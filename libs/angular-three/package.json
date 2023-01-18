@@ -1,0 +1,14 @@
+{
+    "name": "angular-three",
+    "version": "0.0.1",
+    "peerDependencies": {
+        "@angular/common": "^15.1.0",
+        "@angular/core": "^15.1.0",
+        "three": "0.148.0"
+    },
+    "dependencies": {
+        "ngx-resize": "^1.0.0",
+        "tslib": "^2.3.0"
+    },
+    "sideEffects": false
+}
