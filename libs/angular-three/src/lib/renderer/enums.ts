@@ -2,7 +2,7 @@ export const enum NgtRendererClassId {
     type,
     parent,
     children,
-    removed,
+    destroyed,
     compound,
     compoundParent,
     compounded,
@@ -12,6 +12,7 @@ export const enum NgtRendererClassId {
     rawValue,
     ref,
     portalContainer,
+    injectorFactory,
 }
 
 export const enum NgtCompoundClassId {
