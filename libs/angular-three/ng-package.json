@@ -4,5 +4,5 @@
     "lib": {
         "entryFile": "src/index.ts"
     },
-    "allowedNonPeerDependencies": ["ngx-resize"]
+    "allowedNonPeerDependencies": ["ngx-resize", "@rx-angular/state"]
 }
