@@ -1,5 +1,13 @@
 
 
+## [1.0.0-beta.3](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.0...1.0.0-beta.3) (2023-01-19)
+
+
+### Bug Fixes
+
+* add rxangular state to non peer dependency ([f0fd966](https://github.com/angular-threejs/angular-three/commit/f0fd966361d51b8956043e4c8b45f82eae8761a5))
+* root cdr now calls the component ref cdr after itself ([4ba20f4](https://github.com/angular-threejs/angular-three/commit/4ba20f474be27bbe4fb7605cee188aa543ad00f8))
+
 ## [1.0.0-beta.1](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.0...1.0.0-beta.1) (2023-01-19)
 
 
