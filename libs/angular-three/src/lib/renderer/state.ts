@@ -6,7 +6,7 @@ import { applyProps } from '../utils/apply-props';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
 import { NgtCompoundClassId, NgtQueueOpClassId, NgtRendererClassId } from './enums';
-import { attachThreeChild, SPECIAL_PROPERTIES } from './utils';
+import { attachThreeChild, removeThreeChild, SPECIAL_PROPERTIES } from './utils';
 
 export type NgtRendererRootState = {
     store: NgtStore;
