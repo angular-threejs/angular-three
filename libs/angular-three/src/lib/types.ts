@@ -272,6 +272,7 @@ export interface NgtInstanceLocalState {
     objects: BehaviorSubject<NgtInstanceNode[]>;
     // shortcut to add/remove object to list
     add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
+    remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
     // parent based on attach three instance
     parent: NgtInstanceNode | null;
     // if this THREE instance is a ngt-primitive
