@@ -1,5 +1,12 @@
 
 
+## [1.0.0-beta.4](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.3...1.0.0-beta.4) (2023-01-19)
+
+
+### Features
+
+* expose more to public API ([e1f3982](https://github.com/angular-threejs/angular-three/commit/e1f3982eeb31b43a89f93f0390ecd1219f8da520))
+
 ## [1.0.0-beta.3](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.0...1.0.0-beta.3) (2023-01-19)
 
 
