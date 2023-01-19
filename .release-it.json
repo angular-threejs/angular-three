@@ -41,6 +41,6 @@
     },
     "hooks": {
         "before:bump": "npx nx build angular-three",
-        "after:bump": ["git checkout -- package.json", "git checkout -- package-lock.json"]
+        "after:bump": ["git checkout -- package.json"]
     }
 }
