@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
+import { NgtAnyRecord } from '../types';
+import { is } from '../utils/is';
 
 export const startWithUndefined = <T>(): MonoTypeOperatorFunction<T> => startWith<T>(undefined! as T);
 
@@ -78,6 +80,25 @@ export class NgtRxStore<
         this.set({ __ngt_dummy__: '__ngt_dummy__' } as TRxState);
         // call initialize that might be setup by derived Stores
         this.initialize();
+        // override set so our consumers don't have to handle undefined for state that already have default values
+        const originalSet = this.set.bind(this);
+        Object.defineProperty(this, 'set', {
+            get: () => {
+                // Parameters type does not do well with overloads. So we use any[] here
+                return (...args: any[]) => {
+                    const firstArg = args[0];
+                    if (is.obj(firstArg)) {
+                        const modArgs = Object.entries(firstArg).reduce((modded, [key, value]) => {
+                            modded[key] = value === undefined ? this.get(key as keyof TRxState) : value;
+                            return modded;
+                        }, {} as NgtAnyRecord);
+                        return originalSet(modArgs as Partial<TRxState>);
+                    }
+                    // @ts-ignore
+                    return originalSet(...args);
+                };
+            },
+        });
     }
 
     protected initialize() {

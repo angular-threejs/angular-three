@@ -114,3 +114,5 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
 (injectLoader as NgtLoader).preLoad = (loaderConstructorFactory, inputs, extensions) => {
     injectLoader(loaderConstructorFactory, inputs, extensions).pipe(take(1)).subscribe();
 };
+
+export const injectNgtLoader = injectLoader as NgtLoader;
