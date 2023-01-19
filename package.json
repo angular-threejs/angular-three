@@ -24,6 +24,7 @@
         "@types/three": "^0.148.0",
         "@typescript-eslint/eslint-plugin": "^5.36.1",
         "@typescript-eslint/parser": "^5.36.1",
+        "dotenv-cli": "^7.0.0",
         "eslint": "~8.15.0",
         "eslint-config-prettier": "8.1.0",
         "jest": "28.1.1",
