@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
-        "release": "release-it"
+        "release": "dotenv release-it --"
     },
     "private": true,
     "devDependencies": {
@@ -19,6 +19,8 @@
         "@nrwl/jest": "15.5.2",
         "@nrwl/linter": "15.5.2",
         "@nrwl/workspace": "15.5.2",
+        "@release-it/bumper": "^4.0.2",
+        "@release-it/conventional-changelog": "^5.1.1",
         "@types/jest": "28.1.1",
         "@types/node": "16.11.7",
         "@types/three": "^0.148.0",
