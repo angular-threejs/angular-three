@@ -1,5 +1,12 @@
 
 
+## [1.0.0-beta.1](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.0...1.0.0-beta.1) (2023-01-19)
+
+
+### Bug Fixes
+
+* add rxangular state to non peer dependency ([f0fd966](https://github.com/angular-threejs/angular-three/commit/f0fd966361d51b8956043e4c8b45f82eae8761a5))
+
 ## 1.0.0-beta.0 (2023-01-19)
 
 
