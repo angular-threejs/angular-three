@@ -1,4 +1,4 @@
-import { NgtAnyRecord, NgtAttachFunction } from '../types';
+import type { NgtAnyRecord, NgtAttachFunction } from '../types';
 import { applyProps } from './apply-props';
 import { getLocalState } from './instance';
 

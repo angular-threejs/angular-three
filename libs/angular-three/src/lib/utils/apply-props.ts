@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { NgtAnyRecord, NgtInstanceNode } from '../types';
+import type { NgtAnyRecord, NgtInstanceNode } from '../types';
 import { getLocalState, invalidateInstance } from './instance';
 import { is } from './is';
 import { checkUpdate } from './update';

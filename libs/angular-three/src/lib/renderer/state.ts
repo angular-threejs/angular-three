@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, getDebugNode, Injector, Type } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import { NgtStore } from '../stores/store';
-import { NgtAnyRecord } from '../types';
+import type { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';

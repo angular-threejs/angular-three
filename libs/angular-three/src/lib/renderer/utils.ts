@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { removeInteractivity } from '../events';
-import { NgtEventHandlers, NgtInstanceNode } from '../types';
+import type { NgtEventHandlers, NgtInstanceNode } from '../types';
 import { attach, detach } from '../utils/attach';
 import { getLocalState, invalidateInstance } from '../utils/instance';
 import { is } from '../utils/is';

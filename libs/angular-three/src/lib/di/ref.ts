@@ -11,7 +11,7 @@ import {
     switchMap,
     takeUntil,
 } from 'rxjs';
-import { NgtAnyRecord, NgtInstanceNode } from '../types';
+import type { NgtAnyRecord, NgtInstanceNode } from '../types';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
 import { injectNgtDestroy } from './destroy';

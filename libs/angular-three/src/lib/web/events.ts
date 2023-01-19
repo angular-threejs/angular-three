@@ -1,6 +1,6 @@
 import { createEvents } from '../events';
 import { NgtRxStore } from '../stores/rx-store';
-import { NgtAnyRecord, NgtDomEvent, NgtEventManager, NgtEvents, NgtState } from '../types';
+import type { NgtAnyRecord, NgtDomEvent, NgtEventManager, NgtEvents, NgtState } from '../types';
 
 const DOM_EVENTS = {
     click: false,

@@ -1,5 +1,5 @@
 import { NgtRxStore } from './stores/rx-store';
-import { NgtState } from './types';
+import type { NgtState } from './types';
 
 export type NgtGlobalRenderCallback = (timestamp: number) => void;
 type NgtSubItem = { callback: NgtGlobalRenderCallback };

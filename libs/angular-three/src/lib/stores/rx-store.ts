@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
-import { NgtAnyRecord } from '../types';
+import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 
 export const startWithUndefined = <T>(): MonoTypeOperatorFunction<T> => startWith<T>(undefined! as T);
