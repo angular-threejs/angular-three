@@ -1,6 +1,25 @@
 {
     "name": "angular-three",
-    "version": "0.0.1",
+    "version": "0.0.0-replace",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/angular-threejs/angular-three"
+    },
+    "author": {
+        "name": "Chau Tran",
+        "email": "nartc7789@gmail.com",
+        "url": "https://nartc.me"
+    },
+    "description": "Angular Renderer for THREE.js",
+    "keywords": [
+        "angular",
+        "threejs",
+        "renderer"
+    ],
+    "license": "MIT",
     "peerDependencies": {
         "@angular/common": "^15.1.0",
         "@angular/core": "^15.1.0",
