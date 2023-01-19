@@ -243,8 +243,10 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
                 this.envInjector
             );
             this.glRef = this.glAnchor.createComponent(this.scene, { environmentInjector: this.glEnvInjector });
-            this.glRef.changeDetectorRef.detectChanges();
             this.glRef.changeDetectorRef.detach();
+
+            // here, we override the detectChanges to also call detectChanges on the ComponentRef
+            this.overrideDetectChanges();
             this.cdr.detectChanges();
         });
     }
@@ -258,5 +260,13 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         }
         injectNgtLoader.destroy();
         super.ngOnDestroy();
+    }
+
+    private overrideDetectChanges() {
+        const originalDetectChanges = this.cdr.detectChanges.bind(this.cdr);
+        this.cdr.detectChanges = () => {
+            originalDetectChanges();
+            this.glRef?.changeDetectorRef.detectChanges();
+        };
     }
 }
