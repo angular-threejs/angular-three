@@ -5,9 +5,7 @@ import * as THREE from 'three';
 import { createLoop } from '../loop';
 import type {
     NgtBeforeRenderRecord,
-    NgtCamera,
     NgtCanvasInputs,
-    NgtDomEvent,
     NgtDpr,
     NgtEquConfig,
     NgtEventManager,
