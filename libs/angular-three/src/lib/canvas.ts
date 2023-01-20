@@ -93,7 +93,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         return this.get('eventSource') !== this.host.nativeElement ? 'none' : 'auto';
     }
 
-    @Input() scene!: Type<any>;
+    @Input() sceneGraph!: Type<any>;
     @Input() compoundPrefixes: string[] = [];
 
     @Input() set linear(linear: boolean) {
@@ -242,7 +242,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
                 ],
                 this.envInjector
             );
-            this.glRef = this.glAnchor.createComponent(this.scene, { environmentInjector: this.glEnvInjector });
+            this.glRef = this.glAnchor.createComponent(this.sceneGraph, { environmentInjector: this.glEnvInjector });
             this.glRef.changeDetectorRef.detach();
 
             // here, we override the detectChanges to also call detectChanges on the ComponentRef

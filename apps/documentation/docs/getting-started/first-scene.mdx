@@ -6,13 +6,96 @@ sidebar_label: First Scene
 
 This tutorial will help us setup our first NGT scene and introduce us to some of its core concepts.
 
-## Set up the Canvas
-
-The scene graph in NGT starts with `<ngt-canvas>`. Let's start by rendering `<ngt-canvas>` on our `app.component.ts`.
-Make sure to import `NgtCanvas` from `angular-three`
-
 :::note
 
-We are using Inline Template syntax for this tutorial
+-   We are using Inline Template syntax for this tutorial
+-   We will put everything in `app.component.ts` for simplicity
+
+:::
+
+## Create a root component for our Scene graph
+
+Let's start by creating a Component as the root of our Scene graph. We'll put the component in `app.component.ts` for now
+
+```ts title="app.component.ts"
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+    standalone: true,
+    template: ``,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+
+@Component({
+    /*...*/
+})
+export class AppComponent {}
+```
+
+-   The `template` is intentionally left empty, we'll fill it out later.
+-   The `selector` is intentionally left out because we'll not render our `SceneGraph` component on the template.
+-   `CUSTOM_ELEMENTS_SCHEMA` is required because Angular does not support custom schemas so our Custom Elements won't work without it.
+
+## Set up the Canvas
+
+The scene graph in NGT starts with `<ngt-canvas>`. Let's render `<ngt-canvas>` on our `app.component.ts` template.
+Make sure to import `NgtCanvas` from `angular-three`
+
+```ts title="app.component.ts"
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+// highlight-next-line
+import { NgtCanvas } from 'angular-three';
+
+@Component({
+    /*...*/
+})
+export class SceneGraph {}
+
+@Component({
+    selector: 'app-root',
+    standalone: true,
+    // highlight-start
+    template: `<ngt-canvas [sceneGraph]="SceneGraph" />`,
+    imports: [NgtCanvas],
+    // highlight-end
+})
+export class AppComponent {
+    // highlight-next-line
+    readonly SceneGraph = SceneGraph;
+}
+```
+
+-   `<ngt-canvas>` has a **required** input `[sceneGraph]` which accepts a Component class. We pass our `SceneGraph` component into that input.
+
+`ngt-canvas` sets up the following:
+
+-   A `WebGLRenderer`, a default `Scene`, and a default `PerspectiveCamera`
+-   A render loop that renders our scene evere frame outside of Angular Zone
+-   A `window:resize` listener that updates our Renderer and Camera when the viewport is resized
+
+`ngt-canvas` renders the `SceneGraph` input in a _detached_ environment from Angular Change Detection. It also provides the custom Angular Renderer
+to render THREE.js entities instead of DOM elements.
+
+Next, we'll set some basic styles in `styles.css`
+
+```css title="style.css"
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+```
+
+:::tip
+
+`ngt-canvas` is designed to fit the parent container so we can control our 3D scene by adjusting the parent's dimensions.
+
+```html
+<div class="canvas-container">
+    <ngt-canvas [sceneGraph]="..." />
+</div>
+```
 
 :::
