@@ -7,6 +7,7 @@ export * from './lib/stores/store';
 export * from './lib/stores/rx-store';
 export * from './lib/utils/instance';
 export * from './lib/utils/update';
+export * from './lib/utils/is';
 export * from './lib/loader';
 export * from './lib/di/ref';
 export * from './lib/di/destroy';
