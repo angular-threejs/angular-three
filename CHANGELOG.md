@@ -1,5 +1,12 @@
 
 
+## [1.0.0-beta.8](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.7...1.0.0-beta.8) (2023-01-20)
+
+
+### Bug Fixes
+
+* rename scene input to sceneGraph to differentiate it with THREE Scene ([0ac4b0a](https://github.com/angular-threejs/angular-three/commit/0ac4b0aeece98b3b4ec0e5df3a50dd4e64fdfe95))
+
 ## [1.0.0-beta.7](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.6...1.0.0-beta.7) (2023-01-20)
 
 
