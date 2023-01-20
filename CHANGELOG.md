@@ -1,5 +1,12 @@
 
 
+## [1.0.0-beta.5](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.4...1.0.0-beta.5) (2023-01-20)
+
+
+### Bug Fixes
+
+* expose utils "is" ([745c6e3](https://github.com/angular-threejs/angular-three/commit/745c6e303a8dbd19f58091e3e0b3c8bf3ec52d15))
+
 ## [1.0.0-beta.4](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.3...1.0.0-beta.4) (2023-01-19)
 
 
