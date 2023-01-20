@@ -1,0 +1,129 @@
+---
+id: introduction
+title: Introduction
+sidebar_label: Introduction
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## What is Angular Three (NGT)?
+
+NGT is a custom **Renderer** that renders [THREE.js](https://threejs.org) entities instead of DOM elements.
+Developers can leverage their [Angular](https://angular.io) skills to build 3D scenes declaratively by tapping into
+Angular features.
+
+:::tip
+It is recommended that developers should get familiar with both Angular and THREE.js before starting with NGT
+:::
+
+## What is the difference between NGT and React Three Fiber (R3F)?
+
+Fundamentally, NGT and [R3F](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) are both custom renderers.
+Technically, there are differences between Angular Renderer and React Reconciler. That said, R3F is a huge inspiration for NGT.
+Many code from R3F are brought over to NGT and adjusted to work with Angular. NGT APIs are intentionally left similar to those from R3F
+so that developers who have experience with R3F can also work with NGT without much friction.
+
+## Why a Renderer?
+
+In the past, Angular Three was a **Component Library** via the name `@angular-three/core`. However, a **Component Library** suffers greatly
+from frequent THREE.js updates. There are trade-offs but Angular Three decides to take the approach of a **Renderer** to ensure optimal compatibilities
+with THREE.js as well as maintenance cost over the time.
+
+## What does the code look like?
+
+:::info
+Play with a Scene with a re-useable component which has its own states, events, and inputs
+
+<iframe
+    class="code-demo"
+    src="https://stackblitz.com/edit/angular-three-demo-template-zgmtpe?ctl=1&embed=1&file=src/app/scene.component.ts&hideExplorer=1&hideNavigation=1&view=previewsjj"
+    title="first-scene-first-cube"
+></iframe>
+:::
+
+<Tabs>
+
+<TabItem value="appComponentTs" label="app.component.ts" default>
+
+```ts
+import { Component } from '@angular/core';
+import { Scene } from './scene.component';
+import { NgtCanvas } from 'angular-three';
+
+@Component({
+    selector: 'my-app',
+    standalone: true,
+    template: `<ngt-canvas [scene]="Scene" />`,
+    imports: [NgtCanvas],
+})
+export class AppComponent {
+    readonly Scene = Scene;
+}
+```
+
+</TabItem>
+
+<TabItem value="sceneComponentTs" label="scene.component.ts">
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+import { extend } from 'angular-three';
+import { AmbientLight, BoxGeometry, Mesh, MeshStandardMaterial, PointLight } from 'three';
+
+extend({ Mesh, MeshStandardMaterial, BoxGeometry, AmbientLight, PointLight });
+
+@Component({
+    selector: 'demo-cube',
+    standalone: true,
+    template: `
+        <ngt-mesh
+            [position]="position"
+            [scale]="active ? 1.5 : 1"
+            (click)="active = !active"
+            (pointerover)="hovered = true"
+            (pointerout)="hovered = false"
+            (beforeRender)="onBeforeRender($any($event).object)"
+        >
+            <ngt-box-geometry />
+            <ngt-mesh-standard-material [color]="hovered ? 'darkred' : 'orange'" />
+        </ngt-mesh>
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class Cube {
+    @Input() position = [0, 0, 0];
+
+    hovered = false;
+    active = false;
+
+    onBeforeRender(cube: Mesh) {
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+    }
+}
+
+@Component({
+    standalone: true,
+    template: `
+        <ngt-ambient-light />
+        <ngt-point-light position="10" />
+        <demo-cube [position]="[1.5, 0, 0]" />
+        <demo-cube [position]="[-1.5, 0, 0]" />
+    `,
+    imports: [Cube],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class Scene {}
+```
+
+</TabItem>
+
+</Tabs>
+
+:::note
+
+-   NGT requires Angular 14+ for Standalone APIs
+-   All examples will be written with Standalone APIs and `inject()`
+
+:::

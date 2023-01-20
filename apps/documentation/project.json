@@ -1,0 +1,6 @@
+{
+    "name": "documentation",
+    "projectType": "application",
+    "sourceRoot": "apps/documentation",
+    "targets": {}
+}

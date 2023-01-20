@@ -1,0 +1,34 @@
+---
+id: installation
+title: Installation
+sidebar_label: Installation
+---
+
+## Automatic
+
+For Angular CLI projects, run the following command:
+
+```shell
+ng add angular-three
+```
+
+For [Nx](https://nx.dev) users, run the following commands:
+
+```shell
+npm i angular-three
+npx nx g angular-three:init
+```
+
+The generator (schematic) does the following:
+
+-   Installs `three`, `@types/three`, and `angular-three` (in the case of Angular CLI)
+-   Turns on `skipLibCheck: true`
+
+## Manual
+
+```shell
+npm i angular-three three
+npm i -D @types/three
+```
+
+Next, open `tsconfig.json` (or `tsconfig.base.json` in an Nx Workspace) and add `skipLibCheck: true` to `compilerOptions`

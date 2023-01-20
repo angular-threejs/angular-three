@@ -4,7 +4,15 @@ sidebar_position: 1
 
 # Tutorial Intro
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's discover Docusaurus as a documentation framework.
+
+<iframe
+  class="code-demo"
+  src="https://stackblitz.com/edit/angular-three-demo-template-zgmtpe?ctl=1&embed=1&file=src/app/scene.component.ts&hideExplorer=1&hideNavigation=1&view=preview"
+  title="first-scene-first-cube"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
 
 ## Getting Started
 
@@ -14,8 +22,8 @@ Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new
 
 ### What you'll need
 
-- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+-   [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
+    -   When installing Node.js, you are recommended to check all checkboxes related to dependencies.
 
 ## Generate a new site
 
