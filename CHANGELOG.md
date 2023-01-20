@@ -1,5 +1,12 @@
 
 
+## [1.0.0-beta.7](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.6...1.0.0-beta.7) (2023-01-20)
+
+
+### Features
+
+* add push pipe ([4acad9d](https://github.com/angular-threejs/angular-three/commit/4acad9ddda6c927176ef9554cf32e4f3ebf9de29))
+
 ## [1.0.0-beta.6](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.5...1.0.0-beta.6) (2023-01-20)
 
 
