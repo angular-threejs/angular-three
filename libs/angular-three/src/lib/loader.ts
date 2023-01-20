@@ -13,7 +13,7 @@ import {
     forkJoin,
     take,
 } from 'rxjs';
-import type { GLTF } from 'three-stdlib';
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtBranchingReturn, NgtLoaderExtensions, NgtLoaderResult, NgtObjectMap } from './types';
 import { makeObjectGraph } from './utils/make';
 
