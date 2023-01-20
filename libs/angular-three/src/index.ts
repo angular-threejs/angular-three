@@ -11,3 +11,4 @@ export * from './lib/utils/is';
 export * from './lib/loader';
 export * from './lib/di/ref';
 export * from './lib/di/destroy';
+export * from './lib/pipes/push';
