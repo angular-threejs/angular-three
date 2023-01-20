@@ -1,5 +1,18 @@
 
 
+## [1.0.0-beta.6](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.5...1.0.0-beta.6) (2023-01-20)
+
+
+### Bug Fixes
+
+* adjust GLTF type import in loader so we do not rely on three-stdlib ([d9d3120](https://github.com/angular-threejs/angular-three/commit/d9d3120010592966a4d94710034b35f7c6728834))
+
+
+### Documentations
+
+* add docusaurus ([939afb3](https://github.com/angular-threejs/angular-three/commit/939afb3278df9aad419a234d9d5397bd2691f95a))
+* start working on docs ([3c55437](https://github.com/angular-threejs/angular-three/commit/3c55437de4c79924c0aec22fe0d5b67d9e852037))
+
 ## [1.0.0-beta.5](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.4...1.0.0-beta.5) (2023-01-20)
 
 
