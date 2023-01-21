@@ -1,17 +1,17 @@
 import {
+    catchError,
+    forkJoin,
+    from,
     isObservable,
+    map,
     Observable,
     of,
-    map,
-    tap,
-    from,
+    ReplaySubject,
     retry,
     share,
-    ReplaySubject,
-    catchError,
     switchMap,
-    forkJoin,
     take,
+    tap,
 } from 'rxjs';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtBranchingReturn, NgtLoaderExtensions, NgtLoaderResult, NgtObjectMap } from './types';

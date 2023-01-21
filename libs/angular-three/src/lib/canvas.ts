@@ -18,13 +18,13 @@ import {
 } from '@angular/core';
 import { injectNgxResize, NgxResizeResult, provideNgxResizeOptions } from 'ngx-resize';
 import { filter } from 'rxjs';
+import { injectNgtLoader } from './loader';
 import { provideNgtRenderer } from './renderer/provider';
 import { NgtRxStore } from './stores/rx-store';
 import { NgtStore, rootStateMap } from './stores/store';
 import type { NgtCanvasInputs, NgtDomEvent, NgtDpr, NgtState } from './types';
 import { is } from './utils/is';
 import { createPointerEvents } from './web/events';
-import { injectNgtLoader } from './loader';
 
 @Component({
     selector: 'ngt-canvas-container',
