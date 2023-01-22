@@ -1,0 +1,94 @@
+---
+id: canvas
+title: Canvas
+sidebar_label: Canvas
+---
+
+The root of a NGT 3D scene is the `NgtCanvas` component
+
+```html
+<ngt-canvas [sceneGraph]="SceneGraph" [camera]="cameraOptions" />
+```
+
+## Inputs
+
+| name             | description                                                                                                                                     | type                                                                                                           | default                  |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| **sceneGraph**   | **(required)** A component that will be rendered as the Root THREE.Scene                                                                        | `Type<any>`                                                                                                    |                          |
+| compoundPrefixes | An array of prefixes of HTML tags that NGT will treat as [TBD: Compound](#)                                                                     | `string[]`                                                                                                     | `[]`                     |
+| gl               | A THREE.js Renderer instance of options that go into the default Renderer. It also accepts a callback that returns a THREE.js Renderer instance | `NgtGLOptions`                                                                                                 | -                        |
+| size             | Dimensions to fit the THREE.js Renderer to. Will measure `<canvas>` dimentions if omitted                                                       | `NgtSize`                                                                                                      | -                        |
+| shadows          | Enables PCFsoft shadows. Can accept `gl.shadowMap` options for fine-tuning                                                                      | `boolean`, `Partial<THREE.WebGLShadowMap>`                                                                     | `false`                  |
+| legacy           | Disables THREE.js r139 ColorManagement                                                                                                          | `boolean`                                                                                                      | `false`                  |
+| linear           | Switch off automatic sRGB encoding and gamma correction                                                                                         | `boolean`                                                                                                      | `false`                  |
+| flat             | Use `NoToneMapping` instead of `ACESFilmicToneMapping`                                                                                          | `boolean`                                                                                                      | `false`                  |
+| orthographic     | Creates an `OrthographicCamera` instead                                                                                                         | `boolean`                                                                                                      | `false`                  |
+| frameloop        | R3F's render mode. Set to `demand` to only render when there are changes to the Scene Graph                                                     | `always`, `demand`, `never`                                                                                    | `always`                 |
+| performance      | Performance options for adaptive environment                                                                                                    | `Partial<Omit<NgtPerformance, 'regress'>>`                                                                     | -                        |
+| dpr              | Target pixel ratio. Can clamp between a range `[min, max]`                                                                                      | `NgtDpr`                                                                                                       | `[1, 2]`                 |
+| raycaster        | Options that go into the default `Raycaster`                                                                                                    | `Partial<THREE.Raycaster>`                                                                                     | -                        |
+| camera           | A Camera instance or options that go into the default Camera                                                                                    | [check source](https://github.com/angular-threejs/angular-three/blob/main/libs/angular-three/src/lib/types.ts) | -                        |
+| events           | R3F event manager to manage elements' pointer events                                                                                            | `(store: NgtRxStore<NgtState>) => NgtEventManager<HTMLElement>`                                                | -                        |
+| eventSource      | The target where events are bound to                                                                                                            | `HTMLElement`, `ElementRef<HTMLElement>`                                                                       | `NgtCanvas` host element |
+| eventPrefix      | The event prefix that is cast into Canvas pointer x/y events                                                                                    | `offset`, `client`, `page`, `layer`, `screen`                                                                  | `offset`                 |
+| lookAt           | Default coordinate for the camera to look at                                                                                                    | `THREE.Vector3`, `Parameters<THREE.Vector3['set']>`                                                            | -                        |
+
+```ts
+export type NgtGLRenderer = {
+    render: (scene: THREE.Scene, camera: THREE.Camera) => void;
+};
+
+export type NgtGLOptions =
+    | NgtGLRenderer
+    | ((canvas: HTMLCanvasElement) => NgtGLRenderer)
+    | Partial<NgtProperties<THREE.WebGLRenderer> | THREE.WebGLRendererParameters>
+    | undefined;
+
+export type NgtSize = {
+    width: number;
+    height: number;
+    top: number;
+    left: number;
+};
+
+export interface NgtPerformance {
+    /** Current performance normal, between min and max */
+    current: number;
+    /** How low the performance can go, between 0 and max */
+    min: number;
+    /** How high the performance can go, between min and max */
+    max: number;
+    /** Time until current returns to max in ms */
+    debounce: number;
+    /** Sets current to min, puts the system in regression */
+    regress: () => void;
+}
+
+export type NgtDpr = number | [min: number, max: number];
+```
+
+## Outputs
+
+| name          | description                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| created       | Emits after the `NgtCanvas` is created with all the internal building blocks                                       |
+| pointerMissed | If observed, NGT will set the internal `pointermissed` event and will emit whenever the Raycaster missed an object |
+
+## Canvas defaults
+
+NgtCanvas sets up a translucent `THREE.WebGLRenderer` with the following constructor arguments:
+
+-   antialias = `true`
+-   alpha = `true`
+-   powerReference = `'high-performance'`
+
+and the following properties:
+
+-   outputEncoding = `THREE.sRGBEncoding`
+-   toneMapping = `THREE.ACESFilmicToneMapping`
+
+-   A `THREE.PCFSoftShadowMap` if `shadows` is `true`
+-   A `THREE.PerspectiveCamera`, or a `THREE.OrthographicCamera` if `orthographic` is `true`
+-   A `THREE.Scene`
+-   A `THREE.Raycaster`
+-   A `window:resize` listener that will update the `THREE.Renderer` and `THREE.Camera`` when the container is resized.

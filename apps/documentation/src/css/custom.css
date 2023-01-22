@@ -53,3 +53,7 @@ a.navbar__item:hover,
 a.table-of-contents__link:hover {
     text-decoration: underline;
 }
+
+div.menu__list-item-collapsible {
+    font-weight: var(--ifm-font-weight-bold);
+}
