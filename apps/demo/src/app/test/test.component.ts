@@ -1,10 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgtBeforeRenderEvent, NgtCanvas } from 'angular-three';
+import { NgtArgs, NgtBeforeRenderEvent, NgtCanvas } from 'angular-three';
+import * as THREE from 'three';
 
 @Component({
     selector: 'demo-test-scene',
     standalone: true,
     template: `
+        <ngt-color *args="['#BFD1E5']" attach="background" />
         <ngt-mesh
             (click)="active = !active"
             (pointerover)="hover = true"
@@ -16,6 +18,7 @@ import { NgtBeforeRenderEvent, NgtCanvas } from 'angular-three';
             <ngt-mesh-basic-material [color]="hover ? 'goldenrod' : 'darkred'" />
         </ngt-mesh>
     `,
+    imports: [NgtArgs],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {

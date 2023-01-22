@@ -343,7 +343,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
 
         // Safely set color management if available.
         // Avoid accessing THREE.ColorManagement to play nice with older versions
-        if (THREE.ColorManagement) THREE.ColorManagement.legacyMode = state.legacy;
+        if (THREE.ColorManagement) THREE.ColorManagement.legacyMode = legacy ?? true;
         const outputEncoding = linear ? THREE.LinearEncoding : THREE.sRGBEncoding;
         const toneMapping = flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
 
