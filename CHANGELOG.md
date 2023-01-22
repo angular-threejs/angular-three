@@ -1,5 +1,12 @@
 
 
+## [1.0.0-beta.10](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.9...1.0.0-beta.10) (2023-01-22)
+
+
+### Bug Fixes
+
+* set legacy mode with canvas inputs rather than state.legacy ([10388e5](https://github.com/angular-threejs/angular-three/commit/10388e5ee64ce47ec47f6f987818e4d84619c0d7))
+
 ## [1.0.0-beta.9](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.8...1.0.0-beta.9) (2023-01-22)
 
 
