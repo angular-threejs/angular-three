@@ -1,5 +1,23 @@
 
 
+## [1.0.0-beta.9](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.8...1.0.0-beta.9) (2023-01-22)
+
+
+### Features
+
+* add injectBeforeRender ([57d71b5](https://github.com/angular-threejs/angular-three/commit/57d71b550d36e623c489f29468b2cd5b72a75ff5))
+
+
+### Bug Fixes
+
+* use a div instead of ngt-canvas-container component ([821fa55](https://github.com/angular-threejs/angular-three/commit/821fa557c5c1b93a5d86447d668aa3dd4b0fae76))
+
+
+### Documentations
+
+* add Canvas API ([015168f](https://github.com/angular-threejs/angular-three/commit/015168fabe0d84b80d3581e38d9562a2cd0dec92))
+* first scene ([54901e7](https://github.com/angular-threejs/angular-three/commit/54901e78c03366805746e7fb36ffd94742bf1077))
+
 ## [1.0.0-beta.8](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.7...1.0.0-beta.8) (2023-01-20)
 
 
