@@ -16,7 +16,7 @@ import {
     ViewChild,
     ViewContainerRef,
 } from '@angular/core';
-import { injectNgxResize, NgxResizeResult, provideNgxResizeOptions } from 'ngx-resize';
+import { NgxResize, NgxResizeResult, provideNgxResizeOptions } from 'ngx-resize';
 import { filter } from 'rxjs';
 import { injectNgtLoader } from './loader';
 import { provideNgtRenderer } from './renderer/provider';
@@ -27,35 +27,15 @@ import { is } from './utils/is';
 import { createPointerEvents } from './web/events';
 
 @Component({
-    selector: 'ngt-canvas-container',
-    standalone: true,
-    template: '<ng-content />',
-    styles: [
-        `
-            :host {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
-        `,
-    ],
-    providers: [provideNgxResizeOptions({ emitInZone: false })],
-})
-export class NgtCanvasContainer {
-    @Output() canvasResize = injectNgxResize();
-}
-
-@Component({
     selector: 'ngt-canvas',
     standalone: true,
     template: `
-        <ngt-canvas-container (canvasResize)="onResize($event)">
+        <div (ngxResize)="onResize($event)" style="height: 100%; width: 100%;">
             <canvas #glCanvas style="display: block;"></canvas>
-            <ng-container #glAnchor />
-        </ngt-canvas-container>
+        </div>
     `,
-    imports: [NgtCanvasContainer],
-    providers: [NgtStore],
+    imports: [NgxResize],
+    providers: [NgtStore, provideNgxResizeOptions({ emitInZone: false })],
     styles: [
         `
             :host {
@@ -158,7 +138,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
     @Output() pointerMissed = new EventEmitter<MouseEvent>();
 
     @ViewChild('glCanvas', { static: true }) glCanvas!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('glAnchor', { static: true, read: ViewContainerRef }) glAnchor!: ViewContainerRef;
+    @ViewChild('glCanvas', { static: true, read: ViewContainerRef }) glAnchor!: ViewContainerRef;
 
     private glRef?: ComponentRef<unknown>;
     private glEnvInjector?: EnvironmentInjector;
@@ -242,7 +222,9 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
                 ],
                 this.envInjector
             );
-            this.glRef = this.glAnchor.createComponent(this.sceneGraph, { environmentInjector: this.glEnvInjector });
+            this.glRef = this.glAnchor.createComponent(this.sceneGraph, {
+                environmentInjector: this.glEnvInjector,
+            });
             this.glRef.changeDetectorRef.detach();
 
             // here, we override the detectChanges to also call detectChanges on the ComponentRef
