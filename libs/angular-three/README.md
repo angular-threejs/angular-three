@@ -41,10 +41,10 @@ export class Scene {}
 -   Custom Element tags follow this rule: `ngt-` + THREE classes in **kebab-case**. `Mesh` -> `ngt-mesh`
 -   `schemas: [CUSTOM_ELEMENTS_SCHEMA]` allows us to use custom tags on the template. This is Angular's limitation at the moment
 
-2. Render `<ngt-canvas>` component, use `Scene` component above to pass into `[scene]` input on `<ngt-canvas>`
+2. Render `<ngt-canvas>` component, use `Scene` component above to pass into `[sceneGraph]` input on `<ngt-canvas>`
 
 ```html
-<ngt-canvas [scene]="Scene" />
+<ngt-canvas [sceneGraph]="Scene" />
 ```
 
 -   `ngt-canvas` creates the basic building blocks of THREE.js: a default `WebGLRenderer`, a default `Scene`, and a default `PerspectiveCamera`
