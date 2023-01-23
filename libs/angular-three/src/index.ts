@@ -13,4 +13,5 @@ export * from './lib/types';
 export { createAttachFunction } from './lib/utils/attach';
 export * from './lib/utils/instance';
 export * from './lib/utils/is';
+export * from './lib/utils/make';
 export * from './lib/utils/update';
