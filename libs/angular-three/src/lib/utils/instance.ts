@@ -38,7 +38,14 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
             objects,
             nonObjects,
             add: (object, type) => {
-                instance.__ngt__[type].next([...instance.__ngt__[type].value, object]);
+                const current = instance.__ngt__[type].value;
+                const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);
+                if (foundIndex > -1) {
+                    current.splice(foundIndex, 1, object);
+                    instance.__ngt__[type].next(current);
+                } else {
+                    instance.__ngt__[type].next([...instance.__ngt__[type].value, object]);
+                }
                 notifyAncestors(instance.__ngt__.parent);
             },
             remove: (object, type) => {
