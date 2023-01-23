@@ -67,15 +67,18 @@ export class NgtRendererStore {
             state[NgtRendererClassId.injectorFactory] = () => getDebugNode(rendererNode)!.injector;
             // we attach an arrow function to the Comment node
             // In our directives, we can call this function to then start tracking the RendererNode
-            rendererNode['__ngt_renderer_add_comment__'] = () => {
-                this.comments.push(rendererNode);
+            rendererNode['__ngt_renderer_add_comment__'] = (portalNode?: NgtRendererNode) => {
+                if (portalNode && portalNode.__ngt_renderer__[NgtRendererClassId.type] === 'portal') {
+                    this.portals.push(portalNode);
+                } else {
+                    this.comments.push(rendererNode);
+                }
             };
             return rendererNode;
         }
 
         if (state[NgtRendererClassId.type] === 'portal') {
             state[NgtRendererClassId.injectorFactory] = () => getDebugNode(rendererNode)!.injector;
-            this.portals.push(rendererNode);
             return rendererNode;
         }
 
@@ -426,7 +429,8 @@ export class NgtRendererStore {
                 continue;
             }
             const instance = injector.get(NgtStore, null);
-            if (instance) {
+            // only the instance with previousStore should pass
+            if (instance && instance.get('previousStore')) {
                 store = instance;
                 break;
             }
