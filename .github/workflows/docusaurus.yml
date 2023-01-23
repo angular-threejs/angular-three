@@ -1,0 +1,49 @@
+name: Docusaurus Documentation Site
+on:
+    push:
+        branches: [main]
+jobs:
+    build-docs:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  persist-credentials: false
+                  fetch-depth: 0
+
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: latest
+                  run_install: false
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: |
+                  pnpm install
+                  pnpm --filter "./apps/documentation" install
+
+            - name: Create local build artifacts
+              run: |
+                  echo "Building documentation..."
+                  npx nx build-external-docs documentation
+
+            - name: Init git and commit local artifacts
+              run: |
+                  cd dist/apps/documentation
+                  git init
+                  git add .
+                  git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git commit -am "docs: build doc"
+
+            - name: Push
+              uses: ad-m/github-push-action@master
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  branch: docs
+                  force: true
+                  directory: dist/apps/documentation
