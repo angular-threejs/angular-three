@@ -126,7 +126,7 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
     }
 
     // dispose
-    if (child['dispose'] && !is.scene(child)) {
+    if (!isPrimitive && child['dispose'] && !is.scene(child)) {
         queueMicrotask(() => child['dispose']());
     }
 

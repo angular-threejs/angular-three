@@ -202,6 +202,7 @@ export class NgtRendererStore {
     applyProperty(node: NgtRendererNode, name: string, value: any) {
         if (node.__ngt_renderer__[NgtRendererClassId.destroyed]) return;
         // setup [ref] here
+        // ref should never change
         if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
             node.__ngt_renderer__[NgtRendererClassId.ref] = value;
             value.nativeElement = node;
