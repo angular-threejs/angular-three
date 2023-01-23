@@ -1,0 +1,347 @@
+---
+id: custom-renderer
+title: Custom Renderer
+sidebar_label: Custom Renderer
+---
+
+:::note
+Throughout this documentation, when we talk about **Custom Renderer**, we mean the Angular Custom Renderer implementation, not THREE.js Renderer
+:::
+
+## Custom Element tags
+
+Since NGT is an [Angular Custom Renderer](https://angular.io/api/core/Renderer2), we can control the _tags_ on the template.
+Thanks to that, we can take a set of Custom Element tags and create corresponding THREE.js entities from those tags.
+
+The convention of these Custom Element tags is: `ngt-three-js-class-in-kebab-case`
+
+-   `ngt-mesh` -> `THREE.Mesh`
+-   `ngt-box-geometry` -> `THREE.BoxGeometry`
+-   `ngt-lOD` -> `THREE.LOD`
+
+### `CUSTOM_ELEMENTS_SCHEMA`
+
+At the moment, Angular **does not** support userland `schemas`. Hence, we need to rely on `CUSTOM_ELEMENTS_SCHEMA` to compile our
+application when using Custom Elements tag
+
+```ts
+@Component({
+    template: `...`,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+:::tip
+
+Only the Components that use Custom Element tags in their template needs `CUSTOM_ELEMENTS_SCHEMA`. The Angular Compiler will
+throw compilation errors if we violate.
+
+:::
+
+## Catalogue
+
+In order to map Custom Element tags to THREE.js entities, NGT creates an internal `catalogue` to keep a dictionary of THREE.js entities.
+This is done so the consumers **do not** have to include the whole THREE.js namespace in their application all the time.
+
+To add THREE.js entities to this `catalogue`, consumers use `extend()` function; ideally at the beginning of the `SceneGraph` component
+
+```ts title="scene-graph.component.ts"
+import { extend } from 'angular-three';
+
+// call extend here
+extend({ Mesh, BoxGeometry });
+
+@Component({
+    /*...*/
+})
+export class SceneGraph {} // SceneGraph can be named anything
+```
+
+```ts
+@Component({
+    template: '<ngt-canvas [sceneGraph]="SceneGraph" />',
+    imports: [NgtCanvas],
+})
+export class SomeFeatureComponent {
+    readonly SceneGraph = SceneGraph; // import SceneGraph component above
+}
+```
+
+:::note
+
+-   It is ok to call `extend()` multiple times with duplications
+-   It is ok to call `extend(THREE)` once to include the entire THREE.js namespace. However, the bundle will also include the entire THREE.js namespace
+
+:::
+
+## THREE.js Inputs
+
+We can pass in any THREE.js entities' properties as Inputs to the Custom Element tags.
+
+```html
+<ngt-mesh [position]="[1, 1, 1]" [scale]="1.5" [castShadow]="true">
+    <ngt-mesh-basic-material color="red" [wireframe]="true" />
+</ngt-mesh>
+<ngt-ambient-light [intensity]="0.5" />
+```
+
+Due to limitations of Angular schemas, we do not have intellisense support here. The best documentation for these Inputs is [THREE.js Documentatation](https://threejs.org)
+
+### Short-cuts
+
+#### `set()`
+
+All Inputs whose underlying object has a `.set()` can accept the same arguments as `set()`. For example, `THREE.Color#set` can accept
+a CSS-like color string. Hence, we can pass `color="red"` instead of `[color]="color"` (where `color = new THREE.Color('red')` in our Component code)
+
+```html
+<ngt-mesh-basic-material color="red" />
+```
+
+#### `setScalar()`
+
+All Inputs whose underlying object has a `.setScalar()` can accept the same arguments as `setScalar()`
+
+```html
+<!-- equivalent to [position]="[10, 10, 10]" -->
+<ngt-mesh [position]="10" />
+```
+
+There are other shortcuts like `copy()`, `fromArray()` etc... The concept is the same but those aren't used as nearly common as `set()` and `setScalar()`
+
+## NGT Inputs
+
+In addition to Inputs that are THREE.js entities' properties, there are several Inputs that are unique to NGT Custom Renderer
+
+### `attach`
+
+This Input is used to specify a property on the parent that this object should be **attached** to. Objects with `attach`
+will be taken off their parent when they're not on the template (eg: under an `*ngIf` or some other Structural Directive)
+
+#### Static value
+
+If the property on the parent is known and static, use `attach` as **Attribute Binding** with `string` values.
+
+```html
+<ngt-mesh>
+    <ngt-mesh-basic-material attach="material" />
+</ngt-mesh>
+```
+
+This is equivalent to
+
+```ts
+const mesh = new THREE.Mesh();
+const material = new THREE.MeshBasicMaterial();
+
+mesh.material = material;
+```
+
+:::info
+
+-   All Geometries have `attach="geometry"` by default
+-   All Materials have `attach="material"` by default
+
+```html
+<ngt-mesh>
+    <!-- implicit attach="geometry" -->
+    <ngt-box-geometry />
+    <!-- implicit attach="material" -->
+    <ngt-mesh-basic-material />
+</ngt-mesh>
+```
+
+:::
+
+We can also pass a `dotted.path` to `attach` if the property is nested
+
+```html
+<ngt-spot-light [castShadow]="true">
+    <ngt-vector2 attach="shadow.mapSize" />
+</ngt-spot-light>
+```
+
+This is equivalent to
+
+```ts
+const spotLight = new THREE.SpotLight();
+spotLight.castShadow = true;
+
+const vector2 = new THREE.Vector2();
+// shortcut is still applied automatically
+spotLight.shadow.mapSize.copy(vector2);
+```
+
+#### Dynamic value
+
+If we need to pass a dynamic value to `attach`, use `attach` as **Property Binding** with `Array<string | number>` values
+
+```html
+<ngt-mesh>
+    <ngt-box-geometry />
+    <!-- ngForRepeat is an NGT directive. We'll learn about it in a different section -->
+    <ngt-mesh-lambert-material *ngFor="let i; repeat 6" [attach]="['material', i]" />
+</ngt-mesh>
+```
+
+This is equivalent to:
+
+```ts
+const mesh = new THREE.Mesh();
+const geometry = new THREE.BoxGeometry();
+
+mesh.geometry = geometry;
+mesh.material = [];
+
+for (let i = 0; i < 6; i++) {
+    const material = new THREE.MeshLambertMaterial();
+    mesh.material[i] = material;
+}
+```
+
+#### `NgtAttachFunction`
+
+Optionally, we can also pass an `NgtAttachFunction` to `[attach]`. When this is the case, we are responsible for **attaching** the child onto the parent
+as well as **de-attaching** (clean-up phase)
+
+```ts
+// we can import this utility from 'angular-three'
+import { createAttachFunction } from 'angular-three':
+
+@Component({
+    template: `
+        <ngt-mesh>
+            <ngt-mesh-basic-material [attach]="attachFn" />
+        </ngt-mesh>
+    `,
+})
+export class SceneGraph {
+    // "store" is the NgtStore, which has all information about the NgtCanvas
+    readonly attachFn = createAttachFunction<Mesh, MeshBasicMaterial>(({ parent, child /*, store */ }) => {
+        const oldMaterial = parent.material;
+        parent.material = child;
+        // return a clean-up function that will be called when `ngt-mesh-basic-material` is destroyed
+        return () => {
+            parent.material = oldMaterial;
+        };
+    });
+}
+```
+
+### `priority`
+
+See [Render Priority](#render-priority)
+
+### `rawValue`
+
+See [TBD: ngt-value](#)
+
+### `ref`
+
+See [TBD: ref](#)
+
+## Outputs
+
+### Object3D Events
+
+All of the following Outputs will trigger Change Detection upon invoked. This is intentional as we usually update Component's state with these Events.
+
+| name          | description                                                        |
+| ------------- | ------------------------------------------------------------------ |
+| click         | If observed, emits when the object is clicked                      |
+| contextmenu   | If observed, emits when the object is right-clicked                |
+| dblclick      | If observed, emits when the object is double clicked               |
+| pointerup     | If observed, emits when the pointer moves up while on the object   |
+| pointerdown   | If observed, emits when the pointer moves down while on the object |
+| pointerover   | If observed, emits when the pointer is over the object             |
+| pointerout    | If observed, emits when the pointer gets on then out of the object |
+| pointerenter  | If observed, emits when the pointer gets on the object             |
+| pointerleave  | If observed, emits when the pointer gets on then out of the object |
+| pointermove   | If observed, emits when the pointer moves while on the object      |
+| pointermissed | If observed, emits when the pointer misses the object              |
+| pointercancel | If observed, emits when the current pointer event gets cancelled   |
+| wheel         | If observed, emits when the wheel is acted on when on the object   |
+
+:::info
+
+The events system in NGT is completely ported from R3F. For more information, please check [React Three Fiber Events](https://docs.pmnd.rs/react-three-fiber/api/events)
+
+:::
+
+### `beforeRender`
+
+To register a callback in the animation loop, we can listen for `(beforeRender)`
+
+```ts
+@Component({
+    template: `<ngt-mesh (beforeRender)="onBeforeRender($any($event))" />`,
+})
+export class SceneGraph {
+    onBeforeRender(event: NgtBeforeRenderEvent<Mesh>) {
+        // call per frame, will not trigger Change Detection
+    }
+}
+```
+
+When the element is destroyed, `(beforeRender)` is unregistered automatically.
+
+:::note
+We use `$any($event)` because of Angular limitations on `CUSTOM_ELEMENTS_SCHEMA`
+:::
+
+#### Render Priority
+
+By default, NGT renders the scene on every frame. If we need to control this process, we can pass `priority` as **Attribute Binding** with number-string values
+to any object whose `(beforeRender)` is being listened to. When a `priority` is set, we are responsible to render our scene now.
+
+```ts
+@Component({
+    template: `
+        <ngt-mesh priority="1" (beforeRender)="onBeforeRender($any($event))" />
+        <ngt-mesh priority="2" (beforeRender)="onOtherBeforeRender($any($event))" />
+    `,
+})
+export class SceneGraph {
+    onBeforeRender(event: NgtBeforeRenderEvent<Mesh>) {
+        const { gl, scene, camera } = event.state;
+        // do something
+        gl.render(scene, camera);
+        // do something else
+    }
+
+    onOtherBeforeRender(event: NgtBeforeRenderEvent<Mesh>) {
+        // this runs after the above beforeRender
+    }
+}
+```
+
+### `afterAttach`
+
+This event emits after the child **has been attached** to the parent
+
+```ts
+@Component({
+    template: `
+        <ngt-mesh>
+            <ngt-mesh-basic-material attach="material" (afterAttach)="onAfterAttach($any($event))" />
+        </ngt-mesh>
+    `,
+})
+export class SceneGraph {
+    onAfterAttach(event: NgtAfterAttach<Mesh, MeshBasicMaterial>) {}
+}
+```
+
+### `afterUpdate`
+
+This event emits after an object is updated
+
+```ts
+@Component({
+    template: ` <ngt-mesh (afterUpdate)="onAfterUpdate($any($event))" [position]="[0, 1, 2]" /> `,
+})
+export class SceneGraph {
+    onAfterUpdate(event: Mesh) {}
+}
+```
