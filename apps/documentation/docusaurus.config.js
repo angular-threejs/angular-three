@@ -22,10 +22,10 @@ const config = {
     // Even if you don't use internalization, you can use this field to set useful
     // metadata like html lang. For example, if your site is Chinese, you may want
     // to replace "en" with "zh-Hans".
-    i18n: {
-        defaultLocale: 'en',
-        locales: ['en'],
-    },
+    //    i18n: {
+    //        defaultLocale: 'en',
+    //        locales: ['en'],
+    //    },
 
     presets: [
         [
@@ -104,10 +104,10 @@ const config = {
                     {
                         title: 'More',
                         items: [
-                            {
-                                label: 'Blog',
-                                to: '/blog',
-                            },
+                            //                            {
+                            //                                label: 'Blog',
+                            //                                to: '/blog',
+                            //                            },
                             {
                                 label: 'GitHub',
                                 href: 'https://github.com/angular-threejs/angular-three',

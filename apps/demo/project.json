@@ -9,7 +9,7 @@
             "executor": "@angular-devkit/build-angular:browser",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/apps/demo",
+                "outputPath": "dist/apps/documentation/demo",
                 "index": "apps/demo/src/index.html",
                 "main": "apps/demo/src/main.ts",
                 "polyfills": ["zone.js"],
@@ -32,7 +32,8 @@
                             "maximumError": "4kb"
                         }
                     ],
-                    "outputHashing": "all"
+                    "outputHashing": "all",
+                    "baseHref": "/demo/"
                 },
                 "development": {
                     "buildOptimizer": false,

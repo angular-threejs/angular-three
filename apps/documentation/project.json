@@ -2,5 +2,18 @@
     "name": "documentation",
     "projectType": "application",
     "sourceRoot": "apps/documentation",
-    "targets": {}
+    "targets": {
+        "build-external-docs": {
+            "executor": "nx:run-commands",
+            "outputs": ["dist/apps/documentation"],
+            "options": {
+                "commands": [
+                    "NX_CLOUD=true npx nx build demo",
+                    "cp apps/documentation/_redirects dist/apps/documentation/"
+                ],
+                "parallel": true
+            },
+            "dependsOn": ["build"]
+        }
+    }
 }
