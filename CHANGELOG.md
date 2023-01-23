@@ -1,5 +1,17 @@
 
 
+## [1.0.0-beta.11](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.10...1.0.0-beta.11) (2023-01-23)
+
+
+### Features
+
+* add createAttachFunction for aid with attach input as function ([882f7d9](https://github.com/angular-threejs/angular-three/commit/882f7d9384dd8044fab6b64e4dccadcf1216c40e))
+
+
+### Documentations
+
+* almost finish custom renderer docs ([d2c329b](https://github.com/angular-threejs/angular-three/commit/d2c329b383375612d2383096d906e329ae5f7e3f))
+
 ## [1.0.0-beta.10](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.9...1.0.0-beta.10) (2023-01-22)
 
 
