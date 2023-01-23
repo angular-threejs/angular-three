@@ -22,7 +22,25 @@ const sidebars = {
         {
             type: 'category',
             label: 'API',
-            items: ['api/canvas', 'api/custom-renderer', 'api/ref'],
+            items: [
+                'api/canvas',
+                'api/custom-renderer',
+                {
+                    type: 'category',
+                    label: 'Directives',
+                    items: ['api/directives/args', 'api/directives/repeat'],
+                },
+                {
+                    type: 'category',
+                    label: 'Pipes',
+                    items: ['api/pipes/push'],
+                },
+                'api/ref',
+                'api/primitive',
+                'api/raw-value',
+                'api/store',
+                'api/additional-exports',
+            ],
         },
     ],
     // By default, Docusaurus generates a sidebar from the docs folder structure

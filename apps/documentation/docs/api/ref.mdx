@@ -3,3 +3,72 @@ id: ref
 title: Ref
 sidebar_label: Ref
 ---
+
+Ref is a concept borrowed from [React](https://beta.reactjs.org/learn/referencing-values-with-refs), but with a little twist.
+In THREE.js, it is common to mutate properties on an object rather than staying in the immutable lane that we're used to.
+And there are many sources that can mutate properties of the same object: THREE.js, Cannon.js (Physics engine), Animations (GSAP) etc...
+
+With that, NGT decides to implement the Ref concept.
+
+## `ViewChild` / `ContentChild`
+
+We can get a hold of an object on the template using the good ol' `ViewChild` or `ContentChild`
+
+```ts
+@Component({
+    template: `<ngt-mesh #mesh />`,
+})
+export class SceneGraph {
+    @ViewChild('mesh', { static: true }) mesh!: ElementRef<Mesh>;
+}
+```
+
+We can also use `ViewChildren` / `ContentChildren` if we want to interact with the [QueryList API](https://angular.io/api/core/QueryList)
+instead.
+
+## `injectNgtRef()`
+
+More than often, we want to define an **external** Ref that we can pass around. To do so, we can use `injectNgtRef()` function
+to create a Ref.
+
+```ts
+@Component({
+    template: `<ngt-mesh />`,
+})
+export class SceneGraph {
+    // highlight-next-line
+    readonly ref = injectNgtRef<Mesh>();
+}
+```
+
+Then, we pass our `ref` into the `[ref]` Input on the element.
+
+```ts
+@Component({
+    template: `
+        // highlight-next-line
+        <ngt-mesh [ref]="ref" />
+    `,
+})
+export class SceneGraph {
+    readonly ref = injectNgtRef();
+}
+```
+
+The NGT Custom Renderer will assign the `Mesh` object to the `ref.nativeElement` when it is available. `injectNgtRef()`
+returns an `NgtInjectedRef<ObjectType>`.
+
+```ts
+type Subscribe<T> = (callback: (current: T, previous: T | null) => void) => Subscription;
+
+export type NgtInjectedRef<T> = ElementRef<T> & {
+    /* a Subscribe fn that emits current and previous value. Useful for debug */
+    subscribe: Subscribe<T>;
+    /* consumers should use this for listening to value of this ref. This filters out initial null value */
+    $: Observable<T>;
+    /* consumers should use this for listenting to children changes on this ref */
+    children$: (type?: 'objects' | 'nonObjects' | 'both') => Observable<NgtInstanceNode[]>;
+    /* notify this CD when ref value changes */
+    useCDR: (cdr: ChangeDetectorRef) => void;
+};
+```title

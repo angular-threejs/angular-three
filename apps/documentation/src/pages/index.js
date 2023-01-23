@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
@@ -19,7 +18,7 @@ function HomepageHeader() {
                     <small>"What happened to Angular 3.0? Well, it became Angular Three" - Mike Hartington</small>
                 </em>
                 <div className={styles.buttons}>
-                    <Link className="button button--secondary button--lg" to="/docs/getting-started/overview">
+                    <Link className="button button--secondary button--lg" to="/docs/getting-started/introduction">
                         Get Started
                     </Link>
                 </div>

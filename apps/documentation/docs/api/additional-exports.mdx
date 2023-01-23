@@ -1,0 +1,36 @@
+---
+id: additional-exports
+title: Additional Exports
+sidebar_label: Additional Exports
+---
+
+## `injectBeforeRender()`
+
+A shortcut to register a before render callback
+
+```ts
+@Component({
+    /*...*/
+})
+export class SceneGraph {
+    readonly sub = injectBeforeRender(() => {}, 0);
+}
+```
+
+:::info
+
+`injectBeforeRender()` automatically cleans up the before render but it returns the reference to the clean up function.
+We can call this function anytime to clean up the before render, not just in `ngOnDestroy`
+
+:::
+
+## `is`
+
+A collection of utility functions to assert object type
+
+```ts
+is.obj(a); // checks if a value is an object; not an Array nor a Function
+is.ref(a); // checks if a value is ElementRef
+is.object3D(a); // checks if a value is an instance of THREE.Object3D
+// and more
+```

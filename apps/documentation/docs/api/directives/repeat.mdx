@@ -1,0 +1,19 @@
+---
+id: repeat
+title: NgtRepeat
+sidebar_label: NgtRepeat
+---
+
+`NgtRepeat` is a structural directive which subclasses `NgFor` to add `ngForRepeat` Input. This is done to provide an
+easy way of looping over a number of times to render a specific amount of objects.
+
+```html
+<ngt-mesh>
+    <ngt-box-geometry />
+    <!-- a Box should have 6 faces, we want to assign an independent Material to each face -->
+    <!-- without NgtRepeat -->
+    <ngt-mesh-standard-material *ngFor="let i of [0, 1, 2, 3, 4, 5]" [attach]="['material', i]" />
+    <!-- with NgtRepeat -->
+    <ngt-mesh-standard-material *ngFor="let i; repeat 6" [attach]="['material', i]" />
+</ngt-mesh>
+```

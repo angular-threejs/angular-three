@@ -1,0 +1,69 @@
+---
+id: store
+title: Store
+sidebar_label: Store
+---
+
+`NgtStore` contains all information about the current `NgtCanvas`. `NgtStore` extends [RxState](https://www.rx-angular.io/docs/state/api/rx-state) API
+
+```ts
+@Component({
+    /*...*/
+})
+export class SceneGraph {
+    // inject the Store. We can also use Constructor DI
+    readonly store = inject(NgtStore);
+}
+```
+
+## Select states reactively
+
+```ts
+@Component({
+    /*...*/
+})
+export class SceneGraph {
+    readonly store = inject(NgtStore);
+    readonly camera$ = this.store.select('camera'); // Observable<NgtCamera>
+    readonly glDom$ = this.store.select('gl', 'domElement'); // Observable<HTMLElement>
+}
+```
+
+## Get states imperatively
+
+```ts
+@Component({
+    /*...*/
+})
+export class SceneGraph {
+    readonly store = inject(NgtStore);
+    readonly camera = this.store.get('camera'); // NgtCamera
+    readonly glDom = this.store.get('gl', 'domElement'); // HTMLElement
+}
+```
+
+## Register before render callbacks
+
+Beside using `(beforeRender)` Output on Custom Element tags, we can also use `NgtStore` to register a before render callback
+
+```ts
+@Component({
+    /*...*/
+})
+export class SceneGraph {
+    readonly store = inject(NgtStore);
+
+    private sub?: () => void;
+
+    ngOnInit() {
+        // register and return the clean up function
+        // signature: subscribe(callback, priority)
+        this.sub = this.store.get('internal').subscribe(() => {}, 0);
+    }
+
+    ngOnDestroy() {
+        // call the clean up function to unregister the callback
+        this.sub?.();
+    }
+}
+```

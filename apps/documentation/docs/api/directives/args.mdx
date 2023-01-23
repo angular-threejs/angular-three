@@ -1,0 +1,47 @@
+---
+id: args
+title: NgtArgs
+sidebar_label: NgtArgs
+---
+
+Some THREE.js entities like Geometries accept **Constructor Arguments** and it is **required** to reconstruct
+these entities when the arguments change.
+
+```ts
+let geometry = new BoxGeometry(); // [1, 1, 1] box
+mesh.geometry = geometry;
+
+// later when we want a bigger box
+mesh.geometry.dispose(); // dispose old box
+// construct new box
+geometry = new BoxGeometry(2, 2, 2); // [2, 2, 2] box
+mesh.geometry = geometry;
+```
+
+To achieve this with the Custom Renderer, NGT provides a structural directive `NgtArgs`
+
+```html
+<ngt-box-geometry *args="boxArgs" />
+```
+
+When `boxArgs` changes, `*args` will destroy the current instance of `ngt-box-geometry` then re-create a new one with
+the new `boxArgs`
+
+`*args` accepts an Array of **Constructor Arguments** that the underlying object accepts.
+
+```html
+<ngt-box-geometry *args="[width, height, depth, widthSegments, heightSegments, depthSegments]" />
+
+<ngt-instanced-mesh *args="[geometry, material, count]" />
+
+<ngt-instanced-mesh *args="[undefined, undefined, count]">
+    <ngt-box-geometry />
+    <ngt-mesh-standard-material />
+</ngt-instanced-mesh>
+
+<ngt-spot-light>
+    <ngt-vector2 *args="[2048, 2048]" attach="shadow.mapSize" />
+</ngt-spot-light>
+```
+
+Please consult [THREE.js Documentation](https://threejs.org) for details on the **Construtor Arguments**
