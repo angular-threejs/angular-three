@@ -16,10 +16,10 @@ export function invalidateInstance<TInstance extends object>(instance: TInstance
 }
 
 export function prepare<TInstance extends object = NgtAnyRecord>(
-    object: TInstance,
+    object: TInstance | (() => TInstance),
     localState?: Partial<NgtInstanceLocalState>
 ): NgtInstanceNode<TInstance> {
-    const instance = object as unknown as NgtInstanceNode<TInstance>;
+    const instance = (typeof object === 'function' ? object() : object) as unknown as NgtInstanceNode<TInstance>;
 
     if (localState?.primitive || !instance.__ngt__) {
         const {
