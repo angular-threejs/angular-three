@@ -1,4 +1,5 @@
-import type { NgtAnyRecord, NgtAttachFunction } from '../types';
+import { NgtRxStore } from '../stores/rx-store';
+import type { NgtAnyRecord, NgtAttachFunction, NgtState } from '../types';
 import { applyProps } from './apply-props';
 import { getLocalState } from './instance';
 
@@ -27,4 +28,10 @@ function assignEmpty(obj: NgtAnyRecord, base: string) {
     if ((!Object.hasOwn(obj, base) && Reflect && !!Reflect.has && !Reflect.has(obj, base)) || obj[base] === undefined) {
         obj[base] = {};
     }
+}
+
+export function createAttachFunction<TParent = any, TChild = any>(
+    cb: (params: { parent: TParent; child: TChild; store: NgtRxStore<NgtState> }) => (() => void) | void
+): NgtAttachFunction<TChild, TParent> {
+    return (parent, child, store) => cb({ parent, child, store });
 }
