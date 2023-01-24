@@ -20,6 +20,7 @@ specifiers:
   '@nrwl/eslint-plugin-nx': 15.6.0
   '@nrwl/jest': 15.6.0
   '@nrwl/linter': 15.6.0
+  '@nrwl/nx-plugin': 15.6.0
   '@nrwl/workspace': 15.6.0
   '@release-it/bumper': ^4.0.2
   '@release-it/conventional-changelog': ^5.1.1
@@ -83,6 +84,7 @@ devDependencies:
   '@nrwl/eslint-plugin-nx': 15.6.0_c333soojynamuzzf6ekjfkjbc4
   '@nrwl/jest': 15.6.0_wpbrc6yjzkwa7mcnsf6anwhj3u
   '@nrwl/linter': 15.6.0_dnmhhapdlrsabfjqjnph4vmyie
+  '@nrwl/nx-plugin': 15.6.0_oj4xl2ikmqfm5mmvwmmbpvg7n4
   '@nrwl/workspace': 15.6.0_u7o74kq4trtlxzokkzkcz24jzu
   '@release-it/bumper': 4.0.2_release-it@15.6.0
   '@release-it/conventional-changelog': 5.1.1_release-it@15.6.0
@@ -3071,6 +3073,30 @@ packages:
       tslib: 2.4.1
     transitivePeerDependencies:
       - nx
+      - typescript
+    dev: true
+
+  /@nrwl/nx-plugin/15.6.0_oj4xl2ikmqfm5mmvwmmbpvg7n4:
+    resolution: {integrity: sha512-uzzz9IzEbLBn9vj3stt5Au9lDFH67mqIqYcEdumuUjL8nj+OpiDAdoVC4UepOaZqChkVPhw9zWNF25l0+uFNrQ==}
+    dependencies:
+      '@nrwl/devkit': 15.6.0_nx@15.6.0+typescript@4.9.4
+      '@nrwl/jest': 15.6.0_wpbrc6yjzkwa7mcnsf6anwhj3u
+      '@nrwl/js': 15.6.0_6xt4qr45pcnffmas54zarsrlam
+      '@nrwl/linter': 15.6.0_dnmhhapdlrsabfjqjnph4vmyie
+      dotenv: 10.0.0
+      fs-extra: 11.1.0
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - '@swc-node/register'
+      - '@swc/core'
+      - '@types/node'
+      - debug
+      - eslint
+      - node-notifier
+      - nx
+      - prettier
+      - supports-color
+      - ts-node
       - typescript
     dev: true
 
