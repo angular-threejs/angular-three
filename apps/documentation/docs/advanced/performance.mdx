@@ -1,0 +1,73 @@
+---
+id: performance
+title: Performance
+sidebar_label: Performance
+---
+
+## Re-use Geometries and Materials
+
+Each Geometry and Material consumes the GPU's resources. If we know certain Geometries and/or Materials will repeat, we can reuse them
+
+### Imperative
+
+We can have static geometries and materials as Component's properties
+
+```ts
+@Component({
+    standalone: true,
+    template: `
+        <ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[1, 1, 1]" />
+        <ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[2, 2, 2]" />
+    `,
+})
+export class SceneGraph {
+    readonly sphere = new THREE.SphereGeometry(1, 32, 32);
+    readonly redMaterial = new THREE.MeshBasicMaterial({ color: 'red' });
+}
+```
+
+We can also store these static objects in a Service to reuse across the application
+
+### Declarative
+
+We can put the Geometries and Materials declaratively on the template so they can react to Input changes; and still can reuse them
+
+```ts
+@Component({
+    standalone: true,
+    template: `
+        <ngt-sphere-geometry *args="sphereArgs" [ref]="sphereRef" />
+        <ngt-mesh-basic-material #redMaterial [color]="color" />
+
+        <ngt-mesh [geometry]="sphereRef.nativeElement" [material]="redMaterial" [position]="[1, 1, 1]" />
+        <ngt-mesh [geometry]="sphereRef.nativeElement" [material]="redMaterial" [position]="[2, 2, 2]" />
+    `,
+    imports: [NgtArgs],
+})
+export class SceneGraph {
+    readonly sphereRef = injectNgtRef<THREE.SphereGeometry>();
+
+    sphereArgs = [1, 32, 32];
+    color = 'red';
+}
+```
+
+## On-demand Rendering
+
+> Credit: [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#on-demand-rendering)
+
+The SceneGraph is usually rendered at 60 frames per second. This makes sense if the SceneGraph ontains _constantly_ moving parts (eg: game).
+Consequently, this drains the device's resources.
+
+If the SceneGraph has static entities, or entities that are allowed to come to a rest, constantly rendering at 60fps would be wasteful.
+In those cases, we can opt into on-demand rendering, which will only render when necessary. All we have to do is to set `frameloop="demand"` on the `<ngt-canvas>`
+
+```html
+<ngt-canvas frameloop="demand" />
+```
+
+:::info
+
+Check out [TBD: Color Grading Stackblitz example](#) to see on-demand rendering in action.
+
+:::

@@ -1,0 +1,87 @@
+---
+id: compound
+title: Compound Component
+sidebar_label: Compound Component
+---
+
+Compound Component is a component that wraps at least one THREE.js entity in its template and all Inputs will be forwarded to that THREE.js entity.
+
+There are two steps to create a Compound component
+
+-   Ensure that NGT Custom Renderer recognizes the Compound Component's selector as a `compound`. We can use `[compoundPrefixes]` Input on `<ngt-canvas>` to configure this
+-   Add `ngtCompound` attribute on the THREE.js entity that we want our Compound Component to wrap
+
+Suppose we have the following template
+
+```html
+<ngt-mesh>
+    <ngt-box-geometry *args="args" />
+    <ngt-mesh-basic-material />
+</ngt-mesh>
+
+<ngt-mesh>
+    <ngt-box-geometry *args="argsTwo" />
+    <ngt-mesh-standard-material />
+</ngt-mesh>
+```
+
+We notice that we keep using `<ngt-mesh>` and `<ngt-box-geometry>`. This is a good candidate to make into a Compound Component. In this case,
+we'll make a `Box` component.
+
+```ts
+extend({ Mesh, BoxGeometry });
+
+@Component({
+    selector: 'tutorial-box',
+    standalone: true,
+    template: `
+        <ngt-mesh ngtCompound [ref]="boxRef">
+            <ngt-box-geometry *args="boxArgs" />
+            <ng-content />
+        </ngt-mesh>
+    `,
+    imports: [NgtArgs],
+})
+export class Box {
+    @Input() boxRef = injectNgtRef<Mesh>();
+    @Input() boxArgs: ConstructorParameters<typeof BoxGeometry> = [1, 1, 1];
+}
+
+@Component({
+    template: `<ngt-canvas [compoundPrefixes]="['tutorial']" />`,
+})
+export class SomeFeature {}
+```
+
+-   We use `<ngt-mesh>` and `<ngt-box-geometry>` with `<ng-content>`. This allows the consumers to pass in any Material, or other objects as children to our `<ngt-mesh>`
+
+    -   We use `ngtCompound` on the `<ngt-mesh>`. This lets NGT Custom Renderer knows that `Box` component will forward its Inputs to `<ngt-mesh>`
+        :::note
+
+        Inputs that are defined like `boxRef` and `boxArgs` will **not** get forwarded.
+
+        :::
+
+-   We `extend({Mesh, BoxGeometry})` to ensure that NGT Custom Renderer knows about `Mesh` and `BoxGeometry` if they consume `Box` component
+-   We let the NGT Custom Renderer knows that our `Box` component is a Compound Component by providing `['tutorial']` to `compoundPrefixes`
+
+Now that we have `Box`, we can consume it like following
+
+```html
+<tutorial-box>
+    <ngt-mesh-basic-material />
+</tutorial-box>
+
+<tutorial-box [position]="[2, 2, 2]">
+    <ngt-mesh-standard-material />
+</tutorial-box>
+
+<tutorial-box [position]="[-2, -2, -2]">
+    <ngt-mesh-standard-material />
+    <ngt-mesh>
+        <ngt-plane-geometry />
+    </ngt-mesh>
+</tutorial-box>
+```
+
+Check out [TBD: angular-three-soba](#) for more examples on Compound Components.
