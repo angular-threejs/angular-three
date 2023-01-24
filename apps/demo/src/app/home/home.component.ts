@@ -57,6 +57,7 @@ export class Autoplay {
         </a>
     `,
     imports: [Autoplay, NgFor, RouterLink],
+    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: { class: 'space-y-6 xl:space-y-10 relative block w-full h-full' },
 })
 export class DemoItem {
@@ -96,6 +97,7 @@ export class DemoList {
             </a>
         </p>
     `,
+    // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: { class: 'space-y-5 sm:space-y-4 md:max-w-xl lg:max-w-3xl xl:max-w-none block mb-4' },
 })
 export class Header {}
