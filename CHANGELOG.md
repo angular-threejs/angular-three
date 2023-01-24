@@ -1,5 +1,12 @@
 
 
+### [1.0.1](https://github.com/angular-threejs/angular-three/compare/1.0.0...1.0.1) (2023-01-24)
+
+
+### Bug Fixes
+
+* add nrwl/devkit to deps ([df526b2](https://github.com/angular-threejs/angular-three/commit/df526b2cb147a0c5798e2dbbf162eedc95391075))
+
 ## [1.0.0](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.11...1.0.0) (2023-01-24)
 
 
