@@ -1,5 +1,31 @@
 
 
+## [1.0.0](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.11...1.0.0) (2023-01-24)
+
+
+### Features
+
+* add nx plugin for ng add ([ba85e71](https://github.com/angular-threejs/angular-three/commit/ba85e7100c2c2ff28b8dc529467adb97c6090a15))
+* add portal ([baba2d8](https://github.com/angular-threejs/angular-three/commit/baba2d8d5d2e4fc143e2b6612be21b0119f17660))
+* expose make ([380a739](https://github.com/angular-threejs/angular-three/commit/380a73907a73377f263c89650dc37959f07738a9))
+
+
+### Bug Fixes
+
+* adjust how children of portal store gets the portalStore instance ([04fffae](https://github.com/angular-threejs/angular-three/commit/04fffaebcf17f0252bed372f7e238e4daef6e5d6))
+* allow prepare to accept a synchronous function to calculate the instance ([cdf0637](https://github.com/angular-threejs/angular-three/commit/cdf0637228b03b4b6dd64e724f55b40c501a0c83))
+* dedupe when adding new object to instance local state ([e2fb313](https://github.com/angular-threejs/angular-three/commit/e2fb313f79ba33b0320dd538ad31ed8fce6e05ac))
+* primitive element should not dispose underlying object ([a091aca](https://github.com/angular-threejs/angular-three/commit/a091acadb7e3a40d7e522639c97423720665f0db))
+
+
+### Documentations
+
+* add some advanced topics ([513c9da](https://github.com/angular-threejs/angular-three/commit/513c9dab4ae085d7647a72e623a361d260331b61))
+* add view-cube to showcase portal ([3db1aeb](https://github.com/angular-threejs/angular-three/commit/3db1aeb5c9496752a050fa3ed66209da6619d452))
+* finish current API ([c8c3079](https://github.com/angular-threejs/angular-three/commit/c8c3079fde314a4638a718dcfa2e77a46209bd61))
+* setup documentation for deploy ([8a2e2e5](https://github.com/angular-threejs/angular-three/commit/8a2e2e5cd32f4f8c2d9a5b6d4dc93e02717a1aa0))
+* update angular three readme ([6e7e365](https://github.com/angular-threejs/angular-three/commit/6e7e3659df8dd1a92cdb8fc765be998d4f1e1514))
+
 ## [1.0.0-beta.11](https://github.com/angular-threejs/angular-three/compare/1.0.0-beta.10...1.0.0-beta.11) (2023-01-23)
 
 
