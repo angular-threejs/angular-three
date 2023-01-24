@@ -75,7 +75,7 @@ export class AppComponent {
 `ngt-canvas` sets up the following:
 
 -   A `WebGLRenderer`, a default `Scene`, and a default `PerspectiveCamera`
--   A render loop that renders our scene evere frame outside of Angular Zone
+-   A render loop that renders our scene evere frame outside of Change Detection
 -   A `window:resize` listener that updates our Renderer and Camera when the viewport is resized
 
 `ngt-canvas` renders the `SceneGraph` input in a _detached_ environment from Angular Change Detection. It also provides the custom Angular Renderer
@@ -438,7 +438,7 @@ Familiar, right? This is one of the goals of NGT. Interact with the cube now and
 
 -   `(click)`, `(pointerover)`, and `(pointerout)` look like DOM events but they are not. These events are named as such
     to give a sense of familiarity to Angular developers.
--   These events get back into Angular Zone so we can update states (eg: `hovered` and `active`). Normally, NGT runs outside of Angular Zone.
+-   These events automatically calls `changeDetectorRef.detectChanges` so we can update states (eg: `hovered` and `active`).
 
 Now that our cube is _interactive_ and _fun_, we can render another `demo-cube` to _double the fun_. But first, we need to add a `position` input
 so we can show both `Cube` in different positions on the Scene.
