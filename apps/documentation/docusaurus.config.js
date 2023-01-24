@@ -4,11 +4,13 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Angular Three',
     tagline: 'Custom Renderer for THREE.js',
-    url: 'https://angular-three.netlify.app',
+    url: 'https://angular-threejs.netlify.app',
     baseUrl: '/',
     onBrokenLinks: 'ignore',
     onBrokenMarkdownLinks: 'warn',
@@ -66,6 +68,11 @@ const config = {
                         docId: 'getting-started/introduction',
                         position: 'left',
                         label: 'Documentation',
+                    },
+                    {
+                        href: 'https://angular-threejs.netlify.app/demo',
+                        position: 'left',
+                        label: 'Demo',
                     },
                     // TODO  re-enable for blogs
                     // { to: '/blog', label: 'Blog', position: 'left' },
