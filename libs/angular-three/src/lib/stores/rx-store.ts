@@ -33,7 +33,7 @@ type EffectFn<TValue> = (
  * )
  * ```
  */
-function tapEffect<TValue>(effectFn: EffectFn<TValue>): MonoTypeOperatorFunction<TValue> {
+export function tapEffect<TValue>(effectFn: EffectFn<TValue>): MonoTypeOperatorFunction<TValue> {
     let cleanupFn: (cleanUpParams: { prev: TValue | undefined; complete: boolean; error: boolean }) => void = () => {};
     let firstRun = false;
     let prev: TValue | undefined = undefined;
