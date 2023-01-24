@@ -22,6 +22,7 @@ specifiers:
   '@nrwl/jest': 15.6.0
   '@nrwl/js': 15.6.0
   '@nrwl/linter': 15.6.0
+  '@nrwl/nx-cloud': ^15.0.2
   '@nrwl/nx-plugin': 15.6.0
   '@nrwl/workspace': 15.6.0
   '@release-it/bumper': ^4.0.2
@@ -94,6 +95,7 @@ devDependencies:
   '@nrwl/jest': 15.6.0_wpbrc6yjzkwa7mcnsf6anwhj3u
   '@nrwl/js': 15.6.0_zo526fhp2qykomw27qmhjjcoei
   '@nrwl/linter': 15.6.0_dnmhhapdlrsabfjqjnph4vmyie
+  '@nrwl/nx-cloud': 15.0.2
   '@nrwl/nx-plugin': 15.6.0_73nc5emuafs2t2gbr2qwgdg3nq
   '@nrwl/workspace': 15.6.0_snje4ixf45ca4toyptozme3x5u
   '@release-it/bumper': 4.0.2_release-it@15.6.0
@@ -3090,6 +3092,22 @@ packages:
       - typescript
     dev: true
 
+  /@nrwl/nx-cloud/15.0.2:
+    resolution: {integrity: sha512-DaTASuXmGyQHMxJuK6y3f7fs+Q0qQCfYDIDVGK9muNwN/QItLeWdRNltLQxbrBeS112kQTu2FPsr0DmRD60+0A==}
+    hasBin: true
+    dependencies:
+      axios: 0.21.4
+      chalk: 4.1.0
+      dotenv: 10.0.0
+      fs-extra: 10.1.0
+      node-machine-id: 1.1.12
+      strip-json-comments: 3.1.1
+      tar: 6.1.11
+      yargs-parser: 21.1.1
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /@nrwl/nx-plugin/15.6.0_73nc5emuafs2t2gbr2qwgdg3nq:
     resolution: {integrity: sha512-uzzz9IzEbLBn9vj3stt5Au9lDFH67mqIqYcEdumuUjL8nj+OpiDAdoVC4UepOaZqChkVPhw9zWNF25l0+uFNrQ==}
     dependencies:
@@ -4740,6 +4758,14 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
+  /axios/0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /axios/1.2.3:
     resolution: {integrity: sha512-pdDkMYJeuXLZ6Xj/Q5J3Phpe+jbGdsSzlQaFVkMQzRUL05+6+tetX8TV3p4HrU4kzuO9bt+io/yGQxuyxA/xcw==}
     dependencies:
@@ -5301,6 +5327,14 @@ packages:
       ansi-styles: 3.2.1
       escape-string-regexp: 1.0.5
       supports-color: 5.5.0
+    dev: true
+
+  /chalk/4.1.0:
+    resolution: {integrity: sha512-qwx12AxXe2Q5xQ43Ac//I6v5aXTipYrSESdOgzrN+9XjgEpyjpKuvSGaN4qE93f7TQTlerQQ8S+EQ0EyDoVL1A==}
+    engines: {node: '>=10'}
+    dependencies:
+      ansi-styles: 4.3.0
+      supports-color: 7.2.0
     dev: true
 
   /chalk/4.1.2:
@@ -10466,6 +10500,10 @@ packages:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
     dev: true
 
+  /node-machine-id/1.1.12:
+    resolution: {integrity: sha512-QNABxbrPa3qEIfrE6GOJ7BYIuignnJw7iQ2YPbc3Nla1HzRJjXzZOiikfF8m7eAMfichLt3M4VgLOetqgDmgGQ==}
+    dev: true
+
   /node-releases/2.0.8:
     resolution: {integrity: sha512-dFSmB8fFHEH/s81Xi+Y/15DQY6VHW81nXRj86EMSL3lmuTmK1e+aT4wrFCkTbm+gSwkw4KpX+rT/pMM2c1mF+A==}
     dev: true
@@ -13415,6 +13453,18 @@ packages:
       fs-constants: 1.0.0
       inherits: 2.0.4
       readable-stream: 3.6.0
+    dev: true
+
+  /tar/6.1.11:
+    resolution: {integrity: sha512-an/KZQzQUkZCkuoAA64hM92X0Urb6VpRhAFllDzz44U2mcD5scmT3zBc4VgVpkugF580+DQn8eAFSyoQt0tznA==}
+    engines: {node: '>= 10'}
+    dependencies:
+      chownr: 2.0.0
+      fs-minipass: 2.1.0
+      minipass: 3.3.6
+      minizlib: 2.1.2
+      mkdirp: 1.0.4
+      yallist: 4.0.0
     dev: true
 
   /tar/6.1.13:
