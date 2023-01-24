@@ -1,5 +1,20 @@
 
 
+### [1.0.2](https://github.com/angular-threejs/angular-three/compare/1.0.1...1.0.2) (2023-01-24)
+
+
+### Bug Fixes
+
+* expose tapEffect ([b69f7c2](https://github.com/angular-threejs/angular-three/commit/b69f7c2eccab538fd3d99b97cf0eefb30e32ff28))
+
+
+### Documentations
+
+* add demo link ([ab10fe0](https://github.com/angular-threejs/angular-three/commit/ab10fe04ca66ff08463a15c10d0f8954b7828226))
+* adjust documentations and fill out some TBD that can be filled ([e98b040](https://github.com/angular-threejs/angular-three/commit/e98b040b9fec01076bd6a25f4714e24c5e7a05c9))
+* disable eslint on host metadata ([1187a54](https://github.com/angular-threejs/angular-three/commit/1187a54c7eddaf5fdbfde1ca79b844352cf0b073))
+* get docs home page in ([dd043f7](https://github.com/angular-threejs/angular-three/commit/dd043f76f94d1ba9b476cdeddc3f11ce69edabb3))
+
 ### [1.0.1](https://github.com/angular-threejs/angular-three/compare/1.0.0...1.0.1) (2023-01-24)
 
 
