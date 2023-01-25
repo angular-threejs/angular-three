@@ -41,7 +41,9 @@ export class Cube {
     template: `
         <ngt-color *args="['#BFD1E5']" attach="background" />
 
-        <ngt-ambient-light [intensity]="0.5" />
+        <ngt-ambient-light>
+            <ngt-value rawValue="0.5" attach="intensity" />
+        </ngt-ambient-light>
         <ngt-spot-light [intensity]="0.5" [position]="10" [angle]="0.15" [penumbra]="1" />
         <ngt-point-light [intensity]="0.5" [position]="-10" />
 

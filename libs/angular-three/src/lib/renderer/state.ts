@@ -186,8 +186,6 @@ export class NgtRendererStore {
         }
 
         if (name === SPECIAL_PROPERTIES.VALUE) {
-            // TODO  the last time we tried this here, this didn't work
-
             // coercion
             let maybeCoerced: any = value;
             if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
