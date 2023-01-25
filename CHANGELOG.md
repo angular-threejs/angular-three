@@ -1,5 +1,12 @@
 
 
+## [1.1.0](https://github.com/angular-threejs/angular-three/compare/1.0.2...1.1.0) (2023-01-25)
+
+
+### Features
+
+* confirm rawValue to work as attribute binding ([b133670](https://github.com/angular-threejs/angular-three/commit/b13367073a2dc1494b430fb1da6201bf2f02bcdd))
+
 ### [1.0.2](https://github.com/angular-threejs/angular-three/compare/1.0.1...1.0.2) (2023-01-24)
 
 
