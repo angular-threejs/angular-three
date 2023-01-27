@@ -121,7 +121,7 @@ export class NgtRenderer implements Renderer2 {
         this.store.setParent(newChild, parent);
         this.store.addChild(parent, newChild);
 
-        // if new chlid is a portal
+        // if new child is a portal
         if (newChild.__ngt_renderer__[NgtRendererClassId.type] === 'portal') {
             this.store.processPortalContainer(newChild);
             if (newChild.__ngt_renderer__[NgtRendererClassId.portalContainer]) {

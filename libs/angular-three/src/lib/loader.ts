@@ -57,9 +57,7 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
         map((inputs) => {
             const loaderConstructor = loaderConstructorFactory(inputs);
             const loader = new loaderConstructor();
-            if (extensions) {
-                extensions(loader);
-            }
+            if (extensions) extensions(loader);
             const urls = Array.isArray(inputs) ? inputs : typeof inputs === 'string' ? [inputs] : Object.values(inputs);
             return [
                 urls.map((url) => {
@@ -68,21 +66,14 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
                             url,
                             from(loader.loadAsync(url, onProgress)).pipe(
                                 tap((data) => {
-                                    if (data.scene) {
-                                        Object.assign(data, makeObjectGraph(data.scene));
-                                    }
+                                    if (data.scene) Object.assign(data, makeObjectGraph(data.scene));
                                 }),
                                 retry(2),
                                 catchError((err) => {
                                     console.error(`[NGT] Error loading ${url}: ${err.message}`);
                                     return of([]);
                                 }),
-                                share({
-                                    connector: () => new ReplaySubject(1),
-                                    resetOnComplete: true,
-                                    resetOnError: true,
-                                    resetOnRefCountZero: true,
-                                })
+                                share({ connector: () => new ReplaySubject(1) })
                             )
                         );
                     }

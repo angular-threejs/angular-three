@@ -19,7 +19,6 @@ export function injectNgtDestroy(cb?: () => void): { destroy$: Observable<void>;
 
         return { destroy$, cdr };
     } catch (e) {
-        console.warn(`[NGT] injectNgtDestroy is being called outside of Constructor Context`);
-        return {} as ReturnType<typeof injectNgtDestroy>;
+        throw new Error(`[NGT] injectNgtDestroy is being called outside of Constructor Context`);
     }
 }

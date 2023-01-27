@@ -165,9 +165,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         rootStateMap.set(this.glCanvas.nativeElement, this.store);
 
         // subscribe to store to listen for ready state
-        this.hold(this.store.select('ready').pipe(filter((ready) => ready)), () => {
-            this.storeReady();
-        });
+        this.hold(this.store.select('ready').pipe(filter((ready) => ready)), () => this.storeReady());
     }
 
     onResize({ width, height }: NgxResizeResult) {
@@ -207,9 +205,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         }
 
         // render
-        if (this.glRef) {
-            this.glRef.destroy();
-        }
+        if (this.glRef) this.glRef.destroy();
 
         requestAnimationFrame(() => {
             this.glEnvInjector = createEnvironmentInjector(
@@ -234,12 +230,8 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
     }
 
     override ngOnDestroy() {
-        if (this.glRef) {
-            this.glRef.destroy();
-        }
-        if (this.glEnvInjector) {
-            this.glEnvInjector.destroy();
-        }
+        if (this.glRef) this.glRef.destroy();
+        if (this.glEnvInjector) this.glEnvInjector.destroy();
         injectNgtLoader.destroy();
         super.ngOnDestroy();
     }

@@ -39,7 +39,7 @@ export class NgtPush<T> implements PipeTransform, OnDestroy {
         return this.latestValue as T;
     }
 
-    updateValue(val: T) {
+    private updateValue(val: T) {
         this.latestValue = val;
         this.cdr.detectChanges();
         if (this.parentCdr) {

@@ -30,13 +30,10 @@ export type NgtInjectedRef<T> = ElementRef<T> & {
 };
 
 export function injectNgtRef<T>(initialValue: NgtInjectedRef<T> | (T | null) = null): NgtInjectedRef<T> {
-    let ref = new ElementRef<T>(initialValue as T);
-
-    if (is.ref(initialValue)) {
-        ref = initialValue;
-    }
+    const ref = is.ref(initialValue) ? initialValue : new ElementRef<T>(initialValue as T);
 
     let lastValue = ref.nativeElement;
+
     const cdRefs = [] as ChangeDetectorRef[];
     const ref$ = new BehaviorSubject<T>(lastValue);
 
@@ -104,7 +101,7 @@ export function injectNgtRef<T>(initialValue: NgtInjectedRef<T> | (T | null) = n
                     }
                     // during creation phase, 'context' on ViewRef will be null
                     // we check the "context" to avoid running detectChanges during this phase.
-                    // becuase there's nothing to check
+                    // because there's nothing to check
                     if ((cd as NgtAnyRecord)['context']) {
                         cd.detectChanges();
                     }

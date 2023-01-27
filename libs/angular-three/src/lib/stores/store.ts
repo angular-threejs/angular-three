@@ -64,15 +64,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
                 const fov = (camera.fov * Math.PI) / 180; // convert vertical fov to radians
                 const h = 2 * Math.tan(fov / 2) * distance; // visible height
                 const w = h * aspect;
-                return {
-                    width: w,
-                    height: h,
-                    top,
-                    left,
-                    factor: width / w,
-                    distance,
-                    aspect,
-                };
+                return { width: w, height: h, top, left, factor: width / w, distance, aspect };
             };
 
             const pointer = new THREE.Vector2();
@@ -287,9 +279,8 @@ export class NgtStore extends NgtRxStore<NgtState> {
                 camera.updateProjectionMatrix();
             }
 
-            if (!is.instance(camera)) {
-                camera = prepare(camera, { store: this });
-            }
+            if (!is.instance(camera)) camera = prepare(camera, { store: this });
+
             stateToUpdate.camera = camera;
         }
 
@@ -370,9 +361,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
         }
 
         // Store events internally
-        if (events && !state.events.handlers) {
-            stateToUpdate.events = events(this);
-        }
+        if (events && !state.events.handlers) stateToUpdate.events = events(this);
 
         // Check performance
         if (performance && !is.equ(performance, state.performance, shallowLoose)) {
@@ -390,9 +379,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
         // Check frameloop
         if (state.frameloop !== frameloop) state.setFrameloop(frameloop);
 
-        if (!this.get('ready')) {
-            this.set({ ready: true });
-        }
+        if (!this.get('ready')) this.set({ ready: true });
 
         this.invalidate();
     }

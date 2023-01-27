@@ -47,9 +47,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
                 targetProp.constructor.name === value.constructor.name
             ) {
                 targetProp['copy'](value);
-                if (!THREE.ColorManagement && !rootState.linear && isColor) {
-                    targetProp['convertSRGBToLinear']();
-                }
+                if (!THREE.ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
             }
             // if nothing else fits, just set the single value, ignore undefined
             else if (value !== undefined) {
@@ -57,18 +55,13 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
                 // allow setting array scalars
                 if (!isColor && targetProp['setScalar']) targetProp['setScalar'](value);
                 // layers have no copy function, copy the mask
-                else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) {
+                else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers)
                     targetProp.mask = value.mask;
-                }
                 // otherwise just set ...
-                else {
-                    targetProp['set'](value);
-                }
+                else targetProp['set'](value);
 
                 // auto-convert srgb
-                if (!THREE.ColorManagement && !rootState?.linear && isColor) {
-                    targetProp.convertSRGBToLinear();
-                }
+                if (!THREE.ColorManagement && !rootState?.linear && isColor) targetProp.convertSRGBToLinear();
             }
         }
         // else just overwrite the value

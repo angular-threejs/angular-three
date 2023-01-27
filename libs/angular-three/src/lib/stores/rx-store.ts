@@ -84,7 +84,7 @@ export class NgtRxStore<
         const originalSet = this.set.bind(this);
         Object.defineProperty(this, 'set', {
             get: () => {
-                // Parameters type does not do well with overloads. So we use any[] here
+                // Parameters type does not do well with overloads (RxState#set). So we use any[] here
                 return (...args: any[]) => {
                     const firstArg = args[0];
                     if (is.obj(firstArg)) {
@@ -94,7 +94,7 @@ export class NgtRxStore<
                         }, {} as NgtAnyRecord);
                         return originalSet(modArgs as Partial<TRxState>);
                     }
-                    // @ts-ignore
+                    // @ts-expect-error not sure why ...args here doesn't pass tuple check
                     return originalSet(...args);
                 };
             },
