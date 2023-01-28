@@ -1,5 +1,18 @@
 
 
+## [1.2.0](https://github.com/angular-threejs/angular-three/compare/1.1.0...1.2.0) (2023-01-28)
+
+
+### Features
+
+* adjust three peer dep version ([b7bede3](https://github.com/angular-threejs/angular-three/commit/b7bede3720f93fa852a35e8d4a3b8c3adc09937e))
+
+
+### Bug Fixes
+
+* adjust the codebase ([c7ace43](https://github.com/angular-threejs/angular-three/commit/c7ace436ad481203a096a6e436050dac3d4b7f4c))
+* clean up renderer ([332229c](https://github.com/angular-threejs/angular-three/commit/332229cc48050ac136f1cedc74620dd363ca14ac))
+
 ## [1.1.0](https://github.com/angular-threejs/angular-three/compare/1.0.2...1.1.0) (2023-01-25)
 
 
