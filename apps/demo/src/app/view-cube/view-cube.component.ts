@@ -1,12 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
 import {
     extend,
+    injectBeforeRender,
     NgtArgs,
     NgtCanvas,
     NgtPortal,
     NgtPortalContent,
     NgtPush,
-    NgtRenderState,
     NgtRepeat,
     NgtRxStore,
     NgtStore,
@@ -21,7 +21,7 @@ extend({ OrbitControls });
     selector: 'view-cube',
     standalone: true,
     template: `
-        <ngt-portal (beforeRender)="onBeforeRender($event.root)" [state]="{camera}">
+        <ngt-portal [state]="{camera}">
             <ng-template ngtPortalContent>
                 <ngt-mesh
                     #cube
@@ -64,11 +64,14 @@ export class ViewCube extends NgtRxStore {
 
     hovered = -1;
 
-    onBeforeRender({ camera }: NgtRenderState) {
-        if (this.cube?.nativeElement) {
-            this.matrix.copy(camera.matrix).invert();
-            this.cube.nativeElement.quaternion.setFromRotationMatrix(this.matrix);
-        }
+    constructor() {
+        super();
+        injectBeforeRender(({ camera }) => {
+            if (this.cube?.nativeElement) {
+                this.matrix.copy(camera.matrix).invert();
+                this.cube.nativeElement.quaternion.setFromRotationMatrix(this.matrix);
+            }
+        });
     }
 }
 
@@ -78,10 +81,14 @@ export class ViewCube extends NgtRxStore {
     template: `
         <ngt-ambient-light [intensity]="0.5" />
         <ngt-mesh [scale]="2">
-            <ngt-torus-geometry *args="[1, 0.25, 32, 100]" />
+            <ngt-torus-geometry *args="[1, 0.5, 32, 100]" />
             <ngt-mesh-normal-material />
         </ngt-mesh>
-        <ngt-orbit-controls *args="[camera, glDom]" [enableDamping]="true" />
+        <ngt-orbit-controls
+            *args="[camera, glDom]"
+            [enableDamping]="true"
+            (beforeRender)="$any($event).object.update()"
+        />
         <view-cube />
     `,
     imports: [ViewCube, NgtArgs],

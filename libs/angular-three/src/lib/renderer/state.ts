@@ -415,13 +415,19 @@ export class NgtRendererStore {
         return directive;
     }
 
-    tryGetPortalStore() {
+    private tryGetPortalStore() {
         let store: NgtStore | undefined;
         // we only care about the portal states because NgtStore only differs per Portal
         let i = this.portals.length - 1;
         while (i >= 0) {
             // loop through the portal state backwards to find the closest NgtStore
-            const injector = this.portals[i].__ngt_renderer__[NgtRendererClassId.injectorFactory]();
+            const portal = this.portals[i];
+            if (portal.__ngt_renderer__[NgtRendererClassId.destroyed]) {
+                i--;
+                continue;
+            }
+
+            const injector = portal.__ngt_renderer__[NgtRendererClassId.injectorFactory]();
             if (!injector) {
                 i--;
                 continue;
@@ -434,6 +440,6 @@ export class NgtRendererStore {
             }
             i--;
         }
-        return store || this.root.store;
+        return store || this.root!.store;
     }
 }

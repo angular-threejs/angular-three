@@ -5,6 +5,12 @@ Leverage your [Angular](https://angular.io) to build 3D applications with [THREE
 ## Installation
 
 ```shell
+npx ng add angular-three
+```
+
+or
+
+```shell
 npm i angular-three three
 ```
 

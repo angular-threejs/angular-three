@@ -17,21 +17,36 @@ export class NgtRendererFactory implements RendererFactory2 {
     private readonly catalogue = inject(NGT_CATALOGUE);
     private readonly compoundPrefixes = inject(NGT_COMPOUND_PREFIXES);
 
-    private readonly rendererStore = new NgtRendererStore({
-        store: this.store,
-        cdr: this.cdr,
-        compoundPrefixes: this.compoundPrefixes,
-    });
-
-    private renderer?: NgtRenderer;
+    private rendererMap = new Map<string, Renderer2>();
 
     createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
-        // TODO  we might need to check on "type" to return DomRenderer for that particular type to support HTML
-        if (!this.renderer) {
-            const domRenderer = this.domRendererFactory.createRenderer(hostElement, type);
-            this.renderer = new NgtRenderer(domRenderer, this.rendererStore, this.catalogue);
+        const domRenderer = this.domRendererFactory.createRenderer(hostElement, type);
+        if (!type) return domRenderer;
+
+        let renderer = this.rendererMap.get(type.id);
+        if (renderer) return renderer;
+
+        if (!hostElement) {
+            const store = new NgtRendererStore({
+                store: this.store,
+                cdr: this.cdr,
+                compoundPrefixes: this.compoundPrefixes,
+            });
+            renderer = new NgtRenderer(domRenderer, store, this.catalogue, true);
+            this.rendererMap.set(type.id, renderer);
         }
-        return this.renderer;
+
+        if (!renderer) {
+            const store = new NgtRendererStore({
+                store: this.store,
+                cdr: this.cdr,
+                compoundPrefixes: this.compoundPrefixes,
+            });
+            renderer = new NgtRenderer(domRenderer, store, this.catalogue);
+            this.rendererMap.set(type.id, renderer);
+        }
+
+        return renderer;
     }
 }
 
@@ -41,14 +56,15 @@ export class NgtRenderer implements Renderer2 {
     constructor(
         private readonly domRenderer: Renderer2,
         private readonly store: NgtRendererStore,
-        private readonly catalogue: Record<string, new (...args: any[]) => any>
+        private readonly catalogue: Record<string, new (...args: any[]) => any>,
+        private readonly root = false
     ) {}
 
     createElement(name: string, namespace?: string | null | undefined) {
         const element = this.domRenderer.createElement(name, namespace);
 
         // on first pass, we return the Root Scene as the root node
-        if (!this.first) {
+        if (this.root && !this.first) {
             this.first = true;
             return this.store.createNode('three', this.store.rootScene);
         }
@@ -191,19 +207,15 @@ export class NgtRenderer implements Renderer2 {
             }
         }
 
-        if (newChild.__ngt_renderer__[NgtRendererClassId.type] === 'three' && !getLocalState(newChild).parent) {
-            // we'll try to get the grandparent instance here so that we can run appendChild with both instances
-            const closestGrandparentInstance = this.store.getClosestParentWithInstance(parent);
-            if (closestGrandparentInstance) {
-                this.appendChild(closestGrandparentInstance, newChild);
-            }
-            return;
-        }
+        const shouldFindGrandparentInstance =
+            // if child is three but haven't been attached to a parent yet
+            (newChild.__ngt_renderer__[NgtRendererClassId.type] === 'three' && !getLocalState(newChild).parent) ||
+            // or both parent and child are DOM elements
+            (parent.__ngt_renderer__[NgtRendererClassId.type] === 'dom' &&
+                newChild.__ngt_renderer__[NgtRendererClassId.type] === 'dom');
 
-        if (
-            parent.__ngt_renderer__[NgtRendererClassId.type] === 'dom' &&
-            newChild.__ngt_renderer__[NgtRendererClassId.type] === 'dom'
-        ) {
+        if (shouldFindGrandparentInstance) {
+            // we'll try to get the grandparent instance here so that we can run appendChild with both instances
             const closestGrandparentInstance = this.store.getClosestParentWithInstance(parent);
             if (closestGrandparentInstance) {
                 this.appendChild(closestGrandparentInstance, newChild);
@@ -215,7 +227,7 @@ export class NgtRenderer implements Renderer2 {
         parent: NgtRendererNode,
         newChild: NgtRendererNode
         // TODO  we might need these?
-        // refChild: NgtRendererNode,
+        // refChild: NgtRendererNode
         // isMove?: boolean | undefined
     ): void {
         if (!parent.__ngt_renderer__) return;

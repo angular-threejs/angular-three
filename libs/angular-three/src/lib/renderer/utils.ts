@@ -39,7 +39,8 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
     let added = false;
 
     // assign store on child if not already exist
-    if (!cLS.store) {
+    // or child store is the parent of parent store
+    if (!cLS.store || cLS.store === pLS.store.get('previousStore')) {
         cLS.store = pLS.store;
     }
 

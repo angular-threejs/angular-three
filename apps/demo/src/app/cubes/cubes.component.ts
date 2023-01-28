@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input } from '@angular/core';
-import { extend, NgtArgs, NgtBeforeRenderEvent, NgtCanvas, NgtStore } from 'angular-three';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, ViewChild } from '@angular/core';
+import { extend, injectBeforeRender, NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 
@@ -10,11 +10,11 @@ extend({ OrbitControls });
     standalone: true,
     template: `
         <ngt-mesh
+            #mesh
             (click)="active = !active"
             (pointerover)="hover = true"
             (pointerout)="hover = false"
             [scale]="active ? 1.5 : 1"
-            (beforeRender)="onBeforeRender($any($event))"
             [position]="position"
         >
             <ngt-box-geometry />
@@ -29,9 +29,17 @@ export class Cube {
     active = false;
     hover = false;
 
-    onBeforeRender({ object }: NgtBeforeRenderEvent<THREE.Mesh>) {
-        object.rotation.x += 0.01;
-        object.rotation.y += 0.01;
+    @ViewChild('mesh', { static: true }) mesh!: ElementRef<THREE.Mesh>;
+
+    constructor() {
+        injectBeforeRender(() => {
+            const object = this.mesh.nativeElement;
+            if (object) {
+                object.rotation.x += 0.01;
+                object.rotation.y += 0.01;
+                object.rotation.z += 0.01;
+            }
+        });
     }
 }
 
@@ -39,11 +47,9 @@ export class Cube {
     selector: 'demo-cubes-scene',
     standalone: true,
     template: `
-        <ngt-color *args="['#BFD1E5']" attach="background" />
+        <ngt-color *args="['skyblue']" attach="background" />
 
-        <ngt-ambient-light>
-            <ngt-value rawValue="0.5" attach="intensity" />
-        </ngt-ambient-light>
+        <ngt-ambient-light [intensity]="0.5" />
         <ngt-spot-light [intensity]="0.5" [position]="10" [angle]="0.15" [penumbra]="1" />
         <ngt-point-light [intensity]="0.5" [position]="-10" />
 
