@@ -39,4 +39,13 @@ export const routes: Routes = [
             asset: 'assets/demo/animation-keyframes',
         },
     },
+    {
+        path: 'animation-skinning-ik',
+        loadComponent: () => import('./animation-skinning-ik/animation-skinning-ik.component'),
+        data: {
+            description: 'Three.js animation with CCDIKSolver',
+            link: '/animation-skinning-ik',
+            asset: 'assets/demo/animation-skinning-ik',
+        },
+    },
 ];

@@ -11,6 +11,7 @@ export * from './lib/portal';
 export * from './lib/stores/rx-store';
 export * from './lib/stores/store';
 export * from './lib/types';
+export * from './lib/utils/apply-props';
 export { createAttachFunction } from './lib/utils/attach';
 export * from './lib/utils/instance';
 export * from './lib/utils/is';
