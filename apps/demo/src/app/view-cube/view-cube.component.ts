@@ -12,6 +12,7 @@ import {
     prepare,
 } from 'angular-three';
 import * as THREE from 'three';
+import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
 
 @Component({
     selector: 'view-cube',
@@ -80,14 +81,10 @@ export class ViewCube extends NgtRxStore {
             <ngt-torus-geometry *args="[1, 0.5, 32, 100]" />
             <ngt-mesh-normal-material />
         </ngt-mesh>
-        <ngt-orbit-controls
-            *args="[camera, glDom]"
-            [enableDamping]="true"
-            (beforeRender)="$any($event).object.update()"
-        />
+        <demo-orbit-controls />
         <view-cube />
     `,
-    imports: [ViewCube, NgtArgs],
+    imports: [ViewCube, NgtArgs, DemoOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {

@@ -30,4 +30,13 @@ export const routes: Routes = [
             asset: 'assets/demo/vertex-colors-instances',
         },
     },
+    {
+        path: 'animation-keyframes',
+        loadComponent: () => import('./animation-keyframes/animation-keyframes.component'),
+        data: {
+            description: 'Three.js WebGL animation with keyframes',
+            link: '/animation-keyframes',
+            asset: 'assets/demo/animation-keyframes',
+        },
+    },
 ];

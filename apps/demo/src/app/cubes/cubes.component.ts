@@ -1,6 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { injectBeforeRender, NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
 import * as THREE from 'three';
+import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
 
 @Component({
     selector: 'demo-cube',
@@ -53,13 +54,9 @@ export class Cube {
         <demo-cube [position]="[1.5, 0, 0]" />
         <demo-cube [position]="[-1.5, 0, 0]" />
 
-        <ngt-orbit-controls
-            *args="[camera, glDom]"
-            [enableDamping]="true"
-            (beforeRender)="$any($event).object.update()"
-        />
+        <demo-orbit-controls />
     `,
-    imports: [NgtArgs, Cube],
+    imports: [NgtArgs, Cube, DemoOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {

@@ -3,6 +3,7 @@ import { NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
 // @ts-expect-error no type def for nice-color-palettes
 import niceColors from 'nice-color-palettes';
 import * as THREE from 'three';
+import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
 const niceColor = niceColors[Math.floor(Math.random() * niceColors.length)];
 
 @Component({
@@ -53,14 +54,9 @@ export class ColorsInstances {
         <ngt-ambient-light />
         <ngt-directional-light [intensity]="0.55" [position]="150" />
         <demo-colors-instances />
-        <ngt-orbit-controls
-            *args="[camera, glDom]"
-            [enableDamping]="true"
-            [autoRotate]="true"
-            (beforeRender)="$any($event).object.update()"
-        />
+        <demo-orbit-controls [autoRotate]="true" />
     `,
-    imports: [NgtArgs, ColorsInstances],
+    imports: [NgtArgs, ColorsInstances, DemoOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
