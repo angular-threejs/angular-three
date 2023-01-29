@@ -1,5 +1,18 @@
 
 
+### [1.2.1](https://github.com/angular-threejs/angular-three/compare/1.2.0...1.2.1) (2023-01-29)
+
+
+### Bug Fixes
+
+* adjust type of ngtloader ([2e99442](https://github.com/angular-threejs/angular-three/commit/2e994425552f21a3def0bd322f6564b524fbe78e))
+
+
+### Documentations
+
+* add vertex colors instances ([7eff3e2](https://github.com/angular-threejs/angular-three/commit/7eff3e2282ddbb1de93bb43be8cd5d498fe1cd00))
+* add webgl animation keyframes ([fdb6b03](https://github.com/angular-threejs/angular-three/commit/fdb6b0356f17113c36da95dae8917f48ace6de0a))
+
 ## [1.2.0](https://github.com/angular-threejs/angular-three/compare/1.1.0...1.2.0) (2023-01-28)
 
 
