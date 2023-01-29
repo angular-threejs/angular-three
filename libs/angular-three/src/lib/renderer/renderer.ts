@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, inject, Injectable, Renderer2, RendererFactory2, RendererType2 } from '@angular/core';
-import { ɵDomRendererFactory2 as DomRendererFactory2 } from '@angular/platform-browser';
 import { NGT_CATALOGUE } from '../di/catalogue';
 import { NgtStore } from '../stores/store';
 import { getLocalState, prepare } from '../utils/instance';
@@ -11,7 +10,7 @@ import { attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild, S
 
 @Injectable()
 export class NgtRendererFactory implements RendererFactory2 {
-    private readonly domRendererFactory = inject(DomRendererFactory2);
+    private readonly delegateRendererFactory = inject(RendererFactory2, { skipSelf: true });
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly store = inject(NgtStore);
     private readonly catalogue = inject(NGT_CATALOGUE);
@@ -20,8 +19,8 @@ export class NgtRendererFactory implements RendererFactory2 {
     private rendererMap = new Map<string, Renderer2>();
 
     createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
-        const domRenderer = this.domRendererFactory.createRenderer(hostElement, type);
-        if (!type) return domRenderer;
+        const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
+        if (!type) return delegateRenderer;
 
         let renderer = this.rendererMap.get(type.id);
         if (renderer) return renderer;
@@ -32,7 +31,7 @@ export class NgtRendererFactory implements RendererFactory2 {
                 cdr: this.cdr,
                 compoundPrefixes: this.compoundPrefixes,
             });
-            renderer = new NgtRenderer(domRenderer, store, this.catalogue, true);
+            renderer = new NgtRenderer(delegateRenderer, store, this.catalogue, true);
             this.rendererMap.set(type.id, renderer);
         }
 
@@ -42,7 +41,7 @@ export class NgtRendererFactory implements RendererFactory2 {
                 cdr: this.cdr,
                 compoundPrefixes: this.compoundPrefixes,
             });
-            renderer = new NgtRenderer(domRenderer, store, this.catalogue);
+            renderer = new NgtRenderer(delegateRenderer, store, this.catalogue);
             this.rendererMap.set(type.id, renderer);
         }
 
@@ -54,14 +53,14 @@ export class NgtRenderer implements Renderer2 {
     private first = false;
 
     constructor(
-        private readonly domRenderer: Renderer2,
+        private readonly delegate: Renderer2,
         private readonly store: NgtRendererStore,
         private readonly catalogue: Record<string, new (...args: any[]) => any>,
         private readonly root = false
     ) {}
 
     createElement(name: string, namespace?: string | null | undefined) {
-        const element = this.domRenderer.createElement(name, namespace);
+        const element = this.delegate.createElement(name, namespace);
 
         // on first pass, we return the Root Scene as the root node
         if (this.root && !this.first) {
@@ -121,7 +120,7 @@ export class NgtRenderer implements Renderer2 {
     }
 
     createComment(value: string) {
-        const comment = this.domRenderer.createComment(value);
+        const comment = this.delegate.createComment(value);
         return this.store.createNode('comment', comment);
     }
 
@@ -266,7 +265,7 @@ export class NgtRenderer implements Renderer2 {
 
     parentNode(node: NgtRendererNode) {
         if (node.__ngt_renderer__?.[NgtRendererClassId.parent]) return node.__ngt_renderer__[NgtRendererClassId.parent];
-        return this.domRenderer.parentNode(node);
+        return this.delegate.parentNode(node);
     }
 
     setAttribute(el: NgtRendererNode, name: string, value: string, namespace?: string | null | undefined): void {
@@ -342,17 +341,17 @@ export class NgtRenderer implements Renderer2 {
     }
 
     get data(): { [key: string]: any } {
-        return this.domRenderer.data;
+        return this.delegate.data;
     }
-    createText = this.domRenderer.createText.bind(this.domRenderer);
-    destroy = this.domRenderer.destroy.bind(this.domRenderer);
+    createText = this.delegate.createText.bind(this.delegate);
+    destroy = this.delegate.destroy.bind(this.delegate);
     destroyNode: ((node: any) => void) | null = null;
-    selectRootElement = this.domRenderer.selectRootElement.bind(this.domRenderer);
-    nextSibling = this.domRenderer.nextSibling.bind(this.domRenderer);
-    removeAttribute = this.domRenderer.removeAttribute.bind(this.domRenderer);
-    addClass = this.domRenderer.addClass.bind(this.domRenderer);
-    removeClass = this.domRenderer.removeClass.bind(this.domRenderer);
-    setStyle = this.domRenderer.setStyle.bind(this.domRenderer);
-    removeStyle = this.domRenderer.removeStyle.bind(this.domRenderer);
-    setValue = this.domRenderer.setValue.bind(this.domRenderer);
+    selectRootElement = this.delegate.selectRootElement.bind(this.delegate);
+    nextSibling = this.delegate.nextSibling.bind(this.delegate);
+    removeAttribute = this.delegate.removeAttribute.bind(this.delegate);
+    addClass = this.delegate.addClass.bind(this.delegate);
+    removeClass = this.delegate.removeClass.bind(this.delegate);
+    setStyle = this.delegate.setStyle.bind(this.delegate);
+    removeStyle = this.delegate.removeStyle.bind(this.delegate);
+    setValue = this.delegate.setValue.bind(this.delegate);
 }

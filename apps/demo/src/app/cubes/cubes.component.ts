@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, ViewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, ViewChild } from '@angular/core';
+import { injectBeforeRender, NgtArgs, NgtCanvas } from 'angular-three';
 import * as THREE from 'three';
 import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
 
@@ -59,11 +59,7 @@ export class Cube {
     imports: [NgtArgs, Cube, DemoOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class Scene {
-    private readonly store = inject(NgtStore);
-    readonly camera = this.store.get('camera');
-    readonly glDom = this.store.get('gl', 'domElement');
-}
+export class Scene {}
 
 @Component({
     standalone: true,

@@ -20,14 +20,14 @@ import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
+    private readonly stats = Stats();
     private readonly gl = inject(NgtStore).get('gl');
     private readonly pmremGenerator = new THREE.PMREMGenerator(this.gl);
 
     readonly texture = this.pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
-    private readonly stats = Stats();
-
     private mixer?: THREE.AnimationMixer;
+
     readonly model$ = injectNgtLoader(
         () => GLTFLoader,
         'assets/LittlestTokyo.glb',

@@ -87,11 +87,7 @@ export class ViewCube extends NgtRxStore {
     imports: [ViewCube, NgtArgs, DemoOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class Scene {
-    private readonly store = inject(NgtStore);
-    readonly camera = this.store.get('camera');
-    readonly glDom = this.store.get('gl', 'domElement');
-}
+export class Scene {}
 
 @Component({
     selector: 'demo-view-cube',

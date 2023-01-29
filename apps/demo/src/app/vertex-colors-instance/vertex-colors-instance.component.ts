@@ -1,5 +1,5 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
-import { NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
+import { NgtArgs, NgtCanvas } from 'angular-three';
 // @ts-expect-error no type def for nice-color-palettes
 import niceColors from 'nice-color-palettes';
 import * as THREE from 'three';
@@ -59,11 +59,7 @@ export class ColorsInstances {
     imports: [NgtArgs, ColorsInstances, DemoOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class Scene {
-    private readonly store = inject(NgtStore);
-    readonly camera = this.store.get('camera');
-    readonly glDom = this.store.get('gl', 'domElement');
-}
+export class Scene {}
 
 @Component({
     standalone: true,
