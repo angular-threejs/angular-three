@@ -1,10 +1,11 @@
 import { NgIf } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
 import {
+    applyProps,
     extend,
+    injectBeforeRender,
     injectNgtLoader,
     NgtArgs,
-    NgtBeforeRenderEvent,
     NgtCanvas,
     NgtPush,
     NgtState,
@@ -12,73 +13,78 @@ import {
 } from 'angular-three';
 import { map } from 'rxjs';
 import * as THREE from 'three';
-import { CCDIKHelper, DRACOLoader, GLTFLoader, TransformControls } from 'three-stdlib';
+import { CCDIKHelper, CCDIKSolver, DRACOLoader, GLTFLoader, IKS, OrbitControls, TransformControls } from 'three-stdlib';
 import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
-import { AnimationSkinningIKStore } from './animation-skinning-ik.store';
 
 extend({ TransformControls, CCDIKHelper });
 
 @Component({
-    selector: 'demo-ik-helper',
     standalone: true,
     template: `
-        <ng-container *ngIf="(ooi$ | ngtPush).kira as kira">
-            <ngt-cCDIK-helper *args="[kira, iks, 0.01]" (beforeRender)="onBeforeRender()" />
+        <ngt-color *args="['#dddddd']" attach="background" />
+        <ngt-fog-exp2 *args="['#ffffff', 0.17]" attach="fog" />
+
+        <ngt-ambient-light [intensity]="8" color="#ffffff" />
+
+        <ngt-primitive *args="[model$ | ngtPush : null]" (afterAttach)="onAfterModelAttach()" />
+
+        <ngt-cube-camera #cubeCamera *args="[0.05, 50, cubeRenderTarget]" />
+
+        <ng-container *ngIf="ooi['kira']">
+            <ngt-cCDIK-helper *args="[ooi['kira'], iks, 0.01]" />
         </ng-container>
-    `,
-    imports: [NgtArgs, NgIf, NgtPush],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class IKHelper {
-    private readonly ikStore = inject(AnimationSkinningIKStore);
-    readonly iks = this.ikStore.iks;
-    readonly ooi$ = this.ikStore.select('OOI');
 
-    onBeforeRender() {
-        this.ikStore.solver.update();
-    }
-}
+        <demo-orbit-controls [minDistance]="0.2" [maxDistance]="1.5" (ready)="orbitControls = $any($event)" />
 
-@Component({
-    selector: 'demo-sphere-camera',
-    standalone: true,
-    template: `
-        <ngt-cube-camera *args="[0.05, 50, cubeRenderTarget]" (beforeRender)="onBeforeRender($any($event))" />
-    `,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SphereCamera {
-    private readonly ikStore = inject(AnimationSkinningIKStore);
-    readonly cubeRenderTarget = this.ikStore.get('cubeRenderTarget');
-
-    onBeforeRender({ object, state: { gl, scene } }: NgtBeforeRenderEvent<THREE.CubeCamera>) {
-        const sphere = this.ikStore.OOI.sphere;
-        if (sphere) {
-            sphere.visible = false;
-            sphere.getWorldPosition(object.position);
-            object.update(gl, scene);
-            sphere.visible = true;
-        }
-    }
-}
-
-@Component({
-    selector: 'demo-kira',
-    standalone: true,
-    template: `
-        <ngt-primitive
-            *args="[model$ | ngtPush : null]"
-            (afterAttach)="onAfterAttach()"
-            (beforeRender)="onBeforeRender()"
+        <ngt-transform-controls
+            #transformControls
+            *args="[camera, glDom]"
+            [size]="0.75"
+            [showX]="false"
+            space="world"
         />
     `,
-    imports: [NgtArgs, NgtPush],
+    imports: [NgtArgs, NgIf, DemoOrbitControls, NgtPush],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class Kira {
-    private readonly ikStore = inject(AnimationSkinningIKStore);
-    readonly v0 = new THREE.Vector3();
+export class Scene {
+    readonly iks = [
+        {
+            target: 22, // "target_hand_l"
+            effector: 6, // "hand_l"
+            links: [
+                {
+                    index: 5, // "lowerarm_l"
+                    enabled: true,
+                    rotationMin: new THREE.Vector3(1.2, -1.8, -0.4),
+                    rotationMax: new THREE.Vector3(1.7, -1.1, 0.3),
+                },
+                {
+                    index: 4, // "Upperarm_l"
+                    enabled: true,
+                    rotationMin: new THREE.Vector3(0.1, -0.7, -1.8),
+                    rotationMax: new THREE.Vector3(1.1, 0, -1.4),
+                },
+            ],
+        },
+    ];
+
+    readonly cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024);
+    readonly material = new THREE.MeshBasicMaterial({ envMap: this.cubeRenderTarget.texture });
+
+    private readonly store = inject(NgtStore);
+    readonly camera = this.store.get('camera');
+    readonly glDom = this.store.get('gl', 'domElement');
+
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    @ViewChild('transformControls') transformControls?: ElementRef<TransformControls>;
+    @ViewChild('cubeCamera') cubeCamera?: ElementRef<THREE.CubeCamera>;
+    orbitControls?: OrbitControls;
+    solver?: CCDIKSolver;
+
+    private readonly v0 = new THREE.Vector3();
+    readonly ooi: Record<string, THREE.Object3D> = {};
 
     readonly model$ = injectNgtLoader(
         () => GLTFLoader,
@@ -90,76 +96,63 @@ export class Kira {
         }
     ).pipe(
         map((gltf) => {
-            const ooi: Record<string, THREE.Object3D> = {};
             gltf.scene.traverse((n) => {
-                if (n.name === 'head') ooi['head'] = n;
-                if (n.name === 'lowerarm_l') ooi['lowerarm_l'] = n;
-                if (n.name === 'Upperarm_l') ooi['Upperarm_l'] = n;
-                if (n.name === 'hand_l') ooi['hand_l'] = n;
-                if (n.name === 'target_hand_l') ooi['target_hand_l'] = n;
-                if (n.name === 'boule') ooi['sphere'] = n;
-                if (n.name === 'Kira_Shirt_left') ooi['kira'] = n;
+                if (n.name === 'head') this.ooi['head'] = n;
+                if (n.name === 'lowerarm_l') this.ooi['lowerarm_l'] = n;
+                if (n.name === 'Upperarm_l') this.ooi['Upperarm_l'] = n;
+                if (n.name === 'hand_l') this.ooi['hand_l'] = n;
+                if (n.name === 'target_hand_l') this.ooi['target_hand_l'] = n;
+                if (n.name === 'boule') this.ooi['sphere'] = n;
+                if (n.name === 'Kira_Shirt_left') this.ooi['kira'] = n;
                 if ((n as THREE.Mesh).isMesh) n.frustumCulled = false;
             });
-            this.ikStore.set({ OOI: ooi });
+            this.cdr.detectChanges();
             return gltf.scene;
         })
     );
 
-    onAfterAttach() {
-        this.ikStore.kiraReady();
+    constructor() {
+        injectBeforeRender(({ gl, scene }) => {
+            if (this.ooi['sphere'] && this.cubeCamera) {
+                this.ooi['sphere'].visible = false;
+                this.ooi['sphere'].getWorldPosition(this.cubeCamera.nativeElement.position);
+                this.cubeCamera.nativeElement.update(gl, scene);
+                this.ooi['sphere'].visible = true;
+            }
+
+            if (this.solver) {
+                this.solver.update();
+            }
+
+            const head = this.ooi['head'];
+            const sphere = this.ooi['sphere'];
+            if (head && sphere) {
+                sphere.getWorldPosition(this.v0);
+                head.lookAt(this.v0);
+                head.rotation.set(head.rotation.x, head.rotation.y + Math.PI, head.rotation.z);
+            }
+        });
     }
 
-    onBeforeRender() {
-        const head = this.ikStore.OOI.head;
-        const sphere = this.ikStore.OOI.sphere;
-        if (head && sphere) {
-            sphere.getWorldPosition(this.v0);
-            head.lookAt(this.v0);
-            head.rotation.set(head.rotation.x, head.rotation.y + Math.PI, head.rotation.z);
+    onAfterModelAttach() {
+        this.orbitControls?.target.copy(this.ooi['sphere'].position);
+        this.ooi['hand_l'].attach(this.ooi['sphere']);
+        applyProps(this.ooi['sphere'], { material: this.material });
+
+        this.transformControls?.nativeElement.attach(this.ooi['target_hand_l']);
+        this.ooi['kira'].add((this.ooi['kira'] as THREE.SkinnedMesh).skeleton.bones[0]);
+        this.solver = new CCDIKSolver(this.ooi['kira'] as THREE.SkinnedMesh, this.iks as unknown as IKS[]);
+
+        if (this.transformControls && this.orbitControls) {
+            this.transformControls.nativeElement.addEventListener(
+                'mouseDown',
+                () => (this.orbitControls!.enabled = false)
+            );
+            this.transformControls.nativeElement.addEventListener(
+                'mouseUp',
+                () => (this.orbitControls!.enabled = true)
+            );
         }
-    }
-}
-
-@Component({
-    standalone: true,
-    template: `
-        <ngt-color *args="['#dddddd']" attach="background" />
-        <ngt-fog-exp2 *args="['#ffffff', 0.17]" attach="fog" />
-
-        <ngt-ambient-light [intensity]="8" color="#ffffff" />
-
-        <demo-kira />
-        <demo-sphere-camera />
-        <demo-ik-helper />
-
-        <demo-orbit-controls
-            [minDistance]="0.2"
-            [maxDistance]="1.5"
-            (ready)="ikStore.set({ orbitControls: $any($event) })"
-        />
-
-        <ngt-transform-controls
-            #transformControls
-            *args="[camera, glDom]"
-            [size]="0.75"
-            [showX]="false"
-            space="world"
-        />
-    `,
-    imports: [NgtArgs, DemoOrbitControls, Kira, SphereCamera, IKHelper],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class Scene {
-    readonly ikStore = inject(AnimationSkinningIKStore);
-    private readonly store = inject(NgtStore);
-    readonly camera = this.store.get('camera');
-    readonly glDom = this.store.get('gl', 'domElement');
-
-    @ViewChild('transformControls') set transformControls({ nativeElement }: ElementRef<TransformControls>) {
-        this.ikStore.set({ transformControls: nativeElement });
-        nativeElement.addEventListener('mouseDown', () => (this.ikStore.orbitControls.enabled = false));
-        nativeElement.addEventListener('mouseUp', () => (this.ikStore.orbitControls.enabled = true));
     }
 }
 
@@ -178,7 +171,6 @@ export class Scene {
             (created)="onCreated($event)"
         />
     `,
-    providers: [AnimationSkinningIKStore],
     imports: [NgtCanvas],
 })
 export default class DemoAnimationSkinningIK {
