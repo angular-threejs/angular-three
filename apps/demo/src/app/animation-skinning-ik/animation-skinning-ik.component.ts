@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
 import {
     applyProps,
     extend,
@@ -15,6 +15,8 @@ import { map } from 'rxjs';
 import * as THREE from 'three';
 import { CCDIKHelper, CCDIKSolver, DRACOLoader, GLTFLoader, IKS, OrbitControls, TransformControls } from 'three-stdlib';
 import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
+// @ts-expect-error
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
 const iks = [
     {
@@ -35,7 +37,7 @@ const iks = [
             },
         ],
     },
-];
+] as any satisfies IKS[];
 const v0 = new THREE.Vector3();
 
 extend({ TransformControls, CCDIKHelper });
@@ -46,36 +48,34 @@ extend({ TransformControls, CCDIKHelper });
         <ngt-color *args="['#dddddd']" attach="background" />
         <ngt-fog-exp2 *args="['#ffffff', 0.17]" attach="fog" />
         <ngt-ambient-light [intensity]="8" />
-        <ngt-primitive *args="[model$ | ngtPush : null]" (afterAttach)="onAfterModelAttach()" />
-        <ngt-cube-camera #cubeCamera *args="[0.05, 50, cubeRenderTarget]" />
-        <ng-container *ngIf="ooi['kira']">
-            <ngt-cCDIK-helper *args="[ooi['kira'], iks, 0.01]" />
+        <ngt-primitive *args="[model$ | ngtPush]" (afterAttach)="onAfterModelAttach()" />
+        <ngt-cube-camera #camera *args="[0.05, 50, cubeRenderTarget]" />
+        <ng-container *ngIf="ooi['kira'] as kira">
+            <ngt-cCDIK-helper *args="[kira, iks, 0.01]" />
         </ng-container>
         <demo-orbit-controls [minDistance]="0.2" [maxDistance]="1.5" (ready)="orbitControls = $any($event)" />
-        <ngt-transform-controls
-            #transformControls
-            *args="[store.get('camera'), store.get('gl', 'domElement')]"
-            [size]="0.75"
-            [showX]="false"
-            space="world"
-        />
+        <ngt-transform-controls #controls *args="[camera, glDom]" [size]="0.75" [showX]="false" space="world" />
     `,
     imports: [NgtArgs, NgIf, DemoOrbitControls, NgtPush],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
+    private readonly config = { followSphere: false, turnHead: true, ikSolver: true };
+    private readonly gui = new GUI();
+
     readonly iks = iks;
     readonly cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024);
 
-    private readonly cdr = inject(ChangeDetectorRef);
     readonly store = inject(NgtStore);
+    readonly camera = this.store.get('camera');
+    readonly glDom = this.store.get('gl', 'domElement');
 
-    @ViewChild('transformControls') transformControls?: ElementRef<TransformControls>;
-    @ViewChild('cubeCamera') cubeCamera?: ElementRef<THREE.CubeCamera>;
+    @ViewChild('controls') transformControls?: ElementRef<TransformControls>;
+    @ViewChild('camera') cubeCamera?: ElementRef<THREE.CubeCamera>;
     orbitControls?: OrbitControls;
     solver?: CCDIKSolver;
 
-    readonly ooi: Record<string, THREE.Object3D> = {};
+    readonly ooi: { sphere: THREE.Mesh; kira: THREE.SkinnedMesh; [key: string]: THREE.Object3D } = {} as any;
 
     readonly model$ = injectNgtLoader(
         () => GLTFLoader,
@@ -91,19 +91,22 @@ export class Scene {
                 if (n.name === 'head') this.ooi['head'] = n;
                 if (n.name === 'hand_l') this.ooi['hand_l'] = n;
                 if (n.name === 'target_hand_l') this.ooi['target_hand_l'] = n;
-                if (n.name === 'boule') this.ooi['sphere'] = n;
-                if (n.name === 'Kira_Shirt_left') this.ooi['kira'] = n;
+                if (n.name === 'boule') this.ooi.sphere = n as THREE.Mesh;
+                if (n.name === 'Kira_Shirt_left') this.ooi.kira = n as THREE.SkinnedMesh;
                 if ((n as THREE.Mesh).isMesh) n.frustumCulled = false;
             });
-            this.cdr.detectChanges();
             return gltf.scene;
         })
     );
 
     constructor() {
+        this.gui.add(this.config, 'followSphere').name('follow sphere');
+        this.gui.add(this.config, 'turnHead').name('turn head');
+        this.gui.add(this.config, 'ikSolver').name('IK Auto update');
+
         injectBeforeRender(({ gl, scene }) => {
             const head = this.ooi['head'];
-            const sphere = this.ooi['sphere'];
+            const sphere = this.ooi.sphere;
 
             if (sphere && this.cubeCamera) {
                 sphere.visible = false;
@@ -112,28 +115,30 @@ export class Scene {
                 sphere.visible = true;
             }
 
-            if (this.solver) {
-                this.solver.update();
+            if (sphere && this.config.followSphere) {
+                sphere.getWorldPosition(v0);
+                this.orbitControls?.target.lerp(v0, 0.1);
             }
 
-            if (head && sphere) {
+            if (head && sphere && this.config.turnHead) {
                 sphere.getWorldPosition(v0);
                 head.lookAt(v0);
                 head.rotation.set(head.rotation.x, head.rotation.y + Math.PI, head.rotation.z);
             }
+
+            if (this.config.ikSolver && this.solver) this.solver.update();
         });
     }
 
     onAfterModelAttach() {
-        this.orbitControls?.target.copy(this.ooi['sphere'].position);
-        this.ooi['hand_l'].attach(this.ooi['sphere']);
-        applyProps(this.ooi['sphere'], {
-            material: new THREE.MeshBasicMaterial({ envMap: this.cubeRenderTarget.texture }),
-        });
+        if (this.orbitControls) this.orbitControls.target.copy(this.ooi.sphere.position);
+        this.ooi['hand_l'].attach(this.ooi.sphere);
+        this.ooi.sphere.material = new THREE.MeshBasicMaterial({ envMap: this.cubeRenderTarget.texture });
 
-        this.transformControls?.nativeElement.attach(this.ooi['target_hand_l']);
-        this.ooi['kira'].add((this.ooi['kira'] as THREE.SkinnedMesh).skeleton.bones[0]);
-        this.solver = new CCDIKSolver(this.ooi['kira'] as THREE.SkinnedMesh, this.iks as unknown as IKS[]);
+        if (this.transformControls) this.transformControls.nativeElement.attach(this.ooi['target_hand_l']);
+
+        this.ooi.kira.add(this.ooi.kira.skeleton.bones[0]);
+        this.solver = new CCDIKSolver(this.ooi.kira, this.iks);
 
         if (this.transformControls && this.orbitControls) {
             this.transformControls.nativeElement.addEventListener(
@@ -145,6 +150,8 @@ export class Scene {
                 () => (this.orbitControls!.enabled = true)
             );
         }
+        this.gui.add(this.solver, 'update').name('IK Manual update()');
+        this.gui.open();
     }
 }
 
