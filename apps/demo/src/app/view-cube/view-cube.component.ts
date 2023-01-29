@@ -1,6 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
 import {
-    extend,
     injectBeforeRender,
     NgtArgs,
     NgtCanvas,
@@ -13,9 +12,6 @@ import {
     prepare,
 } from 'angular-three';
 import * as THREE from 'three';
-import { OrbitControls } from 'three-stdlib';
-
-extend({ OrbitControls });
 
 @Component({
     selector: 'view-cube',

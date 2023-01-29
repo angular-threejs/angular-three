@@ -1,9 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, ViewChild } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
+import { injectBeforeRender, NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
 import * as THREE from 'three';
-import { OrbitControls } from 'three-stdlib';
-
-extend({ OrbitControls });
 
 @Component({
     selector: 'demo-cube',

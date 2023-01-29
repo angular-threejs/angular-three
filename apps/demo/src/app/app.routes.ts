@@ -21,4 +21,13 @@ export const routes: Routes = [
             asset: 'assets/demo/view-cube',
         },
     },
+    {
+        path: 'vertex-colors-instance',
+        loadComponent: () => import('./vertex-colors-instance/vertex-colors-instance.component'),
+        data: {
+            description: 'Three.js vertex colors with instances',
+            link: '/vertex-colors-instance',
+            asset: 'assets/demo/vertex-colors-instances',
+        },
+    },
 ];
