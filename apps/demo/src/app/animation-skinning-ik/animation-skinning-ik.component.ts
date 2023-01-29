@@ -45,7 +45,7 @@ extend({ TransformControls, CCDIKHelper });
     template: `
         <ngt-color *args="['#dddddd']" attach="background" />
         <ngt-fog-exp2 *args="['#ffffff', 0.17]" attach="fog" />
-        <ngt-ambient-light [intensity]="8" color="#ffffff" />
+        <ngt-ambient-light [intensity]="8" />
         <ngt-primitive *args="[model$ | ngtPush : null]" (afterAttach)="onAfterModelAttach()" />
         <ngt-cube-camera #cubeCamera *args="[0.05, 50, cubeRenderTarget]" />
         <ng-container *ngIf="ooi['kira']">
@@ -153,6 +153,7 @@ export class Scene {
     template: `
         <ngt-canvas
             [sceneGraph]="SceneGraph"
+            [legacy]="true"
             [camera]="{
                 fov: 55,
                 near: 0.001,
@@ -169,7 +170,7 @@ export default class DemoAnimationSkinningIK {
     readonly SceneGraph = Scene;
 
     onCreated({ scene, camera, gl }: NgtState) {
+        applyProps(gl, { physicallyCorrectLights: true });
         camera.lookAt(scene.position);
-        gl.physicallyCorrectLights = true;
     }
 }
