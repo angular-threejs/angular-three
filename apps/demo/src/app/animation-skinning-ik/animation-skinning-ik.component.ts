@@ -16,6 +16,28 @@ import * as THREE from 'three';
 import { CCDIKHelper, CCDIKSolver, DRACOLoader, GLTFLoader, IKS, OrbitControls, TransformControls } from 'three-stdlib';
 import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component';
 
+const iks = [
+    {
+        target: 22, // "target_hand_l"
+        effector: 6, // "hand_l"
+        links: [
+            {
+                index: 5, // "lowerarm_l"
+                enabled: true,
+                rotationMin: new THREE.Vector3(1.2, -1.8, -0.4),
+                rotationMax: new THREE.Vector3(1.7, -1.1, 0.3),
+            },
+            {
+                index: 4, // "Upperarm_l"
+                enabled: true,
+                rotationMin: new THREE.Vector3(0.1, -0.7, -1.8),
+                rotationMax: new THREE.Vector3(1.1, 0, -1.4),
+            },
+        ],
+    },
+];
+const v0 = new THREE.Vector3();
+
 extend({ TransformControls, CCDIKHelper });
 
 @Component({
@@ -23,22 +45,16 @@ extend({ TransformControls, CCDIKHelper });
     template: `
         <ngt-color *args="['#dddddd']" attach="background" />
         <ngt-fog-exp2 *args="['#ffffff', 0.17]" attach="fog" />
-
         <ngt-ambient-light [intensity]="8" color="#ffffff" />
-
         <ngt-primitive *args="[model$ | ngtPush : null]" (afterAttach)="onAfterModelAttach()" />
-
         <ngt-cube-camera #cubeCamera *args="[0.05, 50, cubeRenderTarget]" />
-
         <ng-container *ngIf="ooi['kira']">
             <ngt-cCDIK-helper *args="[ooi['kira'], iks, 0.01]" />
         </ng-container>
-
         <demo-orbit-controls [minDistance]="0.2" [maxDistance]="1.5" (ready)="orbitControls = $any($event)" />
-
         <ngt-transform-controls
             #transformControls
-            *args="[camera, glDom]"
+            *args="[store.get('camera'), store.get('gl', 'domElement')]"
             [size]="0.75"
             [showX]="false"
             space="world"
@@ -48,42 +64,17 @@ extend({ TransformControls, CCDIKHelper });
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
-    readonly iks = [
-        {
-            target: 22, // "target_hand_l"
-            effector: 6, // "hand_l"
-            links: [
-                {
-                    index: 5, // "lowerarm_l"
-                    enabled: true,
-                    rotationMin: new THREE.Vector3(1.2, -1.8, -0.4),
-                    rotationMax: new THREE.Vector3(1.7, -1.1, 0.3),
-                },
-                {
-                    index: 4, // "Upperarm_l"
-                    enabled: true,
-                    rotationMin: new THREE.Vector3(0.1, -0.7, -1.8),
-                    rotationMax: new THREE.Vector3(1.1, 0, -1.4),
-                },
-            ],
-        },
-    ];
-
+    readonly iks = iks;
     readonly cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024);
-    readonly material = new THREE.MeshBasicMaterial({ envMap: this.cubeRenderTarget.texture });
-
-    private readonly store = inject(NgtStore);
-    readonly camera = this.store.get('camera');
-    readonly glDom = this.store.get('gl', 'domElement');
 
     private readonly cdr = inject(ChangeDetectorRef);
+    readonly store = inject(NgtStore);
 
     @ViewChild('transformControls') transformControls?: ElementRef<TransformControls>;
     @ViewChild('cubeCamera') cubeCamera?: ElementRef<THREE.CubeCamera>;
     orbitControls?: OrbitControls;
     solver?: CCDIKSolver;
 
-    private readonly v0 = new THREE.Vector3();
     readonly ooi: Record<string, THREE.Object3D> = {};
 
     readonly model$ = injectNgtLoader(
@@ -98,8 +89,6 @@ export class Scene {
         map((gltf) => {
             gltf.scene.traverse((n) => {
                 if (n.name === 'head') this.ooi['head'] = n;
-                if (n.name === 'lowerarm_l') this.ooi['lowerarm_l'] = n;
-                if (n.name === 'Upperarm_l') this.ooi['Upperarm_l'] = n;
                 if (n.name === 'hand_l') this.ooi['hand_l'] = n;
                 if (n.name === 'target_hand_l') this.ooi['target_hand_l'] = n;
                 if (n.name === 'boule') this.ooi['sphere'] = n;
@@ -113,22 +102,23 @@ export class Scene {
 
     constructor() {
         injectBeforeRender(({ gl, scene }) => {
-            if (this.ooi['sphere'] && this.cubeCamera) {
-                this.ooi['sphere'].visible = false;
-                this.ooi['sphere'].getWorldPosition(this.cubeCamera.nativeElement.position);
+            const head = this.ooi['head'];
+            const sphere = this.ooi['sphere'];
+
+            if (sphere && this.cubeCamera) {
+                sphere.visible = false;
+                sphere.getWorldPosition(this.cubeCamera.nativeElement.position);
                 this.cubeCamera.nativeElement.update(gl, scene);
-                this.ooi['sphere'].visible = true;
+                sphere.visible = true;
             }
 
             if (this.solver) {
                 this.solver.update();
             }
 
-            const head = this.ooi['head'];
-            const sphere = this.ooi['sphere'];
             if (head && sphere) {
-                sphere.getWorldPosition(this.v0);
-                head.lookAt(this.v0);
+                sphere.getWorldPosition(v0);
+                head.lookAt(v0);
                 head.rotation.set(head.rotation.x, head.rotation.y + Math.PI, head.rotation.z);
             }
         });
@@ -137,7 +127,9 @@ export class Scene {
     onAfterModelAttach() {
         this.orbitControls?.target.copy(this.ooi['sphere'].position);
         this.ooi['hand_l'].attach(this.ooi['sphere']);
-        applyProps(this.ooi['sphere'], { material: this.material });
+        applyProps(this.ooi['sphere'], {
+            material: new THREE.MeshBasicMaterial({ envMap: this.cubeRenderTarget.texture }),
+        });
 
         this.transformControls?.nativeElement.attach(this.ooi['target_hand_l']);
         this.ooi['kira'].add((this.ooi['kira'] as THREE.SkinnedMesh).skeleton.bones[0]);
