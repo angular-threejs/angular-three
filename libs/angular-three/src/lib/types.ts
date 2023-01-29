@@ -352,8 +352,8 @@ export interface NgtLoaderProto<T> extends THREE.Loader {
     ): unknown;
 }
 
-export interface NgtLoaderExtensions {
-    (loader: THREE.Loader): void;
+export interface NgtLoaderExtensions<TLoader extends THREE.Loader = THREE.Loader> {
+    (loader: TLoader): void;
 }
 
 export type NgtLoaderResult<T> = T extends any[] ? NgtLoaderProto<T[number]> : NgtLoaderProto<T>;

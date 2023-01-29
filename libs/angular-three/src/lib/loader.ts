@@ -21,7 +21,7 @@ interface NgtLoader {
     <TReturnType, TUrl extends string | string[] | Record<string, string>>(
         loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
         input: TUrl | Observable<TUrl>,
-        extensions?: NgtLoaderExtensions,
+        extensions?: NgtLoaderExtensions<NgtLoaderResult<TReturnType>>,
         onProgress?: (event: ProgressEvent) => void
     ): Observable<
         TUrl extends string[]
