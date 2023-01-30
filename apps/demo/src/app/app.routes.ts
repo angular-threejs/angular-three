@@ -48,4 +48,14 @@ export const routes: Routes = [
             asset: 'assets/demo/animation-skinning-ik',
         },
     },
+
+    {
+        path: 'camera',
+        loadComponent: () => import('./camera/camera.component'),
+        data: {
+            description: 'THREE.js Cameras with helpers',
+            link: '/camera',
+            asset: 'assets/demo/camera',
+        },
+    },
 ];

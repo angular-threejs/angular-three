@@ -1,16 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
-import {
-    applyProps,
-    extend,
-    injectBeforeRender,
-    injectNgtLoader,
-    NgtArgs,
-    NgtCanvas,
-    NgtPush,
-    NgtState,
-    NgtStore,
-} from 'angular-three';
+import { extend, injectBeforeRender, injectNgtLoader, NgtArgs, NgtCanvas, NgtPush, NgtStore } from 'angular-three';
 import { map } from 'rxjs';
 import * as THREE from 'three';
 import { CCDIKHelper, CCDIKSolver, DRACOLoader, GLTFLoader, IKS, OrbitControls, TransformControls } from 'three-stdlib';
@@ -168,16 +158,11 @@ export class Scene {
                 position: [0.9728517749133652, 1.1044765132727201, 0.7316689528482836]
             }"
             [gl]="{ logarithmicDepthBuffer: true }"
-            (created)="onCreated($event)"
+            (created)="$event.gl.physicallyCorrectLights = true; $event.camera.lookAt($event.scene.position)"
         />
     `,
     imports: [NgtCanvas],
 })
 export default class DemoAnimationSkinningIK {
     readonly SceneGraph = Scene;
-
-    onCreated({ scene, camera, gl }: NgtState) {
-        applyProps(gl, { physicallyCorrectLights: true });
-        camera.lookAt(scene.position);
-    }
 }
