@@ -12,6 +12,7 @@ export type NgtRendererRootState = {
     store: NgtStore;
     cdr: ChangeDetectorRef;
     compoundPrefixes: string[];
+    document: Document;
 };
 
 export type NgtQueueOp = [type: 'op' | 'cleanUp', op: () => void, done?: true];
@@ -62,6 +63,11 @@ export class NgtRendererStore {
         ] as NgtRendererState;
 
         const rendererNode = Object.assign(node, { __ngt_renderer__: state });
+
+        // assign ownerDocument to node so we can use HostListener in Component
+        if (!rendererNode['ownerDocument']) {
+            rendererNode['ownerDocument'] = this.root.document;
+        }
 
         if (state[NgtRendererClassId.type] === 'comment') {
             state[NgtRendererClassId.injectorFactory] = () => getDebugNode(rendererNode)!.injector;
@@ -239,6 +245,10 @@ export class NgtRendererStore {
 
     isCompound(name: string) {
         return this.root.compoundPrefixes.some((prefix) => name.startsWith(prefix));
+    }
+
+    isDocument(node: NgtAnyRecord) {
+      return node === this.root.document;
     }
 
     get rootScene() {

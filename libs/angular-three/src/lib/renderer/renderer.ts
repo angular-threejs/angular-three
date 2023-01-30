@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, inject, Injectable, Renderer2, RendererFactory2, RendererType2 } from '@angular/core';
 import { NGT_CATALOGUE } from '../di/catalogue';
 import { NgtStore } from '../stores/store';
@@ -15,6 +16,7 @@ export class NgtRendererFactory implements RendererFactory2 {
     private readonly store = inject(NgtStore);
     private readonly catalogue = inject(NGT_CATALOGUE);
     private readonly compoundPrefixes = inject(NGT_COMPOUND_PREFIXES);
+    private readonly document = inject(DOCUMENT);
 
     private rendererMap = new Map<string, Renderer2>();
 
@@ -30,6 +32,7 @@ export class NgtRendererFactory implements RendererFactory2 {
                 store: this.store,
                 cdr: this.cdr,
                 compoundPrefixes: this.compoundPrefixes,
+                document: this.document,
             });
             renderer = new NgtRenderer(delegateRenderer, store, this.catalogue, true);
             this.rendererMap.set(type.id, renderer);
@@ -40,6 +43,7 @@ export class NgtRendererFactory implements RendererFactory2 {
                 store: this.store,
                 cdr: this.cdr,
                 compoundPrefixes: this.compoundPrefixes,
+                document: this.document,
             });
             renderer = new NgtRenderer(delegateRenderer, store, this.catalogue);
             this.rendererMap.set(type.id, renderer);
@@ -318,6 +322,11 @@ export class NgtRenderer implements Renderer2 {
     }
 
     listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
+        // if target is Document (DOM), then we pass that to delegate Renderer
+        if (this.store.isDocument(target)) {
+            return this.delegate.listen(target, eventName, callback);
+        }
+
         if (
             target.__ngt_renderer__[NgtRendererClassId.type] === 'three' ||
             (target.__ngt_renderer__[NgtRendererClassId.type] === 'compound' &&
