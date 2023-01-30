@@ -1,6 +1,15 @@
 import { NgIf } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
-import { extend, injectBeforeRender, injectNgtLoader, NgtArgs, NgtCanvas, NgtPush, NgtStore } from 'angular-three';
+import {
+    extend,
+    injectBeforeRender,
+    injectNgtLoader,
+    NgtArgs,
+    NgtCanvas,
+    NgtPush,
+    NgtRenderState,
+    NgtStore,
+} from 'angular-three';
 import { map } from 'rxjs';
 import * as THREE from 'three';
 import { CCDIKHelper, CCDIKSolver, DRACOLoader, GLTFLoader, IKS, OrbitControls, TransformControls } from 'three-stdlib';
@@ -94,30 +103,7 @@ export class Scene implements OnDestroy {
         this.gui.add(this.config, 'turnHead').name('turn head');
         this.gui.add(this.config, 'ikSolver').name('IK Auto update');
 
-        injectBeforeRender(({ gl, scene }) => {
-            const head = this.ooi['head'];
-            const sphere = this.ooi.sphere;
-
-            if (sphere && this.cubeCamera) {
-                sphere.visible = false;
-                sphere.getWorldPosition(this.cubeCamera.nativeElement.position);
-                this.cubeCamera.nativeElement.update(gl, scene);
-                sphere.visible = true;
-            }
-
-            if (sphere && this.config.followSphere) {
-                sphere.getWorldPosition(v0);
-                this.orbitControls?.target.lerp(v0, 0.1);
-            }
-
-            if (head && sphere && this.config.turnHead) {
-                sphere.getWorldPosition(v0);
-                head.lookAt(v0);
-                head.rotation.set(head.rotation.x, head.rotation.y + Math.PI, head.rotation.z);
-            }
-
-            if (this.config.ikSolver && this.solver) this.solver.update();
-        });
+        injectBeforeRender(this.onBeforeRender.bind(this));
     }
 
     onAfterModelAttach() {
@@ -142,6 +128,31 @@ export class Scene implements OnDestroy {
         }
         this.gui.add(this.solver, 'update').name('IK Manual update()');
         this.gui.open();
+    }
+
+    private onBeforeRender({ gl, scene }: NgtRenderState) {
+        const head = this.ooi['head'];
+        const sphere = this.ooi.sphere;
+
+        if (sphere && this.cubeCamera) {
+            sphere.visible = false;
+            sphere.getWorldPosition(this.cubeCamera.nativeElement.position);
+            this.cubeCamera.nativeElement.update(gl, scene);
+            sphere.visible = true;
+        }
+
+        if (sphere && this.config.followSphere) {
+            sphere.getWorldPosition(v0);
+            this.orbitControls?.target.lerp(v0, 0.1);
+        }
+
+        if (head && sphere && this.config.turnHead) {
+            sphere.getWorldPosition(v0);
+            head.lookAt(v0);
+            head.rotation.set(head.rotation.x, head.rotation.y + Math.PI, head.rotation.z);
+        }
+
+        if (this.config.ikSolver && this.solver) this.solver.update();
     }
 
     ngOnDestroy() {

@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { injectBeforeRender, injectNgtLoader, NgtArgs, NgtCanvas, NgtPush, NgtStore } from 'angular-three';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 import * as THREE from 'three';
 import { DRACOLoader, GLTFLoader, RoomEnvironment } from 'three-stdlib';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -12,7 +12,7 @@ import { DemoOrbitControls } from '../ui-orbit-controls/orbit-controls.component
         <ngt-color *args="['#bfe3dd']" attach="background" />
         <ngt-value [rawValue]="texture" attach="environment" />
 
-        <ngt-primitive *args="[model$ | ngtPush : null]" [position]="[1, 1, 0]" [scale]="0.01" />
+        <ngt-primitive *args="[model$ | ngtPush]" [position]="[1, 1, 0]" [scale]="0.01" />
 
         <demo-orbit-controls [target]="[0, 0.5, 0]" [enablePan]="false" />
     `,
@@ -37,12 +37,12 @@ export class Scene {
             (loader as GLTFLoader).setDRACOLoader(dracoLoader);
         }
     ).pipe(
-        tap((model) => {
+        map((model) => {
             const scene = model.scene;
             this.mixer = new THREE.AnimationMixer(scene);
             this.mixer.clipAction(model.animations[0]).play();
-        }),
-        map((model) => model.scene)
+            return scene;
+        })
     );
 
     constructor() {

@@ -181,7 +181,7 @@ export class Scene implements AfterViewInit, OnInit {
             </a>
             - cameras
             <br />
-            <b class="text-green-300">O</b> orthographic <b class="text-green-300">P</b> perspective
+            <b class="text-green-400">O</b> orthographic <b class="text-green-400">P</b> perspective
         </div>
     `,
     imports: [NgtCanvas],
