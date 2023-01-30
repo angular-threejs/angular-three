@@ -1,5 +1,23 @@
 
 
+### [1.2.2](https://github.com/angular-threejs/angular-three/compare/1.2.1...1.2.2) (2023-01-30)
+
+
+### Bug Fixes
+
+* use Document as ownerDocument for renderer node that does not have ownerDocument yet ([4322bec](https://github.com/angular-threejs/angular-three/commit/4322bec2cde6b1bc9c41a78ed4b64f14b6a13308))
+* use RendererFactory2 to inject into NgtRenderer instead of using private api ([4e6470d](https://github.com/angular-threejs/angular-three/commit/4e6470d16335be45c4155c8f3d5be3fa111f2059))
+
+
+### Documentations
+
+* add animation with ccdiksolver ([eb59ea6](https://github.com/angular-threejs/angular-three/commit/eb59ea6f3b70374ba5f90b18c2874402150b1c2a))
+* add cameras demo ([ca3d10d](https://github.com/angular-threejs/angular-three/commit/ca3d10d6e19c4a9b539a9cb35aa4e2ffe65d6f84))
+* add legacy to spinning ik ([a69179a](https://github.com/angular-threejs/angular-three/commit/a69179a293d5bae065caf6e601822b6355eb9991))
+* clean up skinning ik ([85d089a](https://github.com/angular-threejs/angular-three/commit/85d089a5e99bff24cd04f20218595af85735da0d))
+* clean up skinning ik demo more ([d7508c8](https://github.com/angular-threejs/angular-three/commit/d7508c87f48a32a39a578aba74f20d8da3fe7aea))
+* clean up spinning ik more ([1dd5064](https://github.com/angular-threejs/angular-three/commit/1dd5064ef54530fba28d9c450c78eb4cae935847))
+
 ### [1.2.1](https://github.com/angular-threejs/angular-three/compare/1.2.0...1.2.1) (2023-01-29)
 
 
