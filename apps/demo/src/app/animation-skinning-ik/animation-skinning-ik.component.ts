@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
 import { extend, injectBeforeRender, injectNgtLoader, NgtArgs, NgtCanvas, NgtPush, NgtStore } from 'angular-three';
 import { map } from 'rxjs';
 import * as THREE from 'three';
@@ -49,7 +49,7 @@ extend({ TransformControls, CCDIKHelper });
     imports: [NgtArgs, NgIf, DemoOrbitControls, NgtPush],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class Scene {
+export class Scene implements OnDestroy {
     private readonly config = { followSphere: false, turnHead: true, ikSolver: true };
     private readonly gui = new GUI();
 
@@ -142,6 +142,10 @@ export class Scene {
         }
         this.gui.add(this.solver, 'update').name('IK Manual update()');
         this.gui.open();
+    }
+
+    ngOnDestroy() {
+        this.gui.domElement.remove();
     }
 }
 

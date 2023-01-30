@@ -166,6 +166,14 @@ export class Scene implements AfterViewInit, OnInit {
 @Component({
     standalone: true,
     template: `
+        <div class="block h-full w-full bg-black">
+            <ngt-canvas
+                [sceneGraph]="SceneGraph"
+                [gl]="{ alpha: false }"
+                [camera]="{ fov: 50, near: 1, far: 10000, position: [0, 0, 2500] }"
+                (created)="onCreated($event)"
+            />
+        </div>
         <div class="absolute text-center text-white w-full top-0 left-0 text-xl">
             <a href="https://threejs.org" target="_blank" rel="noopener" class="underline"> three.js </a> -
             <a href="https://angular-threejs.netlify.app" target="_blank" rel="noopener" class="underline">
@@ -174,14 +182,6 @@ export class Scene implements AfterViewInit, OnInit {
             - cameras
             <br />
             <b class="text-green-300">O</b> orthographic <b class="text-green-300">P</b> perspective
-        </div>
-        <div class="block h-full w-full bg-black">
-            <ngt-canvas
-                [sceneGraph]="SceneGraph"
-                [gl]="{ alpha: false }"
-                [camera]="{ fov: 50, near: 1, far: 10000, position: [0, 0, 2500] }"
-                (created)="onCreated($event)"
-            />
         </div>
     `,
     imports: [NgtCanvas],
