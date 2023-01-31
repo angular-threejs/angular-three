@@ -1,5 +1,19 @@
 
 
+### [1.2.3](https://github.com/angular-threejs/angular-three/compare/1.2.2...1.2.3) (2023-01-31)
+
+
+### Bug Fixes
+
+* check target for all DOM nodes instead of just Document object ([043ddfc](https://github.com/angular-threejs/angular-three/commit/043ddfc088b50ba100ce6328360b47a4b68735da))
+
+
+### Documentations
+
+* clean up camera demo ([4553199](https://github.com/angular-threejs/angular-three/commit/4553199cb75a8968d1a883a52203b068b4d26d94))
+* clean up more demos ([728db58](https://github.com/angular-threejs/angular-three/commit/728db58c87bcbfbbe5c93f7a265497b0d8d91dfb))
+* remove GUI on destroy (animation spinning) ([1104e27](https://github.com/angular-threejs/angular-three/commit/1104e27851f9bf1dace0647a75dccf4cf6ef2dda))
+
 ### [1.2.2](https://github.com/angular-threejs/angular-three/compare/1.2.1...1.2.2) (2023-01-30)
 
 
