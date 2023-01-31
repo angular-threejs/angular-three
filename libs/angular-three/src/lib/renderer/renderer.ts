@@ -322,8 +322,8 @@ export class NgtRenderer implements Renderer2 {
     }
 
     listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
-        // if target is Document (DOM), then we pass that to delegate Renderer
-        if (this.store.isDocument(target)) {
+        // if target is DOM node, then we pass that to delegate Renderer
+        if (this.store.isDOM(target)) {
             return this.delegate.listen(target, eventName, callback);
         }
 

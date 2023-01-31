@@ -8,7 +8,7 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtCanvas, NgtRenderState, NgtState, NgtStore } from 'angular-three';
+import { injectBeforeRender, NgtArgs, NgtCanvas, NgtPush, NgtRenderState, NgtState, NgtStore } from 'angular-three';
 import * as THREE from 'three';
 
 @Component({
@@ -17,15 +17,15 @@ import * as THREE from 'three';
         <ngt-group #cameras>
             <ngt-perspective-camera
                 #perspectiveCamera
-                [aspect]="store.get('viewport', 'aspect') * 0.5"
+                [aspect]="(aspect$ | ngtPush) * 0.5"
                 [near]="150"
                 [far]="1000"
                 [rotation]="[0, Math.PI, 0]"
             />
             <ngt-orthographic-camera
                 #orthographicCamera
-                [left]="(300 * store.get('viewport', 'aspect')) / -2"
-                [right]="(300 * store.get('viewport', 'aspect')) / 2"
+                [left]="(300 * (aspect$ | ngtPush)) / -2"
+                [right]="(300 * (aspect$ | ngtPush)) / 2"
                 [top]="300"
                 [bottom]="-300"
                 [near]="150"
@@ -57,13 +57,13 @@ import * as THREE from 'three';
             <ngt-points-material color="#888888" />
         </ngt-points>
     `,
-    imports: [NgtArgs],
+    imports: [NgtArgs, NgtPush],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene implements AfterViewInit, OnInit {
     readonly Math = Math;
 
-    readonly store = inject(NgtStore);
+    readonly aspect$ = inject(NgtStore).select('viewport', 'aspect');
 
     @ViewChild('perspectiveCamera', { static: true }) perspectiveCamera!: ElementRef<THREE.PerspectiveCamera>;
     @ViewChild('orthographicCamera', { static: true }) orthographicCamera!: ElementRef<THREE.OrthographicCamera>;

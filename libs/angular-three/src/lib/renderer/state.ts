@@ -247,8 +247,8 @@ export class NgtRendererStore {
         return this.root.compoundPrefixes.some((prefix) => name.startsWith(prefix));
     }
 
-    isDocument(node: NgtAnyRecord) {
-      return node === this.root.document;
+    isDOM(node: NgtAnyRecord) {
+        return node instanceof Element || node instanceof Document;
     }
 
     get rootScene() {
