@@ -6,6 +6,7 @@ export * from './lib/di/ref';
 export * from './lib/directives/args';
 export * from './lib/directives/repeat';
 export * from './lib/loader';
+export * from './lib/loop';
 export * from './lib/pipes/push';
 export * from './lib/portal';
 export * from './lib/stores/rx-store';
