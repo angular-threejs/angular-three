@@ -1,5 +1,12 @@
 
 
+### [1.2.4](https://github.com/angular-threejs/angular-three/compare/1.2.3...1.2.4) (2023-02-02)
+
+
+### Bug Fixes
+
+* expose loop ([b22b903](https://github.com/angular-threejs/angular-three/commit/b22b903db02d7324290e292f20fe0e086dcb4b10))
+
 ### [1.2.3](https://github.com/angular-threejs/angular-three/compare/1.2.2...1.2.3) (2023-01-31)
 
 
