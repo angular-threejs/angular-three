@@ -350,6 +350,7 @@ export interface NgtLoaderProto<T> extends THREE.Loader {
         onProgress?: (event: ProgressEvent) => void,
         onError?: (event: ErrorEvent) => void
     ): unknown;
+    loadAsync(url: string | string[], onProgress?: (event: ProgressEvent) => void): Promise<any>;
 }
 
 export interface NgtLoaderExtensions<TLoader extends THREE.Loader = THREE.Loader> {

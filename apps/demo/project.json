@@ -7,24 +7,15 @@
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "options": {
                 "outputPath": "dist/apps/documentation/demo",
                 "index": "apps/demo/src/index.html",
                 "main": "apps/demo/src/main.ts",
-                "polyfills": [
-                    "zone.js"
-                ],
+                "polyfills": ["zone.js"],
                 "tsConfig": "apps/demo/tsconfig.app.json",
-                "assets": [
-                    "apps/demo/src/favicon.png",
-                    "apps/demo/src/assets"
-                ],
-                "styles": [
-                    "apps/demo/src/styles.css"
-                ],
+                "assets": ["apps/demo/src/favicon.png", "apps/demo/src/assets"],
+                "styles": ["apps/demo/src/styles.css"],
                 "scripts": []
             },
             "configurations": {
@@ -75,14 +66,9 @@
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": [
-                "{options.outputFile}"
-            ],
+            "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": [
-                    "apps/demo/**/*.ts",
-                    "apps/demo/**/*.html"
-                ]
+                "lintFilePatterns": ["apps/demo/**/*.ts", "apps/demo/**/*.html"]
             }
         }
     },

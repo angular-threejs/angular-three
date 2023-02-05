@@ -1,10 +1,10 @@
 import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, Tree, updateJson } from '@nrwl/devkit';
 
 export const ANGULAR_THREE_VERSION = '^1.0.0';
-export const THREE_VERSION = '^0.148.0';
-export const THREE_TYPE_VERSION = '^0.148.0';
+export const THREE_VERSION = '^0.149.0';
+export const THREE_TYPE_VERSION = '^0.149.0';
 
-export default async function(tree: Tree) {
+export default async function (tree: Tree) {
     logger.log('Initializing Angular Three...');
 
     const packageJson = readJson(tree, 'package.json');

@@ -23,7 +23,7 @@
     "peerDependencies": {
         "@angular/common": "^15.1.0",
         "@angular/core": "^15.1.0",
-        "three": "^0.148.0"
+        "three": "^0.148.0 || ^0.149.0"
     },
     "dependencies": {
         "ngx-resize": "^1.0.0",
