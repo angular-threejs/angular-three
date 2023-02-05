@@ -1,5 +1,12 @@
 
 
+## [1.3.0](https://github.com/angular-threejs/angular-three/compare/1.2.4...1.3.0) (2023-02-05)
+
+
+### Features
+
+* up peer dep of threejs to 0.149 ([7d5e144](https://github.com/angular-threejs/angular-three/commit/7d5e144e2d83c394e787f0ce29e4df547b455f83))
+
 ### [1.2.4](https://github.com/angular-threejs/angular-three/compare/1.2.3...1.2.4) (2023-02-02)
 
 
