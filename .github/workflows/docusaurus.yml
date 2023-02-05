@@ -29,7 +29,8 @@ jobs:
             - name: Create local build artifacts
               run: |
                   echo "Building documentation..."
-                  npx nx build-external-docs documentation
+                  # npx nx build-external-docs documentation
+                  npx nx build documentation
 
             - name: Init git and commit local artifacts
               run: |

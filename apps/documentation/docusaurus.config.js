@@ -70,7 +70,7 @@ const config = {
                         label: 'Documentation',
                     },
                     {
-                        href: 'https://angular-threejs.netlify.app/demo',
+                        href: 'https://angular-threejs-demo.netlify.app/',
                         position: 'left',
                         label: 'Demo',
                     },
