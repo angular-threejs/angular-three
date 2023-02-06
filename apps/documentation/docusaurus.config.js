@@ -74,6 +74,11 @@ const config = {
                         position: 'left',
                         label: 'Demo',
                     },
+                    {
+                        href: 'https://angular-threejs-soba.netlify.app/',
+                        position: 'left',
+                        label: 'Soba Storybook',
+                    },
                     // TODO  re-enable for blogs
                     // { to: '/blog', label: 'Blog', position: 'left' },
                     {
