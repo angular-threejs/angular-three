@@ -1,5 +1,12 @@
 
 
+### [1.4.2](https://github.com/angular-threejs/angular-three/compare/1.4.1...1.4.2) (2023-02-06)
+
+
+### Bug Fixes
+
+* lift portals up to rendererFactory. all renderers share the same portals collection ([c4fced4](https://github.com/angular-threejs/angular-three/commit/c4fced4cf3ff012e5e976c876c64d6f330e52e87))
+
 ### [1.4.1](https://github.com/angular-threejs/angular-three/compare/1.4.0...1.4.1) (2023-02-06)
 
 
