@@ -1,5 +1,18 @@
 
 
+## [1.4.0](https://github.com/angular-threejs/angular-three/compare/1.3.1...1.4.0) (2023-02-06)
+
+
+### Features
+
+* add safe-detect-changes function ([5dab828](https://github.com/angular-threejs/angular-three/commit/5dab8286822a4d7127f335e044508f8741791c6e))
+
+
+### Documentations
+
+* add angular-three-soba link ([4ecc970](https://github.com/angular-threejs/angular-three/commit/4ecc97066ad40bc9813de93b59c15775ab00c145))
+* add soba storybook external link to nav ([01d5fb4](https://github.com/angular-threejs/angular-three/commit/01d5fb4fca1f19e81e17384643fc13594eb2c1ac))
+
 ### [1.3.1](https://github.com/angular-threejs/angular-three/compare/1.3.0...1.3.1) (2023-02-06)
 
 
