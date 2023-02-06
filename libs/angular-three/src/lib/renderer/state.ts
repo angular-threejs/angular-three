@@ -248,7 +248,10 @@ export class NgtRendererStore {
     }
 
     isDOM(node: NgtAnyRecord) {
-        return node instanceof Element || node instanceof Document;
+        return (
+            node['__ngt_renderer__']?.[NgtRendererClassId.type] !== 'compound' &&
+            (node instanceof Element || node instanceof Document)
+        );
     }
 
     get rootScene() {
