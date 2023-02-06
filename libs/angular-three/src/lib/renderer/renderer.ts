@@ -233,7 +233,7 @@ export class NgtRenderer implements Renderer2 {
         // refChild: NgtRendererNode
         // isMove?: boolean | undefined
     ): void {
-        if (!parent.__ngt_renderer__) return;
+        if (!parent.__ngt_renderer__ || parent === newChild) return;
         this.appendChild(parent, newChild);
     }
 

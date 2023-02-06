@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, RendererFactory2 } from '@angular/core';
+import { ChangeDetectorRef, makeEnvironmentProviders, RendererFactory2 } from '@angular/core';
 import { NgtStore } from '../stores/store';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererFactory } from './renderer';
@@ -18,10 +18,10 @@ export function provideNgtRenderer({ store, changeDetectorRef, compoundPrefixes 
         compoundPrefixes.push('ngtp');
     }
 
-    return [
+    return makeEnvironmentProviders([
         { provide: RendererFactory2, useClass: NgtRendererFactory },
         { provide: NgtStore, useValue: store },
         { provide: ChangeDetectorRef, useValue: changeDetectorRef },
         { provide: NGT_COMPOUND_PREFIXES, useValue: compoundPrefixes },
-    ];
+    ]);
 }
