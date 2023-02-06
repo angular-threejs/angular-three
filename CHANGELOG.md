@@ -1,5 +1,17 @@
 
 
+### [1.3.1](https://github.com/angular-threejs/angular-three/compare/1.3.0...1.3.1) (2023-02-06)
+
+
+### Bug Fixes
+
+* ensure parent and newChild isn't the same before calling append ([d1da0cd](https://github.com/angular-threejs/angular-three/commit/d1da0cda2e8c2a719588b9aaf32d6e0142a36d0d))
+
+
+### Documentations
+
+* use external demo site ([766f497](https://github.com/angular-threejs/angular-three/commit/766f49703b1dcbfe34c5a1d065844d02859d6a54))
+
 ## [1.3.0](https://github.com/angular-threejs/angular-three/compare/1.2.4...1.3.0) (2023-02-05)
 
 
