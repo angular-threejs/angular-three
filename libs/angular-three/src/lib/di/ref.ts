@@ -11,9 +11,10 @@ import {
     switchMap,
     takeUntil,
 } from 'rxjs';
-import type { NgtAnyRecord, NgtInstanceNode } from '../types';
+import type { NgtInstanceNode } from '../types';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { injectNgtDestroy } from './destroy';
 
 type Subscribe<T> = (callback: (current: T, previous: T | null) => void) => Subscription;
@@ -102,9 +103,7 @@ export function injectNgtRef<T>(initialValue: NgtInjectedRef<T> | (T | null) = n
                     // during creation phase, 'context' on ViewRef will be null
                     // we check the "context" to avoid running detectChanges during this phase.
                     // because there's nothing to check
-                    if ((cd as NgtAnyRecord)['context']) {
-                        cd.detectChanges();
-                    }
+                    safeDetectChanges(cd);
                 }
             }
         },
