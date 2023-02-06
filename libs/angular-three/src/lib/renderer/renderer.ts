@@ -19,6 +19,7 @@ export class NgtRendererFactory implements RendererFactory2 {
     private readonly document = inject(DOCUMENT);
 
     private rendererMap = new Map<string, Renderer2>();
+    private portals: NgtRendererNode[] = [];
 
     createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
         const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
@@ -31,6 +32,7 @@ export class NgtRendererFactory implements RendererFactory2 {
             const store = new NgtRendererStore({
                 store: this.store,
                 cdr: this.cdr,
+                portals: this.portals,
                 compoundPrefixes: this.compoundPrefixes,
                 document: this.document,
             });
@@ -42,6 +44,7 @@ export class NgtRendererFactory implements RendererFactory2 {
             const store = new NgtRendererStore({
                 store: this.store,
                 cdr: this.cdr,
+                portals: this.portals,
                 compoundPrefixes: this.compoundPrefixes,
                 document: this.document,
             });

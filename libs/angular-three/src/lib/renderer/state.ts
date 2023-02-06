@@ -13,6 +13,7 @@ export type NgtRendererRootState = {
     cdr: ChangeDetectorRef;
     compoundPrefixes: string[];
     document: Document;
+    portals: Array<NgtRendererNode>;
 };
 
 export type NgtQueueOp = [type: 'op' | 'cleanUp', op: () => void, done?: true];
@@ -40,7 +41,6 @@ export type NgtRendererNode = {
 
 export class NgtRendererStore {
     private readonly comments = [] as Array<NgtRendererNode>;
-    private readonly portals = [] as Array<NgtRendererNode>;
 
     constructor(private readonly root: NgtRendererRootState) {}
 
@@ -260,6 +260,10 @@ export class NgtRendererStore {
 
     get rootCdr() {
         return this.root.cdr;
+    }
+
+    get portals() {
+        return this.root.portals;
     }
 
     getClosestParentWithInstance(node: NgtRendererNode): NgtRendererNode | null {
