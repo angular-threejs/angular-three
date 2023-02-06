@@ -1,5 +1,17 @@
 
 
+### [1.4.1](https://github.com/angular-threejs/angular-three/compare/1.4.0...1.4.1) (2023-02-06)
+
+
+### Bug Fixes
+
+* attempt to fix isDOM check ([c571734](https://github.com/angular-threejs/angular-three/commit/c571734ba6781e96d7d531ae172c40218bc8f314))
+
+
+### Documentations
+
+* add link to color grading example ([bfcf948](https://github.com/angular-threejs/angular-three/commit/bfcf948cea20162903e19171456eb13de2269224))
+
 ## [1.4.0](https://github.com/angular-threejs/angular-three/compare/1.3.1...1.4.0) (2023-02-06)
 
 
