@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
+import { combineLatest, MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 
@@ -107,5 +107,17 @@ export class NgtRxStore<
 
     effect<S>(obs: Observable<S>, sideEffectFn: EffectFn<S>): void {
         return this.hold(obs.pipe(tapEffect(sideEffectFn)));
+    }
+
+    triggerChangeDetection(cdr: ChangeDetectorRef, keys: Array<keyof TRxState> = []) {
+        let $: Observable<any> = this.$;
+
+        if (keys.length) {
+            $ = combineLatest(keys.map((key) => this.select(key).pipe(startWith(this.get(key) ?? undefined))));
+        }
+
+        this.hold($, () => {
+            requestAnimationFrame(() => void cdr.detectChanges());
+        });
     }
 }
