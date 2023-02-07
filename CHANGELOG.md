@@ -1,5 +1,12 @@
 
 
+### [1.4.3](https://github.com/angular-threejs/angular-three/compare/1.4.2...1.4.3) (2023-02-07)
+
+
+### Bug Fixes
+
+* allow ngtRxStore to trigger change detection on specific state changes ([09361af](https://github.com/angular-threejs/angular-three/commit/09361afb03a79a3ab0f2e8e3ae7b357a3cce6d06))
+
 ### [1.4.2](https://github.com/angular-threejs/angular-three/compare/1.4.1...1.4.2) (2023-02-06)
 
 
