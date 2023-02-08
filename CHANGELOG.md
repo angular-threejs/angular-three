@@ -1,5 +1,12 @@
 
 
+## [1.5.0-beta.0](https://github.com/angular-threejs/angular-three/compare/1.4.5...1.5.0-beta.0) (2023-02-08)
+
+
+### Features
+
+* try using ref directive ([2c27890](https://github.com/angular-threejs/angular-three/commit/2c278903485c8ae15c62c7cddb91b6b686fe632e))
+
 ### [1.4.5](https://github.com/angular-threejs/angular-three/compare/1.4.4...1.4.5) (2023-02-08)
 
 
