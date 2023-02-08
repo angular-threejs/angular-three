@@ -342,7 +342,7 @@ export class NgtRenderer implements Renderer2 {
     listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
         const targetCdr = target.__ngt_renderer__?.[NgtRendererClassId.injectorFactory]?.().get(
             ChangeDetectorRef,
-            undefined
+            null
         );
         // if target is DOM node, then we pass that to delegate Renderer
         if (this.store.isDOM(target)) {
@@ -362,7 +362,7 @@ export class NgtRenderer implements Renderer2 {
         ) {
             const instance = target.__ngt_renderer__[NgtRendererClassId.compounded] || target;
             const priority = getLocalState(target).priority;
-            return processThreeEvent(instance, priority || 0, eventName, callback, this.store.rootCdr, targetCdr);
+            return processThreeEvent(instance, priority || 0, eventName, callback, this.store.rootCdr, targetCdr!);
         }
 
         if (
