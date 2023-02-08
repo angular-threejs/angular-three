@@ -1,5 +1,13 @@
 
 
+### [1.6.2](https://github.com/angular-threejs/angular-three/compare/1.6.1...1.6.2) (2023-02-08)
+
+
+### Bug Fixes
+
+* adjust renderer listen to listen for DOM events if target is root Scene ([46f9206](https://github.com/angular-threejs/angular-three/commit/46f920640f035d9bc1e5bad24b7236d6e9edb968))
+* check for instance of Window for isDOM ([4026871](https://github.com/angular-threejs/angular-three/commit/402687116920384d6204f9be1e6994a9ea902024))
+
 ### [1.6.1](https://github.com/angular-threejs/angular-three/compare/1.6.0...1.6.1) (2023-02-08)
 
 
