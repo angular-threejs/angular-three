@@ -1,5 +1,12 @@
 
 
+### [1.4.4](https://github.com/angular-threejs/angular-three/compare/1.4.3...1.4.4) (2023-02-08)
+
+
+### Bug Fixes
+
+* pass target change detector ref to listen ([e648752](https://github.com/angular-threejs/angular-three/commit/e64875210b24c18d1e1253a396e3585ea5132e88))
+
 ### [1.4.3](https://github.com/angular-threejs/angular-three/compare/1.4.2...1.4.3) (2023-02-07)
 
 
