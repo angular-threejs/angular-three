@@ -1,5 +1,12 @@
 
 
+### [1.6.1](https://github.com/angular-threejs/angular-three/compare/1.6.0...1.6.1) (2023-02-08)
+
+
+### Bug Fixes
+
+* use null as fallback value for target CDR in listen ([728f4fe](https://github.com/angular-threejs/angular-three/commit/728f4fe682e59a809abb47936e89597b7d41eb22))
+
 ## [1.6.0](https://github.com/angular-threejs/angular-three/compare/1.5.1...1.6.0) (2023-02-08)
 
 
