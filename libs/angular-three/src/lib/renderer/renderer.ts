@@ -341,7 +341,10 @@ export class NgtRenderer implements Renderer2 {
     }
 
     listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
-        const targetCdr = target.__ngt_renderer__[NgtRendererClassId.injectorFactory]?.().get(ChangeDetectorRef, null);
+        const targetCdr = target.__ngt_renderer__?.[NgtRendererClassId.injectorFactory]?.().get(
+            ChangeDetectorRef,
+            undefined
+        );
         // if target is DOM node, then we pass that to delegate Renderer
         if (this.store.isDOM(target)) {
             const callbackWithCdr = (event: any) => {

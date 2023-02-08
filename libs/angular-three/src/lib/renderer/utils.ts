@@ -144,7 +144,7 @@ export function processThreeEvent(
     eventName: string,
     callback: (event: any) => void,
     cdr: ChangeDetectorRef,
-    targetCdr: ChangeDetectorRef | null
+    targetCdr?: ChangeDetectorRef
 ): () => void {
     const lS = getLocalState(instance);
     if (eventName === SPECIAL_EVENTS.BEFORE_RENDER) {
@@ -194,11 +194,7 @@ export function processThreeEvent(
     };
 }
 
-export function eventToHandler(
-    callback: (event: any) => void,
-    cdr: ChangeDetectorRef,
-    targetCdr: ChangeDetectorRef | null
-) {
+export function eventToHandler(callback: (event: any) => void, cdr: ChangeDetectorRef, targetCdr?: ChangeDetectorRef) {
     return (event: Parameters<Exclude<NgtEventHandlers[(typeof supportedEvents)[number]], undefined>>[0]) => {
         callback(event);
         if (targetCdr) targetCdr.detectChanges();
