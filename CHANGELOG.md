@@ -1,5 +1,12 @@
 
 
+### [1.4.5](https://github.com/angular-threejs/angular-three/compare/1.4.4...1.4.5) (2023-02-08)
+
+
+### Bug Fixes
+
+* check for NgtRendererNode when accessing injectorFactory ([7acf098](https://github.com/angular-threejs/angular-three/commit/7acf09883f1d91f1242db3e8aa646712344dd0c2))
+
 ### [1.4.4](https://github.com/angular-threejs/angular-three/compare/1.4.3...1.4.4) (2023-02-08)
 
 
