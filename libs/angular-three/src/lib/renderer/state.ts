@@ -209,27 +209,20 @@ export class NgtRendererStore {
 
     applyProperty(node: NgtRendererNode, name: string, value: any) {
         if (node.__ngt_renderer__[NgtRendererClassId.destroyed]) return;
-        // setup [ref] here
-        // ref should never change
-        // if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
-        // node.__ngt_renderer__[NgtRendererClassId.ref] = value;
-        // value.nativeElement = node;
-        // return;
-        // }
 
         const parent = getLocalState(node).parent || node.__ngt_renderer__[NgtRendererClassId.parent];
 
         // rawValue
         if (getLocalState(node).isRaw && name === SPECIAL_PROPERTIES.VALUE) {
             node.__ngt_renderer__[NgtRendererClassId.rawValue] = value;
-            attachThreeChild(parent, node);
+            if (parent) attachThreeChild(parent, node);
             return;
         }
 
         // attach
         if (name === SPECIAL_PROPERTIES.ATTACH) {
             getLocalState(node).attach = Array.isArray(value) ? value.map((v) => v.toString()) : value;
-            attachThreeChild(parent, node);
+            if (parent) attachThreeChild(parent, node);
             return;
         }
 
