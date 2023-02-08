@@ -105,7 +105,7 @@ export class NgtRenderer implements Renderer2 {
             );
         }
 
-        const { injectedArgs, injectedRef, store } = this.store.getCreationState();
+        const { injectedArgs, store } = this.store.getCreationState();
 
         // handle primitive
         if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
@@ -117,9 +117,7 @@ export class NgtRenderer implements Renderer2 {
                 localState = getLocalState(object);
             }
             if (!localState.store) localState.store = store;
-            const primitiveNode = this.store.createNode('three', object);
-            if (injectedRef) injectedRef.nativeElement = primitiveNode;
-            return primitiveNode;
+            return this.store.createNode('three', object);
         }
 
         const threeTag = name.startsWith('ngt') ? name.slice(4) : name;
@@ -135,12 +133,6 @@ export class NgtRenderer implements Renderer2 {
             } else if (is.material(instance)) {
                 localState.attach = ['material'];
             }
-
-            if (injectedRef) {
-                injectedRef.nativeElement = node;
-                node.__ngt_renderer__[NgtRendererClassId.ref] = injectedRef;
-            }
-
             return node;
         }
 

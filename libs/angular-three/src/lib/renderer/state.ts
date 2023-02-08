@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, getDebugNode, Injector, Type } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import { NgtCommonDirective } from '../directives/common';
-import { NgtRef } from '../directives/ref';
 import { NgtStore } from '../stores/store';
 import type { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { getLocalState } from '../utils/instance';
+import { is } from '../utils/is';
 import { NgtCompoundClassId, NgtQueueOpClassId, NgtRendererClassId } from './enums';
 import { attachThreeChild, removeThreeChild, SPECIAL_PROPERTIES } from './utils';
 
@@ -210,16 +210,23 @@ export class NgtRendererStore {
     applyProperty(node: NgtRendererNode, name: string, value: any) {
         if (node.__ngt_renderer__[NgtRendererClassId.destroyed]) return;
 
+        // [ref]
+        if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
+            node.__ngt_renderer__[NgtRendererClassId.ref] = value;
+            value.nativeElement = node;
+            return;
+        }
+
         const parent = getLocalState(node).parent || node.__ngt_renderer__[NgtRendererClassId.parent];
 
-        // rawValue
+        // [rawValue]
         if (getLocalState(node).isRaw && name === SPECIAL_PROPERTIES.VALUE) {
             node.__ngt_renderer__[NgtRendererClassId.rawValue] = value;
             if (parent) attachThreeChild(parent, node);
             return;
         }
 
-        // attach
+        // [attach]
         if (name === SPECIAL_PROPERTIES.ATTACH) {
             getLocalState(node).attach = Array.isArray(value) ? value.map((v) => v.toString()) : value;
             if (parent) attachThreeChild(parent, node);
@@ -312,9 +319,8 @@ export class NgtRendererStore {
 
     getCreationState() {
         const injectedArgs = this.firstNonInjectedDirective(NgtArgs)?.args || [];
-        const injectedRef = this.firstNonInjectedDirective(NgtRef)?.ref || null;
         const store = this.tryGetPortalStore();
-        return { injectedArgs, injectedRef, store };
+        return { injectedArgs, store };
     }
 
     destroy(node: NgtRendererNode, parent?: NgtRendererNode) {
