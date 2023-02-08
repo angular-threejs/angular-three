@@ -1,5 +1,12 @@
 
 
+### [1.5.1](https://github.com/angular-threejs/angular-three/compare/1.5.0...1.5.1) (2023-02-08)
+
+
+### Bug Fixes
+
+* only attach if there's parent ([9728392](https://github.com/angular-threejs/angular-three/commit/9728392da28e2d32c06568231b08a878b1badd9e))
+
 ## [1.5.0](https://github.com/angular-threejs/angular-three/compare/1.5.0-beta.0...1.5.0) (2023-02-08)
 
 ## [1.5.0-beta.0](https://github.com/angular-threejs/angular-three/compare/1.4.5...1.5.0-beta.0) (2023-02-08)
