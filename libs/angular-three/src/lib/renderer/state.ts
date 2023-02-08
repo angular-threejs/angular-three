@@ -249,10 +249,9 @@ export class NgtRendererStore {
     }
 
     isDOM(node: NgtAnyRecord) {
-        return (
-            node['__ngt_renderer__']?.[NgtRendererClassId.type] !== 'compound' &&
-            (node instanceof Element || node instanceof Document)
-        );
+        const rendererNode = node['__ngt_renderer__'];
+        if (rendererNode && rendererNode[NgtRendererClassId.type] !== 'compound') return true;
+        return node instanceof Element || node instanceof Document || node instanceof Window;
     }
 
     get rootScene() {
