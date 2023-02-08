@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, getDebugNode, Injector, Type } from '@angular/core';
 import { NgtArgs } from '../directives/args';
+import { NgtCommonDirective } from '../directives/common';
+import { NgtRef } from '../directives/ref';
 import { NgtStore } from '../stores/store';
 import type { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { getLocalState } from '../utils/instance';
-import { is } from '../utils/is';
 import { NgtCompoundClassId, NgtQueueOpClassId, NgtRendererClassId } from './enums';
 import { attachThreeChild, removeThreeChild, SPECIAL_PROPERTIES } from './utils';
 
@@ -210,11 +211,11 @@ export class NgtRendererStore {
         if (node.__ngt_renderer__[NgtRendererClassId.destroyed]) return;
         // setup [ref] here
         // ref should never change
-        if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
-            node.__ngt_renderer__[NgtRendererClassId.ref] = value;
-            value.nativeElement = node;
-            return;
-        }
+        // if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
+        // node.__ngt_renderer__[NgtRendererClassId.ref] = value;
+        // value.nativeElement = node;
+        // return;
+        // }
 
         const parent = getLocalState(node).parent || node.__ngt_renderer__[NgtRendererClassId.parent];
 
@@ -318,8 +319,9 @@ export class NgtRendererStore {
 
     getCreationState() {
         const injectedArgs = this.firstNonInjectedDirective(NgtArgs)?.args || [];
+        const injectedRef = this.firstNonInjectedDirective(NgtRef)?.ref || null;
         const store = this.tryGetPortalStore();
-        return { injectedArgs, store };
+        return { injectedArgs, injectedRef, store };
     }
 
     destroy(node: NgtRendererNode, parent?: NgtRendererNode) {
@@ -405,8 +407,8 @@ export class NgtRendererStore {
         }
     }
 
-    private firstNonInjectedDirective(dir: Type<NgtArgs>) {
-        let directive: NgtArgs | undefined;
+    private firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {
+        let directive: T | undefined;
 
         let i = this.comments.length - 1;
         while (i >= 0) {
