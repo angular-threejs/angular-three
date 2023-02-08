@@ -143,7 +143,8 @@ export function processThreeEvent(
     priority: number,
     eventName: string,
     callback: (event: any) => void,
-    cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef,
+    targetCdr: ChangeDetectorRef | null
 ): () => void {
     const lS = getLocalState(instance);
     if (eventName === SPECIAL_EVENTS.BEFORE_RENDER) {
@@ -174,7 +175,7 @@ export function processThreeEvent(
 
     lS.handlers = {
         ...lS.handlers,
-        [eventName]: eventToHandler(updatedCallback, cdr),
+        [eventName]: eventToHandler(updatedCallback, cdr, targetCdr),
     };
     // increment the count everytime
     lS.eventCount += 1;
@@ -193,9 +194,14 @@ export function processThreeEvent(
     };
 }
 
-export function eventToHandler(callback: (event: any) => void, cdr: ChangeDetectorRef) {
+export function eventToHandler(
+    callback: (event: any) => void,
+    cdr: ChangeDetectorRef,
+    targetCdr: ChangeDetectorRef | null
+) {
     return (event: Parameters<Exclude<NgtEventHandlers[(typeof supportedEvents)[number]], undefined>>[0]) => {
         callback(event);
+        if (targetCdr) targetCdr.detectChanges();
         cdr.detectChanges();
     };
 }

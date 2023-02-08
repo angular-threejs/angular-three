@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, inject, Injectable, Renderer2, RendererFactory2, RendererType2 } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    getDebugNode,
+    inject,
+    Injectable,
+    Renderer2,
+    RendererFactory2,
+    RendererType2,
+} from '@angular/core';
 import { NGT_CATALOGUE } from '../di/catalogue';
 import { NgtStore } from '../stores/store';
 import { getLocalState, prepare } from '../utils/instance';
@@ -72,11 +80,17 @@ export class NgtRenderer implements Renderer2 {
         // on first pass, we return the Root Scene as the root node
         if (this.root && !this.first) {
             this.first = true;
-            return this.store.createNode('three', this.store.rootScene);
+            const node = this.store.createNode('three', this.store.rootScene);
+            node.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)!.injector;
+            return node;
         }
 
         // handle compound
-        if (this.store.isCompound(name)) return this.store.createNode('compound', element);
+        if (this.store.isCompound(name)) {
+            const compound = this.store.createNode('compound', element);
+            compound.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)!.injector;
+            return compound;
+        }
 
         // handle portal
         if (name === SPECIAL_DOM_TAG.NGT_PORTAL) {
@@ -123,7 +137,9 @@ export class NgtRenderer implements Renderer2 {
             return node;
         }
 
-        return this.store.createNode('dom', element);
+        const domNode = this.store.createNode('dom', element);
+        domNode.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)!.injector;
+        return domNode;
     }
 
     createComment(value: string) {
@@ -325,9 +341,16 @@ export class NgtRenderer implements Renderer2 {
     }
 
     listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
+        const targetCdr = target.__ngt_renderer__[NgtRendererClassId.injectorFactory]?.().get(ChangeDetectorRef, null);
         // if target is DOM node, then we pass that to delegate Renderer
         if (this.store.isDOM(target)) {
-            return this.delegate.listen(target, eventName, callback);
+            const callbackWithCdr = (event: any) => {
+                const value = callback(event);
+                if (targetCdr) targetCdr.detectChanges();
+                this.store.rootCdr.detectChanges();
+                return value;
+            };
+            return this.delegate.listen(target, eventName, callbackWithCdr);
         }
 
         if (
@@ -337,7 +360,7 @@ export class NgtRenderer implements Renderer2 {
         ) {
             const instance = target.__ngt_renderer__[NgtRendererClassId.compounded] || target;
             const priority = getLocalState(target).priority;
-            return processThreeEvent(instance, priority || 0, eventName, callback, this.store.rootCdr);
+            return processThreeEvent(instance, priority || 0, eventName, callback, this.store.rootCdr, targetCdr);
         }
 
         if (
