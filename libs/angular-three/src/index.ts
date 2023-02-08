@@ -3,6 +3,7 @@ export * from './lib/di/before-render';
 export * from './lib/di/catalogue';
 export * from './lib/di/destroy';
 export * from './lib/di/ref';
+export * from './lib/di/run-in-context';
 export * from './lib/directives/args';
 export * from './lib/directives/repeat';
 export * from './lib/loader';
