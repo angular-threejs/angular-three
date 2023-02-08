@@ -1,5 +1,12 @@
 
 
+### [1.6.3](https://github.com/angular-threejs/angular-three/compare/1.6.2...1.6.3) (2023-02-08)
+
+
+### Bug Fixes
+
+* adjust isDOM logic ([f68e443](https://github.com/angular-threejs/angular-three/commit/f68e443d917dc0eb4ce40bb160260917257850d1))
+
 ### [1.6.2](https://github.com/angular-threejs/angular-three/compare/1.6.1...1.6.2) (2023-02-08)
 
 
