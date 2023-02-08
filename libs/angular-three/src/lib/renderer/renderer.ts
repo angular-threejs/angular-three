@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { NGT_CATALOGUE } from '../di/catalogue';
 import { NgtStore } from '../stores/store';
+import { NgtAnyRecord } from '../types';
 import { getLocalState, prepare } from '../utils/instance';
 import { is } from '../utils/is';
 import { NGT_COMPOUND_PREFIXES } from './di';
@@ -345,14 +346,28 @@ export class NgtRenderer implements Renderer2 {
             null
         );
         // if target is DOM node, then we pass that to delegate Renderer
+        const callbackWithCdr = (event: any) => {
+            const value = callback(event);
+            if (targetCdr) targetCdr.detectChanges();
+            this.store.rootCdr.detectChanges();
+            return value;
+        };
         if (this.store.isDOM(target)) {
-            const callbackWithCdr = (event: any) => {
-                const value = callback(event);
-                if (targetCdr) targetCdr.detectChanges();
-                this.store.rootCdr.detectChanges();
-                return value;
-            };
             return this.delegate.listen(target, eventName, callbackWithCdr);
+        }
+
+        // @ts-expect-error - we know that target is not DOM node
+        if (target === this.store.rootScene) {
+            let [domTarget, event] = eventName.split(':');
+            if (event == null) {
+                event = domTarget;
+                domTarget = '';
+            }
+            const eventTarget =
+                domTarget === 'window'
+                    ? (target as NgtAnyRecord)['ownerDocument']['defaultView']
+                    : (target as NgtAnyRecord)['ownerDocument'];
+            return this.delegate.listen(eventTarget, event, callbackWithCdr);
         }
 
         if (
