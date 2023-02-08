@@ -1,5 +1,13 @@
 
 
+## [1.6.0](https://github.com/angular-threejs/angular-three/compare/1.5.1...1.6.0) (2023-02-08)
+
+
+### Features
+
+* add createRunInContext ([16d057f](https://github.com/angular-threejs/angular-three/commit/16d057f4ae46464b0ccd0e4d651bfb1d80b45b9a))
+* revert *ref ([1c98ed6](https://github.com/angular-threejs/angular-three/commit/1c98ed6675270524641f521f0a5a6c539a43a7d6))
+
 ### [1.5.1](https://github.com/angular-threejs/angular-three/compare/1.5.0...1.5.1) (2023-02-08)
 
 
