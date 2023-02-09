@@ -292,7 +292,7 @@ export function createEvents(store: NgtRxStore<NgtState>) {
             case 'lostpointercapture':
                 return (event: NgtDomEvent) => {
                     const { internal } = store.get();
-                    if ('pointerId' in event && !internal.capturedMap.has(event.pointerId)) {
+                    if ('pointerId' in event && internal.capturedMap.has(event.pointerId)) {
                         // If the object event interface had onLostPointerCapture, we'd call it here on every
                         // object that's getting removed.
                         internal.capturedMap.delete(event.pointerId);
