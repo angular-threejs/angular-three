@@ -1,5 +1,12 @@
 
 
+### [1.6.4](https://github.com/angular-threejs/angular-three/compare/1.6.3...1.6.4) (2023-02-09)
+
+
+### Bug Fixes
+
+* fix lostpointercapture event isn't fired ([b77ae3a](https://github.com/angular-threejs/angular-three/commit/b77ae3a654a54aecbd48d28146f99cf63e741faa))
+
 ### [1.6.3](https://github.com/angular-threejs/angular-three/compare/1.6.2...1.6.3) (2023-02-08)
 
 
