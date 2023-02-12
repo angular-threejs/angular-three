@@ -1,5 +1,12 @@
 
 
+### [1.6.8](https://github.com/angular-threejs/angular-three/compare/1.6.7...1.6.8) (2023-02-12)
+
+
+### Bug Fixes
+
+* use safeDetectChanges instaed ([b9d5ad4](https://github.com/angular-threejs/angular-three/commit/b9d5ad4dc0be22c84d04b6196e3cdbc8aef8314c))
+
 ### [1.6.7](https://github.com/angular-threejs/angular-three/compare/1.6.6...1.6.7) (2023-02-12)
 
 
