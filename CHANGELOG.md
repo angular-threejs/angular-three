@@ -1,5 +1,12 @@
 
 
+### [1.6.7](https://github.com/angular-threejs/angular-three/compare/1.6.6...1.6.7) (2023-02-12)
+
+
+### Bug Fixes
+
+* run detectChanges after set ([7cc72f0](https://github.com/angular-threejs/angular-three/commit/7cc72f0ff4fb6221b4b77b45636e6915c0bedac7))
+
 ### [1.6.6](https://github.com/angular-threejs/angular-three/compare/1.6.5...1.6.6) (2023-02-12)
 
 
