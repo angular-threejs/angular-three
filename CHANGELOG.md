@@ -1,5 +1,12 @@
 
 
+### [1.6.11](https://github.com/angular-threejs/angular-three/compare/1.6.10...1.6.11) (2023-02-12)
+
+
+### Bug Fixes
+
+* run cdr after load assets ([da4a798](https://github.com/angular-threejs/angular-three/commit/da4a798452164a462ad9cec889c7712bf0bd5ed6))
+
 ### [1.6.10](https://github.com/angular-threejs/angular-three/compare/1.6.9...1.6.10) (2023-02-12)
 
 
