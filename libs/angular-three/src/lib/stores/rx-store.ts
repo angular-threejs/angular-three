@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { ChangeDetectorRef, inject, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { combineLatest, MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
 import type { NgtAnyRecord } from '../types';
@@ -76,6 +76,7 @@ export class NgtRxStore<
 > extends RxState<TRxState> {
     constructor() {
         super();
+        const cdr = inject(ChangeDetectorRef, { optional: true });
         // set a dummy property so that initial this.get() won't return undefined
         this.set({ __ngt_dummy__: '__ngt_dummy__' } as TRxState);
         // call initialize that might be setup by derived Stores
@@ -92,10 +93,14 @@ export class NgtRxStore<
                             modded[key] = value === undefined ? this.get(key as keyof TRxState) : value;
                             return modded;
                         }, {} as NgtAnyRecord);
-                        return originalSet(modArgs as Partial<TRxState>);
+                        const value = originalSet(modArgs as Partial<TRxState>);
+                        cdr?.detectChanges();
+                        return value;
                     }
                     // @ts-expect-error not sure why ...args here doesn't pass tuple check
-                    return originalSet(...args);
+                    const value = originalSet(...args);
+                    cdr?.detectChanges();
+                    return value;
                 };
             },
         });
