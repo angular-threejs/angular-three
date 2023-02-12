@@ -182,6 +182,9 @@ export class NgtRenderer implements Renderer2 {
             parent.__ngt_renderer__[NgtRendererClassId.type] === 'three' &&
             newChild.__ngt_renderer__[NgtRendererClassId.type] === 'three'
         ) {
+            // if child already attached to a parent, skip
+            if (getLocalState(newChild).parent) return;
+            // attach THREE child
             attachThreeChild(parent, newChild);
             // here, we handle the special case of if the parent has a compoundParent, which means this child is part of a compound parent template
             if (!newChild.__ngt_renderer__[NgtRendererClassId.compound]) return;
