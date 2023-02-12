@@ -1,5 +1,12 @@
 
 
+### [1.6.5](https://github.com/angular-threejs/angular-three/compare/1.6.4...1.6.5) (2023-02-12)
+
+
+### Bug Fixes
+
+* prevent a THREE child is attached to a parent when it is already attached ([66a98e3](https://github.com/angular-threejs/angular-three/commit/66a98e32b6bd5a0ec1f4e96f3b6fc75987c97b35))
+
 ### [1.6.4](https://github.com/angular-threejs/angular-three/compare/1.6.3...1.6.4) (2023-02-09)
 
 
