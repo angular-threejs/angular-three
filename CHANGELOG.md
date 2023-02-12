@@ -1,5 +1,12 @@
 
 
+### [1.6.9](https://github.com/angular-threejs/angular-three/compare/1.6.8...1.6.9) (2023-02-12)
+
+
+### Bug Fixes
+
+* revert detect changes in store ([3e36bca](https://github.com/angular-threejs/angular-three/commit/3e36bca1c0203338718f2c550c30a5a91aac9173))
+
 ### [1.6.8](https://github.com/angular-threejs/angular-three/compare/1.6.7...1.6.8) (2023-02-12)
 
 
