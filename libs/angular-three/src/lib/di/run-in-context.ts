@@ -4,7 +4,7 @@ export function createRunInContext() {
     const nodeInjector = inject(Injector);
     const envInjector = inject(EnvironmentInjector);
 
-    const originalGet = envInjector.get;
+    const originalGet = envInjector.get.bind(envInjector);
 
     return <TReturn>(cb: () => TReturn): TReturn => {
         envInjector.get = (...args: Parameters<EnvironmentInjector['get']>) => {
