@@ -1,5 +1,13 @@
 
 
+### [1.6.6](https://github.com/angular-threejs/angular-three/compare/1.6.5...1.6.6) (2023-02-12)
+
+
+### Bug Fixes
+
+* bind environment injector in runInContext ([aa905ff](https://github.com/angular-threejs/angular-three/commit/aa905ffdba2187bf407c34c3a570edeba9b1821d))
+* compound can also be DOM (todo: need a way to exclude compoundPrefix) ([ef25fc5](https://github.com/angular-threejs/angular-three/commit/ef25fc567264e3eb32b793cccd3af12fa2959999))
+
 ### [1.6.5](https://github.com/angular-threejs/angular-three/compare/1.6.4...1.6.5) (2023-02-12)
 
 
