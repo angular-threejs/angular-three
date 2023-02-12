@@ -1,3 +1,4 @@
+import { ChangeDetectorRef, inject } from '@angular/core';
 import {
     catchError,
     forkJoin,
@@ -52,6 +53,7 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
     onProgress?: (event: ProgressEvent) => void
 ): Observable<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap>>> {
     const urls$ = isObservable(input) ? input : of(input);
+    const cdr = inject(ChangeDetectorRef);
 
     return urls$.pipe(
         map((inputs) => {
@@ -92,6 +94,9 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
                         result[key as keyof typeof result] = results[keys.indexOf(key)];
                         return result;
                     }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap> });
+                }),
+                tap(() => {
+                    requestAnimationFrame(() => cdr.detectChanges());
                 })
             );
         })
