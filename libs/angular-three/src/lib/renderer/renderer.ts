@@ -236,8 +236,12 @@ export class NgtRenderer implements Renderer2 {
             // if child is three but haven't been attached to a parent yet
             (newChild.__ngt_renderer__[NgtRendererClassId.type] === 'three' && !getLocalState(newChild).parent) ||
             // or both parent and child are DOM elements
-            (parent.__ngt_renderer__[NgtRendererClassId.type] === 'dom' &&
-                newChild.__ngt_renderer__[NgtRendererClassId.type] === 'dom');
+            ((parent.__ngt_renderer__[NgtRendererClassId.type] === 'dom' ||
+                (parent.__ngt_renderer__[NgtRendererClassId.type] === 'compound' &&
+                    !parent.__ngt_renderer__[NgtRendererClassId.compounded])) &&
+                (newChild.__ngt_renderer__[NgtRendererClassId.type] === 'dom' ||
+                    (newChild.__ngt_renderer__[NgtRendererClassId.type] === 'compound' &&
+                        !newChild.__ngt_renderer__[NgtRendererClassId.compounded])));
 
         if (shouldFindGrandparentInstance) {
             // we'll try to get the grandparent instance here so that we can run appendChild with both instances
