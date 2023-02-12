@@ -1,5 +1,12 @@
 
 
+### [1.6.10](https://github.com/angular-threejs/angular-three/compare/1.6.9...1.6.10) (2023-02-12)
+
+
+### Bug Fixes
+
+* add key$ to select observable from RxStore ([4b87be0](https://github.com/angular-threejs/angular-three/commit/4b87be0247a7125e364f1f2ed85b6bd000e171c5))
+
 ### [1.6.9](https://github.com/angular-threejs/angular-three/compare/1.6.8...1.6.9) (2023-02-12)
 
 
