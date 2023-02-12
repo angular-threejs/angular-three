@@ -3,6 +3,7 @@ import { RxState } from '@rx-angular/state';
 import { combineLatest, MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 
 export const startWithUndefined = <T>(): MonoTypeOperatorFunction<T> => startWith<T>(undefined! as T);
 
@@ -94,12 +95,12 @@ export class NgtRxStore<
                             return modded;
                         }, {} as NgtAnyRecord);
                         const value = originalSet(modArgs as Partial<TRxState>);
-                        cdr?.detectChanges();
+                        safeDetectChanges(cdr);
                         return value;
                     }
                     // @ts-expect-error not sure why ...args here doesn't pass tuple check
                     const value = originalSet(...args);
-                    cdr?.detectChanges();
+                    safeDetectChanges(cdr);
                     return value;
                 };
             },
