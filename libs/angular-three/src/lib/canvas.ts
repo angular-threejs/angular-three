@@ -243,6 +243,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         if (this.glRef) this.glRef.destroy();
         if (this.glEnvInjector) this.glEnvInjector.destroy();
         injectNgtLoader.destroy();
+        this.store.destroy(this.glCanvas.nativeElement);
         super.ngOnDestroy();
     }
 

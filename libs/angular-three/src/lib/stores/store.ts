@@ -384,6 +384,33 @@ export class NgtStore extends NgtRxStore<NgtState> {
         this.invalidate();
     }
 
+    destroy(canvas: HTMLCanvasElement) {
+        this.set((state) => ({
+            internal: { ...state.internal, active: false },
+        }));
+
+        setTimeout(() => {
+            const { gl, xr, events } = this.get();
+            if (gl) {
+                if (events.disconnect) {
+                    events.disconnect();
+                }
+
+                gl.renderLists.dispose();
+                gl.forceContextLoss();
+
+                if (gl.xr && gl.xr.enabled) {
+                    gl.xr.setAnimationLoop(null);
+                    xr.disconnect();
+                }
+
+                dispose(this.get());
+
+                rootStateMap.delete(canvas);
+            }
+        }, 500);
+    }
+
     private resize() {
         const state = this.get();
         let oldSize = state.size;
@@ -427,4 +454,13 @@ function computeInitialSize(canvas: HTMLCanvasElement | THREE.OffscreenCanvas, d
     }
 
     return { width: 0, height: 0, top: 0, left: 0 };
+}
+
+// Disposes an object and all its properties
+function dispose<TObj extends { dispose?: () => void; type?: string; [key: string]: any }>(obj: TObj) {
+    if (obj.dispose && !is.scene(obj)) obj.dispose();
+    for (const p in obj) {
+        (p as any).dispose?.();
+        delete obj[p];
+    }
 }
