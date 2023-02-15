@@ -29,38 +29,23 @@ export class NgtRendererFactory implements RendererFactory2 {
 
     private rendererMap = new Map<string, Renderer2>();
     private portals: NgtRendererNode[] = [];
+    private rendererStore = new NgtRendererStore({
+        store: this.store,
+        cdr: this.cdr,
+        portals: this.portals,
+        compoundPrefixes: this.compoundPrefixes,
+        document: this.document,
+    });
 
     createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
         const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
         if (!type) return delegateRenderer;
 
         let renderer = this.rendererMap.get(type.id);
-        if (renderer) return renderer;
-
-        if (!hostElement) {
-            const store = new NgtRendererStore({
-                store: this.store,
-                cdr: this.cdr,
-                portals: this.portals,
-                compoundPrefixes: this.compoundPrefixes,
-                document: this.document,
-            });
-            renderer = new NgtRenderer(delegateRenderer, store, this.catalogue);
-            this.rendererMap.set(type.id, renderer);
-        }
-
         if (!renderer) {
-            const store = new NgtRendererStore({
-                store: this.store,
-                cdr: this.cdr,
-                portals: this.portals,
-                compoundPrefixes: this.compoundPrefixes,
-                document: this.document,
-            });
-            renderer = new NgtRenderer(delegateRenderer, store, this.catalogue, false);
+            renderer = new NgtRenderer(delegateRenderer, this.rendererStore, this.catalogue, !hostElement);
             this.rendererMap.set(type.id, renderer);
         }
-
         return renderer;
     }
 }
@@ -69,20 +54,19 @@ export class NgtRendererFactory implements RendererFactory2 {
  * Anything abbreviated with rS/RS stands for RendererState
  */
 export class NgtRenderer implements Renderer2 {
-    private first = false;
     constructor(
         private readonly delegate: Renderer2,
         private readonly store: NgtRendererStore,
         private readonly catalogue: Record<string, new (...args: any[]) => any>,
-        private readonly root = true
+        private root = true
     ) {}
 
     createElement(name: string, namespace?: string | null | undefined) {
         const element = this.delegate.createElement(name, namespace);
 
         // on first pass, we return the Root Scene as the root node
-        if (this.root && !this.first) {
-            this.first = true;
+        if (this.root) {
+            this.root = false;
             const node = this.store.createNode('three', this.store.rootScene);
             node.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)!.injector;
             return node;
