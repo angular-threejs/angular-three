@@ -1,5 +1,12 @@
 
 
+### [1.7.1](https://github.com/angular-threejs/angular-three/compare/1.7.0...1.7.1) (2023-02-15)
+
+
+### Bug Fixes
+
+* clean up renderer more ([614f698](https://github.com/angular-threejs/angular-three/commit/614f698a7457c156d9d0a9dd601d53b372c131dc))
+
 ## [1.7.0](https://github.com/angular-threejs/angular-three/compare/1.6.11...1.7.0) (2023-02-15)
 
 
