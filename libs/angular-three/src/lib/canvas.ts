@@ -9,9 +9,11 @@ import {
     HostBinding,
     inject,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
+    SimpleChanges,
     Type,
     ViewChild,
     ViewContainerRef,
@@ -22,7 +24,7 @@ import { injectNgtLoader } from './loader';
 import { provideNgtRenderer } from './renderer/provider';
 import { NgtRxStore } from './stores/rx-store';
 import { NgtStore, rootStateMap } from './stores/store';
-import type { NgtCanvasInputs, NgtDomEvent, NgtDpr, NgtState } from './types';
+import type { NgtAnyRecord, NgtCanvasInputs, NgtDomEvent, NgtDpr, NgtState } from './types';
 import { is } from './utils/is';
 import { createPointerEvents } from './web/events';
 
@@ -48,7 +50,7 @@ import { createPointerEvents } from './web/events';
         `,
     ],
 })
-export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, OnDestroy {
+export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, OnDestroy, OnChanges {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly envInjector = inject(EnvironmentInjector);
     private readonly host = inject(ElementRef) as ElementRef<HTMLElement>;
@@ -74,6 +76,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
     }
 
     @Input() sceneGraph!: Type<any>;
+    @Input() sceneGraphInputs: NgtAnyRecord = {};
     @Input() compoundPrefixes: string[] = [];
 
     @Input() set linear(linear: boolean) {
@@ -142,6 +145,12 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
 
     private glRef?: ComponentRef<unknown>;
     private glEnvInjector?: EnvironmentInjector;
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['sceneGraphInputs'] && this.glRef) {
+            this.setSceneGraphInputs();
+        }
+    }
 
     ngOnInit() {
         if (!this.get('eventSource')) {
@@ -222,6 +231,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
                 environmentInjector: this.glEnvInjector,
             });
             this.glRef.changeDetectorRef.detach();
+            this.setSceneGraphInputs();
 
             // here, we override the detectChanges to also call detectChanges on the ComponentRef
             this.overrideDetectChanges();
@@ -242,5 +252,12 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
             originalDetectChanges();
             this.glRef?.changeDetectorRef.detectChanges();
         };
+    }
+
+    private setSceneGraphInputs() {
+        for (const key of Object.keys(this.sceneGraphInputs)) {
+            this.glRef?.setInput(key, this.sceneGraphInputs[key]);
+        }
+        this.cdr.detectChanges();
     }
 }
