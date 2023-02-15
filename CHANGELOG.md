@@ -1,5 +1,12 @@
 
 
+## [1.7.0](https://github.com/angular-threejs/angular-three/compare/1.6.11...1.7.0) (2023-02-15)
+
+
+### Features
+
+* add sceneGraphInputs ([cd0d275](https://github.com/angular-threejs/angular-three/commit/cd0d27547d6015a9c50a64ad2ae4ede6e340238f))
+
 ### [1.6.11](https://github.com/angular-threejs/angular-three/compare/1.6.10...1.6.11) (2023-02-12)
 
 
