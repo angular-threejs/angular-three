@@ -69,18 +69,20 @@ export class NgtRendererFactory implements RendererFactory2 {
  * Anything abbreviated with rS/RS stands for RendererState
  */
 export class NgtRenderer implements Renderer2 {
+    private first = false;
     constructor(
         private readonly delegate: Renderer2,
         private readonly store: NgtRendererStore,
         private readonly catalogue: Record<string, new (...args: any[]) => any>,
-        private readonly first = true
+        private readonly root = true
     ) {}
 
     createElement(name: string, namespace?: string | null | undefined) {
         const element = this.delegate.createElement(name, namespace);
 
         // on first pass, we return the Root Scene as the root node
-        if (this.first) {
+        if (this.root && !this.first) {
+            this.first = true;
             const node = this.store.createNode('three', this.store.rootScene);
             node.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)!.injector;
             return node;

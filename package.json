@@ -3,7 +3,8 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
-        "release": "dotenv release-it --"
+        "release": "dotenv release-it --",
+        "start": "nx serve example"
     },
     "private": true,
     "devDependencies": {
