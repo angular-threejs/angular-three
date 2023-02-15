@@ -1,5 +1,12 @@
 
 
+### [1.7.2](https://github.com/angular-threejs/angular-three/compare/1.7.1...1.7.2) (2023-02-15)
+
+
+### Bug Fixes
+
+* destroy canvas properly ([34e26c9](https://github.com/angular-threejs/angular-three/commit/34e26c90aa49ea120b623488372f6bd817278bbf))
+
 ### [1.7.1](https://github.com/angular-threejs/angular-three/compare/1.7.0...1.7.1) (2023-02-15)
 
 
