@@ -70,10 +70,16 @@ export class NgtRendererStore {
             rendererNode['ownerDocument'] = this.root.document;
         }
 
-        if (state[NgtRendererClassId.type] === 'comment') {
+        // assign injectorFactory on non-three type since
+        // rendererNode is an instance of DOM Node
+        if (state[NgtRendererClassId.type] !== 'three') {
             state[NgtRendererClassId.injectorFactory] = () => getDebugNode(rendererNode)!.injector;
+        }
+
+        if (state[NgtRendererClassId.type] === 'comment') {
             // we attach an arrow function to the Comment node
             // In our directives, we can call this function to then start tracking the RendererNode
+            // this is done to limit the amount of Nodes we need to process for getCreationState
             rendererNode['__ngt_renderer_add_comment__'] = (portalNode?: NgtRendererNode) => {
                 if (portalNode && portalNode.__ngt_renderer__[NgtRendererClassId.type] === 'portal') {
                     this.portals.push(portalNode);
@@ -81,11 +87,6 @@ export class NgtRendererStore {
                     this.comments.push(rendererNode);
                 }
             };
-            return rendererNode;
-        }
-
-        if (state[NgtRendererClassId.type] === 'portal') {
-            state[NgtRendererClassId.injectorFactory] = () => getDebugNode(rendererNode)!.injector;
             return rendererNode;
         }
 
@@ -119,18 +120,19 @@ export class NgtRendererStore {
     }
 
     setCompound(compound: NgtRendererNode, instance: NgtRendererNode) {
-        compound.__ngt_renderer__[NgtRendererClassId.compounded] = instance;
-        const attributes = Object.keys(compound.__ngt_renderer__[NgtRendererClassId.attributes]);
-        const properties = Object.keys(compound.__ngt_renderer__[NgtRendererClassId.properties]);
+        const rS = compound.__ngt_renderer__;
+        rS[NgtRendererClassId.compounded] = instance;
+        const attributes = Object.keys(rS[NgtRendererClassId.attributes]);
+        const properties = Object.keys(rS[NgtRendererClassId.properties]);
 
         if (attributes.length) {
             for (const key of attributes) {
-                this.applyAttribute(instance, key, compound.__ngt_renderer__[NgtRendererClassId.attributes][key]);
+                this.applyAttribute(instance, key, rS[NgtRendererClassId.attributes][key]);
             }
         }
         if (properties.length) {
             for (const key of properties) {
-                this.applyProperty(instance, key, compound.__ngt_renderer__[NgtRendererClassId.properties][key]);
+                this.applyProperty(instance, key, rS[NgtRendererClassId.properties][key]);
             }
         }
 
@@ -142,11 +144,12 @@ export class NgtRendererStore {
     }
 
     executeOperation(node: NgtRendererNode, type: NgtQueueOp[NgtQueueOpClassId.type] = 'op') {
-        if (node.__ngt_renderer__[NgtRendererClassId.queueOps]?.size) {
-            node.__ngt_renderer__[NgtRendererClassId.queueOps].forEach((op) => {
+        const rS = node.__ngt_renderer__;
+        if (rS[NgtRendererClassId.queueOps]?.size) {
+            rS[NgtRendererClassId.queueOps].forEach((op) => {
                 if (op[NgtQueueOpClassId.type] === type) {
                     op[NgtQueueOpClassId.op]();
-                    node.__ngt_renderer__[NgtRendererClassId.queueOps].delete(op);
+                    rS[NgtRendererClassId.queueOps].delete(op);
                 }
             });
         }
@@ -167,7 +170,8 @@ export class NgtRendererStore {
     }
 
     applyAttribute(node: NgtRendererNode, name: string, value: string) {
-        if (node.__ngt_renderer__[NgtRendererClassId.destroyed]) return;
+        const rS = node.__ngt_renderer__;
+        if (rS[NgtRendererClassId.destroyed]) return;
         if (name === SPECIAL_PROPERTIES.RENDER_PRIORITY) {
             // priority needs to be set as an attribute string so that they can be set as early as possible
             // we convert that string to a number. if it's invalid, 0
@@ -181,7 +185,7 @@ export class NgtRendererStore {
 
         if (name === SPECIAL_PROPERTIES.COMPOUND) {
             // we set the compound property on instance node now so we know that this instance is being compounded
-            node.__ngt_renderer__[NgtRendererClassId.compound] = [value === '' || value === 'first', {}];
+            rS[NgtRendererClassId.compound] = [value === '' || value === 'first', {}];
             return;
         }
 
@@ -200,7 +204,7 @@ export class NgtRendererStore {
             } else if (!isNaN(Number(maybeCoerced))) {
                 maybeCoerced = Number(maybeCoerced);
             }
-            node.__ngt_renderer__[NgtRendererClassId.rawValue] = maybeCoerced;
+            rS[NgtRendererClassId.rawValue] = maybeCoerced;
             return;
         }
 
@@ -208,20 +212,21 @@ export class NgtRendererStore {
     }
 
     applyProperty(node: NgtRendererNode, name: string, value: any) {
-        if (node.__ngt_renderer__[NgtRendererClassId.destroyed]) return;
+        const rS = node.__ngt_renderer__;
+        if (rS[NgtRendererClassId.destroyed]) return;
 
         // [ref]
         if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
-            node.__ngt_renderer__[NgtRendererClassId.ref] = value;
+            rS[NgtRendererClassId.ref] = value;
             value.nativeElement = node;
             return;
         }
 
-        const parent = getLocalState(node).parent || node.__ngt_renderer__[NgtRendererClassId.parent];
+        const parent = getLocalState(node).parent || rS[NgtRendererClassId.parent];
 
         // [rawValue]
         if (getLocalState(node).isRaw && name === SPECIAL_PROPERTIES.VALUE) {
-            node.__ngt_renderer__[NgtRendererClassId.rawValue] = value;
+            rS[NgtRendererClassId.rawValue] = value;
             if (parent) attachThreeChild(parent, node);
             return;
         }
@@ -233,7 +238,7 @@ export class NgtRendererStore {
             return;
         }
 
-        const compound = node.__ngt_renderer__[NgtRendererClassId.compound];
+        const compound = rS[NgtRendererClassId.compound];
         if (
             compound?.[NgtCompoundClassId.props] &&
             name in compound[NgtCompoundClassId.props] &&
@@ -249,10 +254,10 @@ export class NgtRendererStore {
     }
 
     isDOM(node: NgtAnyRecord) {
-        const rendererNode = node['__ngt_renderer__'];
+        const rS = node['__ngt_renderer__'];
         return (
-            !rendererNode ||
-            (rendererNode[NgtRendererClassId.type] !== 'compound' &&
+            !rS ||
+            (rS[NgtRendererClassId.type] !== 'compound' &&
                 (node instanceof Element || node instanceof Document || node instanceof Window))
         );
     }
@@ -326,11 +331,11 @@ export class NgtRendererStore {
     }
 
     destroy(node: NgtRendererNode, parent?: NgtRendererNode) {
-        const state = node.__ngt_renderer__;
-        if (state[NgtRendererClassId.destroyed]) return;
-        if (state[NgtRendererClassId.type] === 'three') {
-            state[NgtRendererClassId.compound] = undefined!;
-            state[NgtRendererClassId.compoundParent] = undefined!;
+        const rS = node.__ngt_renderer__;
+        if (rS[NgtRendererClassId.destroyed]) return;
+        if (rS[NgtRendererClassId.type] === 'three') {
+            rS[NgtRendererClassId.compound] = undefined!;
+            rS[NgtRendererClassId.compoundParent] = undefined!;
 
             const localState = getLocalState(node);
             if (localState.objects) {
@@ -360,8 +365,8 @@ export class NgtRendererStore {
             }
         }
 
-        if (state[NgtRendererClassId.type] === 'comment') {
-            state[NgtRendererClassId.injectorFactory] = null!;
+        if (rS[NgtRendererClassId.type] === 'comment') {
+            rS[NgtRendererClassId.injectorFactory] = null!;
             delete (node as NgtAnyRecord)['__ngt_renderer_add_comment__'];
             const index = this.comments.findIndex((comment) => comment === node);
             if (index > -1) {
@@ -369,40 +374,40 @@ export class NgtRendererStore {
             }
         }
 
-        if (state[NgtRendererClassId.type] === 'portal') {
-            state[NgtRendererClassId.injectorFactory] = null!;
+        if (rS[NgtRendererClassId.type] === 'portal') {
+            rS[NgtRendererClassId.injectorFactory] = null!;
             const index = this.portals.findIndex((portal) => portal === node);
             if (index > -1) {
                 this.portals.splice(index, 1);
             }
         }
 
-        if (state[NgtRendererClassId.type] === 'compound') {
-            state[NgtRendererClassId.compounded] = undefined!;
-            state[NgtRendererClassId.attributes] = null!;
-            state[NgtRendererClassId.properties] = null!;
+        if (rS[NgtRendererClassId.type] === 'compound') {
+            rS[NgtRendererClassId.compounded] = undefined!;
+            rS[NgtRendererClassId.attributes] = null!;
+            rS[NgtRendererClassId.properties] = null!;
             this.executeOperation(node, 'cleanUp');
-            state[NgtRendererClassId.queueOps].clear();
-            state[NgtRendererClassId.queueOps] = null!;
+            rS[NgtRendererClassId.queueOps].clear();
+            rS[NgtRendererClassId.queueOps] = null!;
         }
 
-        if (state[NgtRendererClassId.ref]) {
+        if (rS[NgtRendererClassId.ref]) {
             // nullify ref
-            state[NgtRendererClassId.ref].nativeElement = null;
-            state[NgtRendererClassId.ref] = undefined!;
+            rS[NgtRendererClassId.ref].nativeElement = null;
+            rS[NgtRendererClassId.ref] = undefined!;
         }
 
         // nullify parent
-        state[NgtRendererClassId.parent] = null;
-        for (const renderChild of state[NgtRendererClassId.children] || []) {
+        rS[NgtRendererClassId.parent] = null;
+        for (const renderChild of rS[NgtRendererClassId.children] || []) {
             if (renderChild.__ngt_renderer__[NgtRendererClassId.type] === 'three' && parent) {
                 removeThreeChild(parent, renderChild, true);
             }
             this.destroy(renderChild, parent);
         }
 
-        state[NgtRendererClassId.children] = [];
-        state[NgtRendererClassId.destroyed] = true;
+        rS[NgtRendererClassId.children] = [];
+        rS[NgtRendererClassId.destroyed] = true;
         if (parent) {
             this.removeChild(parent, node);
         }
