@@ -1,5 +1,12 @@
 
 
+## [1.8.0](https://github.com/angular-threejs/angular-three/compare/1.7.2...1.8.0) (2023-02-17)
+
+
+### Features
+
+* add routing capability ([0186d03](https://github.com/angular-threejs/angular-three/commit/0186d034939bed0f45f4ab53b17a4b71309d8e45))
+
 ### [1.7.2](https://github.com/angular-threejs/angular-three/compare/1.7.1...1.7.2) (2023-02-15)
 
 
