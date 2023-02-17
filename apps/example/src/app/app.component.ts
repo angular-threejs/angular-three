@@ -1,36 +1,45 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
-import { extend, injectBeforeRender, NgtCanvas } from 'angular-three';
+import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { extend, NgtCanvas, NgtRoutedScene } from 'angular-three';
 import * as THREE from 'three';
 
 extend(THREE);
 
 @Component({
     standalone: true,
-    template: `
-        <ngt-mesh #cube>
-            <ngt-box-geometry />
-            <ngt-mesh-basic-material color="red" />
-        </ngt-mesh>
-    `,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class Scene {
-    @ViewChild('cube', { static: true }) cube!: ElementRef<THREE.Mesh>;
-
-    constructor() {
-        injectBeforeRender(({ clock }) => {
-            this.cube.nativeElement.rotation.x = clock.elapsedTime;
-            this.cube.nativeElement.rotation.y = clock.elapsedTime;
-        });
-    }
-}
-
-@Component({
-    standalone: true,
     selector: 'angular-three-root',
-    template: ` <ngt-canvas [sceneGraph]="scene" /> `,
-    imports: [NgtCanvas],
+    template: `
+        <ul>
+            <li>
+                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Red</a>
+            </li>
+            <li>
+                <a routerLink="/blue" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Blue</a>
+            </li>
+        </ul>
+        <ngt-canvas [sceneGraph]="scene" />
+    `,
+    imports: [NgtCanvas, RouterLink, RouterLinkActive],
+    styles: [
+        `
+            ul {
+                display: flex;
+                gap: 1rem;
+            }
+
+            li {
+                list-style: none;
+            }
+
+            a.active {
+                color: blue;
+                text-decoration: underline;
+                border: 1px solid;
+                padding: 0.25rem;
+            }
+        `,
+    ],
 })
 export class AppComponent {
-    readonly scene = Scene;
+    readonly scene = NgtRoutedScene;
 }

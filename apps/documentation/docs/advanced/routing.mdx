@@ -1,0 +1,128 @@
+---
+id: routing
+title: Routing
+sidebar_label: Routing
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Sometimes, we might have use-cases where we need to load different Scene graph while keeping the Canvas alive on the route level.
+To help with this, `angular-three` provides the component `NgtRoutedScene`
+
+To start, we can create two Scene components: `RedScene` and `BlueScene`
+
+<Tabs>
+<TabItem value="red" label="red-scene.component.ts" default>
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
+import { injectBeforeRender } from 'angular-three';
+
+@Component({
+    standalone: true,
+    template: `
+        <ngt-mesh #cube>
+            <ngt-box-geometry />
+            <ngt-mesh-basic-material color="red" />
+        </ngt-mesh>
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export default class RedScene {
+    @ViewChild('cube', { static: true }) cube!: ElementRef<THREE.Mesh>;
+
+    constructor() {
+        injectBeforeRender(({ clock }) => {
+            this.cube.nativeElement.rotation.x = clock.elapsedTime;
+            this.cube.nativeElement.rotation.y = clock.elapsedTime;
+        });
+    }
+}
+```
+
+</TabItem>
+<TabItem value="blue" label="blue-scene.component.ts">
+
+```ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
+import { injectBeforeRender } from 'angular-three';
+
+@Component({
+    standalone: true,
+    template: `
+        <ngt-mesh #cube>
+            <ngt-box-geometry />
+            <ngt-mesh-basic-material color="blue" />
+        </ngt-mesh>
+    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export default class BlueScene {
+    @ViewChild('cube', { static: true }) cube!: ElementRef<THREE.Mesh>;
+
+    constructor() {
+        injectBeforeRender(({ clock }) => {
+            this.cube.nativeElement.rotation.x = clock.elapsedTime;
+            this.cube.nativeElement.rotation.y = clock.elapsedTime;
+        });
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+Next, we'll provide `RedScene` and `BlueScene` as lazy-load component in our route configuration.
+
+```ts title="main.ts"
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideRouter([
+            {
+                path: '',
+                loadComponent: () => import('./app/red-scene.component'),
+            },
+            {
+                path: 'blue',
+                loadComponent: () => import('./app/blue-scene.component'),
+            },
+        ]),
+    ],
+}).catch((err) => console.error(err));
+```
+
+Finally, we'll use `NgtRoutedScene` as the `[sceneGraph]`
+
+```ts title="app.component.ts"
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { extend, NgtCanvas, NgtRoutedScene } from 'angular-three';
+import * as THREE from 'three';
+
+extend(THREE);
+
+@Component({
+    standalone: true,
+    selector: 'angular-three-root',
+    template: `
+        <ul>
+            <li>
+                <a routerLink="/">Red</a>
+            </li>
+            <li>
+                <a routerLink="/blue">Blue</a>
+            </li>
+        </ul>
+        <ngt-canvas [sceneGraph]="scene" />
+    `,
+    imports: [NgtCanvas, RouterLink],
+})
+export class AppComponent {
+    readonly scene = NgtRoutedScene;
+}
+```

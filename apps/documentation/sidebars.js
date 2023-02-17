@@ -45,7 +45,7 @@ const sidebars = {
         {
             type: 'category',
             label: 'Advanced',
-            items: ['advanced/compound', 'advanced/performance'],
+            items: ['advanced/routing', 'advanced/compound', 'advanced/performance'],
         },
     ],
     // By default, Docusaurus generates a sidebar from the docs folder structure

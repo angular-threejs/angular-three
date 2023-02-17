@@ -28,6 +28,7 @@ export class NgtRendererFactory implements RendererFactory2 {
     private readonly document = inject(DOCUMENT);
 
     private rendererMap = new Map<string, Renderer2>();
+    private routedSet = new Set<string>();
     private portals: NgtRendererNode[] = [];
     private rendererStore = new NgtRendererStore({
         store: this.store,
@@ -40,10 +41,18 @@ export class NgtRendererFactory implements RendererFactory2 {
     createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
         const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
         if (!type) return delegateRenderer;
-
+        if ((type as NgtAnyRecord)['type']['isRoutedScene']) {
+            this.routedSet.add(type.id);
+        }
         let renderer = this.rendererMap.get(type.id);
         if (!renderer) {
-            renderer = new NgtRenderer(delegateRenderer, this.rendererStore, this.catalogue, !hostElement);
+            renderer = new NgtRenderer(
+                delegateRenderer,
+                this.rendererStore,
+                this.catalogue,
+                // setting root scene if there's no routed scene OR this component is the routed Scene
+                !hostElement && (this.routedSet.size === 0 || this.routedSet.has(type.id))
+            );
             this.rendererMap.set(type.id, renderer);
         }
         return renderer;

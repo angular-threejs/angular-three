@@ -10,6 +10,7 @@ export * from './lib/loader';
 export * from './lib/loop';
 export * from './lib/pipes/push';
 export * from './lib/portal';
+export * from './lib/routed-scene';
 export * from './lib/stores/rx-store';
 export * from './lib/stores/store';
 export * from './lib/types';
