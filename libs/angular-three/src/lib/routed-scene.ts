@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, takeUntil } from 'rxjs';
+import { injectNgtDestroy } from './di/destroy';
 
 @Component({
     standalone: true,
@@ -9,4 +11,16 @@ import { RouterOutlet } from '@angular/router';
 })
 export class NgtRoutedScene {
     static isRoutedScene = true;
+
+    constructor(router: Router) {
+        const { destroy$, cdr } = injectNgtDestroy();
+        router.events
+            .pipe(
+                filter((event) => event instanceof ActivationEnd),
+                takeUntil(destroy$)
+            )
+            .subscribe(() => {
+                cdr.detectChanges();
+            });
+    }
 }

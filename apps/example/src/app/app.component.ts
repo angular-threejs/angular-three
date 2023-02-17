@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { extend, NgtCanvas, NgtRoutedScene } from 'angular-three';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { extend } from 'angular-three';
 import * as THREE from 'three';
 
 extend(THREE);
@@ -11,15 +11,17 @@ extend(THREE);
     template: `
         <ul>
             <li>
-                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Red</a>
+                <a routerLink="/routed" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Red</a>
             </li>
             <li>
-                <a routerLink="/blue" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Blue</a>
+                <a routerLink="/routed/blue" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                    Blue
+                </a>
             </li>
         </ul>
-        <ngt-canvas [sceneGraph]="scene" />
+        <router-outlet />
     `,
-    imports: [NgtCanvas, RouterLink, RouterLinkActive],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive],
     styles: [
         `
             ul {
@@ -40,6 +42,4 @@ extend(THREE);
         `,
     ],
 })
-export class AppComponent {
-    readonly scene = NgtRoutedScene;
-}
+export class AppComponent {}

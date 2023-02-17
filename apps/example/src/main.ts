@@ -1,18 +1,23 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withDebugTracing } from '@angular/router';
 import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
     providers: [
-        provideRouter([
-            {
-                path: '',
-                loadComponent: () => import('./app/red-scene.component'),
-            },
-            {
-                path: 'blue',
-                loadComponent: () => import('./app/blue-scene.component'),
-            },
-        ]),
+        provideRouter(
+            [
+                {
+                    path: '',
+                    redirectTo: 'routed',
+                    pathMatch: 'full',
+                },
+                {
+                    path: 'routed',
+                    loadComponent: () => import('./app/scene/scene.component'),
+                    loadChildren: () => import('./app/scene/scene.routes'),
+                },
+            ],
+            withDebugTracing()
+        ),
     ],
 }).catch((err) => console.error(err));
