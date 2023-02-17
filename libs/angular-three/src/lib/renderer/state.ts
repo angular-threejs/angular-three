@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, getDebugNode, Injector, Type } from '@angular/core';
+import { NgtInjectedRef } from '../di/ref';
 import { NgtArgs } from '../directives/args';
 import { NgtCommonDirective } from '../directives/common';
+import { NgtParent } from '../directives/parent';
 import { NgtStore } from '../stores/store';
 import type { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
@@ -22,6 +24,7 @@ export type NgtQueueOp = [type: 'op' | 'cleanUp', op: () => void, done?: true];
 export type NgtRendererState = [
     type: 'three' | 'compound' | 'portal' | 'comment' | 'dom',
     parent: NgtRendererNode | null,
+    injectedParent: NgtRendererNode | NgtInjectedRef<NgtRendererNode> | null,
     children: NgtRendererNode[],
     destroyed: boolean,
     compound: [applyFirst: boolean, props: Record<string, any>],
@@ -48,6 +51,7 @@ export class NgtRendererStore {
     createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord) {
         const state = [
             type,
+            null,
             null,
             [],
             false,
@@ -326,8 +330,9 @@ export class NgtRendererStore {
 
     getCreationState() {
         const injectedArgs = this.firstNonInjectedDirective(NgtArgs)?.args || [];
+        const injectedParent = this.firstNonInjectedDirective(NgtParent)?.parent || null;
         const store = this.tryGetPortalStore();
-        return { injectedArgs, store };
+        return { injectedArgs, injectedParent, store };
     }
 
     destroy(node: NgtRendererNode, parent?: NgtRendererNode) {

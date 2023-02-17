@@ -1,6 +1,7 @@
 export const enum NgtRendererClassId {
     type,
     parent,
+    injectedParent,
     children,
     destroyed,
     compound,

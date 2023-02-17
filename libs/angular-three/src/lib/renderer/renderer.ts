@@ -8,6 +8,7 @@ import {
     RendererFactory2,
     RendererType2,
 } from '@angular/core';
+import { take } from 'rxjs';
 import { NGT_CATALOGUE } from '../di/catalogue';
 import { NgtStore } from '../stores/store';
 import { NgtAnyRecord } from '../types';
@@ -15,7 +16,7 @@ import { getLocalState, prepare } from '../utils/instance';
 import { is } from '../utils/is';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererClassId } from './enums';
-import { NgtRendererNode, NgtRendererStore } from './state';
+import { NgtRendererNode, NgtRendererState, NgtRendererStore } from './state';
 import { attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild, SPECIAL_DOM_TAG } from './utils';
 
 @Injectable()
@@ -99,7 +100,14 @@ export class NgtRenderer implements Renderer2 {
             );
         }
 
-        const { injectedArgs, store } = this.store.getCreationState();
+        const { injectedArgs, injectedParent, store } = this.store.getCreationState();
+
+        let parent = injectedParent as NgtRendererState[NgtRendererClassId.injectedParent];
+        if (typeof injectedParent === 'string') {
+            parent = store
+                .get('scene')
+                .getObjectByName(injectedParent) as unknown as NgtRendererState[NgtRendererClassId.injectedParent];
+        }
 
         // handle primitive
         if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
@@ -111,7 +119,11 @@ export class NgtRenderer implements Renderer2 {
                 localState = getLocalState(object);
             }
             if (!localState.store) localState.store = store;
-            return this.store.createNode('three', object);
+            const node = this.store.createNode('three', object);
+            if (parent) {
+                node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
+            }
+            return node;
         }
 
         const threeTag = name.startsWith('ngt') ? name.slice(4) : name;
@@ -127,6 +139,11 @@ export class NgtRenderer implements Renderer2 {
             } else if (is.material(instance)) {
                 localState.attach = ['material'];
             }
+
+            if (parent) {
+                node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
+            }
+
             return node;
         }
 
@@ -145,6 +162,17 @@ export class NgtRenderer implements Renderer2 {
 
         if (cRS[NgtRendererClassId.type] === 'comment') {
             this.store.setParent(newChild, parent);
+            return;
+        }
+
+        if (cRS[NgtRendererClassId.injectedParent]) {
+            if (is.ref(cRS[NgtRendererClassId.injectedParent])) {
+                cRS[NgtRendererClassId.injectedParent].$.pipe(take(1)).subscribe((val) => {
+                    this.appendChild(val, newChild);
+                });
+            } else {
+                this.appendChild(cRS[NgtRendererClassId.injectedParent], newChild);
+            }
             return;
         }
 
@@ -234,7 +262,7 @@ export class NgtRenderer implements Renderer2 {
         // refChild: NgtRendererNode
         // isMove?: boolean | undefined
     ): void {
-        if (!parent.__ngt_renderer__ || parent === newChild) return;
+        if (parent == null || !parent.__ngt_renderer__ || parent === newChild) return;
         this.appendChild(parent, newChild);
     }
 
