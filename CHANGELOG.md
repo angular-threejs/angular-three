@@ -1,5 +1,12 @@
 
 
+## [1.9.0](https://github.com/angular-threejs/angular-three/compare/1.8.1...1.9.0) (2023-02-17)
+
+
+### Features
+
+* add parent directive to add "parent" slot to a 3d object ([346aa3d](https://github.com/angular-threejs/angular-three/commit/346aa3d5e6ac3f7edbc8f48f09ca38a912b98a70))
+
 ### [1.8.1](https://github.com/angular-threejs/angular-three/compare/1.8.0...1.8.1) (2023-02-17)
 
 
