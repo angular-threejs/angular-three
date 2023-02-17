@@ -1,5 +1,12 @@
 
 
+### [1.8.1](https://github.com/angular-threejs/angular-three/compare/1.8.0...1.8.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* ensure cd is ran on route change if routed scene is used ([1702a51](https://github.com/angular-threejs/angular-three/commit/1702a510a53e40f7e50c4814e9e341787432528c))
+
 ## [1.8.0](https://github.com/angular-threejs/angular-three/compare/1.7.2...1.8.0) (2023-02-17)
 
 
