@@ -1,5 +1,12 @@
 
 
+### [1.9.1](https://github.com/angular-threejs/angular-three/compare/1.9.0...1.9.1) (2023-02-18)
+
+
+### Bug Fixes
+
+* infinity loop when parent and injectedParent are the same ([5e02f8a](https://github.com/angular-threejs/angular-three/commit/5e02f8ae1854b61d912027a9650cb40d57c2fe84))
+
 ## [1.9.0](https://github.com/angular-threejs/angular-three/compare/1.8.1...1.9.0) (2023-02-17)
 
 
