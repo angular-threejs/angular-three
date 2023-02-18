@@ -172,10 +172,11 @@ export class NgtRenderer implements Renderer2 {
                         this.appendChild(val, newChild);
                     }
                 });
+                return;
             } else if (parent !== cRS[NgtRendererClassId.injectedParent]) {
                 this.appendChild(cRS[NgtRendererClassId.injectedParent], newChild);
+                return;
             }
-            return;
         }
 
         this.store.setParent(newChild, parent);
