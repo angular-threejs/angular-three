@@ -1,5 +1,12 @@
 
 
+### [1.9.2](https://github.com/angular-threejs/angular-three/compare/1.9.1...1.9.2) (2023-02-18)
+
+
+### Bug Fixes
+
+* return early at the right place ([0ff2d5e](https://github.com/angular-threejs/angular-three/commit/0ff2d5e2cbc7f5ea629c5117056a5e1b8c5b4b86))
+
 ### [1.9.1](https://github.com/angular-threejs/angular-three/compare/1.9.0...1.9.1) (2023-02-18)
 
 
