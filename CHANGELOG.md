@@ -1,5 +1,12 @@
 
 
+### [1.9.4](https://github.com/angular-threejs/angular-three/compare/1.9.3...1.9.4) (2023-02-20)
+
+
+### Bug Fixes
+
+* adjust overriden get logic ([3d074b5](https://github.com/angular-threejs/angular-three/commit/3d074b5bd80deda07894ed0e42a7dc2bb9603c40))
+
 ### [1.9.3](https://github.com/angular-threejs/angular-three/compare/1.9.2...1.9.3) (2023-02-20)
 
 
