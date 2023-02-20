@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter, withDebugTracing } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
@@ -16,8 +16,8 @@ bootstrapApplication(AppComponent, {
                     loadComponent: () => import('./app/scene/scene.component'),
                     loadChildren: () => import('./app/scene/scene.routes'),
                 },
-            ],
-            withDebugTracing()
+            ]
+            // withDebugTracing()
         ),
     ],
 }).catch((err) => console.error(err));

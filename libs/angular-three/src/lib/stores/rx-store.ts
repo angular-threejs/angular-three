@@ -101,8 +101,10 @@ export class NgtRxStore<TState extends object = any, TRxState extends object = T
         Object.defineProperty(this, 'get', {
             get: () => {
                 return (...args: Parameters<RxState<TRxState>['get']>) => {
-                    const state = originalGet(...args);
-                    return state || {};
+                    if ((args as any[]).length === 0) {
+                        return originalGet() ?? {};
+                    }
+                    return originalGet(...args);
                 };
             },
         });
