@@ -78,14 +78,11 @@ export class NgtRxStore<TState extends object = any, TRxState extends object = T
         super();
         // set a dummy property so that initial this.get() won't return undefined
         this.set({ __ngt_dummy__: '__ngt_dummy__' } as TRxState);
-        // call initialize that might be setup by derived Stores
-        this.initialize();
         // override set so our consumers don't have to handle undefined for state that already have default values
         const originalSet = this.set.bind(this);
         Object.defineProperty(this, 'set', {
             get: () => {
-                // Parameters type does not do well with overloads (RxState#set). So we use any[] here
-                return (...args: any[]) => {
+                return (...args: Parameters<RxState<TRxState>['set']>) => {
                     const firstArg = args[0];
                     if (is.obj(firstArg)) {
                         const modArgs = Object.entries(firstArg).reduce((modded, [key, value]) => {
@@ -94,11 +91,24 @@ export class NgtRxStore<TState extends object = any, TRxState extends object = T
                         }, {} as NgtAnyRecord);
                         return originalSet(modArgs as Partial<TRxState>);
                     }
-                    // @ts-expect-error not sure why ...args here doesn't pass tuple check
                     return originalSet(...args);
                 };
             },
         });
+
+        // override get to return {} if get() returns undefined
+        const originalGet = this.get.bind(this);
+        Object.defineProperty(this, 'get', {
+            get: () => {
+                return (...args: Parameters<RxState<TRxState>['get']>) => {
+                    const state = originalGet(...args);
+                    return state || {};
+                };
+            },
+        });
+
+        // call initialize that might be setup by derived Stores
+        this.initialize();
     }
 
     protected initialize() {
