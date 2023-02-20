@@ -1,5 +1,12 @@
 
 
+### [1.9.3](https://github.com/angular-threejs/angular-three/compare/1.9.2...1.9.3) (2023-02-20)
+
+
+### Bug Fixes
+
+* override NgtRxStore#get to prevent undefined ([ea4ea22](https://github.com/angular-threejs/angular-three/commit/ea4ea22e68fa795b624d04a01fd37ee73a9cf4d0))
+
 ### [1.9.2](https://github.com/angular-threejs/angular-three/compare/1.9.1...1.9.2) (2023-02-18)
 
 
