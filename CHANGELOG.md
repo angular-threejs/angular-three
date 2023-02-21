@@ -1,5 +1,12 @@
 
 
+### [1.9.5](https://github.com/angular-threejs/angular-three/compare/1.9.4...1.9.5) (2023-02-21)
+
+
+### Bug Fixes
+
+* clean up renderer ([ea7837e](https://github.com/angular-threejs/angular-three/commit/ea7837ea11765966e585c023f1ceb38ed02ae10b))
+
 ### [1.9.4](https://github.com/angular-threejs/angular-three/compare/1.9.3...1.9.4) (2023-02-20)
 
 
