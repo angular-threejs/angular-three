@@ -1,5 +1,12 @@
 
 
+### [1.9.10](https://github.com/angular-threejs/angular-three/compare/1.9.9...1.9.10) (2023-02-21)
+
+
+### Bug Fixes
+
+* use bitwise to check for inject flags ([0784dd0](https://github.com/angular-threejs/angular-three/commit/0784dd049a916cb6b92377f4feeaae125cae25ec))
+
 ### [1.9.9](https://github.com/angular-threejs/angular-three/compare/1.9.8...1.9.9) (2023-02-21)
 
 
