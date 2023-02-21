@@ -1,5 +1,12 @@
 
 
+### [1.9.7](https://github.com/angular-threejs/angular-three/compare/1.9.6...1.9.7) (2023-02-21)
+
+
+### Bug Fixes
+
+* attempt 2 to prevent internal infinity loop regarding injectors ([dc482f3](https://github.com/angular-threejs/angular-three/commit/dc482f36dae0344aefba31b11bbc50897aa389f3))
+
 ### [1.9.6](https://github.com/angular-threejs/angular-three/compare/1.9.5...1.9.6) (2023-02-21)
 
 
