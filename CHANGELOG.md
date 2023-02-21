@@ -1,5 +1,13 @@
 
 
+### [1.9.6](https://github.com/angular-threejs/angular-three/compare/1.9.5...1.9.6) (2023-02-21)
+
+
+### Bug Fixes
+
+* match with latest react three fiber on applyProps ([b36d3ab](https://github.com/angular-threejs/angular-three/commit/b36d3abffa337122e0994108b53adcb456efe645))
+* prevent internal inifinity loop with runInContext ([d3f95f5](https://github.com/angular-threejs/angular-three/commit/d3f95f527d27907d811bb5ee4e5fc6043ee44636))
+
 ### [1.9.5](https://github.com/angular-threejs/angular-three/compare/1.9.4...1.9.5) (2023-02-21)
 
 
