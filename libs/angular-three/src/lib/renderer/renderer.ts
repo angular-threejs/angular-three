@@ -22,21 +22,16 @@ import { attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild, S
 @Injectable()
 export class NgtRendererFactory implements RendererFactory2 {
     private readonly delegateRendererFactory = inject(RendererFactory2, { skipSelf: true });
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly store = inject(NgtStore);
     private readonly catalogue = inject(NGT_CATALOGUE);
-    private readonly compoundPrefixes = inject(NGT_COMPOUND_PREFIXES);
-    private readonly document = inject(DOCUMENT);
 
     private rendererMap = new Map<string, Renderer2>();
     private routedSet = new Set<string>();
-    private portals: NgtRendererNode[] = [];
     private rendererStore = new NgtRendererStore({
-        store: this.store,
-        cdr: this.cdr,
-        portals: this.portals,
-        compoundPrefixes: this.compoundPrefixes,
-        document: this.document,
+        store: inject(NgtStore),
+        cdr: inject(ChangeDetectorRef),
+        portals: [],
+        compoundPrefixes: inject(NGT_COMPOUND_PREFIXES),
+        document: inject(DOCUMENT),
     });
 
     createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {

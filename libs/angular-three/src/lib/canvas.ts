@@ -227,9 +227,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
                 ],
                 this.envInjector
             );
-            this.glRef = this.glAnchor.createComponent(this.sceneGraph, {
-                environmentInjector: this.glEnvInjector,
-            });
+            this.glRef = this.glAnchor.createComponent(this.sceneGraph, { environmentInjector: this.glEnvInjector });
             this.glRef.changeDetectorRef.detach();
             this.setSceneGraphInputs();
 
