@@ -11,8 +11,8 @@ export function createRunInContext() {
         envInjector.get = (...args: Parameters<EnvironmentInjector['get']>) => {
             try {
                 const originalFlags = (args as any)[2];
-                if (originalFlags === 0) {
-                    (args as any)[2] = 8;
+                if (!(originalFlags & 8)) {
+                    (args as any)[2] |= 8;
                 }
                 const fromEnvInjector = originalGet(...args);
                 if (fromEnvInjector) return fromEnvInjector;
