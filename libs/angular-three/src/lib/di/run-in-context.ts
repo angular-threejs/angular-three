@@ -16,7 +16,7 @@ export function createRunInContext() {
                 }
                 const fromEnvInjector = originalGet(...args);
                 if (fromEnvInjector) return fromEnvInjector;
-                if (fromEnvInjector === null && ((args[1] !== undefined && args[1] === null) || originalFlags === 0))
+                if (fromEnvInjector === null && ((args[1] !== undefined && args[1] === null) || originalFlags & 8))
                     return fromEnvInjector;
                 (args as any)[2] = originalFlags;
                 if (!tryFromNodeInjector) {
