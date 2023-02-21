@@ -1,5 +1,12 @@
 
 
+### [1.9.8](https://github.com/angular-threejs/angular-three/compare/1.9.7...1.9.8) (2023-02-21)
+
+
+### Bug Fixes
+
+* run environment injector with optional flags ([d2498fd](https://github.com/angular-threejs/angular-three/commit/d2498fd97fd48cd49366c0e28f5c6af6ee7ae996))
+
 ### [1.9.7](https://github.com/angular-threejs/angular-three/compare/1.9.6...1.9.7) (2023-02-21)
 
 
