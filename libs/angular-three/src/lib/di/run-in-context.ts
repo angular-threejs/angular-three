@@ -10,9 +10,15 @@ export function createRunInContext() {
         let tryFromNodeInjector = false;
         envInjector.get = (...args: Parameters<EnvironmentInjector['get']>) => {
             try {
+                const originalFlags = (args as any)[2];
+                if (originalFlags === 0) {
+                    (args as any)[2] = 8;
+                }
                 const fromEnvInjector = originalGet(...args);
                 if (fromEnvInjector) return fromEnvInjector;
-                if (fromEnvInjector === null && args[1] !== undefined && args[1] === null) return fromEnvInjector;
+                if (fromEnvInjector === null && ((args[1] !== undefined && args[1] === null) || originalFlags === 0))
+                    return fromEnvInjector;
+                (args as any)[2] = originalFlags;
                 if (!tryFromNodeInjector) {
                     tryFromNodeInjector = true;
                     const fromNodeInjector = nodeInjector.get(...(args as Parameters<Injector['get']>));
