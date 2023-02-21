@@ -1,5 +1,12 @@
 
 
+### [1.9.9](https://github.com/angular-threejs/angular-three/compare/1.9.8...1.9.9) (2023-02-21)
+
+
+### Bug Fixes
+
+* use bitwise to manipulate flags ([12e1a6a](https://github.com/angular-threejs/angular-three/commit/12e1a6adc620bc8b276df7265042f6189823a116))
+
 ### [1.9.8](https://github.com/angular-threejs/angular-three/compare/1.9.7...1.9.8) (2023-02-21)
 
 
