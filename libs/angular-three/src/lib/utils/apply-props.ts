@@ -68,7 +68,12 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
         else {
             currentInstance[key] = value;
             // auto-convert srgb textures
-            if (!rootState?.linear && currentInstance[key] instanceof THREE.Texture) {
+            if (
+                !rootState?.linear &&
+                currentInstance[key] instanceof THREE.Texture &&
+                currentInstance[key].format === THREE.RGBAFormat &&
+                currentInstance[key].type === THREE.UnsignedByteType
+            ) {
                 currentInstance[key]['encoding'] = THREE.sRGBEncoding;
             }
         }
