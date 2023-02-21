@@ -1,0 +1,70 @@
+---
+id: migrate
+title: Migrate to Angular Three (WIP)
+sidebar_label: Migrate to Angular Three (WIP)
+---
+
+## Packages
+
+NGT is now distributed via `angular-three` (and auxiliary packages like `angular-three-soba` or `angular-three-cannon`) instead of `@angular-three/*`
+
+```shell
+npx ng add angular-three
+npx ng add angular-three-soba
+npx ng add angular-three-cannon
+...
+```
+
+## Canvas
+
+The Scene Graph now has to be in a separate component instead of inline as Content Child to the `NgtCanvas`.
+
+```html title="app.component.html"
+<!-- before -->
+<ngt-canvas>
+    <ng-template>
+        <ngt-mesh></ngt-mesh>
+    </ng-template>
+</ngt-canvas>
+```
+
+```html title="app.component.html"
+<!-- after -->
+<ngt-canvas [sceneGraph]="Scene" />
+```
+
+where `Scene` is a reference to the component with our Scene graph.
+
+```ts title="app.component.ts"
+@Component({
+    standalone: true,
+    template: ` <ngt-mesh></ngt-mesh> `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneComponent {}
+
+@Component({
+    standalone: true,
+    templateUrl: 'app.component.html',
+    imports: [NgtCanvas],
+})
+export class AppComponent {
+    readonly Scene = SceneComponent;
+}
+```
+
+:::info
+
+Check out [First Scene](../getting-started/first-scene) for better explanation
+
+:::
+
+## Store
+
+`angular-three` has migrated to [RxAngular](https://www.rx-angular.io/) instead of [NgRx](https://ngrx.io) for our internal states.
+
+:::info
+
+Check out [Store](../api/store) for more info
+
+:::
