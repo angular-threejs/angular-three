@@ -4,6 +4,7 @@ import { selectSlice } from '@rx-angular/state';
 import * as THREE from 'three';
 import { createLoop } from '../loop';
 import type {
+    NgtAnyRecord,
     NgtBeforeRenderRecord,
     NgtCanvasInputs,
     NgtDpr,
@@ -334,7 +335,11 @@ export class NgtStore extends NgtRxStore<NgtState> {
 
         // Safely set color management if available.
         // Avoid accessing THREE.ColorManagement to play nice with older versions
-        if (THREE.ColorManagement) THREE.ColorManagement.legacyMode = legacy ?? true;
+        if (THREE.ColorManagement) {
+            const ColorManagement = THREE.ColorManagement as NgtAnyRecord;
+            if ('enabled' in ColorManagement) ColorManagement['enabled'] = !legacy ?? false;
+            else if ('legacyMode' in ColorManagement) ColorManagement['legacyMode'] = legacy ?? true;
+        }
         const outputEncoding = linear ? THREE.LinearEncoding : THREE.sRGBEncoding;
         const toneMapping = flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
 

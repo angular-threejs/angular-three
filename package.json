@@ -72,7 +72,7 @@
         "ngx-resize": "^1.0.6",
         "nice-color-palettes": "^3.0.0",
         "rxjs": "~7.8.0",
-        "three": "^0.149.0",
+        "three": "^0.150.1",
         "three-stdlib": "^2.21.8",
         "tslib": "^2.5.0",
         "zone.js": "0.12.0"

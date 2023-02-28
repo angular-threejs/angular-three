@@ -19,8 +19,6 @@ export class NgtRoutedScene {
                 filter((event) => event instanceof ActivationEnd),
                 takeUntil(destroy$)
             )
-            .subscribe(() => {
-                cdr.detectChanges();
-            });
+            .subscribe(cdr.detectChanges.bind(cdr));
     }
 }
