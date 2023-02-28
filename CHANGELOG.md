@@ -1,5 +1,17 @@
 
 
+### [1.9.11](https://github.com/angular-threejs/angular-three/compare/1.9.10...1.9.11) (2023-02-28)
+
+
+### Bug Fixes
+
+* adjust ColorManagement automatic configuration to accomodate 150 ([c00d4a1](https://github.com/angular-threejs/angular-three/commit/c00d4a167d9dab72aeef20850e9d987ecc1e59e1))
+
+
+### Documentations
+
+* add migrations ([97ae506](https://github.com/angular-threejs/angular-three/commit/97ae50621abce1ef920693a2f17f42e1bdc3b905))
+
 ### [1.9.10](https://github.com/angular-threejs/angular-three/compare/1.9.9...1.9.10) (2023-02-21)
 
 
