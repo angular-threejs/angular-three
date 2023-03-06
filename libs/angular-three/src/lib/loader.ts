@@ -17,6 +17,7 @@ import {
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtBranchingReturn, NgtLoaderExtensions, NgtLoaderResult, NgtObjectMap } from './types';
 import { makeObjectGraph } from './utils/make';
+import { safeDetectChanges } from './utils/safe-detect-changes';
 
 interface NgtLoader {
     <TReturnType, TUrl extends string | string[] | Record<string, string>>(
@@ -46,15 +47,13 @@ export type NgtLoaderResults<
 
 const cached = new Map<string, Observable<any>>();
 
-function injectLoader<TReturnType, TUrl extends string | string[] | Record<string, string>>(
+function load<TReturnType, TUrl extends string | string[] | Record<string, string>>(
     loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
     input: TUrl | Observable<TUrl>,
     extensions?: NgtLoaderExtensions,
     onProgress?: (event: ProgressEvent) => void
-): Observable<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap>>> {
+) {
     const urls$ = isObservable(input) ? input : of(input);
-    const cdr = inject(ChangeDetectorRef);
-
     return urls$.pipe(
         map((inputs) => {
             const loaderConstructor = loaderConstructorFactory(inputs);
@@ -83,7 +82,19 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
                 }),
                 inputs,
             ] as [Array<Observable<any>>, TUrl | TUrl[]];
-        }),
+        })
+    );
+}
+
+function injectLoader<TReturnType, TUrl extends string | string[] | Record<string, string>>(
+    loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
+    input: TUrl | Observable<TUrl>,
+    extensions?: NgtLoaderExtensions,
+    onProgress?: (event: ProgressEvent) => void
+): Observable<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap>>> {
+    const cdr = inject(ChangeDetectorRef);
+
+    return load(loaderConstructorFactory, input, extensions, onProgress).pipe(
         switchMap(([observables$, inputs]) => {
             return forkJoin(observables$).pipe(
                 map((results) => {
@@ -96,7 +107,7 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
                     }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap> });
                 }),
                 tap(() => {
-                    requestAnimationFrame(() => cdr.detectChanges());
+                    requestAnimationFrame(() => void safeDetectChanges(cdr));
                 })
             );
         })
@@ -108,7 +119,7 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
 };
 
 (injectLoader as NgtLoader).preLoad = (loaderConstructorFactory, inputs, extensions) => {
-    injectLoader(loaderConstructorFactory, inputs, extensions).pipe(take(1)).subscribe();
+    load(loaderConstructorFactory, inputs, extensions).pipe(take(1)).subscribe();
 };
 
 export const injectNgtLoader = injectLoader as NgtLoader;

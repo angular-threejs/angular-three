@@ -26,6 +26,7 @@ import { NgtRxStore } from './stores/rx-store';
 import { NgtStore, rootStateMap } from './stores/store';
 import type { NgtAnyRecord, NgtCanvasInputs, NgtDomEvent, NgtDpr, NgtState } from './types';
 import { is } from './utils/is';
+import { safeDetectChanges } from './utils/safe-detect-changes';
 import { createPointerEvents } from './web/events';
 
 @Component({
@@ -162,7 +163,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
             this.store.set({
                 onPointerMissed: (event: MouseEvent) => {
                     this.pointerMissed.emit(event);
-                    this.cdr.detectChanges();
+                    safeDetectChanges(this.cdr);
                 },
             });
         }
@@ -210,24 +211,20 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         // emit created event if observed
         if (this.created.observed) {
             this.created.emit(this.store.get());
-            this.cdr.detectChanges();
         }
 
         // render
         if (this.glRef) this.glRef.destroy();
 
         requestAnimationFrame(() => {
+            const { store, cdr: changeDetectorRef, compoundPrefixes } = this;
             this.glEnvInjector = createEnvironmentInjector(
-                [
-                    provideNgtRenderer({
-                        store: this.store,
-                        changeDetectorRef: this.cdr,
-                        compoundPrefixes: this.compoundPrefixes,
-                    }),
-                ],
+                [provideNgtRenderer({ store, changeDetectorRef, compoundPrefixes })],
                 this.envInjector
             );
             this.glRef = this.glAnchor.createComponent(this.sceneGraph, { environmentInjector: this.glEnvInjector });
+            // detach the Scene graph from Change Detection mechanism
+            // everything from this point forward will trigger CD manually with detectChanges
             this.glRef.changeDetectorRef.detach();
             this.setSceneGraphInputs();
 
@@ -249,14 +246,14 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         const originalDetectChanges = this.cdr.detectChanges.bind(this.cdr);
         this.cdr.detectChanges = () => {
             originalDetectChanges();
-            this.glRef?.changeDetectorRef.detectChanges();
+safeDetectChanges(this.glRef?.changeDetectorRef);
         };
     }
 
     private setSceneGraphInputs() {
         for (const key of Object.keys(this.sceneGraphInputs)) {
-            this.glRef?.setInput(key, this.sceneGraphInputs[key]);
+            this.glRef!.setInput(key, this.sceneGraphInputs[key]);
         }
-        this.cdr.detectChanges();
+        safeDetectChanges(this.cdr);
     }
 }

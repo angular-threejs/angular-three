@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Injectable, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { combineLatest, distinctUntilChanged, MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
+import { combineLatest, MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 
 export const startWithUndefined = <T>(): MonoTypeOperatorFunction<T> => startWith<T>(undefined! as T);
 
@@ -15,7 +16,6 @@ type EffectFn<TValue> = (
  * - runs on every `next` notification from `source$`
  * - can optionally return a `cleanUp` function that
  * invokes from the 2nd `next` notification onward and on `unsubscribe` (destroyed)
- *
  *
  * @example
  * ```typescript
@@ -48,20 +48,14 @@ export function tapEffect<TValue>(effectFn: EffectFn<TValue>): MonoTypeOperatorF
 
     return tap<TValue>({
         next: (value: TValue) => {
-            if (cleanupFn && firstRun) {
-                cleanupFn({ prev, complete: false, error: false });
-            }
+            if (cleanupFn && firstRun) cleanupFn({ prev, complete: false, error: false });
 
             const cleanUpOrVoid = effectFn(value);
-            if (cleanUpOrVoid) {
-                cleanupFn = cleanUpOrVoid;
-            }
+            if (cleanUpOrVoid) cleanupFn = cleanUpOrVoid;
 
             prev = value;
 
-            if (!firstRun) {
-                firstRun = true;
-            }
+            if (!firstRun) firstRun = true;
         },
         complete: teardown(false),
         unsubscribe: teardown(false),
@@ -70,10 +64,10 @@ export function tapEffect<TValue>(effectFn: EffectFn<TValue>): MonoTypeOperatorF
 }
 
 @Injectable()
-export class NgtRxStore<TState extends object = any, TRxState extends object = TState & Record<string, any>>
-    extends RxState<TRxState>
-    implements OnDestroy
-{
+export class NgtRxStore<
+    TState extends object = any,
+    TRxState extends object = TState & Record<string, any>
+> extends RxState<TRxState> {
     constructor() {
         super();
         // set a dummy property so that initial this.get() won't return undefined
@@ -129,31 +123,7 @@ export class NgtRxStore<TState extends object = any, TRxState extends object = T
         }
 
         this.hold($, () => {
-            requestAnimationFrame(() => void cdr.detectChanges());
+            requestAnimationFrame(() => void safeDetectChanges(cdr));
         });
-    }
-
-    private cache: Record<string, Observable<any>> = {};
-    key$<K extends keyof TRxState>(key: K): Observable<TRxState[K]>;
-    key$<K1 extends keyof TRxState, K2 extends keyof TRxState[K1]>(key1: K1, key2: K2): Observable<TRxState[K1][K2]>;
-    key$<K1 extends keyof TRxState, K2 extends keyof TRxState[K1], K3 extends keyof TRxState[K1][K2]>(
-        key1: K1,
-        key2: K2,
-        key3: K3
-    ): Observable<TRxState[K1][K2][K3]>;
-    key$(...keys: string[]) {
-        const key = keys.join('.');
-        if (!this.cache[key]) {
-            this.cache[key] = this.select(...(keys as [any])).pipe(
-                startWith(this.get(...(keys as [any])) ?? undefined),
-                distinctUntilChanged()
-            );
-        }
-        return this.cache[key];
-    }
-
-    override ngOnDestroy() {
-        this.cache = {};
-        super.ngOnDestroy();
     }
 }

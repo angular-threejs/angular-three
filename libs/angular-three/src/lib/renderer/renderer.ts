@@ -14,6 +14,7 @@ import { NgtStore } from '../stores/store';
 import { NgtAnyRecord } from '../types';
 import { getLocalState, prepare } from '../utils/instance';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererClassId } from './enums';
 import { NgtRendererNode, NgtRendererState, NgtRendererStore } from './state';
@@ -342,8 +343,8 @@ export class NgtRenderer implements Renderer2 {
         // if target is DOM node, then we pass that to delegate Renderer
         const callbackWithCdr = (event: any) => {
             const value = callback(event);
-            if (targetCdr) targetCdr.detectChanges();
-            this.store.rootCdr.detectChanges();
+            safeDetectChanges(targetCdr);
+            safeDetectChanges(this.store.rootCdr);
             return value;
         };
         if (this.store.isDOM(target)) {

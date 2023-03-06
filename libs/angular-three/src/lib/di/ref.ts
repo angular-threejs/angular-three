@@ -53,6 +53,8 @@ export function injectNgtRef<T>(initialValue: NgtInjectedRef<T> | (T | null) = n
         });
     };
 
+    const useCDR = (cdr: ChangeDetectorRef) => void cdRefs.push(cdr);
+
     const $ = obs$.pipe(
         filter((value, index) => index > 0 || value != null),
         takeUntil(destroy$)
@@ -83,6 +85,7 @@ export function injectNgtRef<T>(initialValue: NgtInjectedRef<T> | (T | null) = n
             takeUntil(destroy$)
         );
 
+    // here, we override nativeElement to  add more functionalities to nativeElement
     Object.defineProperty(ref, 'nativeElement', {
         set: (newVal: T) => {
             if (ref.nativeElement !== newVal) {
@@ -110,5 +113,5 @@ export function injectNgtRef<T>(initialValue: NgtInjectedRef<T> | (T | null) = n
         get: () => ref$.value,
     });
 
-    return Object.assign(ref, { subscribe, $, children$, useCDR: (cdr: ChangeDetectorRef) => void cdRefs.push(cdr) });
+    return Object.assign(ref, { subscribe, $, children$, useCDR });
 }

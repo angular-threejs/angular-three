@@ -41,6 +41,8 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
                 const current = instance.__ngt__[type].value;
                 const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);
                 if (foundIndex > -1) {
+                    // if we add an object with the same reference, then we switch it out
+                    // and update the BehaviorSubject
                     current.splice(foundIndex, 1, object);
                     instance.__ngt__[type].next(current);
                 } else {

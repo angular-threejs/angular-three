@@ -4,6 +4,7 @@ import type { NgtEventHandlers, NgtInstanceNode } from '../types';
 import { attach, detach } from '../utils/attach';
 import { getLocalState, invalidateInstance } from '../utils/instance';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { supportedEvents } from '../web/events';
 import { NgtRendererClassId } from './enums';
 
@@ -197,8 +198,8 @@ export function processThreeEvent(
 export function eventToHandler(callback: (event: any) => void, cdr: ChangeDetectorRef, targetCdr?: ChangeDetectorRef) {
     return (event: Parameters<Exclude<NgtEventHandlers[(typeof supportedEvents)[number]], undefined>>[0]) => {
         callback(event);
-        if (targetCdr) targetCdr.detectChanges();
-        cdr.detectChanges();
+        safeDetectChanges(targetCdr);
+        safeDetectChanges(cdr);
     };
 }
 

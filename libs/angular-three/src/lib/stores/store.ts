@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
-import { selectSlice } from '@rx-angular/state';
+import { combineLatest } from 'rxjs';
 import * as THREE from 'three';
 import { createLoop } from '../loop';
 import type {
@@ -68,8 +68,6 @@ export class NgtStore extends NgtRxStore<NgtState> {
                 return { width: w, height: h, top, left, factor: width / w, distance, aspect };
             };
 
-            const pointer = new THREE.Vector2();
-
             let performanceTimeout: ReturnType<typeof setTimeout>;
             const setPerformanceCurrent = (current: number) => {
                 this.set((state) => ({ performance: { ...state.performance, current } }));
@@ -93,7 +91,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
 
                 controls: null,
                 clock: new THREE.Clock(),
-                pointer,
+                pointer: new THREE.Vector2(),
 
                 frameloop: 'always',
                 performance: {
@@ -129,7 +127,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
                     factor: 0,
                     getCurrentViewport,
                 },
-                previousStore: this.parentStore as NgtRxStore<NgtState>,
+                previousStore: this.parentStore as NgtStore,
                 internal: {
                     active: false,
                     priority: 0,
@@ -422,25 +420,29 @@ export class NgtStore extends NgtRxStore<NgtState> {
         let oldDpr = state.viewport.dpr;
         let oldCamera = state.camera;
 
-        this.hold(this.select(selectSlice(['camera', 'size', 'viewport', 'gl'])), () => {
-            const { camera, size, viewport, gl, set } = this.get();
-            // resize camera and renderer on changes to size and dpr
-            if (size !== oldSize || viewport.dpr !== oldDpr) {
-                oldSize = size;
-                oldDpr = viewport.dpr;
-                // update camera
-                updateCamera(camera, size);
-                gl.setPixelRatio(viewport.dpr);
-                gl.setSize(size.width, size.height);
-            }
+        this.hold(
+            combineLatest([this.select('camera'), this.select('size'), this.select('viewport'), this.select('gl')]),
+            ([camera, size, viewport, gl]) => {
+                // resize camera and renderer on changes to size and dpr
+                if (size !== oldSize || viewport.dpr !== oldDpr) {
+                    oldSize = size;
+                    oldDpr = viewport.dpr;
+                    // update camera
+                    updateCamera(camera, size);
+                    gl.setPixelRatio(viewport.dpr);
+                    gl.setSize(size.width, size.height);
+                }
 
-            // update viewport when camera changes
-            if (camera !== oldCamera) {
-                updateCamera(camera, size);
-                oldCamera = camera;
-                set((state) => ({ viewport: { ...state.viewport, ...state.viewport.getCurrentViewport(camera) } }));
+                // update viewport when camera changes
+                if (camera !== oldCamera) {
+                    updateCamera(camera, size);
+                    oldCamera = camera;
+                    this.set((state) => ({
+                        viewport: { ...state.viewport, ...state.viewport.getCurrentViewport(camera) },
+                    }));
+                }
             }
-        });
+        );
     }
 
     private invalidate() {
@@ -454,8 +456,7 @@ function computeInitialSize(canvas: HTMLCanvasElement | THREE.OffscreenCanvas, d
     }
 
     if (canvas instanceof HTMLCanvasElement && canvas.parentElement) {
-        const { width, height, top, left } = canvas.parentElement.getBoundingClientRect();
-        return { width, height, top, left };
+        return canvas.parentElement.getBoundingClientRect();
     }
 
     return { width: 0, height: 0, top: 0, left: 0 };

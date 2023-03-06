@@ -197,11 +197,11 @@ export class NgtPortal extends NgtRxStore<NgtPortalInputs> implements OnInit, On
         });
 
         this.hold(this.parentStore.select(), (previous) =>
-            this.portalStore.set((state) => this.#inject(previous, state))
+            this.portalStore.set((state) => this.inject(previous, state))
         );
 
         requestAnimationFrame(() => {
-            this.portalStore.set((injectState) => this.#inject(this.parentStore.get(), injectState));
+            this.portalStore.set((injectState) => this.inject(this.parentStore.get(), injectState));
         });
         this.portalContentView = this.portalContentAnchor.createEmbeddedView(this.portalContentTemplate);
         this.portalContentView.detectChanges();
@@ -222,7 +222,7 @@ export class NgtPortal extends NgtRxStore<NgtPortalInputs> implements OnInit, On
         super.ngOnDestroy();
     }
 
-    #inject(rootState: NgtState, injectState: NgtState) {
+    private inject(rootState: NgtState, injectState: NgtState) {
         const intersect: Partial<NgtState> = { ...rootState };
 
         Object.keys(intersect).forEach((key) => {

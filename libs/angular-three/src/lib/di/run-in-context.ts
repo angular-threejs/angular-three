@@ -1,5 +1,10 @@
 import { EnvironmentInjector, inject, Injector } from '@angular/core';
 
+/**
+ * Please use this sparringly and know what you're doing.
+ *
+ * Create a runInContext function that has access to the NodeInjector as well
+ */
 export function createRunInContext() {
     const nodeInjector = inject(Injector);
     const envInjector = inject(EnvironmentInjector);

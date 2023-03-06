@@ -1,4 +1,5 @@
 import { Directive, EmbeddedViewRef, inject, TemplateRef, ViewContainerRef } from '@angular/core';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 
 @Directive()
 export abstract class NgtCommonDirective {
@@ -25,7 +26,7 @@ export abstract class NgtCommonDirective {
                 this.view.destroy();
             }
             this.view = this.vcr.createEmbeddedView(this.template);
-            this.view.detectChanges();
+            safeDetectChanges(this.view);
         }
     }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, takeUntil } from 'rxjs';
 import { injectNgtDestroy } from './di/destroy';
+import { safeDetectChanges } from './utils/safe-detect-changes';
 
 @Component({
     standalone: true,
@@ -19,6 +20,6 @@ export class NgtRoutedScene {
                 filter((event) => event instanceof ActivationEnd),
                 takeUntil(destroy$)
             )
-            .subscribe(cdr.detectChanges.bind(cdr));
+            .subscribe(() => safeDetectChanges(cdr));
     }
 }
