@@ -1,5 +1,12 @@
 
 
+### [1.9.12](https://github.com/angular-threejs/angular-three/compare/1.9.11...1.9.12) (2023-03-06)
+
+
+### Bug Fixes
+
+* clean up change detection runs ([4ebddbb](https://github.com/angular-threejs/angular-three/commit/4ebddbb0f722509fcccff15d352a2c69c725c8e9))
+
 ### [1.9.11](https://github.com/angular-threejs/angular-three/compare/1.9.10...1.9.11) (2023-02-28)
 
 
