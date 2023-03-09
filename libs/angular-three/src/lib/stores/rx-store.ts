@@ -38,12 +38,8 @@ export function tapEffect<TValue>(effectFn: EffectFn<TValue>): MonoTypeOperatorF
     let firstRun = false;
     let prev: TValue | undefined = undefined;
 
-    const teardown = (error: boolean) => {
-        return () => {
-            if (cleanupFn) {
-                cleanupFn({ prev, complete: true, error });
-            }
-        };
+    const teardown = (error: boolean) => () => {
+        if (cleanupFn) cleanupFn({ prev, complete: true, error });
     };
 
     return tap<TValue>({
@@ -93,14 +89,12 @@ export class NgtRxStore<
         // override get to return {} if get() returns undefined
         const originalGet = this.get.bind(this);
         Object.defineProperty(this, 'get', {
-            get: () => {
-                return (...args: Parameters<RxState<TRxState>['get']>) => {
-                    if ((args as any[]).length === 0) {
-                        return originalGet() ?? {};
-                    }
+            get:
+                () =>
+                (...args: Parameters<RxState<TRxState>['get']>) => {
+                    if ((args as any[]).length === 0) return originalGet() ?? {};
                     return originalGet(...args);
-                };
-            },
+                },
         });
 
         // call initialize that might be setup by derived Stores
@@ -122,8 +116,6 @@ export class NgtRxStore<
             $ = combineLatest(keys.map((key) => this.select(key).pipe(startWith(this.get(key) ?? undefined))));
         }
 
-        this.hold($, () => {
-            requestAnimationFrame(() => void safeDetectChanges(cdr));
-        });
+        this.hold($, () => void requestAnimationFrame(() => void safeDetectChanges(cdr)));
     }
 }

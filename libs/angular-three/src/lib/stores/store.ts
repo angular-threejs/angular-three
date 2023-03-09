@@ -239,15 +239,11 @@ export class NgtStore extends NgtRxStore<NgtState> {
 
         // setup renderer
         let gl = state.gl;
-        if (!state.gl) {
-            stateToUpdate.gl = gl = makeDefaultRenderer(glOptions, canvasElement);
-        }
+        if (!state.gl) stateToUpdate.gl = gl = makeDefaultRenderer(glOptions, canvasElement);
 
         // setup raycaster
         let raycaster = state.raycaster;
-        if (!raycaster) {
-            stateToUpdate.raycaster = raycaster = new THREE.Raycaster();
-        }
+        if (!raycaster) stateToUpdate.raycaster = raycaster = new THREE.Raycaster();
 
         // set raycaster options
         const { params, ...options } = raycasterOptions || {};
@@ -388,9 +384,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
     }
 
     destroy(canvas: HTMLCanvasElement) {
-        this.set((state) => ({
-            internal: { ...state.internal, active: false },
-        }));
+        this.set((state) => ({ internal: { ...state.internal, active: false } }));
 
         setTimeout(() => {
             const { gl, xr, events } = this.get();
@@ -451,9 +445,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
 }
 
 function computeInitialSize(canvas: HTMLCanvasElement | THREE.OffscreenCanvas, defaultSize?: NgtSize): NgtSize {
-    if (defaultSize) {
-        return defaultSize;
-    }
+    if (defaultSize) return defaultSize;
 
     if (canvas instanceof HTMLCanvasElement && canvas.parentElement) {
         return canvas.parentElement.getBoundingClientRect();

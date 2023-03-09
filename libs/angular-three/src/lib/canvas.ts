@@ -71,8 +71,8 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         });
     }
 
-    @HostBinding('class.ngt-canvas') readonly hostClass = true;
-    @HostBinding('style.pointerEvents') get pointerEvents() {
+    @HostBinding('class.ngt-canvas') readonly hbClass = true;
+    @HostBinding('style.pointerEvents') get hbPointerEvents() {
         return this.get('eventSource') !== this.host.nativeElement ? 'none' : 'auto';
     }
 
@@ -209,9 +209,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         }
 
         // emit created event if observed
-        if (this.created.observed) {
-            this.created.emit(this.store.get());
-        }
+        if (this.created.observed) this.created.emit(this.store.get());
 
         // render
         if (this.glRef) this.glRef.destroy();
@@ -246,7 +244,7 @@ export class NgtCanvas extends NgtRxStore<NgtCanvasInputs> implements OnInit, On
         const originalDetectChanges = this.cdr.detectChanges.bind(this.cdr);
         this.cdr.detectChanges = () => {
             originalDetectChanges();
-safeDetectChanges(this.glRef?.changeDetectorRef);
+            safeDetectChanges(this.glRef?.changeDetectorRef);
         };
     }
 

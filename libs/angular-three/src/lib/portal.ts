@@ -53,10 +53,7 @@ export interface NgtPortalInputs {
     >;
 }
 
-@Directive({
-    selector: 'ngt-portal-before-render',
-    standalone: true,
-})
+@Directive({ selector: '[ngtPortalBeforeRender]', standalone: true })
 export class NgtPortalBeforeRender implements OnInit, OnDestroy {
     private readonly portalStore = inject(NgtStore);
 
@@ -113,8 +110,9 @@ export class NgtPortalContent {
     standalone: true,
     template: `
         <ng-container #portalContentAnchor>
-            <ngt-portal-before-render
+            <ng-container
                 *ngIf="autoRender && portalContentRendered"
+                ngtPortalBeforeRender
                 [renderPriority]="autoRenderPriority"
                 [parentScene]="parentScene"
                 [parentCamera]="parentCamera"

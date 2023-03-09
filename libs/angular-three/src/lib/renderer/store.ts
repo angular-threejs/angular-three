@@ -70,9 +70,7 @@ export class NgtRendererStore {
         const rendererNode = Object.assign(node, { __ngt_renderer__: state });
 
         // assign ownerDocument to node so we can use HostListener in Component
-        if (!rendererNode['ownerDocument']) {
-            rendererNode['ownerDocument'] = this.root.document;
-        }
+        if (!rendererNode['ownerDocument']) rendererNode['ownerDocument'] = this.root.document;
 
         // assign injectorFactory on non-three type since
         // rendererNode is an instance of DOM Node
@@ -84,9 +82,9 @@ export class NgtRendererStore {
             // we attach an arrow function to the Comment node
             // In our directives, we can call this function to then start tracking the RendererNode
             // this is done to limit the amount of Nodes we need to process for getCreationState
-            rendererNode['__ngt_renderer_add_comment__'] = (portalNode?: NgtRendererNode) => {
-                if (portalNode && portalNode.__ngt_renderer__[NgtRendererClassId.type] === 'portal') {
-                    this.portals.push(portalNode);
+            rendererNode['__ngt_renderer_add_comment__'] = (node?: NgtRendererNode) => {
+                if (node && node.__ngt_renderer__[NgtRendererClassId.type] === 'portal') {
+                    this.portals.push(node);
                 } else {
                     this.comments.push(rendererNode);
                 }
@@ -129,15 +127,12 @@ export class NgtRendererStore {
         const attributes = Object.keys(rS[NgtRendererClassId.attributes]);
         const properties = Object.keys(rS[NgtRendererClassId.properties]);
 
-        if (attributes.length) {
-            for (const key of attributes) {
-                this.applyAttribute(instance, key, rS[NgtRendererClassId.attributes][key]);
-            }
+        for (const key of attributes) {
+            this.applyAttribute(instance, key, rS[NgtRendererClassId.attributes][key]);
         }
-        if (properties.length) {
-            for (const key of properties) {
-                this.applyProperty(instance, key, rS[NgtRendererClassId.properties][key]);
-            }
+
+        for (const key of properties) {
+            this.applyProperty(instance, key, rS[NgtRendererClassId.properties][key]);
         }
 
         this.executeOperation(compound);
@@ -147,7 +142,7 @@ export class NgtRendererStore {
         node.__ngt_renderer__[NgtRendererClassId.queueOps].add(op);
     }
 
-    executeOperation(node: NgtRendererNode, type: NgtQueueOp[NgtQueueOpClassId.type] = 'op') {
+    private executeOperation(node: NgtRendererNode, type: NgtQueueOp[NgtQueueOpClassId.type] = 'op') {
         const rS = node.__ngt_renderer__;
         if (rS[NgtRendererClassId.queueOps]?.size) {
             rS[NgtRendererClassId.queueOps].forEach((op) => {

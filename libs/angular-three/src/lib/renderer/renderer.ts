@@ -17,7 +17,7 @@ import { is } from '../utils/is';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererClassId } from './enums';
-import { NgtRendererNode, NgtRendererState, NgtRendererStore } from './state';
+import { NgtRendererNode, NgtRendererState, NgtRendererStore } from './store';
 import { attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild, SPECIAL_DOM_TAG } from './utils';
 
 @Injectable()
@@ -25,9 +25,10 @@ export class NgtRendererFactory implements RendererFactory2 {
     private readonly delegateRendererFactory = inject(RendererFactory2, { skipSelf: true });
     private readonly catalogue = inject(NGT_CATALOGUE);
 
-    private rendererMap = new Map<string, Renderer2>();
-    private routedSet = new Set<string>();
-    private rendererStore = new NgtRendererStore({
+    private readonly rendererMap = new Map<string, Renderer2>();
+    private readonly routedSet = new Set<string>();
+    // all Renderer instances share the same Store
+    private readonly rendererStore = new NgtRendererStore({
         store: inject(NgtStore),
         cdr: inject(ChangeDetectorRef),
         portals: [],

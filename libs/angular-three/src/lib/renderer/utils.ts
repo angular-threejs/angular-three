@@ -90,9 +90,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
     cLS.parent = parent;
 
-    if (cLS.afterAttach) {
-        cLS.afterAttach.emit({ parent, node: child });
-    }
+    if (cLS.afterAttach) cLS.afterAttach.emit({ parent, node: child });
 
     invalidateInstance(child);
     invalidateInstance(parent);
@@ -106,13 +104,8 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
     cLS.parent = null;
 
     // remove child from parent
-    if (pLS.objects) {
-        pLS.remove(child, 'objects');
-    }
-
-    if (pLS.nonObjects) {
-        pLS.remove(child, 'nonObjects');
-    }
+    if (pLS.objects) pLS.remove(child, 'objects');
+    if (pLS.nonObjects) pLS.remove(child, 'nonObjects');
 
     if (cLS.attach) {
         detach(parent, child, cLS.attach);
@@ -155,16 +148,13 @@ export function processThreeEvent(
     }
 
     if (eventName === SPECIAL_EVENTS.AFTER_UPDATE || eventName === SPECIAL_EVENTS.AFTER_ATTACH) {
-        if (!lS[eventName]) {
-            lS[eventName] = new EventEmitter();
-        }
-        const sub = lS[eventName]?.subscribe(callback);
+        let emitter = lS[eventName];
+        if (!emitter) emitter = new EventEmitter();
+        const sub = emitter.subscribe(callback);
         return sub!.unsubscribe.bind(sub);
     }
 
-    if (!lS.handlers) {
-        lS.handlers = {};
-    }
+    if (!lS.handlers) lS.handlers = {};
 
     // try to get the previous handler. compound might have one, the THREE object might also have one with the same name
     const previousHandler = lS.handlers[eventName as keyof typeof lS.handlers];
@@ -174,24 +164,18 @@ export function processThreeEvent(
         callback(event);
     };
 
-    lS.handlers = {
-        ...lS.handlers,
-        [eventName]: eventToHandler(updatedCallback, cdr, targetCdr),
-    };
+    Object.assign(lS.handlers, { [eventName]: eventToHandler(updatedCallback, cdr, targetCdr) });
+
     // increment the count everytime
     lS.eventCount += 1;
     // but only add the instance (target) to the interaction array (so that it is handled by the EventManager with Raycast)
     // the first time eventCount is incremented
-    if (lS.eventCount === 1 && instance['raycast']) {
-        lS.store.get('addInteraction')(instance);
-    }
+    if (lS.eventCount === 1 && instance['raycast']) lS.store.get('addInteraction')(instance);
 
     // clean up the event listener by removing the target from the interaction array
     return () => {
         const localState = getLocalState(instance);
-        if (localState && localState.eventCount) {
-            localState.store.get('removeInteraction')(instance['uuid']);
-        }
+        if (localState && localState.eventCount) localState.store.get('removeInteraction')(instance['uuid']);
     };
 }
 
@@ -208,9 +192,7 @@ export function kebabToPascal(str: string): string {
     const parts = str.split('-');
 
     // map over the parts, capitalizing the first letter of each part
-    const pascalParts = parts.map((part) => {
-        return part.charAt(0).toUpperCase() + part.slice(1);
-    });
+    const pascalParts = parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1));
 
     // join the parts together to create the final PascalCase string
     return pascalParts.join('');

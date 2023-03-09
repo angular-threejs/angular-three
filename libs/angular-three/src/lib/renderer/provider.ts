@@ -10,13 +10,8 @@ export type NgtRendererProviderOptions = {
 };
 
 export function provideNgtRenderer({ store, changeDetectorRef, compoundPrefixes = [] }: NgtRendererProviderOptions) {
-    if (!compoundPrefixes.includes('ngts')) {
-        compoundPrefixes.push('ngts');
-    }
-
-    if (!compoundPrefixes.includes('ngtp')) {
-        compoundPrefixes.push('ngtp');
-    }
+    if (!compoundPrefixes.includes('ngts')) compoundPrefixes.push('ngts');
+    if (!compoundPrefixes.includes('ngtp')) compoundPrefixes.push('ngtp');
 
     return makeEnvironmentProviders([
         { provide: RendererFactory2, useClass: NgtRendererFactory },
