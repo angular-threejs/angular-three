@@ -1,5 +1,12 @@
 
 
+### [1.9.14](https://github.com/angular-threejs/angular-three/compare/1.9.13...1.9.14) (2023-04-01)
+
+
+### Bug Fixes
+
+* afterAttach and afterUpdate events are not reassigned back on node local state ([22197d3](https://github.com/angular-threejs/angular-three/commit/22197d35d7980900d245ef896ffc24cd73f29c8e))
+
 ### [1.9.13](https://github.com/angular-threejs/angular-three/compare/1.9.12...1.9.13) (2023-03-31)
 
 ### [1.9.12](https://github.com/angular-threejs/angular-three/compare/1.9.11...1.9.12) (2023-03-06)
