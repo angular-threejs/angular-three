@@ -149,7 +149,7 @@ export function processThreeEvent(
 
     if (eventName === SPECIAL_EVENTS.AFTER_UPDATE || eventName === SPECIAL_EVENTS.AFTER_ATTACH) {
         let emitter = lS[eventName];
-        if (!emitter) emitter = new EventEmitter();
+        if (!emitter) emitter = lS[eventName] = new EventEmitter();
         const sub = emitter.subscribe(callback);
         return sub!.unsubscribe.bind(sub);
     }
