@@ -23,8 +23,8 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  pnpm install
-                  pnpm --filter "./apps/documentation" install
+                  pnpm install --no-frozen-lockfile
+                  pnpm --filter "./apps/documentation" install --no-frozen-lockfile
 
             - name: Create local build artifacts
               run: |
