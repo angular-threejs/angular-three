@@ -18,6 +18,11 @@ extend(THREE);
                     Blue
                 </a>
             </li>
+            <li>
+                <a routerLink="/routed/extrude" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                    Extrude
+                </a>
+            </li>
         </ul>
         <router-outlet />
     `,
