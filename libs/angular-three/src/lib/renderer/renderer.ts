@@ -131,6 +131,8 @@ export class NgtRenderer implements Renderer2 {
             const instance = prepare(new threeTarget(...injectedArgs), { store, args: injectedArgs });
             const node = this.store.createNode('three', instance);
             const localState = getLocalState(instance);
+
+            // auto-attach for geometry and material
             if (is.geometry(instance)) {
                 localState.attach = ['geometry'];
             } else if (is.material(instance)) {
@@ -243,6 +245,7 @@ export class NgtRenderer implements Renderer2 {
             // if child is three but haven't been attached to a parent yet
             (cRS[NgtRendererClassId.type] === 'three' && !getLocalState(newChild).parent) ||
             // or both parent and child are DOM elements
+            // or they are compound AND haven't had a THREE instance yet
             ((pRS[NgtRendererClassId.type] === 'dom' ||
                 (pRS[NgtRendererClassId.type] === 'compound' && !pRS[NgtRendererClassId.compounded])) &&
                 (cRS[NgtRendererClassId.type] === 'dom' ||
@@ -325,10 +328,10 @@ export class NgtRenderer implements Renderer2 {
 
             if (rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound]) {
                 Object.assign(rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound], {
-                    props: {
-                        ...rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound],
-                        [name]: value,
-                    },
+                    props: Object.assign(
+                        rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound],
+                        { [name]: value }
+                    ),
                 });
             }
             this.setProperty(rS[NgtRendererClassId.compounded], name, value);
@@ -341,13 +344,37 @@ export class NgtRenderer implements Renderer2 {
     listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
         const rS = target.__ngt_renderer__;
         const targetCdr = rS?.[NgtRendererClassId.injectorFactory]?.().get(ChangeDetectorRef, null);
-        // if target is DOM node, then we pass that to delegate Renderer
+
+        if (
+            rS[NgtRendererClassId.type] === 'three' ||
+            (rS[NgtRendererClassId.type] === 'compound' && rS[NgtRendererClassId.compounded])
+        ) {
+            const instance = rS[NgtRendererClassId.compounded] || target;
+            const priority = getLocalState(target).priority;
+            return processThreeEvent(instance, priority || 0, eventName, callback, this.store.rootCdr, targetCdr!);
+        }
+
+        if (rS[NgtRendererClassId.type] === 'compound' && !rS[NgtRendererClassId.compounded]) {
+            this.store.queueOperation(target, [
+                'op',
+                () => this.store.queueOperation(target, ['cleanUp', this.listen(target, eventName, callback)]),
+            ]);
+        }
+
+        // setup a new callback with CDR so that it will trigger change detection properly
         const callbackWithCdr = (event: any) => {
             const value = callback(event);
             safeDetectChanges(targetCdr);
             safeDetectChanges(this.store.rootCdr);
             return value;
         };
+
+        // if the target doesn't have __ngt_renderer__, we delegate
+        if (!rS) {
+            return this.delegate.listen(target, eventName, callbackWithCdr);
+        }
+
+        // if target is DOM node, then we pass that to delegate Renderer
         if (this.store.isDOM(target)) {
             return this.delegate.listen(target, eventName, callbackWithCdr);
         }
@@ -366,21 +393,6 @@ export class NgtRenderer implements Renderer2 {
             return this.delegate.listen(eventTarget, event, callbackWithCdr);
         }
 
-        if (
-            rS[NgtRendererClassId.type] === 'three' ||
-            (rS[NgtRendererClassId.type] === 'compound' && rS[NgtRendererClassId.compounded])
-        ) {
-            const instance = rS[NgtRendererClassId.compounded] || target;
-            const priority = getLocalState(target).priority;
-            return processThreeEvent(instance, priority || 0, eventName, callback, this.store.rootCdr, targetCdr!);
-        }
-
-        if (rS[NgtRendererClassId.type] === 'compound' && !rS[NgtRendererClassId.compounded]) {
-            this.store.queueOperation(target, [
-                'op',
-                () => this.store.queueOperation(target, ['cleanUp', this.listen(target, eventName, callback)]),
-            ]);
-        }
         return () => {};
     }
 
