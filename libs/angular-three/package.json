@@ -6,7 +6,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/angular-threejs/angular-three"
+        "url": "https://github.com/angular-threejs/angular-three/tree/main/libs/angular-three"
     },
     "author": {
         "name": "Chau Tran",
