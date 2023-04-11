@@ -6,6 +6,7 @@ import { createLoop } from '../loop';
 import type {
     NgtAnyRecord,
     NgtBeforeRenderRecord,
+    NgtCameraManual,
     NgtCanvasInputs,
     NgtDpr,
     NgtEquConfig,
@@ -271,12 +272,12 @@ export class NgtStore extends NgtRxStore<NgtState> {
                 }
 
                 // update projection matrix after applyprops
-                camera.updateProjectionMatrix();
+                camera.updateProjectionMatrix?.();
             }
 
             if (!is.instance(camera)) camera = prepare(camera, { store: this });
 
-            stateToUpdate.camera = camera;
+            stateToUpdate.camera = camera as NgtCameraManual;
         }
 
         // Set up XR (one time only!)
