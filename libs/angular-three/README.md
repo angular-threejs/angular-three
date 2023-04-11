@@ -1,5 +1,7 @@
 # Angular Renderer for THREE.js
 
+[![From Vietnam with <3](https://raw.githubusercontent.com/webuild-community/badge/master/svg/love.svg)](https://webuild.community)
+
 Leverage your [Angular](https://angular.io) to build 3D applications with [THREE.js](https://threejs.org)
 
 ## Installation
