@@ -1,5 +1,7 @@
 
 
+### [1.9.16](https://github.com/angular-threejs/angular-three/compare/1.9.15...1.9.16) (2023-04-11)
+
 ### [1.9.15](https://github.com/angular-threejs/angular-three/compare/1.9.14...1.9.15) (2023-04-11)
 
 
