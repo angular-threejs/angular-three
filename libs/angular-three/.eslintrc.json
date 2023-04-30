@@ -16,11 +16,11 @@
                 "@typescript-eslint/member-ordering": "off",
                 "@typescript-eslint/no-non-null-assertion": "off"
             },
-            "extends": ["plugin:@nrwl/nx/angular", "plugin:@angular-eslint/template/process-inline-templates"]
+            "extends": ["plugin:@nx/angular", "plugin:@angular-eslint/template/process-inline-templates"]
         },
         {
             "files": ["*.html"],
-            "extends": ["plugin:@nrwl/nx/angular-template"],
+            "extends": ["plugin:@nx/angular-template"],
             "rules": {}
         }
     ]

@@ -1,5 +1,5 @@
-import { readJson, Tree } from '@nrwl/devkit';
-import { createTreeWithEmptyWorkspace } from '@nrwl/devkit/testing';
+import { readJson, Tree } from '@nx/devkit';
+import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import init, { ANGULAR_THREE_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from './init';
 
 describe('init generator', () => {

@@ -1,4 +1,4 @@
-import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, Tree, updateJson } from '@nrwl/devkit';
+import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, Tree, updateJson } from '@nx/devkit';
 
 export const ANGULAR_THREE_VERSION = '^1.0.0';
 export const THREE_VERSION = '^0.149.0';

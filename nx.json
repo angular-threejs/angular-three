@@ -3,7 +3,7 @@
     "npmScope": "angular-three",
     "tasksRunnerOptions": {
         "default": {
-            "runner": "@nrwl/nx-cloud",
+            "runner": "nx-cloud",
             "options": {
                 "cacheableOperations": ["build", "lint", "test", "e2e"],
                 "accessToken": "OWIxOTExNDctYWVjOC00MTY5LWJmMDktYWVhYzg3ZjhlYTZlfHJlYWQtd3JpdGU="
@@ -34,17 +34,17 @@
         "sharedGlobals": []
     },
     "generators": {
-        "@nrwl/angular:application": {
+        "@nx/angular:application": {
             "style": "css",
             "linter": "eslint",
             "unitTestRunner": "jest",
             "e2eTestRunner": "none"
         },
-        "@nrwl/angular:library": {
+        "@nx/angular:library": {
             "linter": "eslint",
             "unitTestRunner": "jest"
         },
-        "@nrwl/angular:component": {
+        "@nx/angular:component": {
             "style": "css"
         }
     }
