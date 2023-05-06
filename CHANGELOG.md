@@ -1,5 +1,15 @@
 
 
+## [1.10.0](https://github.com/angular-threejs/angular-three/compare/1.9.16...1.10.0) (2023-05-06)
+
+
+### Features
+
+* add custom elements type ([8cb1e2a](https://github.com/angular-threejs/angular-three/commit/8cb1e2a986a981db9138cb1b10e0e8e6071432a2))
+* adjust peer deps ([8ffedb3](https://github.com/angular-threejs/angular-three/commit/8ffedb34aeeb96e6326358718a0bb5e357558da5))
+* update ng-add generator ([2e622c1](https://github.com/angular-threejs/angular-three/commit/2e622c136fbf47c6e447a62b5f9a039d087b2122))
+* update setting color space and encoding with r152 ([3f77a7d](https://github.com/angular-threejs/angular-three/commit/3f77a7d6d0020cd6fb5a5aa259d3e1bd21dbfc65))
+
 ### [1.9.16](https://github.com/angular-threejs/angular-three/compare/1.9.15...1.9.16) (2023-04-11)
 
 ### [1.9.15](https://github.com/angular-threejs/angular-three/compare/1.9.14...1.9.15) (2023-04-11)
