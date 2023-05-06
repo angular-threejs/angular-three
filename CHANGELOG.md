@@ -1,5 +1,12 @@
 
 
+### [1.10.1](https://github.com/angular-threejs/angular-three/compare/1.10.0...1.10.1) (2023-05-06)
+
+
+### Bug Fixes
+
+* add nx to peer deps for now ([00ab36a](https://github.com/angular-threejs/angular-three/commit/00ab36a1f663e5d2062da8f9f946b88fb39b1f0e))
+
 ## [1.10.0](https://github.com/angular-threejs/angular-three/compare/1.9.16...1.10.0) (2023-05-06)
 
 
