@@ -1,5 +1,12 @@
 
 
+### [1.10.3](https://github.com/angular-threejs/angular-three/compare/1.10.2...1.10.3) (2023-05-06)
+
+
+### Bug Fixes
+
+* export three-types ([0497ce6](https://github.com/angular-threejs/angular-three/commit/0497ce6e3ab9c16a8fb6a854e649fb60b52d2c7d))
+
 ### [1.10.2](https://github.com/angular-threejs/angular-three/compare/1.10.1...1.10.2) (2023-05-06)
 
 
