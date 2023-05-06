@@ -16,6 +16,7 @@
         "baseUrl": ".",
         "paths": {
             "@angular-three/plugin": ["libs/plugin/src/index.ts"],
+            "angular-three": ["libs/angular-three/src/index.ts"],
             "angular-three-backup": ["libs/angular-three-backup/src/index.ts"]
         }
     },
