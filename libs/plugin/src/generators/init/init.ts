@@ -1,8 +1,8 @@
 import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, Tree, updateJson } from '@nx/devkit';
 
 export const ANGULAR_THREE_VERSION = '^1.0.0';
-export const THREE_VERSION = '^0.149.0';
-export const THREE_TYPE_VERSION = '^0.149.0';
+export const THREE_VERSION = '^0.152.0';
+export const THREE_TYPE_VERSION = '^0.152.0';
 
 export default async function (tree: Tree) {
     logger.log('Initializing Angular Three...');
@@ -34,6 +34,21 @@ export default async function (tree: Tree) {
         }
         return json;
     });
+
+    // add metadata.json to vscode settings if exists
+    const vscodeSettingsPath = '.vscode/settings.json';
+    if (tree.exists(vscodeSettingsPath)) {
+        logger.info('Enabling typings support for VSCode...');
+        updateJson(tree, vscodeSettingsPath, (json) => {
+            if (json['html.customData'] && Array.isArray(json['html.customData'])) {
+                json['html.customData'].push('./node_modules/angular-three/metadata.json');
+            } else {
+                json['html.customData'] = ['./node_modules/angular-three/metadata.json'];
+            }
+
+            return json;
+        });
+    }
     return () => {
         installPackagesTask(tree);
     };
