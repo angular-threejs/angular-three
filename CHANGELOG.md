@@ -1,5 +1,12 @@
 
 
+### [1.10.2](https://github.com/angular-threejs/angular-three/compare/1.10.1...1.10.2) (2023-05-06)
+
+
+### Bug Fixes
+
+* adjust ng add generator ([dcbda79](https://github.com/angular-threejs/angular-three/commit/dcbda794c108add725398b2434fd633bab537cc2))
+
 ### [1.10.1](https://github.com/angular-threejs/angular-three/compare/1.10.0...1.10.1) (2023-05-06)
 
 
