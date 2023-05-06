@@ -33,5 +33,6 @@
     },
     "sideEffects": false,
     "generators": "./plugin/generators.json",
-    "schematics": "./plugin/generators.json"
+    "schematics": "./plugin/generators.json",
+    "web-types": "./web-types.json"
 }

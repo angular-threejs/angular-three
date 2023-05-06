@@ -163,7 +163,7 @@ export class NgtStore extends NgtRxStore<NgtState> {
                         };
                     },
                 },
-                setEvents: (events: Partial<NgtEventManager>) => {
+                setEvents: (events: Partial<NgtEventManager<any>>) => {
                     this.set((state) => ({ events: { ...state.events, ...events } }));
                 },
                 setSize: (width: number, height: number, top?: number, left?: number) => {

@@ -4,5 +4,6 @@
     "lib": {
         "entryFile": "src/index.ts"
     },
-    "allowedNonPeerDependencies": ["ngx-resize", "@rx-angular/state", "@nx/devkit"]
+    "allowedNonPeerDependencies": ["ngx-resize", "@rx-angular/state", "@nx/devkit"],
+    "assets": ["metadata.json", "web-types.json"]
 }

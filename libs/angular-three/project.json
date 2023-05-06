@@ -24,7 +24,11 @@
         "package": {
             "executor": "nx:run-commands",
             "options": {
-                "commands": ["npx nx build angular-three", "npx nx build angular-three-plugin"],
+                "commands": [
+                    "node ./tools/scripts/generate-json.mjs",
+                    "npx nx build angular-three",
+                    "npx nx build angular-three-plugin"
+                ],
                 "parallel": false
             }
         },

@@ -1,44 +1,30 @@
 import { ChangeDetectorRef, inject } from '@angular/core';
 import {
+    ReplaySubject,
     catchError,
     forkJoin,
     from,
     isObservable,
     map,
-    Observable,
     of,
-    ReplaySubject,
     retry,
     share,
     switchMap,
     take,
     tap,
+    type Observable,
 } from 'rxjs';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import type { NgtBranchingReturn, NgtLoaderExtensions, NgtLoaderResult, NgtObjectMap } from './types';
+import type {
+    NgtAnyRecord,
+    NgtBranchingReturn,
+    NgtLoaderExtensions,
+    NgtLoaderProto,
+    NgtLoaderReturnType,
+    NgtObjectMap,
+} from './types';
 import { makeObjectGraph } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';
-
-interface NgtLoader {
-    <TReturnType, TUrl extends string | string[] | Record<string, string>>(
-        loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
-        input: TUrl | Observable<TUrl>,
-        extensions?: NgtLoaderExtensions<NgtLoaderResult<TReturnType>>,
-        onProgress?: (event: ProgressEvent) => void
-    ): Observable<
-        TUrl extends string[]
-            ? Array<NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap>>
-            : TUrl extends object
-            ? { [key in keyof TUrl]: NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap> }
-            : NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap>
-    >;
-    destroy: () => void;
-    preLoad: <TReturnType, TUrl extends string | string[] | Record<string, string>>(
-        loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
-        inputs: TUrl | Observable<TUrl>,
-        extensions?: NgtLoaderExtensions
-    ) => void;
-}
 
 export type NgtLoaderResults<
     TInput extends string | string[] | Record<string, string>,
@@ -47,10 +33,14 @@ export type NgtLoaderResults<
 
 const cached = new Map<string, Observable<any>>();
 
-function load<TReturnType, TUrl extends string | string[] | Record<string, string>>(
-    loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
+function load<
+    TData,
+    TUrl extends string | string[] | Record<string, string>,
+    TLoaderConstructor extends NgtLoaderProto<TData>
+>(
+    loaderConstructorFactory: (inputs: TUrl) => TLoaderConstructor,
     input: TUrl | Observable<TUrl>,
-    extensions?: NgtLoaderExtensions,
+    extensions?: NgtLoaderExtensions<TLoaderConstructor>,
     onProgress?: (event: ProgressEvent) => void
 ) {
     const urls$ = isObservable(input) ? input : of(input);
@@ -67,7 +57,11 @@ function load<TReturnType, TUrl extends string | string[] | Record<string, strin
                             url,
                             from(loader.loadAsync(url, onProgress)).pipe(
                                 tap((data) => {
-                                    if (data.scene) Object.assign(data, makeObjectGraph(data.scene));
+                                    if ((data as NgtAnyRecord)['scene'])
+                                        Object.assign(
+                                            data as NgtAnyRecord,
+                                            makeObjectGraph((data as NgtAnyRecord)['scene'])
+                                        );
                                 }),
                                 retry(2),
                                 catchError((err) => {
@@ -86,12 +80,17 @@ function load<TReturnType, TUrl extends string | string[] | Record<string, strin
     );
 }
 
-function injectLoader<TReturnType, TUrl extends string | string[] | Record<string, string>>(
-    loaderConstructorFactory: (inputs: TUrl) => new (...args: any[]) => NgtLoaderResult<TReturnType>,
+export function injectNgtLoader<
+    TData,
+    TUrl extends string | string[] | Record<string, string>,
+    TLoaderConstructor extends NgtLoaderProto<TData>,
+    TReturn = NgtLoaderReturnType<TData, TLoaderConstructor>
+>(
+    loaderConstructorFactory: (inputs: TUrl) => TLoaderConstructor,
     input: TUrl | Observable<TUrl>,
-    extensions?: NgtLoaderExtensions,
+    extensions?: NgtLoaderExtensions<TLoaderConstructor>,
     onProgress?: (event: ProgressEvent) => void
-): Observable<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap>>> {
+): Observable<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>> {
     const cdr = inject(ChangeDetectorRef);
 
     return load(loaderConstructorFactory, input, extensions, onProgress).pipe(
@@ -104,7 +103,7 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
                     return keys.reduce((result, key) => {
                         result[key as keyof typeof result] = results[keys.indexOf(key)];
                         return result;
-                    }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturnType, GLTF, GLTF & NgtObjectMap> });
+                    }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap> });
                 }),
                 tap(() => {
                     requestAnimationFrame(() => void safeDetectChanges(cdr));
@@ -114,12 +113,18 @@ function injectLoader<TReturnType, TUrl extends string | string[] | Record<strin
     );
 }
 
-(injectLoader as NgtLoader).destroy = () => {
+injectNgtLoader['destroy'] = () => {
     cached.clear();
 };
 
-(injectLoader as NgtLoader).preLoad = (loaderConstructorFactory, inputs, extensions) => {
+injectNgtLoader['preLoad'] = <
+    TData,
+    TUrl extends string | string[] | Record<string, string>,
+    TLoaderConstructor extends NgtLoaderProto<TData>
+>(
+    loaderConstructorFactory: (inputs: TUrl) => TLoaderConstructor,
+    inputs: TUrl | Observable<TUrl>,
+    extensions?: NgtLoaderExtensions<TLoaderConstructor>
+) => {
     load(loaderConstructorFactory, inputs, extensions).pipe(take(1)).subscribe();
 };
-
-export const injectNgtLoader = injectLoader as NgtLoader;
