@@ -8,7 +8,7 @@ import {
     writeJson,
 } from '@nx/devkit';
 
-export const ANGULAR_THREE_VERSION = '^1.0.0';
+export const ANGULAR_THREE_VERSION = '^2.0.0';
 export const THREE_VERSION = '^0.152.0';
 export const THREE_TYPE_VERSION = '^0.152.0';
 

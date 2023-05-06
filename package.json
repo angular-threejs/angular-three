@@ -69,7 +69,7 @@
         "@angular/router": "16.0.0",
         "@rx-angular/state": "^14.0.0",
         "@swc/helpers": "0.5.1",
-        "ngx-resize": "^1.0.6",
+        "ngx-resize": "^2.0.0",
         "nice-color-palettes": "^3.0.0",
         "rxjs": "~7.8.0",
         "three": "^0.150.1",

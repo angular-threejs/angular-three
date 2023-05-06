@@ -22,6 +22,21 @@
             },
             "defaultConfiguration": "production"
         },
+        "package": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "node ./tools/scripts/generate-json.mjs",
+                    "pnpm exec nx build angular-three",
+                    "pnpm exec nx build angular-three-plugin"
+                ],
+                "parallel": false
+            }
+        },
+        "publish": {
+            "command": "npm publish",
+            "cwd": "dist/libs/angular-three"
+        },
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
