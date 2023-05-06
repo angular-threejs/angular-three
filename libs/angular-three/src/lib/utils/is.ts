@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
 import * as THREE from 'three';
-import type { NgtAnyRecord, NgtEquConfig, NgtInstanceNode } from '../types';
+import type { NgtAnyRecord, NgtEquConfig, NgtGLRenderer, NgtInstanceNode } from '../types';
 
 export const is = {
     obj: (a: unknown): a is object => a === Object(a) && !Array.isArray(a) && typeof a !== 'function',
@@ -16,6 +16,12 @@ export const is = {
     object3D: (a: unknown): a is THREE.Object3D => !!a && (a as THREE.Object3D).isObject3D,
     instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
     ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
+    colorSpaceExist: <
+        T extends NgtGLRenderer | THREE.Texture | object,
+        P = T extends NgtGLRenderer ? { outputColorSpace: string } : { colorSpace: string }
+    >(
+        object: T
+    ): object is T & P => 'colorSpace' in object || 'outputColorSpace' in object,
     equ(a: any, b: any, { arrays = 'shallow', objects = 'reference', strict = true }: NgtEquConfig = {}) {
         // Wrong type or one of the two undefined, doesn't match
         if (typeof a !== typeof b || !!a !== !!b) return false;

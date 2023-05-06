@@ -26,34 +26,49 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
     const changes = diffProps(instance, props);
 
     for (let i = 0; i < changes.length; i++) {
-        const key = changes[i][0];
+        let key = changes[i][0];
         const currentInstance = instance;
         const targetProp = currentInstance[key] as NgtAnyRecord;
-        const value = changes[i][1];
+        let value = changes[i][1];
+
+        if (is.colorSpaceExist(currentInstance)) {
+            const sRGBEncoding = 3001;
+            const SRGBColorSpace = 'srgb';
+            const LinearSRGBColorSpace = 'srgb-linear';
+
+            if (key === 'encoding') {
+                key = 'colorSpace';
+                value = value === sRGBEncoding ? SRGBColorSpace : LinearSRGBColorSpace;
+            } else if (key === 'outputEncoding') {
+                key = 'outputColorSpace';
+                value = value === sRGBEncoding ? SRGBColorSpace : LinearSRGBColorSpace;
+            }
+        }
 
         // special treatmen for objects with support for set/copy, and layers
         if (targetProp && targetProp['set'] && (targetProp['copy'] || targetProp instanceof THREE.Layers)) {
             const isColor = targetProp instanceof THREE.Color;
             // if value is an array
             if (Array.isArray(value)) {
-                if (targetProp['fromArray']) targetProp['fromArray'](value);
+                if ((targetProp as NgtAnyRecord)['fromArray']) (targetProp as NgtAnyRecord)['fromArray'](value);
                 else targetProp['set'](...value);
             }
             // test again target.copy
             else if (
-                targetProp['copy'] &&
+                (targetProp as NgtAnyRecord)['copy'] &&
                 value &&
                 value.constructor &&
                 targetProp.constructor.name === value.constructor.name
             ) {
-                targetProp['copy'](value);
+                (targetProp as NgtAnyRecord)['copy'](value);
                 if (!THREE.ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
             }
             // if nothing else fits, just set the single value, ignore undefined
             else if (value !== undefined) {
                 const isColor = targetProp instanceof THREE.Color;
                 // allow setting array scalars
-                if (!isColor && targetProp['setScalar']) targetProp['setScalar'](value);
+                if (!isColor && (targetProp as NgtAnyRecord)['setScalar'])
+                    (targetProp as NgtAnyRecord)['setScalar'](value);
                 // layers have no copy function, copy the mask
                 else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers)
                     targetProp.mask = value.mask;
@@ -69,12 +84,14 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
             currentInstance[key] = value;
             // auto-convert srgb textures
             if (
-                !rootState?.linear &&
                 currentInstance[key] instanceof THREE.Texture &&
                 currentInstance[key].format === THREE.RGBAFormat &&
                 currentInstance[key].type === THREE.UnsignedByteType
             ) {
-                currentInstance[key]['encoding'] = THREE.sRGBEncoding;
+                const texture = currentInstance[key] as THREE.Texture;
+                if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
+                    texture.colorSpace = rootState.gl.outputColorSpace;
+                else texture.encoding = rootState.gl.outputEncoding;
             }
         }
 

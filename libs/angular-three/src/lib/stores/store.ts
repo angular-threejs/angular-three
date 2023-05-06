@@ -335,11 +335,14 @@ export class NgtStore extends NgtRxStore<NgtState> {
             if ('enabled' in ColorManagement) ColorManagement['enabled'] = !legacy ?? false;
             else if ('legacyMode' in ColorManagement) ColorManagement['legacyMode'] = legacy ?? true;
         }
-        const outputEncoding = linear ? THREE.LinearEncoding : THREE.sRGBEncoding;
-        const toneMapping = flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
 
-        if (gl.outputEncoding !== outputEncoding) gl.outputEncoding = outputEncoding;
-        if (gl.toneMapping !== toneMapping) gl.toneMapping = toneMapping;
+        // set color space and tonemapping preferences
+        const LinearEncoding = 3000;
+        const sRGBEncoding = 3001;
+        applyProps(gl, {
+            outputEncoding: linear ? LinearEncoding : sRGBEncoding,
+            toneMapping: flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping,
+        });
 
         // Update color management state
         if (state.legacy !== legacy) stateToUpdate.legacy = legacy;
