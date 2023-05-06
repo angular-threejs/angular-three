@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild } from '@angular/core';
-import { injectBeforeRender, NgtStore } from 'angular-three';
+import { injectBeforeRender, NgtStore } from 'angular-three-backup';
 import { CursorPointer } from './cursor';
 
 @Component({

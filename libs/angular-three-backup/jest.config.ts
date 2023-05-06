@@ -1,10 +1,10 @@
 /* eslint-disable */
 export default {
-    displayName: 'angular-three',
+    displayName: 'angular-three-backup',
     preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {},
-    coverageDirectory: '../../coverage/libs/angular-three',
+    coverageDirectory: '../../coverage/libs/angular-three-backup',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': [
             'jest-preset-angular',

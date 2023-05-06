@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, inject, OnInit, Renderer2 } from '@angular/core';
-import { getLocalState, injectNgtDestroy } from 'angular-three';
+import { getLocalState, injectNgtDestroy } from 'angular-three-backup';
 
 @Directive({ selector: 'ngt-mesh[cursorPointer]', standalone: true })
 export class CursorPointer implements OnInit {

@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, ElementRef, ViewRef } from '@angular/core';
 import {
     BehaviorSubject,
+    Observable,
+    Subscription,
     distinctUntilChanged,
     filter,
     map,
     merge,
-    Observable,
     of,
-    Subscription,
     switchMap,
     takeUntil,
 } from 'rxjs';

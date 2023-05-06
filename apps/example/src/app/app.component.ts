@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { extend } from 'angular-three';
+import { extend } from 'angular-three-backup';
 import * as THREE from 'three';
 
 extend(THREE);

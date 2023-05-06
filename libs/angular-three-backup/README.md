@@ -7,13 +7,13 @@ Leverage your [Angular](https://angular.io) to build 3D applications with [THREE
 ## Installation
 
 ```shell
-npx ng add angular-three
+npx ng add angular-three-backup
 ```
 
 or
 
 ```shell
-npm i angular-three three
+npm i angular-three-backup three
 ```
 
 ```shell
@@ -27,7 +27,7 @@ npm i -D @types/three
 1. Create a `Scene` component as a Standalone Component
 
 ```ts
-import { extend } from 'angular-three';
+import { extend } from 'angular-three-backup';
 import { Mesh, BoxGeometry, MeshBasicMaterial } from 'three';
 
 extend({ Mesh, BoxGeometry, MeshBasicMaterial });
@@ -45,7 +45,7 @@ extend({ Mesh, BoxGeometry, MeshBasicMaterial });
 export class Scene {}
 ```
 
--   `extend` will add the THREE entities to `angular-three` catalogue which allows the renderer to recognize the custom tags: `ngt-mesh`, `ngt-box-geometry` etc..
+-   `extend` will add the THREE entities to `angular-three-backup` catalogue which allows the renderer to recognize the custom tags: `ngt-mesh`, `ngt-box-geometry` etc..
 -   Custom Element tags follow this rule: `ngt-` + THREE classes in **kebab-case**. `Mesh` -> `ngt-mesh`
 -   `schemas: [CUSTOM_ELEMENTS_SCHEMA]` allows us to use custom tags on the template. This is Angular's limitation at the moment
 
@@ -59,7 +59,7 @@ export class Scene {}
 
 ## Documentations
 
-Read more about Angular Three usages in [Documentations](https://angular-threejs.netlify.app)
+Read more about Angular Three usages in [Documentations](https://angular-three-backupjs.netlify.app)
 
 ## Contributions
 

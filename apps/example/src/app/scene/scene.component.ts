@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgtCanvas, NgtRoutedScene } from 'angular-three';
+import { NgtCanvas, NgtRoutedScene } from 'angular-three-backup';
 
 @Component({
     standalone: true,

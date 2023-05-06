@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { combineLatest, MonoTypeOperatorFunction, Observable, startWith, tap } from 'rxjs';
+import { MonoTypeOperatorFunction, Observable, combineLatest, startWith, tap } from 'rxjs';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 import { safeDetectChanges } from '../utils/safe-detect-changes';

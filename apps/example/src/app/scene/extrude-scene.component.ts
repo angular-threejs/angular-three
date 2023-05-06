@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from 'angular-three-backup';
 import * as THREE from 'three';
 import { CursorPointer } from './cursor';
 
