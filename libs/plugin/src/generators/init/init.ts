@@ -37,7 +37,7 @@ export default async function (tree: Tree) {
 
     // add metadata.json to vscode settings if exists
     const vscodeSettingsPath = '.vscode/settings.json';
-    if (tree.exists(vscodeSettingsPath)) {
+    if (tree.exists('.vscode') || tree.exists(vscodeSettingsPath)) {
         logger.info('Enabling typings support for VSCode...');
         updateJson(tree, vscodeSettingsPath, (json) => {
             if (json['html.customData'] && Array.isArray(json['html.customData'])) {
@@ -48,7 +48,15 @@ export default async function (tree: Tree) {
 
             return json;
         });
+    } else {
+        logger.info(
+            `.vscode/settings.json not found.
+If you are using VSCode, add "./node_modules/angular-three/metadata.json" to "html.customData" in ".vscode/settings.json"
+to enable TypeScript type definitions for Angular Three elements.
+`
+        );
     }
+
     return () => {
         installPackagesTask(tree);
     };

@@ -29,7 +29,8 @@
         "ngx-resize": "^1.0.0",
         "@rx-angular/state": "^14.0.0",
         "tslib": "^2.3.0",
-        "@nx/devkit": "^16.1.0"
+        "@nx/devkit": "^16.0.0",
+        "nx": "^16.0.0"
     },
     "sideEffects": false,
     "generators": "./plugin/generators.json",
