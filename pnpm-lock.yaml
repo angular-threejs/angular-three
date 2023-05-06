@@ -35,8 +35,8 @@ dependencies:
     specifier: 0.5.1
     version: 0.5.1
   ngx-resize:
-    specifier: ^1.0.6
-    version: 1.0.6(@angular/common@16.0.0)(@angular/core@16.0.0)
+    specifier: ^2.0.0
+    version: 2.0.0(@angular/common@16.0.0)(@angular/core@16.0.0)
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
@@ -10696,11 +10696,11 @@ packages:
       - supports-color
     dev: true
 
-  /ngx-resize@1.0.6(@angular/common@16.0.0)(@angular/core@16.0.0):
-    resolution: {integrity: sha512-HHq6kGulCy0iZD90YvBRv8rjoG2w1blf5v8PrWhLZFepKgNZ5cuQpgYXwO3yOeplJokG48EQS/wajDzf/q2okA==}
+  /ngx-resize@2.0.0(@angular/common@16.0.0)(@angular/core@16.0.0):
+    resolution: {integrity: sha512-aXMN/KCDJyYOvNtbbzgAEiCJD+inQNqkyaQjMMW09OmxwepHmKPil9/tDQfNSdrmGq6CfYjsygH9vycXTHayyA==}
     peerDependencies:
-      '@angular/common': ^14.0.0 || ^15.0.0
-      '@angular/core': ^14.0.0 || ^15.0.0
+      '@angular/common': ^14.0.0 || ^15.0.0 || ^16.0.0
+      '@angular/core': ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@angular/common': 16.0.0(@angular/core@16.0.0)(rxjs@7.8.0)
       '@angular/core': 16.0.0(rxjs@7.8.0)(zone.js@0.13.0)

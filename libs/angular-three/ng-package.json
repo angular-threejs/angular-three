@@ -3,5 +3,7 @@
     "dest": "../../dist/libs/angular-three",
     "lib": {
         "entryFile": "src/index.ts"
-    }
+    },
+    "allowedNonPeerDependencies": ["ngx-resize", "@nx/devkit", "nx"],
+    "assets": ["metadata.json", "web-types.json"]
 }
