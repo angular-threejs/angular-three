@@ -14,6 +14,7 @@ export * from './lib/portal';
 export * from './lib/routed-scene';
 export * from './lib/stores/rx-store';
 export * from './lib/stores/store';
+export * from './lib/three-types';
 export * from './lib/types';
 export * from './lib/utils/apply-props';
 export { createAttachFunction } from './lib/utils/attach';
