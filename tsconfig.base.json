@@ -17,7 +17,10 @@
         "paths": {
             "@angular-three/plugin": ["libs/plugin/src/index.ts"],
             "angular-three": ["libs/angular-three/src/index.ts"],
-            "angular-three-backup": ["libs/angular-three-backup/src/index.ts"]
+            "angular-three-backup": ["libs/angular-three-backup/src/index.ts"],
+            "angular-three-cannon": ["libs/cannon/src/index.ts"],
+            "angular-three-postprocessing": ["libs/postprocessing/src/index.ts"],
+            "angular-three-soba": ["libs/soba/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
