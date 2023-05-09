@@ -3,5 +3,13 @@
     "dest": "../../dist/libs/soba",
     "lib": {
         "entryFile": "src/index.ts"
-    }
+    },
+    "assets": [
+        {
+            "input": "./shaders/src/assets/",
+            "glob": "**/*",
+            "output": "assets"
+        }
+    ],
+    "allowedNonPeerDependencies": ["@nx/devkit", "nx"]
 }

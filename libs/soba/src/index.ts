@@ -1,1 +1,1 @@
-export * from './lib/soba/soba.component';
+export default void 0;
