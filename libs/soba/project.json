@@ -40,7 +40,14 @@
             "executor": "@nx/linter:eslint",
             "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": ["libs/soba/**/*.ts", "libs/soba/**/*.html"]
+                "lintFilePatterns": [
+                    "libs/soba/**/*.ts",
+                    "libs/soba/**/*.html",
+                    "libs/soba/abstractions/**/*.ts",
+                    "libs/soba/abstractions/**/*.html",
+                    "libs/soba/controls/**/*.ts",
+                    "libs/soba/controls/**/*.html"
+                ]
             }
         },
         "storybook": {

@@ -1,5 +1,6 @@
-import { signal, untracked } from '@angular/core';
+import { untracked } from '@angular/core';
 import type { NgtAnyRecord, NgtInstanceLocalState, NgtInstanceNode } from '../types';
+import { createSignal } from './signal';
 import { checkUpdate } from './update';
 
 export function getLocalState<TInstance extends object = NgtAnyRecord>(
@@ -23,15 +24,15 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 
     if (localState?.primitive || !instance.__ngt__) {
         const {
-            objects = signal<NgtInstanceNode[]>([]),
-            nonObjects = signal<NgtInstanceNode[]>([]),
+            objects = createSignal<NgtInstanceNode[]>([]),
+            nonObjects = createSignal<NgtInstanceNode[]>([]),
             ...rest
         } = localState || {};
 
         instance.__ngt__ = {
             previousAttach: null,
             store: null,
-            parent: signal(null),
+            parent: createSignal(null),
             memoized: {},
             eventCount: 0,
             handlers: {},

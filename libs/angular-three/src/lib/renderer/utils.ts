@@ -74,7 +74,9 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
             // attach
             if (cLS.isRaw) {
-                cLS.parent.set(parent);
+                if (cLS.parent) {
+                    cLS.parent.set(parent);
+                }
                 // at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
                 if (child.__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
                 attach(parent, child.__ngt_renderer__[NgtRendererClassId.rawValue], attachProp);
@@ -91,7 +93,9 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
     pLS.add(child, added ? 'objects' : 'nonObjects');
 
-    cLS.parent.set(parent);
+    if (cLS.parent) {
+        cLS.parent.set(parent);
+    }
 
     if (cLS.afterAttach) cLS.afterAttach.emit({ parent, node: child });
 

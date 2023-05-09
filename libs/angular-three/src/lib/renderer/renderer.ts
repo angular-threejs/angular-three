@@ -18,6 +18,7 @@ import { NgtStore } from '../stores/store';
 import type { NgtAnyRecord } from '../types';
 import { getLocalState, prepare } from '../utils/instance';
 import { is } from '../utils/is';
+import { createSignal } from '../utils/signal';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererClassId } from './enums';
 import { NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
@@ -112,7 +113,10 @@ export class NgtRenderer implements Renderer2 {
         if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
             return this.store.createNode(
                 'three',
-                Object.assign({ __ngt_renderer__: { rawValue: undefined } }, { __ngt__: { isRaw: true } })
+                Object.assign(
+                    { __ngt_renderer__: { rawValue: undefined } },
+                    { __ngt__: { isRaw: true, parent: createSignal(null) } }
+                )
             );
         }
 

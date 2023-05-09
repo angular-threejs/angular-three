@@ -8,16 +8,17 @@ import {
     computed,
     inject,
     runInInjectionContext,
-    signal,
     untracked,
 } from '@angular/core';
 import { NgtInstanceNode } from '../types';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
+import { createSignal } from '../utils/signal';
 
 export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
     children: (type?: 'objects' | 'nonObjects' | 'both') => Signal<NgtInstanceNode[]>;
+    untracked: TElement;
 };
 
 export function injectNgtRef<TElement>(
@@ -30,7 +31,7 @@ export function injectNgtRef<TElement>(
         const cdr = inject(ChangeDetectorRef);
 
         const ref = is.ref(initial) ? initial : new ElementRef<TElement>(initial as TElement);
-        const signalRef = signal(ref.nativeElement);
+        const signalRef = createSignal(ref.nativeElement);
         const readonlySignal = signalRef.asReadonly();
         const cached = new Map();
 
@@ -57,13 +58,21 @@ export function injectNgtRef<TElement>(
         Object.defineProperty(ref, 'nativeElement', {
             set: (newElement) => {
                 if (newElement !== untracked(signalRef)) {
-                    signalRef.set(newElement);
+                    try {
+                        signalRef.set(newElement);
+                    } catch {
+                        requestAnimationFrame(() => signalRef.set(newElement));
+                    }
                     safeDetectChanges(cdr);
                 }
             },
             get: () => readonlySignal(),
         });
 
-        return Object.assign(ref, { children });
+        Object.defineProperty(ref, 'untracked', {
+            get: () => untracked(readonlySignal),
+        });
+
+        return Object.assign(ref, { children }) as NgtInjectedRef<TElement>;
     });
 }
