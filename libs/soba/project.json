@@ -42,6 +42,47 @@
             "options": {
                 "lintFilePatterns": ["libs/soba/**/*.ts", "libs/soba/**/*.html"]
             }
+        },
+        "storybook": {
+            "executor": "@storybook/angular:start-storybook",
+            "options": {
+                "port": 4400,
+                "configDir": "libs/soba/.storybook",
+                "browserTarget": "soba:build-storybook",
+                "compodoc": false
+            },
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            }
+        },
+        "build-storybook": {
+            "executor": "@storybook/angular:build-storybook",
+            "outputs": ["{options.outputDir}"],
+            "options": {
+                "outputDir": "dist/storybook/soba",
+                "configDir": "libs/soba/.storybook",
+                "browserTarget": "soba:build-storybook",
+                "compodoc": false
+            },
+            "configurations": {
+                "ci": {
+                    "quiet": true
+                }
+            }
+        },
+        "static-storybook": {
+            "executor": "@nx/web:file-server",
+            "options": {
+                "buildTarget": "soba:build-storybook",
+                "staticFilePath": "dist/storybook/soba"
+            },
+            "configurations": {
+                "ci": {
+                    "buildTarget": "soba:build-storybook:ci"
+                }
+            }
         }
     }
 }
