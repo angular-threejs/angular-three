@@ -46,7 +46,9 @@
                     "libs/soba/abstractions/**/*.ts",
                     "libs/soba/abstractions/**/*.html",
                     "libs/soba/controls/**/*.ts",
-                    "libs/soba/controls/**/*.html"
+                    "libs/soba/controls/**/*.html",
+                    "libs/soba/staging/**/*.ts",
+                    "libs/soba/staging/**/*.html"
                 ]
             }
         },

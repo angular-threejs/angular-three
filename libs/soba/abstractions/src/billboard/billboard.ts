@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
-import { NgtGroup, NgtSignalStore, extend, injectBeforeRender, injectNgtRef } from 'angular-three';
+import { NgtSignalStore, extend, injectBeforeRender, injectNgtRef, type NgtGroup } from 'angular-three';
 import { Group } from 'three';
 
 extend({ Group });
