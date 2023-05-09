@@ -107,7 +107,6 @@ class StorybookScene implements OnInit {
 
     ngOnInit() {
         this.#ref = this.anchor.createComponent(this.#story);
-        console.log('here??');
         const componentInputs = this.#storyMirror.inputs.map((input) => input.propName);
 
         effect(
