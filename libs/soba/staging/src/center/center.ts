@@ -142,6 +142,7 @@ export class NgtsCenter extends NgtSignalStore<NgtsCenterState> implements OnIni
         effect(
             () => {
                 const { center: centerGroup, outer, inner } = trigger();
+                if (!outer || !inner) return;
                 const { precise, top, left, front, disable, disableX, disableY, disableZ, back, bottom, right } =
                     this.get();
                 outer.matrixWorld.identity();

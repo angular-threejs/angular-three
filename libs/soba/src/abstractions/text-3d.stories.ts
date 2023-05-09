@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsCenter, NgtsFloat } from 'angular-three-soba/staging';
-import { makeCanvasOptions, StorybookSetup } from '../setup-canvas';
+import { makeRenderFunction, StorybookSetup } from '../setup-canvas';
 
 @Component({
     standalone: true,
@@ -33,15 +33,6 @@ export default {
 } as Meta;
 
 export const Default: StoryObj = {
-    render: (args) => ({
-        props: {
-            options: makeCanvasOptions({ camera: { position: [0, 0, 10] } }),
-            story: DefaultText3DStory,
-            inputs: args,
-        },
-        template: `
-    <storybook-setup [options]="options" [story]="story" [inputs]="inputs" />
-        `,
-    }),
+    render: makeRenderFunction(DefaultText3DStory, { camera: { position: [0, 0, 10] } }),
     args: { text: 'Angular Three' },
 };
