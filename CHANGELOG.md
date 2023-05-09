@@ -1,5 +1,18 @@
 
 
+## [2.0.0-beta.1](https://github.com/angular-threejs/angular-three/compare/1.10.3...2.0.0-beta.1) (2023-05-09)
+
+
+### Features
+
+* generate new lib ([580393b](https://github.com/angular-threejs/angular-three/commit/580393b26c07fe29f3464cc91b1fc85d8124177d))
+* signals are ready ([ec8f498](https://github.com/angular-threejs/angular-three/commit/ec8f4981cb345851a08f4289b0dca0fea9b367da))
+
+
+### Documentations
+
+* update readme ([4b27e00](https://github.com/angular-threejs/angular-three/commit/4b27e003a942ee9a3f13677d53b15d6ed1ad09a6))
+
 ## [2.0.0-beta.0](https://github.com/angular-threejs/angular-three/compare/1.10.3...2.0.0-beta.0) (2023-05-09)
 
 
