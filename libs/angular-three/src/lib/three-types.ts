@@ -166,7 +166,7 @@ export type NgtMeshMatcapMaterial = NgtMaterial<THREE.MeshMatcapMaterial, [THREE
 export type NgtLineDashedMaterial = NgtMaterial<THREE.LineDashedMaterial, [THREE.LineDashedMaterialParameters]>;
 export type NgtLineBasicMaterial = NgtMaterial<THREE.LineBasicMaterial, [THREE.LineBasicMaterialParameters]>;
 
-export type NgtPrimitive = NgtAnyRecord;
+export type NgtPrimitive = NgtNodeElement<NgtAnyRecord, any>;
 export type NgtValue = NgtNode<{ rawValue: any }, {}>;
 
 export type NgtLightShadow = NgtNode<THREE.LightShadow, typeof THREE.LightShadow>;
