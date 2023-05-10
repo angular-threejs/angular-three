@@ -18,6 +18,7 @@ import { NgtStore } from '../stores/store';
 import type { NgtAnyRecord } from '../types';
 import { getLocalState, prepare } from '../utils/instance';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { createSignal } from '../utils/signal';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererClassId } from './enums';
@@ -244,6 +245,7 @@ export class NgtRenderer implements Renderer2 {
             if (getLocalState(newChild).parent && untracked(getLocalState(newChild).parent)) return;
             // attach THREE child
             attachThreeChild(parent, newChild);
+            safeDetectChanges(this.cdr);
             // here, we handle the special case of if the parent has a compoundParent, which means this child is part of a compound parent template
             if (!cRS[NgtRendererClassId.compound]) return;
             const closestGrandparentWithCompound = this.store.getClosestParentWithCompound(parent);
