@@ -1,6 +1,6 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { extend, NgtArgs, NgtSignalStore, type NgtMesh } from 'angular-three';
+import { extend, injectNgtRef, NgtArgs, NgtSignalStore, type NgtMesh } from 'angular-three';
 import { map, of, switchMap } from 'rxjs';
 import { Mesh } from 'three';
 import { FontLoader, TextGeometry } from 'three-stdlib';
@@ -30,6 +30,7 @@ export type NgtsText3DState = {
     bevelOffset: number;
     bevelSegments: number;
     curveSegments: number;
+    smooth?: number;
 };
 
 declare global {
@@ -42,7 +43,7 @@ declare global {
     selector: 'ngts-text-3d',
     standalone: true,
     template: `
-        <ngt-mesh ngtCompound>
+        <ngt-mesh ngtCompound [ref]="textRef">
             <ngt-text-geometry *args="geometryArgs()" />
             <ng-content />
         </ngt-mesh>
@@ -51,6 +52,8 @@ declare global {
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsText3D extends NgtSignalStore<NgtsText3DState> {
+    @Input() textRef = injectNgtRef<Mesh>();
+
     @Input({ required: true }) set font(font: FontData | string) {
         this.set({ font });
     }
@@ -97,6 +100,10 @@ export class NgtsText3D extends NgtSignalStore<NgtsText3DState> {
 
     @Input() set letterSpacing(letterSpacing: number) {
         this.set({ letterSpacing });
+    }
+
+    @Input() set smooth(smooth: number) {
+        this.set({ smooth });
     }
 
     constructor() {
