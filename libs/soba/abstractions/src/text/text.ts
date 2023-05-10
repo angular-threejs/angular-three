@@ -5,7 +5,6 @@ import {
     EventEmitter,
     Injector,
     Input,
-    NgZone,
     Output,
     computed,
     effect,
@@ -216,7 +215,6 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
 
     readonly troikaText = new Text();
 
-    readonly #zone = inject(NgZone);
     readonly #injector = inject(Injector);
     readonly #store = inject(NgtStore);
 
@@ -227,13 +225,8 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
         inject(DestroyRef).onDestroy(() => {
             this.troikaText.dispose();
         });
-    }
-
-    ngOnInit() {
-        this.#zone.runOutsideAngular(() => {
-            this.#preloadFont();
-            this.#syncText();
-        });
+        this.#preloadFont();
+        this.#syncText();
     }
 
     #preloadFont() {

@@ -7,8 +7,6 @@ import {
     inject,
     Injector,
     Input,
-    NgZone,
-    OnInit,
     Output,
 } from '@angular/core';
 import { injectBeforeRender, injectNgtRef, NgtArgs, NgtSignalStore, NgtStore, NgtVector3 } from 'angular-three';
@@ -36,7 +34,7 @@ declare global {
     imports: [NgtArgs],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> implements OnInit {
+export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     @Input() controlsRef = injectNgtRef<OrbitControls>();
 
     @Input() set camera(camera: THREE.Camera) {
@@ -69,7 +67,6 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> im
 
     readonly #store = inject(NgtStore);
     readonly #injector = inject(Injector);
-    readonly #zone = inject(NgZone);
 
     readonly args = computed(() => [this.controlsRef.nativeElement]);
     readonly damping = this.select('enableDamping');
@@ -85,15 +82,11 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> im
             },
             { priority: -1 }
         );
-    }
 
-    ngOnInit() {
-        this.#zone.runOutsideAngular(() => {
-            this.#setControls();
-            this.#connectElement();
-            this.#makeControlsDefault();
-            this.#setEvents();
-        });
+        this.#setControls();
+        this.#connectElement();
+        this.#makeControlsDefault();
+        this.#setEvents();
     }
 
     #setControls() {

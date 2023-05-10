@@ -7,7 +7,6 @@ import {
     inject,
     Injector,
     Input,
-    OnInit,
     Output,
 } from '@angular/core';
 import { extend, injectNgtRef, NgtSignalStore, type NgtGroup } from 'angular-three';
@@ -54,7 +53,7 @@ declare global {
     `,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsCenter extends NgtSignalStore<NgtsCenterState> implements OnInit {
+export class NgtsCenter extends NgtSignalStore<NgtsCenterState> {
     @Input() centerRef = injectNgtRef<Group>();
 
     readonly outerRef = injectNgtRef<Group>();
@@ -124,9 +123,6 @@ export class NgtsCenter extends NgtSignalStore<NgtsCenterState> implements OnIni
 
     constructor() {
         super({ precise: true });
-    }
-
-    ngOnInit(): void {
         this.#setPosition();
     }
 

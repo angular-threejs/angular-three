@@ -134,6 +134,7 @@ export class NgtsText3D extends NgtSignalStore<NgtsText3DState> {
     readonly geometryArgs = computed(() => {
         const fontData = this.#fontData();
         if (!fontData) return null;
+
         const text = this.select('text');
         const size = this.select('size');
         const height = this.select('height');

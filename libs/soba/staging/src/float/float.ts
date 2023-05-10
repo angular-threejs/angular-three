@@ -58,20 +58,21 @@ export class NgtsFloat extends NgtSignalStore<NgtsFloatState> {
 
     constructor() {
         super({ speed: 1, rotationIntensity: 1, floatIntensity: 1, floatingRange: [-0.1, 0.1], enabled: true });
-        injectBeforeRender(this.onBeforeRender.bind(this));
+        injectBeforeRender(this.#onBeforeRender.bind(this));
     }
 
-    private onBeforeRender({ clock }: NgtRenderState) {
-        if (!this.floatRef.untracked) return;
+    #onBeforeRender({ clock }: NgtRenderState) {
+        const float = this.floatRef.untracked;
+        if (!float) return;
         const { enabled, speed, floatingRange, floatIntensity, rotationIntensity } = this.get();
         if (!enabled || speed === 0) return;
 
         const t = this.#offset + clock.getElapsedTime();
-        this.floatRef.untracked.rotation.x = (Math.cos((t / 4) * speed) / 8) * rotationIntensity;
-        this.floatRef.untracked.rotation.y = (Math.sin((t / 4) * speed) / 8) * rotationIntensity;
-        this.floatRef.untracked.rotation.z = (Math.sin((t / 4) * speed) / 20) * rotationIntensity;
+        float.rotation.x = (Math.cos((t / 4) * speed) / 8) * rotationIntensity;
+        float.rotation.y = (Math.sin((t / 4) * speed) / 8) * rotationIntensity;
+        float.rotation.z = (Math.sin((t / 4) * speed) / 20) * rotationIntensity;
         let yPosition = Math.sin((t / 4) * speed) / 10;
         yPosition = THREE.MathUtils.mapLinear(yPosition, -0.1, 0.1, floatingRange[0] ?? -0.1, floatingRange[1] ?? 0.1);
-        this.floatRef.untracked.position.y = yPosition * floatIntensity;
+        float.position.y = yPosition * floatIntensity;
     }
 }

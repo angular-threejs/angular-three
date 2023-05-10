@@ -1,6 +1,6 @@
-import { NgTemplateOutlet } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgtCanvas, extend } from 'angular-three';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
 
 extend(THREE);
@@ -39,8 +39,9 @@ export class Cube {
         <ngt-spot-light [position]="5" />
         <ngt-point-light [position]="-5" />
         <app-cube />
+        <ngts-orbit-controls />
     `,
-    imports: [Cube, NgTemplateOutlet],
+    imports: [Cube, NgtsOrbitControls],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
