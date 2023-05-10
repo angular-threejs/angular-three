@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, Component, Injector, Input, computed, effect, i
 import { NgtArgs, NgtStore, injectNgtRef } from 'angular-three';
 import * as THREE from 'three';
 import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib';
-import { NgtsLineInputs, NgtsLineState } from './line-input';
+import { NgtsLineInputs, type NgtsLineState } from './line-input';
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -19,9 +19,9 @@ declare global {
             <ngt-primitive
                 *args="[lineMaterial]"
                 attach="material"
+                [resolution]="lineMaterialParameters().resolution"
                 [color]="lineMaterialParameters().color"
                 [vertexColors]="lineMaterialParameters().vertexColors"
-                [resolution]="lineMaterialParameters().resolution"
                 [linewidth]="lineMaterialParameters().linewidth"
                 [alphaToCoverage]="lineMaterialParameters().alphaToCoverage"
                 [dashed]="lineMaterialParameters().dashed"
@@ -101,32 +101,19 @@ export class NgtsLine extends NgtsLineInputs {
     });
 
     readonly lineMaterialParameters = computed(() => {
-        const color = this.select('color');
-        const vertexColors = this.select('vertexColors');
+        const parameters = this.lineParameters();
         const resolution = this.#resolution();
-        const linewidth = this.select('lineWidth');
-        const alphaToCoverage = this.select('alphaToCoverage');
-        const dashed = this.select('dashed');
-        const dashScale = this.select('dashScale');
-        const dashSize = this.select('dashSize');
-        const dashOffset = this.select('dashOffset');
-        const gapSize = this.select('gapSize');
-        const wireframe = this.select('wireframe');
-        const worldUnits = this.select('worldUnits');
 
         return {
-            color: color(),
-            vertexColors: Boolean(vertexColors()),
+            ...parameters,
+            vertexColors: Boolean(parameters.vertexColors),
             resolution,
-            linewidth: linewidth(),
-            alphaToCoverage: alphaToCoverage(),
-            dashed: dashed(),
-            dashScale: dashScale() ?? this.lineMaterial.dashScale,
-            dashSize: dashSize() ?? this.lineMaterial.dashSize,
-            dashOffset: dashOffset() ?? this.lineMaterial.dashOffset,
-            gapSize: gapSize() ?? this.lineMaterial.gapSize,
-            wireframe: wireframe() ?? this.lineMaterial.wireframe,
-            worldUnits: worldUnits() ?? this.lineMaterial.worldUnits,
+            dashScale: parameters.dashScale ?? this.lineMaterial.dashScale,
+            dashSize: parameters.dashSize ?? this.lineMaterial.dashSize,
+            dashOffset: parameters.dashOffset ?? this.lineMaterial.dashOffset,
+            gapSize: parameters.gapSize ?? this.lineMaterial.gapSize,
+            wireframe: parameters.wireframe ?? this.lineMaterial.wireframe,
+            worldUnits: parameters.worldUnits ?? this.lineMaterial.worldUnits,
         };
     });
 
@@ -141,19 +128,15 @@ export class NgtsLine extends NgtsLineInputs {
         const trigger = computed(() => {
             const points = this.select('points');
             const lineGeometry = this.lineGeometry();
-            const line = this.line();
+            const line = this.lineRef.nativeElement;
             const children = this.lineRef.children('nonObjects');
             return { points: points(), lineGeometry, line, children: children() };
         });
-        effect(
-            () => {
-                const { line, children } = trigger();
-                if (children.length) {
-                    line.computeLineDistances();
-                }
-            },
-            { injector: this.#injector }
-        );
+        effect(() => {
+            const { line } = trigger();
+            if (!line) return;
+            line.computeLineDistances();
+        });
     }
 
     #disposeGeometry() {

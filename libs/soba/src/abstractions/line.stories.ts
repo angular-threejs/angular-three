@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
-import { NgtsLine } from 'angular-three-soba/abstractions';
+import { NgtsLine, NgtsQuadraticBezierLine } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
 import { GeometryUtils } from 'three-stdlib';
@@ -77,32 +77,32 @@ const defaultCatmullRom = {
 //     @Input() tension = defaultCatmullRom.tension;
 // }
 //
-// @Component({
-//     standalone: true,
-//     template: `
-//         <ngts-quadratic-bezier-line
-//             [start]="start"
-//             [end]="end"
-//             [midA]="midA"
-//             [midB]="midB"
-//             [segments]="segments"
-//             [color]="color"
-//             [lineWidth]="lineWidth"
-//             [dashed]="dashed"
-//         />
-//         <ngts-orbit-controls [zoomSpeed]="0.5" />
-//     `,
-//     imports: [NgtsQuadraticBezierLine, NgtsOrbitControls],
-//     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-// })
-// class QuadraticBezierLineStory {
-//     @Input() color = 'red';
-//     @Input() lineWidth = 3;
-//     @Input() dashed = false;
-//     @Input() start = defaultQuadraticBezier.start;
-//     @Input() end = defaultQuadraticBezier.end;
-//     @Input() segments = defaultQuadraticBezier.segments;
-// }
+@Component({
+    standalone: true,
+    template: `
+        <ngts-quadratic-bezier-line
+            [start]="start"
+            [end]="end"
+            [midA]="midA"
+            [midB]="midB"
+            [segments]="segments"
+            [color]="color"
+            [lineWidth]="lineWidth"
+            [dashed]="dashed"
+        />
+        <ngts-orbit-controls [zoomSpeed]="0.5" />
+    `,
+    imports: [NgtsQuadraticBezierLine, NgtsOrbitControls],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+class QuadraticBezierLineStory {
+    @Input() color = 'red';
+    @Input() lineWidth = 3;
+    @Input() dashed = false;
+    @Input() start = defaultQuadraticBezier.start;
+    @Input() end = defaultQuadraticBezier.end;
+    @Input() segments = defaultQuadraticBezier.segments;
+}
 //
 // @Component({
 //     standalone: true,
@@ -208,24 +208,15 @@ export const VertexColors: StoryObj = {
 //     },
 // };
 //
-// export const QuadraticBezierLine: StoryObj = {
-//     render: (args) => ({
-//         props: {
-//             story: QuadraticBezierLineStory,
-//             options: makeCanvasOptions({ camera: { position: [0, 0, 17] }, controls: false }),
-//             inputs: args,
-//         },
-//         template: `
-// <storybook-setup [story]="story" [options]="options" [inputs]="inputs" />
-//         `,
-//     }),
-//     args: {
-//         ...defaultQuadraticBezier,
-//         color: 'red',
-//         lineWidth: 3,
-//         dashed: false,
-//     },
-// };
+export const QuadraticBezierLine: StoryObj = {
+    render: makeRenderFunction(QuadraticBezierLineStory, { camera: { position: [0, 0, 17] }, controls: false }),
+    args: {
+        ...defaultQuadraticBezier,
+        color: 'red',
+        lineWidth: 3,
+        dashed: false,
+    },
+};
 //
 // export const CatmullRomLine: StoryObj = {
 //     render: (args) => ({

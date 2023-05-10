@@ -1,14 +1,14 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, computed } from '@angular/core';
 import { NgtSignalStore } from 'angular-three';
 import type { LineMaterialParameters } from 'three-stdlib';
 
-export type NgtsLineState = {
+export interface NgtsLineState extends Omit<LineMaterialParameters, 'vertexColors' | 'color'> {
     vertexColors?: Array<THREE.Color | [number, number, number]>;
     lineWidth?: number;
-    segments?: boolean;
+    segments: boolean | number | undefined;
     color: THREE.ColorRepresentation;
     points: Array<THREE.Vector3 | THREE.Vector2 | [number, number, number] | [number, number] | number>;
-} & Omit<LineMaterialParameters, 'vertexColors' | 'color'>;
+}
 
 @Directive()
 export abstract class NgtsLineInputs extends NgtSignalStore<NgtsLineState> {
@@ -59,6 +59,36 @@ export abstract class NgtsLineInputs extends NgtSignalStore<NgtsLineState> {
     @Input() set worldUnits(worldUnits: boolean) {
         this.set({ worldUnits });
     }
+
+    readonly lineParameters = computed(() => {
+        const color = this.select('color');
+        const vertexColors = this.select('vertexColors');
+        const resolution = this.select('resolution');
+        const linewidth = this.select('lineWidth');
+        const alphaToCoverage = this.select('alphaToCoverage');
+        const dashed = this.select('dashed');
+        const dashScale = this.select('dashScale');
+        const dashSize = this.select('dashSize');
+        const dashOffset = this.select('dashOffset');
+        const gapSize = this.select('gapSize');
+        const wireframe = this.select('wireframe');
+        const worldUnits = this.select('worldUnits');
+
+        return {
+            color: color(),
+            vertexColors: vertexColors(),
+            resolution: resolution(),
+            linewidth: linewidth(),
+            alphaToCoverage: alphaToCoverage(),
+            dashed: dashed(),
+            dashScale: dashScale(),
+            dashSize: dashSize(),
+            dashOffset: dashOffset(),
+            gapSize: gapSize(),
+            wireframe: wireframe(),
+            worldUnits: worldUnits(),
+        };
+    });
 
     constructor() {
         super({ color: 'black' });
