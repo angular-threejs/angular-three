@@ -1,6 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
-import { NgtsCubicBezierLine, NgtsLine, NgtsQuadraticBezierLine } from 'angular-three-soba/abstractions';
+import {
+    NgtsCatmullRomLine,
+    NgtsCubicBezierLine,
+    NgtsLine,
+    NgtsQuadraticBezierLine,
+} from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
 import { GeometryUtils } from 'three-stdlib';
@@ -48,35 +53,35 @@ const defaultCatmullRom = {
     curveType: 'centripetal',
 };
 
-// @Component({
-//     standalone: true,
-//     template: `
-//         <ngts-catmull-rom-line
-//             [points]="points"
-//             [closed]="closed"
-//             [curveType]="curveType"
-//             [tension]="tension"
-//             [segments]="segments"
-//             [color]="color"
-//             [lineWidth]="lineWidth"
-//             [dashed]="dashed"
-//         />
-//         <ngts-orbit-controls [zoomSpeed]="0.5" />
-//     `,
-//     imports: [NgtsCatmullRomLine, NgtsOrbitControls],
-//     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-// })
-// class CatmullRomLineStory {
-//     readonly points = defaultCatmullRom.points;
-//     @Input() color = 'red';
-//     @Input() lineWidth = 3;
-//     @Input() dashed = false;
-//     @Input() segments = defaultCatmullRom.segments;
-//     @Input() closed = defaultCatmullRom.closed;
-//     @Input() curveType = defaultCatmullRom.curveType;
-//     @Input() tension = defaultCatmullRom.tension;
-// }
-//
+@Component({
+    standalone: true,
+    template: `
+        <ngts-catmull-rom-line
+            [points]="points"
+            [closed]="closed"
+            [curveType]="curveType"
+            [tension]="tension"
+            [segments]="segments"
+            [color]="color"
+            [lineWidth]="lineWidth"
+            [dashed]="dashed"
+        />
+        <ngts-orbit-controls [zoomSpeed]="0.5" />
+    `,
+    imports: [NgtsCatmullRomLine, NgtsOrbitControls],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+class CatmullRomLineStory {
+    readonly points = defaultCatmullRom.points;
+    @Input() color = 'red';
+    @Input() lineWidth = 3;
+    @Input() dashed = false;
+    @Input() segments = defaultCatmullRom.segments;
+    @Input() closed = defaultCatmullRom.closed;
+    @Input() curveType = defaultCatmullRom.curveType;
+    @Input() tension = defaultCatmullRom.tension;
+}
+
 @Component({
     standalone: true,
     template: `
@@ -179,54 +184,32 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
+const canvasOptions = { camera: { position: [0, 0, 17] }, controls: false };
+
 export const Default: StoryObj = {
-    render: makeRenderFunction(DefaultLineStory, { camera: { position: [0, 0, 17] }, controls: false }),
+    render: makeRenderFunction(DefaultLineStory, canvasOptions),
     args: { color: 'red', dashed: false, lineWidth: 3 },
 };
 
 export const VertexColors: StoryObj = {
-    render: makeRenderFunction(VertexColorsLineStory, { camera: { position: [0, 0, 17] }, controls: false }),
+    render: makeRenderFunction(VertexColorsLineStory, canvasOptions),
     args: { color: 'red', dashed: false, lineWidth: 3 },
 };
 
 export const CubicBezierLine: StoryObj = {
-    render: makeRenderFunction(CubicBezierLineStory, { camera: { position: [0, 0, 17] }, controls: false }),
-    args: {
-        ...defaultCubicBezier,
-        color: 'red',
-        lineWidth: 3,
-        dashed: false,
-    },
+    render: makeRenderFunction(CubicBezierLineStory, canvasOptions),
+    args: { ...defaultCubicBezier, color: 'red', lineWidth: 3, dashed: false },
 };
 
 export const QuadraticBezierLine: StoryObj = {
-    render: makeRenderFunction(QuadraticBezierLineStory, { camera: { position: [0, 0, 17] }, controls: false }),
-    args: {
-        ...defaultQuadraticBezier,
-        color: 'red',
-        lineWidth: 3,
-        dashed: false,
+    render: makeRenderFunction(QuadraticBezierLineStory, canvasOptions),
+    args: { ...defaultQuadraticBezier, color: 'red', lineWidth: 3, dashed: false },
+};
+
+export const CatmullRomLine: StoryObj = {
+    render: makeRenderFunction(CatmullRomLineStory, canvasOptions),
+    args: { ...defaultCatmullRom, color: 'red', lineWidth: 3, dashed: false },
+    argTypes: {
+        curveType: { options: ['centripetal', 'chordal', 'catmullrom'], control: { type: 'select' } },
     },
 };
-//
-// export const CatmullRomLine: StoryObj = {
-//     render: (args) => ({
-//         props: {
-//             story: CatmullRomLineStory,
-//             options: makeCanvasOptions({ camera: { position: [0, 0, 17] }, controls: false }),
-//             inputs: args,
-//         },
-//         template: `
-// <storybook-setup [story]="story" [options]="options" [inputs]="inputs" />
-//         `,
-//     }),
-//     args: {
-//         ...defaultCatmullRom,
-//         color: 'red',
-//         lineWidth: 3,
-//         dashed: false,
-//     },
-//     argTypes: {
-//         curveType: { options: ['centripetal', 'chordal', 'catmullrom'], control: { type: 'select' } },
-//     },
-// };

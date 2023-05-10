@@ -58,11 +58,7 @@ export function injectNgtRef<TElement>(
         Object.defineProperty(ref, 'nativeElement', {
             set: (newElement) => {
                 if (newElement !== untracked(signalRef)) {
-                    try {
-                        signalRef.set(newElement);
-                    } catch {
-                        requestAnimationFrame(() => signalRef.set(newElement));
-                    }
+                    signalRef.set(newElement);
                     safeDetectChanges(cdr);
                 }
             },
