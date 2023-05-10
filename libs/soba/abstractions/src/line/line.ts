@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Injector, Input, computed, effect, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect, inject } from '@angular/core';
 import { NgtArgs, NgtStore, injectNgtRef } from 'angular-three';
 import * as THREE from 'three';
 import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib';
@@ -50,7 +50,6 @@ export class NgtsLine extends NgtsLineInputs {
         this.set({ segments });
     }
 
-    readonly #injector = inject(Injector);
     readonly #store = inject(NgtStore);
 
     readonly #resolution = computed(() => {
@@ -140,12 +139,9 @@ export class NgtsLine extends NgtsLineInputs {
     }
 
     #disposeGeometry() {
-        effect(
-            (onCleanup) => {
-                const lineGeometry = this.lineGeometry();
-                onCleanup(() => lineGeometry.dispose());
-            },
-            { injector: this.#injector }
-        );
+        effect((onCleanup) => {
+            const lineGeometry = this.lineGeometry();
+            onCleanup(() => lineGeometry.dispose());
+        });
     }
 }

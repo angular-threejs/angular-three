@@ -5,7 +5,6 @@ import {
     effect,
     EventEmitter,
     inject,
-    Injector,
     Input,
     Output,
 } from '@angular/core';
@@ -66,7 +65,6 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     @Output() end = new EventEmitter<THREE.Event>();
 
     readonly #store = inject(NgtStore);
-    readonly #injector = inject(Injector);
 
     readonly args = computed(() => [this.controlsRef.nativeElement]);
     readonly damping = this.select('enableDamping');
@@ -105,7 +103,7 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
                     this.controlsRef.nativeElement = new OrbitControls(controlsCamera);
                 }
             },
-            { injector: this.#injector, allowSignalWrites: true }
+            { allowSignalWrites: true }
         );
     }
 
@@ -126,15 +124,12 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
             };
         });
 
-        effect(
-            (onCleanup) => {
-                const { domElement, controls } = trigger();
-                if (!controls) return;
-                controls.connect(domElement);
-                onCleanup(() => void controls.dispose());
-            },
-            { injector: this.#injector }
-        );
+        effect((onCleanup) => {
+            const { domElement, controls } = trigger();
+            if (!controls) return;
+            controls.connect(domElement);
+            onCleanup(() => void controls.dispose());
+        });
     }
 
     #makeControlsDefault() {
@@ -152,7 +147,7 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
                     onCleanup(() => void this.#store.set({ controls: oldControls }));
                 }
             },
-            { injector: this.#injector, allowSignalWrites: true }
+            { allowSignalWrites: true }
         );
     }
 
@@ -162,31 +157,28 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
             const performance = this.#store.get('performance');
             return { invalidate: invalidate(), performance, controls: this.controlsRef.nativeElement };
         });
-        effect(
-            (onCleanup) => {
-                const { controls, invalidate, performance } = trigger();
-                if (!controls) return;
-                const regress = this.get('regress');
-                const changeCallback: (e: THREE.Event) => void = (e) => {
-                    invalidate();
-                    if (regress) performance.regress();
-                    if (this.change.observed) this.change.emit(e);
-                };
+        effect((onCleanup) => {
+            const { controls, invalidate, performance } = trigger();
+            if (!controls) return;
+            const regress = this.get('regress');
+            const changeCallback: (e: THREE.Event) => void = (e) => {
+                invalidate();
+                if (regress) performance.regress();
+                if (this.change.observed) this.change.emit(e);
+            };
 
-                const startCallback = this.start.observed ? this.start.emit.bind(this.start) : null;
-                const endCallback = this.end.observed ? this.end.emit.bind(this.end) : null;
+            const startCallback = this.start.observed ? this.start.emit.bind(this.start) : null;
+            const endCallback = this.end.observed ? this.end.emit.bind(this.end) : null;
 
-                controls.addEventListener('change', changeCallback);
-                if (startCallback) controls.addEventListener('start', startCallback);
-                if (endCallback) controls.addEventListener('end', endCallback);
+            controls.addEventListener('change', changeCallback);
+            if (startCallback) controls.addEventListener('start', startCallback);
+            if (endCallback) controls.addEventListener('end', endCallback);
 
-                onCleanup(() => {
-                    controls.removeEventListener('change', changeCallback);
-                    if (startCallback) controls.removeEventListener('start', startCallback);
-                    if (endCallback) controls.removeEventListener('end', endCallback);
-                });
-            },
-            { injector: this.#injector }
-        );
+            onCleanup(() => {
+                controls.removeEventListener('change', changeCallback);
+                if (startCallback) controls.removeEventListener('start', startCallback);
+                if (endCallback) controls.removeEventListener('end', endCallback);
+            });
+        });
     }
 }

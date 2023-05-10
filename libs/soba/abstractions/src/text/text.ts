@@ -3,7 +3,6 @@ import {
     Component,
     DestroyRef,
     EventEmitter,
-    Injector,
     Input,
     Output,
     computed,
@@ -215,7 +214,6 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
 
     readonly troikaText = new Text();
 
-    readonly #injector = inject(Injector);
     readonly #store = inject(NgtStore);
 
     readonly state = this.select();
@@ -236,29 +234,23 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
             return { font: font(), characters: characters() };
         });
 
-        effect(
-            () => {
-                const { font, characters } = trigger();
-                const invalidate = this.#store.get('invalidate');
-                preloadFont({ font, characters }, () => invalidate());
-            },
-            { injector: this.#injector }
-        );
+        effect(() => {
+            const { font, characters } = trigger();
+            const invalidate = this.#store.get('invalidate');
+            preloadFont({ font, characters }, () => invalidate());
+        });
     }
 
     #syncText() {
-        effect(
-            () => {
-                this.select()();
-                const invalidate = this.#store.get('invalidate');
-                this.troikaText.sync(() => {
-                    invalidate();
-                    if (this.sync.observed) {
-                        this.sync.emit(this.troikaText);
-                    }
-                });
-            },
-            { injector: this.#injector }
-        );
+        effect(() => {
+            this.select()();
+            const invalidate = this.#store.get('invalidate');
+            this.troikaText.sync(() => {
+                invalidate();
+                if (this.sync.observed) {
+                    this.sync.emit(this.troikaText);
+                }
+            });
+        });
     }
 }
