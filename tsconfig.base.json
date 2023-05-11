@@ -22,7 +22,9 @@
             "angular-three-postprocessing": ["libs/postprocessing/src/index.ts"],
             "angular-three-soba": ["libs/soba/src/index.ts"],
             "angular-three-soba/abstractions": ["libs/soba/abstractions/src/index.ts"],
+            "angular-three-soba/cameras": ["libs/soba/cameras/src/index.ts"],
             "angular-three-soba/controls": ["libs/soba/controls/src/index.ts"],
+            "angular-three-soba/misc": ["libs/soba/misc/src/index.ts"],
             "angular-three-soba/staging": ["libs/soba/staging/src/index.ts"],
             "angular-three-suspense": ["libs/suspense/src/index.ts"]
         }
