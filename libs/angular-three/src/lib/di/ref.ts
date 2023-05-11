@@ -23,11 +23,15 @@ export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
 
 export function injectNgtRef<TElement>(
     initial: ElementRef<TElement> | TElement = null!,
-    injector = inject(Injector, { optional: true })
+    injector?: Injector
 ): NgtInjectedRef<TElement> {
-    !injector && assertInInjectionContext(injectNgtRef);
+    assertInInjectionContext(injectNgtRef);
 
-    return runInInjectionContext(injector!, () => {
+    if (!injector) {
+        injector = inject(Injector);
+    }
+
+    return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
 
         const ref = is.ref(initial) ? initial : new ElementRef<TElement>(initial as TElement);

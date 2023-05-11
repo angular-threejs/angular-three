@@ -4,14 +4,15 @@ import { NgtBeforeRenderRecord } from '../types';
 
 export function injectBeforeRender(
     cb: NgtBeforeRenderRecord['callback'],
-    {
-        priority = 0,
-        injector = inject(Injector, { optional: true }),
-    }: { priority?: number; injector?: Injector | null } = {}
+    { priority = 0, injector }: { priority?: number; injector?: Injector | null } = {}
 ) {
-    !injector && assertInInjectionContext(injectBeforeRender);
+    assertInInjectionContext(injectBeforeRender);
 
-    return runInInjectionContext(injector!, () => {
+    if (!injector) {
+        injector = inject(Injector);
+    }
+
+    return runInInjectionContext(injector, () => {
         const store = inject(NgtStore);
         const sub = store.get('internal').subscribe(cb, priority, store);
         inject(DestroyRef).onDestroy(() => void sub());

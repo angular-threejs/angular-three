@@ -55,7 +55,6 @@ export class NgtsLine extends NgtsLineInputs {
     readonly #resolution = computed(() => {
         const size = this.#store.select('size');
         const resolution = this.select('resolution');
-
         return resolution() ? resolution() : [size().width, size().height];
     });
 

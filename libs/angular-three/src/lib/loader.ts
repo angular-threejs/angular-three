@@ -94,16 +94,20 @@ export function injectNgtLoader<
     {
         extensions,
         onProgress,
-        injector = inject(Injector, { optional: true }),
+        injector,
     }: {
         extensions?: NgtLoaderExtensions<TLoaderConstructor>;
         onProgress?: (event: ProgressEvent) => void;
-        injector?: Injector | null;
+        injector?: Injector;
     } = {}
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>> {
-    !injector && assertInInjectionContext(injectNgtLoader);
+    assertInInjectionContext(injectNgtLoader);
 
-    return runInInjectionContext(injector!, () => {
+    if (!injector) {
+        injector = inject(Injector);
+    }
+
+    return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
         const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>>(null!);
         const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
