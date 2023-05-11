@@ -154,13 +154,18 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     #setEvents() {
         const trigger = computed(() => {
             const invalidate = this.#store.select('invalidate');
-            const performance = this.#store.get('performance');
-            return { invalidate: invalidate(), performance, controls: this.controlsRef.nativeElement };
+            const performance = this.#store.select('performance');
+            const regress = this.select('regress');
+            return {
+                invalidate: invalidate(),
+                performance: performance(),
+                regress: regress(),
+                controls: this.controlsRef.nativeElement,
+            };
         });
         effect((onCleanup) => {
-            const { controls, invalidate, performance } = trigger();
+            const { controls, invalidate, performance, regress } = trigger();
             if (!controls) return;
-            const regress = this.get('regress');
             const changeCallback: (e: THREE.Event) => void = (e) => {
                 invalidate();
                 if (regress) performance.regress();

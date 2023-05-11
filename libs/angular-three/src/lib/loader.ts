@@ -140,7 +140,7 @@ injectNgtLoader['preload'] = <
     TLoaderConstructor extends NgtLoaderProto<TData>
 >(
     loaderConstructorFactory: (inputs: string[]) => TLoaderConstructor,
-    inputs: Signal<TUrl>,
+    inputs: () => TUrl,
     extensions?: NgtLoaderExtensions<TLoaderConstructor>
 ) => {
     Promise.all(load(loaderConstructorFactory, inputs, { extensions })());
