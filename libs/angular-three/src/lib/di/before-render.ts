@@ -1,16 +1,13 @@
-import { DestroyRef, Injector, assertInInjectionContext, inject, runInInjectionContext } from '@angular/core';
+import { DestroyRef, Injector, inject, runInInjectionContext } from '@angular/core';
 import { NgtStore } from '../stores/store';
 import { NgtBeforeRenderRecord } from '../types';
+import { assertInjectionContext } from '../utils/assert-in-injection-context';
 
 export function injectBeforeRender(
     cb: NgtBeforeRenderRecord['callback'],
-    { priority = 0, injector }: { priority?: number; injector?: Injector | null } = {}
+    { priority = 0, injector }: { priority?: number; injector?: Injector } = {}
 ) {
-    assertInInjectionContext(injectBeforeRender);
-
-    if (!injector) {
-        injector = inject(Injector);
-    }
+    injector = assertInjectionContext(injectBeforeRender, injector);
 
     return runInInjectionContext(injector, () => {
         const store = inject(NgtStore);

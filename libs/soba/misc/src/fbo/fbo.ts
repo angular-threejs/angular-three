@@ -1,5 +1,4 @@
 import {
-    assertInInjectionContext,
     ChangeDetectorRef,
     computed,
     DestroyRef,
@@ -8,7 +7,7 @@ import {
     Injector,
     runInInjectionContext,
 } from '@angular/core';
-import { injectNgtRef, NgtStore, safeDetectChanges } from 'angular-three';
+import { assertInjectionContext, injectNgtRef, NgtStore, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 
 interface FBOSettings extends THREE.WebGLRenderTargetOptions {
@@ -25,12 +24,7 @@ export interface NgtsFBOParams {
 }
 
 export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { injector?: Injector } = {}) {
-    assertInInjectionContext(injectNgtsFBO);
-
-    if (!injector) {
-        injector = inject(Injector);
-    }
-
+    injector = assertInjectionContext(injectNgtsFBO, injector);
     return runInInjectionContext(injector, () => {
         const store = inject(NgtStore);
         const cdr = inject(ChangeDetectorRef);
@@ -41,33 +35,33 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
 
         const trigger = computed(() => {
             const size = store.select('size');
-            const viewport = store.select('viewport');
+            const dpr = store.select('viewport', 'dpr');
             const { width, height, settings } = fboParams();
-            return { size: size(), viewport: viewport(), width, height, settings };
+            const _width = typeof width === 'number' ? width : size().width * dpr();
+            const _height = typeof height === 'number' ? height : size().height * dpr();
+            const _settings = (typeof width === 'number' ? settings : (width as FBOSettings)) || {};
+
+            return { width: _width, height: _height, settings: _settings };
         });
 
         effect(
             () => {
-                const { size, width, height, settings, viewport } = trigger();
-                const _width = typeof width === 'number' ? width : size.width * viewport.dpr;
-                const _height = typeof height === 'number' ? height : size.height * viewport.dpr;
-                const _settings = (typeof width === 'number' ? settings : (width as FBOSettings)) || {};
-                const { samples = 0, depth, ...targetSettings } = _settings;
-
+                const { width, height, settings } = trigger();
+                const { samples = 0, depth, ...targetSettings } = settings;
                 if (!targetRef.untracked) {
-                    const target = new THREE.WebGLRenderTarget(_width, _height, {
+                    const target = new THREE.WebGLRenderTarget(width, height, {
                         minFilter: THREE.LinearFilter,
                         magFilter: THREE.LinearFilter,
                         type: THREE.HalfFloatType,
                         ...targetSettings,
                     });
-                    if (depth) target.depthTexture = new THREE.DepthTexture(_width, _height, THREE.FloatType);
+                    if (depth) target.depthTexture = new THREE.DepthTexture(width, height, THREE.FloatType);
 
                     target.samples = samples;
                     targetRef.nativeElement = target;
                 }
 
-                targetRef.untracked.setSize(_width, _height);
+                targetRef.untracked.setSize(width, height);
                 if (samples) targetRef.nativeElement.samples = samples;
                 safeDetectChanges(cdr);
             },

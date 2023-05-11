@@ -1,7 +1,6 @@
 import {
     ChangeDetectorRef,
     Injector,
-    assertInInjectionContext,
     computed,
     effect,
     inject,
@@ -19,6 +18,7 @@ import type {
     NgtLoaderReturnType,
     NgtObjectMap,
 } from './types';
+import { assertInjectionContext } from './utils/assert-in-injection-context';
 import { makeObjectGraph } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';
 
@@ -101,12 +101,7 @@ export function injectNgtLoader<
         injector?: Injector;
     } = {}
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>> {
-    assertInInjectionContext(injectNgtLoader);
-
-    if (!injector) {
-        injector = inject(Injector);
-    }
-
+    injector = assertInjectionContext(injectNgtLoader, injector);
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
         const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>>(null!);

@@ -4,13 +4,13 @@ import {
     ElementRef,
     Injector,
     Signal,
-    assertInInjectionContext,
     computed,
     inject,
     runInInjectionContext,
     untracked,
 } from '@angular/core';
 import { NgtInstanceNode } from '../types';
+import { assertInjectionContext } from '../utils/assert-in-injection-context';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
@@ -25,11 +25,7 @@ export function injectNgtRef<TElement>(
     initial: ElementRef<TElement> | TElement = null!,
     injector?: Injector
 ): NgtInjectedRef<TElement> {
-    assertInInjectionContext(injectNgtRef);
-
-    if (!injector) {
-        injector = inject(Injector);
-    }
+    injector = assertInjectionContext(injectNgtRef, injector);
 
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
