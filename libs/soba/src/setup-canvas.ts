@@ -172,11 +172,11 @@ export class StorybookSetup implements OnInit {
             this.#envInjector
         );
         this.#ref = this.anchor.createComponent(NgtCanvas, { environmentInjector: this.#refEnvInjector });
-        this.#ref.setInput('sceneGraph', StorybookScene);
         this.#ref.setInput('shadows', true);
         this.#ref.setInput('performance', this.options.performance);
         this.#ref.setInput('camera', this.options.camera);
         this.#ref.setInput('compoundPrefixes', this.options.compoundPrefixes);
+        this.#ref.setInput('sceneGraph', StorybookScene);
         safeDetectChanges(this.#ref.changeDetectorRef);
     }
 }

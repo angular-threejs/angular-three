@@ -9,7 +9,7 @@ export interface NgtsDepthBufferParams {
 }
 
 export function injectNgtsDepthBuffer(
-    paramsFactory: () => NgtsDepthBufferParams = () => ({ size: 256, frames: Infinity }),
+    paramsFactory: () => Partial<NgtsDepthBufferParams> = () => ({}),
     { injector }: { injector?: Injector } = {}
 ) {
     injector = assertInjectionContext(injectNgtsDepthBuffer, injector);
@@ -22,8 +22,7 @@ export function injectNgtsDepthBuffer(
         const dpr = store.select('viewport', 'dpr');
 
         const fboParams = computed(() => {
-            const params = paramsFactory();
-
+            const params = { size: 256, frames: Infinity, ...paramsFactory() };
             const width = params.size || size().width * dpr();
             const height = params.size || size().height * dpr();
             const depthTexture = new THREE.DepthTexture(width, height);
@@ -36,7 +35,7 @@ export function injectNgtsDepthBuffer(
 
         let count = 0;
         injectBeforeRender(({ gl, scene, camera }) => {
-            const params = paramsFactory();
+            const params = { size: 256, frames: Infinity, ...paramsFactory() };
             if ((params.frames === Infinity || count < params.frames) && fboRef.untracked) {
                 gl.setRenderTarget(fboRef.untracked);
                 gl.render(scene, camera);
