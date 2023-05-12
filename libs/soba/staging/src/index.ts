@@ -3,3 +3,4 @@ export * from './cloud/cloud';
 export * from './contact-shadows/contact-shadows';
 export * from './float/float';
 export * from './sky/sky';
+export * from './stars/stars';
