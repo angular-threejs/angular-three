@@ -51,16 +51,16 @@ export class NgtsLine extends NgtsLineInputs {
     }
 
     readonly #store = inject(NgtStore);
+    readonly #size = this.#store.select('size');
 
-    readonly #resolution = computed(() => {
-        const size = this.#store.select('size');
-        const resolution = this.select('resolution');
-        return resolution() ? resolution() : [size().width, size().height];
-    });
+    readonly #lineResolution = this.select('resolution');
+    readonly #resolution = computed(() =>
+        this.#lineResolution() ? this.#lineResolution() : [this.#size().width, this.#size().height]
+    );
 
-    readonly #pointValues = computed(() => {
-        const points = this.select('points');
-        return points().map((p) => {
+    readonly #points = this.select('points');
+    readonly #pointValues = computed(() =>
+        this.#points().map((p) => {
             const isArray = Array.isArray(p);
             return p instanceof THREE.Vector3
                 ? [p.x, p.y, p.z]
@@ -71,19 +71,20 @@ export class NgtsLine extends NgtsLineInputs {
                 : isArray && p.length === 2
                 ? [p[0], p[1], 0]
                 : p;
-        });
-    });
-    readonly #vertexColors = computed(() => {
-        const vertexColors = this.select('vertexColors');
-        return (vertexColors() || []).map((c) => (c instanceof THREE.Color ? c.toArray() : c));
-    });
+        })
+    );
 
+    readonly #vertexColors = this.select('vertexColors');
+    readonly #vertexColorValues = computed(() =>
+        (this.#vertexColors() || []).map((c) => (c instanceof THREE.Color ? c.toArray() : c))
+    );
+
+    readonly #segments = this.select('segments');
     readonly lineGeometry = computed(() => {
-        const segments = this.select('segments');
         const pointValues = this.#pointValues();
-        const vertexColors = this.#vertexColors();
+        const vertexColors = this.#vertexColorValues();
 
-        const geometry = segments() ? new LineSegmentsGeometry() : new LineGeometry();
+        const geometry = this.#segments() ? new LineSegmentsGeometry() : new LineGeometry();
         geometry.setPositions(pointValues.flat());
 
         if (vertexColors.length) {
@@ -93,10 +94,7 @@ export class NgtsLine extends NgtsLineInputs {
         return geometry;
     });
     readonly lineMaterial = new LineMaterial();
-    readonly line = computed(() => {
-        const segments = this.select('segments');
-        return segments() ? new LineSegments2() : new Line2();
-    });
+    readonly line = computed(() => (this.#segments() ? new LineSegments2() : new Line2()));
 
     readonly lineMaterialParameters = computed(() => {
         const parameters = this.lineParameters();
@@ -123,8 +121,8 @@ export class NgtsLine extends NgtsLineInputs {
     }
 
     #computeLineDistances() {
+        const points = this.select('points');
         const trigger = computed(() => {
-            const points = this.select('points');
             const lineGeometry = this.lineGeometry();
             const line = this.lineRef.nativeElement;
             const children = this.lineRef.children('nonObjects');

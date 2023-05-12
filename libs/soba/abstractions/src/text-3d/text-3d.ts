@@ -131,36 +131,35 @@ export class NgtsText3D extends NgtSignalStore<NgtsText3DState> {
         )
     );
 
+    readonly #text = this.select('text');
+    readonly #size = this.select('size');
+    readonly #height = this.select('height');
+    readonly #bevelThickness = this.select('bevelThickness');
+    readonly #bevelSize = this.select('bevelSize');
+    readonly #bevelEnabled = this.select('bevelEnabled');
+    readonly #bevelSegments = this.select('bevelSegments');
+    readonly #bevelOffset = this.select('bevelOffset');
+    readonly #curveSegments = this.select('curveSegments');
+    readonly #letterSpacing = this.select('letterSpacing');
+    readonly #lineHeight = this.select('lineHeight');
     readonly geometryArgs = computed(() => {
         const fontData = this.#fontData();
         if (!fontData) return null;
 
-        const text = this.select('text');
-        const size = this.select('size');
-        const height = this.select('height');
-        const bevelThickness = this.select('bevelThickness');
-        const bevelSize = this.select('bevelSize');
-        const bevelEnabled = this.select('bevelEnabled');
-        const bevelSegments = this.select('bevelSegments');
-        const bevelOffset = this.select('bevelOffset');
-        const curveSegments = this.select('curveSegments');
-        const letterSpacing = this.select('letterSpacing');
-        const lineHeight = this.select('lineHeight');
-
         return [
-            text(),
+            this.#text(),
             {
                 font: fontData,
-                size: size(),
-                height: height(),
-                bevelThickness: bevelThickness(),
-                bevelSize: bevelSize(),
-                bevelSegments: bevelSegments(),
-                bevelEnabled: bevelEnabled(),
-                bevelOffset: bevelOffset(),
-                curveSegments: curveSegments(),
-                letterSpacing: letterSpacing(),
-                lineHeight: lineHeight(),
+                size: this.#size(),
+                height: this.#height(),
+                bevelThickness: this.#bevelThickness(),
+                bevelSize: this.#bevelSize(),
+                bevelSegments: this.#bevelSegments(),
+                bevelEnabled: this.#bevelEnabled(),
+                bevelOffset: this.#bevelOffset(),
+                curveSegments: this.#curveSegments(),
+                letterSpacing: this.#letterSpacing(),
+                lineHeight: this.#lineHeight(),
             },
         ] as const;
     });

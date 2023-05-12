@@ -63,26 +63,27 @@ export class NgtsCatmullRomLine extends NgtsLineInputs {
         this.set({ segments });
     }
 
+    readonly #points = this.select('points');
+    readonly #closed = this.select('closed');
+    readonly #curveType = this.select('curveType');
+    readonly #tension = this.select('tension');
+
     readonly #curve = computed(() => {
-        const points = this.select('points');
-        const closed = this.select('closed');
-        const curveType = this.select('curveType');
-        const tension = this.select('tension');
-        const mappedPoints = points().map((p) =>
+        const mappedPoints = this.#points().map((p) =>
             p instanceof THREE.Vector3 ? p : new THREE.Vector3(...(p as [number, number, number]))
         );
-        return new CatmullRomCurve3(mappedPoints, closed(), curveType(), tension());
+        return new CatmullRomCurve3(mappedPoints, this.#closed(), this.#curveType(), this.#tension());
     });
 
+    readonly #segments = this.select('segments');
     readonly segmentedPoints = computed(() => {
         const curve = this.#curve();
-        const segments = this.select('segments');
-        return curve.getPoints(segments() as number);
+        return curve.getPoints(this.#segments() as number);
     });
 
     readonly interpolatedVertexColors = computed(() => {
         const vertexColors = this.select('vertexColors')();
-        const segments = this.select('segments')() as number;
+        const segments = this.#segments() as number;
 
         if (!vertexColors || vertexColors.length < 2) return undefined;
         if (vertexColors.length === segments + 1) return vertexColors;

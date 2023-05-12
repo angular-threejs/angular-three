@@ -27,13 +27,15 @@ export class NgtsAdaptiveDpr {
             { allowSignalWrites: true }
         );
 
+        const performanceCurrent = store.select('performance', 'current');
+        // TODO: mousemove event doesn't seem to trigger change detection. investigate later
         effect(
             () => {
-                const performanceCurrent = store.select('performance', 'current');
+                const current = performanceCurrent();
                 const { gl, viewport, setDpr } = store.get();
-                setDpr(performanceCurrent() * viewport.initialDpr);
+                setDpr(current * viewport.initialDpr);
                 if (untracked(this.#pixelated) && gl.domElement)
-                    gl.domElement.style.imageRendering = performanceCurrent() === 1 ? 'auto' : 'pixelated';
+                    gl.domElement.style.imageRendering = current === 1 ? 'auto' : 'pixelated';
             },
             { allowSignalWrites: true }
         );

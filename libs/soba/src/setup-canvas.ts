@@ -24,6 +24,7 @@ import {
 import type { Args } from '@storybook/angular';
 import { NgtArgs, NgtCanvas, extend, safeDetectChanges, type NgtPerformance } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsLoader } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 
 interface CanvasOptions {
@@ -40,6 +41,7 @@ interface CanvasOptions {
           };
     lights?: boolean;
     compoundPrefixes?: string[];
+    loader?: boolean;
 }
 
 const defaultCanvasOptions: CanvasOptions = {
@@ -56,6 +58,7 @@ const defaultCanvasOptions: CanvasOptions = {
     whiteBackground: false,
     controls: true,
     lights: true,
+    loader: false,
 };
 
 extend(THREE);
@@ -127,7 +130,11 @@ class StorybookScene implements OnInit {
 @Component({
     selector: 'storybook-setup[story]',
     standalone: true,
-    template: '<ng-container #anchor />',
+    template: `
+        <ng-container #anchor />
+        <ngts-loader *ngIf="options.loader" />
+    `,
+    imports: [NgtsLoader, NgIf],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StorybookSetup implements OnInit {

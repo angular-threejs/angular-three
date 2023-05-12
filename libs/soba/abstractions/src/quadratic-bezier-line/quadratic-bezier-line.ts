@@ -59,13 +59,13 @@ export class NgtsQuadraticBezierLine extends NgtsLineInputs {
         this.set({ segments });
     }
 
-    readonly points = computed(() => {
-        const start = this.select('start');
-        const end = this.select('end');
-        const mid = this.select('mid');
-        const segments = this.select('segments');
-        return this.#getPoints(start(), end(), mid(), segments() as number);
-    });
+    readonly #start = this.select('start');
+    readonly #end = this.select('end');
+    readonly #mid = this.select('mid');
+    readonly #segments = this.select('segments');
+    readonly points = computed(() =>
+        this.#getPoints(this.#start(), this.#end(), this.#mid(), this.#segments() as number)
+    );
 
     constructor() {
         super();

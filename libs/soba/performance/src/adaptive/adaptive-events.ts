@@ -19,11 +19,11 @@ export class NgtsAdaptiveEvents {
             { allowSignalWrites: true }
         );
 
+        const performanceCurrent = store.select('performance', 'current');
         effect(
             () => {
-                const performanceCurrent = store.select('performance', 'current')();
                 const setEvents = store.get('setEvents');
-                setEvents({ enabled: performanceCurrent === 1 });
+                setEvents({ enabled: performanceCurrent() === 1 });
             },
             { allowSignalWrites: true }
         );

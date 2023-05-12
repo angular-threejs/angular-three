@@ -59,29 +59,16 @@ export class NgtsOrthographicCamera extends NgtsCamera<THREE.OrthographicCamera>
         this.set({ bottom });
     }
 
-    readonly cameraLeft = computed(() => {
-        const left = this.select('left');
-        const size = this.store.select('size');
-        return left() || size().width / -2;
-    });
+    readonly #left = this.select('left');
+    readonly #right = this.select('right');
+    readonly #top = this.select('top');
+    readonly #bottom = this.select('bottom');
+    readonly #size = this.store.select('size');
 
-    readonly cameraRight = computed(() => {
-        const right = this.select('right');
-        const size = this.store.select('size');
-        return right() || size().width / 2;
-    });
-
-    readonly cameraTop = computed(() => {
-        const top = this.select('top');
-        const size = this.store.select('size');
-        return top() || size().height / 2;
-    });
-
-    readonly cameraBottom = computed(() => {
-        const bottom = this.select('bottom');
-        const size = this.store.select('size');
-        return bottom() || size().height / -2;
-    });
+    readonly cameraLeft = computed(() => this.#left() || this.#size().width / -2);
+    readonly cameraRight = computed(() => this.#right() || this.#size().width / 2);
+    readonly cameraTop = computed(() => this.#top() || this.#size().height / 2);
+    readonly cameraBottom = computed(() => this.#bottom() || this.#size().height / -2);
 
     constructor() {
         super();

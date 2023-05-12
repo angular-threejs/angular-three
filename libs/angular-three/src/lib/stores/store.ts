@@ -105,10 +105,9 @@ export class NgtStore extends NgtSignalStore<NgtState> {
                         if (state.performance.current !== state.performance.min)
                             setPerformanceCurrent(state.performance.min);
                         // go back to upper bound
-                        performanceTimeout = setTimeout(
-                            () => setPerformanceCurrent(this.get('performance', 'max') || 1),
-                            state.performance.debounce
-                        );
+                        performanceTimeout = setTimeout(() => {
+                            setPerformanceCurrent(this.get('performance', 'max') || 1);
+                        }, state.performance.debounce);
                     },
                 },
                 size: { width: 0, height: 0, top: 0, left: 0 },
@@ -425,14 +424,11 @@ export class NgtStore extends NgtSignalStore<NgtState> {
         let oldDpr = state.viewport.dpr;
         let oldCamera = state.camera;
 
-        const triggers = computed(() => {
-            return {
-                camera: this.select('camera')(),
-                size: this.select('size')(),
-                viewport: this.select('viewport')(),
-                gl: this.get('gl'),
-            };
-        });
+        const camera = this.select('camera');
+        const size = this.select('size');
+        const viewport = this.select('viewport');
+
+        const triggers = computed(() => ({ camera: camera(), size: size(), viewport: viewport(), gl: this.get('gl') }));
 
         effect(
             () => {

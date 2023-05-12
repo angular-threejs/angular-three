@@ -228,11 +228,9 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
     }
 
     #preloadFont() {
-        const trigger = computed(() => {
-            const font = this.select('font');
-            const characters = this.select('characters');
-            return { font: font(), characters: characters() };
-        });
+        const font = this.select('font');
+        const characters = this.select('characters');
+        const trigger = computed(() => ({ font: font(), characters: characters() }));
 
         effect(() => {
             const { font, characters } = trigger();
@@ -242,8 +240,9 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
     }
 
     #syncText() {
+        const state = this.select();
         effect(() => {
-            this.select()();
+            state();
             const invalidate = this.#store.get('invalidate');
             this.troikaText.sync(() => {
                 invalidate();

@@ -41,9 +41,9 @@ export class NgtsDetailed extends NgtSignalStore<NgtsDetailedState> {
     }
 
     #updateChildren() {
+        const distances = this.select('distances');
         const trigger = computed(() => {
             const children = this.lodRef.children();
-            const distances = this.select('distances');
             return { children: children(), distances: distances() };
         });
         effect(() => {

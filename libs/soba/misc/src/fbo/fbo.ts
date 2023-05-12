@@ -33,9 +33,9 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
 
         inject(DestroyRef).onDestroy(() => targetRef.untracked.dispose());
 
+        const size = store.select('size');
+        const dpr = store.select('viewport', 'dpr');
         const trigger = computed(() => {
-            const size = store.select('size');
-            const dpr = store.select('viewport', 'dpr');
             const { width, height, settings } = fboParams();
             const _width = typeof width === 'number' ? width : size().width * dpr();
             const _height = typeof height === 'number' ? height : size().height * dpr();

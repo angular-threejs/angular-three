@@ -88,11 +88,9 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     }
 
     #setControls() {
-        const trigger = computed(() => {
-            const camera = this.select('camera');
-            const defaultCamera = this.#store.select('camera');
-            return { camera: camera(), defaultCamera: defaultCamera() };
-        });
+        const camera = this.select('camera');
+        const defaultCamera = this.#store.select('camera');
+        const trigger = computed(() => ({ camera: camera(), defaultCamera: defaultCamera() }));
 
         effect(
             () => {
@@ -108,14 +106,13 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     }
 
     #connectElement() {
+        const glDomElement = this.#store.select('gl', 'domElement');
+        const domElement = this.select('domElement');
+        const regress = this.select('regress');
+        const invalidate = this.#store.select('invalidate');
+
         const trigger = computed(() => {
-            const glDomElement = this.#store.select('gl', 'domElement');
-            const domElement = this.select('domElement');
-            const regress = this.select('regress');
-
             const eventsSource = this.#store.get('events', 'connected');
-            const invalidate = this.#store.select('invalidate');
-
             return {
                 controls: this.controlsRef.nativeElement,
                 domElement: domElement() || eventsSource || glDomElement(),
@@ -133,10 +130,11 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     }
 
     #makeControlsDefault() {
+        const makeDefault = this.select('makeDefault');
         const trigger = computed(() => {
-            const makeDefault = this.select('makeDefault');
             return { controls: this.controlsRef.nativeElement, makeDefault: makeDefault() };
         });
+
         effect(
             (onCleanup) => {
                 const { controls, makeDefault } = trigger();
@@ -152,10 +150,11 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     }
 
     #setEvents() {
+        const invalidate = this.#store.select('invalidate');
+        const performance = this.#store.select('performance');
+        const regress = this.select('regress');
+
         const trigger = computed(() => {
-            const invalidate = this.#store.select('invalidate');
-            const performance = this.#store.select('performance');
-            const regress = this.select('regress');
             return {
                 invalidate: invalidate(),
                 performance: performance(),

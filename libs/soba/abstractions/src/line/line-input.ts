@@ -60,35 +60,33 @@ export abstract class NgtsLineInputs extends NgtSignalStore<NgtsLineState> {
         this.set({ worldUnits });
     }
 
-    readonly lineParameters = computed(() => {
-        const color = this.select('color');
-        const vertexColors = this.select('vertexColors');
-        const resolution = this.select('resolution');
-        const linewidth = this.select('lineWidth');
-        const alphaToCoverage = this.select('alphaToCoverage');
-        const dashed = this.select('dashed');
-        const dashScale = this.select('dashScale');
-        const dashSize = this.select('dashSize');
-        const dashOffset = this.select('dashOffset');
-        const gapSize = this.select('gapSize');
-        const wireframe = this.select('wireframe');
-        const worldUnits = this.select('worldUnits');
+    readonly #color = this.select('color');
+    readonly #vertexColors = this.select('vertexColors');
+    readonly #resolution = this.select('resolution');
+    readonly #linewidth = this.select('lineWidth');
+    readonly #alphaToCoverage = this.select('alphaToCoverage');
+    readonly #dashed = this.select('dashed');
+    readonly #dashScale = this.select('dashScale');
+    readonly #dashSize = this.select('dashSize');
+    readonly #dashOffset = this.select('dashOffset');
+    readonly #gapSize = this.select('gapSize');
+    readonly #wireframe = this.select('wireframe');
+    readonly #worldUnits = this.select('worldUnits');
 
-        return {
-            color: color(),
-            vertexColors: vertexColors(),
-            resolution: resolution(),
-            linewidth: linewidth(),
-            alphaToCoverage: alphaToCoverage(),
-            dashed: dashed(),
-            dashScale: dashScale(),
-            dashSize: dashSize(),
-            dashOffset: dashOffset(),
-            gapSize: gapSize(),
-            wireframe: wireframe(),
-            worldUnits: worldUnits(),
-        };
-    });
+    readonly lineParameters = computed(() => ({
+        color: this.#color(),
+        vertexColors: this.#vertexColors(),
+        resolution: this.#resolution(),
+        linewidth: this.#linewidth(),
+        alphaToCoverage: this.#alphaToCoverage(),
+        dashed: this.#dashed(),
+        dashScale: this.#dashScale(),
+        dashSize: this.#dashSize(),
+        dashOffset: this.#dashOffset(),
+        gapSize: this.#gapSize(),
+        wireframe: this.#wireframe(),
+        worldUnits: this.#worldUnits(),
+    }));
 
     constructor() {
         super({ color: 'black' });

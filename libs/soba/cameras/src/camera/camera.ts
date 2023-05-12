@@ -35,10 +35,8 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> extends NgtSignalSto
     @Input() cameraRef = injectNgtRef<TCamera>();
 
     protected readonly store = inject(NgtStore);
-    readonly fboRef = injectNgtsFBO(() => {
-        const resolution = this.select('resolution');
-        return { width: resolution() };
-    });
+    readonly #resolution = this.select('resolution');
+    readonly fboRef = injectNgtsFBO(() => ({ width: this.#resolution() }));
 
     constructor() {
         super({ resolution: 256, frames: Infinity, makeDefault: false, manual: false });
@@ -47,10 +45,10 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> extends NgtSignalSto
     }
 
     #setDefaultCamera() {
+        const makeDefault = this.select('makeDefault');
         effect(
             (onCleanup) => {
                 const camera = this.cameraRef.nativeElement;
-                const makeDefault = this.select('makeDefault');
                 if (camera && makeDefault()) {
                     const { camera: oldCamera } = this.store.get();
                     this.store.set({ camera });
@@ -62,9 +60,9 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> extends NgtSignalSto
     }
 
     #updateProjectionMatrix() {
+        const manual = this.select('manual');
         effect(() => {
             const camera = this.cameraRef.nativeElement;
-            const manual = this.select('manual');
             if (!manual() && camera) camera.updateProjectionMatrix();
         });
     }

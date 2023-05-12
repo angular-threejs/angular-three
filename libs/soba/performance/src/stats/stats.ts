@@ -39,13 +39,16 @@ export class NgtsStats extends NgtSignalStore<NgtsStatsState> {
             ? new (Stats as NgtAnyRecord)['default']()
             : new Stats();
 
-        const trigger = computed(() => {
-            const showPanel = this.select('showPanel');
-            const right = this.select('right');
-            const parent = this.select('parent');
-            const classes = this.select('classes');
-            return { showPanel: showPanel(), right: right(), parent: parent(), classes: classes() };
-        });
+        const showPanel = this.select('showPanel');
+        const right = this.select('right');
+        const parent = this.select('parent');
+        const classes = this.select('classes');
+        const trigger = computed(() => ({
+            showPanel: showPanel(),
+            right: right(),
+            parent: parent(),
+            classes: classes(),
+        }));
 
         effect((onCleanup) => {
             const { showPanel, right, parent, classes } = trigger();

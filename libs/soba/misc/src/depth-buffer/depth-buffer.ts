@@ -18,13 +18,14 @@ export function injectNgtsDepthBuffer(
         const store = inject(NgtStore);
         const cdr = inject(ChangeDetectorRef);
 
+        const size = store.select('size');
+        const dpr = store.select('viewport', 'dpr');
+
         const fboParams = computed(() => {
             const params = paramsFactory();
-            const size = store.select('size')();
-            const dpr = store.select('viewport', 'dpr')();
 
-            const width = params.size || size.width * dpr;
-            const height = params.size || size.height * dpr;
+            const width = params.size || size().width * dpr();
+            const height = params.size || size().height * dpr();
             const depthTexture = new THREE.DepthTexture(width, height);
             depthTexture.format = THREE.DepthFormat;
             depthTexture.type = THREE.UnsignedShortType;

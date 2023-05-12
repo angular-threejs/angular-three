@@ -78,4 +78,5 @@ export const Default: StoryFn = makeRenderFunction(DefaultAdaptiveStory, {
     controls: false,
     lights: false,
     performance: { min: 0.2 },
+    loader: true,
 });
