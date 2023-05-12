@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
+import { Meta, moduleMetadata } from '@storybook/angular';
 import {
     NgtsCatmullRomLine,
     NgtsCubicBezierLine,
@@ -9,7 +9,7 @@ import {
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
 import { GeometryUtils } from 'three-stdlib';
-import { makeRenderFunction, StorybookSetup } from '../setup-canvas';
+import { color, makeStoryObject, number, select, StorybookSetup } from '../setup-canvas';
 
 const points = GeometryUtils.hilbert3D(new THREE.Vector3(0), 5).map((p) => [p.x, p.y, p.z]) as [
     number,
@@ -186,30 +186,39 @@ export default {
 
 const canvasOptions = { camera: { position: [0, 0, 17] }, controls: false };
 
-export const Default: StoryObj = {
-    render: makeRenderFunction(DefaultLineStory, canvasOptions),
-    args: { color: 'red', dashed: false, lineWidth: 3 },
-};
-
-export const VertexColors: StoryObj = {
-    render: makeRenderFunction(VertexColorsLineStory, canvasOptions),
-    args: { color: 'red', dashed: false, lineWidth: 3 },
-};
-
-export const CubicBezierLine: StoryObj = {
-    render: makeRenderFunction(CubicBezierLineStory, canvasOptions),
-    args: { ...defaultCubicBezier, color: 'red', lineWidth: 3, dashed: false },
-};
-
-export const QuadraticBezierLine: StoryObj = {
-    render: makeRenderFunction(QuadraticBezierLineStory, canvasOptions),
-    args: { ...defaultQuadraticBezier, color: 'red', lineWidth: 3, dashed: false },
-};
-
-export const CatmullRomLine: StoryObj = {
-    render: makeRenderFunction(CatmullRomLineStory, canvasOptions),
-    args: { ...defaultCatmullRom, color: 'red', lineWidth: 3, dashed: false },
-    argTypes: {
-        curveType: { options: ['centripetal', 'chordal', 'catmullrom'], control: { type: 'select' } },
+export const Default = makeStoryObject(DefaultLineStory, {
+    canvasOptions,
+    argsOptions: { color: color('red'), dashed: false, lineWidth: number(3, { range: true, max: 10, step: 0.5 }) },
+});
+export const VertexColors = makeStoryObject(VertexColorsLineStory, {
+    canvasOptions,
+    argsOptions: { dashed: false, lineWidth: number(3, { range: true, max: 10, step: 0.5 }) },
+});
+export const CubicBezierLine = makeStoryObject(CubicBezierLineStory, {
+    canvasOptions,
+    argsOptions: {
+        ...defaultCubicBezier,
+        color: color('red'),
+        dashed: false,
+        lineWidth: number(3, { range: true, max: 10, step: 0.5 }),
     },
-};
+});
+export const QuadraticBezierLine = makeStoryObject(QuadraticBezierLineStory, {
+    canvasOptions,
+    argsOptions: {
+        ...defaultQuadraticBezier,
+        color: color('red'),
+        dashed: false,
+        lineWidth: number(3, { range: true, max: 10, step: 0.5 }),
+    },
+});
+export const CatmullRomLine = makeStoryObject(CatmullRomLineStory, {
+    canvasOptions,
+    argsOptions: {
+        ...defaultCatmullRom,
+        color: color('red'),
+        dashed: false,
+        lineWidth: number(3, { range: true, max: 10, step: 0.5 }),
+        curveType: select(defaultCatmullRom.curveType, { options: ['centripetal', 'chordal', 'catmullrom'] }),
+    },
+});

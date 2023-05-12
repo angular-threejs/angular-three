@@ -1,8 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
+import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { DoubleSide } from 'three';
-import { makeRenderFunction, StorybookSetup, turn } from '../setup-canvas';
+import { color, makeStoryObject, StorybookSetup, turn } from '../setup-canvas';
 
 @Component({
     standalone: true,
@@ -180,34 +180,23 @@ EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERU
 
 const canvasOptions = { camera: { position: [0, 0, 200] } };
 
-export const Default: StoryObj = {
-    render: makeRenderFunction(DefaultTextStory, canvasOptions),
-    args: { text: defaultText, color: '#ec2d2d' },
-};
-
-export const Outline: StoryObj = {
-    render: makeRenderFunction(OutlineTextStory, canvasOptions),
-    args: { text: defaultText },
-};
-
-export const Stroke: StoryObj = {
-    render: makeRenderFunction(StrokeTextStory, canvasOptions),
-    args: { text: defaultText },
-};
-
-export const Shadow: StoryObj = {
-    render: makeRenderFunction(ShadowTextStory, canvasOptions),
-    args: { text: defaultText },
-};
-
-export const LTR: StoryObj = {
-    render: makeRenderFunction(LTRTextStory, canvasOptions),
-    args: {
+export const Default = makeStoryObject(DefaultTextStory, {
+    canvasOptions,
+    argsOptions: { text: defaultText, color: color('#ec2d2d') },
+});
+export const Outline = makeStoryObject(OutlineTextStory, { canvasOptions, argsOptions: { text: defaultText } });
+export const Stroke = makeStoryObject(StrokeTextStory, { canvasOptions, argsOptions: { text: defaultText } });
+export const Shadow = makeStoryObject(ShadowTextStory, { canvasOptions, argsOptions: { text: defaultText } });
+export const LTR = makeStoryObject(LTRTextStory, {
+    canvasOptions,
+    argsOptions: {
         text: `يولد جميع الناس أحرارًا متساوين في الكرامة والحقوق. وقد وهبوا عقلاً وضميرًا وعليهم أن يعامل بعضهم بعضًا بروح الإخاء.`,
     },
-};
-
-export const CustomMaterial: StoryObj = {
-    render: makeRenderFunction(CustomMaterialTextStory, canvasOptions),
-    args: { text: defaultText, color: 'turquoise' },
-};
+});
+export const CustomMaterial = makeStoryObject(CustomMaterialTextStory, {
+    canvasOptions,
+    argsOptions: {
+        text: defaultText,
+        color: color('turquoise'),
+    },
+});

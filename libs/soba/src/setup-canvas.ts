@@ -208,17 +208,56 @@ export function makeCanvasOptions(options: DeepPartial<CanvasOptions> = {}) {
     return mergedOptions;
 }
 
-export function makeRenderFunction(story: Type<unknown>, canvasOptions: DeepPartial<CanvasOptions> = {}) {
+export function makeStoryFunction(story: Type<unknown>, canvasOptions: DeepPartial<CanvasOptions> = {}) {
     return (args: Args) => {
         return {
-            props: {
-                options: makeCanvasOptions(canvasOptions),
-                inputs: args || {},
-                story,
-            },
+            props: { options: makeCanvasOptions(canvasOptions), inputs: args || {}, story },
             template: `<storybook-setup  [story]="story" [inputs]="inputs" [options]="options" />`,
         };
     };
+}
+
+export function makeStoryObject(
+    story: Type<unknown>,
+    {
+        canvasOptions = {},
+        argsOptions = {},
+    }: {
+        canvasOptions?: DeepPartial<CanvasOptions>;
+        argsOptions?: Record<string, any | { defaultValue: any; control: { control: any } }>;
+    } = {}
+) {
+    const render = makeStoryFunction(story, canvasOptions);
+    const args: Record<string, any> = {};
+    const argTypes: Record<string, any> = {};
+
+    for (const [argKey, argOption] of Object.entries(argsOptions)) {
+        if (argOption['defaultValue']) {
+            args[argKey] = argOption.defaultValue;
+            argTypes[argKey] = argOption.control;
+        } else {
+            args[argKey] = argOption;
+        }
+    }
+
+    return { render, args, argTypes };
+}
+
+export function number(
+    defaultValue: number,
+    options: { min?: number; max?: number; step?: number; range?: true } = {}
+) {
+    if (Object.keys(options).length === 0) return defaultValue;
+    const { range, ...rest } = options;
+    return { defaultValue, control: { control: { type: range ? 'range' : 'number', ...rest } } };
+}
+
+export function color(defaultValue: string, { presetColors = [] }: { presetColors?: THREE.ColorKeyword[] } = {}) {
+    return { defaultValue, control: { control: { type: 'color', presetColors } } };
+}
+
+export function select(defaultValue: string | string[], { multi, options }: { options: string[]; multi?: true }) {
+    return { defaultValue, control: { control: multi ? 'multi-select' : 'select', options } };
 }
 
 export function turn(object: THREE.Object3D) {

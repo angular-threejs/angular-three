@@ -1,8 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Meta, moduleMetadata, StoryFn } from '@storybook/angular';
+import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCloud } from 'angular-three-soba/staging';
-import { makeRenderFunction, StorybookSetup } from '../setup-canvas';
+import { makeStoryFunction, StorybookSetup } from '../setup-canvas';
 
 @Component({
     standalone: true,
@@ -24,7 +24,7 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
-export const Default: StoryFn = makeRenderFunction(DefaultCloudStory, {
+export const Default = makeStoryFunction(DefaultCloudStory, {
     camera: { position: [0, 0, 10] },
     controls: false,
 });

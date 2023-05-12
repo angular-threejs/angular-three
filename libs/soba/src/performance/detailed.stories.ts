@@ -3,7 +3,7 @@ import { Meta, moduleMetadata, StoryFn } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsDetailed } from 'angular-three-soba/performance';
-import { makeRenderFunction, StorybookSetup } from '../setup-canvas';
+import { makeStoryFunction, StorybookSetup } from '../setup-canvas';
 
 @Component({
     standalone: true,
@@ -36,7 +36,7 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
-export const Default: StoryFn = makeRenderFunction(DefaultDetailedStory, {
+export const Default: StoryFn = makeStoryFunction(DefaultDetailedStory, {
     controls: false,
     camera: { position: [0, 0, 100] },
 });

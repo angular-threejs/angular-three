@@ -1,13 +1,13 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Signal } from '@angular/core';
-import { Meta, StoryFn, moduleMetadata } from '@storybook/angular';
+import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
 import { NgtsAdaptiveDpr, NgtsAdaptiveEvents } from 'angular-three-soba/performance';
 import type { Material, Mesh } from 'three';
 import type { GLTF } from 'three-stdlib/loaders/GLTFLoader';
-import { StorybookSetup, makeRenderFunction } from '../setup-canvas';
+import { StorybookSetup, makeStoryFunction } from '../setup-canvas';
 
 interface ArcherGLTF extends GLTF {
     materials: { material_0: Material };
@@ -73,7 +73,7 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
-export const Default: StoryFn = makeRenderFunction(DefaultAdaptiveStory, {
+export const Default = makeStoryFunction(DefaultAdaptiveStory, {
     camera: { position: [0, 0, 30], fov: 50 },
     controls: false,
     lights: false,

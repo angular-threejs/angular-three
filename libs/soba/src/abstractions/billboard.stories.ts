@@ -1,10 +1,10 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
+import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { BoxGeometry, ConeGeometry, PlaneGeometry } from 'three';
-import { makeRenderFunction, StorybookSetup } from '../setup-canvas';
+import { makeStoryObject, StorybookSetup } from '../setup-canvas';
 
 @Component({
     selector: 'BillboardCone',
@@ -138,17 +138,13 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
-const canvasOptions = {
-    camera: { position: [0, 0, 10] },
-    controls: false,
-};
+const canvasOptions = { camera: { position: [0, 0, 10] }, controls: false };
 
-export const Default: StoryObj = {
-    render: makeRenderFunction(DefaultBillboardStory, canvasOptions),
-    args: { follow: true, lockX: false, lockY: false, lockZ: false },
-};
-
-export const Text: StoryObj = {
-    render: makeRenderFunction(TextBillboardStory, canvasOptions),
-    args: { follow: true, lockX: false, lockY: false, lockZ: false },
-};
+export const Default = makeStoryObject(DefaultBillboardStory, {
+    canvasOptions,
+    argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
+});
+export const Text = makeStoryObject(TextBillboardStory, {
+    canvasOptions,
+    argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
+});

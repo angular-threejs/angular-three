@@ -1,8 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta, moduleMetadata, StoryFn, StoryObj } from '@storybook/angular';
+import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
 import { NgtsContactShadows } from 'angular-three-soba/staging';
-import { makeRenderFunction, StorybookSetup } from '../setup-canvas';
+import { makeStoryFunction, makeStoryObject, StorybookSetup } from '../setup-canvas';
 
 @Component({
     standalone: true,
@@ -41,8 +41,7 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
-export const Default: StoryFn = makeRenderFunction(DefaultContactShadowsStory);
-export const Colorized: StoryObj = {
-    render: makeRenderFunction(DefaultContactShadowsStory),
-    args: { colorized: true },
-};
+export const Default = makeStoryFunction(DefaultContactShadowsStory);
+export const Colorized = makeStoryObject(DefaultContactShadowsStory, {
+    argsOptions: { colorized: true },
+});
