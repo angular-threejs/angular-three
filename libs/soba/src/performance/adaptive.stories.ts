@@ -73,6 +73,7 @@ export default {
     decorators: [moduleMetadata({ imports: [StorybookSetup] })],
 } as Meta;
 
+// TODO: mousemove doesn't seem to trigger change detection on mouse up
 export const Default = makeStoryFunction(DefaultAdaptiveStory, {
     camera: { position: [0, 0, 30], fov: 50 },
     controls: false,

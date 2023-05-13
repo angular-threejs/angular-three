@@ -21,39 +21,44 @@ export function injectNgtsDepthBuffer(
         const size = store.select('size');
         const dpr = store.select('viewport', 'dpr');
 
-        const fboParams = computed(() => {
-            const params = { size: 256, frames: Infinity, ...paramsFactory() };
-            const width = params.size || size().width * dpr();
-            const height = params.size || size().height * dpr();
-            const depthTexture = new THREE.DepthTexture(width, height);
-            depthTexture.format = THREE.DepthFormat;
-            depthTexture.type = THREE.UnsignedShortType;
-            return { width, height, settings: { depthTexture } };
+        requestAnimationFrame(() => {
+            const fboParams = computed(() => {
+                const params = { size: 256, frames: Infinity, ...paramsFactory() };
+                const width = params.size || size().width * dpr();
+                const height = params.size || size().height * dpr();
+                const depthTexture = new THREE.DepthTexture(width, height);
+                depthTexture.format = THREE.DepthFormat;
+                depthTexture.type = THREE.UnsignedShortType;
+                return { width, height, settings: { depthTexture } };
+            });
+
+            const fboRef = injectNgtsFBO(fboParams, { injector });
+
+            effect(
+                () => {
+                    const fbo = fboRef.nativeElement;
+                    if (fbo) {
+                        depthBufferRef.nativeElement = fbo.depthTexture;
+                        safeDetectChanges(cdr);
+                    }
+                },
+                { allowSignalWrites: true, injector }
+            );
+
+            let count = 0;
+            injectBeforeRender(
+                ({ gl, scene, camera }) => {
+                    const params = { size: 256, frames: Infinity, ...paramsFactory() };
+                    if ((params.frames === Infinity || count < params.frames) && fboRef.untracked) {
+                        gl.setRenderTarget(fboRef.untracked);
+                        gl.render(scene, camera);
+                        gl.setRenderTarget(null);
+                        count++;
+                    }
+                },
+                { injector }
+            );
         });
-
-        const fboRef = injectNgtsFBO(fboParams);
-
-        let count = 0;
-        injectBeforeRender(({ gl, scene, camera }) => {
-            const params = { size: 256, frames: Infinity, ...paramsFactory() };
-            if ((params.frames === Infinity || count < params.frames) && fboRef.untracked) {
-                gl.setRenderTarget(fboRef.untracked);
-                gl.render(scene, camera);
-                gl.setRenderTarget(null);
-                count++;
-            }
-        });
-
-        effect(
-            () => {
-                const fbo = fboRef.nativeElement;
-                if (fbo) {
-                    depthBufferRef.nativeElement = fbo.depthTexture;
-                    safeDetectChanges(cdr);
-                }
-            },
-            { allowSignalWrites: true }
-        );
 
         return depthBufferRef;
     });

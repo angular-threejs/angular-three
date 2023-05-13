@@ -131,9 +131,7 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
 
     #makeControlsDefault() {
         const makeDefault = this.select('makeDefault');
-        const trigger = computed(() => {
-            return { controls: this.controlsRef.nativeElement, makeDefault: makeDefault() };
-        });
+        const trigger = computed(() => ({ controls: this.controlsRef.nativeElement, makeDefault: makeDefault() }));
 
         effect(
             (onCleanup) => {
@@ -154,14 +152,12 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
         const performance = this.#store.select('performance');
         const regress = this.select('regress');
 
-        const trigger = computed(() => {
-            return {
-                invalidate: invalidate(),
-                performance: performance(),
-                regress: regress(),
-                controls: this.controlsRef.nativeElement,
-            };
-        });
+        const trigger = computed(() => ({
+            invalidate: invalidate(),
+            performance: performance(),
+            regress: regress(),
+            controls: this.controlsRef.nativeElement,
+        }));
         effect((onCleanup) => {
             const { controls, invalidate, performance, regress } = trigger();
             if (!controls) return;

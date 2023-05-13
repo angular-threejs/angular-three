@@ -26,10 +26,8 @@ export function injectNgtRef<TElement>(
     injector?: Injector
 ): NgtInjectedRef<TElement> {
     injector = assertInjectionContext(injectNgtRef, injector);
-
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
-
         const ref = is.ref(initial) ? initial : new ElementRef<TElement>(initial as TElement);
         const signalRef = createSignal(ref.nativeElement);
         const readonlySignal = signalRef.asReadonly();

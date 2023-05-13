@@ -39,35 +39,43 @@ function injectShadowMeshCommon(
         const pos = new THREE.Vector3();
         const dir = new THREE.Vector3();
 
-        effect(() => {
-            const spotLight = spotLightRef.nativeElement;
-            if (!spotLight) return;
-            if (isSpotLight(spotLight)) {
-                spotLight.shadow.mapSize.set(width(), height());
-                checkUpdate(spotLight.shadow);
-            } else {
-                throw new Error('<ngts-spot-light-shadow> must be a child of a <ngts-spot-light>');
-            }
-        });
+        requestAnimationFrame(() => {
+            effect(
+                () => {
+                    const spotLight = spotLightRef.nativeElement;
+                    if (!spotLight) return;
+                    if (isSpotLight(spotLight)) {
+                        spotLight.shadow.mapSize.set(width(), height());
+                        checkUpdate(spotLight.shadow);
+                    } else {
+                        throw new Error('<ngts-spot-light-shadow> must be a child of a <ngts-spot-light>');
+                    }
+                },
+                { injector }
+            );
 
-        injectBeforeRender(() => {
-            const spotLight = spotLightRef.nativeElement;
-            const mesh = meshRef.nativeElement;
+            injectBeforeRender(
+                () => {
+                    const spotLight = spotLightRef.nativeElement;
+                    const mesh = meshRef.nativeElement;
 
-            if (!spotLight) return;
+                    if (!spotLight) return;
 
-            const A = spotLight.position;
-            const B = spotLight.target.position;
+                    const A = spotLight.position;
+                    const B = spotLight.target.position;
 
-            dir.copy(B).sub(A);
-            const len = dir.length();
-            dir.normalize().multiplyScalar(len * distance());
-            pos.copy(A).add(dir);
+                    dir.copy(B).sub(A);
+                    const len = dir.length();
+                    dir.normalize().multiplyScalar(len * distance());
+                    pos.copy(A).add(dir);
 
-            if (mesh) {
-                mesh.position.copy(pos);
-                mesh.lookAt(spotLight.target.position);
-            }
+                    if (mesh) {
+                        mesh.position.copy(pos);
+                        mesh.lookAt(spotLight.target.position);
+                    }
+                },
+                { injector }
+            );
         });
     });
 }

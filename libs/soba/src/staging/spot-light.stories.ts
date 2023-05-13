@@ -6,7 +6,7 @@ import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 import { injectNgtsDepthBuffer } from 'angular-three-soba/misc';
-import { NgtsSpotLight, NgtsSpotLightShadow } from 'angular-three-soba/staging';
+import { NgtsEnvironment, NgtsSpotLight, NgtsSpotLightShadow } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { makeStoryObject, number, StorybookSetup } from '../setup-canvas';
 
@@ -23,7 +23,7 @@ injectNgtsTextureLoader.preload(() => '/soba/textures/other/leaves.jpg');
             [maxDistance]="10"
         />
         <ngts-perspective-camera [near]="0.01" [far]="50" [position]="[1, 3, 1]" [makeDefault]="true" [fov]="60" />
-        <!-- <ngts-environment preset="sunset" /> -->
+        <ngts-environment preset="sunset" />
 
         <ngt-hemisphere-light *args="['#ffffbb', '#080820', 1]" />
 
@@ -64,7 +64,7 @@ injectNgtsTextureLoader.preload(() => '/soba/textures/other/leaves.jpg');
         NgtArgs,
         NgtsOrbitControls,
         NgtsPerspectiveCamera,
-        // NgtsEnvironment,
+        NgtsEnvironment,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

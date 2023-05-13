@@ -40,7 +40,7 @@ declare global {
 export class NgtsLine extends NgtsLineInputs {
     @Input() lineRef = injectNgtRef<LineSegments2 | Line2>();
 
-    @Input() set points(
+    @Input({ required: true }) set points(
         points: Array<THREE.Vector3 | THREE.Vector2 | [number, number, number] | [number, number] | number>
     ) {
         this.set({ points });

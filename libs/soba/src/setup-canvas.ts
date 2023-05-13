@@ -243,6 +243,14 @@ export function makeStoryObject(
     return { render, args, argTypes };
 }
 
+export function number(defaultValue: number): number;
+export function number(
+    defaultValue: number,
+    options: { min?: number; max?: number; step?: number; range?: true }
+): {
+    defaultValue: number;
+    control: { control: { type: 'range' | 'number'; min?: number; max?: number; step?: number } };
+};
 export function number(
     defaultValue: number,
     options: { min?: number; max?: number; step?: number; range?: true } = {}
