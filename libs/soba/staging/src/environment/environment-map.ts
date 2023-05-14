@@ -1,5 +1,5 @@
-import { Directive, computed, effect, inject } from '@angular/core';
-import { NgtStore } from 'angular-three';
+import { Directive, Input, computed, effect, inject } from '@angular/core';
+import { NgtStore, requestAnimationInInjectionContext } from 'angular-three';
 import { NgtsEnvironmentInput } from './environment-input';
 import { setEnvProps } from './utils';
 
@@ -7,23 +7,33 @@ import { setEnvProps } from './utils';
     selector: 'ngts-environment-map',
     standalone: true,
 })
-export class NgtsEnvironmentMap extends NgtsEnvironmentInput {
+export class NgtsEnvironmentMap {
+    protected readonly environmentInput = inject(NgtsEnvironmentInput);
     readonly #store = inject(NgtStore);
 
+    @Input() set map(map: THREE.Texture) {
+        this.environmentInput.set({ map });
+    }
+
+    @Input() set background(background: boolean) {
+        this.environmentInput.set({ background });
+    }
+
     constructor() {
-        super();
-        this.set({ background: false });
-        this.#setEnvProps();
+        this.environmentInput.patch({ background: false });
+        requestAnimationInInjectionContext(() => {
+            this.#setEnvProps();
+        });
     }
 
     #setEnvProps() {
         const scene = this.#store.select('scene');
         const trigger = computed(() => ({
             defaultScene: scene(),
-            scene: this.environmentScene(),
-            background: this.environmentBackground(),
-            blur: this.environmentBlur(),
-            texture: this.environmentMap(),
+            scene: this.environmentInput.environmentScene(),
+            background: this.environmentInput.environmentBackground(),
+            blur: this.environmentInput.environmentBlur(),
+            texture: this.environmentInput.environmentMap(),
         }));
 
         effect((onCleanup) => {

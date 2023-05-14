@@ -10,6 +10,7 @@ import {
     NgtRenderState,
     NgtStore,
     prepare,
+    requestAnimationInInjectionContext,
 } from 'angular-three';
 import * as THREE from 'three';
 import { CubeCamera } from 'three';
@@ -28,21 +29,16 @@ extend({ CubeCamera });
             <ng-template ngtPortalContent>
                 <ng-content />
                 <ngt-cube-camera *args="cameraArgs()" [ref]="cubeCameraRef" />
-                <ng-container *ngIf="environmentFiles() || environmentPreset(); else environmentMap">
-                    <ngts-environment-cube
-                        [background]="true"
-                        [files]="environmentFiles()"
-                        [preset]="environmentPreset()"
-                        [path]="environmentPath()"
-                        [extensions]="environmentExtensions()"
-                    />
+                <ng-container
+                    *ngIf="
+                        environmentInput.environmentFiles() || environmentInput.environmentPreset();
+                        else environmentMap
+                    "
+                >
+                    <ngts-environment-cube [background]="true" />
                 </ng-container>
                 <ng-template #environmentMap>
-                    <ngts-environment-map
-                        [background]="true"
-                        [map]="environmentMap()"
-                        [extensions]="environmentExtension()"
-                    />
+                    <ngts-environment-map [background]="true" [map]="environmentInput.environmentMap()" />
                 </ng-template>
             </ng-template>
         </ngt-portal>
@@ -50,23 +46,36 @@ extend({ CubeCamera });
     imports: [NgtPortal, NgtPortalContent, NgtsEnvironmentMap, NgtsEnvironmentCube, NgIf, NgtArgs],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsEnvironmentPortal extends NgtsEnvironmentInput {
+export class NgtsEnvironmentPortal {
+    protected readonly environmentInput = inject(NgtsEnvironmentInput);
     readonly #store = inject(NgtStore);
 
     readonly virtualSceneRef = injectNgtRef<THREE.Scene>(prepare(new THREE.Scene()));
     readonly cubeCameraRef = injectNgtRef<THREE.CubeCamera>();
 
     readonly #fbo = computed(() => {
-        const fbo = new THREE.WebGLCubeRenderTarget(this.environmentResolution());
+        const fbo = new THREE.WebGLCubeRenderTarget(this.environmentInput.environmentResolution());
         fbo.texture.type = THREE.HalfFloatType;
         return fbo;
     });
-    readonly cameraArgs = computed(() => [this.environmentNear(), this.environmentFar(), this.#fbo()]);
+    readonly cameraArgs = computed(() => [
+        this.environmentInput.environmentNear(),
+        this.environmentInput.environmentFar(),
+        this.#fbo(),
+    ]);
 
     constructor() {
-        super();
-        this.set({ near: 1, far: 1000, resolution: 256, frames: 1, background: false, preset: undefined });
-        this.#setEnvProps();
+        this.environmentInput.patch({
+            near: 1,
+            far: 1000,
+            resolution: 256,
+            frames: 1,
+            background: false,
+            preset: undefined,
+        });
+        requestAnimationInInjectionContext(() => {
+            this.#setEnvProps();
+        });
         injectBeforeRender(this.#onBeforeRender.bind(this, 1));
     }
 
@@ -78,10 +87,10 @@ export class NgtsEnvironmentPortal extends NgtsEnvironmentInput {
             gl: gl(),
             defaultScene: scene(),
             fbo: this.#fbo(),
-            scene: this.environmentScene(),
-            background: this.environmentBackground(),
-            frames: this.environmentFrames(),
-            blur: this.environmentBlur(),
+            scene: this.environmentInput.environmentScene(),
+            background: this.environmentInput.environmentBackground(),
+            frames: this.environmentInput.environmentFrames(),
+            blur: this.environmentInput.environmentBlur(),
             virtualScene: this.virtualSceneRef.nativeElement,
             cubeCamera: this.cubeCameraRef.nativeElement,
         }));
@@ -95,7 +104,7 @@ export class NgtsEnvironmentPortal extends NgtsEnvironmentInput {
     }
 
     #onBeforeRender(count: number, { gl }: NgtRenderState) {
-        const { frames } = this.get();
+        const { frames } = this.environmentInput.get();
         if (frames === Infinity || count < frames) {
             const camera = this.cubeCameraRef.nativeElement;
             const virtualScene = this.virtualSceneRef.nativeElement;

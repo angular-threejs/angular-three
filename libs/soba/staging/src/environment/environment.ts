@@ -13,63 +13,19 @@ export class NgtsEnvironmentContent {}
     selector: 'ngts-environment',
     standalone: true,
     template: `
-        <ngts-environment-ground
-            *ngIf="environmentGround(); else noGround"
-            [ground]="environmentGround()"
-            [map]="environmentMap()"
-            [scene]="environmentScene()"
-            [blur]="environmentBlur()"
-            [background]="environmentBackground()"
-            [preset]="environmentPreset()"
-            [frames]="environmentFrames()"
-            [far]="environmentFar()"
-            [near]="environmentNear()"
-            [resolution]="environmentResolution()"
-            [files]="environmentFiles()"
-            [path]="environmentPath()"
-            [extensions]="environmentExtensions()"
-        />
+        <ngts-environment-ground *ngIf="environmentGround(); else noGround" />
         <ng-template #noGround>
             <ngts-environment-map
                 *ngIf="environmentMap(); else noMap"
                 [map]="environmentMap()"
-                [scene]="environmentScene()"
-                [blur]="environmentBlur()"
                 [background]="environmentBackground()"
             />
             <ng-template #noMap>
-                <ngts-environment-portal
-                    *ngIf="content; else noPortal"
-                    [frames]="environmentFrames()"
-                    [far]="environmentFar()"
-                    [near]="environmentNear()"
-                    [resolution]="environmentResolution()"
-                    [map]="environmentMap()"
-                    [background]="environmentBackground()"
-                    [blur]="environmentBlur()"
-                    [scene]="environmentScene()"
-                    [files]="environmentFiles()"
-                    [path]="environmentPath()"
-                    [preset]="environmentPreset()"
-                    [extensions]="environmentExtensions()"
-                >
+                <ngts-environment-portal *ngIf="content; else noPortal">
                     <ng-container *ngTemplateOutlet="content" />
                 </ngts-environment-portal>
                 <ng-template #noPortal>
-                    <ngts-environment-cube
-                        [frames]="environmentFrames()"
-                        [far]="environmentFar()"
-                        [near]="environmentNear()"
-                        [resolution]="environmentResolution()"
-                        [map]="environmentMap()"
-                        [background]="environmentBackground()"
-                        [blur]="environmentBlur()"
-                        [scene]="environmentScene()"
-                        [files]="environmentFiles()"
-                        [path]="environmentPath()"
-                        [preset]="environmentPreset()"
-                        [extensions]="environmentExtensions()"
-                    />
+                    <ngts-environment-cube [background]="environmentBackground()" />
                 </ng-template>
             </ng-template>
         </ng-template>
@@ -82,6 +38,7 @@ export class NgtsEnvironmentContent {}
         NgIf,
         NgTemplateOutlet,
     ],
+    providers: [{ provide: NgtsEnvironmentInput, useExisting: NgtsEnvironment }],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsEnvironment extends NgtsEnvironmentInput {
