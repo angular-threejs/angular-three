@@ -179,7 +179,7 @@ export const Default = makeStoryObject(DefaultSpotLightStory, {
     argsOptions: { size: number(256), debug: false, volumetric: true },
 });
 
-// TODO: shadows doesn't seem to work due to some racing condition with map
+// TODO: shadow.map also needs to set size, shadow.mapSize isn't enough. investigate further?
 export const Shadows = makeStoryObject(ShadowsSpotLightStory, {
     canvasOptions: { lights: false },
     argsOptions: { wind: true, debug: false },

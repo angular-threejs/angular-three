@@ -15,6 +15,7 @@ import {
     extend,
     injectBeforeRender,
     injectNgtRef,
+    requestAnimationInInjectionContext,
 } from 'angular-three';
 import * as THREE from 'three';
 import { Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
@@ -39,43 +40,38 @@ function injectShadowMeshCommon(
         const pos = new THREE.Vector3();
         const dir = new THREE.Vector3();
 
-        requestAnimationFrame(() => {
-            effect(
-                () => {
-                    const spotLight = spotLightRef.nativeElement;
-                    if (!spotLight) return;
-                    if (isSpotLight(spotLight)) {
-                        spotLight.shadow.mapSize.set(width(), height());
-                        checkUpdate(spotLight.shadow);
-                    } else {
-                        throw new Error('<ngts-spot-light-shadow> must be a child of a <ngts-spot-light>');
-                    }
-                },
-                { injector }
-            );
+        requestAnimationInInjectionContext(() => {
+            effect(() => {
+                const spotLight = spotLightRef.nativeElement;
+                if (!spotLight) return;
+                if (isSpotLight(spotLight)) {
+                    spotLight.shadow.mapSize.set(width(), height());
+                    spotLight.shadow.map.setSize(width(), height());
+                    spotLight.shadow.needsUpdate = true;
+                } else {
+                    throw new Error('<ngts-spot-light-shadow> must be a child of a <ngts-spot-light>');
+                }
+            });
+        });
 
-            injectBeforeRender(
-                () => {
-                    const spotLight = spotLightRef.nativeElement;
-                    const mesh = meshRef.nativeElement;
+        injectBeforeRender(() => {
+            const spotLight = spotLightRef.nativeElement;
+            const mesh = meshRef.nativeElement;
 
-                    if (!spotLight) return;
+            if (!spotLight) return;
 
-                    const A = spotLight.position;
-                    const B = spotLight.target.position;
+            const A = spotLight.position;
+            const B = spotLight.target.position;
 
-                    dir.copy(B).sub(A);
-                    const len = dir.length();
-                    dir.normalize().multiplyScalar(len * distance());
-                    pos.copy(A).add(dir);
+            dir.copy(B).sub(A);
+            const len = dir.length();
+            dir.normalize().multiplyScalar(len * distance());
+            pos.copy(A).add(dir);
 
-                    if (mesh) {
-                        mesh.position.copy(pos);
-                        mesh.lookAt(spotLight.target.position);
-                    }
-                },
-                { injector }
-            );
+            if (mesh) {
+                mesh.position.copy(pos);
+                mesh.lookAt(spotLight.target.position);
+            }
         });
     });
 }
@@ -86,23 +82,23 @@ extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
     selector: 'ngts-spot-light-shadow-mesh-no-shader',
     standalone: true,
     template: `
-        <ngt-mesh [ref]="meshRef" [scale]="shadowMeshScale()" [castShadow]="true">
+        <ngt-mesh [ref]="meshRef" [scale]="shadowMeshInput.shadowMeshScale()" [castShadow]="true">
             <ngt-plane-geometry />
             <ngt-mesh-basic-material
                 [transparent]="true"
                 [side]="DoubleSide"
-                [alphaTest]="shadowMeshAlphaTest()"
-                [alphaMap]="shadowMeshMap()"
+                [alphaTest]="shadowMeshInput.shadowMeshAlphaTest()"
+                [alphaMap]="shadowMeshInput.shadowMeshMap()"
                 [opacity]="debug() ? 1 : 0"
             >
                 <ng-content />
             </ngt-mesh-basic-material>
         </ngt-mesh>
     `,
-    imports: [NgIf],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsSpotLightShadowMeshNoShader extends NgtsSpotLightShadowMeshInput {
+export class NgtsSpotLightShadowMeshNoShader {
+    protected readonly shadowMeshInput = inject(NgtsSpotLightShadowMeshInput);
     readonly #spotLightApi = inject(NGTS_SPOT_LIGHT_API);
 
     readonly meshRef = injectNgtRef<THREE.Mesh>();
@@ -111,23 +107,24 @@ export class NgtsSpotLightShadowMeshNoShader extends NgtsSpotLightShadowMeshInpu
     readonly debug = this.#spotLightApi.debug;
 
     constructor() {
-        super();
-        this.set({ distance: 0.4, alphaTest: 0.5, width: 512, height: 512 });
+        this.shadowMeshInput.patch({ distance: 0.4, alphaTest: 0.5, width: 512, height: 512, scale: 1 });
 
-        effect(() => {
-            const map = this.shadowMeshMap();
-            if (map) {
-                map.wrapS = map.wrapT = THREE.RepeatWrapping;
-                checkUpdate(map);
-            }
+        requestAnimationInInjectionContext(() => {
+            effect(() => {
+                const map = this.shadowMeshInput.shadowMeshMap();
+                if (map) {
+                    map.wrapS = map.wrapT = THREE.RepeatWrapping;
+                    checkUpdate(map);
+                }
+            });
         });
 
         injectShadowMeshCommon(
             this.#spotLightApi.spotLight,
             this.meshRef,
-            this.shadowMeshWidth,
-            this.shadowMeshHeight,
-            this.shadowMeshDistance
+            this.shadowMeshInput.shadowMeshWidth,
+            this.shadowMeshInput.shadowMeshHeight,
+            this.shadowMeshInput.shadowMeshDistance
         );
     }
 }
@@ -136,12 +133,12 @@ export class NgtsSpotLightShadowMeshNoShader extends NgtsSpotLightShadowMeshInpu
     selector: 'ngts-spot-light-shadow-mesh-shader',
     standalone: true,
     template: `
-        <ngt-mesh [ref]="meshRef" [scale]="shadowMeshScale()" [castShadow]="true">
+        <ngt-mesh [ref]="meshRef" [scale]="shadowMeshInput.shadowMeshScale()" [castShadow]="true">
             <ngt-plane-geometry />
             <ngt-mesh-basic-material
                 [transparent]="true"
                 [side]="DoubleSide"
-                [alphaTest]="shadowMeshAlphaTest()"
+                [alphaTest]="shadowMeshInput.shadowMeshAlphaTest()"
                 [alphaMap]="renderTarget().texture"
                 [opacity]="debug() ? 1 : 0"
             >
@@ -153,7 +150,8 @@ export class NgtsSpotLightShadowMeshNoShader extends NgtsSpotLightShadowMeshInpu
     `,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsSpotLightShadowMeshShader extends NgtsSpotLightShadowMeshInput {
+export class NgtsSpotLightShadowMeshShader {
+    protected readonly shadowMeshInput = inject(NgtsSpotLightShadowMeshInput);
     readonly meshRef = injectNgtRef<THREE.Mesh>();
     readonly #spotLightApi = inject(NGTS_SPOT_LIGHT_API);
 
@@ -162,8 +160,8 @@ export class NgtsSpotLightShadowMeshShader extends NgtsSpotLightShadowMeshInput 
 
     readonly debug = this.#spotLightApi.debug;
     readonly renderTarget = computed(() => {
-        const width = this.shadowMeshWidth();
-        const height = this.shadowMeshHeight();
+        const width = this.shadowMeshInput.shadowMeshWidth();
+        const height = this.shadowMeshInput.shadowMeshHeight();
 
         return new THREE.WebGLRenderTarget(width, height, {
             format: THREE.RGBAFormat,
@@ -173,12 +171,12 @@ export class NgtsSpotLightShadowMeshShader extends NgtsSpotLightShadowMeshInput 
         });
     });
     readonly uniforms = {
-        uShadowMap: { value: this.shadowMeshMap() },
+        uShadowMap: { value: this.shadowMeshInput.shadowMeshMap() },
         uTime: { value: 0 },
     };
 
     readonly #fsQuad = computed(() => {
-        const shader = this.shadowMeshShader();
+        const shader = this.shadowMeshInput.shadowMeshShader();
         if (!shader) return null;
         return new FullScreenQuad(
             new THREE.ShaderMaterial({
@@ -197,37 +195,16 @@ export class NgtsSpotLightShadowMeshShader extends NgtsSpotLightShadowMeshInput 
     });
 
     constructor() {
-        super();
-        this.set({ distance: 0.4, alphaTest: 0.5, width: 512, height: 512, scale: 1 });
+        this.shadowMeshInput.patch({ distance: 0.4, alphaTest: 0.5, width: 512, height: 512, scale: 4 });
 
-        effect(() => {
-            const map = this.shadowMeshMap();
-            this.uniforms.uShadowMap.value = map;
-        });
-
-        effect((onCleanup) => {
-            const fsQuad = this.#fsQuad();
-            onCleanup(() => {
-                if (fsQuad) {
-                    fsQuad.dispose();
-                    fsQuad.material.dispose();
-                }
-            });
-        });
-
-        effect((onCleanup) => {
-            const renderTarget = this.renderTarget();
-            onCleanup(() => {
-                renderTarget.dispose();
-            });
-        });
         injectShadowMeshCommon(
             this.#spotLightApi.spotLight,
             this.meshRef,
-            this.shadowMeshWidth,
-            this.shadowMeshHeight,
-            this.shadowMeshDistance
+            this.shadowMeshInput.shadowMeshWidth,
+            this.shadowMeshInput.shadowMeshHeight,
+            this.shadowMeshInput.shadowMeshDistance
         );
+
         injectBeforeRender(({ delta, gl }) => {
             this.uniforms.uTime.value += delta;
             const fsQuad = this.#fsQuad();
@@ -238,6 +215,32 @@ export class NgtsSpotLightShadowMeshShader extends NgtsSpotLightShadowMeshInput 
                 gl.setRenderTarget(null);
             }
         });
+
+        requestAnimationInInjectionContext(() => {
+            effect(() => {
+                const map = this.shadowMeshInput.shadowMeshMap();
+                if (map) {
+                    this.uniforms.uShadowMap.value = map;
+                }
+            });
+
+            effect((onCleanup) => {
+                const fsQuad = this.#fsQuad();
+                onCleanup(() => {
+                    if (fsQuad) {
+                        fsQuad.dispose();
+                        fsQuad.material.dispose();
+                    }
+                });
+            });
+
+            effect((onCleanup) => {
+                const renderTarget = this.renderTarget();
+                onCleanup(() => {
+                    renderTarget.dispose();
+                });
+            });
+        });
     }
 }
 
@@ -245,27 +248,12 @@ export class NgtsSpotLightShadowMeshShader extends NgtsSpotLightShadowMeshInput 
     selector: 'ngts-spot-light-shadow',
     standalone: true,
     template: `
-        <ngts-spot-light-shadow-mesh-shader
-            *ngIf="shadowMeshShader(); else noShader"
-            [distance]="shadowMeshDistance()"
-            [shader]="shadowMeshShader()"
-            [alphaTest]="shadowMeshAlphaTest()"
-            [scale]="shadowMeshScale()"
-            [map]="shadowMeshMap()"
-            [width]="shadowMeshWidth()"
-            [height]="shadowMeshHeight()"
-        />
+        <ngts-spot-light-shadow-mesh-shader *ngIf="shadowMeshShader(); else noShader" />
         <ng-template #noShader>
-            <ngts-spot-light-shadow-mesh-no-shader
-                [distance]="shadowMeshDistance()"
-                [alphaTest]="shadowMeshAlphaTest()"
-                [scale]="shadowMeshScale()"
-                [map]="shadowMeshMap()"
-                [width]="shadowMeshWidth()"
-                [height]="shadowMeshHeight()"
-            />
+            <ngts-spot-light-shadow-mesh-no-shader />
         </ng-template>
     `,
     imports: [NgtsSpotLightShadowMeshShader, NgtsSpotLightShadowMeshNoShader, NgIf],
+    providers: [{ provide: NgtsSpotLightShadowMeshInput, useExisting: NgtsSpotLightShadow }],
 })
 export class NgtsSpotLightShadow extends NgtsSpotLightShadowMeshInput {}

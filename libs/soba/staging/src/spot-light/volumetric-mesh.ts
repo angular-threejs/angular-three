@@ -13,11 +13,11 @@ extend({ Mesh });
     template: `
         <ngt-mesh [ref]="mesh" [geometry]="geometry()" [raycast]="nullRaycast">
             <ngt-primitive *args="[material]" attach="material">
-                <ngt-value [rawValue]="lightOpacity()" attach="uniforms.opacity.value" />
-                <ngt-value [rawValue]="lightColor()" attach="uniforms.lightColor.value" />
-                <ngt-value [rawValue]="lightAttenuation()" attach="uniforms.attenuation.value" />
-                <ngt-value [rawValue]="lightAnglePower()" attach="uniforms.anglePower.value" />
-                <ngt-value [rawvalue]="lightDepthBuffer()" attach="uniforms.depth.value" />
+                <ngt-value [rawValue]="spotLightInput.lightOpacity()" attach="uniforms.opacity.value" />
+                <ngt-value [rawValue]="spotLightInput.lightColor()" attach="uniforms.lightColor.value" />
+                <ngt-value [rawValue]="spotLightInput.lightAttenuation()" attach="uniforms.attenuation.value" />
+                <ngt-value [rawValue]="spotLightInput.lightAnglePower()" attach="uniforms.anglePower.value" />
+                <ngt-value [rawvalue]="spotLightInput.lightDepthBuffer()" attach="uniforms.depth.value" />
                 <ngt-value [rawvalue]="near()" attach="uniforms.cameraNear.value" />
                 <ngt-value [rawvalue]="far()" attach="uniforms.cameraFar.value" />
                 <ngt-value [rawvalue]="resolution()" attach="uniforms.resolution.value" />
@@ -27,7 +27,8 @@ extend({ Mesh });
     imports: [NgtArgs],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsVolumetricMesh extends NgtsSpotLightInput {
+export class NgtsVolumetricMesh {
+    protected readonly spotLightInput = inject(NgtsSpotLightInput);
     readonly mesh = injectNgtRef<THREE.Mesh>();
     readonly material = new SpotLightMaterial();
     readonly nullRaycast = () => null;
@@ -38,12 +39,16 @@ export class NgtsVolumetricMesh extends NgtsSpotLightInput {
     readonly #size = this.#store.select('size');
     readonly #dpr = this.#store.select('viewport', 'dpr');
 
-    readonly #normalizedRadiusTop = computed(() => (this.lightRadiusTop() === undefined ? 0.1 : this.lightRadiusTop()));
+    readonly #normalizedRadiusTop = computed(() =>
+        this.spotLightInput.lightRadiusTop() === undefined ? 0.1 : this.spotLightInput.lightRadiusTop()
+    );
     readonly #normalizedRadiusBottom = computed(() =>
-        this.lightRadiusBottom() === undefined ? this.lightAngle() * 7 : this.lightRadiusBottom()
+        this.spotLightInput.lightRadiusBottom() === undefined
+            ? this.spotLightInput.lightAngle() * 7
+            : this.spotLightInput.lightRadiusBottom()
     );
     readonly geometry = computed(() => {
-        const distance = this.lightDistance();
+        const distance = this.spotLightInput.lightDistance();
         const radiusTop = this.#normalizedRadiusTop();
         const radiusBottom = this.#normalizedRadiusBottom();
 
@@ -55,12 +60,20 @@ export class NgtsVolumetricMesh extends NgtsSpotLightInput {
     readonly near = computed(() => this.#camera().near);
     readonly far = computed(() => this.#camera().far);
     readonly resolution = computed(() =>
-        this.lightDepthBuffer() ? [this.#size().width * this.#dpr(), this.#size().height * this.#dpr()] : [0, 0]
+        this.spotLightInput.lightDepthBuffer()
+            ? [this.#size().width * this.#dpr(), this.#size().height * this.#dpr()]
+            : [0, 0]
     );
 
     constructor() {
-        super();
-        this.set({ opacity: 1, color: 'white', distance: 5, angle: 0.15, attenuation: 5, anglePower: 5 });
+        this.spotLightInput.patch({
+            opacity: 1,
+            color: 'white',
+            distance: 5,
+            angle: 0.15,
+            attenuation: 5,
+            anglePower: 5,
+        });
         injectBeforeRender(() => {
             const mesh = this.mesh.nativeElement;
             if (!mesh) return;

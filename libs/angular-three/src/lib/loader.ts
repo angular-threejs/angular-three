@@ -21,6 +21,7 @@ import type {
 import { assertInjectionContext } from './utils/assert-in-injection-context';
 import { makeObjectGraph } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';
+import { requestAnimationInInjectionContext } from './utils/timing';
 
 export type NgtLoaderResults<
     TInput extends string | string[] | Record<string, string>,
@@ -107,29 +108,26 @@ export function injectNgtLoader<
         const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>>(null!);
         const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
 
-        requestAnimationFrame(() => {
-            effect(
-                () => {
-                    const originalUrls = untracked(inputs);
-                    Promise.all(effector())
-                        .then((results) => {
-                            if (Array.isArray(originalUrls)) return results;
-                            if (typeof originalUrls === 'string') return results[0];
-                            const keys = Object.keys(originalUrls);
-                            return keys.reduce((result, key) => {
-                                (result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-                                return result;
-                            }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap> });
-                        })
-                        .then((value) => {
-                            response.set(
-                                value as NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>
-                            );
-                            safeDetectChanges(cdr);
-                        });
-                },
-                { injector }
-            );
+        requestAnimationInInjectionContext(() => {
+            effect(() => {
+                const originalUrls = untracked(inputs);
+                Promise.all(effector())
+                    .then((results) => {
+                        if (Array.isArray(originalUrls)) return results;
+                        if (typeof originalUrls === 'string') return results[0];
+                        const keys = Object.keys(originalUrls);
+                        return keys.reduce((result, key) => {
+                            (result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+                            return result;
+                        }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap> });
+                    })
+                    .then((value) => {
+                        response.set(
+                            value as NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>
+                        );
+                        safeDetectChanges(cdr);
+                    });
+            });
         });
 
         return response.asReadonly();

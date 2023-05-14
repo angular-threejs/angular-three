@@ -33,34 +33,25 @@ function spotLightApiFactory(spotLight: NgtsSpotLight): NgtsSpotLightApi {
     template: `
         <ngt-group>
             <ng-container *ngIf="lightDebug() && spotLightRef.nativeElement">
-                <ngt-spot-light-helper *args="[spotLightRef.untracked]" />
+                <ngt-spot-light-helper *args="[spotLightRef.nativeElement]" />
             </ng-container>
             <ngt-spot-light
-                ngtCompound
                 [ref]="spotLightRef"
                 [color]="lightColor()"
                 [distance]="lightDistance()"
                 [angle]="lightAngle()"
                 [castShadow]="true"
+                ngtCompound
             >
-                <ngts-volumetric-mesh
-                    *ngIf="showVolumetric()"
-                    [debug]="lightDebug()"
-                    [opacity]="lightOpacity()"
-                    [radiusTop]="lightRadiusTop()"
-                    [radiusBottom]="lightRadiusBottom()"
-                    [depthBuffer]="lightDepthBuffer()"
-                    [color]="lightColor()"
-                    [distance]="lightDistance()"
-                    [angle]="lightAngle()"
-                    [attenuation]="lightAttenuation()"
-                    [anglePower]="lightAnglePower()"
-                />
+                <ngts-volumetric-mesh *ngIf="showVolumetric()" />
             </ngt-spot-light>
             <ng-content />
         </ngt-group>
     `,
-    providers: [{ provide: NGTS_SPOT_LIGHT_API, useFactory: spotLightApiFactory, deps: [NgtsSpotLight] }],
+    providers: [
+        { provide: NGTS_SPOT_LIGHT_API, useFactory: spotLightApiFactory, deps: [NgtsSpotLight] },
+        { provide: NgtsSpotLightInput, useExisting: NgtsSpotLight },
+    ],
     imports: [NgIf, NgtArgs, NgtsVolumetricMesh],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

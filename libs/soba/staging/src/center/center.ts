@@ -1,5 +1,5 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, EventEmitter, Input, Output } from '@angular/core';
-import { extend, injectNgtRef, NgtSignalStore, type NgtGroup } from 'angular-three';
+import { extend, injectNgtRef, NgtSignalStore, requestAnimationInInjectionContext, type NgtGroup } from 'angular-three';
 import { Box3, Group, Sphere, Vector3 } from 'three';
 
 export type NgtsCenterState = {
@@ -111,7 +111,9 @@ export class NgtsCenter extends NgtSignalStore<NgtsCenterState> {
 
     constructor() {
         super({ precise: true });
-        this.#setPosition();
+        requestAnimationInInjectionContext(() => {
+            this.#setPosition();
+        });
     }
 
     #setPosition() {

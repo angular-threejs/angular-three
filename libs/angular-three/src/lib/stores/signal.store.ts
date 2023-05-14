@@ -106,6 +106,13 @@ export class NgtSignalStore<TState extends object> {
             ...(typeof state === 'function' ? state(previous) : state),
         }));
     }
+
+    patch(state: Partial<TState>) {
+        this.#state.update((previous) => ({
+            ...state,
+            ...previous,
+        }));
+    }
 }
 
 function parseOptions(keysAndOptions: any[]): [string[], CreateComputedOptions<any>?] {
