@@ -62,7 +62,7 @@ injectNgtsGLTFLoader['preload'] = <TUrl extends string | string[] | Record<strin
         useDraco?: boolean | string;
         useMeshOpt?: boolean;
         extensions?: (loader: GLTFLoader) => void;
-    }
+    } = {}
 ) => {
     injectNgtLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions));
 };
