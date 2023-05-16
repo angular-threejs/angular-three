@@ -8,6 +8,7 @@ import {
     InjectionToken,
     Input,
     Output,
+    Signal,
     untracked,
 } from '@angular/core';
 import {
@@ -64,7 +65,7 @@ function damp(v: THREE.Vector3, t: THREE.Vector3, lambda: number, delta: number)
     v.z = THREE.MathUtils.damp(v.z, t.z, lambda, delta);
 }
 
-export const NGTS_BOUNDS_API = new InjectionToken<NgtsBoundsApi>('NgtsBounds API');
+export const NGTS_BOUNDS_API = new InjectionToken<Signal<NgtsBoundsApi>>('NgtsBounds API');
 
 export interface NgtsBoundsState {
     damping: number;
@@ -85,7 +86,7 @@ extend({ Group });
             <ng-content />
         </ngt-group>
     `,
-    providers: [{ provide: NGTS_BOUNDS_API, useFactory: (bounds: NgtsBounds) => bounds.api(), deps: [NgtsBounds] }],
+    providers: [{ provide: NGTS_BOUNDS_API, useFactory: (bounds: NgtsBounds) => bounds.api, deps: [NgtsBounds] }],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsBounds extends NgtSignalStore<NgtsBoundsState> {

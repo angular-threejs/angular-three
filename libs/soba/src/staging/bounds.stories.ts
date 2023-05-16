@@ -58,11 +58,11 @@ class Models {
 
     onClick(event: NgtThreeEvent<MouseEvent>) {
         event.stopPropagation();
-        event.delta <= 2 && this.#boundsApi.refresh(event.object).fit();
+        event.delta <= 2 && this.#boundsApi().refresh(event.object).fit();
     }
 
     onPointerMissed(event: NgtThreeEvent<PointerEvent>) {
-        (event as NgtAnyRecord)['button'] === 0 && this.#boundsApi.refresh().fit();
+        (event as NgtAnyRecord)['button'] === 0 && this.#boundsApi().refresh().fit();
     }
 }
 
