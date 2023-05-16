@@ -42,7 +42,7 @@ declare global {
     template: `
         <ngt-group ngtCompound [ref]="contactShadowsRef" [rotation]="[Math.PI / 2, 0, 0]">
             <ngt-mesh
-                [renderOrder]="shadowRenderOrder()"
+                [renderOrder]="shadowRenderOrder() ?? 0"
                 [geometry]="contactShadows().planeGeometry"
                 [scale]="[1, -1, 1]"
                 [rotation]="[-Math.PI / 2, 0, 0]"
@@ -50,8 +50,8 @@ declare global {
                 <ngt-mesh-basic-material
                     [map]="contactShadows().renderTarget.texture"
                     [transparent]="true"
-                    [opacity]="shadowOpacity()"
-                    [depthWrite]="shadowDepthWrite()"
+                    [opacity]="shadowOpacity() ?? 1"
+                    [depthWrite]="shadowDepthWrite() ?? false"
                 >
                     <ngt-value [rawValue]="encoding()" attach="map.encoding" />
                 </ngt-mesh-basic-material>
@@ -127,11 +127,11 @@ export class NgtsContactShadows extends NgtSignalStore<NgtsContactShadowsState> 
 
     readonly #scaledWidth = computed(() => {
         const scale = this.#scale();
-        return this.#width() * (Array.isArray(scale) ? scale[0] : scale || 1);
+        return (this.#width() || 1) * (Array.isArray(scale) ? scale[0] : scale || 1);
     });
     readonly #scaledHeight = computed(() => {
         const scale = this.#scale();
-        return this.#height() * (Array.isArray(scale) ? scale[1] : scale || 1);
+        return (this.#height() || 1) * (Array.isArray(scale) ? scale[1] : scale || 1);
     });
 
     readonly encoding = this.#store.select('gl', 'outputEncoding');
@@ -145,9 +145,10 @@ export class NgtsContactShadows extends NgtSignalStore<NgtsContactShadowsState> 
         return [-width / 2, width / 2, height / 2, -height / 2, 0, this.#far()];
     });
     readonly contactShadows = computed(() => {
-        const color = this.#color();
-        const renderTarget = new THREE.WebGLRenderTarget(this.#resolution(), this.#resolution());
-        const renderTargetBlur = new THREE.WebGLRenderTarget(this.#resolution(), this.#resolution());
+        const color = this.#color() || '#000000';
+        const resolution = this.#resolution() || 512;
+        const renderTarget = new THREE.WebGLRenderTarget(resolution, resolution);
+        const renderTargetBlur = new THREE.WebGLRenderTarget(resolution, resolution);
         renderTargetBlur.texture.generateMipmaps = renderTarget.texture.generateMipmaps = false;
         const planeGeometry = new THREE.PlaneGeometry(this.#scaledWidth(), this.#scaledHeight()).rotateX(Math.PI / 2);
         const blurPlane = new Mesh(planeGeometry);
@@ -205,7 +206,7 @@ export class NgtsContactShadows extends NgtSignalStore<NgtsContactShadowsState> 
     }
 
     #onBeforeRender(count: number, { scene, gl }: NgtRenderState) {
-        const { frames, blur, smooth } = this.get();
+        const { frames = Infinity, blur = 1, smooth = true } = this.get();
         const { depthMaterial, renderTarget } = this.contactShadows();
         const shadowCamera = this.shadowCameraRef.nativeElement;
         if (shadowCamera && (frames === Infinity || count < frames)) {
