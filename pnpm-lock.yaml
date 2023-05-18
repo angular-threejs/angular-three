@@ -183,6 +183,9 @@ devDependencies:
   eslint-config-prettier:
     specifier: 8.8.0
     version: 8.8.0(eslint@8.38.0)
+  glsl-noise:
+    specifier: ^0.0.0
+    version: 0.0.0
   glslify-loader:
     specifier: ^2.0.0
     version: 2.0.0
@@ -9814,6 +9817,10 @@ packages:
       glsl-token-inject-block: 1.1.0
       glsl-token-string: 1.0.1
       glsl-tokenizer: 2.1.5
+    dev: true
+
+  /glsl-noise@0.0.0:
+    resolution: {integrity: sha512-b/ZCF6amfAUb7dJM/MxRs7AetQEahYzJ8PtgfrmEdtw6uyGOr+ZSGtgjFm6mfsBkxJ4d2W7kg+Nlqzqvn3Bc0w==}
     dev: true
 
   /glsl-resolve@0.0.1:

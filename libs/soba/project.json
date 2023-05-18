@@ -58,7 +58,9 @@
                     "libs/soba/loaders/**/*.ts",
                     "libs/soba/loaders/**/*.html",
                     "libs/soba/shaders/**/*.ts",
-                    "libs/soba/shaders/**/*.html"
+                    "libs/soba/shaders/**/*.html",
+                    "libs/soba/materials/**/*.ts",
+                    "libs/soba/materials/**/*.html"
                 ]
             }
         },

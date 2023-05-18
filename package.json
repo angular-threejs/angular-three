@@ -45,6 +45,7 @@
         "dotenv-cli": "^7.2.1",
         "eslint": "~8.38.0",
         "eslint-config-prettier": "8.8.0",
+        "glsl-noise": "^0.0.0",
         "glslify-loader": "^2.0.0",
         "jest": "29.5.0",
         "jest-environment-jsdom": "29.5.0",

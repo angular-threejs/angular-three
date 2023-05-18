@@ -6,7 +6,7 @@
     },
     "assets": [
         {
-            "input": "./shaders/src/assets/",
+            "input": "./shaders/assets/",
             "glob": "**/*",
             "output": "assets"
         }
