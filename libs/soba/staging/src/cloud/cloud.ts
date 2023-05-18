@@ -13,7 +13,7 @@ import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 import { Group, Mesh, MeshStandardMaterial, PlaneGeometry } from 'three';
 
 const CLOUD_URL = 'https://rawcdn.githack.com/pmndrs/drei-assets/9225a9f1fbd449d9411125c2f419b843d0308c9f/cloud.png';
-injectNgtsTextureLoader.preload(() => CLOUD_URL);
+(injectNgtsTextureLoader as any).preload(() => CLOUD_URL);
 
 extend({ Group, Mesh, PlaneGeometry, MeshStandardMaterial });
 

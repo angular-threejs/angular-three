@@ -11,7 +11,7 @@ extend({ GroundProjectedEnv });
     selector: 'ngts-environment-ground',
     standalone: true,
     template: `
-        <ngts-environment-map [map]="texture()" [background]="environmentInput.environmentBackground()" />
+        <ngts-environment-map [map]="texture()" [background]="!!environmentInput.environmentBackground()" />
         <ngt-ground-projected-env *args="groundArgs()" [scale]="scale()" [height]="height()" [radius]="radius()" />
     `,
     imports: [NgtsEnvironmentMap, NgtArgs],

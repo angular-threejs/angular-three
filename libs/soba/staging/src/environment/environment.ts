@@ -18,14 +18,14 @@ export class NgtsEnvironmentContent {}
             <ngts-environment-map
                 *ngIf="environmentMap(); else noMap"
                 [map]="environmentMap()"
-                [background]="environmentBackground()"
+                [background]="!!environmentBackground()"
             />
             <ng-template #noMap>
                 <ngts-environment-portal *ngIf="content; else noPortal">
                     <ng-container *ngTemplateOutlet="content" />
                 </ngts-environment-portal>
                 <ng-template #noPortal>
-                    <ngts-environment-cube [background]="environmentBackground()" />
+                    <ngts-environment-cube [background]="!!environmentBackground()" />
                 </ng-template>
             </ng-template>
         </ng-template>

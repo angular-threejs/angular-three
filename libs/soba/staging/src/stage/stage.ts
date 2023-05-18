@@ -95,11 +95,11 @@ extend({ AmbientLight, SpotLight, Vector2, PointLight, Group });
     selector: 'ngts-stage',
     standalone: true,
     template: `
-        <ngt-ambient-light [intensity]="stageIntensity() / 3" />
+        <ngt-ambient-light [intensity]="stageIntensity()! / 3" />
         <ngt-spot-light
             [penumbra]="1"
             [position]="spotLightPosition()"
-            [intensity]="stageIntensity() * 2"
+            [intensity]="stageIntensity()! * 2"
             [castShadow]="!!stageShadows()"
         >
             <ngt-value [rawValue]="shadowsInfo().shadowBias" attach="shadow.bias" />
@@ -175,21 +175,21 @@ extend({ AmbientLight, SpotLight, Vector2, PointLight, Group });
             </ngts-accumulative-shadows>
         </ngt-group>
         <ngts-environment
-            *ngIf="environmentInfo()"
-            [frames]="environmentInfo().frames"
-            [near]="environmentInfo().near"
-            [far]="environmentInfo().far"
-            [resolution]="environmentInfo().resolution"
-            [background]="environmentInfo().background"
-            [blur]="environmentInfo().blur"
-            [map]="environmentInfo().map"
-            [files]="environmentInfo().files"
-            [path]="environmentInfo().path"
-            [preset]="environmentInfo().preset"
-            [scene]="environmentInfo().scene"
-            [extensions]="environmentInfo().extensions"
-            [ground]="environmentInfo().ground"
-            [encoding]="environmentInfo().encoding"
+            *ngIf="environmentInfo() as environmentInfo"
+            [frames]="environmentInfo.frames!"
+            [near]="environmentInfo.near!"
+            [far]="environmentInfo.far!"
+            [resolution]="environmentInfo.resolution!"
+            [background]="environmentInfo.background!"
+            [blur]="environmentInfo.blur!"
+            [map]="environmentInfo.map!"
+            [files]="environmentInfo.files!"
+            [path]="environmentInfo.path!"
+            [preset]="environmentInfo.preset!"
+            [scene]="environmentInfo.scene!"
+            [extensions]="environmentInfo.extensions!"
+            [ground]="environmentInfo.ground!"
+            [encoding]="environmentInfo.encoding!"
         />
     `,
     imports: [
@@ -250,7 +250,7 @@ export class NgtsStage extends NgtSignalStore<NgtsStageProps> {
         return typeof preset === 'string' ? presets[preset] : preset;
     });
 
-    readonly shadowsInfo = computed(() => {
+    readonly shadowsInfo = computed<any>(() => {
         const shadows = this.stageShadows();
         const restProps = typeof shadows === 'string' ? {} : (shadows as NgtsStageShadows) || {};
         return {
@@ -264,7 +264,7 @@ export class NgtsStage extends NgtSignalStore<NgtsStageProps> {
         };
     });
 
-    readonly spotLightPosition = computed(() => {
+    readonly spotLightPosition = computed<[number, number, number]>(() => {
         const config = this.config();
         if (!config) return [0, 0, 0];
         const radius = this.boundingState().radius;

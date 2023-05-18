@@ -36,5 +36,5 @@ export function injectNgtsTextureLoader<TInput extends string[] | string | Recor
 injectNgtsTextureLoader['preload'] = <TInput extends string[] | string | Record<string, string>>(
     input: () => TInput
 ) => {
-    injectNgtLoader.preload(() => THREE.TextureLoader, input);
+    (injectNgtLoader as any).preload(() => THREE.TextureLoader, input);
 };

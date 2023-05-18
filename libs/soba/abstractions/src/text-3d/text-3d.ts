@@ -161,6 +161,6 @@ export class NgtsText3D extends NgtSignalStore<NgtsText3DState> {
                 letterSpacing: this.#letterSpacing(),
                 lineHeight: this.#lineHeight(),
             },
-        ] as const;
+        ];
     });
 }

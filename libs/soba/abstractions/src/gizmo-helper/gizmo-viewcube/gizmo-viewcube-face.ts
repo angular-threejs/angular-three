@@ -87,7 +87,11 @@ export class NgtsGizmoViewcubeFaceMaterial extends NgtSignalStore<{
     selector: 'ngts-gizmo-viewcube-face-cube',
     standalone: true,
     template: `
-        <ngt-mesh (pointermove)="onPointerMove($event)" (pointerout)="onPointerOut($event)" (click)="onClick($event)">
+        <ngt-mesh
+            (pointermove)="onPointerMove($any($event))"
+            (pointerout)="onPointerOut($any($event))"
+            (click)="onClick($any($event))"
+        >
             <ngt-box-geometry />
             <ngts-gizmo-viewcube-face-material *ngFor="let i; repeat: 6" [hover]="hover() === i" [index]="i" />
         </ngt-mesh>

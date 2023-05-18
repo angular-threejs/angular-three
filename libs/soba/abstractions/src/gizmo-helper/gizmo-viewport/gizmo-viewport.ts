@@ -37,7 +37,7 @@ extend({ Group, AmbientLight, PointLight });
                     [labelColor]="viewportLabelColor()"
                     [clickEmitter]="clicked"
                     [axisHeadScale]="viewportAxisHeadScale()"
-                    (pointerdown)="onPointerDown($event)"
+                    (pointerdown)="onPointerDown($any($event))"
                 ></ngts-gizmo-viewport-axis-head>
                 <ngts-gizmo-viewport-axis-head
                     [arcStyle]="viewportAxisColors()[1]"
@@ -48,7 +48,7 @@ extend({ Group, AmbientLight, PointLight });
                     [labelColor]="viewportLabelColor()"
                     [clickEmitter]="clicked"
                     [axisHeadScale]="viewportAxisHeadScale()"
-                    (pointerdown)="onPointerDown($event)"
+                    (pointerdown)="onPointerDown($any($event))"
                 ></ngts-gizmo-viewport-axis-head>
                 <ngts-gizmo-viewport-axis-head
                     [arcStyle]="viewportAxisColors()[2]"
@@ -59,7 +59,7 @@ extend({ Group, AmbientLight, PointLight });
                     [labelColor]="viewportLabelColor()"
                     [clickEmitter]="clicked"
                     [axisHeadScale]="viewportAxisHeadScale()"
-                    (pointerdown)="onPointerDown($event)"
+                    (pointerdown)="onPointerDown($any($event))"
                 ></ngts-gizmo-viewport-axis-head>
                 <ng-container *ngIf="!viewportHideNegativeAxes()">
                     <ngts-gizmo-viewport-axis-head
@@ -70,7 +70,7 @@ extend({ Group, AmbientLight, PointLight });
                         [labelColor]="viewportLabelColor()"
                         [clickEmitter]="clicked"
                         [axisHeadScale]="viewportAxisHeadScale()"
-                        (pointerdown)="onPointerDown($event)"
+                        (pointerdown)="onPointerDown($any($event))"
                     ></ngts-gizmo-viewport-axis-head>
                     <ngts-gizmo-viewport-axis-head
                         [arcStyle]="viewportAxisColors()[1]"
@@ -80,7 +80,7 @@ extend({ Group, AmbientLight, PointLight });
                         [labelColor]="viewportLabelColor()"
                         [clickEmitter]="clicked"
                         [axisHeadScale]="viewportAxisHeadScale()"
-                        (pointerdown)="onPointerDown($event)"
+                        (pointerdown)="onPointerDown($any($event))"
                     ></ngts-gizmo-viewport-axis-head>
                     <ngts-gizmo-viewport-axis-head
                         [arcStyle]="viewportAxisColors()[2]"
@@ -90,7 +90,7 @@ extend({ Group, AmbientLight, PointLight });
                         [labelColor]="viewportLabelColor()"
                         [clickEmitter]="clicked"
                         [axisHeadScale]="viewportAxisHeadScale()"
-                        (pointerdown)="onPointerDown($event)"
+                        (pointerdown)="onPointerDown($any($event))"
                     ></ngts-gizmo-viewport-axis-head>
                 </ng-container>
             </ng-container>
