@@ -2,6 +2,7 @@ export * from './accumulative-shadows/accumulative-shadows';
 export * from './accumulative-shadows/randomized-lights';
 export * from './bounds/bounds';
 export * from './camera-shake/camera-shake';
+export * from './caustics/caustisc';
 export * from './center/center';
 export * from './cloud/cloud';
 export * from './contact-shadows/contact-shadows';
