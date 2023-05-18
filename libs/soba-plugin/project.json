@@ -1,0 +1,62 @@
+{
+    "name": "angular-three-soba-plugin",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/soba-plugin/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/libs/soba/plugin",
+                "main": "libs/soba-plugin/src/index.ts",
+                "tsConfig": "libs/soba-plugin/tsconfig.lib.json",
+                "assets": [
+                    "libs/plugin/*.md",
+                    {
+                        "input": "./libs/soba-plugin/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./libs/soba-plugin/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./libs/soba-plugin",
+                        "glob": "generators.json",
+                        "output": "."
+                    }
+                ]
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": [
+                    "libs/soba-plugin/**/*.ts",
+                    "libs/soba-plugin/generators.json",
+                    "libs/soba-plugin/executors.json",
+                    "libs/soba-plugin/package.json"
+                ]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/soba-plugin/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        }
+    },
+    "tags": []
+}
