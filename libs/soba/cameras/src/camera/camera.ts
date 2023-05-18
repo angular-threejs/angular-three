@@ -1,5 +1,11 @@
 import { Directive, effect, inject, Input } from '@angular/core';
-import { injectNgtRef, NgtSignalStore, NgtStore, type NgtCamera } from 'angular-three';
+import {
+    injectNgtRef,
+    NgtSignalStore,
+    NgtStore,
+    requestAnimationInInjectionContext,
+    type NgtCamera,
+} from 'angular-three';
 import { injectNgtsFBO } from 'angular-three-soba/misc';
 
 export interface NgtsCameraState {
@@ -40,8 +46,10 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> extends NgtSignalSto
 
     constructor() {
         super({ resolution: 256, frames: Infinity, makeDefault: false, manual: false });
-        this.#setDefaultCamera();
-        this.#updateProjectionMatrix();
+        requestAnimationInInjectionContext(() => {
+            this.#setDefaultCamera();
+            this.#updateProjectionMatrix();
+        });
     }
 
     #setDefaultCamera() {

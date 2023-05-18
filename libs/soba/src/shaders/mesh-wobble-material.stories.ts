@@ -21,8 +21,10 @@ class RefMeshWobbleMaterialStory {
 
     constructor() {
         injectBeforeRender(({ clock }) => {
-            this.ref.nativeElement.factor = Math.abs(Math.sin(clock.getElapsedTime())) * 2;
-            this.ref.nativeElement.speed = Math.abs(Math.sin(clock.getElapsedTime())) * 10;
+            if (this.ref.nativeElement) {
+                this.ref.nativeElement.factor = Math.abs(Math.sin(clock.getElapsedTime())) * 2;
+                this.ref.nativeElement.speed = Math.abs(Math.sin(clock.getElapsedTime())) * 10;
+            }
         });
     }
 }

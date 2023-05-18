@@ -127,11 +127,11 @@ export class NgtsContactShadows extends NgtSignalStore<NgtsContactShadowsState> 
 
     readonly #scaledWidth = computed(() => {
         const scale = this.#scale();
-        return (this.#width() || 1) * (Array.isArray(scale) ? scale[0] : scale || 1);
+        return this.#width() * (Array.isArray(scale) ? scale[0] : scale || 1);
     });
     readonly #scaledHeight = computed(() => {
         const scale = this.#scale();
-        return (this.#height() || 1) * (Array.isArray(scale) ? scale[1] : scale || 1);
+        return this.#height() * (Array.isArray(scale) ? scale[1] : scale || 1);
     });
 
     readonly encoding = this.#store.select('gl', 'outputEncoding');
@@ -145,8 +145,8 @@ export class NgtsContactShadows extends NgtSignalStore<NgtsContactShadowsState> 
         return [-width / 2, width / 2, height / 2, -height / 2, 0, this.#far()];
     });
     readonly contactShadows = computed(() => {
-        const color = this.#color() || '#000000';
-        const resolution = this.#resolution() || 512;
+        const color = this.#color();
+        const resolution = this.#resolution();
         const renderTarget = new THREE.WebGLRenderTarget(resolution, resolution);
         const renderTargetBlur = new THREE.WebGLRenderTarget(resolution, resolution);
         renderTargetBlur.texture.generateMipmaps = renderTarget.texture.generateMipmaps = false;

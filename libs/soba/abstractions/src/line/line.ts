@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect, inject } from '@angular/core';
-import { NgtArgs, NgtStore, injectNgtRef } from 'angular-three';
+import { NgtArgs, NgtStore, injectNgtRef, requestAnimationInInjectionContext } from 'angular-three';
 import * as THREE from 'three';
 import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib';
 import { NgtsLineInputs, type NgtsLineState } from './line-input';
@@ -100,9 +100,15 @@ export class NgtsLine extends NgtsLineInputs {
         const parameters = this.lineParameters();
         const resolution = this.#resolution();
 
+        const vertexColors = Boolean(parameters.vertexColors);
+
+        if (vertexColors) {
+            parameters.color = undefined!;
+        }
+
         return {
             ...parameters,
-            vertexColors: Boolean(parameters.vertexColors),
+            vertexColors,
             resolution,
             dashScale: parameters.dashScale ?? this.lineMaterial.dashScale,
             dashSize: parameters.dashSize ?? this.lineMaterial.dashSize,
@@ -116,8 +122,10 @@ export class NgtsLine extends NgtsLineInputs {
     constructor() {
         super();
         this.set({ segments: false });
-        this.#disposeGeometry();
-        this.#computeLineDistances();
+        requestAnimationInInjectionContext(() => {
+            this.#disposeGeometry();
+            this.#computeLineDistances();
+        });
     }
 
     #computeLineDistances() {

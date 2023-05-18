@@ -23,7 +23,9 @@ class RefMeshDistortMaterialStory {
 
     constructor() {
         injectBeforeRender(({ clock }) => {
-            this.ref.nativeElement.distort = Math.sin(clock.getElapsedTime());
+            if (this.ref.nativeElement) {
+                this.ref.nativeElement.distort = Math.sin(clock.getElapsedTime());
+            }
         });
     }
 }

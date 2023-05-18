@@ -101,17 +101,31 @@ export class NgtSignalStore<TState extends object> {
     }
 
     set(state: Partial<TState> | ((previous: TState) => Partial<TState>)) {
-        this.#state.update((previous) => ({
-            ...previous,
-            ...(typeof state === 'function' ? state(previous) : state),
-        }));
+        const updater = (previous: TState) => {
+            const partial = typeof state === 'function' ? state(previous) : state;
+            Object.keys(partial).forEach((key) => {
+                const partialKey = key as keyof TState;
+                if (partial[partialKey] === undefined && previous[partialKey] != null) {
+                    partial[partialKey] = previous[partialKey];
+                }
+            });
+            return partial;
+        };
+        this.#state.update((previous) => ({ ...previous, ...updater(previous) }));
+        // this.#state.update(previous => ({...previous, ...(typeof state === 'function' ? state(previous) : state)}))
     }
 
     patch(state: Partial<TState>) {
-        this.#state.update((previous) => ({
-            ...state,
-            ...previous,
-        }));
+        const updater = (previous: TState) => {
+            Object.keys(state).forEach((key) => {
+                const partialKey = key as keyof TState;
+                if (state[partialKey] === undefined && previous[partialKey] != null) {
+                    state[partialKey] = previous[partialKey];
+                }
+            });
+            return state;
+        };
+        this.#state.update((previous) => ({ ...updater(previous), ...previous }));
     }
 }
 
