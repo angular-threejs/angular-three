@@ -1,5 +1,14 @@
-import { ChangeDetectorRef, computed, effect, inject, Injector, runInInjectionContext } from '@angular/core';
-import { assertInjectionContext, injectBeforeRender, injectNgtRef, NgtStore, safeDetectChanges } from 'angular-three';
+import {
+    ChangeDetectorRef,
+    computed,
+    effect,
+    inject,
+    Injector,
+    runInInjectionContext,
+    signal,
+    untracked,
+} from '@angular/core';
+import { assertInjectionContext, injectBeforeRender, NgtStore, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 import { injectNgtsFBO } from '../fbo/fbo';
 
@@ -14,7 +23,7 @@ export function injectNgtsDepthBuffer(
 ) {
     injector = assertInjectionContext(injectNgtsDepthBuffer, injector);
     return runInInjectionContext(injector, () => {
-        const depthBufferRef = injectNgtRef<THREE.DepthTexture>();
+        const depthBufferRef = signal<THREE.DepthTexture>(null!);
         const store = inject(NgtStore);
         const cdr = inject(ChangeDetectorRef);
 
@@ -36,9 +45,9 @@ export function injectNgtsDepthBuffer(
 
             effect(
                 () => {
-                    const fbo = fboRef.nativeElement;
+                    const fbo = fboRef();
                     if (fbo) {
-                        depthBufferRef.nativeElement = fbo.depthTexture;
+                        depthBufferRef.set(fbo.depthTexture);
                         safeDetectChanges(cdr);
                     }
                 },
@@ -49,8 +58,9 @@ export function injectNgtsDepthBuffer(
             injectBeforeRender(
                 ({ gl, scene, camera }) => {
                     const params = { size: 256, frames: Infinity, ...paramsFactory() };
-                    if ((params.frames === Infinity || count < params.frames) && fboRef.untracked) {
-                        gl.setRenderTarget(fboRef.untracked);
+                    const fbo = untracked(fboRef);
+                    if ((params.frames === Infinity || count < params.frames) && fbo) {
+                        gl.setRenderTarget(fbo);
                         gl.render(scene, camera);
                         gl.setRenderTarget(null);
                         count++;
@@ -60,6 +70,6 @@ export function injectNgtsDepthBuffer(
             );
         });
 
-        return depthBufferRef;
+        return depthBufferRef.asReadonly();
     });
 }

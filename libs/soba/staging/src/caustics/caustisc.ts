@@ -111,11 +111,11 @@ export interface NgtsCausticsState {
             <ngt-mesh [renderOrder]="2" [ref]="planeRef" [rotation]="[-Math.PI / 2, 0, 0]">
                 <ngt-plane-geometry />
                 <ngt-caustics-projection-material
-                    *ngIf="causticsTargetFbo.nativeElement && causticsTargetBFbo.nativeElement"
+                    *ngIf="causticsTargetFbo() && causticsTargetBFbo()"
                     [transparent]="true"
                     [color]="causticsColor()"
-                    [causticsTexture]="causticsTargetFbo.nativeElement.texture"
-                    [causticsTextureB]="causticsTargetBFbo.nativeElement.texture"
+                    [causticsTexture]="causticsTargetFbo().texture"
+                    [causticsTextureB]="causticsTargetBFbo().texture"
                     [blending]="CustomBlending"
                     [blendSrc]="OneFactor"
                     [blendDst]="SrcAlphaFactor"
@@ -258,10 +258,10 @@ export class NgtsCaustics extends NgtSignalStore<NgtsCausticsState> {
             sceneChildren: this.sceneRef.children()(),
             caustics: this.causticsRef.nativeElement,
             camera: this.cameraRef.nativeElement,
-            normalTarget: this.normalTargetFbo.nativeElement,
-            normalTargetB: this.normalTargetBFbo.nativeElement,
-            causticsTarget: this.causticsTargetFbo.nativeElement,
-            causticsTargetB: this.causticsTargetBFbo.nativeElement,
+            normalTarget: this.normalTargetFbo(),
+            normalTargetB: this.normalTargetBFbo(),
+            causticsTarget: this.causticsTargetFbo(),
+            causticsTargetB: this.causticsTargetBFbo(),
             plane: this.planeRef.nativeElement,
             planeChildren: this.planeRef.children('both')(),
         }));

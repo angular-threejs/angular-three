@@ -6,8 +6,10 @@ import {
     inject,
     Injector,
     runInInjectionContext,
+    signal,
+    untracked,
 } from '@angular/core';
-import { assertInjectionContext, injectNgtRef, NgtStore, safeDetectChanges } from 'angular-three';
+import { assertInjectionContext, NgtStore, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 
 interface FBOSettings extends THREE.WebGLRenderTargetOptions {
@@ -29,9 +31,9 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
         const store = inject(NgtStore);
         const cdr = inject(ChangeDetectorRef);
 
-        const targetRef = injectNgtRef<THREE.WebGLRenderTarget>();
+        const targetRef = signal<THREE.WebGLRenderTarget>(null!);
 
-        inject(DestroyRef).onDestroy(() => targetRef.untracked.dispose());
+        inject(DestroyRef).onDestroy(() => targetRef().dispose());
 
         requestAnimationFrame(() => {
             const size = store.select('size');
@@ -49,7 +51,8 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
                 () => {
                     const { width, height, settings } = trigger();
                     const { samples = 0, depth, ...targetSettings } = settings;
-                    if (!targetRef.untracked) {
+                    let untrackedTarget = untracked(targetRef);
+                    if (!untrackedTarget) {
                         const target = new THREE.WebGLRenderTarget(width, height, {
                             minFilter: THREE.LinearFilter,
                             magFilter: THREE.LinearFilter,
@@ -59,17 +62,18 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
                         if (depth) target.depthTexture = new THREE.DepthTexture(width, height, THREE.FloatType);
 
                         target.samples = samples;
-                        targetRef.nativeElement = target;
+                        targetRef.set(target);
+                        untrackedTarget = untracked(targetRef);
                     }
 
-                    targetRef.untracked.setSize(width, height);
-                    if (samples) targetRef.nativeElement.samples = samples;
+                    untrackedTarget.setSize(width, height);
+                    if (samples) untrackedTarget.samples = samples;
                     safeDetectChanges(cdr);
                 },
                 { allowSignalWrites: true, injector }
             );
         });
 
-        return targetRef;
+        return targetRef.asReadonly();
     });
 }
