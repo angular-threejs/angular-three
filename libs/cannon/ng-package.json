@@ -3,5 +3,6 @@
     "dest": "../../dist/libs/cannon",
     "lib": {
         "entryFile": "src/index.ts"
-    }
+    },
+    "allowedNonPeerDependencies": ["@nx/devkit", "nx"]
 }

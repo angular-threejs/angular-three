@@ -28,12 +28,18 @@ dependencies:
   '@angular/router':
     specifier: 16.0.0
     version: 16.0.0(@angular/common@16.0.0)(@angular/core@16.0.0)(@angular/platform-browser@16.0.0)(rxjs@7.8.0)
+  '@pmndrs/cannon-worker-api':
+    specifier: ^2.3.2
+    version: 2.3.2(three@0.150.1)
   '@rx-angular/state':
     specifier: ^14.0.0
     version: 14.0.0(@angular-devkit/core@16.0.0)(@angular-devkit/schematics@16.0.0)(@angular/core@16.0.0)(rxjs@7.8.0)
   '@swc/helpers':
     specifier: 0.5.1
     version: 0.5.1
+  cannon-es:
+    specifier: ^0.20.0
+    version: 0.20.0
   ngx-resize:
     specifier: ^2.0.0
     version: 2.0.0(@angular/common@16.0.0)(@angular/core@16.0.0)
@@ -4061,6 +4067,14 @@ packages:
     dev: true
     optional: true
 
+  /@pmndrs/cannon-worker-api@2.3.2(three@0.150.1):
+    resolution: {integrity: sha512-+4YGTH7XfSvUYUa65LoltcDMRLu3lr7rFtHT9dmeCeu2JJ7Zg2xBFJ5wiWSJmcM1ECh2R0YDcROdEQ1JKpOgFA==}
+    peerDependencies:
+      three: '>=0.139'
+    dependencies:
+      three: 0.150.1
+    dev: false
+
   /@pnpm/config.env-replace@1.0.0:
     resolution: {integrity: sha512-ZVPVDi1E8oeXlYqkGRtX0CkzLTwE2zt62bjWaWKaAvI8NZqHzlMvGeSNDpW+JB3+aKanYb4UETJOF1/CxGPemA==}
     engines: {node: '>=12.22.0'}
@@ -7129,6 +7143,10 @@ packages:
   /caniuse-lite@1.0.30001469:
     resolution: {integrity: sha512-Rcp7221ScNqQPP3W+lVOYDyjdR6dC+neEQCttoNr5bAyz54AboB4iwpnWgyi8P4YUsPybVzT4LgWiBbI3drL4g==}
     dev: true
+
+  /cannon-es@0.20.0:
+    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
+    dev: false
 
   /case-sensitive-paths-webpack-plugin@2.4.0:
     resolution: {integrity: sha512-roIFONhcxog0JSSWbvVAh3OocukmSgpqOH6YpMkCvav/ySIV3JKg4Dc8vYtQjYi/UxpNE36r/9v+VqTQqgkYmw==}
