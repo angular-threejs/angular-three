@@ -40,7 +40,7 @@
         "releaseName": "Release ${version}"
     },
     "hooks": {
-        "before:bump": "pnpm exec nx package angular-three",
+        "before:bump": "pnpm exec nx run-many --target=package --projects=angular-three,soba",
         "after:bump": ["git checkout -- package.json"]
     }
 }
