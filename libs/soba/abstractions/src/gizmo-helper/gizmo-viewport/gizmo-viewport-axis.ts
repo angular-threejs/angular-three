@@ -1,14 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-    ChangeDetectorRef,
-    Component,
-    computed,
-    CUSTOM_ELEMENTS_SCHEMA,
-    EventEmitter,
-    inject,
-    Input,
-    signal,
-} from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, inject, Input, signal } from '@angular/core';
 import { extend, NgtArgs, NgtSignalStore, NgtStore, NgtThreeEvent } from 'angular-three';
 import { BoxGeometry, CanvasTexture, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three';
 
@@ -88,7 +79,6 @@ export class NgtsGizmoViewportAxisHead extends NgtSignalStore<{
     clickEmitter: EventEmitter<NgtThreeEvent<MouseEvent>>;
 }> {
     readonly #document = inject(DOCUMENT);
-    readonly #cdr = inject(ChangeDetectorRef);
     readonly #store = inject(NgtStore);
     readonly gl = this.#store.select('gl');
 
@@ -170,7 +160,6 @@ export class NgtsGizmoViewportAxisHead extends NgtSignalStore<{
         if (!this.get('disabled')) {
             event.stopPropagation();
             this.active.set(true);
-            this.#cdr.detectChanges();
         }
     }
 
@@ -181,7 +170,6 @@ export class NgtsGizmoViewportAxisHead extends NgtSignalStore<{
             } else {
                 event.stopPropagation();
                 this.active.set(false);
-                this.#cdr.detectChanges();
             }
         }
     }

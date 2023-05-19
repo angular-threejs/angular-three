@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, Input, signal } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, Input, signal } from '@angular/core';
 import { extend, NgtRepeat, NgtSignalStore, NgtStore, NgtThreeEvent } from 'angular-three';
 import { BoxGeometry, CanvasTexture, Mesh, MeshLambertMaterial } from 'three';
 import { NGTS_GIZMO_HELPER_API } from '../gizmo-helper';
@@ -101,7 +101,6 @@ export class NgtsGizmoViewcubeFaceMaterial extends NgtSignalStore<{
 })
 export class NgtsGizmoViewcubeFaceCube {
     readonly #gizmoHelperApi = inject(NGTS_GIZMO_HELPER_API);
-    readonly #cdr = inject(ChangeDetectorRef);
 
     protected readonly viewcubeInputs = inject(NgtsGizmoViewcubeInputs);
 
@@ -110,13 +109,11 @@ export class NgtsGizmoViewcubeFaceCube {
     onPointerMove(event: NgtThreeEvent<PointerEvent>) {
         event.stopPropagation();
         this.hover.set(Math.floor(event.faceIndex! / 2));
-        this.#cdr.detectChanges();
     }
 
     onPointerOut(event: NgtThreeEvent<PointerEvent>) {
         event.stopPropagation();
         this.hover.set(-1);
-        this.#cdr.detectChanges();
     }
 
     onClick(event: NgtThreeEvent<MouseEvent>) {

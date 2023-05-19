@@ -145,7 +145,8 @@ export function processThreeEvent(
     eventName: string,
     callback: (event: any) => void,
     zone: NgZone,
-    cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef,
+    targetCdr?: ChangeDetectorRef | null
 ): () => void {
     const lS = getLocalState(instance);
     if (eventName === SPECIAL_EVENTS.BEFORE_RENDER) {
@@ -170,12 +171,12 @@ export function processThreeEvent(
         if (previousHandler) previousHandler(event);
         zone.run(() => {
             callback(event);
+            safeDetectChanges(targetCdr);
             safeDetectChanges(cdr);
-            // cdr.detectChanges();
         });
     };
 
-    Object.assign(lS.handlers, { [eventName]: eventToHandler(updatedCallback) });
+    Object.assign(lS.handlers, { [eventName]: updatedCallback });
 
     // increment the count everytime
     lS.eventCount += 1;

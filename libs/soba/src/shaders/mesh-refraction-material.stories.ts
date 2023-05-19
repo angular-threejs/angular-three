@@ -20,36 +20,35 @@ import { makeStoryFunction, StorybookSetup } from '../setup-canvas';
     standalone: true,
     template: `
         <ngts-cube-camera [resolution]="256" [frames]="1" [envMap]="cameraTexture()">
-            <ng-template [ngtsCameraContent]="true" let-fbo="fbo">
-                <ngts-caustics
-                    color="white"
-                    [backside]="true"
-                    [position]="[0, -0.5, 0]"
-                    [lightSource]="[5, 5, -10]"
-                    [worldRadius]="0.1"
-                    [ior]="1.8"
-                    [backsideIOR]="1.1"
-                    [intensity]="0.1"
+            <ngts-caustics
+                *ngtsCameraContent="true; fbo as fbo"
+                color="white"
+                [backside]="true"
+                [position]="[0, -0.5, 0]"
+                [lightSource]="[5, 5, -10]"
+                [worldRadius]="0.1"
+                [ior]="1.8"
+                [backsideIOR]="1.1"
+                [intensity]="0.1"
+            >
+                <ngt-mesh
+                    *ngIf="diamondGeometry() as diamondGeometry"
+                    [castShadow]="true"
+                    [geometry]="diamondGeometry"
+                    [rotation]="[0, 0, 0.715]"
+                    [position]="[0, -0.175 + 0.5, 0]"
                 >
-                    <ngt-mesh
-                        *ngIf="diamondGeometry() as diamondGeometry"
-                        [castShadow]="true"
-                        [geometry]="diamondGeometry"
-                        [rotation]="[0, 0, 0.715]"
-                        [position]="[0, -0.175 + 0.5, 0]"
-                    >
-                        <ngts-mesh-refraction-material
-                            [envMap]="fbo.texture"
-                            [bounces]="3"
-                            [aberrationStrength]="0.01"
-                            [ior]="2.75"
-                            [fresnel]="1"
-                            [fastChroma]="true"
-                            [toneMapped]="false"
-                        />
-                    </ngt-mesh>
-                </ngts-caustics>
-            </ng-template>
+                    <ngts-mesh-refraction-material
+                        [envMap]="fbo.texture"
+                        [bounces]="3"
+                        [aberrationStrength]="0.01"
+                        [ior]="2.75"
+                        [fresnel]="1"
+                        [fastChroma]="true"
+                        [toneMapped]="false"
+                    />
+                </ngt-mesh>
+            </ngts-caustics>
         </ngts-cube-camera>
     `,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -136,6 +135,7 @@ class Diamond {
     `,
     imports: [
         Diamond,
+        NgIf,
         NgtArgs,
         NgtsMeshTranmissionMaterial,
         NgtsAccumulativeShadows,
@@ -156,5 +156,5 @@ export default {
 } as Meta;
 
 export const Default = makeStoryFunction(DefaultMeshRefractionMaterialStory, {
-    camera: { fov: 45, position: [-5, 0.5, 5] },
+    camera: { fov: 45, position: [-5, 0.5, 0] },
 });

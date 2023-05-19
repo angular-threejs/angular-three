@@ -11,7 +11,7 @@ import {
     OnChanges,
     Output,
 } from '@angular/core';
-import { createSignal, extend, NgtArgs, NgtSignalStore } from 'angular-three';
+import { createSignal, extend, NgtArgs, NgtSignalStore, safeDetectChanges } from 'angular-three';
 import { AmbientLight, Group, PointLight, SpotLight, Vector2 } from 'three';
 import { NgtsAccumulativeShadows } from '../accumulative-shadows/accumulative-shadows';
 import { NgtsRandomizedLights } from '../accumulative-shadows/randomized-lights';
@@ -312,7 +312,7 @@ export class NgtsStage extends NgtSignalStore<NgtsStageProps> {
     }) {
         const { boundingSphere, width, height, depth } = props;
         this.boundingState.set({ radius: boundingSphere.radius, width, height, depth });
-        this.#cdr.detectChanges();
+        safeDetectChanges(this.#cdr);
         if (this.centered.observed) this.centered.emit(props);
     }
 }
