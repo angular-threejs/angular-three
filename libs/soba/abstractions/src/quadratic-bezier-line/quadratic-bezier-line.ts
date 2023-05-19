@@ -22,25 +22,23 @@ const v = new THREE.Vector3();
         <ngts-line
             [lineRef]="lineRef"
             [points]="points()"
-            [color]="lineParameters().color!"
-            [vertexColors]="lineParameters().vertexColors!"
-            [resolution]="lineParameters().resolution!"
-            [lineWidth]="lineParameters().linewidth!"
-            [alphaToCoverage]="lineParameters().alphaToCoverage!"
-            [dashed]="lineParameters().dashed!"
-            [dashScale]="lineParameters().dashScale!"
-            [dashSize]="lineParameters().dashSize!"
-            [dashOffset]="lineParameters().dashOffset!"
-            [gapSize]="lineParameters().gapSize!"
-            [wireframe]="lineParameters().wireframe!"
-            [worldUnits]="lineParameters().worldUnits!"
+            [color]="lineParameters().color"
+            [vertexColors]="lineParameters().vertexColors"
+            [resolution]="lineParameters().resolution"
+            [lineWidth]="lineParameters().linewidth"
+            [alphaToCoverage]="lineParameters().alphaToCoverage"
+            [dashed]="lineParameters().dashed"
+            [dashScale]="lineParameters().dashScale"
+            [dashSize]="lineParameters().dashSize"
+            [dashOffset]="lineParameters().dashOffset"
+            [gapSize]="lineParameters().gapSize"
+            [wireframe]="lineParameters().wireframe"
+            [worldUnits]="lineParameters().worldUnits"
         />
     `,
     imports: [NgtsLine],
 })
 export class NgtsQuadraticBezierLine extends NgtsLineInputs {
-    readonly curve = new THREE.QuadraticBezierCurve3(undefined!, undefined!, undefined!);
-
     @Input() lineRef = injectNgtRef<Line2>();
 
     @Input() set start(start: THREE.Vector3 | [number, number, number]) {
@@ -58,6 +56,8 @@ export class NgtsQuadraticBezierLine extends NgtsLineInputs {
     @Input() set segments(segments: number) {
         this.set({ segments });
     }
+
+    readonly #curve = new THREE.QuadraticBezierCurve3(undefined!, undefined!, undefined!);
 
     readonly #start = this.select('start');
     readonly #end = this.select('end');
@@ -100,20 +100,20 @@ export class NgtsQuadraticBezierLine extends NgtsLineInputs {
         mid?: THREE.Vector3 | [number, number, number],
         segments = 20
     ) {
-        if (start instanceof THREE.Vector3) this.curve.v0.copy(start);
-        else this.curve.v0.set(...(start as [number, number, number]));
-        if (end instanceof THREE.Vector3) this.curve.v2.copy(end);
-        else this.curve.v2.set(...(end as [number, number, number]));
+        if (start instanceof THREE.Vector3) this.#curve.v0.copy(start);
+        else this.#curve.v0.set(...(start as [number, number, number]));
+        if (end instanceof THREE.Vector3) this.#curve.v2.copy(end);
+        else this.#curve.v2.set(...(end as [number, number, number]));
         if (mid instanceof THREE.Vector3) {
-            this.curve.v1.copy(mid);
+            this.#curve.v1.copy(mid);
         } else {
-            this.curve.v1.copy(
-                this.curve.v0
+            this.#curve.v1.copy(
+                this.#curve.v0
                     .clone()
-                    .add(this.curve.v2.clone().sub(this.curve.v0))
-                    .add(v.set(0, this.curve.v0.y - this.curve.v2.y, 0))
+                    .add(this.#curve.v2.clone().sub(this.#curve.v0))
+                    .add(v.set(0, this.#curve.v0.y - this.#curve.v2.y, 0))
             );
         }
-        return this.curve.getPoints(segments);
+        return this.#curve.getPoints(segments);
     }
 }

@@ -12,51 +12,51 @@ export interface NgtsLineState extends Omit<LineMaterialParameters, 'vertexColor
 
 @Directive()
 export abstract class NgtsLineInputs extends NgtSignalStore<NgtsLineState> {
-    @Input() set vertexColors(vertexColors: Array<THREE.Color | [number, number, number]>) {
+    @Input() set vertexColors(vertexColors: NgtsLineState['vertexColors']) {
         this.set({ vertexColors });
     }
 
-    @Input() set lineWidth(lineWidth: number) {
+    @Input() set lineWidth(lineWidth: NgtsLineState['lineWidth']) {
         this.set({ lineWidth });
     }
 
-    @Input() set alphaToCoverage(alphaToCoverage: boolean) {
+    @Input() set alphaToCoverage(alphaToCoverage: NgtsLineState['alphaToCoverage']) {
         this.set({ alphaToCoverage });
     }
 
-    @Input() set color(color: THREE.ColorRepresentation) {
+    @Input() set color(color: NgtsLineState['color']) {
         this.set({ color });
     }
 
-    @Input() set dashed(dashed: boolean) {
+    @Input() set dashed(dashed: NgtsLineState['dashed']) {
         this.set({ dashed });
     }
 
-    @Input() set dashScale(dashScale: number) {
+    @Input() set dashScale(dashScale: NgtsLineState['dashScale']) {
         this.set({ dashScale });
     }
 
-    @Input() set dashSize(dashSize: number) {
+    @Input() set dashSize(dashSize: NgtsLineState['dashSize']) {
         this.set({ dashSize });
     }
 
-    @Input() set dashOffset(dashOffset: number) {
+    @Input() set dashOffset(dashOffset: NgtsLineState['dashOffset']) {
         this.set({ dashOffset });
     }
 
-    @Input() set gapSize(gapSize: number) {
+    @Input() set gapSize(gapSize: NgtsLineState['gapSize']) {
         this.set({ gapSize });
     }
 
-    @Input() set resolution(resolution: THREE.Vector2) {
+    @Input() set resolution(resolution: NgtsLineState['resolution']) {
         this.set({ resolution });
     }
 
-    @Input() set wireframe(wireframe: boolean) {
+    @Input() set wireframe(wireframe: NgtsLineState['wireframe']) {
         this.set({ wireframe });
     }
 
-    @Input() set worldUnits(worldUnits: boolean) {
+    @Input() set worldUnits(worldUnits: NgtsLineState['worldUnits']) {
         this.set({ worldUnits });
     }
 

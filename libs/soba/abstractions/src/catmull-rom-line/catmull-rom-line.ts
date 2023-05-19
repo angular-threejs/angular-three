@@ -21,18 +21,18 @@ declare module '../line/line-input' {
         <ngts-line
             [lineRef]="lineRef"
             [points]="segmentedPoints()"
-            [vertexColors]="interpolatedVertexColors()!"
+            [vertexColors]="interpolatedVertexColors()"
             [color]="lineParameters().color"
-            [resolution]="lineParameters().resolution!"
-            [lineWidth]="lineParameters().linewidth!"
-            [alphaToCoverage]="lineParameters().alphaToCoverage!"
-            [dashed]="lineParameters().dashed!"
-            [dashScale]="lineParameters().dashScale!"
-            [dashSize]="lineParameters().dashSize!"
-            [dashOffset]="lineParameters().dashOffset!"
-            [gapSize]="lineParameters().gapSize!"
-            [wireframe]="lineParameters().wireframe!"
-            [worldUnits]="lineParameters().worldUnits!"
+            [resolution]="lineParameters().resolution"
+            [lineWidth]="lineParameters().linewidth"
+            [alphaToCoverage]="lineParameters().alphaToCoverage"
+            [dashed]="lineParameters().dashed"
+            [dashScale]="lineParameters().dashScale"
+            [dashSize]="lineParameters().dashSize"
+            [dashOffset]="lineParameters().dashOffset"
+            [gapSize]="lineParameters().gapSize"
+            [wireframe]="lineParameters().wireframe"
+            [worldUnits]="lineParameters().worldUnits"
         />
     `,
     imports: [NgtsLine],
@@ -67,6 +67,7 @@ export class NgtsCatmullRomLine extends NgtsLineInputs {
     readonly #closed = this.select('closed');
     readonly #curveType = this.select('curveType');
     readonly #tension = this.select('tension');
+    readonly #vertexColors = this.select('vertexColors');
 
     readonly #curve = computed(() => {
         const mappedPoints = this.#points().map((p) =>
@@ -82,7 +83,7 @@ export class NgtsCatmullRomLine extends NgtsLineInputs {
     });
 
     readonly interpolatedVertexColors = computed(() => {
-        const vertexColors = this.select('vertexColors')();
+        const vertexColors = this.#vertexColors();
         const segments = this.#segments() as number;
 
         if (!vertexColors || vertexColors.length < 2) return undefined;

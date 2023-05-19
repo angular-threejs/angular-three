@@ -16,8 +16,8 @@ export class NgtsEnvironmentContent {}
         <ngts-environment-ground *ngIf="environmentGround(); else noGround" />
         <ng-template #noGround>
             <ngts-environment-map
-                *ngIf="environmentMap(); else noMap"
-                [map]="environmentMap()"
+                *ngIf="environmentMap() as map; else noMap"
+                [map]="map"
                 [background]="!!environmentBackground()"
             />
             <ng-template #noMap>

@@ -4,77 +4,77 @@ import { Loader, Scene, Texture, TextureEncoding } from 'three';
 import { NgtsEnvironmentPresetsType } from './assets';
 
 export interface NgtsEnvironmentInputState {
-    frames: number;
-    near: number;
-    far: number;
-    resolution: number;
-    background: boolean | 'only';
-    blur: number;
-    map: Texture;
-    files: string | string[];
-    path: string;
-    preset: NgtsEnvironmentPresetsType;
-    scene: Scene | ElementRef<Scene>;
-    extensions: (loader: Loader) => void;
-    ground: boolean | { radius?: number; height?: number; scale?: number };
-    encoding: TextureEncoding;
+    frames?: number;
+    near?: number;
+    far?: number;
+    resolution?: number;
+    background?: boolean | 'only';
+    blur?: number;
+    map?: Texture;
+    files?: string | string[];
+    path?: string;
+    preset?: NgtsEnvironmentPresetsType;
+    scene?: Scene | ElementRef<Scene>;
+    extensions?: (loader: Loader) => void;
+    ground?: boolean | { radius?: number; height?: number; scale?: number };
+    encoding?: TextureEncoding;
 }
 
 @Directive()
 export abstract class NgtsEnvironmentInput extends NgtSignalStore<NgtsEnvironmentInputState> {
-    @Input() set frames(frames: number) {
+    @Input() set frames(frames: NgtsEnvironmentInputState['frames']) {
         this.set({ frames });
     }
 
-    @Input() set near(near: number) {
+    @Input() set near(near: NgtsEnvironmentInputState['near']) {
         this.set({ near });
     }
 
-    @Input() set far(far: number) {
+    @Input() set far(far: NgtsEnvironmentInputState['far']) {
         this.set({ far });
     }
 
-    @Input() set resolution(resolution: number) {
+    @Input() set resolution(resolution: NgtsEnvironmentInputState['resolution']) {
         this.set({ resolution });
     }
 
-    @Input() set background(background: boolean | 'only') {
+    @Input() set background(background: NgtsEnvironmentInputState['background']) {
         this.set({ background });
     }
 
-    @Input() set blur(blur: number) {
+    @Input() set blur(blur: NgtsEnvironmentInputState['blur']) {
         this.set({ blur });
     }
 
-    @Input() set map(map: Texture) {
+    @Input() set map(map: NgtsEnvironmentInputState['map']) {
         this.set({ map });
     }
 
-    @Input() set files(files: string | string[]) {
+    @Input() set files(files: NgtsEnvironmentInputState['files']) {
         this.set({ files });
     }
 
-    @Input() set path(path: string) {
+    @Input() set path(path: NgtsEnvironmentInputState['path']) {
         this.set({ path });
     }
 
-    @Input() set preset(preset: NgtsEnvironmentPresetsType) {
+    @Input() set preset(preset: NgtsEnvironmentInputState['preset']) {
         this.set({ preset });
     }
 
-    @Input() set scene(scene: Scene | ElementRef<Scene>) {
+    @Input() set scene(scene: NgtsEnvironmentInputState['scene']) {
         this.set({ scene });
     }
 
-    @Input() set extensions(extensions: (loader: Loader) => void) {
+    @Input() set extensions(extensions: NgtsEnvironmentInputState['extensions']) {
         this.set({ extensions });
     }
 
-    @Input() set ground(ground: boolean | { radius?: number; height?: number; scale?: number }) {
+    @Input() set ground(ground: NgtsEnvironmentInputState['ground']) {
         this.set({ ground });
     }
 
-    @Input() set encoding(encoding: TextureEncoding) {
+    @Input() set encoding(encoding: NgtsEnvironmentInputState['encoding']) {
         this.set({ encoding });
     }
 

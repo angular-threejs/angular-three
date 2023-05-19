@@ -38,7 +38,11 @@ extend({ CubeCamera });
                     <ngts-environment-cube [background]="true" />
                 </ng-container>
                 <ng-template #environmentMap>
-                    <ngts-environment-map [background]="true" [map]="environmentInput.environmentMap()" />
+                    <ngts-environment-map
+                        *ngIf="environmentInput.environmentMap() as map"
+                        [background]="true"
+                        [map]="map"
+                    />
                 </ng-template>
             </ng-template>
         </ngt-portal>
@@ -59,8 +63,8 @@ export class NgtsEnvironmentPortal {
         return fbo;
     });
     readonly cameraArgs = computed(() => [
-        this.environmentInput.environmentNear(),
-        this.environmentInput.environmentFar(),
+        this.environmentInput.environmentNear()!,
+        this.environmentInput.environmentFar()!,
         this.#fbo(),
     ]);
 
@@ -99,13 +103,13 @@ export class NgtsEnvironmentPortal {
             const { virtualScene, blur, frames, background, scene, fbo, defaultScene, gl, cubeCamera } = trigger();
             if (!cubeCamera || !virtualScene) return;
             if (frames === 1) cubeCamera.update(gl, virtualScene);
-            onCleanup(setEnvProps(background, scene, defaultScene, fbo.texture, blur));
+            onCleanup(setEnvProps(background!, scene, defaultScene, fbo.texture, blur));
         });
     }
 
     #onBeforeRender(count: number, { gl }: NgtRenderState) {
         const { frames } = this.environmentInput.get();
-        if (frames === Infinity || count < frames) {
+        if (frames === Infinity || count < frames!) {
             const camera = this.cubeCameraRef.nativeElement;
             const virtualScene = this.virtualSceneRef.nativeElement;
             if (camera && virtualScene) {

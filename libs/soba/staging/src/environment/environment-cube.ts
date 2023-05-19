@@ -36,7 +36,7 @@ export class NgtsEnvironmentCube {
         effect((onCleanup) => {
             const { background, defaultScene, scene, blur, texture } = trigger();
             if (!texture) return;
-            onCleanup(setEnvProps(background, scene, defaultScene, texture, blur));
+            onCleanup(setEnvProps(background!, scene, defaultScene, texture, blur));
         });
     }
 }

@@ -57,20 +57,20 @@ type NgtsStageShadows = Partial<NgtsAccumulativeShadows> &
 
 interface NgtsStageProps {
     /** Lighting setup, default: "rembrandt" */
-    preset?:
+    preset:
         | 'rembrandt'
         | 'portrait'
         | 'upfront'
         | 'soft'
         | { main: [x: number, y: number, z: number]; fill: [x: number, y: number, z: number] };
     /** Controls the ground shadows, default: "contact" */
-    shadows?: boolean | 'contact' | 'accumulative' | NgtsStageShadows;
+    shadows: boolean | 'contact' | 'accumulative' | NgtsStageShadows;
     /** Optionally wraps and thereby centers the models using <Bounds>, can also be a margin, default: true */
-    adjustCamera?: boolean | number;
+    adjustCamera: boolean | number;
     /** The default environment, default: "city" */
-    environment?: NgtsEnvironmentPresetsType | Partial<NgtsEnvironmentInput>;
+    environment: NgtsEnvironmentPresetsType | Partial<NgtsEnvironmentInput>;
     /** The lighting intensity, default: 0.5 */
-    intensity?: number;
+    intensity: number;
     /** To adjust centering, default: undefined */
     center?: Partial<NgtsCenter>;
 }
@@ -95,11 +95,11 @@ extend({ AmbientLight, SpotLight, Vector2, PointLight, Group });
     selector: 'ngts-stage',
     standalone: true,
     template: `
-        <ngt-ambient-light [intensity]="stageIntensity()! / 3" />
+        <ngt-ambient-light [intensity]="stageIntensity() / 3" />
         <ngt-spot-light
             [penumbra]="1"
             [position]="spotLightPosition()"
-            [intensity]="stageIntensity()! * 2"
+            [intensity]="stageIntensity() * 2"
             [castShadow]="!!stageShadows()"
         >
             <ngt-value [rawValue]="shadowsInfo().shadowBias" attach="shadow.bias" />
@@ -176,20 +176,20 @@ extend({ AmbientLight, SpotLight, Vector2, PointLight, Group });
         </ngt-group>
         <ngts-environment
             *ngIf="environmentInfo() as environmentInfo"
-            [frames]="environmentInfo.frames!"
-            [near]="environmentInfo.near!"
-            [far]="environmentInfo.far!"
-            [resolution]="environmentInfo.resolution!"
-            [background]="environmentInfo.background!"
-            [blur]="environmentInfo.blur!"
-            [map]="environmentInfo.map!"
-            [files]="environmentInfo.files!"
-            [path]="environmentInfo.path!"
-            [preset]="environmentInfo.preset!"
-            [scene]="environmentInfo.scene!"
-            [extensions]="environmentInfo.extensions!"
-            [ground]="environmentInfo.ground!"
-            [encoding]="environmentInfo.encoding!"
+            [frames]="environmentInfo.frames"
+            [near]="environmentInfo.near"
+            [far]="environmentInfo.far"
+            [resolution]="environmentInfo.resolution"
+            [background]="environmentInfo.background"
+            [blur]="environmentInfo.blur"
+            [map]="environmentInfo.map"
+            [files]="environmentInfo.files"
+            [path]="environmentInfo.path"
+            [preset]="environmentInfo.preset"
+            [scene]="environmentInfo.scene"
+            [extensions]="environmentInfo.extensions"
+            [ground]="environmentInfo.ground"
+            [encoding]="environmentInfo.encoding"
         />
     `,
     imports: [

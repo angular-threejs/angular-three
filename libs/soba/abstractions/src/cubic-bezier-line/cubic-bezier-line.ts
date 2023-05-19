@@ -21,18 +21,18 @@ declare module '../line/line-input' {
         <ngts-line
             [lineRef]="lineRef"
             [points]="points()"
-            [color]="lineParameters().color!"
-            [vertexColors]="lineParameters().vertexColors!"
-            [resolution]="lineParameters().resolution!"
-            [lineWidth]="lineParameters().linewidth!"
-            [alphaToCoverage]="lineParameters().alphaToCoverage!"
-            [dashed]="lineParameters().dashed!"
-            [dashScale]="lineParameters().dashScale!"
-            [dashSize]="lineParameters().dashSize!"
-            [dashOffset]="lineParameters().dashOffset!"
-            [gapSize]="lineParameters().gapSize!"
-            [wireframe]="lineParameters().wireframe!"
-            [worldUnits]="lineParameters().worldUnits!"
+            [color]="lineParameters().color"
+            [vertexColors]="lineParameters().vertexColors"
+            [resolution]="lineParameters().resolution"
+            [lineWidth]="lineParameters().linewidth"
+            [alphaToCoverage]="lineParameters().alphaToCoverage"
+            [dashed]="lineParameters().dashed"
+            [dashScale]="lineParameters().dashScale"
+            [dashSize]="lineParameters().dashSize"
+            [dashOffset]="lineParameters().dashOffset"
+            [gapSize]="lineParameters().gapSize"
+            [wireframe]="lineParameters().wireframe"
+            [worldUnits]="lineParameters().worldUnits"
         />
     `,
     imports: [NgtsLine],
@@ -60,12 +60,18 @@ export class NgtsCubicBezierLine extends NgtsLineInputs {
         this.set({ segments });
     }
 
+    readonly #start = this.select('start');
+    readonly #end = this.select('end');
+    readonly #midA = this.select('midA');
+    readonly #midB = this.select('midB');
+    readonly #segments = this.select('segments');
+
     readonly points = computed(() => {
-        const start = this.select('start')();
-        const end = this.select('end')();
-        const midA = this.select('midA')();
-        const midB = this.select('midB')();
-        const segments = this.select('segments')() as number;
+        const start = this.#start();
+        const end = this.#end();
+        const midA = this.#midA();
+        const midB = this.#midB();
+        const segments = this.#segments() as number;
 
         const startV = start instanceof THREE.Vector3 ? start : new THREE.Vector3(...start);
         const endV = end instanceof THREE.Vector3 ? end : new THREE.Vector3(...end);
