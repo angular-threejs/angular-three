@@ -1,0 +1,62 @@
+{
+    "name": "angular-three-cannon-plugin",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/cannon-plugin/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/libs/cannon/plugin",
+                "main": "libs/cannon-plugin/src/index.ts",
+                "tsConfig": "libs/cannon-plugin/tsconfig.lib.json",
+                "assets": [
+                    "libs/cannon-plugin/*.md",
+                    {
+                        "input": "./libs/cannon-plugin/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./libs/cannon-plugin/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./libs/cannon-plugin",
+                        "glob": "generators.json",
+                        "output": "."
+                    }
+                ]
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": [
+                    "libs/cannon-plugin/**/*.ts",
+                    "libs/cannon-plugin/generators.json",
+                    "libs/cannon-plugin/executors.json",
+                    "libs/cannon-plugin/package.json"
+                ]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/cannon-plugin/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        }
+    },
+    "tags": []
+}

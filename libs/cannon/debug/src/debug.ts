@@ -54,7 +54,7 @@ export class NgtcDebug implements OnInit {
 
     readonly #bodies: Body[] = [];
     readonly #bodyMap: Record<string, Body> = {};
-    readonly #scene = new THREE.Scene();
+    readonly scene = new THREE.Scene();
 
     readonly #physicsApi = inject(NGTC_PHYSICS_API);
 
@@ -83,7 +83,7 @@ export class NgtcDebug implements OnInit {
                 this.#bodyMap[uuid].quaternion.copy(q as unknown as CQuarternion);
             }
 
-            for (const child of this.#scene.children) {
+            for (const child of this.scene.children) {
                 child.visible = !this.disabled;
             }
 
@@ -94,7 +94,7 @@ export class NgtcDebug implements OnInit {
     }
 
     ngOnInit() {
-        this.#cannonDebugger = this.impl(this.#scene, { bodies: this.#bodies } as World, {
+        this.#cannonDebugger = this.impl(this.scene, { bodies: this.#bodies } as World, {
             color: this.color,
             scale: this.scale,
         });

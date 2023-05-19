@@ -22,6 +22,19 @@
             },
             "defaultConfiguration": "production"
         },
+        "package": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": ["npx nx build cannon", "npx nx build angular-three-cannon-plugin"],
+                "parallel": false
+            }
+        },
+        "publish": {
+            "command": "npm publish",
+            "options": {
+                "cwd": "dist/libs/cannon"
+            }
+        },
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
