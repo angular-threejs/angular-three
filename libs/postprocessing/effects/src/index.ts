@@ -4,6 +4,7 @@ export * from './color-depth/color-depth';
 export * from './depth/depth';
 export * from './dot-screen/dot-screen';
 export * from './hue-saturation/hue-saturation';
+export * from './lut/lut';
 export * from './noise/noise';
 export * from './scanline/scanline';
 export * from './sepia/sepia';
