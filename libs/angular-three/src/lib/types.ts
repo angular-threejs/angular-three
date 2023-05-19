@@ -1,6 +1,7 @@
 import type { ElementRef, EventEmitter, WritableSignal } from '@angular/core';
 import * as THREE from 'three';
 import type { NgtSignalStore } from './stores/signal.store';
+import { NgtObject3DNode } from './three-types';
 
 export type NgtAnyRecord = Record<string, any>;
 export type NgtProperties<T> = Pick<T, { [K in keyof T]: T[K] extends (_: any) => any ? never : K }[keyof T]>;
@@ -337,7 +338,14 @@ export type NgtCanvasInputs = {
     /** A `THREE.Scene` instance or props that go into the default scene */
     scene?: THREE.Scene | Partial<THREE.Scene>;
     /** A `Camera` instance or props that go into the default camera */
-    camera?: (NgtCamera | Partial<THREE.Camera>) & {
+    camera?: (
+        | NgtCamera
+        | Partial<
+              NgtObject3DNode<THREE.Camera, typeof THREE.Camera> &
+                  NgtObject3DNode<THREE.PerspectiveCamera, typeof THREE.PerspectiveCamera> &
+                  NgtObject3DNode<THREE.OrthographicCamera, typeof THREE.OrthographicCamera>
+          >
+    ) & {
         /** Flags the camera as manual, putting projection into your own hands */
         manual?: boolean;
     };

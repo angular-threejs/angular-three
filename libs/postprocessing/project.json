@@ -22,6 +22,19 @@
             },
             "defaultConfiguration": "production"
         },
+        "package": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": ["npx nx build postprocessing", "npx nx build angular-three-postprocessing-plugin"],
+                "parallel": false
+            }
+        },
+        "publish": {
+            "command": "npm publish",
+            "options": {
+                "cwd": "dist/libs/postprocessing"
+            }
+        },
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
@@ -40,7 +53,12 @@
             "executor": "@nx/linter:eslint",
             "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": ["libs/postprocessing/**/*.ts", "libs/postprocessing/**/*.html"]
+                "lintFilePatterns": [
+                    "libs/postprocessing/**/*.ts",
+                    "libs/postprocessing/**/*.html",
+                    "libs/postprocessing/effects/**/*.ts",
+                    "libs/postprocessing/effects/**/*.html"
+                ]
             }
         }
     }

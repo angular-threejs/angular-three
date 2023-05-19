@@ -40,6 +40,9 @@ dependencies:
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
+  postprocessing:
+    specifier: ^6.31.0
+    version: 6.31.0(three@0.150.1)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -14392,6 +14395,15 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
     dev: true
+
+  /postprocessing@6.31.0(three@0.150.1):
+    resolution: {integrity: sha512-h1g2KDVrTS6QB4AHP55opp8FYzq66jJHh4JIFCptaj283RUX1y/tPkv8FBB2oK4WYrdPgqvElnKrXZwgiLWeHQ==}
+    engines: {node: '>= 0.13.2'}
+    peerDependencies:
+      three: '>= 0.138.0 < 0.153.0'
+    dependencies:
+      three: 0.150.1
+    dev: false
 
   /potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}

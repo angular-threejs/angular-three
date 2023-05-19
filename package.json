@@ -80,6 +80,7 @@
         "@swc/helpers": "0.5.1",
         "ngx-resize": "^2.0.0",
         "nice-color-palettes": "^3.0.0",
+        "postprocessing": "^6.31.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "rxjs": "~7.8.0",

@@ -1,1 +1,2 @@
-export * from './lib/postprocessing/postprocessing.component';
+export * from './effect';
+export * from './effect-composer';
