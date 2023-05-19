@@ -44,7 +44,9 @@
                     "libs/cannon/**/*.ts",
                     "libs/cannon/**/*.html",
                     "libs/cannon/debug/**/*.ts",
-                    "libs/cannon/debug/**/*.html"
+                    "libs/cannon/debug/**/*.html",
+                    "libs/cannon/services/**/*.ts",
+                    "libs/cannon/services/**/*.html"
                 ]
             }
         }
