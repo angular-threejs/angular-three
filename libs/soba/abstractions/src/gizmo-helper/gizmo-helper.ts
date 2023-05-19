@@ -168,7 +168,6 @@ export class NgtsGizmoHelper extends NgtSignalStore<NgtsGizmoHelperState> {
     constructor() {
         super({ alignment: 'bottom-right', margin: [80, 80], renderPriority: 1 });
         this.#updateDefaultUp();
-        console.log(this.virtualCameraRef);
     }
 
     onBeforeRender(delta: number) {

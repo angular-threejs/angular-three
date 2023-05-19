@@ -1,4 +1,5 @@
 import { untracked } from '@angular/core';
+import { NgtSignalStore } from '../stores/signal.store';
 import type { NgtAnyRecord, NgtInstanceLocalState, NgtInstanceNode } from '../types';
 import { createSignal } from './signal';
 import { checkUpdate } from './update';
@@ -38,6 +39,7 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
             handlers: {},
             objects,
             nonObjects,
+            nativeProps: new NgtSignalStore({}),
             add: (object, type) => {
                 const current = untracked(instance.__ngt__[type]);
                 const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);

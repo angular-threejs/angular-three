@@ -251,6 +251,8 @@ export type NgtInstanceLocalState = {
     // shortcut to add/remove object to list
     add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
     remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
+    // native props signal
+    nativeProps: NgtSignalStore<NgtAnyRecord>;
     // parent based on attach three instance
     parent: WritableSignal<NgtInstanceNode | null>;
     // if this THREE instance is a ngt-primitive

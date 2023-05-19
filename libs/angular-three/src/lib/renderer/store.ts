@@ -346,6 +346,7 @@ export class NgtRendererStore {
 
             delete (localState as NgtAnyRecord)['objects'];
             delete (localState as NgtAnyRecord)['nonObjects'];
+            delete (localState as NgtAnyRecord)['nativeProps'];
             delete (localState as NgtAnyRecord)['add'];
             delete (localState as NgtAnyRecord)['remove'];
             delete (localState as NgtAnyRecord)['afterUpdate'];
