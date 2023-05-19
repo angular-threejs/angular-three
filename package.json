@@ -80,6 +80,7 @@
         "@rx-angular/state": "^14.0.0",
         "@swc/helpers": "0.5.1",
         "cannon-es": "^0.20.0",
+        "cannon-es-debugger": "^1.0.0",
         "ngx-resize": "^2.0.0",
         "nice-color-palettes": "^3.0.0",
         "postprocessing": "^6.31.0",
