@@ -5,7 +5,7 @@ import {
     HingeConstraintOpts,
     PointToPointConstraintOpts,
 } from '@pmndrs/cannon-worker-api';
-import { NgtAnyRecord, NgtInjectedRef, assertInjectionContext, injectNgtRef, is } from 'angular-three';
+import { NgtAnyRecord, NgtInjectedRef, assertInjectionContext, injectNgtRef, is, makeId } from 'angular-three';
 import { NGTC_PHYSICS_API } from 'angular-three-cannon';
 import * as THREE from 'three';
 
@@ -105,14 +105,14 @@ function injectConstraint<
         const physicsApi = inject(NGTC_PHYSICS_API);
         const { worker } = physicsApi();
 
-        const uuid = THREE.MathUtils.generateUUID();
+        const uuid = makeId();
 
         const bodyARef = is.ref(bodyA) ? bodyA : injectNgtRef(bodyA);
         const bodyBRef = is.ref(bodyB) ? bodyB : injectNgtRef(bodyB);
 
         effect((onCleanup) => {
             deps();
-            if (bodyARef.untracked && bodyBRef.untracked) {
+            if (bodyARef.nativeElement && bodyBRef.nativeElement) {
                 worker.addConstraint({
                     props: [bodyARef.untracked.uuid, bodyBRef.untracked.uuid, untracked(opts)],
                     type,
