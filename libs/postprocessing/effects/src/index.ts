@@ -10,6 +10,7 @@ export * from './scanline/scanline';
 export * from './sepia/sepia';
 export * from './shock-wave/shock-wave';
 export * from './smaa/smaa';
+export * from './ssao/ssao';
 export * from './tilt-shift/tilt-shift';
 export * from './tone-mapping/tone-mapping';
 export * from './vignette/vignette';
