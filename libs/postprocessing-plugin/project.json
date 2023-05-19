@@ -1,0 +1,62 @@
+{
+    "name": "angular-three-postprocessing-plugin",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/postprocessing-plugin/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/libs/postprocessing/plugin",
+                "main": "libs/postprocessing-plugin/src/index.ts",
+                "tsConfig": "libs/postprocessing-plugin/tsconfig.lib.json",
+                "assets": [
+                    "libs/postprocessing-plugin/*.md",
+                    {
+                        "input": "./libs/postprocessing-plugin/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./libs/postprocessing-plugin/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./libs/postprocessing-plugin",
+                        "glob": "generators.json",
+                        "output": "."
+                    }
+                ]
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": [
+                    "libs/postprocessing-plugin/**/*.ts",
+                    "libs/postprocessing-plugin/generators.json",
+                    "libs/postprocessing-plugin/executors.json",
+                    "libs/postprocessing-plugin/package.json"
+                ]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/postprocessing-plugin/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        }
+    },
+    "tags": []
+}
