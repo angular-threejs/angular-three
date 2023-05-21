@@ -1,70 +1,39 @@
 ---
 id: migrate
-title: Migrate to Angular Three (WIP)
-sidebar_label: Migrate to Angular Three (WIP)
+title: Migrate to V2
+sidebar_label: Migrate to V2
 ---
 
-## Packages
+Angular Three v2 is utilizing [Angular Signals](https://angular.io/guide/signals) under the hood so there are some fundamental changes
+as to how things work
 
-NGT is now distributed via `angular-three` (and auxiliary packages like `angular-three-soba` or `angular-three-cannon`) instead of `@angular-three/*`
+### `NgtStore`
 
-```shell
-npx ng add angular-three
-npx ng add angular-three-soba
-npx ng add angular-three-cannon
-...
-```
+`NgtStore` utilizes Signal APIs that returns reactive properties as `Signal<Type>` instead of `Observable<Type>`. Check out [Store](../api/store) for more information
 
-## Canvas
+```ts
+export class Scene {
+    readonly #store = inject(NgtStore);
 
-The Scene Graph now has to be in a separate component instead of inline as Content Child to the `NgtCanvas`.
+    // before
+    readonly camera$ = this.#store.select('camera'); // Observable<NgtCamera>
+    readonly glDom$ = this.#store.select('gl', 'domElement'); // Observable<HTMLElement>
+    readonly orbitControlsArgs$ = combineLatest([this.camera$, this.glDom$]); // Observable<[NgtCamera, HTMLElement]>
 
-```html title="app.component.html"
-<!-- before -->
-<ngt-canvas>
-    <ng-template>
-        <ngt-mesh></ngt-mesh>
-    </ng-template>
-</ngt-canvas>
-```
-
-```html title="app.component.html"
-<!-- after -->
-<ngt-canvas [sceneGraph]="Scene" />
-```
-
-where `Scene` is a reference to the component with our Scene graph.
-
-```ts title="app.component.ts"
-@Component({
-    standalone: true,
-    template: ` <ngt-mesh></ngt-mesh> `,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneComponent {}
-
-@Component({
-    standalone: true,
-    templateUrl: 'app.component.html',
-    imports: [NgtCanvas],
-})
-export class AppComponent {
-    readonly Scene = SceneComponent;
+    // after
+    readonly #camera = this.#store.select('camera'); // Signal<NgtCamera>
+    readonly #glDom = this.#store.select('gl', 'domElement'); // Signal<HTMLElement>
+    readonly orbitControlsArgs = computed(() => [this.#camera(), this.#glDom()]); // Signal<[NgtCamera, HTMLElement]>
 }
 ```
 
-:::info
+### `NgtPush`
 
-Check out [First Scene](../getting-started/first-scene) for better explanation
+With Signals, we do not need `NgtPush` pipe anymore so this pipe is removed
 
-:::
-
-## Store
-
-`angular-three` has migrated to [RxAngular](https://www.rx-angular.io/) instead of [NgRx](https://ngrx.io) for our internal states.
-
-:::info
-
-Check out [Store](../api/store) for more info
-
-:::
+```html
+<!-- before -->
+<ngt-primitive *args="[model$ | push]" />
+<!-- after -->
+<ngt-primitive *args="[model()]" />
+```
