@@ -35,14 +35,12 @@ const config = {
             ({
                 docs: {
                     sidebarPath: require.resolve('./sidebars.js'),
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
                     editUrl: 'https://github.com/angular-threejs/angular-three/tree/main/apps/documentation',
                 },
                 blog: {
                     showReadingTime: true,
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
+                    blogTitle: 'Angular Three Blog',
+                    blogDescription: 'Blog posts relating to Angular Three and its ecosystem',
                     editUrl: 'https://github.com/angular-threejs/angular-three/tree/main/apps/documentation',
                 },
                 theme: {
@@ -78,8 +76,7 @@ const config = {
                         position: 'left',
                         label: 'Soba Storybook',
                     },
-                    // TODO: re-enable for blogs
-                    // { to: '/blog', label: 'Blog', position: 'left' },
+                    { to: '/blog', label: 'Blog', position: 'left' },
                     {
                         href: 'https://github.com/angular-threejs/angular-three',
                         label: 'GitHub',
@@ -115,11 +112,10 @@ const config = {
                     {
                         title: 'More',
                         items: [
-                            // TODO: renable for blog
-                            //                            {
-                            //                                label: 'Blog',
-                            //                                to: '/blog',
-                            //                            },
+                            {
+                                label: 'Blog',
+                                to: '/blog',
+                            },
                             {
                                 label: 'GitHub',
                                 href: 'https://github.com/angular-threejs/angular-three',
