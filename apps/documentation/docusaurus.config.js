@@ -1,15 +1,17 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+// @ts-expect-error
+const { themes } = require('prism-react-renderer');
+const lightCodeTheme = themes.vsLight;
+const darkCodeTheme = themes.vsDark;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Angular Three',
-    tagline: 'Custom Renderer for THREE.js',
+    tagline: 'Build declarative 3D scenes with Angular',
     url: 'https://angular-threejs.netlify.app',
     baseUrl: '/',
     onBrokenLinks: 'ignore',
@@ -24,10 +26,7 @@ const config = {
     // Even if you don't use internalization, you can use this field to set useful
     // metadata like html lang. For example, if your site is Chinese, you may want
     // to replace "en" with "zh-Hans".
-    //    i18n: {
-    //        defaultLocale: 'en',
-    //        locales: ['en'],
-    //    },
+    i18n: { defaultLocale: 'en', locales: ['en'] },
 
     presets: [
         [
@@ -79,7 +78,7 @@ const config = {
                         position: 'left',
                         label: 'Soba Storybook',
                     },
-                    // TODO  re-enable for blogs
+                    // TODO: re-enable for blogs
                     // { to: '/blog', label: 'Blog', position: 'left' },
                     {
                         href: 'https://github.com/angular-threejs/angular-three',
@@ -116,6 +115,7 @@ const config = {
                     {
                         title: 'More',
                         items: [
+                            // TODO: renable for blog
                             //                            {
                             //                                label: 'Blog',
                             //                                to: '/blog',
@@ -129,10 +129,7 @@ const config = {
                 ],
                 copyright: `Copyright © ${new Date().getFullYear()} Angular Three, Inc. Built with Docusaurus.`,
             },
-            prism: {
-                theme: lightCodeTheme,
-                darkTheme: darkCodeTheme,
-            },
+            prism: { theme: lightCodeTheme, darkTheme: darkCodeTheme, additionalLanguages: ['lua'] },
         }),
 };
 

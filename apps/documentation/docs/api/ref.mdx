@@ -59,16 +59,17 @@ The NGT Custom Renderer will assign the `Mesh` object to the `ref.nativeElement`
 returns an `NgtInjectedRef<ObjectType>`.
 
 ```ts
-type Subscribe<T> = (callback: (current: T, previous: T | null) => void) => Subscription;
-
-export type NgtInjectedRef<T> = ElementRef<T> & {
-    /* a Subscribe fn that emits current and previous value. Useful for debug */
-    subscribe: Subscribe<T>;
-    /* consumers should use this for listening to value of this ref. This filters out initial null value */
-    $: Observable<T>;
+export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
     /* consumers should use this for listenting to children changes on this ref */
-    children$: (type?: 'objects' | 'nonObjects' | 'both') => Observable<NgtInstanceNode[]>;
-    /* notify this CD when ref value changes */
-    useCDR: (cdr: ChangeDetectorRef) => void;
+    children: (type?: 'objects' | 'nonObjects' | 'both') => Signal<NgtInstanceNode[]>;
+    /* consumers should use this to read the ref current value without registering the signal */
+    untracked: TElement;
 };
 ```
+
+:::note
+
+`NgtInjectedRef<TElement>#nativeElement` is overridden to be a getter that returns a `Signal<TElement>`. Consumers should use
+`nativeElement` only if they want to register `Signal<TElement>` as a dependency in other Signal APIs like `computed` or `effect`
+
+:::

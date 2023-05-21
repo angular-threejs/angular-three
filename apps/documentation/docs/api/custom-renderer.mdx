@@ -275,7 +275,7 @@ To register a callback in the animation loop, we can listen for `(beforeRender)`
 
 ```ts
 @Component({
-    template: `<ngt-mesh (beforeRender)="onBeforeRender($any($event))" />`,
+    template: `<ngt-mesh (beforeRender)="onBeforeRender($event)" />`,
 })
 export class SceneGraph {
     onBeforeRender(event: NgtBeforeRenderEvent<Mesh>) {
@@ -286,10 +286,6 @@ export class SceneGraph {
 
 When the element is destroyed, `(beforeRender)` is unregistered automatically.
 
-:::note
-We use `$any($event)` because of Angular limitations on `CUSTOM_ELEMENTS_SCHEMA`
-:::
-
 #### Render Priority
 
 By default, NGT renders the scene on every frame. If we need to control this process, we can pass `priority` as **Attribute Binding** with number-string values
@@ -298,8 +294,8 @@ to any object whose `(beforeRender)` is being listened to. When a `priority` is 
 ```ts
 @Component({
     template: `
-        <ngt-mesh priority="1" (beforeRender)="onBeforeRender($any($event))" />
-        <ngt-mesh priority="2" (beforeRender)="onOtherBeforeRender($any($event))" />
+        <ngt-mesh priority="1" (beforeRender)="onBeforeRender($event)" />
+        <ngt-mesh priority="2" (beforeRender)="onOtherBeforeRender($event)" />
     `,
 })
 export class SceneGraph {
@@ -324,7 +320,7 @@ This event emits after the child **has been attached** to the parent
 @Component({
     template: `
         <ngt-mesh>
-            <ngt-mesh-basic-material attach="material" (afterAttach)="onAfterAttach($any($event))" />
+            <ngt-mesh-basic-material attach="material" (afterAttach)="onAfterAttach($event)" />
         </ngt-mesh>
     `,
 })
@@ -339,7 +335,7 @@ This event emits after an object is updated
 
 ```ts
 @Component({
-    template: ` <ngt-mesh (afterUpdate)="onAfterUpdate($any($event))" [position]="[0, 1, 2]" /> `,
+    template: ` <ngt-mesh (afterUpdate)="onAfterUpdate($event)" [position]="[0, 1, 2]" /> `,
 })
 export class SceneGraph {
     onAfterUpdate(event: Mesh) {}

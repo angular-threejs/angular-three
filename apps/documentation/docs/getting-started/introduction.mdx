@@ -64,7 +64,7 @@ export class AppComponent {
 <TabItem value="sceneComponentTs" label="scene.component.ts">
 
 ```ts
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, signal } from '@angular/core';
 import { extend } from 'angular-three';
 import { AmbientLight, BoxGeometry, Mesh, MeshStandardMaterial, PointLight } from 'three';
 
@@ -73,26 +73,14 @@ extend({ Mesh, MeshStandardMaterial, BoxGeometry, AmbientLight, PointLight });
 @Component({
     selector: 'demo-cube',
     standalone: true,
-    template: `
-        <ngt-mesh
-            [position]="position"
-            [scale]="active ? 1.5 : 1"
-            (click)="active = !active"
-            (pointerover)="hovered = true"
-            (pointerout)="hovered = false"
-            (beforeRender)="onBeforeRender($any($event).object)"
-        >
-            <ngt-box-geometry />
-            <ngt-mesh-standard-material [color]="hovered ? 'darkred' : 'orange'" />
-        </ngt-mesh>
-    `,
+    templateUrl: 'cube.component.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Cube {
     @Input() position = [0, 0, 0];
 
-    hovered = false;
-    active = false;
+    hovered = signal(false);
+    active = signal(false);
 
     onBeforeRender(cube: Mesh) {
         cube.rotation.x += 0.01;
@@ -102,12 +90,7 @@ export class Cube {
 
 @Component({
     standalone: true,
-    template: `
-        <ngt-ambient-light />
-        <ngt-point-light position="10" />
-        <demo-cube [position]="[1.5, 0, 0]" />
-        <demo-cube [position]="[-1.5, 0, 0]" />
-    `,
+    templateUrl: 'scene.component.html',
     imports: [Cube],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -116,11 +99,41 @@ export class Scene {}
 
 </TabItem>
 
+<TabItem value="sceneComponentHtml" label="scene.component.html">
+
+```html
+<ngt-ambient-light />
+<ngt-point-light [position]="10" />
+<demo-cube [position]="[1.5, 0, 0]" />
+<demo-cube [position]="[-1.5, 0, 0]" />
+```
+
+</TabItem>
+
+<TabItem value="cubeHtml" label="cube.component.html">
+
+```html
+<ngt-mesh
+    [position]="position"
+    [scale]="active() ? 1.5 : 1"
+    (click)="active.set(!active())"
+    (pointerover)="hovered.set(true)"
+    (pointerout)="hovered.set(false)"
+    (beforeRender)="onBeforeRender($event.object)"
+>
+    <ngt-box-geometry />
+    <ngt-mesh-standard-material [color]="hovered() ? 'darkred' : 'orange'" />
+</ngt-mesh>
+```
+
+</TabItem>
+
 </Tabs>
 
-:::note
+:::caution
 
--   NGT requires Angular 14+ for Standalone APIs
--   All examples will be written with Standalone APIs and `inject()`
+-   NGT requires Angular 16+ for Signal APIs
+-   All examples will be written with Signal APIs, Standalone APIs, and `inject()`
+-   HTML code snippets will be put in separate `.html` files for better syntax highlighting where needed
 
 :::

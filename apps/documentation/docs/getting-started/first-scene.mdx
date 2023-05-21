@@ -10,13 +10,6 @@ import CodeDemo from '@site/src/components/CodeDemo';
 
 This tutorial will help us setup our first NGT scene and introduce us to some of its core concepts.
 
-:::note
-
--   We are using Inline Template syntax for this tutorial
--   We will put everything in `app.component.ts` for simplicity
-
-:::
-
 ## Create a root component for our Scene graph
 
 Let's start by creating a Component as the root of our Scene graph. We'll put the component in `app.component.ts` for now
@@ -26,7 +19,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
     standalone: true,
-    template: ``,
+    templateUrl: 'scene.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {}
@@ -37,8 +30,11 @@ export class SceneGraph {}
 export class AppComponent {}
 ```
 
--   The `template` is intentionally left empty, we'll fill it out later.
--   The `selector` is intentionally left out because we'll not render our `SceneGraph` component on the template.
+```html title="scene.html"
+<!-- we'll fill this out momentarily -->
+```
+
+-   The `selector` on `SceneGraph` component is intentionally left out because we'll not render our `SceneGraph` component on the template.
 -   `CUSTOM_ELEMENTS_SCHEMA` is required because Angular does not support custom schemas so our Custom Elements won't work without it.
 
 ## Set up the Canvas
@@ -135,7 +131,7 @@ extend({ Mesh });
 
 :::note
 We can extend the entire THREE.js collection with `extend(THREE)` but that will include everything from `THREE`
-namespace in our bundle. For the purpose of this tutorial, we'll be using `extend(THREE)`
+namespace in our bundle. However for the purpose of this tutorial, we'll be using `extend(THREE)`
 :::
 
 ```ts title="app.component.ts"
@@ -155,49 +151,21 @@ extend(THREE);
 
 Now that we have THREE.js in our catalogue, we are ready to render some THREE.js entities. Let's start with adding a `THREE.Mesh`.
 
-```ts title="app.component.ts"
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgtCanvas, extend } from 'angular-three';
-import * as THREE from 'three';
-
-extend(THREE);
-
-@Component({
-    standalone: true,
-    template: `
-        // highlight-next-line
-        <ngt-mesh></ngt-mesh>
-    `,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {}
-
-/* AppComponent code */
+```html title="scene.html"
+<!-- highlight-next-line -->
+<ngt-mesh></ngt-mesh>
 ```
 
 `THREE.Mesh` is one of the most fundamental objects in THREE.js. It is used to hold a **Geometry** and a **Material**
 to represent a shape in the 3D space. For this tutorial, we'll use `BoxGeometry`, and `MeshBasicMaterial` to create a cube.
 
-```ts title="app.component.ts"
-/* imports */
-
-extend(THREE);
-
-@Component({
-    standalone: true,
-    template: `
-        <ngt-mesh>
-            // highlight-start
-            <ngt-box-geometry />
-            <ngt-mesh-basic-material />
-            // highlight-end
-        </ngt-mesh>
-    `,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {}
-
-/* AppComponent code */
+```html title="scene.html"
+<ngt-mesh>
+    <!-- highlight-start -->
+    <ngt-box-geometry />
+    <ngt-mesh-basic-material />
+    <!-- highlight-end -->
+</ngt-mesh>
 ```
 
 At this point, we'll have something on the scene to look at.
@@ -221,15 +189,7 @@ extend(THREE);
 
 @Component({
     standalone: true,
-    template: `
-        <ngt-mesh
-            // highlight-next-line
-            (beforeRender)="onBeforeRender($any($event))"
-        >
-            <ngt-box-geometry />
-            <ngt-mesh-basic-material />
-        </ngt-mesh>
-    `,
+    templateUrl: 'scene.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {
@@ -243,8 +203,15 @@ export class SceneGraph {
 /* AppComponent code */
 ```
 
+```html title="scene.html"
+<!-- highlight-next-line -->
+<ngt-mesh (beforeRender)="onBeforeRender($event)">
+    <ngt-box-geometry />
+    <ngt-mesh-basic-material />
+</ngt-mesh>
+```
+
 -   We listen for `(beforeRender)` on our `ngt-mesh` with `onBeforeRender()` handler.
--   We use `$any($event)` due to Angular Language Service's limitation.
 -   On `onBeforeRender()`, we type `event` with `NgtBeforeRenderEvent<THREE.Mesh>`
     -   `event.state` is the state of our Scene graph; mouse position, clock, delta, scene, camera, the GL renderer etc...
     -   `event.object` is the instance of the object we're attaching `(beforeRender)` on. In this case, it is a `THREE.Mesh`
@@ -252,50 +219,7 @@ export class SceneGraph {
 
 <CodeDemo srcId="dnc3hb" />
 
-Wow, that was easy! Before we move on, let's pause for a moment to understand what is _happening_ here.
-
-Here are the code of the above scene with Angular Three and plain THREE.js
-
-<Tabs>
-<TabItem value="angular" label="Angular Three" default>
-
-```ts
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgtCanvas, extend, NgtBeforeRenderEvent } from 'angular-three';
-import * as THREE from 'three';
-
-extend(THREE);
-
-@Component({
-    standalone: true,
-    template: `
-        <ngt-mesh (beforeRender)="onBeforeRender($any($event))">
-            <ngt-box-geometry />
-            <ngt-mesh-basic-material />
-        </ngt-mesh>
-    `,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {
-    onBeforeRender(event: NgtBeforeRenderEvent<THREE.Mesh>) {
-        event.object.rotation.x += 0.01;
-    }
-}
-
-@Component({
-    selector: 'app-root',
-    standalone: true,
-    template: `<ngt-canvas [sceneGraph]="SceneGraph" />`,
-    imports: [NgtCanvas],
-})
-export class AppComponent {
-    readonly SceneGraph = SceneGraph;
-}
-```
-
-</TabItem>
-
-<TabItem value="plain" label="Plain THREE.js">
+Wow, that was easy! Before we move on, let's pause for a moment to understand what is _happening_ here. Here is the code of the above scene with plain THREE.js
 
 ```ts
 const scene = new THREE.Scene();
@@ -333,10 +257,6 @@ function animate() {
 animate();
 ```
 
-</TabItem>
-
-</Tabs>
-
 Plain THREE.js does not look so bad but it is _imperative_. By leveraging Angular template, we can express our Scene in a
 more _declarative_ manner. We can use Angular features like `*ngIf`, `*ngFor`, other Directives, DI, and more to allow our Scene
 to be more **dynamic**. In addition, the THREE entities expressed in NGT are aware of their life-cycles which allows them
@@ -348,7 +268,7 @@ Next section of this tutorial shows an even _better_ reason to use NGT.
 
 Using Angular means we can make components out of our template. Let's do that for our cube
 
-```ts
+```ts title="app.component.ts"
 /* imports */
 extend(THREE);
 
@@ -356,12 +276,7 @@ extend(THREE);
 @Component({
     selector: 'demo-cube',
     standalone: true,
-    template: `
-        <ngt-mesh (beforeRender)="onBeforeRender($any($event))">
-            <ngt-box-geometry />
-            <ngt-mesh-basic-material />
-        </ngt-mesh>
-    `,
+    templateUrl: 'cube.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Cube {
@@ -373,8 +288,8 @@ export class Cube {
 
 @Component({
     standalone: true,
+    templateUrl: 'scene.html',
     // highlight-start
-    template: ` <demo-cube /> `,
     imports: [Cube],
     // highlight-end
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -382,6 +297,20 @@ export class Cube {
 export class SceneGraph {}
 
 /* AppComponent code */
+```
+
+```html title="scene.html"
+<!-- highlight-next-line -->
+<demo-cube />
+```
+
+```html title="cube.html"
+<!-- highlight-start -->
+<ngt-mesh (beforeRender)="onBeforeRender($event)">
+    <ngt-box-geometry />
+    <ngt-mesh-basic-material />
+</ngt-mesh>
+<!-- highlight-end -->
 ```
 
 Everything works as before but now we have a `Cube` component that can have internal states.
@@ -399,27 +328,13 @@ extend(THREE);
 @Component({
     selector: 'demo-cube',
     standalone: true,
-    template: `
-        <ngt-mesh
-            (beforeRender)="onBeforeRender($any($event))"
-            // highlight-start
-            (click)="active = !active"
-            (pointerover)="hovered = true"
-            (pointerout)="hovered = false"
-            [scale]="active ? 1.5 : 1"
-            // highlight-end
-        >
-            <ngt-box-geometry />
-            // highlight-next-line
-            <ngt-mesh-basic-material [color]="hovered ? 'darkred' : 'red'" />
-        </ngt-mesh>
-    `,
+    templateUrl: 'cube.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Cube {
     // highlight-start
-    active = false;
-    hovered = false;
+    active = signal(false);
+    hovered = signal(false);
     // highlight-end
 
     onBeforeRender(event: NgtBeforeRenderEvent<THREE.Mesh>) {
@@ -432,13 +347,29 @@ export class Cube {
 /* AppComponent code */
 ```
 
+```html title="cube.html"
+<ngt-mesh
+    (beforeRender)="onBeforeRender($event)"
+    <!-- highlight-start -->
+    (click)="active.set(!active())"
+    (pointerover)="hovered.set(true)"
+    (pointerout)="hovered.set(false)"
+    [scale]="active() ? 1.5 : 1"
+    <!-- highlight-end -->
+>
+    <ngt-box-geometry />
+    <!-- highlight-next-line -->
+    <ngt-mesh-basic-material [color]="hovered() ? 'darkred' : 'red'" />
+</ngt-mesh>
+```
+
 Familiar, right? This is one of the goals of NGT. Interact with the cube now and see the _magic_
 
 <CodeDemo srcId="chmpph" />
 
 -   `(click)`, `(pointerover)`, and `(pointerout)` look like DOM events but they are not. These events are named as such
     to give a sense of familiarity to Angular developers.
--   These events automatically calls `changeDetectorRef.detectChanges` so we can update states (eg: `hovered` and `active`).
+
 
 Now that our cube is _interactive_ and _fun_, we can render another `demo-cube` to _double the fun_. But first, we need to add a `position` input
 so we can show both `Cube` in different positions on the Scene.
@@ -450,20 +381,7 @@ extend(THREE);
 @Component({
     selector: 'demo-cube',
     standalone: true,
-    template: `
-        <ngt-mesh
-            (beforeRender)="onBeforeRender($any($event))"
-            (click)="active = !active"
-            (pointerover)="hovered = true"
-            (pointerout)="hovered = false"
-            [scale]="active ? 1.5 : 1"
-            // highlight-next-line
-            [position]="position"
-        >
-            <ngt-box-geometry />
-            <ngt-mesh-basic-material [color]="hovered ? 'darkred' : 'red'" />
-        </ngt-mesh>
-    `,
+    templateUrl: 'cube.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Cube {
@@ -478,20 +396,31 @@ export class Cube {
     }
 }
 
-@Component({
-    standalone: true,
-    template: `
-        // highlight-start
-        <demo-cube [position]="[1.5, 0, 0]" />
-        <demo-cube [position]="[-1.5, 0, 0]" />
-        // highlight-end
-    `,
-    imports: [Cube],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {}
+/* SceneGraph code */
 
 /* AppComponent code */
+```
+
+```html title="cube.html"
+<ngt-mesh
+    (beforeRender)="onBeforeRender($event)"
+    (click)="active.set(!active())"
+    (pointerover)="hovered.set(true)"
+    (pointerout)="hovered.set(false)"
+    [scale]="active() ? 1.5 : 1"
+    <!-- highlight-next-line -->
+    [position]="position"
+>
+    <ngt-box-geometry />
+    <ngt-mesh-basic-material [color]="hovered() ? 'darkred' : 'red'" />
+</ngt-mesh>
+```
+
+```html title="scene.html"
+<!-- highlight-start -->
+<demo-cube [position]="[1.5, 0, 0]" />
+<demo-cube [position]="[-1.5, 0, 0]" />
+<!-- highlight-end -->
 ```
 
 and voila, we have 2 `Cube` that have their own states, and reacting to events independently.
@@ -500,35 +429,24 @@ and voila, we have 2 `Cube` that have their own states, and reacting to events i
 
 ## Adding lights
 
-Our cubes are interactive, but they look bland. They don't look like 3D objects at the moment, because they lack Light Reflections.
+Our cubes are interactive, but they look bland. They don't look like 3D objects at the moment, because they lack **Light Reflections**.
 
 First, let's switch out `<ngt-mesh-basic-material>` for `<ngt-mesh-standard-material>`
 
-```diff
-/* imports */
-extend(THREE);
-
-@Component({
-    selector: 'demo-cube',
-    standalone: true,
-    template: `
-        <ngt-mesh
-            /* mesh properties/events */
-        >
-            <ngt-box-geometry />
--           <ngt-mesh-basic-material [color]="hovered ? 'darkred' : 'red'" />
-+           <ngt-mesh-standard-material [color]="hovered ? 'darkred' : 'red'" />
-        </ngt-mesh>
-    `,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class Cube {
-    /* component code */
-}
-
-/* SceneGraph code */
-
-/* AppComponent code */
+```html title="cube.html"
+<ngt-mesh
+    (beforeRender)="onBeforeRender($event)"
+    (click)="active.set(!active())"
+    (pointerover)="hovered.set(true)"
+    (pointerout)="hovered.set(false)"
+    [scale]="active() ? 1.5 : 1"
+    [position]="position"
+>
+    <ngt-box-geometry />
+    <!-- highlight-start -->
+    <ngt-mesh-standard-material [color]="hovered() ? 'darkred' : 'red'" />
+    <!-- highlight-end -->
+</ngt-mesh>
 ```
 
 :::note
@@ -541,30 +459,15 @@ Imagine a dark room with no lights, any object would be black. Our scene backgro
 
 Next, let's start adding lights to our `SceneGraph` component
 
-```ts
-/* imports */
-extend(THREE);
+```html title="scene.html"
+<!-- highlight-start -->
+<ngt-ambient-light [intensity]="0.5" />
+<ngt-spot-light [position]="10" [angle]="0.15" [penumbra]="1" />
+<ngt-point-light [position]="-10" />
+<!-- highlight-end -->
 
-/* Cube code */
-
-@Component({
-    standalone: true,
-    template: `
-        // highlight-start
-        <ngt-ambient-light [intensity]="0.5" />
-        <ngt-spot-light [position]="10" [angle]="0.15" [penumbra]="1" />
-        <ngt-point-light [position]="-10" />
-        // highlight-end
-
-        <demo-cube [position]="[1.5, 0, 0]" />
-        <demo-cube [position]="[-1.5, 0, 0]" />
-    `,
-    imports: [Cube],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-export class SceneGraph {}
-
-/* AppComponent code */
+<demo-cube [position]="[1.5, 0, 0]" />
+<demo-cube [position]="[-1.5, 0, 0]" />
 ```
 
 :::tip
@@ -590,14 +493,15 @@ npm i three-stdlib
 
 Next, we'll update our code as follow
 
-```ts
+```ts title="app.component.ts"
 /* imports */
 // highlight-next-line
-import { NgtCanvas, extend, NgtBeforeRenderEvent, NgtStore, NgtArgs } from 'angular-three';
+import { NgtCanvas, extend, NgtBeforeRenderEvent, NgtStore, NgtArgs, computed } from 'angular-three';
 // highlight-next-line
 import { OrbitControls } from 'three-stdlib';
 
 extend(THREE);
+// Reminder: this allows us to use OrbitControls as ngt-orbit-controls
 // highlight-next-line
 extend({ OrbitControls });
 
@@ -605,37 +509,42 @@ extend({ OrbitControls });
 
 @Component({
     standalone: true,
-    template: `
-        <ngt-ambient-light [intensity]="0.5" />
-        <ngt-spot-light [position]="10" [angle]="0.15" [penumbra]="1" />
-        <ngt-point-light [position]="-10" />
-
-        <demo-cube [position]="[1.5, 0, 0]" />
-        <demo-cube [position]="[-1.5, 0, 0]" />
-
-        // highlight-next-line
-        <ngt-orbit-controls *args="[camera, glDom]" [enableDamping]="true" />
-    `,
+    templateUrl: 'scene.html',
     // highlight-next-line
     imports: [Cube, NgtArgs],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {
     // highlight-start
-    private readonly store = inject(NgtStore);
-    readonly camera = this.store.get('camera');
-    readonly glDom = this.store.get('gl', 'domElement');
+    readonly #store = inject(NgtStore);
+    readonly #camera = this.store.select('camera');
+    readonly #glDom = this.store.select('gl', 'domElement');
+
+    readonly orbitControlsArgs = computed(() => [this.#camera(), this.#glDom()]);
     // highlight-end
 }
 
 /* AppComponent code */
 ```
 
+```html title="scene.html"
+<ngt-ambient-light [intensity]="0.5" />
+<ngt-spot-light [position]="10" [angle]="0.15" [penumbra]="1" />
+<ngt-point-light [position]="-10" />
+
+<demo-cube [position]="[1.5, 0, 0]" />
+<demo-cube [position]="[-1.5, 0, 0]" />
+
+<!-- highlight-next-line -->
+<ngt-orbit-controls *args="orbitControlsArgs()" [enableDamping]="true" (beforeRender)="$event.object.update()" />
+```
+
 -   We call `inject(NgtStore)` to inject an object which stores all information about the Canvas.
-    -   We extract `camera` and the `gl.domElement` from the `NgtStore`
+    -   We extract `camera` and the `gl.domElement` from the `NgtStore` as signals
 -   We import `OrbitControls` from `three-stdlib` and call `extend()` with it so our catalogue knows about `OrbitControls`, allowing us to render `<ngt-orbit-controls>`
 -   `OrbitControls` needs two constructor arguments; `new OrbitControls(camera, domElement)`. That's what `*args` directive is for.
     -   We set `enableDamping` on the `OrbitControls` to `true` so we have a smooth experience when we move the Camera around.
+    -   Since `enableDamping` is turned on, we need to call `controls.update()` on every frame. That's what `(beforeRender)` is doing
 
 <CodeDemo srcId="gbtvkp" />
 

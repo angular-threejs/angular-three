@@ -17,7 +17,9 @@ import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { createSignal } from '../utils/signal';
 
 export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
+    /* consumers should use this for listenting to children changes on this ref */
     children: (type?: 'objects' | 'nonObjects' | 'both') => Signal<NgtInstanceNode[]>;
+    /* consumers should use this to read the ref current value without registering the signal */
     untracked: TElement;
 };
 

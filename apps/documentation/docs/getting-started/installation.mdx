@@ -32,3 +32,96 @@ npm i -D @types/three
 ```
 
 Next, open `tsconfig.json` (or `tsconfig.base.json` in an Nx Workspace) and add `skipLibCheck: true` to `compilerOptions`
+
+## Typing Support
+
+NGT comes with typings support via Editor/IDE capabilities
+
+:::note
+
+Custom Elements typings support in Angular is **limited** at the moment.
+
+:::
+
+### VSCode
+
+If you use `ng add` or `nx generate` command, this is setup.
+
+If you install `angular-three` manually, follow the below steps to enable typings:
+
+-   Open `.vscode/settings.json`, or create one if you do not have it
+-   Find (or add) `html.customData` property to the file with the following value:
+    `json
+    {
+        "html.customData": ["./node_modules/angular-three/metadata.json"]
+    }
+    `
+
+### WebStorm/IntelliJ
+
+You **should not** need to do anything here. In the case where things do not work, add the following record to `package.json`
+`json
+    {
+        "web-types": "./node_modules/angular-three/web-types.json"
+    }
+    `
+
+### NeoVim
+
+Setup will vary depending on your current NeoVim configuration. However, I'd expect the **required** steps to be the same
+
+-   `neovim/nvim-lspconfig` needs to be configured for `html` LSP
+-   `init_options.dataPaths` needs to include the path to `node_modules/angular-three/metadata.json`
+-   Setup a `html/customDataContent` handler (`handlers = {["html/customDataContent"] = function() ... end}` for Lua syntax)
+    and return the content of the `init_options.dataPaths`
+
+Here's an example setup for [LazyVim](https://www.lazyvim.org/)
+
+```lua
+return {
+  {
+    "neovim/nvim-lspconfig",
+    ---@class PluginLspOpts
+    opts = {
+      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
+      setup = {
+        html = function(_, opts)
+          opts.init_options = {
+            dataPaths = {
+              vim.fn.getcwd() .. "/node_modules/angular-three/metadata.json",
+            },
+            configurationSection = { "html", "css", "javascript" },
+            embeddedLanguages = {
+              css = true,
+              javascript = true,
+            },
+            provideFormatter = true,
+          }
+
+          opts.handlers = {
+            ["html/customDataContent"] = function(err, result, ctx, config)
+              local function exists(name)
+                if type(name) ~= "string" then
+                  return false
+                end
+                return os.execute("test -e " .. name)
+              end
+
+              if not vim.tbl_isempty(result) and #result == 1 then
+                if not exists(result[1]) then
+                  return ""
+                end
+                local content = vim.fn.join(vim.fn.readfile(result[1]), "\n")
+                return content
+              end
+              return ""
+            end,
+          }
+
+          return false
+        end,
+      },
+    },
+  },
+}
+```

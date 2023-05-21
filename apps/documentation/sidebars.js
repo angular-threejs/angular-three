@@ -30,11 +30,6 @@ const sidebars = {
                     label: 'Directives',
                     items: ['api/directives/args', 'api/directives/repeat'],
                 },
-                {
-                    type: 'category',
-                    label: 'Pipes',
-                    items: ['api/pipes/push'],
-                },
                 'api/ref',
                 'api/primitive',
                 'api/raw-value',

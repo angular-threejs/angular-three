@@ -23,10 +23,18 @@ A more realistic use-case is to load a 3D model into our SceneGraph
 
 ```ts
 @Component({
-    template: ` <ngt-primitive *args="[model$ | ngtPush]" [scale]="0.01" /> `,
-    imports: [NgtArgs, NgtPush],
+    template: ` <ngt-primitive *args="[model()]" [scale]="0.01" /> `,
+    imports: [NgtArgs],
 })
 export class SceneGraph {
-    readonly model$ = injectNgtLoader(GLTFLoader, 'assets/model.glb').pipe(map((model) => model.scene));
+    readonly #gltf = injectNgtLoader(
+        () => GLTFLoader,
+        () => 'assets/model.glb'
+    );
+    readonly model = computed(() => {
+        const gltf = this.#gltf();
+        if (!gltf) return null;
+        return gltf.scene;
+    });
 }
 ```
