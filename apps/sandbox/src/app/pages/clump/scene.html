@@ -1,0 +1,18 @@
+<ngt-ambient-light [intensity]="0.25" />
+<ngt-spot-light [position]="30" [angle]="0.2" [penumbra]="1" [castShadow]="true">
+    <ngt-vector2 *args="[512, 512]" attach="shadow.mapSize" />
+</ngt-spot-light>
+<ngt-directional-light [position]="-10" [intensity]="5" color="purple" />
+
+<ngtc-physics [gravity]="[0, 2, 0]" [iterations]="10">
+    <clump-pointer />
+    <object-clump />
+</ngtc-physics>
+
+<ngts-environment files="adamsbridge.hdr" />
+
+<ngtp-effect-composer>
+    <ngtp-bloom />
+</ngtp-effect-composer>
+
+<ngts-sky />

@@ -1,3 +1,4 @@
+import { RouteMeta } from '@analogjs/router';
 import {
     AfterViewInit,
     CUSTOM_ELEMENTS_SCHEMA,
@@ -11,6 +12,10 @@ import {
 } from '@angular/core';
 import { NgtArgs, NgtCanvas, NgtRenderState, NgtState, NgtStore, injectBeforeRender } from 'angular-three';
 import * as THREE from 'three';
+
+export const routeMeta: RouteMeta = {
+    title: 'THREE.js Camera',
+};
 
 @Component({
     standalone: true,

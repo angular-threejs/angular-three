@@ -1,0 +1,16 @@
+<ngt-instanced-mesh
+    *args="[undefined, undefined, count]"
+    [ref]="sphereBody.ref"
+    [castShadow]="true"
+    [receiveShadow]="true"
+    (beforeRender)="onBeforeRender($event.object)"
+>
+    <ngt-sphere-geometry *args="[1, 32, 32]" />
+    <ngt-mesh-standard-material
+        color="red"
+        emissive="#370037"
+        [roughness]="0"
+        [envMapIntensity]="0.2"
+        [map]="texture()"
+    />
+</ngt-instanced-mesh>

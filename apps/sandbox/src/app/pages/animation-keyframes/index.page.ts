@@ -1,3 +1,4 @@
+import { RouteMeta } from '@analogjs/router';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, computed, inject } from '@angular/core';
 import { NgtArgs, NgtCanvas, NgtStore } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -6,6 +7,10 @@ import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import { NgtsStats } from 'angular-three-soba/performance';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three-stdlib';
+
+export const routeMeta: RouteMeta = {
+    title: 'THREE.js Animation keyframes',
+};
 
 @Component({
     standalone: true,
