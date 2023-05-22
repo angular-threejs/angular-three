@@ -1,0 +1,8 @@
+<ngt-canvas
+    [sceneGraph]="scene"
+    [gl]="{alpha: false}"
+    [camera]="{fov: 50, position: [-1, 1, 2.5]}"
+    [shadows]="true"
+    (pointerMissed)="toggle()"
+/>
+<ngts-stats [right]="true" />

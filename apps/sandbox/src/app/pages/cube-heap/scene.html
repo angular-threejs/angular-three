@@ -1,0 +1,13 @@
+<ngt-color *args="['lightblue']" attach="background" />
+<ngt-hemisphere-light [intensity]="0.35" />
+<ngt-spot-light [position]="5" [angle]="0.3" [penumbra]="1" [intensity]="2" [castShadow]="true">
+    <ngt-vector2 *args="[256, 256]" attach="shadow.mapSize" />
+</ngt-spot-light>
+
+<ngtc-physics broadphase="SAP">
+    <heap-plane />
+    <heap-boxes *ngIf="isBox(); else spheres" [count]="count" [colors]="colors" />
+    <ng-template #spheres>
+        <heap-spheres [count]="count" [colors]="colors" />
+    </ng-template>
+</ngtc-physics>
