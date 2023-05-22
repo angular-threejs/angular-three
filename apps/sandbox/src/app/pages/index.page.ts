@@ -124,8 +124,8 @@ import { Component } from '@angular/core';
     `,
 })
 export default class HomeComponent {
-    public count = 0;
-    public increment() {
+    count = 0;
+    increment() {
         this.count++;
     }
 }
