@@ -46,7 +46,9 @@ function injectShadowMeshCommon(
                 if (!spotLight) return;
                 if (isSpotLight(spotLight)) {
                     spotLight.shadow.mapSize.set(width(), height());
-                    spotLight.shadow.map.setSize(width(), height());
+                    if (spotLight.shadow.map) {
+                        spotLight.shadow.map.setSize(width(), height());
+                    }
                     spotLight.shadow.needsUpdate = true;
                 } else {
                     throw new Error('<ngts-spot-light-shadow> must be a child of a <ngts-spot-light>');
