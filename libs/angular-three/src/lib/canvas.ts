@@ -167,6 +167,7 @@ export class NgtCanvas extends NgtSignalStore<NgtCanvasInputs> implements OnInit
             this.#store.set({
                 onPointerMissed: (event: MouseEvent) => {
                     this.pointerMissed.emit(event);
+                    safeDetectChanges(this.#cdr);
                 },
             });
         }
