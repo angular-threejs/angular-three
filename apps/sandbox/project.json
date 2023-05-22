@@ -57,10 +57,6 @@
             "options": {
                 "lintFilePatterns": ["apps/sandbox/**/*.ts", "apps/sandbox/**/*.html"]
             }
-        },
-        "test": {
-            "executor": "@nx/vite:test",
-            "outputs": ["apps/sandbox/coverage"]
         }
     },
     "tags": []

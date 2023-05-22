@@ -3,6 +3,7 @@
 import analog from '@analogjs/platform';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, Plugin, splitVendorChunkPlugin } from 'vite';
+import glslify from 'vite-plugin-glslify';
 import tsConfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
@@ -17,12 +18,13 @@ export default defineConfig(({ mode }) => {
             target: ['es2020'],
         },
         plugins: [
+            glslify(),
             analog({
                 ssrBuildDir: '../../dist/apps/sandbox/ssr',
                 entryServer: 'apps/sandbox/src/main.server.ts',
                 vite: {
                     inlineStylesExtension: 'css',
-                    tsconfig: mode === 'test' ? 'apps/sandbox/tsconfig.spec.json' : 'apps/sandbox/tsconfig.app.json',
+                    tsconfig: 'apps/sandbox/tsconfig.app.json',
                 },
                 nitro: {
                     rootDir: 'apps/sandbox',
@@ -44,17 +46,5 @@ export default defineConfig(({ mode }) => {
             visualizer() as Plugin,
             splitVendorChunkPlugin(),
         ],
-        test: {
-            globals: true,
-            environment: 'jsdom',
-            setupFiles: ['src/test-setup.ts'],
-            include: ['**/*.spec.ts'],
-            cache: {
-                dir: `../../node_modules/.vitest`,
-            },
-        },
-        define: {
-            'import.meta.vitest': mode !== 'production',
-        },
     };
 });

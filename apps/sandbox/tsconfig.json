@@ -8,9 +8,6 @@
             "path": "./tsconfig.app.json"
         },
         {
-            "path": "./tsconfig.spec.json"
-        },
-        {
             "path": "./tsconfig.editor.json"
         }
     ],
