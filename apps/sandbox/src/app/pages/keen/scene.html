@@ -1,0 +1,19 @@
+<ngt-color *args="['black']" attach="background" />
+
+<ngt-ambient-light />
+<ngt-directional-light [position]="[0, 1, 2]" />
+
+<ngt-group [position]="[0, -7, 0]" [rotation]="[-Math.PI / 2, 0, 0]" (beforeRender)="onBeforeRender($event)">
+    <ngt-mesh
+        *ngIf="keen() as keen"
+        [material]="keen.materials['Scene_-_Root']"
+        [geometry]="keen.nodes['mesh_0'].geometry"
+    />
+</ngt-group>
+
+<ngtp-effect-composer>
+    <ngtp-bloom [intensity]="5" />
+    <ngtp-dot-screen [scale]="3" />
+</ngtp-effect-composer>
+
+<ngts-orbit-controls />
