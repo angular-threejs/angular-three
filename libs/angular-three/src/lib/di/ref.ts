@@ -1,4 +1,5 @@
 import {
+    ApplicationRef,
     ChangeDetectorRef,
     DestroyRef,
     ElementRef,
@@ -30,6 +31,7 @@ export function injectNgtRef<TElement>(
     injector = assertInjectionContext(injectNgtRef, injector);
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
+        const appRef = inject(ApplicationRef);
         const ref = is.ref(initial) ? initial : new ElementRef<TElement>(initial as TElement);
         const signalRef = createSignal(ref.nativeElement);
         const readonlySignal = signalRef.asReadonly();
@@ -59,15 +61,14 @@ export function injectNgtRef<TElement>(
             set: (newElement) => {
                 if (newElement !== untracked(signalRef)) {
                     signalRef.set(newElement);
-                    safeDetectChanges(cdr);
+                    // trigger CDR
+                    requestAnimationFrame(() => void safeDetectChanges(cdr));
                 }
             },
             get: () => readonlySignal(),
         });
 
-        Object.defineProperty(ref, 'untracked', {
-            get: () => untracked(readonlySignal),
-        });
+        Object.defineProperty(ref, 'untracked', { get: () => untracked(readonlySignal) });
 
         return Object.assign(ref, { children }) as NgtInjectedRef<TElement>;
     });
