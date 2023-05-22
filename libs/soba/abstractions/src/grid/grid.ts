@@ -30,7 +30,7 @@ export interface NgtsGridState {
     /** Material side, default: THREE.BackSide */
     side: THREE.Side;
     /** Default plane-geometry arguments */
-    args?: ConstructorParameters<typeof THREE.PlaneGeometry>;
+    args: ConstructorParameters<typeof THREE.PlaneGeometry>;
 }
 
 @Component({
