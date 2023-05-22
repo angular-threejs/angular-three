@@ -1,0 +1,15 @@
+<ngt-hemisphere-light [intensity]="0.35" />
+<ngt-spot-light [position]="[30, 0, 30]" [intensity]="2" [angle]="0.3" [penumbra]="1" [castShadow]="true">
+    <ngt-vector2 *args="[256, 256]" attach="shadow.mapSize" />
+</ngt-spot-light>
+<ngt-point-light [position]="[-30, 0, -30]" [intensity]="0.5" />
+
+<ngtc-physics [gravity]="[0, 0, -30]">
+    <kinematic-plane [color]="niceColor[4]" />
+    <kinematic-plane [color]="niceColor[1]" [position]="[-6, 0, 0]" [rotation]="[0, 0.9, 0]" />
+    <kinematic-plane [color]="niceColor[2]" [position]="[6, 0, 0]" [rotation]="[0, -0.9, 0]" />
+    <kinematic-plane [color]="niceColor[3]" [position]="[0, 6, 0]" [rotation]="[0.9, 0, 0]" />
+    <kinematic-plane [color]="niceColor[0]" [position]="[0, -6, 0]" [rotation]="[-0.9, 0, 0]" />
+    <kinematic-box />
+    <kinematic-spheres />
+</ngtc-physics>

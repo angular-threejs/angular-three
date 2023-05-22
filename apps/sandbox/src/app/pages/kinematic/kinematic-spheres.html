@@ -1,0 +1,11 @@
+<ngt-instanced-mesh
+    *args="[undefined, undefined, sphereCount()]"
+    [ref]="sphereBody.ref"
+    [castShadow]="true"
+    [receiveShadow]="true"
+>
+    <ngt-sphere-geometry *args="[radius, 16, 16]">
+        <ngt-instanced-buffer-attribute *args="[colors(), 3]" attach="attributes.color" />
+    </ngt-sphere-geometry>
+    <ngt-mesh-phong-material [vertexColors]="true" />
+</ngt-instanced-mesh>
