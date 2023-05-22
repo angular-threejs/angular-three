@@ -1,5 +1,30 @@
 
 
+## [2.0.0-beta.4](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.3...2.0.0-beta.4) (2023-05-22)
+
+
+### Features
+
+* **core:** expose "state" as signal readonly ([774fc7b](https://github.com/angular-threejs/angular-three/commit/774fc7b46f5a4599bec9f8ee5090b943d744ce4f))
+* **soba:** add Grid ([204bb49](https://github.com/angular-threejs/angular-three/commit/204bb492f7a3f5a677ecfc09a4ea53a64fbffb35))
+
+
+### Bug Fixes
+
+* **core:** call safeDetectChanges in CommonDirective instead of calling detectChanges() ([d88ca49](https://github.com/angular-threejs/angular-three/commit/d88ca4984eadbd401863ad5030d98fd89fa3ba54))
+* **core:** trigger cdr in an animation frame after setting nativeElement on ref ([f65807c](https://github.com/angular-threejs/angular-three/commit/f65807ce9418178355615b0b10b3b64f348259bb))
+* **soba:** adjust ngtsAnimations ([3cb63a5](https://github.com/angular-threejs/angular-three/commit/3cb63a549d6114ec27238fb37175306d0e87f1f7))
+* **soba:** catch up with latest fix with mesh refraction material from r3f ([51b5062](https://github.com/angular-threejs/angular-three/commit/51b506214fcaf187c706694d64e61239806875d7))
+* **soba:** fix args type in grid ([995b568](https://github.com/angular-threejs/angular-three/commit/995b568c39a50e96f3a81d88c6d8711719d12548))
+* **soba:** init plugin with all dependencies ([5942477](https://github.com/angular-threejs/angular-three/commit/594247776cebfb01644255af8f5ccbe0d8e19ada))
+
+
+### Documentations
+
+* add release blog post ([0566683](https://github.com/angular-threejs/angular-three/commit/0566683757218e33bed525254ff60f8ee96ac2be))
+* start on migration docs ([baffa23](https://github.com/angular-threejs/angular-three/commit/baffa23fe3ec9a6188b6719ac01160c3d72a7b1c))
+* update documentation ([ce80683](https://github.com/angular-threejs/angular-three/commit/ce806837219a9478a755cca5aeaa737a5c856369))
+
 ## [2.0.0-beta.3](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.2...2.0.0-beta.3) (2023-05-19)
 
 ## [2.0.0-beta.2](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.1...2.0.0-beta.2) (2023-05-19)
