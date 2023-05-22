@@ -113,30 +113,30 @@ function injectConstraint<
         effect((onCleanup) => {
             deps();
             if (bodyARef.nativeElement && bodyBRef.nativeElement) {
-                worker.addConstraint({
+                worker().addConstraint({
                     props: [bodyARef.untracked.uuid, bodyBRef.untracked.uuid, untracked(opts)],
                     type,
                     uuid,
                 });
-                onCleanup(() => worker.removeConstraint({ uuid }));
+                onCleanup(() => worker().removeConstraint({ uuid }));
             }
         });
 
         const api = computed(() => {
             deps();
             const enableDisable = {
-                disable: () => worker.disableConstraint({ uuid }),
-                enable: () => worker.enableConstraint({ uuid }),
-                remove: () => worker.removeConstraint({ uuid }),
+                disable: () => worker().disableConstraint({ uuid }),
+                enable: () => worker().enableConstraint({ uuid }),
+                remove: () => worker().removeConstraint({ uuid }),
             };
 
             if (type === 'Hinge') {
                 return {
                     ...enableDisable,
-                    disableMotor: () => worker.disableConstraintMotor({ uuid }),
-                    enableMotor: () => worker.enableConstraintMotor({ uuid }),
-                    setMotorMaxForce: (value: number) => worker.setConstraintMotorMaxForce({ props: value, uuid }),
-                    setMotorSpeed: (value: number) => worker.setConstraintMotorSpeed({ props: value, uuid }),
+                    disableMotor: () => worker().disableConstraintMotor({ uuid }),
+                    enableMotor: () => worker().enableConstraintMotor({ uuid }),
+                    setMotorMaxForce: (value: number) => worker().setConstraintMotorMaxForce({ props: value, uuid }),
+                    setMotorSpeed: (value: number) => worker().setConstraintMotorSpeed({ props: value, uuid }),
                 } as NgtcConstraintORHingeApi<TConstraintType>;
             }
 

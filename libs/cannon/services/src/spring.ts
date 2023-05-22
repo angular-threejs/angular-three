@@ -41,21 +41,21 @@ export function injectSpring<A extends THREE.Object3D, B extends THREE.Object3D>
         effect((onCleanup) => {
             deps();
             if (bodyARef.nativeElement && bodyBRef.nativeElement) {
-                worker.addSpring({
+                worker().addSpring({
                     props: [bodyARef.nativeElement.uuid, bodyBRef.nativeElement.uuid, untracked(opts)],
                     uuid,
                 });
-                onCleanup(() => worker.removeSpring({ uuid }));
+                onCleanup(() => worker().removeSpring({ uuid }));
             }
         });
 
         const api = computed(() => {
             deps();
             return {
-                setDamping: (value: number) => worker.setSpringDamping({ props: value, uuid }),
-                setRestLength: (value: number) => worker.setSpringRestLength({ props: value, uuid }),
-                setStiffness: (value: number) => worker.setSpringStiffness({ props: value, uuid }),
-                remove: () => worker.removeSpring({ uuid }),
+                setDamping: (value: number) => worker().setSpringDamping({ props: value, uuid }),
+                setRestLength: (value: number) => worker().setSpringRestLength({ props: value, uuid }),
+                setStiffness: (value: number) => worker().setSpringStiffness({ props: value, uuid }),
+                remove: () => worker().removeSpring({ uuid }),
             };
         });
 

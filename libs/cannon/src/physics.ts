@@ -66,7 +66,7 @@ export interface NgtcPhysicsApi {
     refs: Refs;
     scaleOverrides: ScaleOverrides;
     subscriptions: Subscriptions;
-    worker: CannonWorkerAPI;
+    worker: Signal<CannonWorkerAPI>;
 }
 
 export const NGTC_PHYSICS_API = new InjectionToken<Signal<NgtcPhysicsApi>>('NgtcPhysics API');
@@ -173,10 +173,7 @@ export class NgtcPhysics extends NgtSignalStore<NgtcPhysicsState> {
         tolerance: this.get('tolerance'),
     }));
 
-    readonly worker = computed(() => {
-        const workerProps = this.#workerProps();
-        return new CannonWorkerAPI(workerProps);
-    });
+    readonly worker = computed(() => new CannonWorkerAPI(this.#workerProps()));
 
     readonly api = computed(() => ({
         bodies: this.#bodies,
@@ -184,7 +181,7 @@ export class NgtcPhysics extends NgtSignalStore<NgtcPhysicsState> {
         refs: this.#refs,
         scaleOverrides: this.#scaleOverrides,
         subscriptions: this.#subscriptions,
-        worker: this.worker(),
+        worker: this.worker,
     }));
 
     constructor() {

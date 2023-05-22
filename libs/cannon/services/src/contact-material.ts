@@ -19,11 +19,11 @@ export function injectContactMaterial(
         const uuid = makeId();
         effect((onCleanup) => {
             deps();
-            worker.addContactMaterial({
+            worker().addContactMaterial({
                 props: [materialA, materialB, untracked(opts)],
                 uuid,
             });
-            onCleanup(() => worker.removeContactMaterial({ uuid }));
+            onCleanup(() => worker().removeContactMaterial({ uuid }));
         });
     });
 }

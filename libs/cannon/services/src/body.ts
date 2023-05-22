@@ -25,7 +25,13 @@ import type {
     Triplet,
     VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { NgtAnyRecord, NgtInjectedRef, assertInjectionContext, injectNgtRef } from 'angular-three';
+import {
+    NgtAnyRecord,
+    NgtInjectedRef,
+    assertInjectionContext,
+    injectNgtRef,
+    queueMicrotaskInInjectionContext,
+} from 'angular-three';
 import { NGTC_PHYSICS_API, NgtcCannonEvents } from 'angular-three-cannon';
 import { NGTC_DEBUG_API } from 'angular-three-cannon/debug';
 import * as THREE from 'three';
@@ -242,72 +248,74 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
         const physicsApi = inject(NGTC_PHYSICS_API);
         const debugApi = inject(NGTC_DEBUG_API, { optional: true });
 
-        const { refs, worker, subscriptions, scaleOverrides, events } = physicsApi();
         const { add: debugAdd, remove: debugRemove } = debugApi?.() || {};
+        const { refs, worker, subscriptions, scaleOverrides, events } = physicsApi();
 
-        effect(
-            (onCleanup) => {
-                // register deps
-                deps();
+        queueMicrotaskInInjectionContext(() => {
+            effect(
+                (onCleanup) => {
+                    // register deps
+                    deps();
 
-                if (!bodyRef.untracked) {
-                    bodyRef.nativeElement = new THREE.Object3D() as TObject;
-                }
+                    if (!bodyRef.nativeElement) {
+                        bodyRef.nativeElement = new THREE.Object3D() as TObject;
+                    }
 
-                const object = bodyRef.untracked;
-                const currentWorker = worker;
+                    const object = bodyRef.nativeElement;
+                    const currentWorker = worker();
 
-                const objectCount =
-                    object instanceof THREE.InstancedMesh
-                        ? (object.instanceMatrix.setUsage(THREE.DynamicDrawUsage), object.count)
-                        : 1;
+                    const objectCount =
+                        object instanceof THREE.InstancedMesh
+                            ? (object.instanceMatrix.setUsage(THREE.DynamicDrawUsage), object.count)
+                            : 1;
 
-                const uuid =
-                    object instanceof THREE.InstancedMesh
-                        ? new Array(objectCount).fill(0).map((_, i) => `${object.uuid}/${i}`)
-                        : [object.uuid];
+                    const uuid =
+                        object instanceof THREE.InstancedMesh
+                            ? new Array(objectCount).fill(0).map((_, i) => `${object.uuid}/${i}`)
+                            : [object.uuid];
 
-                const props: (TBodyProps & { args: unknown })[] =
-                    object instanceof THREE.InstancedMesh
-                        ? uuid.map((id, i) => {
-                              const props = getPropsFn(i);
-                              prepare(temp, props);
-                              object.setMatrixAt(i, temp.matrix);
-                              object.instanceMatrix.needsUpdate = true;
-                              refs[id] = object;
-                              debugAdd?.(id, props, type);
-                              setupCollision(events, props, id);
-                              return { ...props, args: argsFn(props.args) };
-                          })
-                        : uuid.map((id, i) => {
-                              const props = getPropsFn(i);
-                              prepare(object, props);
-                              refs[id] = object;
-                              debugAdd?.(id, props, type);
-                              setupCollision(events, props, id);
-                              return { ...props, args: argsFn(props.args) };
-                          });
+                    const props: (TBodyProps & { args: unknown })[] =
+                        object instanceof THREE.InstancedMesh
+                            ? uuid.map((id, i) => {
+                                  const props = getPropsFn(i);
+                                  prepare(temp, props);
+                                  object.setMatrixAt(i, temp.matrix);
+                                  object.instanceMatrix.needsUpdate = true;
+                                  refs[id] = object;
+                                  debugAdd?.(id, props, type);
+                                  setupCollision(events, props, id);
+                                  return { ...props, args: argsFn(props.args) };
+                              })
+                            : uuid.map((id, i) => {
+                                  const props = getPropsFn(i);
+                                  prepare(object, props);
+                                  refs[id] = object;
+                                  debugAdd?.(id, props, type);
+                                  setupCollision(events, props, id);
+                                  return { ...props, args: argsFn(props.args) };
+                              });
 
-                // Register on mount, unregister on unmount
-                currentWorker.addBodies({
-                    props: props.map(({ onCollide, onCollideBegin, onCollideEnd, ...serializableProps }) => {
-                        return { onCollide: Boolean(onCollide), ...serializableProps };
-                    }),
-                    type,
-                    uuid,
-                });
-
-                onCleanup(() => {
-                    uuid.forEach((id) => {
-                        delete refs[id];
-                        debugRemove?.(id);
-                        delete events[id];
+                    // Register on mount, unregister on unmount
+                    currentWorker.addBodies({
+                        props: props.map(({ onCollide, onCollideBegin, onCollideEnd, ...serializableProps }) => {
+                            return { onCollide: Boolean(onCollide), ...serializableProps };
+                        }),
+                        type,
+                        uuid,
                     });
-                    currentWorker.removeBodies({ uuid });
-                });
-            },
-            { allowSignalWrites: true }
-        );
+
+                    onCleanup(() => {
+                        uuid.forEach((id) => {
+                            delete refs[id];
+                            debugRemove?.(id);
+                            delete events[id];
+                        });
+                        currentWorker.removeBodies({ uuid });
+                    });
+                },
+                { allowSignalWrites: true }
+            );
+        });
 
         const api = computed(() => {
             const makeAtomic = <T extends AtomicName>(type: T, index?: number) => {
@@ -317,12 +325,12 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                     set: (value: PropValue<T>) => {
                         const uuid = getUUID(bodyRef, index);
                         uuid &&
-                            worker[op]({
+                            worker()[op]({
                                 props: value,
                                 uuid,
                             } as never);
                     },
-                    subscribe: subscribe(bodyRef, worker, subscriptions, type, index),
+                    subscribe: subscribe(bodyRef, worker(), subscriptions, type, index),
                 };
             };
 
@@ -331,13 +339,13 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                 return {
                     copy: ({ w, x, y, z }: THREE.Quaternion) => {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.setQuaternion({ props: [x, y, z, w], uuid });
+                        uuid && worker().setQuaternion({ props: [x, y, z, w], uuid });
                     },
                     set: (x: number, y: number, z: number, w: number) => {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.setQuaternion({ props: [x, y, z, w], uuid });
+                        uuid && worker().setQuaternion({ props: [x, y, z, w], uuid });
                     },
-                    subscribe: subscribe(bodyRef, worker, subscriptions, type, index),
+                    subscribe: subscribe(bodyRef, worker(), subscriptions, type, index),
                 };
             };
 
@@ -345,11 +353,11 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                 return {
                     copy: ({ x, y, z }: THREE.Vector3 | THREE.Euler) => {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.setRotation({ props: [x, y, z], uuid });
+                        uuid && worker().setRotation({ props: [x, y, z], uuid });
                     },
                     set: (x: number, y: number, z: number) => {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.setRotation({ props: [x, y, z], uuid });
+                        uuid && worker().setRotation({ props: [x, y, z], uuid });
                     },
                     subscribe: (callback: (value: Triplet) => void) => {
                         const id = incrementingId++;
@@ -358,10 +366,10 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                         const uuid = getUUID(bodyRef, index);
 
                         subscriptions[id] = { [type]: quaternionToRotation(callback) };
-                        uuid && worker.subscribe({ props: { id, target, type }, uuid });
+                        uuid && worker().subscribe({ props: { id, target, type }, uuid });
                         return () => {
                             delete subscriptions[id];
-                            worker.unsubscribe({ props: id });
+                            worker().unsubscribe({ props: id });
                         };
                     },
                 };
@@ -372,20 +380,20 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                 return {
                     copy: ({ x, y, z }: THREE.Vector3 | THREE.Euler) => {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker[op]({ props: [x, y, z], uuid });
+                        uuid && worker()[op]({ props: [x, y, z], uuid });
                     },
                     set: (x: number, y: number, z: number) => {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker[op]({ props: [x, y, z], uuid });
+                        uuid && worker()[op]({ props: [x, y, z], uuid });
                     },
-                    subscribe: subscribe(bodyRef, worker, subscriptions, type, index),
+                    subscribe: subscribe(bodyRef, worker(), subscriptions, type, index),
                 };
             };
 
             const makeRemove = (index?: number) => {
                 const uuid = getUUID(bodyRef, index);
                 return () => {
-                    if (uuid) worker.removeBodies({ uuid: [uuid] });
+                    if (uuid) worker().removeBodies({ uuid: [uuid] });
                 };
             };
 
@@ -397,23 +405,23 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                     angularVelocity: makeVec('angularVelocity', index),
                     applyForce(force: Triplet, worldPoint: Triplet) {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.applyForce({ props: [force, worldPoint], uuid });
+                        uuid && worker().applyForce({ props: [force, worldPoint], uuid });
                     },
                     applyImpulse(impulse: Triplet, worldPoint: Triplet) {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.applyImpulse({ props: [impulse, worldPoint], uuid });
+                        uuid && worker().applyImpulse({ props: [impulse, worldPoint], uuid });
                     },
                     applyLocalForce(force: Triplet, localPoint: Triplet) {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.applyLocalForce({ props: [force, localPoint], uuid });
+                        uuid && worker().applyLocalForce({ props: [force, localPoint], uuid });
                     },
                     applyLocalImpulse(impulse: Triplet, localPoint: Triplet) {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.applyLocalImpulse({ props: [impulse, localPoint], uuid });
+                        uuid && worker().applyLocalImpulse({ props: [impulse, localPoint], uuid });
                     },
                     applyTorque(torque: Triplet) {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.applyTorque({ props: [torque], uuid });
+                        uuid && worker().applyTorque({ props: [torque], uuid });
                     },
                     collisionFilterGroup: makeAtomic('collisionFilterGroup', index),
                     collisionFilterMask: makeAtomic('collisionFilterMask', index),
@@ -433,7 +441,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                     },
                     sleep() {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.sleep({ uuid });
+                        uuid && worker().sleep({ uuid });
                     },
                     sleepSpeedLimit: makeAtomic('sleepSpeedLimit', index),
                     sleepTimeLimit: makeAtomic('sleepTimeLimit', index),
@@ -442,7 +450,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
                     remove: makeRemove(index),
                     wakeUp() {
                         const uuid = getUUID(bodyRef, index);
-                        uuid && worker.wakeUp({ uuid });
+                        uuid && worker().wakeUp({ uuid });
                     },
                 };
             }

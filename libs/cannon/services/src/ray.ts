@@ -32,9 +32,9 @@ function injectRay(mode: RayMode, { options, callback, deps = () => ({}), inject
         effect((onCleanup) => {
             deps();
             events[uuid] = { rayhit: callback };
-            worker.addRay({ props: { ...untracked(options), mode }, uuid });
+            worker().addRay({ props: { ...untracked(options), mode }, uuid });
             onCleanup(() => {
-                worker.removeRay({ uuid });
+                worker().removeRay({ uuid });
                 delete events[uuid];
             });
         });

@@ -54,7 +54,7 @@ export function injectRaycastVehicle<TObject extends THREE.Object3D = THREE.Obje
                     instanceRef.nativeElement = new THREE.Object3D() as TObject;
                 }
 
-                const currentWorker = worker;
+                const currentWorker = worker();
                 const uuid: string = instanceRef.nativeElement.uuid;
                 const {
                     chassisBody,
@@ -87,30 +87,30 @@ export function injectRaycastVehicle<TObject extends THREE.Object3D = THREE.Obje
                 applyEngineForce(value: number, wheelIndex: number) {
                     const uuid = getUUID(instanceRef);
                     uuid &&
-                        worker.applyRaycastVehicleEngineForce({
+                        worker().applyRaycastVehicleEngineForce({
                             props: [value, wheelIndex],
                             uuid,
                         });
                 },
                 setBrake(brake: number, wheelIndex: number) {
                     const uuid = getUUID(instanceRef);
-                    uuid && worker.setRaycastVehicleBrake({ props: [brake, wheelIndex], uuid });
+                    uuid && worker().setRaycastVehicleBrake({ props: [brake, wheelIndex], uuid });
                 },
                 setSteeringValue(value: number, wheelIndex: number) {
                     const uuid = getUUID(instanceRef);
                     uuid &&
-                        worker.setRaycastVehicleSteeringValue({
+                        worker().setRaycastVehicleSteeringValue({
                             props: [value, wheelIndex],
                             uuid,
                         });
                 },
                 sliding: {
-                    subscribe: subscribe(instanceRef, worker, subscriptions, 'sliding', undefined, 'vehicles'),
+                    subscribe: subscribe(instanceRef, worker(), subscriptions, 'sliding', undefined, 'vehicles'),
                 },
 
                 remove: () => {
                     const uuid = getUUID(instanceRef);
-                    uuid && worker.removeRaycastVehicle({ uuid });
+                    uuid && worker().removeRaycastVehicle({ uuid });
                 },
             };
         });
