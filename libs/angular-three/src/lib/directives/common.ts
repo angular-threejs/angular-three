@@ -1,5 +1,6 @@
 import { Directive, EmbeddedViewRef, inject, NgZone, TemplateRef, ViewContainerRef } from '@angular/core';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/utils';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 
 @Directive()
 export abstract class NgtCommonDirective {
@@ -28,7 +29,7 @@ export abstract class NgtCommonDirective {
             }
             this.#zone.runOutsideAngular(() => {
                 this.#view = this.#vcr.createEmbeddedView(this.#template);
-                this.#view.detectChanges();
+                safeDetectChanges(this.#view);
             });
         }
     }
