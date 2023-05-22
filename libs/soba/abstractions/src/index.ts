@@ -5,6 +5,7 @@ export * from './edges/edges';
 export * from './gizmo-helper/gizmo-helper';
 export * from './gizmo-helper/gizmo-viewcube/gizmo-viewcube';
 export * from './gizmo-helper/gizmo-viewport/gizmo-viewport';
+export * from './grid/grid';
 export * from './line/line';
 export * from './quadratic-bezier-line/quadratic-bezier-line';
 export * from './text-3d/text-3d';
