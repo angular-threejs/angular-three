@@ -1,0 +1,14 @@
+<ngt-color *args="['#171720']" attach="background" />
+<ngts-orbit-controls [dampingFactor]="0.2" [minPolarAngle]="Math.PI / 3" [maxPolarAngle]="Math.PI / 3" />
+
+<ngtc-physics>
+    <ngt-ambient-light [intensity]="0.5" />
+    <ngt-directional-light [position]="[0, 3, 0]" [castShadow]="true" />
+    <height-field
+        [elementSize]="scale / 128"
+        [heights]="heights"
+        [position]="[-scale / 2, 0, scale / 2]"
+        [rotation]="[Math.PI / -2, 0, 0]"
+    />
+    <height-field-spheres [rows]="3" [columns]="3" [spread]="4" />
+</ngtc-physics>
