@@ -10,6 +10,7 @@ import {
 } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
+import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import { makeStoryObject, StorybookSetup } from '../setup-canvas';
 
 const alignment = [
@@ -49,7 +50,7 @@ const args = {
 @Component({
     standalone: true,
     template: `
-        <ngt-primitive *args="[model()]" [scale]="0.01" />
+        <ngt-primitive *args="[model()]" [scale]="0.01" [ref]="animations.ref" />
         <ngts-gizmo-helper [alignment]="alignment" [margin]="[marginX, marginY]">
             <ng-template ngtsGizmoHelperContent>
                 <ngts-gizmo-viewcube
@@ -85,11 +86,10 @@ const args = {
 })
 class DefaultGizmoHelperStory {
     readonly #gltf = injectNgtsGLTFLoader(() => 'soba/assets/LittlestTokyo.glb');
-    readonly model = computed(() => {
-        const gltf = this.#gltf();
-        if (!gltf) return null;
-        return gltf.scene;
-    });
+
+    readonly model = computed(() => this.#gltf()?.scene || null);
+    readonly animations = injectNgtsAnimations(() => this.#gltf()?.animations || []);
+
     @Input() alignment = args.alignment;
     @Input() marginX = args.marginX;
     @Input() marginY = args.marginY;

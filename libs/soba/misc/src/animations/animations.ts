@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 export function injectNgtsAnimations(
     animationsFactory: () => THREE.AnimationClip[],
-    { ref, injector }: { ref?: NgtInjectedRef<THREE.Object3D> | THREE.Object3D; injector?: Injector }
+    { ref, injector }: { ref?: NgtInjectedRef<THREE.Object3D> | THREE.Object3D; injector?: Injector } = {}
 ) {
     injector = assertInjectionContext(injectNgtsAnimations, injector);
     return runInInjectionContext(injector, () => {
@@ -38,32 +38,28 @@ export function injectNgtsAnimations(
 
         injectBeforeRender(({ delta }) => mixer.update(delta));
 
-        requestAnimationFrame(() => {
-            effect(
-                () => {
-                    const actual = actualRef.nativeElement;
-                    const animations = animationsFactory();
+        effect(() => {
+            const actual = actualRef.nativeElement;
+            if (!actual) return;
+            const animations = animationsFactory();
 
-                    for (let i = 0; i < animations.length; i++) {
-                        const clip = animations[i];
+            for (let i = 0; i < animations.length; i++) {
+                const clip = animations[i];
 
-                        names.push(clip.name);
-                        clips.push(clip);
+                names.push(clip.name);
+                clips.push(clip);
 
-                        Object.defineProperty(actions, clip.name, {
-                            enumerable: true,
-                            get: () => {
-                                return cached[clip.name] || (cached[clip.name] = mixer.clipAction(clip, actual));
-                            },
-                        });
+                Object.defineProperty(actions, clip.name, {
+                    enumerable: true,
+                    get: () => {
+                        return cached[clip.name] || (cached[clip.name] = mixer.clipAction(clip, actual));
+                    },
+                });
 
-                        if (i === 0) {
-                            actions[clip.name].play();
-                        }
-                    }
-                },
-                { injector }
-            );
+                if (i === 0) {
+                    actions[clip.name].play();
+                }
+            }
         });
 
         return { ref: actualRef, actions, mixer, names, clips };
