@@ -2,7 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, inject, Input } from '@angular/core';
 import { extend, getLocalState, injectBeforeRender, injectNgtRef, NgtSignalStore, NgtStore } from 'angular-three';
 import { MeshRefractionMaterial } from 'angular-three-soba/shaders';
-import { MeshBVH, SAH } from 'three-mesh-bvh';
+import { MeshBVH, MeshBVHUniformStruct, SAH } from 'three-mesh-bvh';
 
 extend({ MeshRefractionMaterial });
 
@@ -139,8 +139,9 @@ export class NgtsMeshRefractionMaterial extends NgtSignalStore<NgtsMeshRefractio
             if (!material) return;
             const geometry = getLocalState(material).parent()?.geometry;
             if (geometry) {
+                (material as any).bvh = new MeshBVHUniformStruct();
                 (material as any).bvh.updateFrom(
-                    new MeshBVH(geometry.toNonIndexed(), { lazyGeneration: false, strategy: SAH } as any)
+                    new MeshBVH(geometry.clone().toNonIndexed(), { lazyGeneration: false, strategy: SAH } as any)
                 );
             }
         });
