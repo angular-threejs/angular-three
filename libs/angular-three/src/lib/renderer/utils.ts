@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, EventEmitter, NgZone, untracked } from '@angular/core';
+import { EventEmitter, untracked, type ChangeDetectorRef, type NgZone } from '@angular/core';
 import { supportedEvents } from '../dom/events';
 import { removeInteractivity } from '../events';
 import type { NgtEventHandlers, NgtInstanceNode } from '../types';

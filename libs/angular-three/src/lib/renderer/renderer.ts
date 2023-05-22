@@ -4,12 +4,12 @@ import {
     Injectable,
     Injector,
     NgZone,
-    Renderer2,
     RendererFactory2,
     effect,
     getDebugNode,
     inject,
     untracked,
+    type Renderer2,
     type RendererType2,
 } from '@angular/core';
 import { NGT_CATALOGUE } from '../di/catalogue';
@@ -115,6 +115,8 @@ export class NgtRenderer implements Renderer2 {
                 'three',
                 Object.assign(
                     { __ngt_renderer__: { rawValue: undefined } },
+                    // NOTE: we assign this manually to a raw value node
+                    // because we say it is a 'three' node but we're not using prepare()
                     { __ngt__: { isRaw: true, parent: createSignal(null) } }
                 )
             );
@@ -135,8 +137,8 @@ export class NgtRenderer implements Renderer2 {
             const object = injectedArgs[0];
             let localState = getLocalState(object);
             if (!Object.keys(localState).length) {
-                prepare(object, { store, args: injectedArgs, primitive: true });
-                localState = getLocalState(object);
+                // NOTE: if an object isn't already "prepared", we prepare it
+                localState = getLocalState(prepare(object, { store, args: injectedArgs, primitive: true }));
             }
             if (!localState.store) localState.store = store;
             const node = this.store.createNode('three', object);

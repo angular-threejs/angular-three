@@ -78,7 +78,7 @@ export class NgtRendererStore {
         }
 
         if (state[NgtRendererClassId.type] === 'comment') {
-            // we attach an arrow function to the Comment node
+            // NOTE: we attach an arrow function to the Comment node
             // In our directives, we can call this function to then start tracking the RendererNode
             // this is done to limit the amount of Nodes we need to process for getCreationState
             rendererNode[SPECIAL_INTERNAL_ADD_COMMENT] = (node?: NgtRendererNode) => {
@@ -319,9 +319,9 @@ export class NgtRendererStore {
     }
 
     getCreationState() {
-        const injectedArgs = this.firstNonInjectedDirective(NgtArgs)?.args || [];
-        const injectedParent = this.firstNonInjectedDirective(NgtParent)?.parent || null;
-        const store = this.tryGetPortalStore();
+        const injectedArgs = this.#firstNonInjectedDirective(NgtArgs)?.args || [];
+        const injectedParent = this.#firstNonInjectedDirective(NgtParent)?.parent || null;
+        const store = this.#tryGetPortalStore();
         return { injectedArgs, injectedParent, store };
     }
 
@@ -407,7 +407,7 @@ export class NgtRendererStore {
         }
     }
 
-    private firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {
+     #firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {
         let directive: T | undefined;
 
         let i = this.#comments.length - 1;
@@ -434,7 +434,7 @@ export class NgtRendererStore {
         return directive;
     }
 
-    private tryGetPortalStore() {
+     #tryGetPortalStore() {
         let store: NgtStore | undefined;
         // we only care about the portal states because NgtStore only differs per Portal
         let i = this.portals.length - 1;
