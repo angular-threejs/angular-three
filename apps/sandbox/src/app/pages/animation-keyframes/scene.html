@@ -1,0 +1,5 @@
+<ngt-color *args="['#bfe3dd']" attach="background" />
+<ngt-value [rawValue]="texture" attach="environment" />
+<ngt-primitive *args="[model()]" [position]="[1, 1, 0]" [scale]="0.01" [ref]="animations.ref" />
+<ngts-orbit-controls [target]="[0, 0.5, 0]" [enablePan]="false" [autoRotate]="true" />
+<ngts-stats [parent]="statsDom" [right]="true" />

@@ -38,7 +38,8 @@
             "configurations": {
                 "development": {
                     "buildTarget": "sandbox:build:development",
-                    "hmr": true
+                    "hmr": true,
+                    "force": true
                 },
                 "production": {
                     "buildTarget": "sandbox:build:production"

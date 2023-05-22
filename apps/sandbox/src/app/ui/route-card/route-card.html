@@ -1,0 +1,35 @@
+<a
+    class="w-full overflow-hidden"
+    style="
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+        border-end-start-radius: unset;
+        border-end-end-radius: unset;
+    "
+    [routerLink]="[route.path]"
+>
+    <video
+        sandboxAutoplay
+        muted
+        playsinline
+        class="w-full h-full max-h-48 object-cover cursor-pointer"
+        [title]="route.title"
+        [poster]="isIOS ? route.asset + '.gif?raw=true' : ''"
+    >
+        <source
+            *ngFor="let source of ['webm', 'mp4']"
+            [src]="route.asset + '.' + source + '?raw=true'"
+            [type]="'video/' + source"
+        />
+        <img
+            class="w-full h-full max-h-48 object-cover cursor-pointer"
+            [src]="route.asset + '.gif?raw=true'"
+            [alt]="route.title"
+            loading="lazy"
+        />
+    </video>
+</a>
+
+<div class="card-body p-1">
+    <code>{{ route.title }}</code>
+</div>

@@ -7,10 +7,9 @@ import glslify from 'vite-plugin-glslify';
 import tsConfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
     return {
         publicDir: 'src/public',
-
         optimizeDeps: {
             include: ['@angular/common', '@angular/forms'],
         },
@@ -20,8 +19,8 @@ export default defineConfig(({ mode }) => {
         plugins: [
             glslify(),
             analog({
-                ssrBuildDir: '../../dist/apps/sandbox/ssr',
-                entryServer: 'apps/sandbox/src/main.server.ts',
+                static: true,
+                ssr: false,
                 vite: {
                     inlineStylesExtension: 'css',
                     tsconfig: 'apps/sandbox/tsconfig.app.json',
@@ -35,9 +34,6 @@ export default defineConfig(({ mode }) => {
                     publicAssets: [{ dir: `../../../dist/apps/sandbox/client` }],
                     serverAssets: [{ baseName: 'public', dir: `./dist/apps/sandbox/client` }],
                     buildDir: '../../dist/apps/sandbox/.nitro',
-                },
-                prerender: {
-                    routes: ['/'],
                 },
             }),
             tsConfigPaths({
