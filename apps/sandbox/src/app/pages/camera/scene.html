@@ -1,0 +1,42 @@
+<ngt-group #cameras>
+    <ngt-perspective-camera
+        #perspectiveCamera
+        [aspect]="perspectiveAspect()"
+        [near]="150"
+        [far]="1000"
+        [rotation]="[0, Math.PI, 0]"
+    />
+    <ngt-orthographic-camera
+        #orthographicCamera
+        [left]="left()"
+        [right]="right()"
+        [top]="300"
+        [bottom]="-300"
+        [near]="150"
+        [far]="1000"
+        [rotation]="[0, Math.PI, 0]"
+    />
+
+    <ngt-mesh [position]="[0, 0, 150]">
+        <ngt-sphere-geometry *args="[5, 16, 8]" />
+        <ngt-mesh-basic-material color="#0000ff" [wireframe]="true" />
+    </ngt-mesh>
+</ngt-group>
+
+<ngt-camera-helper #perspectiveHelper *args="[perspectiveCamera]" />
+<ngt-camera-helper #orthographicHelper *args="[orthographicCamera]" />
+
+<ngt-mesh #mesh>
+    <ngt-sphere-geometry *args="[100, 16, 8]" />
+    <ngt-mesh-basic-material [wireframe]="true" />
+
+    <ngt-mesh [position]="[0, 150, 0]">
+        <ngt-sphere-geometry *args="[50, 16, 8]" />
+        <ngt-mesh-basic-material color="#00ff00" [wireframe]="true" />
+    </ngt-mesh>
+</ngt-mesh>
+
+<ngt-points>
+    <ngt-float32-buffer-attribute *args="[vertices, 3]" attach="geometry.attributes.position" />
+    <ngt-points-material color="#888888" />
+</ngt-points>
