@@ -17,6 +17,7 @@ const STORE_COMPUTED_KEY = '__ngt_store_computed__' as const;
 export class NgtSignalStore<TState extends object> {
     readonly #state: WritableSignal<TState>;
     readonly #computedCache = new Map();
+    readonly state: Signal<TState>;
 
     constructor(
         @Optional()
@@ -25,6 +26,7 @@ export class NgtSignalStore<TState extends object> {
     ) {
         initialState ??= {};
         this.#state = createSignal(Object.assign(initialState, { __ngt_dummy_state__: Date.now() }) as TState);
+        this.state = this.#state.asReadonly();
     }
 
     select<
@@ -53,12 +55,12 @@ export class NgtSignalStore<TState extends object> {
     select<TKey extends keyof TState>(key: TKey, options?: CreateComputedOptions<TState[TKey]>): Signal<TState[TKey]>;
     select(options?: CreateComputedOptions<TState>): Signal<TState>;
     select(...keysAndOptions: any[]) {
-        if (keysAndOptions.length === 0) return this.#state.asReadonly();
+        if (keysAndOptions.length === 0) return this.state;
         if (keysAndOptions.length === 1 && typeof keysAndOptions[0] === 'object') {
             if (!this.#computedCache.has(STORE_COMPUTED_KEY)) {
                 this.#computedCache.set(
                     STORE_COMPUTED_KEY,
-                    computed(() => this.#state(), keysAndOptions as CreateComputedOptions<TState>)
+                    computed(this.state, keysAndOptions as CreateComputedOptions<TState>)
                 );
                 return this.#computedCache.get(STORE_COMPUTED_KEY)!;
             }
@@ -70,10 +72,7 @@ export class NgtSignalStore<TState extends object> {
         if (!this.#computedCache.has(joinedKeys)) {
             this.#computedCache.set(
                 joinedKeys,
-                computed(() => {
-                    const state = this.#state();
-                    return keys.reduce((value, key) => (value as NgtAnyRecord)[key], state);
-                }, options)
+                computed(() => keys.reduce((value, key) => (value as NgtAnyRecord)[key], this.state()), options)
             );
         }
 
@@ -95,7 +94,7 @@ export class NgtSignalStore<TState extends object> {
     get<TKey extends keyof TState>(key: TKey): TState[TKey];
     get(): TState;
     get(...keys: string[]) {
-        const state = untracked(this.#state);
+        const state = untracked(this.state);
         if (keys.length === 0) return state;
         return keys.reduce((value, key) => (value as NgtAnyRecord)[key], state);
     }

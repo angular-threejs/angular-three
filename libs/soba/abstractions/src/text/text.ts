@@ -216,8 +216,6 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
 
     readonly #store = inject(NgtStore);
 
-    readonly state = this.select();
-
     constructor() {
         super({ fontSize: 1, sdfGlyphSize: 64, anchorX: 'center', anchorY: 'middle' });
         inject(DestroyRef).onDestroy(() => {
@@ -240,9 +238,8 @@ export class NgtsText extends NgtSignalStore<NgtsTextState> {
     }
 
     #syncText() {
-        const state = this.select();
         effect(() => {
-            state();
+            this.state();
             const invalidate = this.#store.get('invalidate');
             this.troikaText.sync(() => {
                 invalidate();

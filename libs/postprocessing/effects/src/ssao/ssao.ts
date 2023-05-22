@@ -122,10 +122,8 @@ export class NgtpSSAO extends NgtSignalStore<NgtpSSAOState> {
 
     readonly #effectComposerApi = inject(NGTP_EFFECT_COMPOSER_API);
 
-    readonly #state = this.select();
-
     readonly effect = computed(() => {
-        const state = this.#state();
+        const state = this.state();
         const { camera, normalPass, downSamplingPass, resolutionScale } = this.#effectComposerApi();
 
         if (normalPass === null && downSamplingPass === null) {

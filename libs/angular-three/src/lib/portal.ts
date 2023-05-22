@@ -20,6 +20,7 @@ import {
     type OnInit,
 } from '@angular/core';
 import * as THREE from 'three';
+import { injectBeforeRender } from './di/before-render';
 import { injectNgtRef } from './di/ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/utils';
 import { NgtSignalStore } from './stores/signal.store';
@@ -28,6 +29,7 @@ import type { NgtEventManager, NgtRenderState, NgtSize, NgtState } from './types
 import { getLocalState, prepare } from './utils/instance';
 import { is } from './utils/is';
 import { safeDetectChanges } from './utils/safe-detect-changes';
+import { queueMicrotaskInInjectionContext } from './utils/timing';
 import { updateCamera } from './utils/update';
 
 const privateKeys = [
@@ -57,7 +59,7 @@ export interface NgtPortalInputs {
 }
 
 @Directive({ selector: '[ngtPortalBeforeRender]', standalone: true })
-export class NgtPortalBeforeRender implements OnInit {
+export class NgtPortalBeforeRender {
     readonly #portalStore = inject(NgtStore);
 
     @Input() renderPriority = 1;
@@ -66,36 +68,29 @@ export class NgtPortalBeforeRender implements OnInit {
 
     @Output() beforeRender = new EventEmitter<NgtRenderState>();
 
-    #subscription?: () => void;
-
     constructor() {
-        inject(DestroyRef).onDestroy(() => {
-            this.#subscription?.();
-        });
-    }
-
-    ngOnInit() {
         let oldClear: boolean;
-        this.#subscription = this.#portalStore.get('internal').subscribe(
-            ({ delta, frame }) => {
-                this.beforeRender.emit({ ...this.#portalStore.get(), delta, frame });
-                const { gl, scene, camera } = this.#portalStore.get();
-                oldClear = gl.autoClear;
-                if (this.renderPriority === 1) {
-                    // clear scene and render with default
-                    gl.autoClear = true;
-                    gl.render(this.parentScene, this.parentCamera);
-                }
-                // disable cleaning
-                gl.autoClear = false;
-                gl.clearDepth();
-                gl.render(scene, camera);
-                // restore
-                gl.autoClear = oldClear;
-            },
-            this.renderPriority,
-            this.#portalStore
-        );
+        queueMicrotaskInInjectionContext(() => {
+            injectBeforeRender(
+                ({ delta, frame }) => {
+                    this.beforeRender.emit({ ...this.#portalStore.get(), delta, frame });
+                    const { gl, scene, camera } = this.#portalStore.get();
+                    oldClear = gl.autoClear;
+                    if (this.renderPriority === 1) {
+                        // clear scene and render with default
+                        gl.autoClear = true;
+                        gl.render(this.parentScene, this.parentCamera);
+                    }
+                    // disable cleaning
+                    gl.autoClear = false;
+                    gl.clearDepth();
+                    gl.render(scene, camera);
+                    // restore
+                    gl.autoClear = oldClear;
+                },
+                { priority: this.renderPriority }
+            );
+        });
     }
 }
 
@@ -133,7 +128,7 @@ export class NgtPortal extends NgtSignalStore<NgtPortalInputs> implements OnInit
         this.set({ container });
     }
 
-    @Input() set state(state: NgtPortalInputs['state']) {
+    @Input() set portalState(state: NgtPortalInputs['state']) {
         this.set({ state });
     }
 

@@ -286,7 +286,7 @@ export class NgtsAccumulativeShadows extends NgtSignalStore<NgtsAccumulativeShad
 
     #resetAndUpdate() {
         const trigger = computed(() => ({
-            state: this.select()(),
+            state: this.state(),
             objects: getLocalState(this.#store.get('scene')).objects(),
             mesh: this.meshRef.nativeElement,
         }));

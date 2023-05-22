@@ -457,13 +457,7 @@ export class NgtStore extends NgtSignalStore<NgtState> {
     }
 
     #invalidate() {
-        const state = this.select();
-        effect(
-            () => {
-                state().invalidate();
-            },
-            { injector: this.#injector }
-        );
+        effect(() => void this.state().invalidate(), { injector: this.#injector });
     }
 }
 

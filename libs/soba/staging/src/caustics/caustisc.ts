@@ -236,7 +236,7 @@ export class NgtsCaustics extends NgtSignalStore<NgtsCausticsState> {
             sceneChildren: this.sceneRef.children()(),
             caustics: this.causticsRef.nativeElement,
             causticsChildren: this.causticsRef.children()(),
-            state: this.select()(),
+            state: this.state(),
         }));
 
         effect(() => {

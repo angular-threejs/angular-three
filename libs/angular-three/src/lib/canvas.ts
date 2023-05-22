@@ -198,11 +198,10 @@ export class NgtCanvas extends NgtSignalStore<NgtCanvasInputs> implements OnInit
 
         if (width > 0 && height > 0) {
             if (!this.#store.isInit) this.#store.init();
-            const inputs = this.select();
             this.#resizeRef = this.#zone.run(() =>
                 effect(
                     () => {
-                        const canvasInputs = inputs();
+                        const canvasInputs = this.state();
                         this.#zone.runOutsideAngular(() => {
                             this.#store.configure(
                                 { ...canvasInputs, size: { width, height, top, left } },
