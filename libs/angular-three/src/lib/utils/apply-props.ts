@@ -10,7 +10,15 @@ function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
     const changes: [key: string, value: unknown][] = [];
 
     for (const [propKey, propValue] of propsEntries) {
-        if (is.equ(propValue, instance[propKey])) continue;
+        let key = propKey;
+        if (is.colorSpaceExist(instance)) {
+            if (propKey === 'encoding') {
+                key = 'colorSpace';
+            } else if (propKey === 'outputEncoding') {
+                key = 'outputColorSpace';
+            }
+        }
+        if (is.equ(propValue, instance[key])) continue;
         changes.push([propKey, propValue]);
     }
 
@@ -27,9 +35,8 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
     const changes = diffProps(instance, props);
 
     for (let i = 0; i < changes.length; i++) {
-        let key = changes[i][0];
         const currentInstance = instance;
-        const targetProp = currentInstance[key] as NgtAnyRecord;
+        let key = changes[i][0];
         let value = changes[i][1];
 
         if (is.colorSpaceExist(currentInstance)) {
@@ -45,6 +52,8 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
                 value = value === sRGBEncoding ? SRGBColorSpace : LinearSRGBColorSpace;
             }
         }
+
+        const targetProp = currentInstance[key] as NgtAnyRecord;
 
         // special treatmen for objects with support for set/copy, and layers
         if (targetProp && targetProp['set'] && (targetProp['copy'] || targetProp instanceof THREE.Layers)) {
