@@ -1,0 +1,12 @@
+<ngt-mesh>
+    <ngt-sphere-geometry *args="[1, 64, 64]" />
+    <ngt-mesh-physical-material
+        *ngIf="texture() as texture"
+        [map]="texture"
+        [envMapIntensity]="0.4"
+        [clearcoat]="0.8"
+        [clearcoatRoughness]="0"
+        [roughness]="1"
+        [metalness]="0"
+    />
+</ngt-mesh>

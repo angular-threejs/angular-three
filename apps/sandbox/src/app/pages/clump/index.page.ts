@@ -14,7 +14,7 @@ export const routeMeta: RouteMeta = {
 };
 
 @Directive({ selector: 'clump-pointer', standalone: true })
-class Pointer {
+class ClumpPointer {
     readonly pointerBody = injectSphere(() => ({ type: 'Kinematic', args: [3], position: [0, 0, 0] }));
 
     constructor() {
@@ -67,7 +67,7 @@ class ObjectClump {
 @Component({
     standalone: true,
     templateUrl: 'scene.html',
-    imports: [NgtArgs, NgtcPhysics, NgtsEnvironment, NgtsSky, NgtpEffectComposer, NgtpBloom, ObjectClump, Pointer],
+    imports: [NgtArgs, NgtcPhysics, NgtsEnvironment, NgtsSky, NgtpEffectComposer, NgtpBloom, ObjectClump, ClumpPointer],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class SceneGraph {}
