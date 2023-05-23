@@ -26,8 +26,8 @@
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
-                    "node ./tools/scripts/generate-json.mjs",
                     "pnpm exec nx build angular-three",
+                    "node ./tools/scripts/generate-json.mjs",
                     "pnpm exec nx build angular-three-plugin"
                 ],
                 "parallel": false
