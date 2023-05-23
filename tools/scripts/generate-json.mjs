@@ -1,4 +1,4 @@
-import { createWriteStream, existsSync, unlinkSync, writeFileSync, mkdirSync } from 'fs';
+import { createWriteStream, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 import ts from 'typescript';
 import { format } from 'util';
 
@@ -254,11 +254,11 @@ ts.forEachChild(sourceFile, (node) => {
     }
 });
 
-writeFileSync('libs/angular-three/metadata.json', JSON.stringify(metadataJson));
-writeFileSync('libs/angular-three/web-types.json', JSON.stringify(webTypesJson));
+writeFileSync('dist/libs/angular-three/metadata.json', JSON.stringify(metadataJson));
+writeFileSync('dist/libs/angular-three/web-types.json', JSON.stringify(webTypesJson));
 
 if (!existsSync('node_modules/angular-three')) {
-    mkdirSync('node_modules/angular-three')
+    mkdirSync('node_modules/angular-three');
 }
 writeFileSync('node_modules/angular-three/metadata.json', JSON.stringify(metadataJson));
 writeFileSync('node_modules/angular-three/web-types.json', JSON.stringify(webTypesJson));
