@@ -262,7 +262,7 @@ export function number(
     return { defaultValue, control: { control: { type: range ? 'range' : 'number', ...rest } } };
 }
 
-export function color(defaultValue: string, { presetColors = [] }: { presetColors?: THREE.ColorKeyword[] } = {}) {
+export function color(defaultValue: string, { presetColors = [] }: { presetColors?: string[] } = {}) {
     return { defaultValue, control: { control: { type: 'color', presetColors } } };
 }
 
