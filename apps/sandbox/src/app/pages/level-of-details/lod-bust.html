@@ -1,0 +1,11 @@
+<ngts-detailed [distances]="[0, 15, 25, 35, 100]" [position]="position" [rotation]="rotation">
+    <ngt-mesh
+        *ngFor="let level of levels()"
+        [receiveShadow]="true"
+        [castShadow]="true"
+        [geometry]="level.nodes.Mesh_0001.geometry"
+        [material]="level.materials.default"
+    >
+        <ngt-value [rawValue]="0.25" attach="material.envMapIntensity" />
+    </ngt-mesh>
+</ngts-detailed>

@@ -1,0 +1,6 @@
+<lod-bust *ngFor="let p of positions" [position]="p.position" [rotation]="p.rotation" />
+<ngts-orbit-controls [zoomSpeed]="0.075" />
+<ngt-point-light [position]="0" [intensity]="0.5" />
+<ngt-spot-light [position]="50" [intensity]="2.5" [castShadow]="true" />
+<ngts-environment preset="city" />
+<ngts-bake-shadows />
