@@ -1,14 +1,4 @@
-import {
-    ChangeDetectorRef,
-    Injector,
-    computed,
-    effect,
-    inject,
-    runInInjectionContext,
-    signal,
-    untracked,
-    type Signal,
-} from '@angular/core';
+import { ChangeDetectorRef, Injector, effect, inject, runInInjectionContext, signal, type Signal } from '@angular/core';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type {
     NgtAnyRecord,
@@ -30,6 +20,12 @@ export type NgtLoaderResults<
 
 const cached = new Map();
 
+function normalizeInputs(input: string | string[] | Record<string, string>) {
+    if (Array.isArray(input)) return input;
+    if (typeof input === 'string') return [input];
+    return Object.values(input);
+}
+
 function load<
     TData,
     TUrl extends string | string[] | Record<string, string>,
@@ -45,25 +41,16 @@ function load<
         onProgress?: (event: ProgressEvent) => void;
     } = {}
 ) {
-    const computedUrls: Signal<string[]> = computed(() => {
-        const input = inputs();
-        if (Array.isArray(input)) return input;
-        if (typeof input === 'string') return [input];
-        return Object.values(input);
-    });
-
     return () => {
-        const urls = computedUrls();
-        const loaderConstructor = loaderConstructorFactory(urls);
-        const loader = new loaderConstructor();
+        const urls = normalizeInputs(inputs());
+        const loader = new (loaderConstructorFactory(urls))();
         if (extensions) extensions(loader);
-
-        return urls.map(
-            (url) =>
-                new Promise((resolve, reject) => {
-                    if (cached.has(url)) {
-                        resolve(cached.get(url));
-                    } else {
+        // TODO: reevaluate this
+        return urls.map((url) => {
+            if (!cached.has(url)) {
+                cached.set(
+                    url,
+                    new Promise((resolve, reject) => {
                         loader.load(
                             url,
                             (data) => {
@@ -72,15 +59,16 @@ function load<
                                         data as NgtAnyRecord,
                                         makeObjectGraph((data as NgtAnyRecord)['scene'])
                                     );
-                                cached.set(url, data);
                                 resolve(data);
                             },
                             onProgress,
                             (error) => reject(new Error(`[NGT] Could not load ${url}: ${error}`))
                         );
-                    }
-                })
-        );
+                    })
+                );
+            }
+            return cached.get(url)!;
+        });
     };
 }
 
@@ -103,31 +91,30 @@ export function injectNgtLoader<
     } = {}
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>> {
     injector = assertInjectionContext(injectNgtLoader, injector);
+    const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>>(null!);
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
-        const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>>(null!);
         const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
 
         requestAnimationInInjectionContext(() => {
-            effect(() => {
-                const originalUrls = untracked(inputs);
-                Promise.all(effector())
-                    .then((results) => {
-                        if (Array.isArray(originalUrls)) return results;
-                        if (typeof originalUrls === 'string') return results[0];
-                        const keys = Object.keys(originalUrls);
-                        return keys.reduce((result, key) => {
-                            (result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-                            return result;
-                        }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap> });
-                    })
-                    .then((value) => {
-                        response.set(
-                            value as NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>>
-                        );
+            effect(
+                () => {
+                    const originalUrls = inputs();
+                    Promise.all(effector()).then((results) => {
+                        response.update(() => {
+                            if (Array.isArray(originalUrls)) return results;
+                            if (typeof originalUrls === 'string') return results[0];
+                            const keys = Object.keys(originalUrls);
+                            return keys.reduce((result, key) => {
+                                (result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+                                return result;
+                            }, {} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap> });
+                        });
                         safeDetectChanges(cdr);
                     });
-            });
+                },
+                { allowSignalWrites: true }
+            );
         });
 
         return response.asReadonly();
