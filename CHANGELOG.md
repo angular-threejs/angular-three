@@ -1,5 +1,31 @@
 
 
+## [2.0.0-beta.5](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.4...2.0.0-beta.5) (2023-05-23)
+
+
+### Bug Fixes
+
+* **cannon:** expose worker as signal so it is reactive ([37edaa3](https://github.com/angular-threejs/angular-three/commit/37edaa315eafc8713eacd571771c7ddde59bb7ca))
+* **core:** adjust apply props and diff props to take into account of r152 change to color space ([27d401f](https://github.com/angular-threejs/angular-three/commit/27d401fb95d2ab482821cfd077d8dabf006e4459))
+* **core:** adjust caching mechanism in loader ([16ed946](https://github.com/angular-threejs/angular-three/commit/16ed9463430e44a4eb201b38bc9a57aad2478b9d))
+* **core:** ensure to notify change detection on pointermissed ([ab7a619](https://github.com/angular-threejs/angular-three/commit/ab7a6192b927cee4142b6cd009c0aa3c4a5316dd))
+* **soba:** null check shadow.map in spotlight mesh ([3106b79](https://github.com/angular-threejs/angular-three/commit/3106b79438236e245cb3cb20e819a14d11212a97))
+
+
+### Documentations
+
+* add demo analogjs app ([f6f544c](https://github.com/angular-threejs/angular-three/commit/f6f544c67c712cee3b4f24e4e826b96d88737aa3))
+* migrate camera sandbox ([cfaf85e](https://github.com/angular-threejs/angular-three/commit/cfaf85ede0fc5393cbd508d315e7edba836a56f9))
+* migrate color grading ([9a697f2](https://github.com/angular-threejs/angular-three/commit/9a697f2aa772bc204e77e5a7587be749836da528))
+* migrate cube heap ([774c70f](https://github.com/angular-threejs/angular-three/commit/774c70fb38428230ae1d7fb0270e2ed4de82fcd9))
+* migrate height field ([343fd8f](https://github.com/angular-threejs/angular-three/commit/343fd8f0b6744ee9ad69806609c3bb8a1a09002a))
+* migrate keen ([00d276e](https://github.com/angular-threejs/angular-three/commit/00d276e3873bca081a2065a2854d838cb8524371))
+* migrate kinematic ([8e66e23](https://github.com/angular-threejs/angular-three/commit/8e66e235b814e3c00c5c125b9418630e91e35ee7))
+* migrate lod ([d7b342e](https://github.com/angular-threejs/angular-three/commit/d7b342e0fb777cc7ce2eb82ecd98f28ad3dded65))
+* remove colorKeyword type ([fc4d962](https://github.com/angular-threejs/angular-three/commit/fc4d96273a12332129446b3a33743729bb0be70f))
+* remove test setup for sandbox app ([27e8b72](https://github.com/angular-threejs/angular-three/commit/27e8b72dac2e88c141a1fa5ddf83fbcef4289b66))
+* setup analog app ([8e7bd63](https://github.com/angular-threejs/angular-three/commit/8e7bd6342e509993b1ed76dedf83fe920ab60112))
+
 ## [2.0.0-beta.4](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.3...2.0.0-beta.4) (2023-05-22)
 
 
