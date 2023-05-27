@@ -5,7 +5,7 @@ import {
     NgtSignalStore,
     extend,
     injectNgtRef,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
     type NgtGroup,
 } from 'angular-three';
 import * as THREE from 'three';
@@ -206,7 +206,7 @@ export class NgtsRandomizedLights extends NgtSignalStore<NgtsRandomizedLightsSta
             intensity: 1,
             ambient: 0.5,
         });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#updateLightsMap();
         });
     }

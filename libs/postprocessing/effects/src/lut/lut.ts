@@ -1,5 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect, inject } from '@angular/core';
-import { NgtArgs, NgtSignalStore, NgtStore, injectNgtRef, requestAnimationInInjectionContext } from 'angular-three';
+import {
+    NgtArgs,
+    NgtSignalStore,
+    NgtStore,
+    injectNgtRef,
+    requestAnimationFrameInInjectionContext,
+} from 'angular-three';
 import { BlendFunction, LUT3DEffect } from 'postprocessing';
 
 export interface NgtpLUTState {
@@ -47,7 +53,7 @@ export class NgtpLUT extends NgtSignalStore<NgtpLUTState> {
 
     constructor() {
         super();
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#setProps();
         });
     }

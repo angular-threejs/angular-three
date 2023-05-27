@@ -15,7 +15,7 @@ import {
     extend,
     injectBeforeRender,
     injectNgtRef,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
 } from 'angular-three';
 import * as THREE from 'three';
 import { Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
@@ -40,7 +40,7 @@ function injectShadowMeshCommon(
         const pos = new THREE.Vector3();
         const dir = new THREE.Vector3();
 
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             effect(() => {
                 const spotLight = spotLightRef.nativeElement;
                 if (!spotLight) return;
@@ -111,7 +111,7 @@ export class NgtsSpotLightShadowMeshNoShader {
     constructor() {
         this.shadowMeshInput.patch({ distance: 0.4, alphaTest: 0.5, width: 512, height: 512, scale: 1 });
 
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             effect(() => {
                 const map = this.shadowMeshInput.shadowMeshMap();
                 if (map) {
@@ -218,7 +218,7 @@ export class NgtsSpotLightShadowMeshShader {
             }
         });
 
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             effect(() => {
                 const map = this.shadowMeshInput.shadowMeshMap();
                 if (map) {

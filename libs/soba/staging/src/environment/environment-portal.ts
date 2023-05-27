@@ -10,7 +10,7 @@ import {
     NgtRenderState,
     NgtStore,
     prepare,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
 } from 'angular-three';
 import * as THREE from 'three';
 import { CubeCamera } from 'three';
@@ -77,7 +77,7 @@ export class NgtsEnvironmentPortal {
             background: false,
             preset: undefined,
         });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#setEnvProps();
         });
         injectBeforeRender(this.#onBeforeRender.bind(this, 1));

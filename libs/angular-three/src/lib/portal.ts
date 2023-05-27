@@ -29,7 +29,7 @@ import type { NgtEventManager, NgtRenderState, NgtSize, NgtState } from './types
 import { getLocalState, prepare } from './utils/instance';
 import { is } from './utils/is';
 import { safeDetectChanges } from './utils/safe-detect-changes';
-import { queueMicrotaskInInjectionContext } from './utils/timing';
+import { requestAnimationFrameInInjectionContext } from './utils/timing';
 import { updateCamera } from './utils/update';
 
 const privateKeys = [
@@ -70,7 +70,7 @@ export class NgtPortalBeforeRender {
 
     constructor() {
         let oldClear: boolean;
-        queueMicrotaskInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             injectBeforeRender(
                 ({ delta, frame }) => {
                     this.beforeRender.emit({ ...this.#portalStore.get(), delta, frame });

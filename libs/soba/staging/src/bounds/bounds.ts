@@ -18,7 +18,7 @@ import {
     is,
     NgtSignalStore,
     NgtStore,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
     type NgtRenderState,
 } from 'angular-three';
 import * as THREE from 'three';
@@ -283,7 +283,7 @@ export class NgtsBounds extends NgtSignalStore<NgtsBoundsState> {
     constructor() {
         super({ damping: 6, fit: false, clip: false, observe: false, margin: 1.2, eps: 0.01 });
         this.#preventDragHijacking();
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#scalePointer();
             injectBeforeRender(this.#onBeforeRender.bind(this));
         });

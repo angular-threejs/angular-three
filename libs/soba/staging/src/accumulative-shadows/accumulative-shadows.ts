@@ -16,7 +16,7 @@ import {
     getLocalState,
     injectBeforeRender,
     injectNgtRef,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
     type NgtGroup,
 } from 'angular-three';
 import { SoftShadowMaterial, SoftShadowMaterialInputs } from 'angular-three-soba/shaders';
@@ -257,7 +257,7 @@ export class NgtsAccumulativeShadows extends NgtSignalStore<NgtsAccumulativeShad
             toneMapped: true,
             temporal: false,
         });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#configure();
             this.#resetAndUpdate();
         });

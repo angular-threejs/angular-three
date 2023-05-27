@@ -5,7 +5,7 @@ import {
     NgtStore,
     getLocalState,
     injectNgtRef,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
 } from 'angular-three';
 import { BlendFunction, Effect } from 'postprocessing';
 
@@ -59,7 +59,7 @@ export abstract class NgtpEffect<T extends Effect> extends NgtSignalStore<{
 
     constructor() {
         super();
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#setBlendMode();
         });
     }

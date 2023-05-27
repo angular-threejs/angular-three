@@ -16,7 +16,7 @@ import {
     extend,
     injectBeforeRender,
     injectNgtRef,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
 } from 'angular-three';
 import * as THREE from 'three';
 import { InstancedBufferAttribute, InstancedMesh } from 'three';
@@ -126,7 +126,7 @@ export class NgtsInstances extends NgtSignalStore<NgtsInstancesState> {
 
     constructor() {
         super({ limit: 1000, frames: Infinity });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#checkUpdate();
             this.#setBeforeRender();
         });

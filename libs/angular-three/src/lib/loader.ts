@@ -11,7 +11,7 @@ import type {
 import { assertInjectionContext } from './utils/assert-in-injection-context';
 import { makeObjectGraph } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';
-import { requestAnimationInInjectionContext } from './utils/timing';
+import { requestAnimationFrameInInjectionContext } from './utils/timing';
 
 export type NgtLoaderResults<
     TInput extends string | string[] | Record<string, string>,
@@ -96,7 +96,7 @@ export function injectNgtLoader<
         const cdr = inject(ChangeDetectorRef);
         const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
 
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             effect(
                 () => {
                     const originalUrls = inputs();

@@ -14,7 +14,7 @@ import {
     extend,
     injectBeforeRender,
     injectNgtRef,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
 } from 'angular-three';
 import { DepthDownsamplingPass, EffectComposer, EffectPass, NormalPass, RenderPass } from 'postprocessing';
 import * as THREE from 'three';
@@ -191,7 +191,7 @@ export class NgtpEffectComposer extends NgtSignalStore<NgtpEffectComposerState> 
             multisampling: 8,
             frameBufferType: THREE.HalfFloatType,
         });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#setComposerSize();
             this.#updateEffectPasses();
             this.#setBeforeRender();

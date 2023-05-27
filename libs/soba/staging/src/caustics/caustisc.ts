@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, Input } from '@angular/core';
-import { extend, injectNgtRef, NgtSignalStore, NgtStore, requestAnimationInInjectionContext } from 'angular-three';
+import { extend, injectNgtRef, NgtSignalStore, NgtStore, requestAnimationFrameInInjectionContext } from 'angular-three';
 import { NgtsEdges } from 'angular-three-soba/abstractions';
 import { injectNgtsFBO } from 'angular-three-soba/misc';
 import { CausticsMaterial, CausticsProjectionMaterial } from 'angular-three-soba/shaders';
@@ -225,7 +225,7 @@ export class NgtsCaustics extends NgtSignalStore<NgtsCausticsState> {
             resolution: 2024,
             lightSource: [5, 5, 5],
         });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#updateWorldMatrix();
             this.#setBeforeRender();
         });

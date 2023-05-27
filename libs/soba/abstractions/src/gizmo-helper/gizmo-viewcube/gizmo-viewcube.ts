@@ -1,6 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
-import { extend, NgtThreeEvent, requestAnimationInInjectionContext } from 'angular-three';
+import { extend, NgtThreeEvent, requestAnimationFrameInInjectionContext } from 'angular-three';
 import { AmbientLight, Group, PointLight } from 'three';
 import { cornerDimensions, corners, edgeDimensions, edges } from './constants';
 import { NgtsGizmoViewcubeEdgeCube } from './gizmo-viewcube-edge';
@@ -47,7 +47,7 @@ export class NgtsGizmoViewcube extends NgtsGizmoViewcubeInputs {
 
     constructor() {
         super();
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             if (this.clicked.observed) {
                 this.set({ clickEmitter: this.clicked });
             }

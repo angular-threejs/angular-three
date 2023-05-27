@@ -3,7 +3,7 @@ import {
     injectNgtRef,
     NgtSignalStore,
     NgtStore,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
     type NgtCamera,
 } from 'angular-three';
 import { injectNgtsFBO } from 'angular-three-soba/misc';
@@ -46,7 +46,7 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> extends NgtSignalSto
 
     constructor() {
         super({ resolution: 256, frames: Infinity, makeDefault: false, manual: false });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#setDefaultCamera();
             this.#updateProjectionMatrix();
         });

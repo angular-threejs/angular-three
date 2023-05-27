@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, effect, inject } from '@angular/core';
-import { extend, injectNgtRef, requestAnimationInInjectionContext } from 'angular-three';
+import { extend, injectNgtRef, requestAnimationFrameInInjectionContext } from 'angular-three';
 import { NGTS_INSTANCES_API } from './instances';
 import { PositionMesh } from './position-mesh';
 
@@ -25,7 +25,7 @@ export class NgtsInstance {
     protected readonly instancesApi = inject(NGTS_INSTANCES_API);
 
     constructor() {
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             effect((onCleanup) => {
                 onCleanup(this.instancesApi().subscribe(this.positionMeshRef));
             });

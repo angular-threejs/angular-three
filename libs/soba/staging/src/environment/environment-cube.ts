@@ -1,5 +1,5 @@
 import { Directive, Input, computed, effect, inject } from '@angular/core';
-import { NgtStore, requestAnimationInInjectionContext } from 'angular-three';
+import { NgtStore, requestAnimationFrameInInjectionContext } from 'angular-three';
 import { NgtsEnvironmentInput } from './environment-input';
 import { injectNgtsEnvironment, setEnvProps } from './utils';
 
@@ -18,7 +18,7 @@ export class NgtsEnvironmentCube {
 
     constructor() {
         this.environmentInput.patch({ background: false });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#setEnvProps();
         });
     }

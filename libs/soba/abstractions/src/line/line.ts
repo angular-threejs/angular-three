@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect, inject } from '@angular/core';
-import { NgtArgs, NgtStore, injectNgtRef, requestAnimationInInjectionContext } from 'angular-three';
+import { NgtArgs, NgtStore, injectNgtRef, requestAnimationFrameInInjectionContext } from 'angular-three';
 import * as THREE from 'three';
 import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib';
 import { NgtsLineInputs, type NgtsLineState } from './line-input';
@@ -122,7 +122,7 @@ export class NgtsLine extends NgtsLineInputs {
     constructor() {
         super();
         this.set({ segments: false });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#disposeGeometry();
             this.#computeLineDistances();
         });

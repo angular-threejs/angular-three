@@ -22,7 +22,7 @@ import {
     NgtSignalStore,
     NgtStore,
     injectBeforeRender,
-    requestAnimationInInjectionContext,
+    requestAnimationFrameInInjectionContext,
     type NgtRenderState,
 } from 'angular-three';
 import * as THREE from 'three';
@@ -203,7 +203,7 @@ export class NgtcPhysics extends NgtSignalStore<NgtcPhysicsState> {
             stepSize: 1 / 60,
             tolerance: 0.001,
         });
-        requestAnimationInInjectionContext(() => {
+        requestAnimationFrameInInjectionContext(() => {
             this.#connectWorker();
             this.#updateWorkerProp('axisIndex');
             this.#updateWorkerProp('broadphase');
