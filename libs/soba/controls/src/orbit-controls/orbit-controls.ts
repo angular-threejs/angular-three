@@ -8,7 +8,15 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { injectBeforeRender, injectNgtRef, NgtArgs, NgtSignalStore, NgtStore, NgtVector3 } from 'angular-three';
+import {
+    injectBeforeRender,
+    injectNgtRef,
+    NgtArgs,
+    NgtSignalStore,
+    NgtStore,
+    type NgtCamera,
+    type NgtVector3,
+} from 'angular-three';
 import { OrbitControls } from 'three-stdlib';
 
 export type NgtsOrbitControlsState = {
@@ -98,7 +106,7 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
                 const controlsCamera = camera || defaultCamera;
                 const controls = this.controlsRef.nativeElement;
                 if (!controls || controls.object !== controlsCamera) {
-                    this.controlsRef.nativeElement = new OrbitControls(controlsCamera);
+                    this.controlsRef.nativeElement = new OrbitControls(controlsCamera as NgtCamera);
                 }
             },
             { allowSignalWrites: true }

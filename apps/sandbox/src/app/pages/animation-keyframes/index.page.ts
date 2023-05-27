@@ -23,7 +23,7 @@ class SceneGraph {
     readonly #pmremGenerator = new THREE.PMREMGenerator(this.#gl);
 
     readonly statsDom = this.#gl.domElement.parentElement as HTMLElement;
-    readonly texture = this.#pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+    readonly texture = this.#pmremGenerator.fromScene(RoomEnvironment(), 0.04).texture;
 
     readonly #gltf = injectNgtsGLTFLoader(() => 'LittlestTokyo.glb');
 
