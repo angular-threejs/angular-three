@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Injector, inject, runInInjectionContext } from '@angular/core';
-import { assertInjectionContext, createSignal, safeDetectChanges } from 'angular-three';
+import { ChangeDetectorRef, Injector, inject, runInInjectionContext, signal } from '@angular/core';
+import { assertInjectionContext, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 
 export function injectNgtsProgress(injector?: Injector) {
@@ -7,21 +7,14 @@ export function injectNgtsProgress(injector?: Injector) {
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
 
-        const progress = createSignal<{
+        const progress = signal<{
             errors: string[];
             active: boolean;
             progress: number;
             item: string;
             loaded: number;
             total: number;
-        }>({
-            errors: [],
-            active: false,
-            progress: 0,
-            item: '',
-            loaded: 0,
-            total: 0,
-        });
+        }>({ errors: [], active: false, progress: 0, item: '', loaded: 0, total: 0 });
 
         let saveLastTotalLoaded = 0;
 

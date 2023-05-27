@@ -3,13 +3,13 @@ import {
     Injectable,
     Optional,
     computed,
+    signal,
     untracked,
     type CreateComputedOptions,
     type Signal,
     type WritableSignal,
 } from '@angular/core';
 import type { NgtAnyRecord } from '../types';
-import { createSignal } from '../utils/signal';
 
 const STORE_COMPUTED_KEY = '__ngt_store_computed__' as const;
 
@@ -25,7 +25,7 @@ export class NgtSignalStore<TState extends object> {
         initialState: Partial<TState> = {} as unknown as Partial<TState>
     ) {
         initialState ??= {};
-        this.#state = createSignal(Object.assign(initialState, { __ngt_dummy_state__: Date.now() }) as TState);
+        this.#state = signal(Object.assign(initialState, { __ngt_dummy_state__: Date.now() }) as TState);
         this.state = this.#state.asReadonly();
     }
 

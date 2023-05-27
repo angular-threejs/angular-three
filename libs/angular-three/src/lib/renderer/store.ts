@@ -4,7 +4,7 @@ import { NgtArgs } from '../directives/args';
 import type { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
 import { NgtStore } from '../stores/store';
-import type { NgtAnyRecord } from '../types';
+import type { NgtAnyRecord, NgtInstanceNode } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
@@ -207,6 +207,7 @@ export class NgtRendererStore {
         }
 
         applyProps(node, { [name]: value });
+        this.#updateNativeProps(node, name, value);
     }
 
     applyProperty(node: NgtRendererNode, name: string, value: any) {
@@ -245,6 +246,7 @@ export class NgtRendererStore {
             value = compound[NgtCompoundClassId.props][name];
         }
         applyProps(node, { [name]: value });
+        this.#updateNativeProps(node, name, value);
     }
 
     isCompound(name: string) {
@@ -407,7 +409,15 @@ export class NgtRendererStore {
         }
     }
 
-     #firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {
+    #updateNativeProps(node: NgtInstanceNode, name: string, value: any) {
+        const localState = getLocalState(node);
+        if (!localState || !localState.nativeProps) return;
+        queueMicrotask(() => {
+            localState.nativeProps.set({ [name]: value });
+        });
+    }
+
+    #firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {
         let directive: T | undefined;
 
         let i = this.#comments.length - 1;
@@ -434,7 +444,7 @@ export class NgtRendererStore {
         return directive;
     }
 
-     #tryGetPortalStore() {
+    #tryGetPortalStore() {
         let store: NgtStore | undefined;
         // we only care about the portal states because NgtStore only differs per Portal
         let i = this.portals.length - 1;

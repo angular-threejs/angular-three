@@ -1,5 +1,4 @@
 import {
-    ApplicationRef,
     ChangeDetectorRef,
     DestroyRef,
     ElementRef,
@@ -8,6 +7,7 @@ import {
     computed,
     inject,
     runInInjectionContext,
+    signal,
     untracked,
 } from '@angular/core';
 import { NgtInstanceNode } from '../types';
@@ -15,7 +15,6 @@ import { assertInjectionContext } from '../utils/assert-in-injection-context';
 import { getLocalState } from '../utils/instance';
 import { is } from '../utils/is';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
-import { createSignal } from '../utils/signal';
 
 export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
     /* consumers should use this for listenting to children changes on this ref */
@@ -29,13 +28,12 @@ export function injectNgtRef<TElement>(
     injector?: Injector
 ): NgtInjectedRef<TElement> {
     injector = assertInjectionContext(injectNgtRef, injector);
+    const ref = is.ref(initial) ? initial : new ElementRef<TElement>(initial as TElement);
+    const signalRef = signal(ref.nativeElement);
+    const readonlySignal = signalRef.asReadonly();
+    const cached = new Map();
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
-        const appRef = inject(ApplicationRef);
-        const ref = is.ref(initial) ? initial : new ElementRef<TElement>(initial as TElement);
-        const signalRef = createSignal(ref.nativeElement);
-        const readonlySignal = signalRef.asReadonly();
-        const cached = new Map();
 
         inject(DestroyRef).onDestroy(() => void cached.clear());
 
@@ -60,9 +58,15 @@ export function injectNgtRef<TElement>(
         Object.defineProperty(ref, 'nativeElement', {
             set: (newElement) => {
                 if (newElement !== untracked(signalRef)) {
-                    signalRef.set(newElement);
-                    // trigger CDR
+                    try {
+                        signalRef.set(newElement);
+                    } catch {
+                        requestAnimationFrame(() => {
+                            signalRef.set(newElement);
+                        });
+                    }
                     requestAnimationFrame(() => void safeDetectChanges(cdr));
+                    // trigger CDR
                 }
             },
             get: () => readonlySignal(),

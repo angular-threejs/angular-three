@@ -75,7 +75,9 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
             // attach
             if (cLS.isRaw) {
                 if (cLS.parent) {
-                    cLS.parent.set(parent);
+                    queueMicrotask(() => {
+                        cLS.parent.set(parent);
+                    });
                 }
                 // at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
                 if (child.__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
@@ -94,7 +96,9 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
     pLS.add(child, added ? 'objects' : 'nonObjects');
 
     if (cLS.parent) {
-        cLS.parent.set(parent);
+        queueMicrotask(() => {
+            cLS.parent.set(parent);
+        });
     }
 
     if (cLS.afterAttach) cLS.afterAttach.emit({ parent, node: child });
@@ -108,7 +112,9 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
     const cLS = getLocalState(child);
 
     // clear parent ref
-    cLS.parent?.set(null);
+    queueMicrotask(() => {
+        cLS.parent?.set(null);
+    });
 
     // remove child from parent
     if (untracked(pLS.objects)) pLS.remove(child, 'objects');

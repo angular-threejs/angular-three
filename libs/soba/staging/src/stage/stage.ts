@@ -10,8 +10,9 @@ import {
     Input,
     OnChanges,
     Output,
+    signal,
 } from '@angular/core';
-import { createSignal, extend, NgtArgs, NgtSignalStore, safeDetectChanges } from 'angular-three';
+import { extend, NgtArgs, NgtSignalStore, safeDetectChanges } from 'angular-three';
 import { AmbientLight, Group, PointLight, SpotLight, Vector2 } from 'three';
 import { NgtsAccumulativeShadows } from '../accumulative-shadows/accumulative-shadows';
 import { NgtsRandomizedLights } from '../accumulative-shadows/randomized-lights';
@@ -235,7 +236,7 @@ export class NgtsStage extends NgtSignalStore<NgtsStageProps> {
 
     @Output() centered = new EventEmitter() as NgtsCenter['centered'];
 
-    readonly boundingState = createSignal({ radius: 0, width: 0, height: 0, depth: 0 });
+    readonly boundingState = signal({ radius: 0, width: 0, height: 0, depth: 0 });
 
     readonly #preset = this.select('preset');
     readonly #environment = this.select('environment');

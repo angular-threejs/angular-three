@@ -1,7 +1,6 @@
-import { untracked } from '@angular/core';
+import { signal, untracked } from '@angular/core';
 import { NgtSignalStore } from '../stores/signal.store';
 import type { NgtAnyRecord, NgtInstanceLocalState, NgtInstanceNode } from '../types';
-import { createSignal } from './signal';
 import { checkUpdate } from './update';
 
 export function getLocalState<TInstance extends object = NgtAnyRecord>(
@@ -25,15 +24,15 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 
     if (localState?.primitive || !instance.__ngt__) {
         const {
-            objects = createSignal<NgtInstanceNode[]>([]),
-            nonObjects = createSignal<NgtInstanceNode[]>([]),
+            objects = signal<NgtInstanceNode[]>([]),
+            nonObjects = signal<NgtInstanceNode[]>([]),
             ...rest
         } = localState || {};
 
         instance.__ngt__ = {
             previousAttach: null,
             store: null,
-            parent: createSignal(null),
+            parent: signal(null),
             memoized: {},
             eventCount: 0,
             handlers: {},
@@ -41,21 +40,25 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
             nonObjects,
             nativeProps: new NgtSignalStore({}),
             add: (object, type) => {
-                const current = untracked(instance.__ngt__[type]);
-                const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);
-                if (foundIndex > -1) {
-                    // if we add an object with the same reference, then we switch it out
-                    // and update the BehaviorSubject
-                    current.splice(foundIndex, 1, object);
-                    instance.__ngt__[type].set(current);
-                } else {
-                    instance.__ngt__[type].update((prev) => [...prev, object]);
-                }
-                notifyAncestors(untracked(instance.__ngt__.parent));
+                queueMicrotask(() => {
+                    const current = untracked(instance.__ngt__[type]);
+                    const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);
+                    if (foundIndex > -1) {
+                        // if we add an object with the same reference, then we switch it out
+                        // and update the BehaviorSubject
+                        current.splice(foundIndex, 1, object);
+                        instance.__ngt__[type].set(current);
+                    } else {
+                        instance.__ngt__[type].update((prev) => [...prev, object]);
+                    }
+                    notifyAncestors(untracked(instance.__ngt__.parent));
+                });
             },
             remove: (object, type) => {
-                instance.__ngt__[type].update((prev) => prev.filter((o) => o !== object));
-                notifyAncestors(untracked(instance.__ngt__.parent));
+                queueMicrotask(() => {
+                    instance.__ngt__[type].update((prev) => prev.filter((o) => o !== object));
+                    notifyAncestors(untracked(instance.__ngt__.parent));
+                });
             },
             ...rest,
         } as NgtInstanceLocalState;

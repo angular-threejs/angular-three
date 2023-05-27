@@ -88,8 +88,6 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
                 // auto-convert srgb
                 if (!THREE.ColorManagement && !rootState?.linear && isColor) targetProp.convertSRGBToLinear();
             }
-
-            localState?.nativeProps?.set({ [key]: targetProp });
         }
         // else just overwrite the value
         else {
@@ -107,7 +105,6 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
                     else texture.encoding = rootState.gl.outputEncoding;
                 }
             }
-            localState?.nativeProps?.set({ [key]: value });
         }
 
         checkUpdate(targetProp);

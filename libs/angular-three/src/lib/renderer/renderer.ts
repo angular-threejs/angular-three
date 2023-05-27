@@ -8,6 +8,7 @@ import {
     effect,
     getDebugNode,
     inject,
+    signal,
     untracked,
     type Renderer2,
     type RendererType2,
@@ -18,7 +19,6 @@ import { NgtStore } from '../stores/store';
 import type { NgtAnyRecord } from '../types';
 import { getLocalState, prepare } from '../utils/instance';
 import { is } from '../utils/is';
-import { createSignal } from '../utils/signal';
 import { NGT_COMPOUND_PREFIXES } from './di';
 import { NgtRendererClassId } from './enums';
 import { NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
@@ -117,7 +117,7 @@ export class NgtRenderer implements Renderer2 {
                     { __ngt_renderer__: { rawValue: undefined } },
                     // NOTE: we assign this manually to a raw value node
                     // because we say it is a 'three' node but we're not using prepare()
-                    { __ngt__: { isRaw: true, parent: createSignal(null) } }
+                    { __ngt__: { isRaw: true, parent: signal(null) } }
                 )
             );
         }
