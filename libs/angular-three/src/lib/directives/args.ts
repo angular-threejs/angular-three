@@ -6,7 +6,8 @@ export class NgtArgs<TArgs extends any[] = any[]> extends NgtCommonDirective {
     #injectedArgs: TArgs = [] as unknown as TArgs;
 
     @Input() set args(args: TArgs | null) {
-        if (args == null || !Array.isArray(args) || (args.length === 1 && args[0] === null)) return;
+        if (args == null || !Array.isArray(args) || args.length === 0 || (args.length === 1 && args[0] === null))
+            return;
         this.injected = false;
         this.#injectedArgs = args;
         this.createView();
