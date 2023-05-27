@@ -1,4 +1,5 @@
 import { signal, untracked } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { NgtSignalStore } from '../stores/signal.store';
 import type { NgtAnyRecord, NgtInstanceLocalState, NgtInstanceNode } from '../types';
 import { checkUpdate } from './update';
@@ -32,7 +33,7 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
         instance.__ngt__ = {
             previousAttach: null,
             store: null,
-            parent: signal(null),
+            parent: new BehaviorSubject(null),
             memoized: {},
             eventCount: 0,
             handlers: {},
@@ -51,13 +52,13 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
                     } else {
                         instance.__ngt__[type].update((prev) => [...prev, object]);
                     }
-                    notifyAncestors(untracked(instance.__ngt__.parent));
+                    notifyAncestors(instance.__ngt__.parent.value);
                 });
             },
             remove: (object, type) => {
                 queueMicrotask(() => {
                     instance.__ngt__[type].update((prev) => prev.filter((o) => o !== object));
-                    notifyAncestors(untracked(instance.__ngt__.parent));
+                    notifyAncestors(instance.__ngt__.parent.value);
                 });
             },
             ...rest,
@@ -72,5 +73,5 @@ function notifyAncestors(instance: NgtInstanceNode | null) {
     const localState = getLocalState(instance);
     if (localState.objects) localState.objects.update((prev) => prev);
     if (localState.nonObjects) localState.nonObjects.update((prev) => prev);
-    notifyAncestors(untracked(localState.parent));
+    notifyAncestors(localState.parent.value);
 }

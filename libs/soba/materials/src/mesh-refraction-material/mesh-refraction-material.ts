@@ -137,7 +137,7 @@ export class NgtsMeshRefractionMaterial extends NgtSignalStore<NgtsMeshRefractio
         effect(() => {
             const material = this.materialRef.nativeElement;
             if (!material) return;
-            const geometry = getLocalState(material).parent()?.geometry;
+            const geometry = getLocalState(material).parent?.value?.geometry;
             if (geometry) {
                 (material as any).bvh = new MeshBVHUniformStruct();
                 (material as any).bvh.updateFrom(

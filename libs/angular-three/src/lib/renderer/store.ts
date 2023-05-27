@@ -221,7 +221,7 @@ export class NgtRendererStore {
             return;
         }
 
-        const parent = getLocalState(node).parent() || rS[NgtRendererClassId.parent];
+        const parent = getLocalState(node).parent?.value || rS[NgtRendererClassId.parent];
 
         // [rawValue]
         if (getLocalState(node).isRaw && name === SPECIAL_PROPERTIES.VALUE) {

@@ -1,4 +1,5 @@
 import type { ElementRef, EventEmitter, WritableSignal } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import * as THREE from 'three';
 import type { NgtSignalStore } from './stores/signal.store';
 import { NgtObject3DNode } from './three-types';
@@ -255,7 +256,7 @@ export type NgtInstanceLocalState = {
     // native props signal
     nativeProps: NgtSignalStore<NgtAnyRecord>;
     // parent based on attach three instance
-    parent: WritableSignal<NgtInstanceNode | null>;
+    parent: BehaviorSubject<NgtInstanceNode | null>;
     // if this THREE instance is a ngt-primitive
     primitive?: boolean;
     // if this THREE object has any events bound to it

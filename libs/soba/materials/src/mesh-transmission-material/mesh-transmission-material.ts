@@ -209,7 +209,7 @@ export class NgtsMeshTranmissionMaterial extends NgtSignalStore<NgtsMeshTranmiss
             this.materialRef.nativeElement.time = state.clock.getElapsedTime();
             // Render only if the buffer matches the built-in and no transmission sampler is set
             if (this.materialRef.nativeElement.buffer === this.fboMainRef().texture && !transmissionSampler) {
-                parent = getLocalState(this.materialRef.nativeElement).parent() as THREE.Object3D;
+                parent = getLocalState(this.materialRef.nativeElement).parent?.value as THREE.Object3D;
                 if (parent) {
                     // Save defaults
                     oldTone = state.gl.toneMapping;

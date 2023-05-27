@@ -1,4 +1,3 @@
-import { untracked } from '@angular/core';
 import * as THREE from 'three';
 import type { NgtAnyRecord, NgtInstanceNode } from '../types';
 import { getLocalState, invalidateInstance } from './instance';
@@ -112,7 +111,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord): NgtI
     }
 
     const instanceHandlers = localState.eventCount;
-    const parent = localState.parent ? untracked(localState.parent) : null;
+    const parent = localState.parent?.value;
 
     if (parent && rootState.internal && instance['raycast'] && instanceHandlers !== localState.eventCount) {
         // Pre-emptively remove the instance from the interaction manager

@@ -261,7 +261,7 @@ export class NgtsMeshReflectorMaterial extends NgtSignalStore<NgtsMeshReflectorM
 
     #onBeforeRender(state: NgtRenderState) {
         if (!this.materialRef.nativeElement) return;
-        const parent = getLocalState(this.materialRef.nativeElement).parent();
+        const parent = getLocalState(this.materialRef.nativeElement).parent?.value;
         if (!parent) return;
 
         const { gl, scene } = state;
@@ -288,7 +288,7 @@ export class NgtsMeshReflectorMaterial extends NgtSignalStore<NgtsMeshReflectorM
     }
 
     #beforeRender(state: NgtRenderState) {
-        const parent = getLocalState(this.materialRef.nativeElement).parent();
+        const parent = getLocalState(this.materialRef.nativeElement).parent?.value;
         if (!parent) return;
 
         const { camera } = state;

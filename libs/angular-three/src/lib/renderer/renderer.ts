@@ -8,11 +8,10 @@ import {
     effect,
     getDebugNode,
     inject,
-    signal,
-    untracked,
     type Renderer2,
     type RendererType2,
 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { NGT_CATALOGUE } from '../di/catalogue';
 import type { NgtInjectedRef } from '../di/ref';
 import { NgtStore } from '../stores/store';
@@ -117,7 +116,7 @@ export class NgtRenderer implements Renderer2 {
                     { __ngt_renderer__: { rawValue: undefined } },
                     // NOTE: we assign this manually to a raw value node
                     // because we say it is a 'three' node but we're not using prepare()
-                    { __ngt__: { isRaw: true, parent: signal(null) } }
+                    { __ngt__: { isRaw: true, parent: new BehaviorSubject(null) } }
                 )
             );
         }
@@ -243,7 +242,7 @@ export class NgtRenderer implements Renderer2 {
         // if both are three instances, straightforward case
         if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'three') {
             // if child already attached to a parent, skip
-            if (getLocalState(newChild).parent && untracked(getLocalState(newChild).parent)) return;
+            if (getLocalState(newChild).parent?.value) return;
             // attach THREE child
             attachThreeChild(parent, newChild);
             // here, we handle the special case of if the parent has a compoundParent, which means this child is part of a compound parent template
@@ -284,7 +283,7 @@ export class NgtRenderer implements Renderer2 {
 
         const shouldFindGrandparentInstance =
             // if child is three but haven't been attached to a parent yet
-            (cRS[NgtRendererClassId.type] === 'three' && !untracked(getLocalState(newChild).parent)) ||
+            (cRS[NgtRendererClassId.type] === 'three' && !getLocalState(newChild).parent.value) ||
             // or both parent and child are DOM elements
             // or they are compound AND haven't had a THREE instance yet
             ((pRS[NgtRendererClassId.type] === 'dom' ||
