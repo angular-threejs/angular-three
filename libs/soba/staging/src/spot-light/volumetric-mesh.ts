@@ -66,14 +66,27 @@ export class NgtsVolumetricMesh {
     );
 
     constructor() {
-        this.spotLightInput.patch({
-            opacity: 1,
-            color: 'white',
-            distance: 5,
-            angle: 0.15,
-            attenuation: 5,
-            anglePower: 5,
-        });
+        try {
+            this.spotLightInput.patch({
+                opacity: 1,
+                color: 'white',
+                distance: 5,
+                angle: 0.15,
+                attenuation: 5,
+                anglePower: 5,
+            });
+        } catch {
+            queueMicrotask(() => {
+                this.spotLightInput.patch({
+                    opacity: 1,
+                    color: 'white',
+                    distance: 5,
+                    angle: 0.15,
+                    attenuation: 5,
+                    anglePower: 5,
+                });
+            });
+        }
         injectBeforeRender(() => {
             const mesh = this.mesh.nativeElement;
             if (!mesh) return;
