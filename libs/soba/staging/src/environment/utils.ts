@@ -55,9 +55,9 @@ type NgtsInjectEnvironmentParams = Partial<
 const CUBEMAP_ROOT = 'https://market-assets.fra1.cdn.digitaloceanspaces.com/market-assets/hdris/';
 export function injectNgtsEnvironment(paramsFactory: () => Partial<NgtsInjectEnvironmentParams>, injector?: Injector) {
     injector = assertInjectionContext(injectNgtsEnvironment, injector);
+    const textureRef = injectNgtRef<THREE.Texture | CubeTexture>();
     return runInInjectionContext(injector, () => {
         const cdr = inject(ChangeDetectorRef);
-        const textureRef = injectNgtRef<THREE.Texture | CubeTexture>();
 
         inject(DestroyRef).onDestroy(() => {
             textureRef.untracked.dispose();

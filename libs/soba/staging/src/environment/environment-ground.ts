@@ -21,10 +21,13 @@ export class NgtsEnvironmentGround {
     protected readonly environmentInput = inject(NgtsEnvironmentInput);
     readonly #defaultTexture = injectNgtsEnvironment(this.environmentInput.environmentParams);
 
-    readonly texture = computed(() => {
-        const defaultTexture = this.#defaultTexture.nativeElement;
-        return this.environmentInput.environmentMap() || defaultTexture;
-    });
+    readonly texture = computed(
+        () => {
+            const defaultTexture = this.#defaultTexture.nativeElement;
+            return this.environmentInput.environmentMap() || defaultTexture;
+        },
+        { equal: Object.is }
+    );
 
     readonly groundArgs = computed(() => (this.texture() ? [this.texture()] : []));
     readonly height = computed(() => (this.environmentInput.environmentGround() as any)?.height);
