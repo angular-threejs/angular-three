@@ -1,5 +1,15 @@
 
 
+## [2.0.0-beta.7](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.6...2.0.0-beta.7) (2023-05-27)
+
+
+### Bug Fixes
+
+* **core:** check for length of args in NgtArgs before renderering ([4340998](https://github.com/angular-threejs/angular-three/commit/4340998033e3f848f41ca29fe7969d390631e07c))
+* **core:** use behavior subject for parent ([cbd0057](https://github.com/angular-threejs/angular-three/commit/cbd0057ad45f7c837317267943279a12e632c9bd))
+* **soba:** call patch in try catch ([c9da932](https://github.com/angular-threejs/angular-three/commit/c9da93263f75255f495a3e58a8cea4b44cbbc6d9))
+* **soba:** use Object.is for ground texture equal fn ([2353b4a](https://github.com/angular-threejs/angular-three/commit/2353b4ae1bbcede037761e6083645f543ea36b0f))
+
 ## [2.0.0-beta.6](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.5...2.0.0-beta.6) (2023-05-27)
 
 
