@@ -26,6 +26,7 @@ export type NgtsOrbitControlsState = {
     makeDefault: boolean;
     regress: boolean;
     enableDamping: boolean;
+    keyEvents: boolean | HTMLElement;
 };
 
 declare global {
@@ -68,6 +69,10 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
         this.set({ enableDamping });
     }
 
+    @Input() set keyEvents(keyEvents: boolean) {
+        this.set({ keyEvents });
+    }
+
     @Output() change = new EventEmitter<THREE.Event>();
     @Output() start = new EventEmitter<THREE.Event>();
     @Output() end = new EventEmitter<THREE.Event>();
@@ -78,7 +83,7 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
     readonly damping = this.select('enableDamping');
 
     constructor() {
-        super({ enableDamping: true, regress: false, makeDefault: false });
+        super({ enableDamping: true, regress: false, makeDefault: false, keyEvents: false });
         injectBeforeRender(
             () => {
                 const controls = this.controlsRef.untracked;
@@ -118,10 +123,12 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
         const domElement = this.select('domElement');
         const regress = this.select('regress');
         const invalidate = this.#store.select('invalidate');
+        const keyEvents = this.select('keyEvents');
 
         const trigger = computed(() => {
             const eventsSource = this.#store.get('events', 'connected');
             return {
+                keyEvents: keyEvents(),
                 controls: this.controlsRef.nativeElement,
                 domElement: domElement() || eventsSource || glDomElement(),
                 regress: regress(),
@@ -130,9 +137,13 @@ export class NgtsOrbitControls extends NgtSignalStore<NgtsOrbitControlsState> {
         });
 
         effect((onCleanup) => {
-            const { domElement, controls } = trigger();
+            const { domElement, controls, keyEvents } = trigger();
             if (!controls) return;
-            controls.connect(domElement);
+            if (keyEvents) {
+                controls.connect(keyEvents === true ? domElement : keyEvents);
+            } else {
+                controls.connect(domElement);
+            }
             onCleanup(() => void controls.dispose());
         });
     }
