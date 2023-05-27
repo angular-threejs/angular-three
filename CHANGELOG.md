@@ -1,5 +1,21 @@
 
 
+## [2.0.0-beta.6](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.5...2.0.0-beta.6) (2023-05-27)
+
+
+### Features
+
+* **soba:** add keyEvents to OrbitControls to match with drei ([8382c06](https://github.com/angular-threejs/angular-three/commit/8382c06adca139f6e83098d0db6fa1ed61c7f56d))
+
+
+### Bug Fixes
+
+* **cannon:** return early in effect after assigning dummy object3d to body ([a0d44cc](https://github.com/angular-threejs/angular-three/commit/a0d44ccbd7b5de4bd22717a0d0d9331a8604faad))
+* **core:** remove createSignal and use signal directly. queue all signal updates in renderer in microtask ([9315c30](https://github.com/angular-threejs/angular-three/commit/9315c30749837c762640aac28d3fc40cb628dcf6))
+* **core:** rename requestAnimationInInjectionContext to requestAnimationFrameInInjectionContext ([af45513](https://github.com/angular-threejs/angular-three/commit/af45513e5e8737d73e5f3545e6c2e1465efe4033))
+* **soba:** ensure effect that emit centered output allow signal writes ([3ef325d](https://github.com/angular-threejs/angular-three/commit/3ef325d4131881d808fc1cf08760abb1427fa744))
+* **soba:** update controls ([8ea354c](https://github.com/angular-threejs/angular-three/commit/8ea354c63507b7f3d2aa46f0160de085f945f09d))
+
 ## [2.0.0-beta.5](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.4...2.0.0-beta.5) (2023-05-23)
 
 
