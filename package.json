@@ -1,0 +1,14 @@
+{
+  "name": "@platform/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+  },
+  "private": true,
+  "dependencies": {
+  },
+  "devDependencies": {
+    "nx": "16.3.2",
+    "@nx/workspace": "16.3.2"
+  }
+}
