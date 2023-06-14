@@ -46,12 +46,12 @@ Just run `nx build demoapp` to build the application. The build artifacts will b
 
 Nx comes with local caching already built-in (check your `nx.json`). On CI you might want to go a step further.
 
-- [Set up remote caching](https://nx.dev/core-features/share-your-cache)
-- [Set up task distribution across multiple machines](https://nx.dev/core-features/distribute-task-execution)
-- [Learn more how to setup CI](https://nx.dev/recipes/ci)
+-   [Set up remote caching](https://nx.dev/core-features/share-your-cache)
+-   [Set up task distribution across multiple machines](https://nx.dev/core-features/distribute-task-execution)
+-   [Learn more how to setup CI](https://nx.dev/recipes/ci)
 
 ## Connect with us!
 
-- [Join the community](https://nx.dev/community)
-- [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
-- [Follow us on Twitter](https://twitter.com/nxdevtools)
+-   [Join the community](https://nx.dev/community)
+-   [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
+-   [Follow us on Twitter](https://twitter.com/nxdevtools)
