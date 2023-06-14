@@ -2,13 +2,13 @@
   "name": "@platform/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {
-  },
+  "scripts": {},
   "private": true,
-  "dependencies": {
-  },
   "devDependencies": {
+    "@nx/workspace": "16.3.2",
+    "@release-it/bumper": "^4.0.2",
+    "@release-it/conventional-changelog": "^5.1.1",
     "nx": "16.3.2",
-    "@nx/workspace": "16.3.2"
+    "release-it": "^15.11.0"
   }
 }
