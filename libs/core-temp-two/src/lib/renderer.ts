@@ -573,6 +573,7 @@ class NgtRendererFactory implements RendererFactory2 {
 		// if ((type as NgtAnyRecord)['type']['isHtml']) {
 		// return delegateRenderer;
 		// }
+
 		if ((type as NgtAnyRecord)['type'][ROUTED_SCENE]) {
 			this.routedSet.add(type.id);
 		}
