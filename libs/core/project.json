@@ -23,6 +23,17 @@
 			},
 			"defaultConfiguration": "production"
 		},
+		"package": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"pnpm exec nx build core",
+					"node ./tools/scripts/generate-json.mjs",
+					"pnpm exec nx build plugin"
+				],
+				"parallel": false
+			}
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
