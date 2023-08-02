@@ -13,6 +13,9 @@ export type NgtsBillboardState = {
 
 declare global {
 	interface HTMLElementTagNameMap {
+		/**
+		 * @extends ngt-group
+		 */
 		'ngts-billboard': NgtsBillboardState & NgtGroup;
 	}
 }
