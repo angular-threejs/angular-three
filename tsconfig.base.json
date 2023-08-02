@@ -15,9 +15,6 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@platform/core-temp": ["libs/core-temp/src/index.ts"],
-			"@platform/core-temp-three": ["libs/core-temp-three/src/index.ts"],
-			"@platform/core-temp-two": ["libs/core-temp-two/src/index.ts"],
 			"angular-three": ["libs/core/src/index.ts"]
 		}
 	},

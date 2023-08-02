@@ -1,0 +1,10 @@
+<ngt-spot-light [position]="[0, 1.5, 1.5]" [intensity]="5" />
+
+<ngt-mesh
+	(beforeRender)="onBeforeRender($event.object)"
+	(pointerover)="hover.set(true)"
+	(pointerout)="hover.set(false)"
+>
+	<ngt-box-geometry />
+	<ngt-mesh-standard-material [color]="hover() ? 'hotpink' : 'orange'" />
+</ngt-mesh>
