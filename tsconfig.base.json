@@ -16,7 +16,8 @@
 		"baseUrl": ".",
 		"paths": {
 			"@platform/plugin": ["libs/plugin/src/index.ts"],
-			"angular-three": ["libs/core/src/index.ts"]
+			"angular-three": ["libs/core/src/index.ts"],
+			"angular-three-soba": ["libs/soba/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]
