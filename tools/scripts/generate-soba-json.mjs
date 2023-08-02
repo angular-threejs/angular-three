@@ -19,15 +19,17 @@ const externalsMap = {
 	OrbitControls: 'node_modules/three-stdlib/controls/OrbitControls.d.ts',
 };
 
-const sobaRoot = 'libs/soba';
+const entryPoints = {
+	controls: ['orbit-controls'],
+	abstractions: ['billboard', 'text'],
+};
 
-const controlsRoot = 'controls/src';
-const abstractionsRoot = 'abstractions/src';
-
-const abstractions = ['billboard/billboard.ts', 'text/text.ts'].map((path) => join(sobaRoot, abstractionsRoot, path));
-const controls = ['orbit-controls/orbit-controls.ts'].map((path) => join(sobaRoot, controlsRoot, path));
-
-const paths = [].concat(abstractions, controls);
+const paths = [];
+for (const [entryPoint, entryPointEntities] of Object.entries(entryPoints)) {
+	for (const entity of entryPointEntities) {
+		paths.push(join('libs/soba', entryPoint, 'src', entity, `${entity}.ts`));
+	}
+}
 
 const { metadataJson, webTypesJson, write } = createBareJsons('angular-three-soba', 'soba');
 
