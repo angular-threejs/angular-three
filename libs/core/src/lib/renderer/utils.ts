@@ -81,7 +81,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 			// attach
 			if (cLS.isRaw) {
-				if (cLS.parent) {
+				if (cLS.parent && cLS.parent() !== parent) {
 					untracked(() => {
 						cLS.parent.set(parent);
 					});
@@ -102,7 +102,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 	pLS.add(child, added ? 'objects' : 'nonObjects');
 
-	if (cLS.parent) {
+	if (cLS.parent && cLS.parent() !== parent) {
 		untracked(() => {
 			cLS.parent.set(parent);
 		});
