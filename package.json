@@ -5,8 +5,8 @@
 	"scripts": {},
 	"private": true,
 	"devDependencies": {
-		"@analogjs/platform": "^0.2.0-rc.0",
-		"@analogjs/vite-plugin-angular": "^0.2.0-rc.0",
+		"@analogjs/platform": "^0.2.0-rc.1",
+		"@analogjs/vite-plugin-angular": "^0.2.0-rc.1",
 		"@angular-devkit/build-angular": "16.1.6",
 		"@angular-devkit/core": "16.1.6",
 		"@angular-devkit/schematics": "16.1.6",
@@ -78,8 +78,8 @@
 		"vitest": "^0.32.2"
 	},
 	"dependencies": {
-		"@analogjs/content": "^0.2.0-rc.0",
-		"@analogjs/router": "^0.2.0-rc.0",
+		"@analogjs/content": "^0.2.0-rc.1",
+		"@analogjs/router": "^0.2.0-rc.1",
 		"@angular/animations": "16.1.7",
 		"@angular/common": "16.1.7",
 		"@angular/compiler": "16.1.7",

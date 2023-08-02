@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
-// import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { BoxGeometry, ConeGeometry, PlaneGeometry } from 'three';
 import { makeStoryObject, StorybookSetup } from '../setup-canvas';
 
@@ -90,9 +90,9 @@ class Plane {
 			</BillboardPlane>
 		</ngts-billboard>
 
-		<!-- <ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" /> -->
+		<ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" />
 	`,
-	imports: [NgtsBillboard, NgtsText, Cone, Box, Plane],
+	imports: [NgtsBillboard, NgtsText, Cone, Box, Plane, NgtsOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class TextBillboardStory {
@@ -121,9 +121,9 @@ class TextBillboardStory {
 			<BillboardPlane [args]="[3, 2]" color="yellow" />
 		</ngts-billboard>
 
-		<!-- <ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" /> -->
+		<ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" />
 	`,
-	imports: [NgtsBillboard, Plane],
+	imports: [NgtsBillboard, Plane, NgtsOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DefaultBillboardStory {

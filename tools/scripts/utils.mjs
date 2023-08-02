@@ -41,6 +41,9 @@ const PROPERTIES_TO_SKIP = [
 	'removeEventListener',
 	'fromArray',
 	'toArray',
+	'reset',
+	'connect',
+	'saveState',
 ];
 const skipIs = (str) => str.startsWith('is');
 const skipAction = (str) =>
@@ -50,7 +53,10 @@ const skipAction = (str) =>
 	str.startsWith('apply') ||
 	str.startsWith('update') ||
 	str.startsWith('_on') ||
+	str.startsWith('listen') ||
+	str.startsWith('stopListen') ||
 	str.startsWith('get');
+const skipLastNumber = (str) => str.endsWith('0');
 
 export const commonAttributes = [
 	{
@@ -135,11 +141,17 @@ export function createProgram(filePaths, sourceFilePath) {
 		for (const member of members) {
 			/** @type {string} */
 			const memberName = member.name?.text || member.name?.escapedText;
+
+			const exist =
+				memberName && metadata.attributes.find(({ name }) => [memberName, `[${memberName}]`].includes(name));
+
 			if (
+				exist ||
 				!memberName ||
 				PROPERTIES_TO_SKIP.includes(memberName) ||
 				skipIs(memberName) ||
 				skipAction(memberName) ||
+				skipLastNumber(memberName) ||
 				overlapWithCommonAttributes(memberName)
 			) {
 				continue;

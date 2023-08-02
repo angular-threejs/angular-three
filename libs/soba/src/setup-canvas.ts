@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import type { Args } from '@storybook/angular';
 import { NgtArgs, NgtCanvas, extend, safeDetectChanges, type NgtPerformance } from 'angular-three';
-// import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
 // import { NgtsLoader } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 
@@ -81,12 +81,12 @@ const STORY_INPUTS = new InjectionToken<Signal<Record<string, unknown>>>('story 
 		</ng-container>
 
 		<ng-container *ngIf="canvasOptions.controls">
-			<!-- <ngts-orbit-controls [makeDefault]="canvasOptions.controls?.makeDefault" /> -->
+			<ngts-orbit-controls [makeDefault]="canvasOptions.controls?.makeDefault" />
 		</ng-container>
 
 		<ng-container #anchor />
 	`,
-	imports: [NgIf, NgtArgs],
+	imports: [NgIf, NgtArgs, NgtsOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class StorybookScene implements OnInit {

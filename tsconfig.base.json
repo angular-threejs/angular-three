@@ -18,7 +18,8 @@
 			"@platform/plugin": ["libs/plugin/src/index.ts"],
 			"angular-three": ["libs/core/src/index.ts"],
 			"angular-three-soba": ["libs/soba/src/index.ts"],
-			"angular-three-soba/abstractions": ["libs/soba/abstractions/src/index.ts"]
+			"angular-three-soba/abstractions": ["libs/soba/abstractions/src/index.ts"],
+			"angular-three-soba/controls": ["libs/soba/controls/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

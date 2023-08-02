@@ -78,8 +78,6 @@ function render(timestamp: number, store: NgtSignalStore<NgtState>, frame?: XRFr
 }
 
 function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
-	console.log('createLoop', roots);
-
 	let running = false;
 	let repeat: number;
 	let frame: number;

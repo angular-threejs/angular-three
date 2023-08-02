@@ -22,7 +22,6 @@
 			},
 			"defaultConfiguration": "production"
 		},
-
 		"package": {
 			"executor": "nx:run-commands",
 			"options": {
@@ -53,7 +52,9 @@
 					"libs/soba/**/*.html",
 					"libs/soba/package.json",
 					"libs/soba/abstractions/**/*.ts",
-					"libs/soba/abstractions/**/*.html"
+					"libs/soba/abstractions/**/*.html",
+					"libs/soba/controls/**/*.ts",
+					"libs/soba/controls/**/*.html"
 				]
 			}
 		},

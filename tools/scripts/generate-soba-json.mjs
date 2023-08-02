@@ -14,17 +14,25 @@ if (!existsSync(coreMetadataJsonPath)) {
 const coreMetadataJson = devkit.readJsonFile(coreMetadataJsonPath);
 const coreTags = coreMetadataJson.tags;
 
+const externals = ['three-stdlib'];
+const externalsMap = {
+	OrbitControls: 'node_modules/three-stdlib/controls/OrbitControls.d.ts',
+};
+
 const sobaRoot = 'libs/soba';
 
+const controlsRoot = 'controls/src';
 const abstractionsRoot = 'abstractions/src';
-const abstractions = ['billboard/billboard.ts', 'text/text.ts'].map((path) => join(sobaRoot, abstractionsRoot, path));
 
-const paths = [...abstractions];
+const abstractions = ['billboard/billboard.ts', 'text/text.ts'].map((path) => join(sobaRoot, abstractionsRoot, path));
+const controls = ['orbit-controls/orbit-controls.ts'].map((path) => join(sobaRoot, controlsRoot, path));
+
+const paths = [].concat(abstractions, controls);
 
 const { metadataJson, webTypesJson, write } = createBareJsons('angular-three-soba', 'soba');
 
 for (const path of paths) {
-	const { sourceFile, processIntersectionTypeNode } = createProgram([path]);
+	const { sourceFile, processIntersectionTypeNode, processTypeMembers } = createProgram([path]);
 
 	ts.forEachChild(sourceFile, (node) => {
 		if (ts.isModuleDeclaration(node)) {
@@ -46,6 +54,26 @@ for (const path of paths) {
 								for (const tag of jsDocComment.tags) {
 									if (ts.isJSDocAugmentsTag(tag)) {
 										const extendTag = tag.class.expression.escapedText;
+
+										if (externals.includes(extendTag) && tag.comment) {
+											const externalSymbolName = tag.comment.substring(1);
+											const externalDtsPath = externalsMap[externalSymbolName];
+											if (externalDtsPath) {
+												const { sourceFile: externalSourceFile } = createProgram([
+													externalDtsPath,
+												]);
+												ts.forEachChild(externalSourceFile, (externalChildNode) => {
+													if (
+														ts.isClassDeclaration(externalChildNode) &&
+														externalChildNode.name.text === externalSymbolName
+													) {
+														processTypeMembers(metadataAtMember, externalChildNode.members);
+													}
+												});
+											}
+											continue;
+										}
+
 										const foundCoreTag = coreTags.find((coreTag) => coreTag.name === extendTag);
 										if (foundCoreTag) {
 											metadataAtMember.attributes.push(...foundCoreTag.attributes);
