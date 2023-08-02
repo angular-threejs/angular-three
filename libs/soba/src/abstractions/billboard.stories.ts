@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { Meta, moduleMetadata } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
-import { NgtsBillboard } from 'angular-three-soba/abstractions';
+import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
 // import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { BoxGeometry, ConeGeometry, PlaneGeometry } from 'three';
 import { makeStoryObject, StorybookSetup } from '../setup-canvas';
@@ -20,7 +20,7 @@ import { makeStoryObject, StorybookSetup } from '../setup-canvas';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class Cone {
-	@Input() args: ConstructorParameters<typeof ConeGeometry> = [];
+	@Input() args: ConstructorParameters<typeof ConeGeometry> = [1, 1];
 	@Input() color = 'white';
 }
 
@@ -39,7 +39,7 @@ class Cone {
 })
 class Box {
 	@Input() position = [0, 0, 0];
-	@Input() args: ConstructorParameters<typeof BoxGeometry> = [];
+	@Input() args: ConstructorParameters<typeof BoxGeometry> = [1, 1, 1];
 	@Input() color = 'white';
 }
 
@@ -61,46 +61,46 @@ class Plane {
 	@Input() color = 'white';
 }
 
-// @Component({
-// 	standalone: true,
-// 	template: `
-// 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0.5, 2.05, 0.5]">
-// 			<ngts-text text="box" [fontSize]="1" [outlineWidth]="'5%'" [outlineColor]="'#000'" [outlineOpacity]="1" />
-// 		</ngts-billboard>
-// 		<BillboardBox [position]="[0.5, 1, 0.5]" color="red">
-// 			<ngt-mesh-standard-material />
-// 		</BillboardBox>
-// 		<ngt-group [position]="[-2.5, -3, -1]">
-// 			<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 1.05, 0]">
-// 				<ngts-text
-// 					text="cone"
-// 					[fontSize]="1"
-// 					[outlineWidth]="'5%'"
-// 					[outlineColor]="'#000'"
-// 					[outlineOpacity]="1"
-// 				/>
-// 			</ngts-billboard>
-// 			<BillboardCone color="green">
-// 				<ngt-mesh-standard-material />
-// 			</BillboardCone>
-// 		</ngt-group>
-// 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 0, -5]">
-// 			<BillboardPlane [args]="[2, 2]" color="#000066">
-// 				<ngt-mesh-standard-material />
-// 			</BillboardPlane>
-// 		</ngts-billboard>
-//
-// 		<ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" />
-// 	`,
-// 	imports: [NgtsBillboard, NgtsOrbitControls, NgtsText, Cone, Box, Plane],
-// 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-// })
-// class TextBillboardStory {
-// 	@Input() follow = true;
-// 	@Input() lockX = false;
-// 	@Input() lockY = false;
-// 	@Input() lockZ = false;
-// }
+@Component({
+	standalone: true,
+	template: `
+		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0.5, 2.05, 0.5]">
+			<ngts-text text="box" [fontSize]="1" [outlineWidth]="'5%'" [outlineColor]="'#000'" [outlineOpacity]="1" />
+		</ngts-billboard>
+		<BillboardBox [position]="[0.5, 1, 0.5]" color="red">
+			<ngt-mesh-standard-material />
+		</BillboardBox>
+		<ngt-group [position]="[-2.5, -3, -1]">
+			<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 1.05, 0]">
+				<ngts-text
+					text="cone"
+					[fontSize]="1"
+					[outlineWidth]="'5%'"
+					[outlineColor]="'#000'"
+					[outlineOpacity]="1"
+				/>
+			</ngts-billboard>
+			<BillboardCone color="green">
+				<ngt-mesh-standard-material />
+			</BillboardCone>
+		</ngt-group>
+		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 0, -5]">
+			<BillboardPlane [args]="[2, 2]" color="#000066">
+				<ngt-mesh-standard-material />
+			</BillboardPlane>
+		</ngts-billboard>
+
+		<!-- <ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" /> -->
+	`,
+	imports: [NgtsBillboard, NgtsText, Cone, Box, Plane],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+class TextBillboardStory {
+	@Input() follow = true;
+	@Input() lockX = false;
+	@Input() lockY = false;
+	@Input() lockZ = false;
+}
 
 @Component({
 	standalone: true,
@@ -144,7 +144,8 @@ export const Default = makeStoryObject(DefaultBillboardStory, {
 	canvasOptions,
 	argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
 });
-// export const Text = makeStoryObject(TextBillboardStory, {
-// 	canvasOptions,
-// 	argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
-// });
+
+export const Text = makeStoryObject(TextBillboardStory, {
+	canvasOptions,
+	argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
+});

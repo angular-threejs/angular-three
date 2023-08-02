@@ -17,7 +17,7 @@ const coreTags = coreMetadataJson.tags;
 const sobaRoot = 'libs/soba';
 
 const abstractionsRoot = 'abstractions/src';
-const abstractions = ['billboard/billboard.ts'].map((path) => join(sobaRoot, abstractionsRoot, path));
+const abstractions = ['billboard/billboard.ts', 'text/text.ts'].map((path) => join(sobaRoot, abstractionsRoot, path));
 
 const paths = [...abstractions];
 

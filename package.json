@@ -95,10 +95,14 @@
 		"marked-gfm-heading-id": "^3.0.4",
 		"marked-highlight": "^2.0.1",
 		"mermaid": "^10.2.4",
+		"nice-color-palettes": "^3.0.0",
 		"prismjs": "^1.29.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"rxjs": "~7.8.1",
+		"three-mesh-bvh": "^0.6.3",
+		"three-stdlib": "^2.24.1",
+		"troika-three-text": "^0.47.2",
 		"tslib": "^2.6.1",
 		"zone.js": "~0.13.1"
 	}
