@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { ROUTED_SCENE } from './renderer/store';
+import { ROUTED_SCENE } from './renderer/constants';
 import { safeDetectChanges } from './utils/safe-detect-changes';
 
 @Component({

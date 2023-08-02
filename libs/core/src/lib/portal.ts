@@ -24,7 +24,7 @@ import { injectBeforeRender } from './before-render';
 import type { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
 import { injectNgtRef } from './ref';
-import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/store';
+import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
 import { NGT_STORE, NgtRenderState, injectNgtStore, type NgtSize, type NgtState } from './store';
 import { is } from './utils/is';
 import { safeDetectChanges } from './utils/safe-detect-changes';

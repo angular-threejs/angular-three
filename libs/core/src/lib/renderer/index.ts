@@ -21,14 +21,8 @@ import { injectNgtStore, provideNgtStore, type NgtStore } from '../store';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 import { injectNgtCatalogue, type NgtAnyConstructor } from './catalogue';
-import {
-	NGT_COMPOUND_PREFIXES,
-	NgtRendererStore,
-	ROUTED_SCENE,
-	SPECIAL_DOM_TAG,
-	type NgtRendererNode,
-	type NgtRendererState,
-} from './store';
+import { ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
+import { NGT_COMPOUND_PREFIXES, NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
 import { NgtRendererClassId, attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild } from './utils';
 
 @Injectable()

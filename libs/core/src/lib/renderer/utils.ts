@@ -4,7 +4,7 @@ import { getLocalState, invalidateInstance, type NgtInstanceNode } from '../inst
 import { attach, detach } from '../utils/attach';
 import { is } from '../utils/is';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
-import { SPECIAL_EVENTS } from './store';
+import { SPECIAL_EVENTS } from './constants';
 
 // @internal
 export const enum NgtRendererClassId {

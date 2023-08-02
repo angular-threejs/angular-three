@@ -1,5 +1,5 @@
-import { Directive, EmbeddedViewRef, NgZone, TemplateRef, ViewContainerRef, inject } from '@angular/core';
-import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/store';
+import { Directive, NgZone, TemplateRef, ViewContainerRef, inject, type EmbeddedViewRef } from '@angular/core';
+import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
 
 @Directive()
