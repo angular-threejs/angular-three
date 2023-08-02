@@ -4,6 +4,8 @@ export * from './lib/directives/args';
 export * from './lib/directives/parent';
 export * from './lib/directives/repeat';
 export * from './lib/instance';
+export * from './lib/loader';
+export { addAfterEffect, addEffect, addTail } from './lib/loop';
 export { NgtPortal, NgtPortalContent } from './lib/portal';
 export * from './lib/ref';
 export * from './lib/renderer';

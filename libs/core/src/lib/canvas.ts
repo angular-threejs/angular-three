@@ -27,6 +27,7 @@ import { NgxResize, provideNgxResizeOptions, type NgxResizeResult } from 'ngx-re
 import * as THREE from 'three';
 import { createPointerEvents } from './dom/events';
 import type { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
+import { injectNgtLoader } from './loader';
 import { provideNgtRenderer } from './renderer';
 import { injectCanvasRootInitializer, type NgtCanvasConfigurator } from './roots';
 import {
@@ -239,6 +240,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 			this.glEnvironmentInjector?.destroy();
 			this.glRef?.destroy();
 			this.resizeEffectRef?.destroy();
+			injectNgtLoader.destroy();
 			this.configurator?.destroy();
 		});
 	}
