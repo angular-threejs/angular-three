@@ -22,6 +22,7 @@ const externalsMap = {
 const entryPoints = {
 	controls: ['orbit-controls'],
 	abstractions: ['billboard', 'text'],
+	cameras: ['perspective-camera', 'orthographic-camera'],
 };
 
 const paths = [];

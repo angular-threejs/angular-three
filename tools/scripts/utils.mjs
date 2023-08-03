@@ -1,4 +1,5 @@
 import { createWriteStream, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
+import { join } from 'path';
 import ts from 'typescript';
 import { format } from 'util';
 
@@ -105,10 +106,33 @@ export function createProgram(filePaths, sourceFilePath) {
 	 * @type {Record<string, ts.TypeAliasDeclaration | ts.InterfaceDeclaration>}
 	 */
 	const typesMap = {};
+	/**
+	 * @type {Record<string, string>}
+	 */
+	const relativeImportPaths = {};
 
 	ts.forEachChild(sourceFile, (node) => {
 		if (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) {
 			typesMap[node.name.text] = node;
+		} else if (ts.isImportDeclaration(node)) {
+			const moduleSpecifier = node.moduleSpecifier;
+			if (
+				ts.isStringLiteral(moduleSpecifier) &&
+				(moduleSpecifier.text.startsWith('./') || moduleSpecifier.text.startsWith('../'))
+			) {
+				const importClause = node.importClause;
+				if (importClause) {
+					const namedBindings = importClause.namedBindings;
+					if (ts.isNamedImports(namedBindings)) {
+						const currentPaths = (sourceFilePath || filePaths[0]).split('/');
+						currentPaths.pop();
+						const modulePath = join(currentPaths.join('/'), moduleSpecifier.text);
+						namedBindings.elements.forEach((element) => {
+							relativeImportPaths[element.name.escapedText] = modulePath + '.ts';
+						});
+					}
+				}
+			}
 		}
 	});
 
@@ -182,6 +206,23 @@ export function createProgram(filePaths, sourceFilePath) {
 					} else {
 						processTypeMembers(metadata, typeDeclaration.members);
 					}
+				} else if (relativeImportPaths[typeReferenceName]) {
+					const { sourceFile: relativeModuleSourceFile } = createProgram([
+						relativeImportPaths[typeReferenceName],
+					]);
+					ts.forEachChild(relativeModuleSourceFile, (relativeModuleNode) => {
+						if (
+							ts.isTypeAliasDeclaration(relativeModuleNode) &&
+							relativeModuleNode.name.text === typeReferenceName
+						) {
+							processTypeMembers(metadata, relativeModuleNode.type.members);
+						} else if (
+							ts.isInterfaceDeclaration(relativeModuleNode) &&
+							relativeModuleNode.name.text === typeReferenceName
+						) {
+							processTypeMembers(metadata, relativeModuleNode.members);
+						}
+					});
 				}
 			} else if (ts.isTypeLiteralNode(type)) {
 				// this is the type literal that we pass in as an second type argument to NgtOverwrite for NgtObject3DNode
