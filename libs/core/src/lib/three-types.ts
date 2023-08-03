@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import type { NgtEventHandlers } from './events';
 import type { NgtAfterAttach, NgtAttachFunction, NgtInstanceNode } from './instance';
 import type { NgtBeforeRenderEvent } from './store';
-import type { NgtAnyRecord } from './types';
 
 type NoEvent<T> = Omit<T, 'addEventListener' | 'removeEventListener'>;
 
@@ -161,7 +160,7 @@ export type NgtMeshMatcapMaterial = NgtMaterial<THREE.MeshMatcapMaterial, [THREE
 export type NgtLineDashedMaterial = NgtMaterial<THREE.LineDashedMaterial, [THREE.LineDashedMaterialParameters]>;
 export type NgtLineBasicMaterial = NgtMaterial<THREE.LineBasicMaterial, [THREE.LineBasicMaterialParameters]>;
 
-export type NgtPrimitive = NgtNodeElement<NgtAnyRecord, any>;
+export type NgtPrimitive = NgtNodeElement<any, any>;
 export type NgtValue = NgtNode<{ rawValue: any }, {}>;
 
 export type NgtLightShadow = NgtNode<THREE.LightShadow, typeof THREE.LightShadow>;

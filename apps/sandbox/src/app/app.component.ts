@@ -1,31 +1,16 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, computed, signal } from '@angular/core';
-import { NgtArgs, NgtBeforeRenderEvent, NgtCanvas, extend, injectNgtLoader } from 'angular-three';
+import { NgtArgs, NgtCanvas, extend } from 'angular-three';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
+import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 extend(THREE);
 
 @Component({
 	standalone: true,
 	template: `
-		<!-- <ngt-spot-light #spotLight [position]="2" [intensity]="10" /> -->
-		<!-- <ngt-spot-light-helper *args="[spotLight, 'blue']" /> -->
-		<!---->
-		<!-- <ngt-point-light #pointLight [position]="-2" [intensity]="10" /> -->
-		<!-- <ngt-point-light-helper *args="[pointLight, 1, 'green']" /> -->
-
-		<!-- <ngt-mesh -->
-		<!-- 	(click)="active.set(!active())" -->
-		<!-- 	(pointerover)="hover.set(true)" -->
-		<!-- 	(pointerout)="hover.set(false)" -->
-		<!-- 	(beforeRender)="onBeforeRender($event.object)" -->
-		<!-- 	[scale]="active() ? 1.5 : 1" -->
-		<!-- > -->
-		<!-- 	<ngt-box-geometry /> -->
-		<!-- 	<ngt-mesh-standard-material [color]="hover() ? 'hotpink' : 'orange'" /> -->
-		<!-- </ngt-mesh> -->
-
 		<ngt-spot-light [position]="3" [castShadow]="true">
 			<ngt-vector2 *args="[512, 512]" attach="shadow.mapSize" />
 		</ngt-spot-light>
@@ -37,13 +22,16 @@ extend(THREE);
 
 		<ngt-primitive
 			*args="[cloud()]"
+			[ref]="animations.ref"
 			[scale]="0.01"
 			[rotation]="[0, -Math.PI / 2, 0]"
 			[position]="[0, -1, 0]"
-			(beforeRender)="onBeforeRender($event)"
+			(beforeRender)="onBeforeRender($event.object)"
 		/>
+
+		<ngts-orbit-controls />
 	`,
-	imports: [NgtArgs],
+	imports: [NgtArgs, NgtsOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
@@ -52,13 +40,9 @@ export class Scene {
 	active = signal(false);
 	hover = signal(false);
 
-	cloudGltf = injectNgtLoader(
-		() => GLTFLoader,
-		() => 'assets/cloud_from_world_of_final_fantasy/scene.gltf',
-	);
+	private cloudGltf = injectNgtsGLTFLoader(() => 'assets/cloud_from_world_of_final_fantasy/scene.gltf');
 
-	mixer?: THREE.AnimationMixer;
-
+	animations = injectNgtsAnimations(() => this.cloudGltf()?.animations || []);
 	cloud = computed(() => {
 		const gltf = this.cloudGltf();
 		if (gltf) {
@@ -66,18 +50,14 @@ export class Scene {
 				if (child instanceof THREE.Mesh) child.castShadow = true;
 			});
 
-			this.mixer = new THREE.AnimationMixer(gltf.scene);
-			this.mixer.clipAction(gltf.animations[0]).play();
-
 			return gltf.scene;
 		}
 
 		return null;
 	});
 
-	onBeforeRender({ object: cloud, state: { delta } }: NgtBeforeRenderEvent) {
+	onBeforeRender(cloud: THREE.Group) {
 		cloud.rotation.y += 0.005;
-		this.mixer?.update(delta);
 	}
 }
 
