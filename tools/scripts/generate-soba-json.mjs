@@ -19,9 +19,15 @@ const externalsMap = {
 	OrbitControls: 'node_modules/three-stdlib/controls/OrbitControls.d.ts',
 };
 
+const sobaMap = {
+	shaders: {
+		NgtsGridMaterialState: 'grid-material',
+	},
+};
+
 const entryPoints = {
 	controls: ['orbit-controls'],
-	abstractions: ['billboard', 'text'],
+	abstractions: ['billboard', 'text', 'grid'],
 	cameras: ['perspective-camera', 'orthographic-camera'],
 };
 
@@ -88,7 +94,7 @@ for (const path of paths) {
 							const memberType = member.type;
 
 							if (ts.isIntersectionTypeNode(memberType)) {
-								processIntersectionTypeNode(metadataAtMember, memberType);
+								processIntersectionTypeNode(metadataAtMember, memberType, sobaMap);
 							}
 
 							metadataJson.tags.push(metadataAtMember);

@@ -42,6 +42,9 @@
       ],
       "angular-three-soba/misc": [
         "libs/soba/misc/src/index.ts"
+      ],
+      "angular-three-soba/shaders": [
+        "libs/soba/shaders/src/index.ts"
       ]
     }
   },

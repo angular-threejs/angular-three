@@ -110,26 +110,38 @@ export function createProgram(filePaths, sourceFilePath) {
 	 * @type {Record<string, string>}
 	 */
 	const relativeImportPaths = {};
+	/**
+	 * @type {Record<string, string>}
+	 */
+	const sobaImportPaths = {};
 
 	ts.forEachChild(sourceFile, (node) => {
 		if (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) {
 			typesMap[node.name.text] = node;
 		} else if (ts.isImportDeclaration(node)) {
 			const moduleSpecifier = node.moduleSpecifier;
-			if (
-				ts.isStringLiteral(moduleSpecifier) &&
-				(moduleSpecifier.text.startsWith('./') || moduleSpecifier.text.startsWith('../'))
-			) {
+			if (ts.isStringLiteral(moduleSpecifier)) {
 				const importClause = node.importClause;
+
 				if (importClause) {
-					const namedBindings = importClause.namedBindings;
-					if (ts.isNamedImports(namedBindings)) {
-						const currentPaths = (sourceFilePath || filePaths[0]).split('/');
-						currentPaths.pop();
-						const modulePath = join(currentPaths.join('/'), moduleSpecifier.text);
-						namedBindings.elements.forEach((element) => {
-							relativeImportPaths[element.name.escapedText] = modulePath + '.ts';
-						});
+					if (moduleSpecifier.text.startsWith('./') || moduleSpecifier.text.startsWith('../')) {
+						const namedBindings = importClause.namedBindings;
+						if (ts.isNamedImports(namedBindings)) {
+							const currentPaths = (sourceFilePath || filePaths[0]).split('/');
+							currentPaths.pop();
+							const modulePath = join(currentPaths.join('/'), moduleSpecifier.text);
+							namedBindings.elements.forEach((element) => {
+								relativeImportPaths[element.name.escapedText] = modulePath + '.ts';
+							});
+						}
+					} else if (moduleSpecifier.text.startsWith('angular-three-soba')) {
+						const namedBindings = importClause.namedBindings;
+						if (ts.isNamedImports(namedBindings)) {
+							const entryPoint = moduleSpecifier.text.split('/').pop();
+							namedBindings.elements.forEach((element) => {
+								sobaImportPaths[element.name.escapedText] = `libs/soba/${entryPoint}/src`;
+							});
+						}
 					}
 				}
 			}
@@ -187,8 +199,9 @@ export function createProgram(filePaths, sourceFilePath) {
 	/**
 	 * @param {{name: string, attributes: any[]}} metadata
 	 * @param {ts.IntersectionTypeNode} typeNode
+	 * @param {Record<string, any>} sobaMap
 	 */
-	function processIntersectionTypeNode(metadata, typeNode) {
+	function processIntersectionTypeNode(metadata, typeNode, sobaMap) {
 		for (const type of typeNode.types) {
 			if (ts.isTypeReferenceNode(type)) {
 				// TODO: we don't know how to get the inheritance of some THREE object without turning the source file into an AST
@@ -202,7 +215,11 @@ export function createProgram(filePaths, sourceFilePath) {
 				if (typesMap[typeReferenceName]) {
 					const typeDeclaration = typesMap[typeReferenceName];
 					if (ts.isTypeAliasDeclaration(typeDeclaration)) {
-						processTypeMembers(metadata, typeDeclaration.type.members);
+						if (ts.isIntersectionTypeNode(typeDeclaration.type)) {
+							processIntersectionTypeNode(metadata, typeDeclaration.type, sobaMap);
+						} else {
+							processTypeMembers(metadata, typeDeclaration.type.members);
+						}
 					} else {
 						processTypeMembers(metadata, typeDeclaration.members);
 					}
@@ -223,6 +240,30 @@ export function createProgram(filePaths, sourceFilePath) {
 							processTypeMembers(metadata, relativeModuleNode.members);
 						}
 					});
+				} else if (sobaImportPaths[typeReferenceName]) {
+					const entryPoint = sobaImportPaths[typeReferenceName].split('/')[2];
+					const sobaCollection = sobaMap[entryPoint];
+					if (sobaCollection[typeReferenceName]) {
+						const typeReferencePath = join(
+							sobaImportPaths[typeReferenceName],
+							sobaCollection[typeReferenceName],
+							sobaCollection[typeReferenceName],
+						).concat('.ts');
+						const { sourceFile: sobaReferenceSourceFile } = createProgram([typeReferencePath]);
+						ts.forEachChild(sobaReferenceSourceFile, (sobaReferenceNode) => {
+							if (
+								ts.isTypeAliasDeclaration(sobaReferenceNode) &&
+								sobaReferenceNode.name.text === typeReferenceName
+							) {
+								processTypeMembers(metadata, sobaReferenceNode.type.members);
+							} else if (
+								ts.isInterfaceDeclaration(sobaReferenceNode) &&
+								sobaReferenceNode.name.text === typeReferenceName
+							) {
+								processTypeMembers(metadata, sobaReferenceNode.members);
+							}
+						});
+					}
 				}
 			} else if (ts.isTypeLiteralNode(type)) {
 				// this is the type literal that we pass in as an second type argument to NgtOverwrite for NgtObject3DNode
