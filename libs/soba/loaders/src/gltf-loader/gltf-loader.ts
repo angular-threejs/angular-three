@@ -1,9 +1,6 @@
 import type { Injector, Signal } from '@angular/core';
 import { injectNgtLoader, type NgtLoaderResults, type NgtObjectMap } from 'angular-three';
-// @ts-ignore
-import { MeshoptDecoder } from 'three-stdlib';
-import { DRACOLoader } from 'three-stdlib/loaders/DRACOLoader';
-import { GLTF, GLTFLoader } from 'three-stdlib/loaders/GLTFLoader';
+import { DRACOLoader, GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
 
 let dracoLoader: DRACOLoader | null = null;
 
