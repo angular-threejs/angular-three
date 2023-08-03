@@ -212,6 +212,7 @@ export function createProgram(filePaths, sourceFilePath) {
 				//         .symbol
 				// ); THREE.Light, THREE.Mesh, THREE.SpotLight
 				const typeReferenceName = type.typeName.text;
+
 				if (typesMap[typeReferenceName]) {
 					const typeDeclaration = typesMap[typeReferenceName];
 					if (ts.isTypeAliasDeclaration(typeDeclaration)) {

@@ -71,7 +71,9 @@
           "libs/soba/cameras/**/*.ts",
           "libs/soba/cameras/**/*.html",
           "libs/soba/shaders/**/*.ts",
-          "libs/soba/shaders/**/*.html"
+          "libs/soba/shaders/**/*.html",
+          "libs/soba/staging/**/*.ts",
+          "libs/soba/staging/**/*.html"
         ]
       }
     },

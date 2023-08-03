@@ -45,6 +45,9 @@
       ],
       "angular-three-soba/shaders": [
         "libs/soba/shaders/src/index.ts"
+      ],
+      "angular-three-soba/staging": [
+        "libs/soba/staging/src/index.ts"
       ]
     }
   },

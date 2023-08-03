@@ -17,6 +17,7 @@ const coreTags = coreMetadataJson.tags;
 const externals = ['three-stdlib'];
 const externalsMap = {
 	OrbitControls: 'node_modules/three-stdlib/controls/OrbitControls.d.ts',
+	TextGeometryParameters: 'node_modules/three-stdlib/geometries/TextGeometry.d.ts',
 };
 
 const sobaMap = {
@@ -27,8 +28,9 @@ const sobaMap = {
 
 const entryPoints = {
 	controls: ['orbit-controls'],
-	abstractions: ['billboard', 'text', 'grid'],
+	abstractions: ['billboard', 'text', 'grid', 'text-3d'],
 	cameras: ['perspective-camera', 'orthographic-camera'],
+	staging: ['center', 'float'],
 };
 
 const paths = [];
@@ -77,6 +79,14 @@ for (const path of paths) {
 														externalChildNode.name.text === externalSymbolName
 													) {
 														processTypeMembers(metadataAtMember, externalChildNode.members);
+													} else if (
+														ts.isTypeAliasDeclaration(externalChildNode) &&
+														externalChildNode.name.text === externalSymbolName
+													) {
+														processTypeMembers(
+															metadataAtMember,
+															externalChildNode.type.members,
+														);
 													}
 												});
 											}
@@ -94,7 +104,7 @@ for (const path of paths) {
 							const memberType = member.type;
 
 							if (ts.isIntersectionTypeNode(memberType)) {
-								processIntersectionTypeNode(metadataAtMember, memberType, sobaMap);
+								processIntersectionTypeNode(metadataAtMember, memberType, sobaMap, externalsMap);
 							}
 
 							metadataJson.tags.push(metadataAtMember);

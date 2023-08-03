@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { NgtArgs, extend, injectBeforeRender, injectNgtRef, signalStore, type NgtMesh } from 'angular-three';
 import { GridMaterial, type NgtsGridMaterialState } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
@@ -46,6 +46,7 @@ declare global {
 		</ngt-mesh>
 	`,
 	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsGrid {
 	private inputs = signalStore<NgtsGridState>({
