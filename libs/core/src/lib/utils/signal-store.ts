@@ -64,13 +64,9 @@ export type NgtSignalStore<State extends object> = {
 	state: Signal<State>;
 };
 
-export function signalStore<State extends object>(
-	initialState:
-		| Partial<State>
-		| ((storeApi: Pick<NgtSignalStore<State>, 'get' | 'set' | 'patch'>) => Partial<State>) = {},
-	options?: CreateSignalOptions<State>,
-): NgtSignalStore<State> {
-	const setter = (_source: WritableSignal<State>) => (state: State | ((previous: State) => State)) => {
+const setter =
+	<State extends object>(_source: WritableSignal<State>) =>
+	(state: State | ((previous: State) => State)) => {
 		const updater = (previous: State) => {
 			const partial = typeof state === 'function' ? state(previous) : state;
 			Object.keys(partial).forEach((key) => {
@@ -86,7 +82,9 @@ export function signalStore<State extends object>(
 		});
 	};
 
-	const patcher = (_source: WritableSignal<State>) => (state: State) => {
+const patcher =
+	<State extends object>(_source: WritableSignal<State>) =>
+	(state: State) => {
 		const updater = (previous: State) => {
 			Object.keys(state).forEach((key) => {
 				const typedKey = key as keyof State;
@@ -101,14 +99,44 @@ export function signalStore<State extends object>(
 		});
 	};
 
-	const getter =
-		(_source: WritableSignal<State>) =>
-		(...keys: string[]) => {
-			const root = untracked(_source);
-			if (keys.length === 0) return root;
-			return keys.reduce((value, key) => (value as NgtAnyRecord)[key], root);
-		};
+const getter =
+	<State extends object>(_source: WritableSignal<State>) =>
+	(...keys: string[]) => {
+		const root = untracked(_source);
+		if (keys.length === 0) return root;
+		return keys.reduce((value, key) => (value as NgtAnyRecord)[key], root);
+	};
 
+const selector =
+	<State extends object>(_state: Signal<State>, computedCache: Map<string, Signal<any>>) =>
+	(...keysAndOptions: any[]) => {
+		if (keysAndOptions.length === 0) return _state;
+		if (keysAndOptions.length === 1 && typeof keysAndOptions[0] === 'object') {
+			const cachedKey = STORE_COMPUTED_KEY.concat(JSON.stringify(keysAndOptions[0]));
+			if (!computedCache.has(cachedKey)) {
+				computedCache.set(cachedKey, computed(_state, keysAndOptions as CreateComputedOptions<object>));
+			}
+			return computedCache.get(cachedKey)!;
+		}
+		const [keys, options] = parseStoreOptions(keysAndOptions);
+		const joinedKeys = keys.join('-');
+		const cachedKeys = joinedKeys.concat(options ? JSON.stringify(options) : '');
+
+		if (!computedCache.has(cachedKeys)) {
+			computedCache.set(
+				cachedKeys,
+				computed(() => keys.reduce((value, key) => (value as NgtAnyRecord)[key], _state()), options),
+			);
+		}
+		return computedCache.get(cachedKeys)!;
+	};
+
+export function signalStore<State extends object>(
+	initialState:
+		| Partial<State>
+		| ((storeApi: Pick<NgtSignalStore<State>, 'get' | 'set' | 'patch'>) => Partial<State>) = {},
+	options?: CreateSignalOptions<State>,
+): NgtSignalStore<State> {
 	let source: WritableSignal<State>;
 	let set: NgtSignalStore<State>['set'];
 	let get: NgtSignalStore<State>['get'];
@@ -130,34 +158,9 @@ export function signalStore<State extends object>(
 	const state = source.asReadonly();
 	const computedCache = new Map();
 
-	const store = {
-		select: (...keysAndOptions: any[]) => {
-			if (keysAndOptions.length === 0) return state;
-			if (keysAndOptions.length === 1 && typeof keysAndOptions[0] === 'object') {
-				const cachedKey = STORE_COMPUTED_KEY.concat(JSON.stringify(keysAndOptions[0]));
-				if (!computedCache.has(cachedKey)) {
-					computedCache.set(cachedKey, computed(state, keysAndOptions as CreateComputedOptions<object>));
-				}
-				return computedCache.get(cachedKey)!;
-			}
-			const [keys, options] = parseStoreOptions(keysAndOptions);
-			const joinedKeys = keys.join('-');
-			const cachedKeys = joinedKeys.concat(options ? JSON.stringify(options) : '');
+	const store = { select: selector(state, computedCache), get, set, patch, state };
 
-			if (!computedCache.has(cachedKeys)) {
-				computedCache.set(
-					cachedKeys,
-					computed(() => keys.reduce((value, key) => (value as NgtAnyRecord)[key], state()), options),
-				);
-			}
-			return computedCache.get(cachedKeys)!;
-		},
-		get,
-		set,
-		patch,
-		state,
-	};
-
+	// NOTE: internal _snapshot to debug current state
 	Object.defineProperty(store, '_snapshot', {
 		get: state,
 		configurable: false,

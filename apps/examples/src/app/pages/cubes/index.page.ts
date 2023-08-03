@@ -1,9 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { NgtCanvas } from 'angular-three';
+import { NgtArgs, NgtCanvas } from 'angular-three';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
 
 @Component({
 	standalone: true,
 	templateUrl: './scene.html',
+	imports: [NgtsOrbitControls, NgtArgs],
 })
 class Scene {
 	hover = signal(false);
