@@ -1,10 +1,10 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta, moduleMetadata } from '@storybook/angular';
+import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { BoxGeometry, ConeGeometry, PlaneGeometry } from 'three';
-import { makeStoryObject, StorybookSetup } from '../setup-canvas';
+import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
 	selector: 'BillboardCone',
@@ -135,7 +135,7 @@ class DefaultBillboardStory {
 
 export default {
 	title: 'Abstractions/Billboard',
-	decorators: [moduleMetadata({ imports: [StorybookSetup] })],
+	decorators: makeDecorators(),
 } as Meta;
 
 const canvasOptions = { camera: { position: [0, 0, 10] }, controls: false };

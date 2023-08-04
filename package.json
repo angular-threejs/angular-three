@@ -2,7 +2,9 @@
 	"name": "@platform/source",
 	"version": "0.0.0",
 	"license": "MIT",
-	"scripts": {},
+	"scripts": {
+		"storybook": "nx storybook soba"
+	},
 	"private": true,
 	"devDependencies": {
 		"@analogjs/platform": "^0.2.0-rc.1",
