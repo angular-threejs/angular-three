@@ -21,7 +21,7 @@ import {
 	type Signal,
 	type Type,
 } from '@angular/core';
-import type { Args } from '@storybook/angular';
+import { Decorator, moduleMetadata, type Args } from '@storybook/angular';
 import { NgtArgs, NgtCanvas, extend, safeDetectChanges, type NgtPerformance } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 // import { NgtsLoader } from 'angular-three-soba/loaders';
@@ -272,4 +272,8 @@ export function select(defaultValue: string | string[], { multi, options }: { op
 
 export function turn(object: THREE.Object3D) {
 	object.rotation.y += 0.01;
+}
+
+export function makeDecorators(...decoratorFns: Decorator[]): Decorator[] {
+	return [moduleMetadata({ imports: [StorybookSetup] }), ...decoratorFns];
 }
