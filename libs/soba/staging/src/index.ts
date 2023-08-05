@@ -4,3 +4,4 @@ export * from './cloud/cloud';
 export * from './contact-shadows/contact-shadows';
 export * from './float/float';
 export * from './matcap-texture/matcap-texture';
+export * from './sparkles/sparkles';

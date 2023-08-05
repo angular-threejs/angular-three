@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { NgtArgs, extend, injectBeforeRender, injectNgtRef, signalStore, type NgtMesh } from 'angular-three';
-import { GridMaterial, type NgtsGridMaterialState } from 'angular-three-soba/shaders';
+import { GridMaterial, type NgtGridMaterialState } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
 import { Mesh, PlaneGeometry } from 'three';
 
@@ -9,7 +9,7 @@ extend({ GridMaterial, Mesh, PlaneGeometry });
 export type NgtsGridState = {
 	/** Default plane-geometry arguments */
 	args?: ConstructorParameters<typeof THREE.PlaneGeometry>;
-} & NgtsGridMaterialState;
+} & NgtGridMaterialState;
 
 declare global {
 	interface HTMLElementTagNameMap {

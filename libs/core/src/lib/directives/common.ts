@@ -1,4 +1,12 @@
-import { Directive, NgZone, TemplateRef, ViewContainerRef, inject, type EmbeddedViewRef } from '@angular/core';
+import {
+	DestroyRef,
+	Directive,
+	NgZone,
+	TemplateRef,
+	ViewContainerRef,
+	inject,
+	type EmbeddedViewRef,
+} from '@angular/core';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
 import { safeDetectChanges } from '../utils/safe-detect-changes';
 
@@ -18,6 +26,10 @@ export abstract class NgtCommonDirective {
 			commentNode[SPECIAL_INTERNAL_ADD_COMMENT]();
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
 		}
+
+		inject(DestroyRef).onDestroy(() => {
+			this.view?.destroy();
+		});
 	}
 
 	abstract validate(): boolean;

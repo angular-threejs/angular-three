@@ -79,7 +79,7 @@ export const GridMaterial = shaderMaterial(
   `,
 );
 
-export type NgtsGridMaterialState = {
+export type NgtGridMaterialState = {
 	/** Cell size, default: 0.5 */
 	cellSize?: number;
 	/** Cell thickness, default: 0.5 */
@@ -109,6 +109,6 @@ declare global {
 		/**
 		 * @extends ngt-shader-material
 		 */
-		'ngt-grid-material': NgtsGridMaterialState & NgtShaderMaterial;
+		'ngt-grid-material': NgtGridMaterialState & NgtShaderMaterial;
 	}
 }

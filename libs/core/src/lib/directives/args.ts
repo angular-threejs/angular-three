@@ -1,7 +1,7 @@
 import { Directive, Input } from '@angular/core';
 import { NgtCommonDirective } from './common';
 
-@Directive({ selector: '[args]', standalone: true })
+@Directive({ selector: 'ng-template[args]', standalone: true })
 export class NgtArgs<TArgs extends any[] = any[]> extends NgtCommonDirective {
 	private injectedArgs: TArgs = [] as unknown as TArgs;
 

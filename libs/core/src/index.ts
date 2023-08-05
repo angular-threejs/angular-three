@@ -1,6 +1,7 @@
 export * from './lib/before-render';
 export * from './lib/canvas';
 export * from './lib/directives/args';
+export * from './lib/directives/key';
 export * from './lib/directives/parent';
 export * from './lib/directives/repeat';
 export { type NgtCamera } from './lib/events';
