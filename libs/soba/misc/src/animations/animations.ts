@@ -1,4 +1,4 @@
-import { DestroyRef, Injector, effect, inject, runInInjectionContext, signal, untracked } from '@angular/core';
+import { DestroyRef, Injector, computed, effect, inject, runInInjectionContext } from '@angular/core';
 import { assertInjectionContext, injectBeforeRender, injectNgtRef, type NgtInjectedRef } from 'angular-three';
 import * as THREE from 'three';
 
@@ -23,7 +23,6 @@ export function injectNgtsAnimations(
 		}
 
 		const mixer = new THREE.AnimationMixer(null!);
-		const ready = signal(false);
 		const actions = {} as Record<string, THREE.AnimationAction>;
 		let cached = {} as Record<string, THREE.AnimationAction>;
 
@@ -43,36 +42,31 @@ export function injectNgtsAnimations(
 
 		injectBeforeRender(({ delta }) => mixer.update(delta));
 
-		effect(
-			() => {
-				const actual = actualRef.nativeElement;
-				if (!actual) return;
-				const animations = animationsFactory();
+		const ready = computed(() => !!actualRef.nativeElement && !!animationsFactory().length);
 
-				for (let i = 0; i < animations.length; i++) {
-					const clip = animations[i];
+		effect(() => {
+			const actual = actualRef.nativeElement;
+			if (!actual) return;
+			const animations = animationsFactory();
 
-					names.push(clip.name);
-					clips.push(clip);
+			for (let i = 0; i < animations.length; i++) {
+				const clip = animations[i];
 
-					Object.defineProperty(actions, clip.name, {
-						enumerable: true,
-						get: () => {
-							return cached[clip.name] || (cached[clip.name] = mixer.clipAction(clip, actual));
-						},
-					});
+				names.push(clip.name);
+				clips.push(clip);
 
-					if (i === 0 && playFirstClip) {
-						actions[clip.name].play();
-					}
+				Object.defineProperty(actions, clip.name, {
+					enumerable: true,
+					get: () => {
+						return cached[clip.name] || (cached[clip.name] = mixer.clipAction(clip, actual));
+					},
+				});
+
+				if (i === 0 && playFirstClip) {
+					actions[clip.name].play();
 				}
-
-				if (!untracked(ready)) {
-					ready.set(true);
-				}
-			},
-			{ allowSignalWrites: true },
-		);
+			}
+		});
 
 		return { ref: actualRef, actions, mixer, names, clips, ready };
 	});
