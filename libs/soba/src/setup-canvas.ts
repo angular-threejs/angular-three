@@ -141,43 +141,44 @@ export class StorybookSetup implements OnInit {
 	@Input() options: CanvasOptions = defaultCanvasOptions;
 	@Input() story!: Type<unknown>;
 
-	readonly #inputs = signal<Record<string, unknown>>({});
-	@Input() set inputs(inputs: Record<string, unknown>) {
-		this.#inputs.set(inputs);
+	inputs = signal<Record<string, unknown>>({});
+	@Input({ alias: 'inputs' }) set _inputs(inputs: Record<string, unknown>) {
+		this.inputs.set(inputs);
 	}
 
 	@ViewChild('anchor', { read: ViewContainerRef, static: true })
 	anchor!: ViewContainerRef;
 
-	readonly #envInjector = inject(EnvironmentInjector);
+	private envInjector = inject(EnvironmentInjector);
 
-	#ref?: ComponentRef<unknown>;
-	#refEnvInjector?: EnvironmentInjector;
+	private ref?: ComponentRef<unknown>;
+	private refEnvInjector?: EnvironmentInjector;
 
 	constructor() {
 		inject(DestroyRef).onDestroy(() => {
-			this.#ref?.destroy();
-			this.#refEnvInjector?.destroy();
+			this.ref?.destroy();
+			this.refEnvInjector?.destroy();
 		});
 	}
 
 	ngOnInit() {
-		this.#refEnvInjector = createEnvironmentInjector(
+		this.refEnvInjector = createEnvironmentInjector(
 			[
 				{ provide: CANVAS_OPTIONS, useValue: this.options },
 				{ provide: STORY_COMPONENT, useValue: this.story },
 				{ provide: STORY_COMPONENT_MIRROR, useValue: reflectComponentType(this.story) },
-				{ provide: STORY_INPUTS, useValue: this.#inputs },
+				{ provide: STORY_INPUTS, useValue: this.inputs },
 			],
-			this.#envInjector,
+			this.envInjector,
 		);
-		this.#ref = this.anchor.createComponent(NgtCanvas, { environmentInjector: this.#refEnvInjector });
-		this.#ref.setInput('shadows', true);
-		this.#ref.setInput('performance', this.options.performance);
-		this.#ref.setInput('camera', this.options.camera);
-		this.#ref.setInput('compoundPrefixes', this.options.compoundPrefixes || []);
-		this.#ref.setInput('sceneGraph', StorybookScene);
-		safeDetectChanges(this.#ref.changeDetectorRef);
+		this.ref = this.anchor.createComponent(NgtCanvas, { environmentInjector: this.refEnvInjector });
+		this.ref.setInput('shadows', true);
+		this.ref.setInput('performance', this.options.performance);
+		this.ref.setInput('camera', this.options.camera);
+		// this.ref.setInput('gl', { useLegacyLights: true });
+		this.ref.setInput('compoundPrefixes', this.options.compoundPrefixes || []);
+		this.ref.setInput('sceneGraph', StorybookScene);
+		safeDetectChanges(this.ref.changeDetectorRef);
 	}
 }
 
