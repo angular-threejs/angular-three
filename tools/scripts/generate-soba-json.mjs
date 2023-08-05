@@ -29,8 +29,8 @@ const sobaMap = {
 const entryPoints = {
 	controls: ['orbit-controls'],
 	abstractions: ['billboard', 'text', 'grid', 'text-3d'],
-	cameras: ['perspective-camera', 'orthographic-camera'],
-	staging: ['center', 'float'],
+	cameras: ['perspective-camera', 'orthographic-camera', 'cube-camera'],
+	staging: ['center', 'float', 'camera-shake'],
 };
 
 const paths = [];
@@ -43,7 +43,8 @@ for (const [entryPoint, entryPointEntities] of Object.entries(entryPoints)) {
 const { metadataJson, webTypesJson, write } = createBareJsons('angular-three-soba', 'soba');
 
 for (const path of paths) {
-	const { sourceFile, processIntersectionTypeNode, processTypeMembers } = createProgram([path]);
+	const { sourceFile, processIntersectionTypeNode, processTypeMembers, typesMap, processTypeReferenceNode } =
+		createProgram([path]);
 
 	ts.forEachChild(sourceFile, (node) => {
 		if (ts.isModuleDeclaration(node)) {
@@ -105,6 +106,11 @@ for (const path of paths) {
 
 							if (ts.isIntersectionTypeNode(memberType)) {
 								processIntersectionTypeNode(metadataAtMember, memberType, sobaMap, externalsMap);
+							} else if (ts.isTypeReferenceNode(memberType)) {
+								if (typesMap[memberType.typeName.text]) {
+									const typeDeclaration = typesMap[memberType.typeName.text];
+									processTypeReferenceNode(metadataAtMember, typeDeclaration, sobaMap);
+								}
 							}
 
 							metadataJson.tags.push(metadataAtMember);

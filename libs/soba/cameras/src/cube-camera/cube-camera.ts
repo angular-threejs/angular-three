@@ -118,7 +118,7 @@ declare global {
 		/**
 		 * @extends ngt-group
 		 */
-		'ngts-cube-camera': NgtsCubeCameraState & NgtGroup & { frames?: number };
+		'ngts-cube-camera': NgtsCubeCameraComponentState & NgtGroup;
 	}
 }
 

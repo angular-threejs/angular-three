@@ -198,6 +198,23 @@ export function createProgram(filePaths, sourceFilePath) {
 
 	/**
 	 * @param {{name: string, attributes: any[]}} metadata
+	 * @param {ts.TypeAliasDeclaration | ts.InterfaceDeclaration} typeReferenceNode
+	 * @param {Record<string, any>} sobaMap
+	 */
+	function processTypeReferenceNode(metadata, typeReferenceNode, sobaMap) {
+		if (ts.isTypeAliasDeclaration(typeReferenceNode)) {
+			if (ts.isIntersectionTypeNode(typeReferenceNode.type)) {
+				processIntersectionTypeNode(metadata, typeReferenceNode.type, sobaMap);
+			} else {
+				processTypeMembers(metadata, typeReferenceNode.type.members);
+			}
+		} else {
+			processTypeMembers(metadata, typeReferenceNode.members);
+		}
+	}
+
+	/**
+	 * @param {{name: string, attributes: any[]}} metadata
 	 * @param {ts.IntersectionTypeNode} typeNode
 	 * @param {Record<string, any>} sobaMap
 	 */
@@ -215,15 +232,7 @@ export function createProgram(filePaths, sourceFilePath) {
 
 				if (typesMap[typeReferenceName]) {
 					const typeDeclaration = typesMap[typeReferenceName];
-					if (ts.isTypeAliasDeclaration(typeDeclaration)) {
-						if (ts.isIntersectionTypeNode(typeDeclaration.type)) {
-							processIntersectionTypeNode(metadata, typeDeclaration.type, sobaMap);
-						} else {
-							processTypeMembers(metadata, typeDeclaration.type.members);
-						}
-					} else {
-						processTypeMembers(metadata, typeDeclaration.members);
-					}
+					processTypeReferenceNode(metadata, typeDeclaration, sobaMap);
 				} else if (relativeImportPaths[typeReferenceName]) {
 					const { sourceFile: relativeModuleSourceFile } = createProgram([
 						relativeImportPaths[typeReferenceName],
@@ -282,6 +291,8 @@ export function createProgram(filePaths, sourceFilePath) {
 		typeToTypeNode,
 		processTypeMembers,
 		processIntersectionTypeNode,
+		processTypeReferenceNode,
+		typesMap,
 	};
 }
 

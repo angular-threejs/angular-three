@@ -7,7 +7,7 @@ import { BoxGeometry, ConeGeometry, PlaneGeometry } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	selector: 'BillboardCone',
+	selector: 'billboard-cone',
 	standalone: true,
 	template: `
 		<ngt-mesh>
@@ -25,7 +25,7 @@ class Cone {
 }
 
 @Component({
-	selector: 'BillboardBox',
+	selector: 'billboard-box',
 	standalone: true,
 	template: `
 		<ngt-mesh [position]="position">
@@ -44,7 +44,7 @@ class Box {
 }
 
 @Component({
-	selector: 'BillboardPlane',
+	selector: 'billboard-plane',
 	standalone: true,
 	template: `
 		<ngt-mesh>
@@ -67,9 +67,9 @@ class Plane {
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0.5, 2.05, 0.5]">
 			<ngts-text text="box" [fontSize]="1" [outlineWidth]="'5%'" [outlineColor]="'#000'" [outlineOpacity]="1" />
 		</ngts-billboard>
-		<BillboardBox [position]="[0.5, 1, 0.5]" color="red">
+		<billboard-box [position]="[0.5, 1, 0.5]" color="red">
 			<ngt-mesh-standard-material />
-		</BillboardBox>
+		</billboard-box>
 		<ngt-group [position]="[-2.5, -3, -1]">
 			<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 1.05, 0]">
 				<ngts-text
@@ -80,14 +80,14 @@ class Plane {
 					[outlineOpacity]="1"
 				/>
 			</ngts-billboard>
-			<BillboardCone color="green">
+			<billboard-cone color="green">
 				<ngt-mesh-standard-material />
-			</BillboardCone>
+			</billboard-cone>
 		</ngt-group>
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 0, -5]">
-			<BillboardPlane [args]="[2, 2]" color="#000066">
+			<billboard-plane [args]="[2, 2]" color="#000066">
 				<ngt-mesh-standard-material />
-			</BillboardPlane>
+			</billboard-plane>
 		</ngts-billboard>
 
 		<ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" />
@@ -106,19 +106,19 @@ class TextBillboardStory {
 	standalone: true,
 	template: `
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[-4, -2, 0]">
-			<BillboardPlane [args]="[3, 2]" color="red" />
+			<billboard-plane [args]="[3, 2]" color="red" />
 		</ngts-billboard>
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[-4, 2, 0]">
-			<BillboardPlane [args]="[3, 2]" color="orange" />
+			<billboard-plane [args]="[3, 2]" color="orange" />
 		</ngts-billboard>
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 0, 0]">
-			<BillboardPlane [args]="[3, 2]" color="green" />
+			<billboard-plane [args]="[3, 2]" color="green" />
 		</ngts-billboard>
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[4, -2, 0]">
-			<BillboardPlane [args]="[3, 2]" color="blue" />
+			<billboard-plane [args]="[3, 2]" color="blue" />
 		</ngts-billboard>
 		<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[4, 2, 0]">
-			<BillboardPlane [args]="[3, 2]" color="yellow" />
+			<billboard-plane [args]="[3, 2]" color="yellow" />
 		</ngts-billboard>
 
 		<ngts-orbit-controls [enablePan]="true" [zoomSpeed]="0.5" />
