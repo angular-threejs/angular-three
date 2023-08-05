@@ -30,7 +30,7 @@ const entryPoints = {
 	controls: ['orbit-controls'],
 	abstractions: ['billboard', 'text', 'grid', 'text-3d'],
 	cameras: ['perspective-camera', 'orthographic-camera', 'cube-camera'],
-	staging: ['center', 'float', 'camera-shake'],
+	staging: ['center', 'float', 'camera-shake', 'cloud'],
 };
 
 const paths = [];
