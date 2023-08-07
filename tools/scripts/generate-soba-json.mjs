@@ -43,6 +43,7 @@ const entryPoints = {
 		'stars',
 		'accumulative-shadows',
 		'accumulative-shadows/randomized-lights',
+		'stage',
 	],
 };
 
