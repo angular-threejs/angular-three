@@ -3,7 +3,8 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"scripts": {
-		"storybook": "nx storybook soba"
+		"storybook": "nx storybook soba",
+    "generate-soba": "node tools/scripts/generate-soba-json.mjs"
 	},
 	"private": true,
 	"devDependencies": {

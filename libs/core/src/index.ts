@@ -18,6 +18,7 @@ export * from './lib/types';
 export * from './lib/utils/apply-props';
 export * from './lib/utils/assert-injection-context';
 export { createAttachFunction } from './lib/utils/attach';
+export * from './lib/utils/create-injection-token';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
 export * from './lib/utils/safe-detect-changes';

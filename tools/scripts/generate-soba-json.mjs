@@ -31,13 +31,32 @@ const entryPoints = {
 	controls: ['orbit-controls'],
 	abstractions: ['billboard', 'text', 'grid', 'text-3d'],
 	cameras: ['perspective-camera', 'orthographic-camera', 'cube-camera'],
-	staging: ['center', 'float', 'camera-shake', 'cloud', 'contact-shadows', 'sparkles', 'sky', 'spot-light', 'stars'],
+	staging: [
+		'center',
+		'float',
+		'camera-shake',
+		'cloud',
+		'contact-shadows',
+		'sparkles',
+		'sky',
+		'spot-light',
+		'stars',
+		'accumulative-shadows',
+		'accumulative-shadows/randomized-lights',
+	],
 };
 
 const paths = [];
 for (const [entryPoint, entryPointEntities] of Object.entries(entryPoints)) {
-	for (const entity of entryPointEntities) {
-		paths.push(join('libs/soba', entryPoint, 'src', entity, `${entity}.ts`));
+	for (let entity of entryPointEntities) {
+		let entityPaths = [entity];
+
+		if (entity.includes('/')) {
+			entityPaths = entity.split('/');
+			entity = entityPaths.pop();
+		}
+
+		paths.push(join('libs/soba', entryPoint, 'src', ...entityPaths, `${entity}.ts`));
 	}
 }
 
