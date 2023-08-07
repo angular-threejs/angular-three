@@ -1,319 +1,311 @@
-// import { NgIf } from '@angular/common';
-// import {
-// 	ChangeDetectorRef,
-// 	Component,
-// 	computed,
-// 	CUSTOM_ELEMENTS_SCHEMA,
-// 	Directive,
-// 	EventEmitter,
-// 	inject,
-// 	Input,
-// 	OnChanges,
-// 	Output,
-// 	signal,
-// } from '@angular/core';
-// import { extend, NgtArgs, NgtSignalStore, safeDetectChanges } from 'angular-three';
-// import { AmbientLight, Group, PointLight, SpotLight, Vector2 } from 'three';
-// import { NgtsAccumulativeShadows } from '../accumulative-shadows/accumulative-shadows';
-// import { NgtsRandomizedLights } from '../accumulative-shadows/randomized-lights';
-// import { NGTS_BOUNDS_API, NgtsBounds } from '../bounds/bounds';
-// import { NgtsCenter } from '../center/center';
-// import { NgtsContactShadows } from '../contact-shadows/contact-shadows';
-// import { NgtsEnvironmentPresetsType } from '../environment/assets';
-// import { NgtsEnvironment } from '../environment/environment';
-// import { NgtsEnvironmentInput } from '../environment/environment-input';
-//
-// const presets = {
-// 	rembrandt: {
-// 		main: [1, 2, 1],
-// 		fill: [-2, -0.5, -2],
-// 	},
-// 	portrait: {
-// 		main: [-1, 2, 0.5],
-// 		fill: [-1, 0.5, -1.5],
-// 	},
-// 	upfront: {
-// 		main: [0, 2, 1],
-// 		fill: [-1, 0.5, -1.5],
-// 	},
-// 	soft: {
-// 		main: [-2, 4, 4],
-// 		fill: [-1, 0.5, -1.5],
-// 	},
-// };
-//
-// type NgtsStageShadows = Partial<NgtsAccumulativeShadows> &
-// 	Partial<NgtsRandomizedLights> &
-// 	Partial<NgtsContactShadows> & {
-// 		type: 'contact' | 'accumulative';
-// 		/** Shadow plane offset, default: 0 */
-// 		offset?: number;
-// 		/** Shadow bias, default: -0.0001 */
-// 		bias?: number;
-// 		/** Shadow normal bias, default: 0 */
-// 		normalBias?: number;
-// 		/** Shadow map size, default: 1024 */
-// 		size?: number;
-// 	};
-//
-// interface NgtsStageProps {
-// 	/** Lighting setup, default: "rembrandt" */
-// 	preset:
-// 		| 'rembrandt'
-// 		| 'portrait'
-// 		| 'upfront'
-// 		| 'soft'
-// 		| { main: [x: number, y: number, z: number]; fill: [x: number, y: number, z: number] };
-// 	/** Controls the ground shadows, default: "contact" */
-// 	shadows: boolean | 'contact' | 'accumulative' | NgtsStageShadows;
-// 	/** Optionally wraps and thereby centers the models using <Bounds>, can also be a margin, default: true */
-// 	adjustCamera: boolean | number;
-// 	/** The default environment, default: "city" */
-// 	environment: NgtsEnvironmentPresetsType | Partial<NgtsEnvironmentInput>;
-// 	/** The lighting intensity, default: 0.5 */
-// 	intensity: number;
-// 	/** To adjust centering, default: undefined */
-// 	center?: Partial<NgtsCenter>;
-// }
-//
-// @Directive({ selector: 'ngts-stage-refit', standalone: true })
-// export class NgtsStageRefit implements OnChanges {
-// 	readonly #boundsApi = inject(NGTS_BOUNDS_API);
-//
-// 	@Input() radius = 0;
-// 	@Input() adjustCamera = true;
-//
-// 	ngOnChanges() {
-// 		if (this.adjustCamera) {
-// 			this.#boundsApi().refresh().clip().fit();
-// 		}
-// 	}
-// }
-//
-// extend({ AmbientLight, SpotLight, Vector2, PointLight, Group });
-//
-// @Component({
-// 	selector: 'ngts-stage',
-// 	standalone: true,
-// 	template: `
-// 		<ngt-ambient-light [intensity]="stageIntensity() / 3" />
-// 		<ngt-spot-light
-// 			[penumbra]="1"
-// 			[position]="spotLightPosition()"
-// 			[intensity]="stageIntensity() * 2"
-// 			[castShadow]="!!stageShadows()"
-// 		>
-// 			<ngt-value [rawValue]="shadowsInfo().shadowBias" attach="shadow.bias" />
-// 			<ngt-value [rawValue]="shadowsInfo().normalBias" attach="shadow.normalBias" />
-// 			<ngt-vector2 *args="[shadowsInfo().shadowSize, shadowsInfo().shadowSize]" attach="shadow.mapSize" />
-// 		</ngt-spot-light>
-// 		<ngt-point-light [position]="pointLightPosition()" [intensity]="stageIntensity()" />
-//
-// 		<ngts-bounds
-// 			[fit]="!!stageAdjustCamera()"
-// 			[clip]="!!stageAdjustCamera()"
-// 			[margin]="Number(stageAdjustCamera())"
-// 			[observe]="true"
-// 		>
-// 			<ngts-stage-refit [radius]="boundingState().radius" [adjustCamera]="!!stageAdjustCamera()" />
-// 			<ngts-center
-// 				[position]="[0, shadowsInfo().shadowOffset / 2, 0]"
-// 				[top]="!!stageCenter()?.top"
-// 				[right]="!!stageCenter()?.right"
-// 				[bottom]="!!stageCenter()?.bottom"
-// 				[left]="!!stageCenter()?.left"
-// 				[front]="!!stageCenter()?.front"
-// 				[back]="!!stageCenter()?.back"
-// 				[disableX]="!!stageCenter()?.disableX"
-// 				[disableY]="!!stageCenter()?.disableY"
-// 				[disableZ]="!!stageCenter()?.disableZ"
-// 				[precise]="!!stageCenter()?.precise"
-// 				(centered)="onCentered($event)"
-// 			>
-// 				<ng-content />
-// 			</ngts-center>
-// 		</ngts-bounds>
-// 		<ngt-group [position]="[0, -boundingState().height / 2 - shadowsInfo().shadowOffset / 2, 0]">
-// 			<ngts-contact-shadows
-// 				*ngIf="shadowsInfo().contactShadow"
-// 				[scale]="boundingState().radius * 4"
-// 				[far]="boundingState().radius"
-// 				[blur]="2"
-// 				[opacity]="shadowsInfo().opacity"
-// 				[width]="shadowsInfo().width"
-// 				[height]="shadowsInfo().height"
-// 				[smooth]="shadowsInfo().smooth"
-// 				[resolution]="shadowsInfo().resolution"
-// 				[frames]="shadowsInfo().frames"
-// 				[scale]="shadowsInfo().scale"
-// 				[color]="shadowsInfo().color"
-// 				[depthWrite]="shadowsInfo().depthWrite"
-// 				[renderOrder]="shadowsInfo().renderOrder"
-// 			/>
-// 			<ngts-accumulative-shadows
-// 				*ngIf="shadowsInfo().accumulativeShadow"
-// 				[temporal]="true"
-// 				[frames]="100"
-// 				[alphaTest]="0.9"
-// 				[toneMapped]="true"
-// 				[scale]="boundingState().radius * 4"
-// 				[opacity]="shadowsInfo().opacity"
-// 				[alphaTest]="shadowsInfo().alphaTest"
-// 				[color]="shadowsInfo().color"
-// 				[colorBlend]="shadowsInfo().colorBlend"
-// 				[resolution]="shadowsInfo().resolution"
-// 			>
-// 				<ngts-randomized-lights
-// 					[amount]="shadowsInfo().amount ?? 8"
-// 					[radius]="shadowsInfo().radius ?? boundingState().radius"
-// 					[ambient]="shadowsInfo().ambient ?? 0.5"
-// 					[intensity]="shadowsInfo().intensity ?? 1"
-// 					[position]="spotLightPosition()"
-// 					[size]="boundingState().radius * 4"
-// 					[bias]="-shadowsInfo().shadowBias"
-// 					[mapSize]="shadowsInfo().shadowSize"
-// 				/>
-// 			</ngts-accumulative-shadows>
-// 		</ngt-group>
-// 		<ngts-environment
-// 			*ngIf="environmentInfo() as environmentInfo"
-// 			[frames]="environmentInfo.frames"
-// 			[near]="environmentInfo.near"
-// 			[far]="environmentInfo.far"
-// 			[resolution]="environmentInfo.resolution"
-// 			[background]="environmentInfo.background"
-// 			[blur]="environmentInfo.blur"
-// 			[map]="environmentInfo.map"
-// 			[files]="environmentInfo.files"
-// 			[path]="environmentInfo.path"
-// 			[preset]="environmentInfo.preset"
-// 			[scene]="environmentInfo.scene"
-// 			[extensions]="environmentInfo.extensions"
-// 			[ground]="environmentInfo.ground"
-// 			[encoding]="environmentInfo.encoding"
-// 		/>
-// 	`,
-// 	imports: [
-// 		NgtArgs,
-// 		NgtsBounds,
-// 		NgtsStageRefit,
-// 		NgtsCenter,
-// 		NgIf,
-// 		NgtsContactShadows,
-// 		NgtsAccumulativeShadows,
-// 		NgtsRandomizedLights,
-// 		NgtsEnvironment,
-// 	],
-// 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-// })
-// export class NgtsStage extends NgtSignalStore<NgtsStageProps> {
-// 	readonly #cdr = inject(ChangeDetectorRef);
-// 	readonly Number = Number;
-//
-// 	@Input() set preset(preset: NgtsStageProps['preset']) {
-// 		this.set({ preset });
-// 	}
-//
-// 	@Input() set shadows(shadows: NgtsStageProps['shadows']) {
-// 		this.set({ shadows });
-// 	}
-//
-// 	@Input() set adjustCamera(adjustCamera: NgtsStageProps['adjustCamera']) {
-// 		this.set({ adjustCamera });
-// 	}
-//
-// 	@Input() set environment(environment: NgtsStageProps['environment']) {
-// 		this.set({ environment });
-// 	}
-//
-// 	@Input() set intensity(intensity: NgtsStageProps['intensity']) {
-// 		this.set({ intensity });
-// 	}
-//
-// 	@Input() set center(center: NgtsStageProps['center']) {
-// 		this.set({ center });
-// 	}
-//
-// 	@Output() centered = new EventEmitter() as NgtsCenter['centered'];
-//
-// 	readonly boundingState = signal({ radius: 0, width: 0, height: 0, depth: 0 });
-//
-// 	readonly #preset = this.select('preset');
-// 	readonly #environment = this.select('environment');
-//
-// 	readonly stageShadows = this.select('shadows');
-// 	readonly stageIntensity = this.select('intensity');
-// 	readonly stageAdjustCamera = this.select('adjustCamera');
-// 	readonly stageCenter = this.select('center');
-//
-// 	readonly config = computed(() => {
-// 		const preset = this.#preset();
-// 		return typeof preset === 'string' ? presets[preset] : preset;
-// 	});
-//
-// 	readonly shadowsInfo = computed<any>(() => {
-// 		const shadows = this.stageShadows();
-// 		const restProps = typeof shadows === 'string' ? {} : (shadows as NgtsStageShadows) || {};
-// 		return {
-// 			contactShadow: shadows === 'contact' || (shadows as NgtsStageShadows)?.type === 'contact',
-// 			accumulativeShadow: shadows === 'accumulative' || (shadows as NgtsStageShadows)?.type === 'accumulative',
-// 			shadowBias: (shadows as NgtsStageShadows)?.bias ?? -0.0001,
-// 			normalBias: (shadows as NgtsStageShadows)?.normalBias ?? 0,
-// 			shadowSize: (shadows as NgtsStageShadows)?.size ?? 1024,
-// 			shadowOffset: (shadows as NgtsStageShadows)?.offset ?? 0,
-// 			...restProps,
-// 		};
-// 	});
-//
-// 	readonly spotLightPosition = computed<[number, number, number]>(() => {
-// 		const config = this.config();
-// 		if (!config) return [0, 0, 0];
-// 		const radius = this.boundingState().radius;
-// 		return [config.main[0] * radius, config.main[1] * radius, config.main[2] * radius];
-// 	});
-//
-// 	readonly pointLightPosition = computed(() => {
-// 		const config = this.config();
-// 		if (!config) return [0, 0, 0];
-// 		const radius = this.boundingState().radius;
-// 		return [config.fill[0] * radius, config.fill[1] * radius, config.fill[2] * radius];
-// 	});
-//
-// 	readonly environmentInfo = computed(() => {
-// 		const environment = this.#environment();
-// 		if (!environment) return null;
-// 		if (typeof environment === 'string') return { preset: environment };
-// 		return environment;
-// 	});
-//
-// 	constructor() {
-// 		super({
-// 			adjustCamera: true,
-// 			intensity: 0.5,
-// 			shadows: 'contact',
-// 			environment: 'city',
-// 			preset: 'rembrandt',
-// 		});
-// 	}
-//
-// 	onCentered(props: {
-// 		/** The next parent above <Center> */
-// 		parent: THREE.Object3D;
-// 		/** The outmost container group of the <Center> component */
-// 		container: THREE.Object3D;
-// 		width: number;
-// 		height: number;
-// 		depth: number;
-// 		boundingBox: THREE.Box3;
-// 		boundingSphere: THREE.Sphere;
-// 		center: THREE.Vector3;
-// 		verticalAlignment: number;
-// 		horizontalAlignment: number;
-// 		depthAlignment: number;
-// 	}) {
-// 		const { boundingSphere, width, height, depth } = props;
-// 		this.boundingState.set({ radius: boundingSphere.radius, width, height, depth });
-// 		safeDetectChanges(this.#cdr);
-// 		if (this.centered.observed) this.centered.emit(props);
-// 	}
-// }
+import { NgIf } from '@angular/common';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	Component,
+	Directive,
+	EventEmitter,
+	Input,
+	Output,
+	computed,
+	type OnChanges,
+} from '@angular/core';
+import { NgtArgs, extend, signalStore } from 'angular-three';
+import { AmbientLight, Group, PointLight, SpotLight, Vector2 } from 'three';
+import {
+	NgtsAccumulativeShadows,
+	type NgtsAccumulativeShadowsState,
+} from '../accumulative-shadows/accumulative-shadows';
+import { NgtsRandomizedLights, type NgtsRandomizedLightsState } from '../accumulative-shadows/randomized-lights';
+import { NgtsBounds, injectNgtsBoundsApi } from '../bounds/bounds';
+import { NgtsCenter, type NgtsCenterState, type NgtsCenteredEvent } from '../center/center';
+import { NgtsContactShadows, type NgtsContactShadowsState } from '../contact-shadows/contact-shadows';
+import { NgtsEnvironmentPresetsType } from '../environment/assets';
+import { NgtsEnvironment } from '../environment/environment';
+import { type NgtsEnvironmentInputState } from '../environment/environment-input';
+
+const presets = {
+	rembrandt: {
+		main: [1, 2, 1],
+		fill: [-2, -0.5, -2],
+	},
+	portrait: {
+		main: [-1, 2, 0.5],
+		fill: [-1, 0.5, -1.5],
+	},
+	upfront: {
+		main: [0, 2, 1],
+		fill: [-1, 0.5, -1.5],
+	},
+	soft: {
+		main: [-2, 4, 4],
+		fill: [-1, 0.5, -1.5],
+	},
+};
+
+type NgtsStageShadowsState = Partial<NgtsAccumulativeShadowsState> &
+	Partial<NgtsRandomizedLightsState> &
+	Partial<NgtsContactShadowsState> & {
+		type: 'contact' | 'accumulative';
+		/** Shadow plane offset, default: 0 */
+		offset?: number;
+		/** Shadow bias, default: -0.0001 */
+		bias?: number;
+		/** Shadow normal bias, default: 0 */
+		normalBias?: number;
+		/** Shadow map size, default: 1024 */
+		size?: number;
+	};
+
+export type NgtsStageState = {
+	/** Lighting setup, default: "rembrandt" */
+	preset:
+		| 'rembrandt'
+		| 'portrait'
+		| 'upfront'
+		| 'soft'
+		| { main: [x: number, y: number, z: number]; fill: [x: number, y: number, z: number] };
+	/** Controls the ground shadows, default: "contact" */
+	shadows: boolean | 'contact' | 'accumulative' | NgtsStageShadowsState;
+	/** Optionally wraps and thereby centers the models using <Bounds>, can also be a margin, default: true */
+	adjustCamera: boolean | number;
+	/** The default environment, default: "city" */
+	environment: NgtsEnvironmentPresetsType | Partial<NgtsEnvironmentInputState>;
+	/** The lighting intensity, default: 0.5 */
+	intensity: number;
+	/** To adjust centering, default: undefined */
+	center?: Partial<NgtsCenterState>;
+};
+
+declare global {
+	interface HTMLElementTagNameMap {
+		'ngts-stage': NgtsStageState;
+	}
+}
+
+extend({ AmbientLight, SpotLight, Vector2, PointLight, Group });
+
+@Directive({ selector: 'ngts-stage-refit', standalone: true })
+export class NgtsStageRefit implements OnChanges {
+	boundsApi = injectNgtsBoundsApi();
+
+	@Input() radius = 0;
+	@Input() adjustCamera = true;
+
+	ngOnChanges() {
+		if (this.adjustCamera) {
+			this.boundsApi().refresh().clip().fit();
+		}
+	}
+}
+
+@Component({
+	selector: 'ngts-stage',
+	standalone: true,
+	template: `
+		<ngt-ambient-light [intensity]="intensity() / 3" />
+		<ngt-spot-light
+			[penumbra]="1"
+			[position]="[
+				config().main[0] * boundingState.get('radius'),
+				config().main[1] * boundingState.get('radius'),
+				config().main[2] * boundingState.get('radius')
+			]"
+			[intensity]="intensity() * 2"
+			[castShadow]="!!shadows()"
+		>
+			<ngt-value [rawValue]="shadowsState().shadowBias" attach="shadow.bias" />
+			<ngt-value [rawValue]="shadowsState().normalBias" attach="shadow.normalBias" />
+			<ngt-vector2 *args="[shadowsState().shadowSize, shadowsState().shadowSize]" attach="shadow.mapSize" />
+		</ngt-spot-light>
+		<ngt-point-light
+			[position]="[
+				config().fill[0] * boundingState.get('radius'),
+				config().fill[1] * boundingState.get('radius'),
+				config().fill[2] * boundingState.get('radius')
+			]"
+			[intensity]="intensity()"
+		/>
+
+		<ngts-bounds
+			[fit]="!!adjustCamera()"
+			[clip]="!!adjustCamera()"
+			[margin]="Number(adjustCamera())"
+			[observe]="true"
+		>
+			<ngts-stage-refit [radius]="boundingState.get('radius')" [adjustCamera]="adjustCamera()" />
+			<ngts-center
+				[position]="[0, shadowsState().shadowOffset / 2, 0]"
+				[top]="!!center()?.top"
+				[right]="!!center()?.right"
+				[bottom]="!!center()?.bottom"
+				[left]="!!center()?.left"
+				[front]="!!center()?.front"
+				[back]="!!center()?.back"
+				[disableX]="!!center()?.disableX"
+				[disableY]="!!center()?.disableY"
+				[disableZ]="!!center()?.disableZ"
+				[precise]="!!center()?.precise"
+				(centered)="onCentered($event)"
+			>
+				<ng-content />
+			</ngts-center>
+		</ngts-bounds>
+
+		<ngt-group [position]="[0, -boundingState.get('height') / 2 - shadowsState().shadowOffset / 2, 0]">
+			<ngts-contact-shadows
+				*ngIf="shadowsState().contactShadow"
+				[scale]="boundingState.get('radius') * 4"
+				[far]="boundingState.get('radius')"
+				[blur]="2"
+				[opacity]="shadowsState().opacity"
+				[width]="shadowsState().width"
+				[height]="shadowsState().height"
+				[smooth]="shadowsState().smooth"
+				[resolution]="shadowsState().resolution"
+				[frames]="shadowsState().frames"
+				[scale]="shadowsState().scale"
+				[color]="shadowsState().color"
+				[depthWrite]="shadowsState().depthWrite"
+				[renderOrder]="shadowsState().renderOrder"
+			/>
+			<ngts-accumulative-shadows
+				*ngIf="shadowsState().accumulativeShadow"
+				[temporal]="true"
+				[frames]="100"
+				[alphaTest]="0.9"
+				[toneMapped]="true"
+				[scale]="boundingState.get('radius') * 4"
+				[opacity]="shadowsState().opacity"
+				[alphaTest]="shadowsState().alphaTest"
+				[color]="shadowsState().color"
+				[colorBlend]="shadowsState().colorBlend"
+				[resolution]="shadowsState().resolution"
+			>
+				<ngts-randomized-lights
+					[amount]="shadowsState().amount ?? 8"
+					[radius]="shadowsState().radius ?? boundingState.get('radius')"
+					[ambient]="shadowsState().ambient ?? 0.5"
+					[intensity]="shadowsState().intensity ?? 1"
+					[position]="[
+						config().main[0] * boundingState.get('radius'),
+						config().main[1] * boundingState.get('radius'),
+						config().main[2] * boundingState.get('radius')
+					]"
+					[size]="boundingState.get('radius') * 4"
+					[bias]="-shadowsState().shadowBias"
+					[mapSize]="shadowsState().shadowSize"
+				/>
+			</ngts-accumulative-shadows>
+		</ngt-group>
+
+		<ngts-environment
+			*ngIf="environmentState() as environment"
+			[frames]="environment.frames"
+			[near]="environment.near"
+			[far]="environment.far"
+			[resolution]="environment.resolution"
+			[background]="environment.background"
+			[blur]="environment.blur"
+			[map]="environment.map"
+			[files]="environment.files"
+			[path]="environment.path"
+			[preset]="environment.preset"
+			[scene]="environment.scene"
+			[extensions]="environment.extensions"
+			[ground]="environment.ground"
+			[encoding]="environment.encoding"
+		/>
+	`,
+	imports: [
+		NgtArgs,
+		NgIf,
+		NgtsBounds,
+		NgtsStageRefit,
+		NgtsCenter,
+		NgtsContactShadows,
+		NgtsAccumulativeShadows,
+		NgtsRandomizedLights,
+		NgtsEnvironment,
+	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class NgtsStage {
+	Number = Number;
+
+	private inputs = signalStore<NgtsStageState>({
+		adjustCamera: true,
+		intensity: 0.5,
+		shadows: 'contact',
+		environment: 'city',
+		preset: 'rembrandt',
+	});
+
+	@Input({ alias: 'preset' }) set _preset(preset: NgtsStageState['preset']) {
+		this.inputs.set({ preset });
+	}
+
+	@Input({ alias: 'shadows' }) set _shadows(shadows: NgtsStageState['shadows']) {
+		this.inputs.set({ shadows });
+	}
+
+	@Input({ alias: 'adjustCamera' }) set _adjustCamera(adjustCamera: NgtsStageState['adjustCamera']) {
+		this.inputs.set({ adjustCamera });
+	}
+
+	@Input({ alias: 'environment' }) set _environment(environment: NgtsStageState['environment']) {
+		this.inputs.set({ environment });
+	}
+
+	@Input({ alias: 'intensity' }) set _intensity(intensity: NgtsStageState['intensity']) {
+		this.inputs.set({ intensity });
+	}
+
+	@Input({ alias: 'center' }) set _center(center: NgtsStageState['center']) {
+		this.inputs.set({ center });
+	}
+
+	@Output() centered = new EventEmitter<NgtsCenteredEvent>();
+
+	private preset = this.inputs.select('preset');
+	private environment = this.inputs.select('environment');
+
+	boundingState = signalStore({ radius: 0, width: 0, height: 0, depth: 0 });
+	config = computed(() => {
+		const preset = this.preset();
+		return typeof preset === 'string' ? presets[preset] : preset;
+	});
+	shadows = this.inputs.select('shadows');
+	intensity = this.inputs.select('intensity');
+	adjustCamera = this.inputs.select('adjustCamera');
+	center = this.inputs.select('center');
+
+	shadowsState = computed(() => {
+		const shadows = this.shadows();
+		const {
+			bias: shadowBias = -0.0001,
+			normalBias = 0,
+			size: shadowSize = 1024,
+			offset: shadowOffset = 0,
+			...restProps
+		} = (typeof shadows === 'string' ? {} : shadows || {}) as NgtsStageShadowsState;
+		return {
+			contactShadow: shadows === 'contact' || restProps.type === 'contact',
+			accumulativeShadow: shadows === 'accumulative' || restProps.type === 'accumulative',
+			shadowBias,
+			normalBias,
+			shadowSize,
+			shadowOffset,
+			...restProps,
+		};
+	});
+	environmentState = computed(() => {
+		const environment = this.environment();
+		return !environment ? null : typeof environment === 'string' ? { preset: environment } : environment;
+	});
+
+	onCentered($event: NgtsCenteredEvent) {
+		const { width, height, depth, boundingSphere } = $event;
+		this.boundingState.set({ radius: boundingSphere.radius, width, height, depth });
+		if (this.centered.observed) this.centered.emit($event);
+	}
+}
