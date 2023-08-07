@@ -287,7 +287,10 @@ class NgtRenderer implements Renderer2 {
 			((pRS[NgtRendererClassId.type] === 'dom' ||
 				(pRS[NgtRendererClassId.type] === 'compound' && !pRS[NgtRendererClassId.compounded])) &&
 				(cRS[NgtRendererClassId.type] === 'dom' ||
-					(cRS[NgtRendererClassId.type] === 'compound' && !cRS[NgtRendererClassId.compounded])));
+					(cRS[NgtRendererClassId.type] === 'compound' && !cRS[NgtRendererClassId.compounded]))) ||
+			(pRS[NgtRendererClassId.type] === 'dom' &&
+				cRS[NgtRendererClassId.type] === 'compound' &&
+				!!cRS[NgtRendererClassId.compounded]);
 
 		if (shouldFindGrandparentInstance) {
 			// we'll try to get the grandparent instance here so that we can run appendChild with both instances

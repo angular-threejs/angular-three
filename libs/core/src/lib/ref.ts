@@ -20,6 +20,8 @@ export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
 	untracked: TElement;
 };
 
+export type NgtRef<TElement> = TElement | NgtInjectedRef<TElement>;
+
 export function injectNgtRef<TElement>(
 	initial: ElementRef<TElement> | TElement = null!,
 	injector?: Injector,

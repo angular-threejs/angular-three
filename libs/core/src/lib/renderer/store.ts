@@ -3,7 +3,7 @@ import { NgtArgs } from '../directives/args';
 import type { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
 import { getLocalState, type NgtInstanceNode } from '../instance';
-import type { NgtInjectedRef } from '../ref';
+import type { NgtRef } from '../ref';
 import { NGT_STORE, type NgtState } from '../store';
 import type { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
@@ -26,7 +26,7 @@ type NgtQueueOp = [type: 'op' | 'cleanUp', op: () => void, done?: true];
 export type NgtRendererState = [
 	type: 'three' | 'compound' | 'portal' | 'comment' | 'dom',
 	parent: NgtRendererNode | null,
-	injectedParent: NgtRendererNode | NgtInjectedRef<NgtRendererNode> | null,
+	injectedParent: NgtRef<NgtRendererNode> | null,
 	children: NgtRendererNode[],
 	destroyed: boolean,
 	compound: [applyFirst: boolean, props: NgtAnyRecord],

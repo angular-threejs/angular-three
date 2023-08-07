@@ -2,24 +2,24 @@ import { NgIf } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	Component,
-	Injector,
 	computed,
 	effect,
 	inject,
 	runInInjectionContext,
+	type Injector,
 } from '@angular/core';
 import {
-	NgtInjectedRef,
 	assertInjectionContext,
 	checkUpdate,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
+	type NgtInjectedRef,
 } from 'angular-three';
 import * as THREE from 'three';
 import { Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { FullScreenQuad } from 'three-stdlib';
-import { NgtsSpotLightShadowMeshInput, NgtsSpotLightShadowMeshInputState } from './shadow-mesh-input';
+import { NgtsSpotLightShadowMeshInput, type NgtsSpotLightShadowMeshInputState } from './shadow-mesh-input';
 import { injectNgtsSpotLightApi } from './spot-light';
 
 const isSpotLight = (child: THREE.Object3D | null): child is THREE.SpotLight => {
