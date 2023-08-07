@@ -103,6 +103,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				currentInstance[key].type === THREE.UnsignedByteType
 			) {
 				const texture = currentInstance[key] as THREE.Texture;
+
 				if (rootState?.gl) {
 					if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
 						texture.colorSpace = rootState.gl.outputColorSpace;
@@ -111,6 +112,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 			}
 		}
 
+		checkUpdate(currentInstance[key]);
 		checkUpdate(targetProp);
 		invalidateInstance(instance);
 	}
