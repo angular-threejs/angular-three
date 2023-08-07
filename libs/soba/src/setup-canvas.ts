@@ -40,6 +40,7 @@ interface CanvasOptions {
 				makeDefault?: boolean;
 		  };
 	lights?: boolean;
+	useLegacyLights?: boolean;
 	compoundPrefixes?: string[];
 	loader?: boolean;
 }
@@ -56,6 +57,7 @@ const defaultCanvasOptions: CanvasOptions = {
 		debounce: 200,
 	},
 	whiteBackground: false,
+	useLegacyLights: false,
 	controls: true,
 	lights: true,
 	loader: false,
@@ -76,7 +78,7 @@ const STORY_INPUTS = new InjectionToken<Signal<Record<string, unknown>>>('story 
 		</ng-container>
 
 		<ng-container *ngIf="canvasOptions.lights">
-			<ngt-ambient-light [intensity]="0.8" />
+			<ngt-ambient-light [intensity]="0.8 * Math.PI" />
 			<ngt-point-light [intensity]="1" [position]="[0, 6, 0]" />
 		</ng-container>
 
@@ -90,6 +92,7 @@ const STORY_INPUTS = new InjectionToken<Signal<Record<string, unknown>>>('story 
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class StorybookScene implements OnInit {
+	Math = Math;
 	canvasOptions = inject(CANVAS_OPTIONS);
 
 	private story = inject(STORY_COMPONENT);
@@ -175,7 +178,9 @@ export class StorybookSetup implements OnInit {
 		this.ref.setInput('shadows', true);
 		this.ref.setInput('performance', this.options.performance);
 		this.ref.setInput('camera', this.options.camera);
-		// this.ref.setInput('gl', { useLegacyLights: true });
+		// NOTE: r155 has made useLegacyLights "false" by default.
+		console.log('legacyLights', this.options.useLegacyLights);
+		this.ref.setInput('gl', { useLegacyLights: this.options.useLegacyLights ?? false });
 		this.ref.setInput('compoundPrefixes', this.options.compoundPrefixes || []);
 		this.ref.setInput('sceneGraph', StorybookScene);
 		safeDetectChanges(this.ref.changeDetectorRef);
@@ -199,6 +204,7 @@ type DeepPartialObject<T> = {
 export function makeCanvasOptions(options: DeepPartial<CanvasOptions> = {}) {
 	const mergedOptions = {
 		...defaultCanvasOptions,
+		useLegacyLights: options.useLegacyLights ?? defaultCanvasOptions.useLegacyLights,
 		camera: { ...defaultCanvasOptions.camera, ...(options.camera || {}) },
 		performance: { ...defaultCanvasOptions.performance, ...(options.performance || {}) },
 		whiteBackground: options.whiteBackground ?? defaultCanvasOptions.whiteBackground,
