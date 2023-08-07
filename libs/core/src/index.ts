@@ -4,7 +4,7 @@ export * from './lib/directives/args';
 export * from './lib/directives/key';
 export * from './lib/directives/parent';
 export * from './lib/directives/repeat';
-export { type NgtCamera } from './lib/events';
+export { type NgtCamera, type NgtThreeEvent } from './lib/events';
 export * from './lib/instance';
 export * from './lib/loader';
 export { addAfterEffect, addEffect, addTail } from './lib/loop';
