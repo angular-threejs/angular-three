@@ -72,10 +72,10 @@ class ShadowsSpotLightStory {
 	@Input() debug = false;
 	@Input() wind = false;
 
-	readonly Math = Math;
-	readonly MathUtils = THREE.MathUtils;
+	Math = Math;
+	MathUtils = THREE.MathUtils;
 
-	readonly shader = /* glsl */ `
+	shader = /* glsl */ `
             varying vec2 vUv;
             uniform sampler2D uShadowMap;
             uniform float uTime;
@@ -91,14 +91,14 @@ class ShadowsSpotLightStory {
             }
           `;
 
-	readonly textures = injectNgtsTextureLoader(() => ({
+	textures = injectNgtsTextureLoader(() => ({
 		diffuse: '/soba/textures/grassy_cobble/grassy_cobblestone_diff_2k.jpg',
 		normal: '/soba/textures/grassy_cobble/grassy_cobblestone_nor_gl_2k.jpg',
 		roughness: '/soba/textures/grassy_cobble/grassy_cobblestone_rough_2k.jpg',
 		ao: '/soba/textures/grassy_cobble/grassy_cobblestone_ao_2k.jpg',
 	}));
 
-	readonly leaf = injectNgtsTextureLoader(() => '/soba/textures/other/leaves.jpg');
+	leaf = injectNgtsTextureLoader(() => '/soba/textures/other/leaves.jpg');
 
 	constructor() {
 		effect(() => {

@@ -45,9 +45,9 @@ export type NgtRendererNode = {
 	__ngt_renderer__: NgtRendererState;
 };
 export class NgtRendererStore {
-	private readonly comments = [] as Array<NgtRendererNode>;
+	private comments = [] as Array<NgtRendererNode>;
 
-	constructor(private readonly root: NgtRendererRootState) {}
+	constructor(private root: NgtRendererRootState) {}
 
 	createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord) {
 		const state = [

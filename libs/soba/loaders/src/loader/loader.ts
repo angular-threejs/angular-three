@@ -66,27 +66,27 @@ export class NgtsLoader {
 	bar = this.inputs.select('barClass');
 	data = this.inputs.select('dataClass');
 
-	@Input() set containerClass(containerClass: string) {
+	@Input({ alias: 'containerClass' }) set _containerClass(containerClass: string) {
 		this.inputs.set({ containerClass });
 	}
 
-	@Input() set innerClass(innerClass: string) {
+	@Input({ alias: 'innerClass' }) set _innerClass(innerClass: string) {
 		this.inputs.set({ innerClass });
 	}
 
-	@Input() set barClass(barClass: string) {
+	@Input({ alias: 'barClass' }) set _barClass(barClass: string) {
 		this.inputs.set({ barClass });
 	}
 
-	@Input() set dataClass(dataClass: string) {
+	@Input({ alias: 'dataClass' }) set _dataClass(dataClass: string) {
 		this.inputs.set({ dataClass });
 	}
 
-	@Input() set dataInterpolation(dataInterpolation: (value: number) => string) {
+	@Input({ alias: 'dataInterpolation' }) set _dataInterpolation(dataInterpolation: (value: number) => string) {
 		this.inputs.set({ dataInterpolation });
 	}
 
-	@Input() set initialState(initialState: (value: boolean) => boolean) {
+	@Input({ alias: 'initialState' }) set _initialState(initialState: (value: boolean) => boolean) {
 		this.inputs.set({ initialState });
 	}
 

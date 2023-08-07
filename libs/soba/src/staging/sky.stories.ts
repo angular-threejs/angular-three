@@ -26,14 +26,15 @@ import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class RotationSkyStory {
-	readonly Math = Math;
+	Math = Math;
+
 	@Input() turbidity = 8;
 	@Input() rayleigh = 6;
 	@Input() mieCoefficient = 0.005;
 	@Input() mieDirectionalG = 0.8;
 	@Input() azimuth = 0.25;
 
-	readonly inclination = signal(0);
+	inclination = signal(0);
 
 	constructor() {
 		injectBeforeRender(() => {
@@ -64,7 +65,8 @@ class RotationSkyStory {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class CustomAnglesSkyStory {
-	readonly Math = Math;
+	Math = Math;
+
 	@Input() turbidity = 8;
 	@Input() rayleigh = 6;
 	@Input() mieCoefficient = 0.005;
@@ -93,7 +95,8 @@ class CustomAnglesSkyStory {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DefaultSkyStory {
-	readonly Math = Math;
+	Math = Math;
+
 	@Input() turbidity = 8;
 	@Input() rayleigh = 6;
 	@Input() mieCoefficient = 0.005;

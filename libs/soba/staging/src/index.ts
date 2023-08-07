@@ -10,3 +10,4 @@ export * from './sky/sky';
 export * from './sparkles/sparkles';
 export { NgtsSpotLightShadow } from './spot-light/shadow-mesh';
 export * from './spot-light/spot-light';
+export * from './stars/stars';

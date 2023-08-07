@@ -136,7 +136,7 @@ export class NgtsText3D {
 	private letterSpacing = this.inputs.select('letterSpacing');
 	private lineHeight = this.inputs.select('lineHeight');
 
-	readonly geometryArgs = computed(() => {
+	geometryArgs = computed(() => {
 		const fontData = this.fontData();
 		if (!fontData) return null;
 

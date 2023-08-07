@@ -34,8 +34,8 @@ const argsOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class Scene {
-	readonly Math = Math;
-	readonly DoubleSide = THREE.DoubleSide;
+	Math = Math;
+	DoubleSide = THREE.DoubleSide;
 
 	onBeforeRender({ object: mesh }: NgtBeforeRenderEvent<THREE.Mesh>) {
 		mesh.rotation.x = mesh.rotation.y += 0.01;

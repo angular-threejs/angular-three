@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectNgtStore, NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
+import { NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
 import { NgtsContactShadows } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';
@@ -30,13 +30,8 @@ import { makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-can
 })
 class DefaultContactShadowsStory {
 	@Input() colorized = false;
-	readonly Math = Math;
 
-	store = injectNgtStore();
-
-	ngOnInit() {
-		console.log(this.store, THREE);
-	}
+	Math = Math;
 
 	onBeforeRender({ state: { clock }, object: mesh }: NgtBeforeRenderEvent<THREE.Mesh>) {
 		mesh.position.y = Math.sin(clock.getElapsedTime()) + 2;

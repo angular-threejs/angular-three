@@ -32,7 +32,7 @@ declare global {
 @Component({
 	selector: 'ngts-orbit-controls',
 	standalone: true,
-	template: ` <ngt-primitive *args="args()" ngtCompound [enableDamping]="damping()" /> `,
+	template: ` <ngt-primitive *args="args()" ngtCompound [enableDamping]="enableDamping()" /> `,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -46,31 +46,31 @@ export class NgtsOrbitControls {
 
 	@Input() controlsRef = injectNgtRef<OrbitControls>();
 
-	@Input() set camera(camera: THREE.Camera) {
+	@Input({ alias: 'camera' }) set _camera(camera: THREE.Camera) {
 		this.inputs.set({ camera });
 	}
 
-	@Input() set domElement(domElement: HTMLElement) {
+	@Input({ alias: 'domElement' }) set _domElement(domElement: HTMLElement) {
 		this.inputs.set({ domElement });
 	}
 
-	@Input() set makeDefault(makeDefault: boolean) {
+	@Input({ alias: 'makeDefault' }) set _makeDefault(makeDefault: boolean) {
 		this.inputs.set({ makeDefault });
 	}
 
-	@Input() set regress(regress: boolean) {
+	@Input({ alias: 'regress' }) set _regress(regress: boolean) {
 		this.inputs.set({ regress });
 	}
 
-	@Input() set target(target: THREE.Vector3 | Parameters<THREE.Vector3['set']>) {
+	@Input({ alias: 'target' }) set _target(target: THREE.Vector3 | Parameters<THREE.Vector3['set']>) {
 		this.inputs.set({ target });
 	}
 
-	@Input() set enableDamping(enableDamping: boolean) {
+	@Input({ alias: 'enableDamping' }) set _enableDamping(enableDamping: boolean) {
 		this.inputs.set({ enableDamping });
 	}
 
-	@Input() set keyEvents(keyEvents: boolean) {
+	@Input({ alias: 'keyEvents' }) set _keyEvents(keyEvents: boolean) {
 		this.inputs.set({ keyEvents });
 	}
 
@@ -80,8 +80,8 @@ export class NgtsOrbitControls {
 
 	private store = injectNgtStore();
 
-	readonly args = computed(() => [this.controlsRef.nativeElement]);
-	readonly damping = this.inputs.select('enableDamping');
+	args = computed(() => [this.controlsRef.nativeElement]);
+	enableDamping = this.inputs.select('enableDamping');
 
 	constructor() {
 		injectBeforeRender(

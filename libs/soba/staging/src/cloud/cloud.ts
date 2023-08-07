@@ -110,14 +110,14 @@ export class NgtsCloud {
 	private width = this.inputs.select('width');
 	private speed = this.inputs.select('speed');
 
-	readonly segments = this.inputs.select('segments');
-	readonly depth = this.inputs.select('depth');
-	readonly depthTest = this.inputs.select('depthTest');
-	readonly opacity = this.inputs.select('opacity');
-	readonly color = this.inputs.select('color');
-	readonly texture = injectNgtsTextureLoader(this.inputs.select('texture'));
+	segments = this.inputs.select('segments');
+	depth = this.inputs.select('depth');
+	depthTest = this.inputs.select('depthTest');
+	opacity = this.inputs.select('opacity');
+	color = this.inputs.select('color');
+	texture = injectNgtsTextureLoader(this.inputs.select('texture'));
 
-	readonly clouds = computed(() =>
+	clouds = computed(() =>
 		[...new Array(this.segments())].map((_, index) => ({
 			x: this.width() / 2 - Math.random() * this.width(),
 			y: this.width() / 2 - Math.random() * this.width(),

@@ -28,8 +28,8 @@ import { color, makeDecorators, makeStoryObject, turn } from '../setup-canvas';
 class CustomMaterialTextStory {
 	@Input() text = '';
 	@Input() color = 'turquoise';
-	readonly turn = turn;
-	readonly DoubleSide = DoubleSide;
+	turn = turn;
+	DoubleSide = DoubleSide;
 }
 
 @Component({
@@ -55,7 +55,7 @@ class CustomMaterialTextStory {
 })
 class LTRTextStory {
 	@Input() text = '';
-	readonly turn = turn;
+	turn = turn;
 }
 
 @Component({
@@ -85,7 +85,7 @@ class LTRTextStory {
 })
 class ShadowTextStory {
 	@Input() text = '';
-	readonly turn = turn;
+	turn = turn;
 }
 
 @Component({
@@ -112,7 +112,7 @@ class ShadowTextStory {
 })
 class StrokeTextStory {
 	@Input() text = '';
-	readonly turn = turn;
+	turn = turn;
 }
 
 @Component({
@@ -139,7 +139,7 @@ class StrokeTextStory {
 })
 class OutlineTextStory {
 	@Input() text = '';
-	readonly turn = turn;
+	turn = turn;
 }
 
 @Component({
@@ -165,7 +165,7 @@ class OutlineTextStory {
 class DefaultTextStory {
 	@Input() text = '';
 	@Input() color = '#ec2d2d';
-	readonly turn = turn;
+	turn = turn;
 }
 
 export default {

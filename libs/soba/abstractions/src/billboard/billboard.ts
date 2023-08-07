@@ -40,16 +40,16 @@ export class NgtsBillboard {
 
 	@Input() billboardRef = injectNgtRef<Group>();
 
-	@Input() set follow(follow: boolean) {
+	@Input({ alias: 'follow' }) set _follow(follow: boolean) {
 		this.inputs.set({ follow });
 	}
-	@Input() set lockX(lockX: boolean) {
+	@Input({ alias: 'lockX' }) set _lockX(lockX: boolean) {
 		this.inputs.set({ lockX });
 	}
-	@Input() set lockY(lockY: boolean) {
+	@Input({ alias: 'lockY' }) set _lockY(lockY: boolean) {
 		this.inputs.set({ lockY });
 	}
-	@Input() set lockZ(lockZ: boolean) {
+	@Input({ alias: 'lockZ' }) set _lockZ(lockZ: boolean) {
 		this.inputs.set({ lockZ });
 	}
 

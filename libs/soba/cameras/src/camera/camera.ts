@@ -19,23 +19,23 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> {
 		manual: false,
 	});
 
-	@Input() set makeDefault(makeDefault: boolean) {
+	@Input({ alias: 'makeDefault' }) set _makeDefault(makeDefault: boolean) {
 		this.inputs.set({ makeDefault });
 	}
 
-	@Input() set manual(manual: boolean) {
+	@Input({ alias: 'manual' }) set _manual(manual: boolean) {
 		this.inputs.set({ manual });
 	}
 
-	@Input() set frames(frames: number) {
+	@Input({ alias: 'frames' }) set _frames(frames: number) {
 		this.inputs.set({ frames });
 	}
 
-	@Input() set resolution(resolution: number) {
+	@Input({ alias: 'resolution' }) set _resolution(resolution: number) {
 		this.inputs.set({ resolution });
 	}
 
-	@Input() set envMap(envMap: THREE.Texture) {
+	@Input({ alias: 'envMap' }) set _envMap(envMap: THREE.Texture) {
 		this.inputs.set({ envMap });
 	}
 
