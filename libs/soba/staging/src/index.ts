@@ -6,6 +6,7 @@ export * from './environment/assets';
 export * from './environment/environment';
 export * from './float/float';
 export * from './matcap-texture/matcap-texture';
+export * from './normal-texture/normal-texture';
 export * from './sky/sky';
 export * from './sparkles/sparkles';
 export { NgtsSpotLightShadow } from './spot-light/shadow-mesh';

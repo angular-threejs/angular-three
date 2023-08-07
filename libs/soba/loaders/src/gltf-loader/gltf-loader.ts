@@ -16,7 +16,7 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 			}
 
 			dracoLoader.setDecoderPath(
-				typeof useDraco === 'string' ? useDraco : 'https://www.gstatic.com/draco/versioned/decoders/1.4.3/',
+				typeof useDraco === 'string' ? useDraco : 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/',
 			);
 			(loader as GLTFLoader).setDRACOLoader(dracoLoader);
 		}

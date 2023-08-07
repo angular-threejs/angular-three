@@ -78,7 +78,7 @@ const STORY_INPUTS = new InjectionToken<Signal<Record<string, unknown>>>('story 
 		</ng-container>
 
 		<ng-container *ngIf="canvasOptions.lights">
-			<ngt-ambient-light [intensity]="0.8 * Math.PI" />
+			<ngt-ambient-light [intensity]="canvasOptions.useLegacyLights ? 0.8 : 0.8 * Math.PI" />
 			<ngt-point-light [intensity]="1" [position]="[0, 6, 0]" />
 		</ng-container>
 

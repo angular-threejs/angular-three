@@ -40,7 +40,13 @@ class DefaultAnimationsStory {
 	Math = Math;
 
 	yBotGltf = injectNgtsGLTFLoader(() => 'soba/ybot.glb') as Signal<YBotGLTF>;
-	matcapBody = injectNgtsMatcapTexture(() => ({ id: '293534_B2BFC5_738289_8A9AA7', format: 1024 }));
+
+	private _bodyIndex = signal('293534_B2BFC5_738289_8A9AA7');
+	@Input() set bodyIndex(index: string) {
+		this._bodyIndex.set(index);
+	}
+
+	matcapBody = injectNgtsMatcapTexture(() => ({ id: this._bodyIndex(), format: 1024 }));
 	matcapJoints = injectNgtsMatcapTexture(() => ({ id: '3A2412_A78B5F_705434_836C47', format: 1024 }));
 
 	animations = injectNgtsAnimations(() => this.yBotGltf()?.animations || [], { playFirstClip: false });
@@ -75,5 +81,8 @@ export const Default = makeStoryObject(DefaultAnimationsStory, {
 	canvasOptions: { camera: { position: [0, 0, 3] } },
 	argsOptions: {
 		animation: select('Strut', { options: ['Strut', 'Dance', 'Idle'] }),
+		bodyIndex: select('293534_B2BFC5_738289_8A9AA7', {
+			options: ['293534_B2BFC5_738289_8A9AA7', '3A2412_A78B5F_705434_836C47'],
+		}),
 	},
 });

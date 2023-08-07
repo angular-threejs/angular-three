@@ -8,7 +8,7 @@ extend({ GridMaterial, Mesh, PlaneGeometry });
 
 export type NgtsGridState = {
 	/** Default plane-geometry arguments */
-	args?: ConstructorParameters<typeof THREE.PlaneGeometry>;
+	args: ConstructorParameters<typeof THREE.PlaneGeometry>;
 } & NgtGridMaterialState;
 
 declare global {

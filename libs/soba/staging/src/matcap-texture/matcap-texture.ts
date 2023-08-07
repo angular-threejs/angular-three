@@ -41,8 +41,8 @@ export function injectNgtsMatcapTexture(
 
 		const matcapList = signal<Record<string, string>>({});
 
-		const DEFAULT_MATCAP = computed(() => matcapList()[0]);
-		const numTot = computed(() => Object.keys(matcapList()).length);
+		const DEFAULT_MATCAP = () => matcapList()[0];
+		const numTot = () => Object.keys(matcapList()).length;
 
 		effect(() => {
 			if (!untracked(numTot)) {
@@ -54,7 +54,7 @@ export function injectNgtsMatcapTexture(
 			}
 		});
 
-		const fileHash = computed(() => {
+		const fileHash = () => {
 			const id = state().id;
 			if (typeof id === 'string') {
 				return id;
@@ -65,10 +65,10 @@ export function injectNgtsMatcapTexture(
 			}
 
 			return null;
-		});
+		};
 
-		const fileName = computed(() => `${fileHash() || DEFAULT_MATCAP()}${getFormatString(state().format)}.png`);
-		const url = computed(() => `${MATCAP_ROOT}/${state().format}/${fileName()}`);
+		const fileName = () => `${fileHash() || DEFAULT_MATCAP()}${getFormatString(state().format)}.png`;
+		const url = () => `${MATCAP_ROOT}/${state().format}/${fileName()}`;
 
 		let texture: Signal<THREE.Texture | null>;
 		const matcapTexture = computed(() => {
