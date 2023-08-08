@@ -21,7 +21,7 @@ import { injectNgtStore, provideNgtStore, type NgtStore } from '../store';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 import { injectNgtCatalogue, type NgtAnyConstructor } from './catalogue';
-import { ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
+import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
 import { NGT_COMPOUND_PREFIXES, NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
 import { NgtRendererClassId, attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild } from './utils';
 
@@ -47,9 +47,10 @@ class NgtRendererFactory implements RendererFactory2 {
 		const delegate = this.delegateRendererFactory.createRenderer(hostElement, type);
 		if (!type) return delegate;
 		// TODO: handle html in canvas
-		// if ((type as NgtAnyRecord)['type']['isHtml']) {
-		// return delegateRenderer;
-		// }
+		if ((type as NgtAnyRecord)['type'][HTML]) {
+			this.rendererMap.set(type.id, delegate);
+			return delegate;
+		}
 		if ((type as NgtAnyRecord)['type'][ROUTED_SCENE]) {
 			this.routedSet.add(type.id);
 		}
@@ -176,10 +177,17 @@ class NgtRenderer implements Renderer2 {
 	}
 
 	appendChild(parent: NgtRendererNode, newChild: NgtRendererNode): void {
-		// TODO: just ignore text node for now
-		if (newChild instanceof Text) return;
-		const cRS = newChild.__ngt_renderer__;
 		const pRS = parent.__ngt_renderer__;
+		const cRS = newChild.__ngt_renderer__;
+
+		if (
+			pRS[NgtRendererClassId.type] === 'dom' &&
+			(newChild instanceof Text || cRS[NgtRendererClassId.type] === 'dom')
+		) {
+			this.store.addChild(parent, newChild);
+			this.delegate.appendChild(parent, newChild);
+			return;
+		}
 
 		if (cRS[NgtRendererClassId.type] === 'comment') {
 			this.store.setParent(newChild, parent);
@@ -296,6 +304,7 @@ class NgtRenderer implements Renderer2 {
 			// we'll try to get the grandparent instance here so that we can run appendChild with both instances
 			const closestGrandparentInstance = this.store.getClosestParentWithInstance(parent);
 			if (closestGrandparentInstance) this.appendChild(closestGrandparentInstance, newChild);
+			return;
 		}
 	}
 
@@ -313,6 +322,13 @@ class NgtRenderer implements Renderer2 {
 	removeChild(parent: NgtRendererNode, oldChild: NgtRendererNode, isHostElement?: boolean | undefined): void {
 		const pRS = parent.__ngt_renderer__;
 		const cRS = oldChild.__ngt_renderer__;
+
+		if (cRS[NgtRendererClassId.type] === 'dom' && (!pRS || pRS[NgtRendererClassId.type] === 'dom')) {
+			this.delegate.removeChild(parent, oldChild);
+			this.store.destroy(oldChild, parent);
+			return;
+		}
+
 		if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'three') {
 			removeThreeChild(parent, oldChild, true);
 			this.store.destroy(oldChild, parent);
@@ -354,7 +370,12 @@ class NgtRenderer implements Renderer2 {
 			return;
 		}
 
-		if (rS[NgtRendererClassId.type] === 'three') this.store.applyAttribute(el, name, value);
+		if (rS[NgtRendererClassId.type] === 'three') {
+			this.store.applyAttribute(el, name, value);
+			return;
+		}
+
+		return this.delegate.setAttribute(el, name, value);
 	}
 
 	setProperty(el: NgtRendererNode, name: string, value: any): void {
@@ -379,7 +400,12 @@ class NgtRenderer implements Renderer2 {
 			return;
 		}
 
-		if (rS[NgtRendererClassId.type] === 'three') this.store.applyProperty(el, name, value);
+		if (rS[NgtRendererClassId.type] === 'three') {
+			this.store.applyProperty(el, name, value);
+			return;
+		}
+
+		return this.delegate.setProperty(el, name, value);
 	}
 
 	listen(target: NgtRendererNode, eventName: string, callback: (event: any) => boolean | void): () => void {
@@ -462,3 +488,4 @@ export function provideNgtRenderer(store: NgtStore, compoundPrefixes: string[], 
 }
 
 export { extend } from './catalogue';
+export { HTML } from './constants';

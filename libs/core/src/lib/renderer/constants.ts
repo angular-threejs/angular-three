@@ -1,4 +1,5 @@
 export const ROUTED_SCENE = '__ngt_renderer_is_routed_scene__';
+export const HTML = '__ngt_renderer_is_html';
 export const SPECIAL_INTERNAL_ADD_COMMENT = '__ngt_renderer_add_comment__';
 
 export const SPECIAL_DOM_TAG = {

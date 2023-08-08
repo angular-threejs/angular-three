@@ -116,7 +116,7 @@ export class NgtRendererStore {
 	}
 
 	removeChild(node: NgtRendererNode, child: NgtRendererNode) {
-		const index = node.__ngt_renderer__[NgtRendererClassId.children].findIndex((c) => child === c);
+		const index = node.__ngt_renderer__?.[NgtRendererClassId.children].findIndex((c) => child === c);
 		if (index >= 0) {
 			node.__ngt_renderer__[NgtRendererClassId.children].splice(index, 1);
 		}
@@ -331,7 +331,7 @@ export class NgtRendererStore {
 
 	destroy(node: NgtRendererNode, parent?: NgtRendererNode) {
 		const rS = node.__ngt_renderer__;
-		if (rS[NgtRendererClassId.destroyed]) return;
+		if (!rS || rS[NgtRendererClassId.destroyed]) return;
 		if (rS[NgtRendererClassId.type] === 'three') {
 			rS[NgtRendererClassId.compound] = undefined!;
 			rS[NgtRendererClassId.compoundParent] = undefined!;
@@ -398,7 +398,7 @@ export class NgtRendererStore {
 		// nullify parent
 		rS[NgtRendererClassId.parent] = null;
 		for (const renderChild of rS[NgtRendererClassId.children] || []) {
-			if (renderChild.__ngt_renderer__[NgtRendererClassId.type] === 'three' && parent) {
+			if (renderChild.__ngt_renderer__?.[NgtRendererClassId.type] === 'three' && parent) {
 				removeThreeChild(parent, renderChild, true);
 			}
 			this.destroy(renderChild, parent);
