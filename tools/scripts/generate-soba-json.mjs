@@ -31,7 +31,7 @@ const entryPoints = {
 	controls: ['orbit-controls'],
 	abstractions: ['billboard', 'text', 'grid', 'text-3d'],
 	cameras: ['perspective-camera', 'orthographic-camera', 'cube-camera'],
-	misc: ['decal', 'sampler', 'shadow', 'html'],
+	misc: ['decal', 'sampler', 'shadow', 'html', 'trail'],
 	staging: [
 		'center',
 		'float',

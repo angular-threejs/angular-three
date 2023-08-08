@@ -56,6 +56,9 @@ dependencies:
   mermaid:
     specifier: ^10.2.4
     version: 10.2.4
+  meshline:
+    specifier: ^3.1.6
+    version: 3.1.6(three@0.155.0)
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
@@ -16768,6 +16771,14 @@ packages:
       web-worker: 1.2.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /meshline@3.1.6(three@0.155.0):
+    resolution: {integrity: sha512-8JZJOdaL5oz3PI/upG8JvP/5FfzYUOhrkJ8np/WKvXzl0/PZ2V9pqTvCIjSKv+w9ccg2xb+yyBhXAwt6ier3ug==}
+    peerDependencies:
+      three: '>=0.137'
+    dependencies:
+      three: 0.155.0
     dev: false
 
   /meshoptimizer@0.18.1:
