@@ -103,6 +103,7 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"rxjs": "~7.8.1",
+		"stats-gl": "^1.0.4",
 		"three-mesh-bvh": "^0.6.3",
 		"three-stdlib": "^2.24.1",
 		"troika-three-text": "^0.47.2",

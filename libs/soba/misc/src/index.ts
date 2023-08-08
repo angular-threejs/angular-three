@@ -7,3 +7,4 @@ export * from './fbo/fbo';
 export * from './html/html';
 export * from './sampler/sampler';
 export * from './shadow/shadow';
+export * from './stats-gl/stats-gl';
