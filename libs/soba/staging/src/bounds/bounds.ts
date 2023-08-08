@@ -82,7 +82,6 @@ export const [injectNgtsBoundsApi, provideNgtsBoundsApi] = createInjectionToken(
 		<ngt-group [ref]="boundsRef">
 			<ng-content />
 		</ngt-group>
-
 	`,
 	providers: [provideNgtsBoundsApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
