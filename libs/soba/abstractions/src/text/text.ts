@@ -5,7 +5,6 @@ import {
 	EventEmitter,
 	Input,
 	Output,
-	computed,
 	effect,
 	inject,
 } from '@angular/core';
@@ -235,12 +234,11 @@ export class NgtsText {
 	}
 
 	private preloadFont() {
-		const font = this.inputs.select('font');
-		const characters = this.inputs.select('characters');
-		const trigger = computed(() => ({ font: font(), characters: characters() }));
+		const _font = this.inputs.select('font');
+		const _characters = this.inputs.select('characters');
 
 		effect(() => {
-			const { font, characters } = trigger();
+			const [font, characters] = [_font(), _characters()];
 			const invalidate = this.store.get('invalidate');
 			preloadFont({ font, characters }, () => invalidate());
 		});
@@ -248,8 +246,7 @@ export class NgtsText {
 
 	private syncText() {
 		effect(() => {
-			this.inputs.state();
-			const invalidate = this.store.get('invalidate');
+			const [invalidate] = [this.store.get('invalidate'), this.inputs.state()];
 			this.troikaText.sync(() => {
 				invalidate();
 				if (this.sync.observed) {

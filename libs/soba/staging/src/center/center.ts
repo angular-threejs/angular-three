@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, EventEmitter, Input, Output, computed, effect } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, EventEmitter, Input, Output, effect } from '@angular/core';
 import { extend, injectNgtRef, signalStore, type NgtGroup } from 'angular-three';
 import * as THREE from 'three';
 import { Group } from 'three';
@@ -130,61 +130,21 @@ export class NgtsCenter {
 	}
 
 	private setPosition() {
-		const cacheKey = this.inputs.select('cacheKey');
-		const top = this.inputs.select('top');
-		const left = this.inputs.select('left');
-		const front = this.inputs.select('front');
-		const disable = this.inputs.select('disable');
-		const disableX = this.inputs.select('disableX');
-		const disableY = this.inputs.select('disableY');
-		const disableZ = this.inputs.select('disableZ');
-		const precise = this.inputs.select('precise');
-		const right = this.inputs.select('right');
-		const bottom = this.inputs.select('bottom');
-		const back = this.inputs.select('back');
-
-		const trigger = computed(() => {
-			const center = this.centerRef.nativeElement;
-			const outer = this.outerRef.nativeElement;
-			const inner = this.innerRef.nativeElement;
-			const innerChildren = this.innerRef.children();
-			return {
-				center,
-				outer,
-				inner,
-				children: innerChildren(),
-				cacheKey: cacheKey(),
-				top: top(),
-				left: left(),
-				front: front(),
-				disable: disable(),
-				disableX: disableX(),
-				disableY: disableY(),
-				disableZ: disableZ(),
-				precise: precise(),
-				right: right(),
-				bottom: bottom(),
-				back: back(),
-			};
-		});
+		const innerChildren = this.innerRef.children();
 
 		effect(() => {
-			const {
+			const [
 				outer,
 				inner,
-				center: centerRef,
-				precise,
-				top,
-				bottom,
-				left,
-				front,
-				right,
-				back,
-				disable,
-				disableX,
-				disableY,
-				disableZ,
-			} = trigger();
+				centerRef,
+				{ precise, top, bottom, left, front, right, back, disable, disableX, disableY, disableZ },
+			] = [
+				this.outerRef.nativeElement,
+				this.innerRef.nativeElement,
+				this.centerRef.nativeElement,
+				this.inputs.state(),
+				innerChildren(),
+			];
 
 			outer.matrixWorld.identity();
 			const box3 = new THREE.Box3().setFromObject(inner, precise);

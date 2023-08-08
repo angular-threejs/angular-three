@@ -57,53 +57,47 @@ export function injectNgtsCubeCamera(
 ) {
 	injector = assertInjectionContext(injectNgtsCubeCamera, injector);
 	return runInInjectionContext(injector, () => {
-		const state = computed(() => {
-			const cameraState = cubeCameraState();
-			return { ...defaultCubeCameraState, ...cameraState };
-		});
+		const state = computed(() => ({ ...defaultCubeCameraState, ...cubeCameraState() }));
+		const resolution = computed(() => state().resolution);
+		const near = computed(() => state().near);
+		const far = computed(() => state().far);
 
 		const store = injectNgtStore();
 
-		const gl = store.select('gl');
-		const scene = store.select('scene');
+		const _gl = store.select('gl');
+		const _scene = store.select('scene');
 
-		const fbo = computed(() => {
-			const renderTarget = new THREE.WebGLCubeRenderTarget(state().resolution);
+		const _fbo = computed(() => {
+			const renderTarget = new THREE.WebGLCubeRenderTarget(resolution());
 			renderTarget.texture.type = THREE.HalfFloatType;
 			return renderTarget;
 		});
 
 		effect((onCleanup) => {
-			const _fbo = fbo();
-			onCleanup(() => _fbo.dispose());
+			const fbo = _fbo();
+			onCleanup(() => fbo.dispose());
 		});
 
-		const camera = computed(() => {
-			const { near, far } = state();
-			return new THREE.CubeCamera(near, far, fbo());
-		});
+		const _camera = computed(() => new THREE.CubeCamera(near(), far(), _fbo()));
 
 		let originalFog: THREE.Scene['fog'];
 		let originalBackground: THREE.Scene['background'];
 
 		const update = computed(() => {
-			const _scene = scene();
-			const _gl = gl();
-			const _camera = camera();
-			const { envMap, fog } = untracked(state);
+			const [scene, gl, camera, { envMap, fog }] = [_scene(), _gl(), _camera(), untracked(state)];
 
 			return () => {
-				originalFog = _scene.fog;
-				originalBackground = _scene.background;
-				_scene.background = envMap || originalBackground;
-				_scene.fog = fog || originalFog;
-				_camera.update(_gl, _scene);
-				_scene.fog = originalFog;
-				_scene.background = originalBackground;
+				originalFog = scene.fog;
+				originalBackground = scene.background;
+				scene.background = envMap || originalBackground;
+				scene.fog = fog || originalFog;
+				camera.update(gl, scene);
+				scene.fog = originalFog;
+				scene.background = originalBackground;
 			};
 		});
 
-		return { fbo, camera, update };
+		return { fbo: _fbo, camera: _camera, update };
 	});
 }
 
@@ -152,10 +146,10 @@ export class NgtsCubeCamera implements OnInit {
 	@Input() cameraRef = injectNgtRef<Group>();
 
 	@ContentChild(NgtsCubeCameraContent, { static: true, read: TemplateRef })
-	cameraContent!: TemplateRef<{ texture: Signal<THREE.WebGLRenderTarget['texture']> }>;
+	private cameraContent!: TemplateRef<{ texture: Signal<THREE.WebGLRenderTarget['texture']> }>;
 
 	@ViewChild('anchor', { static: true, read: ViewContainerRef })
-	anchor!: ViewContainerRef;
+	private anchor!: ViewContainerRef;
 
 	/** Resolution of the FBO, 256 */
 	@Input({ alias: 'resolution' }) set _resolution(resolution: number) {
@@ -182,7 +176,7 @@ export class NgtsCubeCamera implements OnInit {
 		this.inputs.set({ fog });
 	}
 
-	cubeCamera = injectNgtsCubeCamera(this.inputs.select());
+	cubeCamera = injectNgtsCubeCamera(this.inputs.state);
 	private texture = computed(() => this.cubeCamera.fbo().texture);
 	private contentRef?: EmbeddedViewRef<unknown>;
 

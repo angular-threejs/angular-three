@@ -79,6 +79,16 @@ export class NgtsOrbitControls {
 	@Output() end = new EventEmitter<THREE.Event>();
 
 	private store = injectNgtStore();
+	private invalidate = this.store.select('invalidate');
+	private performance = this.store.select('performance');
+	private defaultCamera = this.store.select('camera');
+	private glDomElement = this.store.select('gl', 'domElement');
+
+	private regress = this.inputs.select('regress');
+	private camera = this.inputs.select('camera');
+	private domElement = this.inputs.select('domElement');
+	private keyEvents = this.inputs.select('keyEvents');
+	private makeDefault = this.inputs.select('makeDefault');
 
 	args = computed(() => [this.controlsRef.nativeElement]);
 	enableDamping = this.inputs.select('enableDamping');
@@ -86,7 +96,7 @@ export class NgtsOrbitControls {
 	constructor() {
 		injectBeforeRender(
 			() => {
-				const controls = this.controlsRef.untracked;
+				const controls = this.controlsRef.nativeElement;
 				if (controls && controls.enabled) {
 					controls.update();
 				}
@@ -101,14 +111,13 @@ export class NgtsOrbitControls {
 	}
 
 	private setControls() {
-		const camera = this.inputs.select('camera');
-		const defaultCamera = this.store.select('camera');
-		const trigger = computed(() => ({ camera: camera(), defaultCamera: defaultCamera() }));
-
 		effect(() => {
-			const { camera, defaultCamera } = trigger();
+			const [camera, defaultCamera, controls] = [
+				this.camera(),
+				this.defaultCamera(),
+				this.controlsRef.nativeElement,
+			];
 			const controlsCamera = camera || defaultCamera;
-			const controls = this.controlsRef.nativeElement;
 			if (!controls || controls.object !== controlsCamera) {
 				this.controlsRef.nativeElement = new OrbitControls(controlsCamera as NgtCamera);
 			}
@@ -116,25 +125,14 @@ export class NgtsOrbitControls {
 	}
 
 	private connectElement() {
-		const glDomElement = this.store.select('gl', 'domElement');
-		const domElement = this.inputs.select('domElement');
-		const regress = this.inputs.select('regress');
-		const invalidate = this.store.select('invalidate');
-		const keyEvents = this.inputs.select('keyEvents');
-
-		const trigger = computed(() => {
-			const eventsSource = this.store.get('events', 'connected');
-			return {
-				keyEvents: keyEvents(),
-				controls: this.controlsRef.nativeElement,
-				domElement: domElement() || eventsSource || glDomElement(),
-				regress: regress(),
-				invalidate: invalidate(),
-			};
-		});
-
 		effect((onCleanup) => {
-			const { domElement, controls, keyEvents } = trigger();
+			const [keyEvents, domElement, controls] = [
+				this.keyEvents(),
+				this.domElement() || this.store.get('events', 'connected') || this.glDomElement(),
+				this.controlsRef.nativeElement,
+				this.invalidate(),
+				this.regress(),
+			];
 			if (!controls) return;
 			if (keyEvents) {
 				controls.connect(keyEvents === true ? domElement : keyEvents);
@@ -146,11 +144,8 @@ export class NgtsOrbitControls {
 	}
 
 	private makeControlsDefault() {
-		const makeDefault = this.inputs.select('makeDefault');
-		const trigger = computed(() => ({ controls: this.controlsRef.nativeElement, makeDefault: makeDefault() }));
-
 		effect((onCleanup) => {
-			const { controls, makeDefault } = trigger();
+			const [controls, makeDefault] = [this.controlsRef.nativeElement, this.makeDefault()];
 			if (!controls) return;
 			if (makeDefault) {
 				const oldControls = this.store.get('controls');
@@ -161,18 +156,13 @@ export class NgtsOrbitControls {
 	}
 
 	private setEvents() {
-		const invalidate = this.store.select('invalidate');
-		const performance = this.store.select('performance');
-		const regress = this.inputs.select('regress');
-
-		const trigger = computed(() => ({
-			invalidate: invalidate(),
-			performance: performance(),
-			regress: regress(),
-			controls: this.controlsRef.nativeElement,
-		}));
 		effect((onCleanup) => {
-			const { controls, invalidate, performance, regress } = trigger();
+			const [controls, invalidate, performance, regress] = [
+				this.controlsRef.nativeElement,
+				this.invalidate(),
+				this.performance(),
+				this.regress(),
+			];
 			if (!controls) return;
 			const changeCallback: (e: THREE.Event) => void = (e) => {
 				invalidate();

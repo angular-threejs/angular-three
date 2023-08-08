@@ -42,6 +42,8 @@ extend({ CubeCamera });
 export class NgtsEnvironmentPortal {
 	environmentInput = inject(NgtsEnvironmentInput);
 	private store = injectNgtStore();
+	private gl = this.store.select('gl');
+	private scene = this.store.select('scene');
 
 	virtualSceneRef = injectNgtRef<THREE.Scene>(prepare(new THREE.Scene()));
 	cubeCameraRef = injectNgtRef<THREE.CubeCamera>();
@@ -69,23 +71,18 @@ export class NgtsEnvironmentPortal {
 	}
 
 	private setEnvProps() {
-		const gl = this.store.select('gl');
-		const scene = this.store.select('scene');
-
-		const trigger = computed(() => ({
-			gl: gl(),
-			defaultScene: scene(),
-			fbo: this.fbo(),
-			scene: this.environmentInput.scene(),
-			background: this.environmentInput.background(),
-			frames: this.environmentInput.frames(),
-			blur: this.environmentInput.blur(),
-			virtualScene: this.virtualSceneRef.nativeElement,
-			cubeCamera: this.cubeCameraRef.nativeElement,
-		}));
-
 		effect((onCleanup) => {
-			const { virtualScene, blur, frames, background, scene, fbo, defaultScene, gl, cubeCamera } = trigger();
+			const [virtualScene, blur, frames, background, scene, fbo, defaultScene, gl, cubeCamera] = [
+				this.virtualSceneRef.nativeElement,
+				this.environmentInput.blur(),
+				this.environmentInput.frames(),
+				this.environmentInput.background(),
+				this.environmentInput.scene(),
+				this.fbo(),
+				this.scene(),
+				this.gl(),
+				this.cubeCameraRef.nativeElement,
+			];
 			if (!cubeCamera || !virtualScene) return;
 			if (frames === 1) cubeCamera.update(gl, virtualScene);
 			const cleanUp = setEnvProps(background!, scene, defaultScene, fbo.texture, blur);

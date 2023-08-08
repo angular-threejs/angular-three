@@ -80,6 +80,8 @@ export class NgtsCameraShake {
 	}
 
 	private store = injectNgtStore();
+	private camera = this.store.select('camera');
+	private controls = this.store.select('controls') as unknown as Signal<ControlsProto>;
 
 	private initialRotation = this.store.get('camera').rotation.clone();
 	private yawNoise = new SimplexNoise();
@@ -102,10 +104,11 @@ export class NgtsCameraShake {
 
 	private beforeRender() {
 		injectBeforeRender(({ clock, delta }) => {
-			const { maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate } =
-				this.inputs.get();
-			const intensity = this.constrainedIntensity();
-			const camera = this.store.get('camera');
+			const [
+				{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate },
+				intensity,
+				camera,
+			] = [this.inputs.get(), this.constrainedIntensity(), this.camera()];
 
 			const shake = Math.pow(intensity, 2);
 			const yaw = maxYaw * shake * this.yawNoise.noise(clock.elapsedTime * yawFrequency, 1);
@@ -125,12 +128,8 @@ export class NgtsCameraShake {
 	}
 
 	private setEvents() {
-		const camera = this.store.select('camera');
-		const controls = this.store.select('controls') as unknown as Signal<ControlsProto>;
-		const trigger = computed(() => ({ camera: camera(), controls: controls() }));
-
 		effect((onCleanup) => {
-			const { camera, controls } = trigger();
+			const [camera, controls] = [this.camera(), this.controls()];
 			if (controls) {
 				const callback = () => void (this.initialRotation = camera.rotation.clone());
 				controls.addEventListener('change', callback);

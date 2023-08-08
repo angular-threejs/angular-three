@@ -1,4 +1,4 @@
-import { Directive, Input, computed, effect, inject } from '@angular/core';
+import { Directive, Input, effect, inject } from '@angular/core';
 import { injectNgtStore, signalStore } from 'angular-three';
 import { NgtsEnvironmentInput, NgtsEnvironmentInputState } from './environment-input';
 import { setEnvProps } from './utils';
@@ -13,11 +13,11 @@ export class NgtsEnvironmentMap {
 
 	private inputs = signalStore<Pick<NgtsEnvironmentInputState, 'map' | 'background'>>({ background: false });
 
-	@Input() set map(map: THREE.Texture) {
+	@Input({ alias: 'map' }) set _map(map: THREE.Texture) {
 		this.inputs.set({ map });
 	}
 
-	@Input() set background(background: boolean) {
+	@Input({ alias: 'background' }) set _background(background: boolean) {
 		this.inputs.set({ background });
 	}
 
@@ -25,20 +25,19 @@ export class NgtsEnvironmentMap {
 		this.setEnvProps();
 	}
 
-	private setEnvProps() {
-		const scene = this.store.select('scene');
-		const background = this.inputs.select('background');
-		const map = this.inputs.select('map');
-		const trigger = computed(() => ({
-			defaultScene: scene(),
-			scene: this.environmentInput.scene(),
-			background: background(),
-			blur: this.environmentInput.blur(),
-			texture: map(),
-		}));
+	private scene = this.store.select('scene');
+	private background = this.inputs.select('background');
+	private map = this.inputs.select('map');
 
+	private setEnvProps() {
 		effect((onCleanup) => {
-			const { background, defaultScene, scene, blur, texture } = trigger();
+			const [defaultScene, scene, background, blur, texture] = [
+				this.scene(),
+				this.environmentInput.scene(),
+				this.background(),
+				this.environmentInput.blur(),
+				this.map(),
+			];
 			if (!texture) return;
 			const cleanUp = setEnvProps(background!, scene, defaultScene, texture, blur);
 			onCleanup(cleanUp);

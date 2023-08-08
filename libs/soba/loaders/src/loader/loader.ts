@@ -53,13 +53,13 @@ export interface NgtsLoaderState {
 export class NgtsLoader {
 	private inputs = signalStore<NgtsLoaderState>({
 		dataInterpolation: defaultDataInterpolation,
-		initialState: (active: boolean) => active,
+		initialState: (active) => active,
 	});
 
-	private _progress = injectNgtsProgress();
+	private progressState = injectNgtsProgress();
 
-	active = computed(() => this._progress().active);
-	progress = computed(() => this._progress().progress);
+	active = computed(() => this.progressState().active);
+	progress = computed(() => this.progressState().progress);
 
 	container = this.inputs.select('containerClass');
 	inner = this.inputs.select('innerClass');
@@ -101,8 +101,7 @@ export class NgtsLoader {
 
 	private setShown() {
 		effect((onCleanup) => {
-			const active = this.active();
-			const lastShown = untracked(this.shown);
+			const [active, lastShown] = [this.active(), untracked(this.shown)];
 			if (lastShown !== active) {
 				const timeoutId = setTimeout(() => {
 					this.shown.set(active);
@@ -116,12 +115,10 @@ export class NgtsLoader {
 		let progressRef = 0;
 		let rafId: ReturnType<typeof requestAnimationFrame>;
 
-		const dataInterpolation = this.inputs.select('dataInterpolation');
-		const trigger = computed(() => ({ dataInterpolation: dataInterpolation(), progress: this.progress() }));
+		const _dataInterpolation = this.inputs.select('dataInterpolation');
 
 		effect((onCleanup) => {
-			const { dataInterpolation, progress } = trigger();
-
+			const [dataInterpolation, progress] = [_dataInterpolation(), this.progress()];
 			const updateProgress = () => {
 				if (!this.progressSpanRef?.nativeElement) return;
 				progressRef += (progress - progressRef) / 2;

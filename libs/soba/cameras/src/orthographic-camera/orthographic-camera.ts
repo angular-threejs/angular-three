@@ -57,30 +57,30 @@ export class NgtsOrthographicCamera extends NgtsCamera<THREE.OrthographicCamera>
 
 	@ContentChild(NgtsCameraContent) cameraContent?: NgtsCameraContent;
 
-	@Input() set left(left: number) {
+	@Input({ alias: 'left' }) set _left(left: number) {
 		this.orthographicInputs.set({ left });
 	}
 
-	@Input() set right(right: number) {
+	@Input({ alias: 'right' }) set _right(right: number) {
 		this.orthographicInputs.set({ right });
 	}
 
-	@Input() set top(top: number) {
+	@Input({ alias: 'top' }) set _top(top: number) {
 		this.orthographicInputs.set({ top });
 	}
 
-	@Input() set bottom(bottom: number) {
+	@Input({ alias: 'bottom' }) set _bottom(bottom: number) {
 		this.orthographicInputs.set({ bottom });
 	}
 
-	private _left = this.orthographicInputs.select('left');
-	private _right = this.orthographicInputs.select('right');
-	private _top = this.orthographicInputs.select('top');
-	private _bottom = this.orthographicInputs.select('bottom');
+	private left = this.orthographicInputs.select('left');
+	private right = this.orthographicInputs.select('right');
+	private top = this.orthographicInputs.select('top');
+	private bottom = this.orthographicInputs.select('bottom');
 	private size = this.store.select('size');
 
-	cameraLeft = computed(() => this._left() || this.size().width / -2);
-	cameraRight = computed(() => this._right() || this.size().width / 2);
-	cameraTop = computed(() => this._top() || this.size().height / 2);
-	cameraBottom = computed(() => this._bottom() || this.size().height / -2);
+	cameraLeft = computed(() => this.left() || this.size().width / -2);
+	cameraRight = computed(() => this.right() || this.size().width / 2);
+	cameraTop = computed(() => this.top() || this.size().height / 2);
+	cameraBottom = computed(() => this.bottom() || this.size().height / -2);
 }

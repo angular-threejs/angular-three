@@ -31,24 +31,22 @@ declare global {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsBillboard {
-	private inputs = signalStore<NgtsBillboardState>({
-		follow: true,
-		lockX: false,
-		lockY: false,
-		lockZ: false,
-	});
+	private inputs = signalStore<NgtsBillboardState>({ follow: true, lockX: false, lockY: false, lockZ: false });
 
 	@Input() billboardRef = injectNgtRef<Group>();
 
 	@Input({ alias: 'follow' }) set _follow(follow: boolean) {
 		this.inputs.set({ follow });
 	}
+
 	@Input({ alias: 'lockX' }) set _lockX(lockX: boolean) {
 		this.inputs.set({ lockX });
 	}
+
 	@Input({ alias: 'lockY' }) set _lockY(lockY: boolean) {
 		this.inputs.set({ lockY });
 	}
+
 	@Input({ alias: 'lockZ' }) set _lockZ(lockZ: boolean) {
 		this.inputs.set({ lockZ });
 	}

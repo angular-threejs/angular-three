@@ -1,14 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-	ElementRef,
-	InjectionToken,
-	Injector,
-	Optional,
-	SkipSelf,
-	computed,
-	effect,
-	runInInjectionContext,
-} from '@angular/core';
+import { ElementRef, InjectionToken, Injector, Optional, SkipSelf, effect, runInInjectionContext } from '@angular/core';
 import { Subject, type Observable } from 'rxjs';
 import * as THREE from 'three';
 import type { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
@@ -344,19 +335,12 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 		let oldDpr = state.viewport.dpr;
 		let oldCamera = state.camera;
 
-		const camera = store.select('camera');
-		const size = store.select('size');
-		const viewport = store.select('viewport');
-
-		const triggers = computed(() => ({
-			camera: camera(),
-			size: size(),
-			viewport: viewport(),
-			gl: store.get('gl'),
-		}));
+		const _camera = store.select('camera');
+		const _size = store.select('size');
+		const _viewport = store.select('viewport');
 
 		effect(() => {
-			const { camera, size, viewport, gl } = triggers();
+			const [camera, size, viewport, gl] = [_camera(), _size(), _viewport(), store.get('gl')];
 
 			// Resize camera and renderer on changes to size and pixelratio
 			if (size !== oldSize || viewport.dpr !== oldDpr) {
