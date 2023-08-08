@@ -41,10 +41,10 @@ export abstract class NgtsCamera<TCamera extends NgtCamera> {
 
 	@Input() cameraRef = injectNgtRef<TCamera>();
 
+	private cameraResolution = this.inputs.select('resolution');
+
 	protected store = injectNgtStore();
 	protected fboRef = injectNgtsFBO(() => ({ width: this.cameraResolution() }));
-
-	private cameraResolution = this.inputs.select('resolution');
 
 	constructor() {
 		this.setDefaultCamera();

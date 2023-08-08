@@ -176,7 +176,11 @@ export class NgtPortal implements OnInit {
 		const { events, size, ...restInputsState } = inputsState.state || {};
 
 		const containerState = inputsState.container;
-		const container = is.ref(containerState) ? containerState.nativeElement : containerState;
+		let container = is.ref(containerState) ? containerState.nativeElement : containerState;
+
+		if (!is.instance(container)) {
+			container = prepare(container);
+		}
 
 		const localState = getLocalState(container);
 		if (!localState.store) {
