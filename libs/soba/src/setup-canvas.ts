@@ -216,12 +216,10 @@ export function makeCanvasOptions(options: DeepPartial<CanvasOptions> = {}) {
 }
 
 export function makeStoryFunction(story: Type<unknown>, canvasOptions: DeepPartial<CanvasOptions> = {}) {
-	return (args: Args) => {
-		return {
-			props: { options: makeCanvasOptions(canvasOptions), inputs: args || {}, story },
-			template: `<storybook-setup  [story]="story" [inputs]="inputs" [options]="options" />`,
-		};
-	};
+	return (args: Args) => ({
+		props: { options: makeCanvasOptions(canvasOptions), inputs: args || {}, story },
+		template: `<storybook-setup  [story]="story" [inputs]="inputs" [options]="options" />`,
+	});
 }
 
 export function makeStoryObject(

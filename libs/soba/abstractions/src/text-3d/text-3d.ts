@@ -138,7 +138,7 @@ export class NgtsText3D {
 
 	geometryArgs = computed(() => {
 		const fontData = this.fontData();
-		if (!fontData) return null;
+		if (!fontData || !fontData.data) return null;
 
 		return [
 			this.text(),

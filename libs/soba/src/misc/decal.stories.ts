@@ -63,7 +63,13 @@ class LoopOverInstancedBufferAttribute {
 
 		<decal-loop-over-instanced-buffer-attribute [buffer]="buffer()">
 			<ng-template let-a="attribute">
-				<ngts-decal [mesh]="ref" [position]="a.position" [rotation]="a.rotation" [scale]="a.scale">
+				<ngts-decal
+					[mesh]="ref"
+					[position]="a.position"
+					[rotation]="a.rotation"
+					[scale]="a.scale"
+					[debug]="debug"
+				>
 					<ngt-mesh-physical-material
 						[roughness]="0.2"
 						[transparent]="true"
@@ -84,6 +90,8 @@ class DefaultDecalStory {
 	Math = Math;
 
 	ref = injectNgtRef<THREE.Mesh>();
+
+	@Input() debug = false;
 
 	private transformFn: NgtsSurfaceSamplerTransformFn = ({ dummy, position, normal }) => {
 		const p = new THREE.Vector3();
@@ -118,4 +126,7 @@ export default {
 
 export const Default = makeStoryObject(DefaultDecalStory, {
 	canvasOptions: { camera: { position: [0, 0, 5] } },
+	argsOptions: {
+		debug: false,
+	},
 });

@@ -144,7 +144,7 @@ export class NgtsDecal {
 				this.position(),
 				this.rotation(),
 				this.scale(),
-				this.helperRef.untracked,
+				this.helperRef.nativeElement,
 			];
 
 			const parent = mesh ? (is.ref(mesh) ? mesh.nativeElement : mesh) : decal.parent;
