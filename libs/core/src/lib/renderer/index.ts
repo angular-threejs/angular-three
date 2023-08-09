@@ -287,23 +287,7 @@ class NgtRenderer implements Renderer2 {
 			}
 		}
 
-		const shouldFindGrandparentInstance =
-			// if child is three but haven't been attached to a parent yet
-			(cRS[NgtRendererClassId.type] === 'three' && !untracked(getLocalState(newChild).parent)) ||
-			// or both parent and child are DOM elements
-			// or they are compound AND haven't had a THREE instance yet
-			((pRS[NgtRendererClassId.type] === 'dom' ||
-				(pRS[NgtRendererClassId.type] === 'compound' && !pRS[NgtRendererClassId.compounded])) &&
-				(cRS[NgtRendererClassId.type] === 'dom' ||
-					(cRS[NgtRendererClassId.type] === 'compound' && !cRS[NgtRendererClassId.compounded]))) ||
-			// or the parent is a non-compounded compound
-			// and the child is a compounded compound
-			((pRS[NgtRendererClassId.type] === 'dom' ||
-				(pRS[NgtRendererClassId.type] === 'compound' && !pRS[NgtRendererClassId.compounded])) &&
-				cRS[NgtRendererClassId.type] === 'compound' &&
-				!!cRS[NgtRendererClassId.compounded]);
-
-		if (shouldFindGrandparentInstance) {
+		if (this.shouldFindGrandparentInstance(pRS, cRS, newChild)) {
 			// we'll try to get the grandparent instance here so that we can run appendChild with both instances
 			const closestGrandparentInstance = this.store.getClosestParentWithInstance(parent);
 			if (closestGrandparentInstance) this.appendChild(closestGrandparentInstance, newChild);
@@ -459,6 +443,28 @@ class NgtRenderer implements Renderer2 {
 		}
 
 		return () => {};
+	}
+
+	private shouldFindGrandparentInstance(pRS: NgtRendererState, cRS: NgtRendererState, child: NgtRendererNode) {
+		const pType = pRS[NgtRendererClassId.type];
+		const cType = cRS[NgtRendererClassId.type];
+		const isParentCompounded = pRS[NgtRendererClassId.compounded];
+		const isChildCompounded = cRS[NgtRendererClassId.compounded];
+
+		// if child is three but haven't been attached to a parent yet
+		const isDanglingThreeChild = cType === 'three' && !untracked(getLocalState(child).parent);
+		// or both parent and child are DOM elements
+		// or they are compound AND haven't had a THREE instance yet
+		const isParentStillDOM = pType === 'dom' || (pType === 'compound' && !isParentCompounded);
+		const isChildStillDOM = cType === 'dom' || (cType === 'compound' && !isChildCompounded);
+		// and the child is a compounded compound
+		const isCompoundChildCompounded = cType === 'compound' && !!isChildCompounded;
+
+		return (
+			isDanglingThreeChild ||
+			(isParentStillDOM && isChildStillDOM) ||
+			(isParentStillDOM && isCompoundChildCompounded)
+		);
 	}
 
 	createText = this.delegate.createText.bind(this.delegate);
