@@ -80,10 +80,9 @@ export class NgtsOrbitControls {
 
 	private store = injectNgtStore();
 	private invalidate = this.store.select('invalidate');
-	private performance = this.store.select('performance');
+	private performanceRegress = this.store.select('performance', 'regress');
 	private defaultCamera = this.store.select('camera');
 	private glDomElement = this.store.select('gl', 'domElement');
-
 	private regress = this.inputs.select('regress');
 	private camera = this.inputs.select('camera');
 	private domElement = this.inputs.select('domElement');
@@ -157,16 +156,16 @@ export class NgtsOrbitControls {
 
 	private setEvents() {
 		effect((onCleanup) => {
-			const [controls, invalidate, performance, regress] = [
+			const [controls, invalidate, performanceRegress, regress] = [
 				this.controlsRef.nativeElement,
 				this.invalidate(),
-				this.performance(),
+				this.performanceRegress(),
 				this.regress(),
 			];
 			if (!controls) return;
 			const changeCallback: (e: THREE.Event) => void = (e) => {
 				invalidate();
-				if (regress) performance.regress();
+				if (regress) performanceRegress();
 				if (this.change.observed) this.change.emit(e);
 			};
 

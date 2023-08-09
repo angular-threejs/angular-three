@@ -1,5 +1,15 @@
 import { DOCUMENT } from '@angular/common';
-import { ElementRef, InjectionToken, Injector, Optional, SkipSelf, effect, runInInjectionContext } from '@angular/core';
+import {
+	ChangeDetectorRef,
+	ElementRef,
+	InjectionToken,
+	Injector,
+	Optional,
+	SkipSelf,
+	effect,
+	inject,
+	runInInjectionContext,
+} from '@angular/core';
 import { Subject, type Observable } from 'rxjs';
 import * as THREE from 'three';
 import type { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
@@ -8,6 +18,7 @@ import { NGT_LOOP, type NgtLoop } from './loop';
 import { createInjectionToken } from './utils/create-injection-token';
 import { is } from './utils/is';
 import { makeDpr } from './utils/make';
+import { safeDetectChanges } from './utils/safe-detect-changes';
 import { signalStore, type NgtSignalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
@@ -152,6 +163,8 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 			throw new Error(`[NGT] Window is not available.`);
 		}
 
+		const cdr = inject(ChangeDetectorRef);
+
 		// NOTE: using Subject because we do not care about late-subscribers
 		const pointerMissed$ = new Subject<MouseEvent>();
 
@@ -225,11 +238,12 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 						// Set lower bound performance
 						if (state.performance.current !== state.performance.min)
 							setPerformanceCurrent(state.performance.min);
+
 						// Go back to upper bound performance after a while unless something regresses meanwhile
-						performanceTimeout = setTimeout(
-							() => setPerformanceCurrent(get('performance', 'max')),
-							state.performance.debounce,
-						);
+						performanceTimeout = setTimeout(() => {
+							setPerformanceCurrent(get('performance', 'max'));
+							safeDetectChanges(cdr);
+						}, state.performance.debounce);
 					},
 				},
 
