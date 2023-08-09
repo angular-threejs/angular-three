@@ -296,7 +296,10 @@ class NgtRenderer implements Renderer2 {
 				(pRS[NgtRendererClassId.type] === 'compound' && !pRS[NgtRendererClassId.compounded])) &&
 				(cRS[NgtRendererClassId.type] === 'dom' ||
 					(cRS[NgtRendererClassId.type] === 'compound' && !cRS[NgtRendererClassId.compounded]))) ||
-			(pRS[NgtRendererClassId.type] === 'dom' &&
+			// or the parent is a non-compounded compound
+			// and the child is a compounded compound
+			((pRS[NgtRendererClassId.type] === 'dom' ||
+				(pRS[NgtRendererClassId.type] === 'compound' && !pRS[NgtRendererClassId.compounded])) &&
 				cRS[NgtRendererClassId.type] === 'compound' &&
 				!!cRS[NgtRendererClassId.compounded]);
 

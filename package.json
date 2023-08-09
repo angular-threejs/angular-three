@@ -94,6 +94,7 @@
 		"@angular/router": "16.1.7",
 		"@swc/helpers": "~0.5.0",
 		"front-matter": "^4.0.2",
+		"maath": "^0.7.0",
 		"marked": "^5.0.2",
 		"marked-gfm-heading-id": "^3.0.4",
 		"marked-highlight": "^2.0.1",

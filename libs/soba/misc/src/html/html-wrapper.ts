@@ -293,6 +293,10 @@ export class NgtsHtmlWrapper {
 
 				let contentRef: EmbeddedViewRef<unknown>;
 				let contentParent: HTMLElement;
+				/**
+				 * NOTE: utilizing rAF here so that renderAnchor (ViewContainerRef) has a chance to be resolved
+				 * TODO: Another approach is to call render() in ngOnInit and pass in an injector to the effect
+				 */
 				const rAF = requestAnimationFrame(() => {
 					if (content && this.renderAnchor) {
 						contentRef = this.renderAnchor.createEmbeddedView(content);

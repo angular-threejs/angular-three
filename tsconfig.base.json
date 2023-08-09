@@ -1,61 +1,33 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2022",
-    "module": "esnext",
-    "lib": [
-      "es2022",
-      "es2020",
-      "dom"
-    ],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@platform/plugin": [
-        "libs/plugin/src/index.ts"
-      ],
-      "angular-three": [
-        "libs/core/src/index.ts"
-      ],
-      "angular-three-soba": [
-        "libs/soba/src/index.ts"
-      ],
-      "angular-three-soba/abstractions": [
-        "libs/soba/abstractions/src/index.ts"
-      ],
-      "angular-three-soba/cameras": [
-        "libs/soba/cameras/src/index.ts"
-      ],
-      "angular-three-soba/controls": [
-        "libs/soba/controls/src/index.ts"
-      ],
-      "angular-three-soba/loaders": [
-        "libs/soba/loaders/src/index.ts"
-      ],
-      "angular-three-soba/misc": [
-        "libs/soba/misc/src/index.ts"
-      ],
-      "angular-three-soba/performances": [
-        "libs/soba/performances/src/index.ts"
-      ],
-      "angular-three-soba/shaders": [
-        "libs/soba/shaders/src/index.ts"
-      ],
-      "angular-three-soba/staging": [
-        "libs/soba/staging/src/index.ts"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+	"compileOnSave": false,
+	"compilerOptions": {
+		"rootDir": ".",
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "es2022",
+		"module": "esnext",
+		"lib": ["es2022", "es2020", "dom"],
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@platform/plugin": ["libs/plugin/src/index.ts"],
+			"angular-three": ["libs/core/src/index.ts"],
+			"angular-three-soba": ["libs/soba/src/index.ts"],
+			"angular-three-soba/abstractions": ["libs/soba/abstractions/src/index.ts"],
+			"angular-three-soba/cameras": ["libs/soba/cameras/src/index.ts"],
+			"angular-three-soba/controls": ["libs/soba/controls/src/index.ts"],
+			"angular-three-soba/loaders": ["libs/soba/loaders/src/index.ts"],
+			"angular-three-soba/materials": ["libs/soba/materials/src/index.ts"],
+			"angular-three-soba/misc": ["libs/soba/misc/src/index.ts"],
+			"angular-three-soba/performances": ["libs/soba/performances/src/index.ts"],
+			"angular-three-soba/shaders": ["libs/soba/shaders/src/index.ts"],
+			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts"]
+		}
+	},
+	"exclude": ["node_modules", "tmp"]
 }
