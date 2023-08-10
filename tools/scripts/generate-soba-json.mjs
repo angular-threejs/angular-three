@@ -32,6 +32,8 @@ const entryPoints = {
 	abstractions: ['billboard', 'text', 'grid', 'text-3d'],
 	cameras: ['perspective-camera', 'orthographic-camera', 'cube-camera'],
 	misc: ['decal', 'sampler', 'shadow', 'html', 'trail'],
+	materials: ['mesh-wobble-material', 'mesh-distort-material', 'mesh-reflector-material', 'point-material'],
+	performances: ['points', 'segments'],
 	staging: [
 		'center',
 		'float',

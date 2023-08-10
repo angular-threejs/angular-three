@@ -19,10 +19,11 @@ export class NgtKey {
 	private lastKey = '';
 	private viewRef?: EmbeddedViewRef<unknown>;
 
-	@Input() set key(key: string) {
-		if (this.lastKey !== key) {
+	@Input() set key(key: string | number | object) {
+		const normalizedKey = key.toString();
+		if (this.lastKey !== normalizedKey) {
 			this.createView();
-			this.lastKey = key;
+			this.lastKey = normalizedKey;
 		}
 	}
 

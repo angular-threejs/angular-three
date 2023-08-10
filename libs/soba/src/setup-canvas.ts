@@ -8,6 +8,7 @@ import {
 	InjectionToken,
 	Injector,
 	Input,
+	Provider,
 	ViewChild,
 	ViewContainerRef,
 	createEnvironmentInjector,
@@ -79,7 +80,7 @@ const STORY_INPUTS = new InjectionToken<Signal<Record<string, unknown>>>('story 
 
 		<ng-container *ngIf="canvasOptions.lights">
 			<ngt-ambient-light [intensity]="canvasOptions.useLegacyLights ? 0.8 : 0.8 * Math.PI" />
-			<ngt-point-light [intensity]="canvasOptions.useLegacyLights ? 1 : 1 * Math.PI" [position]="[0, 6, 0]" />
+			<ngt-point-light [intensity]="canvasOptions.useLegacyLights ? 1 : Math.PI" [position]="[0, 6, 0]" />
 		</ng-container>
 
 		<ng-container *ngIf="canvasOptions.controls">
@@ -179,7 +180,6 @@ export class StorybookSetup implements OnInit {
 		this.ref.setInput('performance', this.options.performance);
 		this.ref.setInput('camera', this.options.camera);
 		// NOTE: r155 has made useLegacyLights "false" by default.
-		console.log('legacyLights', this.options.useLegacyLights);
 		this.ref.setInput('gl', { useLegacyLights: this.options.useLegacyLights ?? false });
 		this.ref.setInput('compoundPrefixes', this.options.compoundPrefixes || []);
 		this.ref.setInput('sceneGraph', StorybookScene);
@@ -279,6 +279,6 @@ export function turn(object: THREE.Object3D) {
 	object.rotation.y += 0.01;
 }
 
-export function makeDecorators(...decoratorFns: Decorator[]): Decorator[] {
-	return [moduleMetadata({ imports: [StorybookSetup] }), ...decoratorFns];
+export function makeDecorators(providers: Provider[] = [], ...decoratorFns: Decorator[]): Decorator[] {
+	return [moduleMetadata({ imports: [StorybookSetup], providers }), ...decoratorFns];
 }
