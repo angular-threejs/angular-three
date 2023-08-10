@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { NgtArgs, injectNgtRef } from 'angular-three';
-import { NgtsHtml, NgtsHtmlContent } from 'angular-three-soba/misc';
+import { NgtsHtml, NgtsSobaContent } from 'angular-three-soba/misc';
 import { Mesh } from 'three';
 import { makeDecorators, makeStoryFunction, makeStoryObject, turn } from '../setup-canvas';
 
@@ -22,7 +22,7 @@ class HtmlContent {
 				<ngt-icosahedron-geometry *args="[2, 2]" />
 				<ngt-mesh-basic-material [color]="color" [wireframe]="true" />
 				<ngts-html [distanceFactor]="distanceFactor" [renderedDivClass]="className" [transform]="transform">
-					<div *ngtsHtmlContent><html-content text="First" /></div>
+					<div *ngtsSobaContent><html-content text="First" /></div>
 				</ngts-html>
 			</ngt-mesh>
 
@@ -30,7 +30,7 @@ class HtmlContent {
 				<ngt-icosahedron-geometry *args="[2, 2]" />
 				<ngt-mesh-basic-material [color]="color" [wireframe]="true" />
 				<ngts-html [distanceFactor]="distanceFactor" [renderedDivClass]="className" [transform]="transform">
-					<div *ngtsHtmlContent><html-content text="Second" /></div>
+					<div *ngtsSobaContent><html-content text="Second" /></div>
 				</ngts-html>
 			</ngt-mesh>
 
@@ -38,7 +38,7 @@ class HtmlContent {
 				<ngt-icosahedron-geometry *args="[2, 2]" />
 				<ngt-mesh-basic-material [color]="color" [wireframe]="true" />
 				<ngts-html [distanceFactor]="distanceFactor" [renderedDivClass]="className" [transform]="transform">
-					<div *ngtsHtmlContent><html-content text="Third" /></div>
+					<div *ngtsSobaContent><html-content text="Third" /></div>
 				</ngts-html>
 			</ngt-mesh>
 
@@ -46,7 +46,7 @@ class HtmlContent {
 		</ngt-group>
 	`,
 	// NOTE: I think createComponent might work better than createEmbeddedView
-	imports: [NgtsHtml, NgtsHtmlContent, NgtArgs, HtmlContent],
+	imports: [NgtsHtml, NgtsSobaContent, NgtArgs, HtmlContent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DefaultHtmlStory {
@@ -74,11 +74,11 @@ class DefaultHtmlStory {
 				[position]="[5, 15, 0]"
 				[style]="{ background: 'palegreen', fontSize: '50px', padding: '10px 18px', border: '2px solid black' }"
 			>
-				<html-content *ngtsHtmlContent text="Transform mode" />
+				<html-content *ngtsSobaContent text="Transform mode" />
 			</ngts-html>
 		</default-html-story>
 	`,
-	imports: [DefaultHtmlStory, NgtsHtml, NgtsHtmlContent, HtmlContent],
+	imports: [DefaultHtmlStory, NgtsHtml, NgtsSobaContent, HtmlContent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class TransformHtmlStory {}
@@ -91,7 +91,7 @@ class TransformHtmlStory {}
 				<ngt-icosahedron-geometry *args="[5, 5]" />
 				<ngt-mesh-basic-material color="hotpink" />
 				<ngts-html [position]="[0, 0, -6]" renderedDivClass="html-story-label" occlude="blending">
-					<span *ngtsHtmlContent>Blending</span>
+					<span *ngtsSobaContent>Blending</span>
 				</ngts-html>
 			</ngt-mesh>
 
@@ -104,7 +104,7 @@ class TransformHtmlStory {}
 					renderedDivClass="html-story-label html-story-label-B"
 					occlude="blending"
 				>
-					<span *ngtsHtmlContent>Blending w/ transform</span>
+					<span *ngtsSobaContent>Blending w/ transform</span>
 				</ngts-html>
 			</ngt-mesh>
 
@@ -117,14 +117,14 @@ class TransformHtmlStory {}
 					renderedDivClass="html-story-label"
 					[occlude]="[occluderRef]"
 				>
-					<span *ngtsHtmlContent>Raycast occlusion</span>
+					<span *ngtsSobaContent>Raycast occlusion</span>
 				</ngts-html>
 			</ngt-mesh>
 		</ngt-group>
 		<ngt-ambient-light [intensity]="0.8" />
 		<ngt-point-light [intensity]="1" [position]="[0, 6, 0]" />
 	`,
-	imports: [NgtArgs, NgtsHtml, NgtsHtmlContent],
+	imports: [NgtArgs, NgtsHtml, NgtsSobaContent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class OccludeHtmlStory {

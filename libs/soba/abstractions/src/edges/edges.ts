@@ -1,6 +1,7 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ContentChild, Directive, Input, TemplateRef, effect } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ContentChild, Input, TemplateRef, effect } from '@angular/core';
 import { extend, injectNgtRef, signalStore, type NgtAnyRecord, type NgtLineSegments } from 'angular-three';
+import { NgtsSobaContent } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { LineBasicMaterial, LineSegments } from 'three';
 
@@ -22,9 +23,6 @@ declare global {
 
 extend({ LineSegments, LineBasicMaterial });
 
-@Directive({ selector: 'ng-template[ngtsEdgesContent]', standalone: true })
-export class NgtsEdgesContent {}
-
 @Component({
 	selector: 'ngts-edges',
 	standalone: true,
@@ -42,7 +40,7 @@ export class NgtsEdgesContent {}
 export class NgtsEdges {
 	nullRaycast = () => null;
 
-	@ContentChild(NgtsEdgesContent, { read: TemplateRef }) content?: TemplateRef<unknown>;
+	@ContentChild(NgtsSobaContent, { read: TemplateRef }) content?: TemplateRef<unknown>;
 
 	private inputs = signalStore<NgtsEdgesState>({ threshold: 15, color: 'black' });
 

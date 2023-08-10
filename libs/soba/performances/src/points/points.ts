@@ -3,7 +3,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	Component,
 	ContentChild,
-	Directive,
 	Injector,
 	Input,
 	NgZone,
@@ -28,6 +27,7 @@ import {
 	type NgtPoints,
 	type NgtRef,
 } from 'angular-three';
+import { NgtsSobaContent } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
 import { NgtsPointsInput, type NgtsPointsBuffersState, type NgtsPointsInstancesState } from './points-input';
@@ -278,9 +278,6 @@ export class NgtsPointsBuffers {
 	}
 }
 
-@Directive({ selector: 'ng-template[ngtsPointsContent]', standalone: true })
-export class NgtsPointsContent {}
-
 @Component({
 	selector: 'ngts-points',
 	standalone: true,
@@ -298,5 +295,5 @@ export class NgtsPointsContent {}
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsPoints extends NgtsPointsInput {
-	@ContentChild(NgtsPointsContent, { static: true, read: TemplateRef }) content!: TemplateRef<unknown>;
+	@ContentChild(NgtsSobaContent, { static: true, read: TemplateRef }) content!: TemplateRef<unknown>;
 }

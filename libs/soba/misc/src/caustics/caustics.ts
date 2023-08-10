@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Input } from '@angular/core';
 import { extend, injectNgtRef, injectNgtStore, NgtGroup, signalStore } from 'angular-three';
-import { NgtsEdges, NgtsEdgesContent } from 'angular-three-soba/abstractions';
-import { injectNgtsFBO } from 'angular-three-soba/misc';
+import { NgtsEdges } from 'angular-three-soba/abstractions';
+import { injectNgtsFBO, NgtsSobaContent } from 'angular-three-soba/misc';
 import { CausticsMaterial, CausticsProjectionMaterial } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
 import { Group, LineBasicMaterial, Mesh, OrthographicCamera, PlaneGeometry, Scene } from 'three';
@@ -129,12 +129,12 @@ declare global {
 				/>
 
 				<ngts-edges *ngIf="debug()">
-					<ngt-line-basic-material *ngtEdgesContent color="#ffff00" [toneMapped]="false" />
+					<ngt-line-basic-material *ngtsSobaContent color="#ffff00" [toneMapped]="false" />
 				</ngts-edges>
 			</ngt-mesh>
 		</ngt-group>
 	`,
-	imports: [NgIf, NgtsEdges, NgtsEdgesContent],
+	imports: [NgIf, NgtsEdges, NgtsSobaContent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsCaustics {

@@ -1,12 +1,13 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, effect, signal } from '@angular/core';
 import { extend, injectBeforeRender, injectNgtStore } from 'angular-three';
 import { NgtsPointMaterial } from 'angular-three-soba/materials';
-import { NgtsPoint, NgtsPoints, NgtsPointsContent } from 'angular-three-soba/performances';
+import { NgtsPoint, NgtsPoints } from 'angular-three-soba/performances';
 import { shaderMaterial } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
 import { makeCanvasOptions, makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 import { NgFor } from '@angular/common';
+import { NgtsSobaContent } from 'angular-three-soba/misc';
 import * as buffer from 'maath/buffer';
 import * as misc from 'maath/misc';
 
@@ -82,7 +83,7 @@ class PointEvent {
 	standalone: true,
 	template: `
 		<ngts-points [limit]="points.length" [range]="points.length">
-			<ng-template ngtsPointsContent>
+			<ng-template ngtsSobaContent>
 				<ngts-point-material
 					[transparent]="true"
 					[vertexColors]="true"
@@ -94,7 +95,7 @@ class PointEvent {
 			</ng-template>
 		</ngts-points>
 	`,
-	imports: [NgtsPoints, NgtsPointsContent, NgFor, NgtsPointMaterial, PointEvent],
+	imports: [NgtsPoints, NgtsSobaContent, NgFor, NgtsPointMaterial, PointEvent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class PointsSelectionStory {
@@ -123,13 +124,13 @@ class PointsSelectionStory {
 	standalone: true,
 	template: `
 		<ngts-points>
-			<ng-template ngtsPointsContent>
+			<ng-template ngtsSobaContent>
 				<points-point-event *ngFor="let p of points" [position]="p.v3" [color]="p.v3" [size]="p.size" />
 				<ngt-my-points-material />
 			</ng-template>
 		</ngts-points>
 	`,
-	imports: [NgtsPoints, NgtsPointsContent, PointEvent, NgFor],
+	imports: [NgtsPoints, NgtsSobaContent, PointEvent, NgFor],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class PointsInstancesStory {
@@ -158,10 +159,10 @@ class PointsInstancesStory {
 	standalone: true,
 	template: `
 		<ngts-points [positions]="positionFinal" [colors]="color" [sizes]="size">
-			<ngt-my-points-material *ngtsPointsContent />
+			<ngt-my-points-material *ngtsSobaContent />
 		</ngts-points>
 	`,
-	imports: [NgtsPoints, NgtsPointsContent],
+	imports: [NgtsPoints, NgtsSobaContent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class PointsBuffersStory {

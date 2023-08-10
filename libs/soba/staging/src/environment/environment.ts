@@ -1,13 +1,11 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ContentChild, Directive, TemplateRef } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ContentChild, TemplateRef } from '@angular/core';
+import { NgtsSobaContent } from 'angular-three-soba/misc';
 import { NgtsEnvironmentCube } from './environment-cube';
 import { NgtsEnvironmentGround } from './environment-ground';
 import { NgtsEnvironmentInput } from './environment-input';
 import { NgtsEnvironmentMap } from './environment-map';
 import { NgtsEnvironmentPortal } from './environment-portal';
-
-@Directive({ selector: 'ng-template[ngtsEnvironmentContent]', standalone: true })
-export class NgtsEnvironmentContent {}
 
 @Component({
 	selector: 'ngts-environment',
@@ -38,5 +36,5 @@ export class NgtsEnvironmentContent {}
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsEnvironment extends NgtsEnvironmentInput {
-	@ContentChild(NgtsEnvironmentContent, { read: TemplateRef }) content?: TemplateRef<unknown>;
+	@ContentChild(NgtsSobaContent, { read: TemplateRef }) content?: TemplateRef<unknown>;
 }

@@ -3,7 +3,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	Component,
 	ContentChild,
-	Directive,
 	EventEmitter,
 	Input,
 	Output,
@@ -23,6 +22,7 @@ import {
 } from 'angular-three';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
+import { NgtsSobaContent } from '../content/content';
 import { NgtsHtmlWrapper, defaultCalculatePosition } from './html-wrapper';
 
 extend({ Group, PlaneGeometry, Mesh, ShaderMaterial });
@@ -69,9 +69,6 @@ export const [injectNgtsHtmlInputs, provideNgtsHtmlInputs] = createInjectionToke
 	(html: NgtsHtml) => ({ state: html.inputs.state, ...html.state }),
 	{ isRoot: false, deps: [forwardRef(() => NgtsHtml)] },
 );
-
-@Directive({ selector: 'ng-template[ngtsHtmlContent]', standalone: true })
-export class NgtsHtmlContent {}
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -129,7 +126,7 @@ export class NgtsHtml {
 		receiveShadow: false,
 	});
 
-	@ContentChild(NgtsHtmlContent, { read: TemplateRef }) set content(content: TemplateRef<unknown>) {
+	@ContentChild(NgtsSobaContent, { read: TemplateRef }) set content(content: TemplateRef<unknown>) {
 		this.inputs.set({ content });
 	}
 
