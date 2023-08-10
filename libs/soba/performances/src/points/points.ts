@@ -6,6 +6,8 @@ import {
 	Directive,
 	Injector,
 	Input,
+	NgZone,
+	OnInit,
 	TemplateRef,
 	computed,
 	effect,
@@ -202,17 +204,24 @@ export class NgtsPointsInstances {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsPoint {
+export class NgtsPoint implements OnInit {
 	@Input() pointRef = injectNgtRef<PositionPoint>();
 
+	private zone = inject(NgZone);
+	private injector = inject(Injector);
 	pointsInstancesApi = injectNgtsPointsInstanceApi();
 
-	constructor() {
-		effect((onCleanup) => {
-			const api = this.pointsInstancesApi();
-			api.getParent().nativeElement;
-			onCleanup(() => api.subscribe(this.pointRef));
-		});
+	ngOnInit() {
+		effect(
+			(onCleanup) => {
+				const cleanup = this.zone.runOutsideAngular(() => {
+					const api = this.pointsInstancesApi();
+					return api.subscribe(this.pointRef);
+				});
+				onCleanup(cleanup);
+			},
+			{ injector: this.injector },
+		);
 	}
 }
 
