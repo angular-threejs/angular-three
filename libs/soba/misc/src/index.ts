@@ -10,4 +10,5 @@ export * from './html/html';
 export * from './sampler/sampler';
 export * from './shadow/shadow';
 export * from './stats-gl/stats-gl';
+export * from './trail-texture/inject-trail-texture';
 export * from './trail/trail';
