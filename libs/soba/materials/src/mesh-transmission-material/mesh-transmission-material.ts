@@ -6,8 +6,8 @@ import {
 	injectNgtRef,
 	NgtArgs,
 	signalStore,
+	type NgtAnyRecord,
 	type NgtMeshPhysicalMaterial,
-    NgtAnyRecord,
 } from 'angular-three';
 import { injectNgtsFBO } from 'angular-three-soba/misc';
 import { DiscardMaterial, MeshTransmissionMaterial } from 'angular-three-soba/shaders';

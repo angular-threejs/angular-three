@@ -68,7 +68,9 @@
 					"libs/soba/performances/**/*.ts",
 					"libs/soba/performances/**/*.html",
 					"libs/soba/materials/**/*.ts",
-					"libs/soba/materials/**/*.html"
+					"libs/soba/materials/**/*.html",
+					"libs/soba/modifiers/**/*.ts",
+					"libs/soba/modifiers/**/*.html"
 				]
 			}
 		},
