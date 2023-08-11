@@ -310,6 +310,16 @@ class NgtRenderer implements Renderer2 {
 		const pRS = parent.__ngt_renderer__;
 		const cRS = oldChild.__ngt_renderer__;
 
+		if (
+			(!cRS || !pRS) &&
+			parent instanceof Element &&
+			(oldChild instanceof Element || oldChild instanceof Text || oldChild instanceof Comment)
+		) {
+			this.delegate.removeChild(parent, oldChild);
+			this.store.destroy(oldChild, parent);
+			return;
+		}
+
 		if (cRS[NgtRendererClassId.type] === 'dom' && (!pRS || pRS[NgtRendererClassId.type] === 'dom')) {
 			this.delegate.removeChild(parent, oldChild);
 			this.store.destroy(oldChild, parent);
