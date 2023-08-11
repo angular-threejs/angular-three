@@ -70,7 +70,9 @@
 					"libs/soba/materials/**/*.ts",
 					"libs/soba/materials/**/*.html",
 					"libs/soba/modifiers/**/*.ts",
-					"libs/soba/modifiers/**/*.html"
+					"libs/soba/modifiers/**/*.html",
+					"libs/soba/utils/**/*.ts",
+					"libs/soba/utils/**/*.html"
 				]
 			}
 		},

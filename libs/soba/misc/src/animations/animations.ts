@@ -25,6 +25,7 @@ export function injectNgtsAnimations(
 		const mixer = new THREE.AnimationMixer(null!);
 		const actions = {} as Record<string, THREE.AnimationAction>;
 		let cached = {} as Record<string, THREE.AnimationAction>;
+		let object: THREE.Object3D | null = null;
 
 		const clips = [] as THREE.AnimationClip[];
 		const names = [] as string[];
@@ -34,10 +35,12 @@ export function injectNgtsAnimations(
 			cached = {};
 			// uncache actions
 			Object.values(actions).forEach((action) => {
-				mixer.uncacheAction(action as unknown as THREE.AnimationClip, actualRef.untracked);
+				mixer.uncacheAction(action as unknown as THREE.AnimationClip, object!);
 			});
 			// stop all actions
 			mixer.stopAllAction();
+
+			object = null;
 		});
 
 		injectBeforeRender(({ delta }) => mixer.update(delta));
@@ -47,6 +50,7 @@ export function injectNgtsAnimations(
 		effect(() => {
 			const actual = actualRef.nativeElement;
 			if (!actual) return;
+			object = actual;
 			const animations = animationsFactory();
 
 			for (let i = 0; i < animations.length; i++) {

@@ -1,7 +1,6 @@
 export * from './animations/animations';
 export * from './bake-shadows/bake-shadows';
 export * from './caustics/caustics';
-export * from './content/content';
 export * from './decal/decal';
 export * from './depth-buffer/depth-buffer';
 export * from './example/example';

@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { NgtArgs, injectNgtRef } from 'angular-three';
-import { NgtsHtml, NgtsSobaContent } from 'angular-three-soba/misc';
+import { NgtsHtml } from 'angular-three-soba/misc';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import { Mesh } from 'three';
 import { makeDecorators, makeStoryFunction, makeStoryObject, turn } from '../setup-canvas';
 

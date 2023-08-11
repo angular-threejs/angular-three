@@ -27,7 +27,7 @@ import {
 	type NgtPoints,
 	type NgtRef,
 } from 'angular-three';
-import { NgtsSobaContent } from 'angular-three-soba/misc';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
 import { NgtsPointsInput, type NgtsPointsBuffersState, type NgtsPointsInstancesState } from './points-input';
@@ -240,14 +240,14 @@ export class NgtsPoint implements OnInit {
 				/>
 				<ngt-buffer-attribute
 					attach="attributes.color"
-					[count]="pointsInput.colors().length / pointsInput.stride()"
+					[count]="pointsInput.colorsLength() / pointsInput.stride()"
 					[array]="pointsInput.colors()"
 					[itemSize]="pointsInput.stride()"
 					[usage]="DynamicDrawUsage"
 				/>
 				<ngt-buffer-attribute
 					attach="attributes.size"
-					[count]="pointsInput.sizes().length / pointsInput.stride()"
+					[count]="pointsInput.sizesLength() / pointsInput.stride()"
 					[array]="pointsInput.sizes()"
 					[itemSize]="1"
 					[usage]="DynamicDrawUsage"

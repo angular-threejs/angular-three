@@ -20,9 +20,9 @@ import {
 	type NgtRef,
 	type NgtVector3,
 } from 'angular-three';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
-import { NgtsSobaContent } from '../content/content';
 import { NgtsHtmlWrapper, defaultCalculatePosition } from './html-wrapper';
 
 extend({ Group, PlaneGeometry, Mesh, ShaderMaterial });

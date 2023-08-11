@@ -28,7 +28,8 @@
 			"angular-three-soba/modifiers": ["libs/soba/modifiers/src/index.ts"],
 			"angular-three-soba/performances": ["libs/soba/performances/src/index.ts"],
 			"angular-three-soba/shaders": ["libs/soba/shaders/src/index.ts"],
-			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts"]
+			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts"],
+			"angular-three-soba/utils": ["libs/soba/utils/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

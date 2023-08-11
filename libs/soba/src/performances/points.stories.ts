@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { makeCanvasOptions, makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 import { NgFor } from '@angular/common';
-import { NgtsSobaContent } from 'angular-three-soba/misc';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as buffer from 'maath/buffer';
 import * as misc from 'maath/misc';
 

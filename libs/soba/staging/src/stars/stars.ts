@@ -31,7 +31,7 @@ const genStar = (r: number) =>
 	selector: 'ngts-stars',
 	standalone: true,
 	template: `
-		<ngt-points [ref]="pointsRef">
+		<ngt-points [ref]="starsRef">
 			<ngt-buffer-geometry>
 				<ngt-buffer-attribute attach="attributes.position" *args="[attributes().positions, 3]" />
 				<ngt-buffer-attribute attach="attributes.color" *args="[attributes().colors, 3]" />

@@ -1,7 +1,7 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ContentChild, Input, TemplateRef, effect } from '@angular/core';
 import { extend, injectNgtRef, signalStore, type NgtAnyRecord, type NgtLineSegments } from 'angular-three';
-import { NgtsSobaContent } from 'angular-three-soba/misc';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 import { LineBasicMaterial, LineSegments } from 'three';
 

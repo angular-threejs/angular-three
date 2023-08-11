@@ -47,6 +47,7 @@ const entryPoints = {
 		'accumulative-shadows',
 		'accumulative-shadows/randomized-lights',
 		'stage',
+		'backdrop',
 	],
 };
 

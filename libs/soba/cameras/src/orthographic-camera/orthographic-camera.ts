@@ -41,7 +41,7 @@ declare global {
 			/>
 		</ngt-orthographic-camera>
 		<ngt-group #group *ngIf="cameraContent && cameraContent.ngtsCameraContent">
-			<ng-container *ngTemplateOutlet="cameraContent.template; context: { fbo: fboRef(), group }" />
+			<ng-container *ngTemplateOutlet="cameraContent.template; context: { fbo: fboRef.nativeElement, group }" />
 		</ngt-group>
 	`,
 	imports: [NgIf, NgTemplateOutlet],

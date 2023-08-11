@@ -1,6 +1,6 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ContentChild, TemplateRef } from '@angular/core';
-import { NgtsSobaContent } from 'angular-three-soba/misc';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import { NgtsEnvironmentCube } from './environment-cube';
 import { NgtsEnvironmentGround } from './environment-ground';
 import { NgtsEnvironmentInput } from './environment-input';

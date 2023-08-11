@@ -2,11 +2,12 @@ import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Input } from '@angular/core';
 import { extend, injectNgtRef, injectNgtStore, NgtGroup, signalStore } from 'angular-three';
 import { NgtsEdges } from 'angular-three-soba/abstractions';
-import { injectNgtsFBO, NgtsSobaContent } from 'angular-three-soba/misc';
 import { CausticsMaterial, CausticsProjectionMaterial } from 'angular-three-soba/shaders';
+import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 import { Group, LineBasicMaterial, Mesh, OrthographicCamera, PlaneGeometry, Scene } from 'three';
 import { FullScreenQuad } from 'three-stdlib';
+import { injectNgtsFBO } from '../fbo/fbo';
 
 extend({ Group, Scene, Mesh, PlaneGeometry, OrthographicCamera, CausticsProjectionMaterial, LineBasicMaterial });
 

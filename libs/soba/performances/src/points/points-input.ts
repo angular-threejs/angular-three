@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, computed } from '@angular/core';
 import { injectNgtRef, signalStore } from 'angular-three';
 import type { Points } from 'three';
 
@@ -53,6 +53,8 @@ export abstract class NgtsPointsInput {
 	range = this.inputs.select('range');
 	positions = this.inputs.select('positions');
 	colors = this.inputs.select('colors');
+	colorsLength = computed(() => this.colors()?.length || 0);
 	sizes = this.inputs.select('sizes');
+	sizesLength = computed(() => this.sizes()?.length || 0);
 	stride = this.inputs.select('stride');
 }

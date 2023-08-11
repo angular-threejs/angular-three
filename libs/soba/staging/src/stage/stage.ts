@@ -89,7 +89,7 @@ export class NgtsStageRefit implements OnChanges {
 	boundsApi = injectNgtsBoundsApi();
 
 	@Input() radius = 0;
-	@Input() adjustCamera = true;
+	@Input() adjustCamera: boolean | number = true;
 
 	ngOnChanges() {
 		if (this.adjustCamera) {
@@ -157,16 +157,16 @@ export class NgtsStageRefit implements OnChanges {
 				[scale]="boundingState.get('radius') * 4"
 				[far]="boundingState.get('radius')"
 				[blur]="2"
-				[opacity]="shadowsState().opacity"
-				[width]="shadowsState().width"
-				[height]="shadowsState().height"
-				[smooth]="shadowsState().smooth"
-				[resolution]="shadowsState().resolution"
-				[frames]="shadowsState().frames"
-				[scale]="shadowsState().scale"
-				[color]="shadowsState().color"
-				[depthWrite]="shadowsState().depthWrite"
-				[renderOrder]="shadowsState().renderOrder"
+				[opacity]="shadowsState().opacity!"
+				[width]="shadowsState().width!"
+				[height]="shadowsState().height!"
+				[smooth]="shadowsState().smooth!"
+				[resolution]="shadowsState().resolution!"
+				[frames]="shadowsState().frames!"
+				[scale]="shadowsState().scale!"
+				[color]="shadowsState().color!"
+				[depthWrite]="shadowsState().depthWrite!"
+				[renderOrder]="shadowsState().renderOrder!"
 			/>
 			<ngts-accumulative-shadows
 				*ngIf="shadowsState().accumulativeShadow"
@@ -175,11 +175,11 @@ export class NgtsStageRefit implements OnChanges {
 				[alphaTest]="0.9"
 				[toneMapped]="true"
 				[scale]="boundingState.get('radius') * 4"
-				[opacity]="shadowsState().opacity"
-				[alphaTest]="shadowsState().alphaTest"
-				[color]="shadowsState().color"
-				[colorBlend]="shadowsState().colorBlend"
-				[resolution]="shadowsState().resolution"
+				[opacity]="shadowsState().opacity!"
+				[alphaTest]="shadowsState().alphaTest!"
+				[color]="shadowsState().color!"
+				[colorBlend]="shadowsState().colorBlend!"
+				[resolution]="shadowsState().resolution!"
 			>
 				<ngts-randomized-lights
 					[amount]="shadowsState().amount ?? 8"
