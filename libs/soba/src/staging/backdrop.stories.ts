@@ -54,7 +54,7 @@ export default {
 };
 
 const canvasOptions = makeCanvasOptions({
-	camera: { position: [-1, 2, 4], fov: 35 },
+	camera: { position: [-1, 2, 5], fov: 35 },
 	controls: false,
 	compoundPrefixes: ['backdrop-robot'],
 	useLegacyLights: true,

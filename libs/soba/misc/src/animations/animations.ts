@@ -1,4 +1,4 @@
-import { DestroyRef, Injector, computed, effect, inject, runInInjectionContext } from '@angular/core';
+import { Injector, computed, effect, runInInjectionContext } from '@angular/core';
 import { assertInjectionContext, injectBeforeRender, injectNgtRef, type NgtRef } from 'angular-three';
 import * as THREE from 'three';
 
@@ -30,24 +30,11 @@ export function injectNgtsAnimations(
 		const clips = [] as THREE.AnimationClip[];
 		const names = [] as string[];
 
-		inject(DestroyRef).onDestroy(() => {
-			// clear cached
-			cached = {};
-			// uncache actions
-			Object.values(actions).forEach((action) => {
-				mixer.uncacheAction(action as unknown as THREE.AnimationClip, object!);
-			});
-			// stop all actions
-			mixer.stopAllAction();
-
-			object = null;
-		});
-
 		injectBeforeRender(({ delta }) => mixer.update(delta));
 
 		const ready = computed(() => !!actualRef.nativeElement && !!animationsFactory().length);
 
-		effect(() => {
+		effect((onCleanup) => {
 			const actual = actualRef.nativeElement;
 			if (!actual) return;
 			object = actual;
@@ -70,6 +57,19 @@ export function injectNgtsAnimations(
 					actions[clip.name].play();
 				}
 			}
+
+			onCleanup(() => {
+				// clear cached
+				cached = {};
+				// stop all actions
+				mixer.stopAllAction();
+				// uncache actions
+				Object.values(actions).forEach((action) => {
+					mixer.uncacheAction(action as unknown as THREE.AnimationClip, object!);
+				});
+
+				object = null;
+			});
 		});
 
 		return { ref: actualRef, actions, mixer, names, clips, ready };
