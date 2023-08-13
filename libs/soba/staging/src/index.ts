@@ -18,3 +18,4 @@ export { NgtsSpotLightShadow } from './spot-light/shadow-mesh';
 export * from './spot-light/spot-light';
 export * from './stage/stage';
 export * from './stars/stars';
+export * from './wireframe/wireframe';

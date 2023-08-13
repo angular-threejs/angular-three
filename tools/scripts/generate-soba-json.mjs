@@ -34,6 +34,7 @@ const entryPoints = {
 	misc: ['decal', 'sampler', 'shadow', 'html', 'trail'],
 	materials: ['mesh-wobble-material', 'mesh-distort-material', 'mesh-reflector-material', 'point-material'],
 	performances: ['points', 'segments'],
+	shaders: ['wireframe-material'],
 	staging: [
 		'center',
 		'float',
