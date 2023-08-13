@@ -138,7 +138,7 @@ export class NgtsHtmlWrapper {
 
 	private store = injectNgtStore();
 	private gl = this.store.select('gl');
-	private events = this.store.select('events');
+	private connected = this.store.select('events', 'connected', { equal: Object.is });
 	private viewport = this.store.select('viewport');
 	private scene = this.store.select('scene');
 	private camera = this.store.select('camera');
@@ -160,7 +160,7 @@ export class NgtsHtmlWrapper {
 	private target = computed(() => {
 		const portalElement = this.portalElement();
 		if (portalElement) return portalElement;
-		const connected = this.events().connected;
+		const connected = this.connected();
 		if (connected) return connected as HTMLElement;
 		return this.gl().domElement.parentElement!;
 	});
