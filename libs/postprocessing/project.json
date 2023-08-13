@@ -1,0 +1,51 @@
+{
+	"name": "postprocessing",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/postprocessing/src",
+	"prefix": "platform",
+	"tags": [],
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+			"options": {
+				"project": "libs/postprocessing/ng-package.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/postprocessing/tsconfig.lib.prod.json"
+				},
+				"development": {
+					"tsConfig": "libs/postprocessing/tsconfig.lib.json"
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/postprocessing/jest.config.ts",
+				"passWithNoTests": true
+			},
+			"configurations": {
+				"ci": {
+					"ci": true,
+					"codeCoverage": true
+				}
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"libs/postprocessing/**/*.ts",
+					"libs/postprocessing/**/*.html",
+					"libs/postprocessing/package.json"
+				]
+			}
+		}
+	}
+}
