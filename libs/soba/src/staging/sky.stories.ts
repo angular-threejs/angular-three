@@ -1,6 +1,6 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, effect, signal } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs } from 'angular-three';
 import { NgtsSky } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
@@ -37,8 +37,11 @@ class RotationSkyStory {
 	inclination = signal(0);
 
 	constructor() {
-		injectBeforeRender(() => {
-			this.inclination.update((prev) => prev + 0.0015);
+		effect((onCleanup) => {
+			const id = setInterval(() => {
+				this.inclination.update((prev) => prev + 0.0015);
+			}, 15);
+			onCleanup(() => clearInterval(id));
 		});
 	}
 }

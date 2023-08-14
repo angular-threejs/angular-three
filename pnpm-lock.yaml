@@ -271,6 +271,9 @@ devDependencies:
     postcss-url:
         specifier: ~10.1.3
         version: 10.1.3(postcss@8.4.27)
+    postprocessing:
+        specifier: ^6.33.0
+        version: 6.33.0(three@0.155.0)
     prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -25487,6 +25490,18 @@ packages:
             nanoid: 3.3.6
             picocolors: 1.0.0
             source-map-js: 1.0.2
+        dev: true
+
+    /postprocessing@6.33.0(three@0.155.0):
+        resolution:
+            {
+                integrity: sha512-W6KGnF8OVyPtB9f5o2z8abJOefDeT9aoOrI/HmMmJM6/gXTKRc66MrL+qNoGmeeA3moWWsTk0mc9M+shN3vXaA==,
+            }
+        engines: { node: '>= 0.13.2' }
+        peerDependencies:
+            three: '>= 0.138.0 < 0.156.0'
+        dependencies:
+            three: 0.155.0
         dev: true
 
     /potpack@1.0.2:

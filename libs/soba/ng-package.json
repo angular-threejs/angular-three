@@ -2,6 +2,5 @@
 	"$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
 	"dest": "../../dist/libs/soba",
 	"lib": { "entryFile": "src/index.ts" },
-	"assets": [{ "input": "./shaders/assets/", "glob": "**/*", "output": "assets" }],
-	"allowedNonPeerDependencies": ["@nx/devkit", "nx"]
+	"assets": [{ "input": "./shaders/assets/", "glob": "**/*", "output": "assets" }]
 }

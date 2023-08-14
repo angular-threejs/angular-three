@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, computed, signal } from '@angular/core';
 import { NgtArgs, NgtCanvas, extend } from 'angular-three';
+import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
@@ -17,8 +18,12 @@ extend(THREE);
 		<ngt-primitive *args="[bot()]" [ref]="animations.ref" [position]="[0, -1, 0]" />
 		<ngts-orbit-controls />
 		<ngts-grid [position]="[0, -1, 0]" [args]="[10, 10]" />
+
+		<ngtp-effect-composer>
+			<ngtp-bloom [intensity]="1.5" />
+		</ngtp-effect-composer>
 	`,
-	imports: [NgtArgs, NgtsOrbitControls, NgtsGrid],
+	imports: [NgtArgs, NgtsOrbitControls, NgtsGrid, NgtpEffectComposer, NgtpBloom],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {

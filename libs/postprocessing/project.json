@@ -22,6 +22,9 @@
 			},
 			"defaultConfiguration": "production"
 		},
+		"package": {
+			"command": "pnpm exec nx build postprocessing"
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

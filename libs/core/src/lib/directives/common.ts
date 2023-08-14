@@ -35,14 +35,14 @@ export abstract class NgtCommonDirective {
 	abstract validate(): boolean;
 
 	protected createView() {
-		if (this.shouldCreateView) {
-			if (this.view && !this.view.destroyed) {
-				this.view.destroy();
-			}
-			this.zone.runOutsideAngular(() => {
+		this.zone.runOutsideAngular(() => {
+			if (this.shouldCreateView) {
+				if (this.view && !this.view.destroyed) {
+					this.view.destroy();
+				}
 				this.view = this.vcr.createEmbeddedView(this.template);
 				safeDetectChanges(this.view);
-			});
-		}
+			}
+		});
 	}
 }

@@ -123,6 +123,19 @@ export class NgtRendererStore {
 	}
 
 	setCompound(compound: NgtRendererNode, instance: NgtRendererNode) {
+		const instanceRS = instance.__ngt_renderer__;
+
+		if (instanceRS && instanceRS[NgtRendererClassId.parent]) {
+			const parentRS = instanceRS[NgtRendererClassId.parent].__ngt_renderer__;
+			// NOTE: if instance is already compounded by its parent. skip
+			if (
+				parentRS[NgtRendererClassId.type] === 'compound' &&
+				parentRS[NgtRendererClassId.compounded] === instance
+			) {
+				return;
+			}
+		}
+
 		const rS = compound.__ngt_renderer__;
 		rS[NgtRendererClassId.compounded] = instance;
 		const attributes = Object.keys(rS[NgtRendererClassId.attributes]);
@@ -391,8 +404,12 @@ export class NgtRendererStore {
 
 		if (rS[NgtRendererClassId.ref]) {
 			// nullify ref
-			rS[NgtRendererClassId.ref].nativeElement = null;
-			rS[NgtRendererClassId.ref] = undefined!;
+			// but we do it later so that it doesn't hinder render
+			// TODO: will this cause memory leak?
+			requestAnimationFrame(() => {
+				rS[NgtRendererClassId.ref].nativeElement = null;
+				rS[NgtRendererClassId.ref] = undefined!;
+			});
 		}
 
 		// nullify parent

@@ -23,7 +23,14 @@ import { is } from '../utils/is';
 import { injectNgtCatalogue, type NgtAnyConstructor } from './catalogue';
 import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
 import { NGT_COMPOUND_PREFIXES, NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
-import { NgtRendererClassId, attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild } from './utils';
+import {
+	NgtCompoundClassId,
+	NgtRendererClassId,
+	attachThreeChild,
+	kebabToPascal,
+	processThreeEvent,
+	removeThreeChild,
+} from './utils';
 
 @Injectable()
 class NgtRendererFactory implements RendererFactory2 {
@@ -189,12 +196,12 @@ class NgtRenderer implements Renderer2 {
 			return;
 		}
 
-		if (cRS[NgtRendererClassId.type] === 'comment') {
+		if (cRS?.[NgtRendererClassId.type] === 'comment') {
 			this.store.setParent(newChild, parent);
 			return;
 		}
 
-		if (cRS[NgtRendererClassId.injectedParent]) {
+		if (cRS?.[NgtRendererClassId.injectedParent]) {
 			if (is.ref(cRS[NgtRendererClassId.injectedParent])) {
 				const injector = cRS[NgtRendererClassId.injectorFactory]().get(Injector, null);
 				if (!injector) {
@@ -228,7 +235,7 @@ class NgtRenderer implements Renderer2 {
 		this.store.addChild(parent, newChild);
 
 		// if new child is a portal
-		if (cRS[NgtRendererClassId.type] === 'portal') {
+		if (cRS?.[NgtRendererClassId.type] === 'portal') {
 			this.store.processPortalContainer(newChild);
 			if (cRS[NgtRendererClassId.portalContainer]) {
 				this.appendChild(parent, cRS[NgtRendererClassId.portalContainer]);
@@ -246,7 +253,7 @@ class NgtRenderer implements Renderer2 {
 		}
 
 		// if both are three instances, straightforward case
-		if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'three') {
+		if (pRS[NgtRendererClassId.type] === 'three' && cRS?.[NgtRendererClassId.type] === 'three') {
 			// if child already attached to a parent, skip
 			if (getLocalState(newChild).parent && untracked(getLocalState(newChild).parent)) return;
 			// attach THREE child
@@ -261,7 +268,7 @@ class NgtRenderer implements Renderer2 {
 
 		// if only the parent is the THREE instance
 		if (pRS[NgtRendererClassId.type] === 'three') {
-			for (const renderChild of cRS[NgtRendererClassId.children]) {
+			for (const renderChild of cRS?.[NgtRendererClassId.children]) {
 				this.appendChild(parent, renderChild);
 			}
 		}
@@ -386,12 +393,12 @@ class NgtRenderer implements Renderer2 {
 			}
 
 			if (rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound]) {
-				Object.assign(rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound], {
-					props: Object.assign(
-						rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound],
-						{ [name]: value },
-					),
-				});
+				Object.assign(
+					rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound][
+						NgtCompoundClassId.props
+					],
+					{ [name]: value },
+				);
 			}
 			this.setProperty(rS[NgtRendererClassId.compounded], name, value);
 			return;
