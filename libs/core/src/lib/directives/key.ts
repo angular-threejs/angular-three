@@ -1,46 +1,21 @@
-import {
-	DestroyRef,
-	Directive,
-	Input,
-	NgZone,
-	TemplateRef,
-	ViewContainerRef,
-	inject,
-	type EmbeddedViewRef,
-} from '@angular/core';
-import { safeDetectChanges } from '../utils/safe-detect-changes';
+import { Directive, Input } from '@angular/core';
+import { NgtCommonDirective } from './common';
 
 @Directive({ selector: 'ng-template[key]', standalone: true })
-export class NgtKey {
-	private vcr = inject(ViewContainerRef);
-	private templateRef = inject(TemplateRef);
-	private zone = inject(NgZone);
+export class NgtKey extends NgtCommonDirective {
+	static override processComment = false;
 
 	private lastKey = '';
-	private viewRef?: EmbeddedViewRef<unknown>;
+
+	override validate(): boolean {
+		return false;
+	}
 
 	@Input() set key(key: string | number | object) {
-		const normalizedKey = key.toString();
+		const normalizedKey = JSON.stringify(key);
 		if (this.lastKey !== normalizedKey) {
-			this.createView();
 			this.lastKey = normalizedKey;
+			this.createView();
 		}
-	}
-
-	constructor() {
-		inject(DestroyRef).onDestroy(() => {
-			this.viewRef?.destroy();
-		});
-	}
-
-	private createView() {
-		if (!this.viewRef?.destroyed) {
-			this.viewRef?.destroy();
-		}
-
-		this.zone.runOutsideAngular(() => {
-			this.viewRef = this.vcr.createEmbeddedView(this.templateRef);
-			safeDetectChanges(this.viewRef);
-		});
 	}
 }

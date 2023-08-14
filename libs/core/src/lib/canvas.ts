@@ -9,10 +9,7 @@ import {
 	Injector,
 	Input,
 	NgZone,
-	OnChanges,
-	OnInit,
 	Output,
-	SimpleChanges,
 	ViewChild,
 	ViewContainerRef,
 	computed,
@@ -21,6 +18,9 @@ import {
 	inject,
 	type ComponentRef,
 	type EffectRef,
+	type OnChanges,
+	type OnInit,
+	type SimpleChanges,
 	type Type,
 } from '@angular/core';
 import { NgxResize, provideNgxResizeOptions, type NgxResizeResult } from 'ngx-resize';
@@ -233,7 +233,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 	}
 
 	ngOnInit() {
-		// NOTE: we resolve glCanvas now, setup the configurator
+		// NOTE: we resolve glCanvas at this point, setup the configurator
 		this.configurator = this.initRoot(this.glCanvas.nativeElement);
 
 		this.destroyRef.onDestroy(() => {
@@ -245,7 +245,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 		});
 	}
 
-	// NOTE: runs outside of Zone due to emitInZone
+	// NOTE: runs outside of Zone due to emitInZone: false
 	onResize(result: NgxResizeResult) {
 		if (result.width > 0 && result.height > 0) {
 			this.resizeEffectRef?.destroy();
@@ -261,7 +261,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 							this.configurator.configure({ ...inputs(), size: result });
 
 							if (this.glRef) {
-								this.glRef.changeDetectorRef.detectChanges();
+								this.cdr.detectChanges();
 							} else {
 								this.render();
 							}

@@ -12,6 +12,8 @@ import { safeDetectChanges } from '../utils/safe-detect-changes';
 
 @Directive()
 export abstract class NgtCommonDirective {
+	protected static processComment = true;
+
 	private vcr = inject(ViewContainerRef);
 	private zone = inject(NgZone);
 	private template = inject(TemplateRef);
@@ -21,10 +23,12 @@ export abstract class NgtCommonDirective {
 	private view?: EmbeddedViewRef<unknown>;
 
 	constructor() {
-		const commentNode = this.vcr.element.nativeElement;
-		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT]();
-			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
+		if (NgtCommonDirective.processComment) {
+			const commentNode = this.vcr.element.nativeElement;
+			if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT]) {
+				commentNode[SPECIAL_INTERNAL_ADD_COMMENT]();
+				delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
+			}
 		}
 
 		inject(DestroyRef).onDestroy(() => {
