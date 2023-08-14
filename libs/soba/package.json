@@ -29,7 +29,7 @@
 		"@angular/common": "^16.0.0",
 		"@angular/core": "^16.0.0",
 		"angular-three": "^2.0.0",
-		"meshline": "^3.1.6",
+		"meshline": "^3.1.0",
 		"stats-gl": "^1.0.0",
 		"stats.js": "^0.17.0",
 		"three": ">=0.148.0",
@@ -38,8 +38,6 @@
 		"troika-three-text": "^0.47.0"
 	},
 	"dependencies": {
-		"@nx/devkit": "^16.0.0",
-		"nx": "^16.0.0",
 		"tslib": "^2.3.0"
 	},
 	"sideEffects": false

@@ -28,8 +28,8 @@
 			"options": {
 				"commands": [
 					"pnpm exec nx build core",
-					"node ./tools/scripts/generate-json.mjs",
-					"pnpm exec nx build plugin"
+					"pnpm exec nx build plugin",
+					"node ./tools/scripts/generate-json.mjs"
 				],
 				"parallel": false
 			}

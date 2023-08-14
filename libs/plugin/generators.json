@@ -7,6 +7,16 @@
 			"factory": "./src/generators/init/generator",
 			"schema": "./src/generators/init/schema.json",
 			"description": "Init Angular Three with proper packages and config"
+		},
+		"soba": {
+			"factory": "./src/generators/init-soba/generator",
+			"schema": "./src/generators/init-soba/schema.json",
+			"description": "Init Angular Three Soba with proper packages "
+		},
+		"postprocessing": {
+			"factory": "./src/generators/init-postprocessing/generator",
+			"schema": "./src/generators/init-postprocessing/schema.json",
+			"description": "Init Angular Three Postprocessing with proper packages "
 		}
 	},
 	"schematics": {
@@ -14,6 +24,16 @@
 			"factory": "./src/generators/init/compat",
 			"schema": "./src/generators/init/schema.json",
 			"description": "Add Angular Three with proper packages and config"
+		},
+		"soba": {
+			"factory": "./src/generators/init-soba/compat",
+			"schema": "./src/generators/init-soba/schema.json",
+			"description": "Init Angular Three Soba with proper packages "
+		},
+		"postprocessing": {
+			"factory": "./src/generators/init-postprocessing/compat",
+			"schema": "./src/generators/init-postprocessing/schema.json",
+			"description": "Init Angular Three Postprocessing with proper packages "
 		}
 	}
 }
