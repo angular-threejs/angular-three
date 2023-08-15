@@ -55,7 +55,6 @@ export class NgtsBBAnchor {
 		effect(() => {
 			const group = this.groupRef.nativeElement;
 			if (!group) return;
-			console.log(group);
 			if (group.parent?.parent) {
 				this.parentRef.nativeElement = group.parent.parent;
 				group.parent.parent.add(group);

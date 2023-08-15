@@ -191,15 +191,17 @@ class NgtRenderer implements Renderer2 {
 			pRS[NgtRendererClassId.type] === 'dom' &&
 			(newChild instanceof Text || cRS[NgtRendererClassId.type] === 'dom')
 		) {
-			this.store.setParent(newChild, parent);
 			this.store.addChild(parent, newChild);
 			this.delegate.appendChild(parent, newChild);
-			if (this.shouldFindGrandparentInstance(pRS, cRS, newChild)) {
-				// we'll try to get the grandparent instance here so that we can run appendChild with both instances
-				const closestGrandparentInstance = this.store.getClosestParentWithInstance(parent);
-				if (closestGrandparentInstance) this.appendChild(closestGrandparentInstance, newChild);
-				return;
+			if (cRS) {
+				this.store.setParent(newChild, parent);
+				if (this.shouldFindGrandparentInstance(pRS, cRS, newChild)) {
+					// we'll try to get the grandparent instance here so that we can run appendChild with both instances
+					const closestGrandparentInstance = this.store.getClosestParentWithInstance(parent);
+					if (closestGrandparentInstance) this.appendChild(closestGrandparentInstance, newChild);
+				}
 			}
+
 			return;
 		}
 
