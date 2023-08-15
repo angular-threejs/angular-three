@@ -103,27 +103,19 @@ export class NgtsInstance {
 	standalone: true,
 	template: `
 		<ngt-instanced-mesh
+			*args="[undefined, undefined, 0]"
 			[userData]="{ instances: meshes() }"
 			[ref]="instancesRef"
 			[matrixAutoUpdate]="false"
 			[raycast]="nullRaycast"
-			*args="[undefined, undefined, 0]"
 			ngtCompound
 		>
 			<ngt-instanced-buffer-attribute
+				*args="[matrices(), 16]"
 				attach="instanceMatrix"
-				[count]="matrices().length / 16"
-				[array]="matrices()"
-				[itemSize]="16"
 				[usage]="DynamicDrawUsage"
 			/>
-			<ngt-instanced-buffer-attribute
-				attach="instanceColor"
-				[count]="colors().length / 3"
-				[array]="colors()"
-				[itemSize]="3"
-				[usage]="DynamicDrawUsage"
-			/>
+			<ngt-instanced-buffer-attribute *args="[colors(), 3]" attach="instanceColor" [usage]="DynamicDrawUsage" />
 			<ng-container *ngTemplateOutlet="content" />
 		</ngt-instanced-mesh>
 	`,
@@ -205,7 +197,7 @@ export class NgtsInstances {
 				this.matrices(),
 				this.colors(),
 			];
-			if (frames === Infinity || count < frames) {
+			if ((frames === Infinity || count < frames) && instancedMesh) {
 				instancedMesh.updateMatrix();
 				instancedMesh.updateMatrixWorld();
 				parentMatrix.copy(instancedMesh.matrixWorld).invert();
