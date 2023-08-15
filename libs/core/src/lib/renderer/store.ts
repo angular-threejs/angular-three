@@ -416,7 +416,10 @@ export class NgtRendererStore {
 		rS[NgtRendererClassId.parent] = null;
 		for (const renderChild of rS[NgtRendererClassId.children] || []) {
 			if (renderChild.__ngt_renderer__?.[NgtRendererClassId.type] === 'three' && parent) {
-				removeThreeChild(parent, renderChild, true);
+				const closestInstance = this.getClosestParentWithInstance(parent);
+				if (closestInstance) {
+					removeThreeChild(closestInstance, renderChild, true);
+				}
 			}
 			this.destroy(renderChild, parent);
 		}

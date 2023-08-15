@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, forwardRef, Input, type OnInit } from '@angular/core';
 import { propsToBody, type BodyProps, type BodyShapeType } from '@pmndrs/cannon-worker-api';
 import { createInjectionToken, injectBeforeRender, NgtArgs } from 'angular-three';
-import { injectNgtcPhysicsApi, provideNgtcPhysicsApi } from 'angular-three-cannon';
+import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import type { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import * as THREE from 'three';
@@ -31,7 +31,7 @@ export const [injectNgtcDebugApi, provideNgtcDebugApi] = createInjectionToken((d
 		<ngt-primitive *args="[scene]" />
 		<ng-content />
 	`,
-	providers: [provideNgtcPhysicsApi()],
+	providers: [provideNgtcDebugApi()],
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

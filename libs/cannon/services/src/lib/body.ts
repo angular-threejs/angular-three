@@ -248,15 +248,15 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 			// register deps
 			deps();
 
+			const currentWorker = worker();
+			if (!currentWorker) return;
+
 			if (!bodyRef.nativeElement) {
 				bodyRef.nativeElement = new THREE.Object3D() as TObject;
 				return;
 			}
 
 			const object = bodyRef.nativeElement;
-			const currentWorker = worker();
-
-			if (!currentWorker) return;
 
 			const objectCount =
 				object instanceof THREE.InstancedMesh
