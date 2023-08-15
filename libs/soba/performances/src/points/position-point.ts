@@ -10,7 +10,7 @@ export class PositionPoint extends THREE.Group {
 	size: number;
 	color: THREE.Color;
 	instance: ElementRef<THREE.Points | undefined>;
-	instanceKey: ElementRef<any>;
+	instanceKey: ElementRef<PositionPoint | undefined>;
 
 	constructor() {
 		super();

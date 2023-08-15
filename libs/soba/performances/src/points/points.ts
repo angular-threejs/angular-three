@@ -120,7 +120,7 @@ export class NgtsPointsInstances {
 
 	injector = inject(Injector);
 
-	api = computed(() => ({
+	api = {
 		getParent: () => this.pointsInput.pointsRef,
 		subscribe: (pointRef: NgtRef<PositionPoint>) => {
 			untracked(() => {
@@ -132,7 +132,7 @@ export class NgtsPointsInstances {
 				});
 			};
 		},
-	}));
+	};
 
 	constructor() {
 		this.checkUpdatePositionAttribute();
@@ -194,7 +194,7 @@ export class NgtsPointsInstances {
 	standalone: true,
 	template: `
 		<ngt-position-point
-			[instance]="pointsInstancesApi().getParent()"
+			[instance]="pointsInstancesApi.getParent()"
 			[ref]="pointRef"
 			[instanceKey]="pointRef"
 			ngtCompound
@@ -214,10 +214,7 @@ export class NgtsPoint implements OnInit {
 	ngOnInit() {
 		effect(
 			(onCleanup) => {
-				const cleanup = this.zone.runOutsideAngular(() => {
-					const api = this.pointsInstancesApi();
-					return api.subscribe(this.pointRef);
-				});
+				const cleanup = this.zone.runOutsideAngular(() => this.pointsInstancesApi.subscribe(this.pointRef));
 				onCleanup(cleanup);
 			},
 			{ injector: this.injector },
