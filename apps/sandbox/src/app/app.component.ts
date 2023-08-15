@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, signal } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, NgtCanvas, extend } from 'angular-three';
+import { NgtArgs, NgtCanvas, NgtKey, extend } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectBox, injectPlane } from 'angular-three-cannon/services';
@@ -28,9 +28,9 @@ extend(THREE);
 })
 export class Plane {
 	Math = Math;
-	@Input() position = [0, 0, 0];
+	@Input() position: Triplet = [0, 0, 0];
 
-	planeApi = injectPlane(() => ({ mass: 0, position: this.position as Triplet, args: [1000, 1000] }));
+	planeApi = injectPlane(() => ({ mass: 0, position: this.position, args: [1000, 1000] }));
 }
 
 @Component({
@@ -46,9 +46,9 @@ export class Plane {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Box {
-	@Input() position = [0, 0, 0];
+	@Input() position: Triplet = [0, 0, 0];
 
-	boxApi = injectBox(() => ({ mass: 10000, position: this.position as Triplet, args: [2, 2, 2] }));
+	boxApi = injectBox(() => ({ mass: 10000, position: this.position, args: [2, 2, 2] }));
 }
 
 @Component({
@@ -93,8 +93,8 @@ export class CannonScene {
 @Component({
 	standalone: true,
 	template: `
-		<ngt-ambient-light [intensity]="Math.PI" />
-		<ngt-point-light [intensity]="Math.PI" />
+		<ngt-ambient-light />
+		<ngt-point-light />
 		<ngt-primitive *args="[bot()]" [ref]="animations.ref" [position]="[0, -1, 0]" />
 		<ngts-orbit-controls />
 		<ngts-grid [position]="[0, -1, 0]" [args]="[10, 10]" />
@@ -126,17 +126,40 @@ export class Scene {
 
 @Component({
 	standalone: true,
-	imports: [NgtCanvas, NgIf],
+	imports: [NgtCanvas, NgIf, NgtKey],
 	selector: 'sandbox-root',
 	template: `
 		<ngt-canvas
-			[sceneGraph]="Scene"
-			[camera]="{ position: [0, 0, 15] }"
+			*key="scene"
+			[sceneGraph]="scenes[scene].scene"
+			[camera]="scenes[scene].cameraOptions"
 			[shadows]="true"
-			[gl]="{ useLegacyLights: true }"
+			[gl]="scenes[scene].glOptions"
 		/>
+		<button (click)="onToggle()">Toggle scene: {{ scene }}</button>
 	`,
+	styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-	readonly Scene = CannonScene;
+	scene: 'cannon' | 'bot' = 'cannon';
+	scenes = {
+		bot: {
+			scene: Scene,
+			cameraOptions: {},
+			glOptions: {},
+		},
+		cannon: {
+			scene: CannonScene,
+			cameraOptions: { position: [0, 0, 15] },
+			glOptions: { useLegacyLights: true },
+		},
+	} as const;
+
+	onToggle() {
+		if (this.scene === 'bot') {
+			this.scene = 'cannon';
+		} else {
+			this.scene = 'bot';
+		}
+	}
 }
