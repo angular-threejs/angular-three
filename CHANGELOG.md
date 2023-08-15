@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.13](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.12...2.0.0-beta.13) (2023-08-15)
+
+
+### Bug Fixes
+
+* **soba:** extend InstancedBufferAttribute ([e39cdb2](https://github.com/angular-threejs/angular-three/commit/e39cdb2dda6827cd89cabda2a49cb5ea644a81ce))
+
 ## [2.0.0-beta.12](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.11...2.0.0-beta.12) (2023-08-15)
 
 
