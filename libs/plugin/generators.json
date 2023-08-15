@@ -17,6 +17,11 @@
 			"factory": "./src/generators/init-postprocessing/generator",
 			"schema": "./src/generators/init-postprocessing/schema.json",
 			"description": "Init Angular Three Postprocessing with proper packages "
+		},
+		"cannon": {
+			"factory": "./src/generators/init-cannon/generator",
+			"schema": "./src/generators/init-cannon/schema.json",
+			"description": "Init Angular Three cannon with proper packages "
 		}
 	},
 	"schematics": {
@@ -34,6 +39,11 @@
 			"factory": "./src/generators/init-postprocessing/compat",
 			"schema": "./src/generators/init-postprocessing/schema.json",
 			"description": "Init Angular Three Postprocessing with proper packages "
+		},
+		"cannon": {
+			"factory": "./src/generators/init-cannon/compat",
+			"schema": "./src/generators/init-cannon/schema.json",
+			"description": "Init Angular Three cannon with proper packages "
 		}
 	}
 }

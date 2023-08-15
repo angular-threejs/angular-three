@@ -1,7 +1,7 @@
 {
-	"name": "postprocessing",
+	"name": "cannon",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/postprocessing/src",
+	"sourceRoot": "libs/cannon/src",
 	"prefix": "platform",
 	"tags": [],
 	"projectType": "library",
@@ -10,14 +10,14 @@
 			"executor": "@nx/angular:package",
 			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
-				"project": "libs/postprocessing/ng-package.json"
+				"project": "libs/cannon/ng-package.json"
 			},
 			"configurations": {
 				"production": {
-					"tsConfig": "libs/postprocessing/tsconfig.lib.prod.json"
+					"tsConfig": "libs/cannon/tsconfig.lib.prod.json"
 				},
 				"development": {
-					"tsConfig": "libs/postprocessing/tsconfig.lib.json"
+					"tsConfig": "libs/cannon/tsconfig.lib.json"
 				}
 			},
 			"defaultConfiguration": "production"
@@ -26,7 +26,7 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "libs/postprocessing/jest.config.ts",
+				"jestConfig": "libs/cannon/jest.config.ts",
 				"passWithNoTests": true
 			},
 			"configurations": {
@@ -41,9 +41,13 @@
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": [
-					"libs/postprocessing/**/*.ts",
-					"libs/postprocessing/**/*.html",
-					"libs/postprocessing/package.json"
+					"libs/cannon/**/*.ts",
+					"libs/cannon/**/*.html",
+					"libs/cannon/package.json",
+					"libs/cannon/debug/**/*.ts",
+					"libs/cannon/debug/**/*.html",
+					"libs/cannon/services/**/*.ts",
+					"libs/cannon/services/**/*.html"
 				]
 			}
 		}

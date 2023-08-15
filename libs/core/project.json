@@ -28,10 +28,29 @@
 			"options": {
 				"commands": [
 					"pnpm exec nx build core",
+					"pnpm exec nx build-ecosystem core",
 					"pnpm exec nx build plugin",
-					"node ./tools/scripts/generate-json.mjs"
+					"pnpm exec nx generate-json core"
 				],
 				"parallel": false
+			}
+		},
+		"build-ecosystem": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"pnpm exec nx build soba",
+					"pnpm exec nx build cannon",
+					"pnpm exec nx build postprocessing"
+				],
+				"parallel": true
+			}
+		},
+		"generate-json": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": ["node ./tools/scripts/generate-json.mjs", "node ./tools/scripts/generate-soba-json.mjs"],
+				"parallel": true
 			}
 		},
 		"test": {

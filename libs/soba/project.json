@@ -22,13 +22,6 @@
 			},
 			"defaultConfiguration": "production"
 		},
-		"package": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": ["pnpm exec nx build soba", "node ./tools/scripts/generate-soba-json.mjs"],
-				"parallel": false
-			}
-		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

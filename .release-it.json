@@ -40,7 +40,7 @@
 		"releaseName": "Release ${version}"
 	},
 	"hooks": {
-		"before:bump": "pnpm exec nx run-many --target=package --projects=core,soba,postprocessing --parallel=false",
+		"before:bump": "pnpm exec nx package core",
 		"after:bump": ["git checkout -- package.json"]
 	}
 }
