@@ -29,10 +29,10 @@ import {
 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as THREE from 'three';
-import { InstancedMesh } from 'three';
+import { InstancedBufferAttribute, InstancedMesh } from 'three';
 import { PositionMesh } from './position-mesh';
 
-extend({ PositionMesh, InstancedMesh });
+extend({ PositionMesh, InstancedMesh, InstancedBufferAttribute });
 
 export type NgtsInstancesState = {
 	range?: number;
