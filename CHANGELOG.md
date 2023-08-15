@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.12](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.11...2.0.0-beta.12) (2023-08-15)
+
+
+### Features
+
+* **soba:** add instances ([e118791](https://github.com/angular-threejs/angular-three/commit/e118791d75aab7cfb88f7575f45efd08db789ee3))
+
 ## [2.0.0-beta.11](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.10...2.0.0-beta.11) (2023-08-15)
 
 
