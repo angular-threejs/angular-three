@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.14](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.13...2.0.0-beta.14) (2023-08-15)
+
+
+### Bug Fixes
+
+* **soba:** attempt to use args for instanced buffer attribute ([6862a07](https://github.com/angular-threejs/angular-three/commit/6862a07775555e9b262f921538bbaf3fb20c2599))
+
 ## [2.0.0-beta.13](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.12...2.0.0-beta.13) (2023-08-15)
 
 
