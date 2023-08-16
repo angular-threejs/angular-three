@@ -392,6 +392,8 @@ class NgtRenderer implements Renderer2 {
 	}
 
 	setProperty(el: NgtRendererNode, name: string, value: any): void {
+		// TODO: should we support ref value
+
 		const rS = el.__ngt_renderer__;
 		if (rS[NgtRendererClassId.type] === 'compound') {
 			// we don't have the compound instance yet

@@ -260,6 +260,7 @@ export class NgtRendererStore {
 		) {
 			value = compound[NgtCompoundClassId.props][name];
 		}
+
 		applyProps(node, { [name]: value });
 		this.updateNativeProps(node, name, value);
 	}

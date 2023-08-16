@@ -12,6 +12,7 @@ import { NgtsLoader, injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
 import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { SkyDivingScene } from './skydiving/scene.component';
+import { VaporwareScene } from './vaporware/scene.component';
 
 extend(THREE);
 
@@ -125,6 +126,32 @@ export class Scene {
 	});
 }
 
+const scenes = {
+	bot: {
+		scene: Scene,
+		cameraOptions: {},
+		glOptions: {},
+	},
+	cannon: {
+		scene: CannonScene,
+		cameraOptions: { position: [0, 0, 15] },
+		glOptions: { useLegacyLights: true },
+	},
+	skydiving: {
+		scene: SkyDivingScene,
+		cameraOptions: { fov: 70, position: [0, 0, 3] },
+		glOptions: { useLegacyLights: true },
+	},
+	vaporware: {
+		scene: VaporwareScene,
+		cameraOptions: { near: 0.01, far: 20, position: [0, 0.06, 1.1] },
+		glOptions: { useLegacyLights: true },
+	},
+} as const;
+const availableScenes = Object.keys(scenes) as [keyof typeof scenes];
+
+type AvailableScene = (typeof availableScenes)[number];
+
 @Component({
 	standalone: true,
 	imports: [NgtCanvas, NgtKey, NgtsLoader],
@@ -132,41 +159,34 @@ export class Scene {
 	template: `
 		<ngt-canvas
 			*key="scene"
-			[sceneGraph]="scenes[scene].scene"
-			[camera]="scenes[scene].cameraOptions"
+			[sceneGraph]="currentScene.scene"
+			[camera]="currentScene.cameraOptions"
+			[gl]="currentScene.glOptions"
 			[shadows]="true"
-			[gl]="scenes[scene].glOptions"
 		/>
 		<ngts-loader />
-		<!-- <button (click)="onToggle()">Toggle scene: {{ scene }}</button> -->
+		<button class="cycle" (click)="cycleScene()">Current scene: {{ scene }}</button>
 	`,
-	styleUrls: ['./app.component.css'],
+	host: {
+		'[style.--background]': 'background',
+		style: 'background-color: var(--background); display: block; height: 100%; width: 100%',
+	},
 })
 export class AppComponent {
-	scene: 'cannon' | 'bot' | 'skydiving' = 'skydiving';
-	scenes = {
-		bot: {
-			scene: Scene,
-			cameraOptions: {},
-			glOptions: {},
-		},
-		cannon: {
-			scene: CannonScene,
-			cameraOptions: { position: [0, 0, 15] },
-			glOptions: { useLegacyLights: true },
-		},
-		skydiving: {
-			scene: SkyDivingScene,
-			cameraOptions: { fov: 70, position: [0, 0, 3] },
-			glOptions: { useLegacyLights: true },
-		},
-	} as const;
+	scene: AvailableScene = 'vaporware';
 
-	onToggle() {
-		if (this.scene === 'bot') {
-			this.scene = 'cannon';
-		} else {
-			this.scene = 'bot';
-		}
+	get currentScene() {
+		return scenes[this.scene];
+	}
+
+	get background() {
+		if (this.scene === 'skydiving') return '#272727';
+		if (this.scene === 'vaporware') return 'black';
+		return 'white';
+	}
+
+	cycleScene() {
+		const index = availableScenes.indexOf(this.scene);
+		this.scene = availableScenes[(index + 1) % availableScenes.length];
 	}
 }
