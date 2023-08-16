@@ -103,7 +103,6 @@ export class NgtsInstance {
 	standalone: true,
 	template: `
 		<ngt-instanced-mesh
-			*args="[undefined, undefined, 0]"
 			[userData]="{ instances: meshes() }"
 			[ref]="instancesRef"
 			[matrixAutoUpdate]="false"
@@ -111,11 +110,15 @@ export class NgtsInstance {
 			ngtCompound
 		>
 			<ngt-instanced-buffer-attribute
-				*args="[matrices(), 16]"
+				*args="[buffers().matrices, 16]"
 				attach="instanceMatrix"
 				[usage]="DynamicDrawUsage"
 			/>
-			<ngt-instanced-buffer-attribute *args="[colors(), 3]" attach="instanceColor" [usage]="DynamicDrawUsage" />
+			<ngt-instanced-buffer-attribute
+				*args="[buffers().colors, 3]"
+				attach="instanceColor"
+				[usage]="DynamicDrawUsage"
+			/>
 			<ng-container *ngTemplateOutlet="content" />
 		</ngt-instanced-mesh>
 	`,
@@ -150,13 +153,16 @@ export class NgtsInstances {
 	private positionMeshes = signal<NgtRef<PositionMesh>[]>([]);
 	meshes = this.positionMeshes.asReadonly();
 
-	matrices = computed(() => new Float32Array(this.limit() * 16));
-	colors = computed(() => {
-		const [limit, matrices] = [this.limit(), this.matrices()];
+	buffers = computed(() => {
+		const limit = this.limit();
+		const matrices = new Float32Array(limit * 16);
+
 		for (let i = 0; i < limit; i++) {
 			tempMatrix.identity().toArray(matrices, i * 16);
 		}
-		return new Float32Array([...Array.from({ length: limit * 3 }, () => 1)]);
+
+		const colors = new Float32Array([...Array.from({ length: limit * 3 }, () => 1)]);
+		return { matrices, colors };
 	});
 
 	api = {
@@ -182,6 +188,9 @@ export class NgtsInstances {
 		effect(() => {
 			const instancedMesh = this.instancesRef.nativeElement;
 			if (!instancedMesh) return;
+			// NOTE: not sure why matrices ends up a different instance than array
+			// we reassign it here
+			instancedMesh.instanceMatrix.array = untracked(this.buffers).matrices;
 			checkUpdate(instancedMesh.instanceMatrix);
 		});
 	}
@@ -190,12 +199,11 @@ export class NgtsInstances {
 		let count = 0;
 		let updateRange = 0;
 		injectBeforeRender(() => {
-			const [{ frames, limit, range }, instancedMesh, instances, matrices, colors] = [
+			const [{ frames, limit, range }, instancedMesh, instances, { matrices, colors }] = [
 				this.inputs.get(),
 				this.instancesRef.nativeElement,
 				this.meshes(),
-				this.matrices(),
-				this.colors(),
+				this.buffers(),
 			];
 			if ((frames === Infinity || count < frames) && instancedMesh) {
 				instancedMesh.updateMatrix();
@@ -217,7 +225,7 @@ export class NgtsInstances {
 					instance.matrixWorld.decompose(translation, rotation, scale);
 					instanceMatrix.compose(translation, rotation, scale).premultiply(parentMatrix);
 					instanceMatrix.toArray(matrices, i * 16);
-					instancedMesh.instanceMatrix.needsUpdate = true;
+					checkUpdate(instancedMesh.instanceMatrix);
 					instance.color.toArray(colors, i * 3);
 					checkUpdate(instancedMesh.instanceColor);
 				}

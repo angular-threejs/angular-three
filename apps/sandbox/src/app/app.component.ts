@@ -8,9 +8,10 @@ import { injectBox, injectPlane } from 'angular-three-cannon/services';
 import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
+import { NgtsLoader, injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
 import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import * as THREE from 'three';
+import { SkyDivingScene } from './skydiving/scene.component';
 
 extend(THREE);
 
@@ -126,7 +127,7 @@ export class Scene {
 
 @Component({
 	standalone: true,
-	imports: [NgtCanvas, NgIf, NgtKey],
+	imports: [NgtCanvas, NgtKey, NgtsLoader],
 	selector: 'sandbox-root',
 	template: `
 		<ngt-canvas
@@ -136,12 +137,13 @@ export class Scene {
 			[shadows]="true"
 			[gl]="scenes[scene].glOptions"
 		/>
-		<button (click)="onToggle()">Toggle scene: {{ scene }}</button>
+		<ngts-loader />
+		<!-- <button (click)="onToggle()">Toggle scene: {{ scene }}</button> -->
 	`,
 	styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-	scene: 'cannon' | 'bot' = 'cannon';
+	scene: 'cannon' | 'bot' | 'skydiving' = 'skydiving';
 	scenes = {
 		bot: {
 			scene: Scene,
@@ -151,6 +153,11 @@ export class AppComponent {
 		cannon: {
 			scene: CannonScene,
 			cameraOptions: { position: [0, 0, 15] },
+			glOptions: { useLegacyLights: true },
+		},
+		skydiving: {
+			scene: SkyDivingScene,
+			cameraOptions: { fov: 70, position: [0, 0, 3] },
 			glOptions: { useLegacyLights: true },
 		},
 	} as const;

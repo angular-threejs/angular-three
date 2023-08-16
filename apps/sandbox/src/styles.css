@@ -1,7 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
+
+* {
+	box-sizing: border-box;
+}
+
 html,
 body {
-	height: 100%;
 	width: 100%;
+	height: 100%;
 	margin: 0;
+	padding: 0;
+	background-color: #272727;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	overflow: hidden;
+}
+
+body {
+	position: fixed;
+	overflow: hidden;
+	overscroll-behavior-y: none;
+	font-family:
+		helvetica neue,
+		helvetica,
+		arial,
+		sans-serif;
+	color: black;
+	-webkit-font-smoothing: antialiased;
 }

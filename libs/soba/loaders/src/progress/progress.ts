@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, inject, runInInjectionContext, signal, type Injector } from '@angular/core';
+import { ChangeDetectorRef, inject, runInInjectionContext, signal, untracked, type Injector } from '@angular/core';
 import { assertInjectionContext, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 
@@ -19,37 +19,46 @@ export function injectNgtsProgress(injector?: Injector) {
 		let saveLastTotalLoaded = 0;
 
 		THREE.DefaultLoadingManager.onStart = (item, loaded, total) => {
-			progress.update((prev) => ({
-				...prev,
-				active: true,
-				item,
-				loaded,
-				total,
-				progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100,
-			}));
+			untracked(() => {
+				progress.update((prev) => ({
+					...prev,
+					active: true,
+					item,
+					loaded,
+					total,
+					progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100,
+				}));
+			});
+
 			safeDetectChanges(cdr);
 		};
 
 		THREE.DefaultLoadingManager.onLoad = () => {
-			progress.update((prev) => ({ ...prev, active: false }));
+			untracked(() => {
+				progress.update((prev) => ({ ...prev, active: false }));
+			});
 			safeDetectChanges(cdr);
-			cdr.detectChanges();
 		};
 
 		THREE.DefaultLoadingManager.onError = (url) => {
-			progress.update((prev) => ({ ...prev, errors: [...prev.errors, url] }));
+			untracked(() => {
+				progress.update((prev) => ({ ...prev, errors: [...prev.errors, url] }));
+			});
 			safeDetectChanges(cdr);
 		};
 
 		THREE.DefaultLoadingManager.onProgress = (item, loaded, total) => {
 			if (loaded === total) saveLastTotalLoaded = total;
-			progress.update((prev) => ({
-				...prev,
-				item,
-				loaded,
-				total,
-				progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100 || 100,
-			}));
+			untracked(() => {
+				progress.update((prev) => ({
+					...prev,
+					item,
+					loaded,
+					total,
+					progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100 || 100,
+				}));
+			});
+
 			safeDetectChanges(cdr);
 		};
 
