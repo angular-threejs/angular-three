@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.15](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.14...2.0.0-beta.15) (2023-08-16)
+
+
+### Documentations
+
+* add skydiving example ([88e5121](https://github.com/angular-threejs/angular-three/commit/88e51217e8447b4aefc011c99e24f118fb6aa706))
+
 ## [2.0.0-beta.14](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.13...2.0.0-beta.14) (2023-08-15)
 
 
