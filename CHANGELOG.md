@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.16](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.15...2.0.0-beta.16) (2023-08-16)
+
+
+### Features
+
+* **plugin:** update init-soba generator to add metadata.json ([6009ca0](https://github.com/angular-threejs/angular-three/commit/6009ca0ac57a1286e8010b902773c84786c6bb48))
+
 ## [2.0.0-beta.15](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.14...2.0.0-beta.15) (2023-08-16)
 
 
