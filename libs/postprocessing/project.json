@@ -22,6 +22,12 @@
 			},
 			"defaultConfiguration": "production"
 		},
+		"publish": {
+			"command": "npm publish",
+			"options": {
+				"cwd": "dist/libs/postprocessing"
+			}
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
