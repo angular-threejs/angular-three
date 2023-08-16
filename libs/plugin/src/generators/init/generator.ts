@@ -1,12 +1,5 @@
-import {
-	addDependenciesToPackageJson,
-	installPackagesTask,
-	logger,
-	readJson,
-	updateJson,
-	writeJson,
-	type Tree,
-} from '@nx/devkit';
+import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, updateJson, type Tree } from '@nx/devkit';
+import { addMetadataJson } from '../utils';
 import { ANGULAR_THREE_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../versions';
 
 export default async function (tree: Tree) {
@@ -35,30 +28,7 @@ export default async function (tree: Tree) {
 		return json;
 	});
 
-	// add metadata.json to vscode settings if exists
-	const vscodeSettingsPath = '.vscode/settings.json';
-	if (tree.exists('.vscode')) {
-		logger.info('Enabling typings support for VSCode...');
-		if (!tree.exists(vscodeSettingsPath)) {
-			writeJson(tree, vscodeSettingsPath, {});
-		}
-		updateJson(tree, vscodeSettingsPath, (json) => {
-			if (json['html.customData'] && Array.isArray(json['html.customData'])) {
-				json['html.customData'].push('./node_modules/angular-three/metadata.json');
-			} else {
-				json['html.customData'] = ['./node_modules/angular-three/metadata.json'];
-			}
-
-			return json;
-		});
-	} else {
-		logger.info(
-			`.vscode/settings.json not found.
-If you are using VSCode, add "./node_modules/angular-three/metadata.json" to "html.customData" in ".vscode/settings.json"
-to enable TypeScript type definitions for Angular Three elements.
-`,
-		);
-	}
+	addMetadataJson(tree, 'angular-three/metadata.json');
 
 	return () => {
 		installPackagesTask(tree);

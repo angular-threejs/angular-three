@@ -1,4 +1,5 @@
 import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, type Tree } from '@nx/devkit';
+import { addMetadataJson } from '../utils';
 import {
 	ANGULAR_THREE_VERSION,
 	MESH_LINE_VERSION,
@@ -30,6 +31,8 @@ export default async function (tree: Tree) {
 		},
 		{},
 	);
+
+	addMetadataJson(tree, 'angular-three-soba/metadata.json');
 
 	return () => {
 		installPackagesTask(tree);
