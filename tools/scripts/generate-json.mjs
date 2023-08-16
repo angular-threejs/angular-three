@@ -1,22 +1,21 @@
-import { createWriteStream, existsSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, unlinkSync, writeFileSync } from 'fs';
 import ts from 'typescript';
-import { format } from 'util';
 
 if (existsSync('tmp/log.txt')) {
     unlinkSync('tmp/log.txt');
 }
 
-const logFile = createWriteStream('tmp/log.txt', { flags: 'a' });
-// Or 'w' to truncate the file every time the process starts.
-const logStdout = process.stdout;
-
-function writeToLog() {
-    logFile.write(format.apply(null, [`------${new Date().toLocaleDateString()}------`, '\n']));
-    // Storing without color codes
-    logFile.write(format.apply(null, arguments).replace(/\033\[[0-9;]*m/g, '') + '\n');
-    // Display normally, with colors to Stdout
-    logStdout.write(format.apply(null, arguments) + '\n');
-}
+// const logFile = createWriteStream('tmp/log.txt', { flags: 'a' });
+// // Or 'w' to truncate the file every time the process starts.
+// const logStdout = process.stdout;
+//
+// function writeToLog() {
+//     logFile.write(format.apply(null, [`------${new Date().toLocaleDateString()}------`, '\n']));
+//     // Storing without color codes
+//     logFile.write(format.apply(null, arguments).replace(/\033\[[0-9;]*m/g, '') + '\n');
+//     // Display normally, with colors to Stdout
+//     logStdout.write(format.apply(null, arguments) + '\n');
+// }
 
 const TYPE_CHECKER_FLAGS =
     ts.NodeBuilderFlags.NoTruncation | ts.NodeBuilderFlags.InTypeAlias | ts.NodeBuilderFlags.NoTypeReduction;
