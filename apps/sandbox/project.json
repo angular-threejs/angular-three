@@ -7,17 +7,16 @@
 	"tags": [],
 	"targets": {
 		"build": {
-			"executor": "@angular-devkit/build-angular:browser",
+			"executor": "@angular-devkit/build-angular:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/apps/sandbox",
 				"index": "apps/sandbox/src/index.html",
-				"main": "apps/sandbox/src/main.ts",
+				"browser": "apps/sandbox/src/main.ts",
 				"polyfills": ["zone.js"],
 				"tsConfig": "apps/sandbox/tsconfig.app.json",
 				"assets": ["apps/sandbox/src/favicon.ico", "apps/sandbox/src/assets"],
-				"styles": ["apps/sandbox/src/styles.css"],
-				"scripts": []
+				"styles": ["apps/sandbox/src/styles.css"]
 			},
 			"configurations": {
 				"production": {
@@ -36,12 +35,9 @@
 					"outputHashing": "all"
 				},
 				"development": {
-					"buildOptimizer": false,
 					"optimization": false,
-					"vendorChunk": true,
 					"extractLicenses": false,
-					"sourceMap": true,
-					"namedChunks": true
+					"sourceMap": true
 				}
 			},
 			"defaultConfiguration": "production"

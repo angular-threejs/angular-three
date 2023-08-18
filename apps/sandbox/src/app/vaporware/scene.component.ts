@@ -80,9 +80,9 @@ declare global {
 				#material
 				[map]="textures.grid"
 				[displacementMap]="textures.displacement"
+				[displacementScale]="0.5"
 				[metalnessMap]="textures.metalness"
-				[displacementScale]="0.4"
-				[metalness]="0.96"
+				[metalness]="1"
 				[roughness]="0.5"
 			/>
 
