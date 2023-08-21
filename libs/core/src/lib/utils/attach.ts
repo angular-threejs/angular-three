@@ -31,7 +31,7 @@ function assignEmpty(obj: NgtAnyRecord, base: string) {
 	}
 }
 
-export function createAttachFunction<TParent = any, TChild = any>(
+export function createAttachFunction<TChild = any, TParent = any>(
 	cb: (params: { parent: TParent; child: TChild; store: NgtSignalStore<NgtState> }) => (() => void) | void,
 ): NgtAttachFunction<TChild, TParent> {
 	return (parent, child, store) => cb({ parent, child, store });

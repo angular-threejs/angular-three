@@ -1,0 +1,12 @@
+<ngt-object3D (afterAttach)="afterAttach.emit($event.node)" (beforeRender)="onCloudBeforeRender($event)">
+	<ngt-box-geometry *args="[20, 20, 20]" [ref]="cloudGeometryRef" />
+	<ngt-mesh-phong-material [color]="Colors.white" />
+
+	<ngt-mesh
+		*ngFor="let i; repeat: count"
+		[geometry]="cloudGeometryRef.nativeElement"
+		[castShadow]="true"
+		[receiveShadow]="true"
+		(afterAttach)="onAfterMeshAttach($event, i)"
+	/>
+</ngt-object3D>

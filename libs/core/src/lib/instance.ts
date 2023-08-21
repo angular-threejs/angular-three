@@ -12,8 +12,8 @@ export type NgtAttachFunction<TChild = any, TParent = any> = (
 ) => void | (() => void);
 
 export type NgtAfterAttach<
-	TParent extends NgtInstanceNode = NgtInstanceNode,
 	TChild extends NgtInstanceNode = NgtInstanceNode,
+	TParent extends NgtInstanceNode = NgtInstanceNode,
 > = { parent: TParent; node: TChild };
 
 export type NgtInstanceLocalState = {

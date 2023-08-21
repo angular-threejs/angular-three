@@ -154,7 +154,7 @@ export class VaporwareScene {
 	}));
 
 	// [attach] can accept an AttachFunction.
-	passAttach = createAttachFunction<EffectComposer, Pass>(({ parent, child }) => {
+	passAttach = createAttachFunction<Pass, EffectComposer>(({ parent, child }) => {
 		parent.addPass(child);
 		// optionally returns a clean up function that will get called when the child is destroyed
 		return () => parent.removePass(child);

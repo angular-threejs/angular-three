@@ -1,0 +1,69 @@
+<ngt-object3D [position]="position">
+	<!-- body -->
+	<ngt-mesh [position]="[2, -12, 0]">
+		<ngt-box-geometry *args="[15, 15, 15]" />
+		<ngt-mesh-phong-material [color]="Colors.brown" [flatShading]="true" />
+	</ngt-mesh>
+
+	<!-- face -->
+	<ngt-mesh-lambert-material #pinkMaterial [color]="Colors.pink" attach="none" />
+	<ngt-mesh [material]="pinkMaterial">
+		<ngt-box-geometry *args="[10, 10, 10]" />
+	</ngt-mesh>
+
+	<!-- hair/glass -->
+	<ngt-mesh-lambert-material #brownMaterial [color]="Colors.brown" attach="none" />
+
+	<ngt-object3D [position]="[-5, 5, 0]">
+		<!-- top -->
+		<ngt-object3D (beforeRender)="onHairsBeforeRender($event)">
+			<ngt-mesh
+				*ngFor="let i; repeat: 12"
+				[position]="[-4 + Math.floor(i / 3) * 4, 0, -4 + (i % 3) * 4]"
+				[material]="brownMaterial"
+			>
+				<ngt-box-geometry *args="[4, 4, 4]" (afterAttach)="onAfterHairAttach($event)" />
+			</ngt-mesh>
+		</ngt-object3D>
+
+		<!-- side R -->
+		<ngt-mesh [material]="brownMaterial" [position]="[8, -2, 6]">
+			<ngt-box-geometry *args="[12, 4, 2]" (afterAttach)="onAfterSideAttach($event)" />
+		</ngt-mesh>
+
+		<!-- side L -->
+		<ngt-mesh [material]="brownMaterial" [position]="[8, -2, -6]">
+			<ngt-box-geometry *args="[12, 4, 2]" (afterAttach)="onAfterSideAttach($event)" />
+		</ngt-mesh>
+
+		<!-- back -->
+		<ngt-mesh [material]="brownMaterial" [position]="[-1, -4, 0]">
+			<ngt-box-geometry *args="[2, 8, 10]" />
+		</ngt-mesh>
+	</ngt-object3D>
+
+	<!-- glass R -->
+	<ngt-mesh [material]="brownMaterial" [position]="[6, 0, 3]">
+		<ngt-box-geometry *args="[5, 5, 5]" />
+	</ngt-mesh>
+
+	<!-- glass L -->
+	<ngt-mesh [material]="brownMaterial" [position]="[6, 0, -3]">
+		<ngt-box-geometry *args="[5, 5, 5]" />
+	</ngt-mesh>
+
+	<!-- glass A -->
+	<ngt-mesh [material]="brownMaterial">
+		<ngt-box-geometry *args="[11, 1, 11]" />
+	</ngt-mesh>
+
+	<!-- ear R -->
+	<ngt-mesh [material]="pinkMaterial" [position]="[0, 0, 6]">
+		<ngt-box-geometry *args="[2, 3, 2]" />
+	</ngt-mesh>
+
+	<!-- ear L -->
+	<ngt-mesh [material]="pinkMaterial" [position]="[0, 0, -6]">
+		<ngt-box-geometry *args="[2, 3, 2]" />
+	</ngt-mesh>
+</ngt-object3D>

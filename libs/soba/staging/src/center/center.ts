@@ -55,7 +55,7 @@ declare global {
 	selector: 'ngts-center',
 	standalone: true,
 	template: `
-		<ngt-group [ref]="centerRef" ngtCompount>
+		<ngt-group [ref]="centerRef" ngtCompound>
 			<ngt-group [ref]="outerRef">
 				<ngt-group [ref]="innerRef">
 					<ng-content />
@@ -146,39 +146,41 @@ export class NgtsCenter {
 				innerChildren(),
 			];
 
-			outer.matrixWorld.identity();
-			const box3 = new THREE.Box3().setFromObject(inner, precise);
-			const center = new THREE.Vector3();
-			const sphere = new THREE.Sphere();
-			const width = box3.max.x - box3.min.x;
-			const height = box3.max.y - box3.min.y;
-			const depth = box3.max.z - box3.min.z;
-			box3.getCenter(center);
-			box3.getBoundingSphere(sphere);
-			const vAlign = top ? height / 2 : bottom ? -height / 2 : 0;
-			const hAlign = left ? -width / 2 : right ? width / 2 : 0;
-			const dAlign = front ? depth / 2 : back ? -depth / 2 : 0;
+			if (outer && inner && centerRef) {
+				outer.matrixWorld.identity();
+				const box3 = new THREE.Box3().setFromObject(inner, precise);
+				const center = new THREE.Vector3();
+				const sphere = new THREE.Sphere();
+				const width = box3.max.x - box3.min.x;
+				const height = box3.max.y - box3.min.y;
+				const depth = box3.max.z - box3.min.z;
+				box3.getCenter(center);
+				box3.getBoundingSphere(sphere);
+				const vAlign = top ? height / 2 : bottom ? -height / 2 : 0;
+				const hAlign = left ? -width / 2 : right ? width / 2 : 0;
+				const dAlign = front ? depth / 2 : back ? -depth / 2 : 0;
 
-			outer.position.set(
-				disable || disableX ? 0 : -center.x + hAlign,
-				disable || disableY ? 0 : -center.y + vAlign,
-				disable || disableZ ? 0 : -center.z + dAlign,
-			);
+				outer.position.set(
+					disable || disableX ? 0 : -center.x + hAlign,
+					disable || disableY ? 0 : -center.y + vAlign,
+					disable || disableZ ? 0 : -center.z + dAlign,
+				);
 
-			if (this.centered.observed) {
-				this.centered.emit({
-					parent: centerRef.parent!,
-					container: centerRef,
-					width,
-					height,
-					depth,
-					boundingBox: box3,
-					boundingSphere: sphere,
-					center: center,
-					verticalAlignment: vAlign,
-					horizontalAlignment: hAlign,
-					depthAlignment: dAlign,
-				});
+				if (this.centered.observed) {
+					this.centered.emit({
+						parent: centerRef.parent!,
+						container: centerRef,
+						width,
+						height,
+						depth,
+						boundingBox: box3,
+						boundingSphere: sphere,
+						center: center,
+						verticalAlignment: vAlign,
+						horizontalAlignment: hAlign,
+						depthAlignment: dAlign,
+					});
+				}
 			}
 		});
 	}

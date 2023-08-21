@@ -1,9 +1,16 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import {
+	ChangeDetectorRef,
+	Component,
+	computed,
+	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
+	inject,
+	Input,
+	signal,
+} from '@angular/core';
 import { extend, injectNgtRef, NgtArgs, signalStore, type NgtMesh } from 'angular-three';
-import { map, of, switchMap } from 'rxjs';
 import { Mesh } from 'three';
-import { FontLoader, TextGeometry, TextGeometryParameters } from 'three-stdlib';
+import { Font, FontLoader, TextGeometry, TextGeometryParameters } from 'three-stdlib';
 
 declare type Glyph = { _cachedOutline: string[]; ha: number; o: string };
 
@@ -114,16 +121,11 @@ export class NgtsText3D {
 		this.inputs.set({ smooth });
 	}
 
-	private fontData = toSignal(
-		toObservable(this.inputs.select('font')).pipe(
-			switchMap((font) => {
-				if (typeof font === 'string') return fetch(font).then((res) => res.json()) as Promise<FontData>;
-				return of(font as FontData);
-			}),
-			map((fontData) => new FontLoader().parse(fontData)),
-		),
-	);
+	private cdr = inject(ChangeDetectorRef);
 
+	private fontData = signal<Font | null>(null);
+
+	private font = this.inputs.select('font');
 	private text = this.inputs.select('text');
 	private size = this.inputs.select('size');
 	private height = this.inputs.select('height');
@@ -136,8 +138,22 @@ export class NgtsText3D {
 	private letterSpacing = this.inputs.select('letterSpacing');
 	private lineHeight = this.inputs.select('lineHeight');
 
+	constructor() {
+		effect(() => {
+			const font = this.font();
+			if (typeof font === 'string') {
+				fetch(font)
+					.then((res) => res.json())
+					.then((fontData) => {
+						this.fontData.set(new FontLoader().parse(fontData));
+						this.cdr.detectChanges();
+					});
+			}
+		});
+	}
+
 	geometryArgs = computed(() => {
-		const fontData = this.fontData();
+		const fontData: Font = this.fontData() || (this.font() as unknown as Font);
 		if (!fontData || !fontData.data) return null;
 
 		return [

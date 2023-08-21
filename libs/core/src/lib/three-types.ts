@@ -36,7 +36,7 @@ export type NgtLayers = THREE.Layers | Parameters<THREE.Layers['set']>[0];
 export type NgtQuaternion = THREE.Quaternion | Parameters<THREE.Quaternion['set']>;
 
 export interface NgtNodeEventMap<TOriginal> {
-	afterAttach: NgtAfterAttach<NgtInstanceNode, TOriginal>;
+	afterAttach: NgtAfterAttach<TOriginal, NgtInstanceNode>;
 	afterUpdate: TOriginal;
 	beforeRender: NgtBeforeRenderEvent<TOriginal>;
 }
