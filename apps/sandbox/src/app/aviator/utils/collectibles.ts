@@ -47,22 +47,11 @@ export class Coin extends THREE.Mesh implements Collectible {
 			if (collide(this.refs.airplane, this, this.world.coinDistanceTolerance)) {
 				spawnParticles(this.position.clone(), 5, COLOR_COINS, 0.8, this.scene);
 				this.game.addCoin();
+				// 	audioManager.play('coin', { volume: 0.5 });
 				this.collectibles.remove(this);
 			} else if (this.angle > Math.PI) {
 				this.collectibles.remove(this);
 			}
 		}
-
-		// collision?
-		// if (collide(airplane.mesh, this.mesh, this.world.coinDistanceTolerance)) {
-		// 	spawnParticles(this.mesh.position.clone(), 5, COLOR_COINS, 0.8);
-		// 	addCoin();
-		// 	audioManager.play('coin', { volume: 0.5 });
-		// 	sceneManager.remove(this);
-		// }
-		// // passed-by?
-		// else if (this.angle > Math.PI) {
-		// 	sceneManager.remove(this);
-		// }
 	}
 }

@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Injectable, inject } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 import { WorldService } from './world.service';
 
 @Injectable()
 export class GameService {
-	private cdr = inject(ChangeDetectorRef);
-	world = inject(WorldService);
+	private zone = inject(NgZone);
+	private world = inject(WorldService);
 
 	status = 'playing';
 
@@ -50,8 +50,9 @@ export class GameService {
 	};
 
 	addCoin() {
-		this.coins += 1;
-		this.statistics.coinsCollected += 1;
-		this.cdr.detectChanges();
+		this.zone.run(() => {
+			this.coins += 1;
+			this.statistics.coinsCollected += 1;
+		});
 	}
 }

@@ -13,6 +13,5 @@ import { WorldService } from './services/world.service';
 })
 export class AviatorCanvas {
 	scene = AviatorScene;
-
 	game = inject(GameService);
 }
