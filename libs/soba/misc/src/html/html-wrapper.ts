@@ -402,10 +402,10 @@ export class NgtsHtmlWrapper {
 					let raytraceTarget: null | undefined | boolean | THREE.Object3D[] = false;
 
 					if (isRayCastOcclusion) {
-						if (occlude !== 'blending') {
-							raytraceTarget = [scene];
-						} else if (Array.isArray(occlude)) {
+						if (Array.isArray(occlude)) {
 							raytraceTarget = occlude.map((item) => (is.ref(item) ? item.nativeElement : item));
+						} else if (occlude !== 'blending') {
+							raytraceTarget = [scene];
 						}
 					}
 
