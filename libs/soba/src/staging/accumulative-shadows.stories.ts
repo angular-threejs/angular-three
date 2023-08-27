@@ -17,7 +17,9 @@ type SuziGLTF = NgtsGLTF<{ materials: { default: THREE.MeshStandardMaterial } }>
 @Component({
 	selector: 'accumulative-shadows-suzi',
 	standalone: true,
-	template: ` <ngt-primitive ngtCompound *args="[model()]" /> `,
+	template: `
+		<ngt-primitive ngtCompound *args="[model()]" />
+	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

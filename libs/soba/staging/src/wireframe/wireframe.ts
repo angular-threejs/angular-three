@@ -95,7 +95,9 @@ function setBarycentricCoordinates(geometry: THREE.BufferGeometry, simplify: boo
 @Component({
 	selector: 'ngts-wireframe-without-custom-geometry',
 	standalone: true,
-	template: `<ngt-object3D [ref]="objectRef" />`,
+	template: `
+		<ngt-object3D [ref]="objectRef" />
+	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsWireframeWithoutCustomGeometry {

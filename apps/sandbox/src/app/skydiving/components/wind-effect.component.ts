@@ -7,7 +7,9 @@ import * as THREE from 'three';
 @Component({
 	selector: 'app-wind-shape',
 	standalone: true,
-	template: ` <ngts-instance color="white" [instanceRef]="ref" [position]="randomPosition" /> `,
+	template: `
+		<ngts-instance color="white" [instanceRef]="ref" [position]="randomPosition" />
+	`,
 	imports: [NgtsInstance],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

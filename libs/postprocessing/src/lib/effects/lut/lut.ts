@@ -17,7 +17,9 @@ declare global {
 @Component({
 	selector: 'ngtp-lut',
 	standalone: true,
-	template: ` <ngt-primitive *args="[effect()]" [ref]="effectRef" /> `,
+	template: `
+		<ngt-primitive *args="[effect()]" [ref]="effectRef" />
+	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

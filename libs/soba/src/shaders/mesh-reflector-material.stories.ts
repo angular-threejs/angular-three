@@ -115,49 +115,63 @@ class Scene {
 
 @Component({
 	standalone: true,
-	template: ` <default-scene [reflectorOffset]="1" /> `,
+	template: `
+		<default-scene [reflectorOffset]="1" />
+	`,
 	imports: [Scene],
 })
 class OffsetMeshReflectorMaterialStory {}
 
 @Component({
 	standalone: true,
-	template: ` <default-scene [normalScale]="0.5" /> `,
+	template: `
+		<default-scene [normalScale]="0.5" />
+	`,
 	imports: [Scene],
 })
 class NormalMapMeshReflectorMaterialStory {}
 
 @Component({
 	standalone: true,
-	template: ` <default-scene [distortion]="1" /> `,
+	template: `
+		<default-scene [distortion]="1" />
+	`,
 	imports: [Scene],
 })
 class DistortionMeshReflectorMaterialStory {}
 
 @Component({
 	standalone: true,
-	template: ` <default-scene [depthScale]="2" /> `,
+	template: `
+		<default-scene [depthScale]="2" />
+	`,
 	imports: [Scene],
 })
 class DepthMeshReflectorMaterialStory {}
 
 @Component({
 	standalone: true,
-	template: ` <default-scene [blur]="[500, 500]" /> `,
+	template: `
+		<default-scene [blur]="[500, 500]" />
+	`,
 	imports: [Scene],
 })
 class BlurMeshReflectorMaterialStory {}
 
 @Component({
 	standalone: true,
-	template: ` <default-scene /> `,
+	template: `
+		<default-scene />
+	`,
 	imports: [Scene],
 })
 class PlainMeshReflectorMaterialStory {}
 
 @Component({
 	standalone: true,
-	template: ` <default-scene [blur]="[100, 500]" [depthScale]="2" [distortion]="0.3" [normalScale]="0.5" /> `,
+	template: `
+		<default-scene [blur]="[100, 500]" [depthScale]="2" [distortion]="0.3" [normalScale]="0.5" />
+	`,
 	imports: [Scene],
 })
 class DefaultMeshReflectorMaterialStory {}

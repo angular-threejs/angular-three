@@ -8,7 +8,9 @@ import { makeDecorators, makeStoryFunction, makeStoryObject, turn } from '../set
 @Component({
 	selector: 'html-content',
 	standalone: true,
-	template: `<h4>{{ text }}</h4>`,
+	template: `
+		<h4>{{ text }}</h4>
+	`,
 })
 class HtmlContent {
 	@Input({ required: true }) text!: string;

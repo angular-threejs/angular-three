@@ -1,16 +1,12 @@
-
-
 ## [2.0.0-beta.17](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.16...2.0.0-beta.17) (2023-08-23)
-
 
 ### Bug Fixes
 
-* **core:** adjust createAttachFn positional type arguments ([b65fe57](https://github.com/angular-threejs/angular-three/commit/b65fe57bc8ab21089ebce86835c0508908f8a755))
-
+-   **core:** adjust createAttachFn positional type arguments ([b65fe57](https://github.com/angular-threejs/angular-three/commit/b65fe57bc8ab21089ebce86835c0508908f8a755))
 
 ### Documentations
 
-* adjust sandbox app component ([15b0a27](https://github.com/angular-threejs/angular-three/commit/15b0a279588dfe125e390093427b48ea09eaea17))
+-   adjust sandbox app component ([15b0a27](https://github.com/angular-threejs/angular-three/commit/15b0a279588dfe125e390093427b48ea09eaea17))
 
 ## [2.0.0-beta.16](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.15...2.0.0-beta.16) (2023-08-16)
 

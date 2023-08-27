@@ -32,7 +32,9 @@ declare global {
 @Component({
 	selector: 'ngts-orbit-controls',
 	standalone: true,
-	template: ` <ngt-primitive *args="args()" ngtCompound [enableDamping]="enableDamping()" /> `,
+	template: `
+		<ngt-primitive *args="args()" ngtCompound [enableDamping]="enableDamping()" />
+	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

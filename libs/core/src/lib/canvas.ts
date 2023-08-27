@@ -116,7 +116,7 @@ export type NgtCanvasInputs = {
 	standalone: true,
 	template: `
 		<div (ngxResize)="onResize($event)" style="height: 100%; width: 100%;">
-			<canvas #glCanvas style="display: block;"> </canvas>
+			<canvas #glCanvas style="display: block;"></canvas>
 		</div>
 	`,
 	imports: [NgxResize],

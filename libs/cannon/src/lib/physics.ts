@@ -76,7 +76,9 @@ export const [injectNgtcPhysicsApi, provideNgtcPhysicsApi] = createInjectionToke
 @Component({
 	selector: 'ngtc-physics',
 	standalone: true,
-	template: `<ng-content />`,
+	template: `
+		<ng-content />
+	`,
 	providers: [provideNgtcPhysicsApi()],
 })
 export class NgtcPhysics implements OnInit {

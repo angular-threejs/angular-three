@@ -8,7 +8,9 @@ import { safeDetectChanges } from './utils/safe-detect-changes';
 @Component({
 	standalone: true,
 	selector: 'ngt-routed-scene',
-	template: `<router-outlet />`,
+	template: `
+		<router-outlet />
+	`,
 	imports: [RouterOutlet],
 })
 export class NgtRoutedScene {

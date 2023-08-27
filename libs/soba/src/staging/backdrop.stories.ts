@@ -9,7 +9,9 @@ import { makeCanvasOptions, makeDecorators, makeStoryFunction } from '../setup-c
 @Component({
 	selector: 'backdrop-robot',
 	standalone: true,
-	template: `<ngt-primitive ngtCompound *args="[robot()]" [ref]="animations.ref" />`,
+	template: `
+		<ngt-primitive ngtCompound *args="[robot()]" [ref]="animations.ref" />
+	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

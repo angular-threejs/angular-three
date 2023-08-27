@@ -46,7 +46,9 @@ declare global {
 @Component({
 	selector: 'ngts-point-material',
 	standalone: true,
-	template: `<ngt-primitive ngtCompound [ref]="pointMaterialRef" *args="[material]" attach="material" />`,
+	template: `
+		<ngt-primitive ngtCompound [ref]="pointMaterialRef" *args="[material]" attach="material" />
+	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
