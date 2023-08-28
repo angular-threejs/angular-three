@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, TrackByFunction } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, type TrackByFunction } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';

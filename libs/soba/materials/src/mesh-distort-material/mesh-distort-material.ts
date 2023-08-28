@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { injectBeforeRender, injectNgtRef, NgtArgs, signalStore, type NgtMeshPhysicalMaterial } from 'angular-three';
-import { injectNgtsMeshDistortMaterial, MeshDistortMaterial } from 'angular-three-soba/shaders';
+import { injectNgtsMeshDistortMaterial, type MeshDistortMaterial } from 'angular-three-soba/shaders';
 
 export type NgtsMeshDistortMaterialState = {
 	time: number;

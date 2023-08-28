@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, EventEmitter, Output } from '@angular/core';
-import { NgtAfterAttach, NgtArgs, NgtBeforeRenderEvent, NgtRepeat, injectNgtRef } from 'angular-three';
+import { NgtArgs, NgtRepeat, injectNgtRef, type NgtAfterAttach, type NgtBeforeRenderEvent } from 'angular-three';
 import { Colors } from '../../../utils/colors';
 
 @Component({

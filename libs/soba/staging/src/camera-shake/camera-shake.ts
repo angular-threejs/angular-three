@@ -1,4 +1,4 @@
-import { Directive, Input, Signal, computed, effect } from '@angular/core';
+import { Directive, Input, computed, effect, type Signal } from '@angular/core';
 import { injectBeforeRender, injectNgtStore, signalStore } from 'angular-three';
 import { SimplexNoise } from 'three-stdlib';
 

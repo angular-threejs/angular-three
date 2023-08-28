@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { extend, injectNgtRef, NgtArgs, signalStore, type NgtMesh } from 'angular-three';
 import { Mesh } from 'three';
-import { Font, FontLoader, TextGeometry, TextGeometryParameters } from 'three-stdlib';
+import { Font, FontLoader, TextGeometry, type TextGeometryParameters } from 'three-stdlib';
 
 declare type Glyph = { _cachedOutline: string[]; ha: number; o: string };
 

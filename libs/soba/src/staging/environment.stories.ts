@@ -1,6 +1,5 @@
 import { NgIf } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -86,7 +85,7 @@ class DefaultEnvironmentStory {
 export default {
 	title: 'Staging/Environment',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultEnvironmentStory, {
 	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },

@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -136,7 +135,7 @@ class DefaultBillboardStory {
 export default {
 	title: 'Abstractions/Billboard',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 const canvasOptions = { camera: { position: [0, 0, 10] }, controls: false };
 

@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed } from '@angular/core';
 import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender, injectNgtRef, signalStore } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
-import { NgtsFBOParams, injectNgtsFBO } from 'angular-three-soba/misc';
+import { injectNgtsFBO, type NgtsFBOParams } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { color, makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';

@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsHtml } from 'angular-three-soba/misc';
-import { NgtsBBAnchor, NgtsBBAnchorState } from 'angular-three-soba/staging';
+import { NgtsBBAnchor, type NgtsBBAnchorState } from 'angular-three-soba/staging';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
 import { makeCanvasOptions, makeDecorators, makeStoryObject, number } from '../setup-canvas';
 

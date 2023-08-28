@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input, computed } from '@angular/core';
 import { signalStore } from 'angular-three';
 import type { Loader, Scene, Texture, TextureEncoding } from 'three';
-import { NgtsEnvironmentPresetsType } from './assets';
+import type { NgtsEnvironmentPresetsType } from './assets';
 
 export type NgtsEnvironmentInputState = {
 	frames?: number;

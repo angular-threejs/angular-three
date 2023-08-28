@@ -4,7 +4,7 @@ import { NgtArgs, injectNgtRef } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
-import { NgtsDecal, NgtsSurfaceSamplerTransformFn, injectNgtsSurfaceSampler } from 'angular-three-soba/misc';
+import { NgtsDecal, injectNgtsSurfaceSampler, type NgtsSurfaceSamplerTransformFn } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 

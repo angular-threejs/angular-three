@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, ViewChild } from '@angular/core';
 import { NgtArgs, injectBeforeRender, injectNgtRef } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
-import { NgtsTrail, NgtsTrailState, injectNgtsTrail } from 'angular-three-soba/misc';
+import { NgtsTrail, injectNgtsTrail, type NgtsTrailState } from 'angular-three-soba/misc';
 import { NgtsFloat } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { Group, InstancedMesh, Mesh } from 'three';

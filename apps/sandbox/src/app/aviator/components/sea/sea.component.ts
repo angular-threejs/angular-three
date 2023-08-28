@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, inject } from '@angular/core';
-import { NgtAfterAttach, NgtArgs, NgtBeforeRenderEvent, checkUpdate } from 'angular-three';
+import { NgtArgs, checkUpdate, type NgtAfterAttach, type NgtBeforeRenderEvent } from 'angular-three';
 import * as THREE from 'three';
 import { GameService } from '../../services/game.service';
 import { WorldService } from '../../services/world.service';

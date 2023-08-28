@@ -1,11 +1,10 @@
 ///<reference path="../types.d.ts"/>
 
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { injectBeforeRender, injectNgtRef, NgtArgs } from 'angular-three';
 import distortShader from 'angular-three-soba/assets/distort.vert.glsl';
 import { NgtsMeshDistortMaterial } from 'angular-three-soba/materials';
-import { MeshDistortMaterial, provideNgtsMeshDistortMaterialShader } from 'angular-three-soba/shaders';
+import { provideNgtsMeshDistortMaterialShader, type MeshDistortMaterial } from 'angular-three-soba/shaders';
 import { makeDecorators, makeStoryFunction, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
@@ -51,7 +50,7 @@ class DefaultMeshDistortMaterialStory {
 export default {
 	title: 'Shaders/MeshDistortMaterial',
 	decorators: makeDecorators([provideNgtsMeshDistortMaterialShader(distortShader)]),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultMeshDistortMaterialStory, {
 	argsOptions: {

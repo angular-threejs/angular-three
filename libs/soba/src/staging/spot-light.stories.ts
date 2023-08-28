@@ -1,6 +1,5 @@
 import { NgIf } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, effect, Input, signal } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { checkUpdate, NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -172,7 +171,7 @@ class DefaultSpotLightStory {
 export default {
 	title: 'Staging/SpotLight',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultSpotLightStory, {
 	canvasOptions: { lights: false, useLegacyLights: true },

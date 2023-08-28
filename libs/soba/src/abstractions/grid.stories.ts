@@ -1,5 +1,4 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
@@ -21,6 +20,6 @@ class DefaultGridStory {}
 export default {
 	title: 'Gizmo/Grid',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryFunction(DefaultGridStory, { camera: { position: [-5, 5, 10] } });

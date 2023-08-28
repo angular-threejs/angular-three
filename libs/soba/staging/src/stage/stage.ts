@@ -19,7 +19,7 @@ import { NgtsRandomizedLights, type NgtsRandomizedLightsState } from '../accumul
 import { NgtsBounds, injectNgtsBoundsApi } from '../bounds/bounds';
 import { NgtsCenter, type NgtsCenterState, type NgtsCenteredEvent } from '../center/center';
 import { NgtsContactShadows, type NgtsContactShadowsState } from '../contact-shadows/contact-shadows';
-import { NgtsEnvironmentPresetsType } from '../environment/assets';
+import type { NgtsEnvironmentPresetsType } from '../environment/assets';
 import { NgtsEnvironment } from '../environment/environment';
 import { type NgtsEnvironmentInputState } from '../environment/environment-input';
 

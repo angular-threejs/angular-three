@@ -1,8 +1,7 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, Signal } from '@angular/core';
-import { Meta } from '@storybook/angular';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, type Signal } from '@angular/core';
 import { applyProps, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectNgtsGLTFLoader, NgtsGLTF } from 'angular-three-soba/loaders';
+import { injectNgtsGLTFLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture';
@@ -86,7 +85,7 @@ class DefaultAccumulativeShadowsStory {}
 export default {
 	title: 'Staging/Accumulative Shadows',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryFunction(DefaultAccumulativeShadowsStory, {
 	compoundPrefixes: ['accumulative-shadows-suzi'],

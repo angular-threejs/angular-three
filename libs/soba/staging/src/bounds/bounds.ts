@@ -4,11 +4,11 @@ import {
 	EventEmitter,
 	Input,
 	Output,
-	Signal,
 	computed,
 	effect,
 	forwardRef,
 	untracked,
+	type Signal,
 } from '@angular/core';
 import {
 	createInjectionToken,

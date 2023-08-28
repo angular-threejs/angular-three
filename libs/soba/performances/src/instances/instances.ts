@@ -22,10 +22,10 @@ import {
 	injectNgtRef,
 	is,
 	NgtArgs,
-	NgtRef,
 	signalStore,
 	type NgtGroup,
 	type NgtInstancedMesh,
+	type NgtRef,
 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
 import * as THREE from 'three';

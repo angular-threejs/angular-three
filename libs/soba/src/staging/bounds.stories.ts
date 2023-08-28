@@ -1,10 +1,9 @@
 import { NgIf } from '@angular/common';
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, Input, Signal, signal } from '@angular/core';
-import { Meta } from '@storybook/angular';
-import { NgtAnyRecord, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, signal, type Signal } from '@angular/core';
+import { NgtArgs, type NgtAnyRecord, type NgtThreeEvent } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectNgtsGLTFLoader, NgtsGLTF } from 'angular-three-soba/loaders';
-import { injectNgtsBoundsApi, NgtsBounds, NgtsContactShadows } from 'angular-three-soba/staging';
+import { injectNgtsGLTFLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
+import { NgtsBounds, NgtsContactShadows, injectNgtsBoundsApi } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 injectNgtsGLTFLoader.preload(() => 'soba/bounds-assets.glb');
@@ -102,7 +101,7 @@ class DefaultBoundsStory {
 export default {
 	title: 'Staging/Bounds',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultBoundsStory, {
 	canvasOptions: {

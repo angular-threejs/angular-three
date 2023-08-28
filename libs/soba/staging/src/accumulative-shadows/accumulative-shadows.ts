@@ -1,12 +1,12 @@
 import {
-	Component,
-	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	Component,
+	Input,
+	computed,
 	effect,
 	forwardRef,
-	Input,
-	Signal,
 	untracked,
+	type Signal,
 } from '@angular/core';
 import {
 	createInjectionToken,

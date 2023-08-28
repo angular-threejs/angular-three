@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed } from '@angular/core';
 import { NgtArgs, injectNgtRef, signalStore } from 'angular-three';
 import { PixelationEffect } from 'postprocessing';
-import { NgtpEffectState } from '../../effect';
+import type { NgtpEffectState } from '../../effect';
 
 export type NgtpPixelationState = {
 	granularity: number;

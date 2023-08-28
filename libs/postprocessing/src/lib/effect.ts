@@ -1,5 +1,5 @@
 import { Directive, Input, computed, effect } from '@angular/core';
-import { NgtAnyRecord, getLocalState, injectNgtRef, injectNgtStore, is, signalStore } from 'angular-three';
+import { getLocalState, injectNgtRef, injectNgtStore, is, signalStore, type NgtAnyRecord } from 'angular-three';
 import { BlendFunction, Effect } from 'postprocessing';
 
 export type NgtpEffectState = {

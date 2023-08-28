@@ -6,7 +6,6 @@ import {
 	Injector,
 	Input,
 	NgZone,
-	OnInit,
 	TemplateRef,
 	computed,
 	effect,
@@ -14,6 +13,7 @@ import {
 	inject,
 	signal,
 	untracked,
+	type OnInit,
 } from '@angular/core';
 import {
 	checkUpdate,

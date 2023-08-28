@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { injectBeforeRender, injectNgtRef, NgtArgs } from 'angular-three';
 import { NgtsMeshWobbleMaterial } from 'angular-three-soba/materials';
 import { MeshWobbleMaterial } from 'angular-three-soba/shaders';
@@ -49,7 +48,7 @@ class DefaultMeshWobbleMaterialStory {
 export default {
 	title: 'Shaders/MeshWobbleMaterial',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultMeshWobbleMaterialStory, {
 	argsOptions: {

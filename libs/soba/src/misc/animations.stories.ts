@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, Signal, effect, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, effect, signal, type Signal } from '@angular/core';
 import { NgtArgs } from 'angular-three';
-import { NgtsGLTF, injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
+import { injectNgtsGLTFLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
 import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import { injectNgtsMatcapTexture } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject, select } from '../setup-canvas';

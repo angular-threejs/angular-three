@@ -1,5 +1,4 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, effect, signal } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsSky } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
@@ -112,7 +111,7 @@ class DefaultSkyStory {
 export default {
 	title: 'Staging/Sky',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultSkyStory, {
 	argsOptions: {

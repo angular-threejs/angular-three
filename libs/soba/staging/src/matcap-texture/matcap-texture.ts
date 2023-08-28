@@ -1,4 +1,4 @@
-import { Signal, computed, effect, runInInjectionContext, signal, untracked, type Injector } from '@angular/core';
+import { computed, effect, runInInjectionContext, signal, untracked, type Injector, type Signal } from '@angular/core';
 import { assertInjectionContext } from 'angular-three';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 

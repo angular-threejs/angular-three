@@ -1,6 +1,6 @@
 import { Directive, Input, computed } from '@angular/core';
 import { is, signalStore, type NgtRef } from 'angular-three';
-import { WireframeMaterialState } from 'angular-three-soba/shaders';
+import type { WireframeMaterialState } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
 
 export type NgtsWireframeState = {

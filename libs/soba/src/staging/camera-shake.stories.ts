@@ -1,6 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
-import { NgtArgs, NgtBeforeRenderEvent } from 'angular-three';
+import { NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake } from 'angular-three-soba/staging';
 import * as THREE from 'three';
@@ -96,7 +95,7 @@ class DefaultCameraShakeStory {
 export default {
 	title: 'Staging/Camera Shake',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultCameraShakeStory, {
 	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },

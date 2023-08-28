@@ -7,8 +7,6 @@ import {
 	Directive,
 	EmbeddedViewRef,
 	Input,
-	OnInit,
-	Signal,
 	TemplateRef,
 	ViewChild,
 	ViewContainerRef,
@@ -18,6 +16,8 @@ import {
 	runInInjectionContext,
 	untracked,
 	type Injector,
+	type OnInit,
+	type Signal,
 } from '@angular/core';
 import {
 	NgtArgs,

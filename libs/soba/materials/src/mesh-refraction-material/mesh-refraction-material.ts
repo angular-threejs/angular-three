@@ -12,7 +12,7 @@ import {
 } from 'angular-three';
 import { MeshRefractionMaterial } from 'angular-three-soba/shaders';
 import { MeshBVH, MeshBVHUniformStruct, SAH } from 'three-mesh-bvh';
-import { NgtsMeshTranmissionMaterialState } from '../mesh-transmission-material/mesh-transmission-material';
+import type { NgtsMeshTranmissionMaterialState } from '../mesh-transmission-material/mesh-transmission-material';
 
 extend({ MeshRefractionMaterial });
 

@@ -11,13 +11,13 @@ import {
 	untracked,
 } from '@angular/core';
 import {
-	NgtGroup,
 	assertInjectionContext,
 	checkUpdate,
 	extend,
 	injectNgtRef,
 	is,
 	signalStore,
+	type NgtGroup,
 	type NgtRef,
 } from 'angular-three';
 import * as THREE from 'three';

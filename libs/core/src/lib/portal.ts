@@ -25,7 +25,7 @@ import type { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
 import { injectNgtRef } from './ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { NGT_STORE, NgtRenderState, injectNgtStore, type NgtSize, type NgtState } from './store';
+import { NGT_STORE, injectNgtStore, type NgtRenderState, type NgtSize, type NgtState } from './store';
 import { is } from './utils/is';
 import { safeDetectChanges } from './utils/safe-detect-changes';
 import { signalStore } from './utils/signal-store';

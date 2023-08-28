@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Signal, effect } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, effect, type Signal } from '@angular/core';
 import { NgtArgs, injectBeforeRender } from 'angular-three';
-import { NgtsGLTF, injectNgtsGLTFLoader, injectNgtsTextureLoader } from 'angular-three-soba/loaders';
+import { injectNgtsGLTFLoader, injectNgtsTextureLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
 import { injectNgtsAnimations } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 

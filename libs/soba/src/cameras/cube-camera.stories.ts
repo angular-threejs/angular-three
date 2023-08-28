@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
-import { NgtArgs, NgtBeforeRenderEvent } from 'angular-three';
+import { NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
 import { NgtsCubeCamera, NgtsCubeCameraContent } from 'angular-three-soba/cameras';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 

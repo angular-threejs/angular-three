@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Input } from '@angular/core';
-import { extend, injectNgtRef, injectNgtStore, NgtGroup, signalStore } from 'angular-three';
+import { extend, injectNgtRef, injectNgtStore, signalStore, type NgtGroup } from 'angular-three';
 import { NgtsEdges } from 'angular-three-soba/abstractions';
 import { CausticsMaterial, CausticsProjectionMaterial } from 'angular-three-soba/shaders';
 import { NgtsSobaContent } from 'angular-three-soba/utils';

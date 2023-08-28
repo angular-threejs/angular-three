@@ -1,5 +1,5 @@
 import { Injector, computed, runInInjectionContext } from '@angular/core';
-import { NgtThreeEvent, assertInjectionContext, injectBeforeRender } from 'angular-three';
+import { assertInjectionContext, injectBeforeRender, type NgtThreeEvent } from 'angular-three';
 import { TrailTexture, type TrailConfig } from './trail-texture';
 
 export function injectNgtsTrailTexture(

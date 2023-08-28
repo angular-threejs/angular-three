@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsCenter, NgtsFloat } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
@@ -30,7 +29,7 @@ class DefaultText3DStory {
 export default {
 	title: 'Abstractions/Text 3D',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultText3DStory, {
 	canvasOptions: { camera: { position: [0, 0, 10] } },

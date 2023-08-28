@@ -10,7 +10,6 @@ import {
 import {
 	NgtPortal,
 	NgtPortalContent,
-	NgtRef,
 	assertInjectionContext,
 	extend,
 	injectBeforeRender,
@@ -18,6 +17,7 @@ import {
 	injectNgtStore,
 	is,
 	signalStore,
+	type NgtRef,
 } from 'angular-three';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';

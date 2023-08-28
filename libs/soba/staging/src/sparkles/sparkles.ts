@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, Signal, computed, isSignal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, isSignal, type Signal } from '@angular/core';
 import {
 	NgtArgs,
 	NgtKey,
@@ -9,7 +9,7 @@ import {
 	signalStore,
 	type NgtPoints,
 } from 'angular-three';
-import { NgtSparklesMaterialState, SparklesMaterial } from 'angular-three-soba/shaders';
+import { SparklesMaterial, type NgtSparklesMaterialState } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
 

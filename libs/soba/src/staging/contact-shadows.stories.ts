@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
 import { NgtsContactShadows } from 'angular-three-soba/staging';
 import * as THREE from 'three';
@@ -41,7 +40,7 @@ class DefaultContactShadowsStory {
 export default {
 	title: 'Staging/Contact Shadows',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryFunction(DefaultContactShadowsStory);
 export const Colorized = makeStoryObject(DefaultContactShadowsStory, {

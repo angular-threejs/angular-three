@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCloud } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
@@ -22,7 +21,7 @@ class DefaultCloudStory {}
 export default {
 	title: 'Staging/Cloud',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryFunction(DefaultCloudStory, {
 	camera: { position: [0, 0, 10] },

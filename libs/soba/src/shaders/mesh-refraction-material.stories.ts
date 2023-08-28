@@ -1,6 +1,5 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { injectNgtLoader, injectNgtStore, NgtArgs } from 'angular-three';
 import { NgtsCubeCamera, NgtsCubeCameraContent } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -155,7 +154,7 @@ class DefaultMeshRefractionMaterialStory {
 export default {
 	title: 'Shaders/MeshRefractionMaterial',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryFunction(DefaultMeshRefractionMaterialStory, {
 	camera: { fov: 45, position: [-5, 0.5, 0] },

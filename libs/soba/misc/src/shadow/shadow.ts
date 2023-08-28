@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed } from '@angular/core';
-import { NgtArgs, NgtMesh, extend, injectNgtRef, signalStore } from 'angular-three';
+import { NgtArgs, extend, injectNgtRef, signalStore, type NgtMesh } from 'angular-three';
 import * as THREE from 'three';
 import { CanvasTexture, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 

@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { ENVIRONMENT_PRESETS, NgtsStage } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject, number, select } from '../setup-canvas';
@@ -34,7 +33,7 @@ class DefaultStageStory {
 export default {
 	title: 'Staging/Stage',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryObject(DefaultStageStory, {
 	canvasOptions: { camera: { position: [0, 0, 3] } },

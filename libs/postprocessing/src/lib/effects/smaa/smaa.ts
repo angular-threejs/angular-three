@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { EdgeDetectionMode, PredicationMode, SMAAEffect, SMAAPreset } from 'postprocessing';
-import { NgtpEffect, NgtpEffectState } from '../../effect';
+import { NgtpEffect, type NgtpEffectState } from '../../effect';
 
 extend({ SMAAEffect });
 

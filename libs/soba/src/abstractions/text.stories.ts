@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { DoubleSide } from 'three';
 import { color, makeDecorators, makeStoryObject, turn } from '../setup-canvas';
@@ -171,7 +170,7 @@ class DefaultTextStory {
 export default {
 	title: 'Abstractions/Text',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 const defaultText = `LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE
 MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO

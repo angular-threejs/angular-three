@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, effect, inject, signal, untracked } from '@angular/core';
-import { NgtRef, extend, injectNgtRef, is } from 'angular-three';
+import { extend, injectNgtRef, is, type NgtRef } from 'angular-three';
 import {
 	WireframeMaterial,
 	WireframeMaterialShaders,
@@ -9,7 +9,7 @@ import {
 } from 'angular-three-soba/shaders';
 import * as THREE from 'three';
 import { Object3D } from 'three';
-import { NgtsWireframeInput, NgtsWireframeState } from './wireframe-input';
+import { NgtsWireframeInput, type NgtsWireframeState } from './wireframe-input';
 
 extend({ WireframeMaterial, Object3D });
 

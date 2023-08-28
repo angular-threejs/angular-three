@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { injectNgtStore } from 'angular-three';
-import { Coin, Collectible } from '../utils/collectibles';
+import { Coin, type Collectible } from '../utils/collectibles';
 import { randomFromRange } from '../utils/random-from-range';
 import { GameService } from './game.service';
 import { RefsService } from './refs.service';

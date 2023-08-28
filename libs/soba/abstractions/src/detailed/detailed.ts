@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, effect } from '@angular/core';
-import { NgtBeforeRenderEvent, extend, injectNgtRef, signalStore, type NgtLOD } from 'angular-three';
+import { extend, injectNgtRef, signalStore, type NgtBeforeRenderEvent, type NgtLOD } from 'angular-three';
 import { LOD } from 'three';
 
 extend({ LOD });

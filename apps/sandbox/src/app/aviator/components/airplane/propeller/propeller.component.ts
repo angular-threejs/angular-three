@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, ViewChild, inject } from '@angular/core';
-import { NgtArgs, NgtBeforeRenderEvent, injectNgtRef } from 'angular-three';
+import { NgtArgs, injectNgtRef, type NgtBeforeRenderEvent } from 'angular-three';
 import { GameService } from '../../../services/game.service';
 import { Colors } from '../../../utils/colors';
 

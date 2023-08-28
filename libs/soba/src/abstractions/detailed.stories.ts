@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Meta, StoryFn } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsDetailed } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -34,9 +33,9 @@ class DefaultDetailedStory {}
 export default {
 	title: 'Abstractions/Detailed',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
-export const Default: StoryFn = makeStoryFunction(DefaultDetailedStory, {
+export const Default = makeStoryFunction(DefaultDetailedStory, {
 	controls: false,
 	camera: { position: [0, 0, 100] },
 });

@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, type Signal } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsGLTF, injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
+import { injectNgtsGLTFLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
 import { NgtsAdaptiveDpr, NgtsAdaptiveEvents } from 'angular-three-soba/performances';
 import { makeCanvasOptions, makeDecorators, makeStoryFunction } from '../setup-canvas';
 

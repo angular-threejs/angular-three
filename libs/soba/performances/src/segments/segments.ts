@@ -4,17 +4,16 @@ import {
 	Injector,
 	Input,
 	NgZone,
-	OnInit,
 	computed,
 	effect,
 	forwardRef,
 	inject,
 	signal,
 	untracked,
+	type OnInit,
 } from '@angular/core';
 import {
 	NgtArgs,
-	NgtRef,
 	createInjectionToken,
 	extend,
 	injectBeforeRender,
@@ -22,6 +21,7 @@ import {
 	is,
 	signalStore,
 	type NgtColor,
+	type NgtRef,
 	type NgtVector3,
 } from 'angular-three';
 import * as THREE from 'three';

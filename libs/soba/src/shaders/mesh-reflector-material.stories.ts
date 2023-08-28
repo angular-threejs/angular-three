@@ -1,6 +1,5 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, Input } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs, signalStore } from 'angular-three';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 import { NgtsMeshReflectorMaterial } from 'angular-three-soba/materials';
@@ -179,7 +178,7 @@ class DefaultMeshReflectorMaterialStory {}
 export default {
 	title: 'Shaders/MeshReflectorMaterial',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 const canvasOptions = { camera: { fov: 20, position: [-6, 6, 15] } };
 

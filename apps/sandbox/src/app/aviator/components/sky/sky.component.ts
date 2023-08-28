@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, inject } from '@angular/core';
-import { NgtArgs, NgtBeforeRenderEvent, NgtRepeat } from 'angular-three';
+import { NgtArgs, NgtRepeat, type NgtBeforeRenderEvent } from 'angular-three';
 import { GameService } from '../../services/game.service';
 import { WorldService } from '../../services/world.service';
 import { Cloud } from './cloud/cloud.component';

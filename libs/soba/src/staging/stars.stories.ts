@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsStars } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
@@ -24,6 +23,6 @@ class DefaultStarsStory {
 export default {
 	title: 'Staging/Stars',
 	decorators: makeDecorators(),
-} as Meta;
+};
 
 export const Default = makeStoryFunction(DefaultStarsStory);

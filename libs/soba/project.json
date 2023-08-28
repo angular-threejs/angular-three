@@ -71,7 +71,9 @@
 					"libs/soba/modifiers/**/*.ts",
 					"libs/soba/modifiers/**/*.html",
 					"libs/soba/utils/**/*.ts",
-					"libs/soba/utils/**/*.html"
+					"libs/soba/utils/**/*.html",
+					"libs/soba/gizmos/**/*.ts",
+					"libs/soba/gizmos/**/*.html"
 				]
 			}
 		},

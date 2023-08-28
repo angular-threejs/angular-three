@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, Input, computed, effect, inject } from '@angular/core';
-import { NgtRef, addAfterEffect, addEffect, injectNgtStore, is, signalStore } from 'angular-three';
+import { addAfterEffect, addEffect, injectNgtStore, is, signalStore, type NgtRef } from 'angular-three';
 import Stats from 'stats-gl';
 
 export type NgtsStatsGLState = {

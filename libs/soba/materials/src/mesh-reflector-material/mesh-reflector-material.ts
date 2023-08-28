@@ -7,9 +7,9 @@ import {
 	injectNgtRef,
 	injectNgtStore,
 	NgtKey,
-	NgtMeshStandardMaterial,
-	NgtRenderState,
 	signalStore,
+	type NgtMeshStandardMaterial,
+	type NgtRenderState,
 } from 'angular-three';
 import { BlurPass, MeshReflectorMaterial } from 'angular-three-soba/shaders';
 import * as THREE from 'three';

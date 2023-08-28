@@ -1,6 +1,6 @@
 import { Directive, Input, effect, inject } from '@angular/core';
 import { injectNgtStore, signalStore } from 'angular-three';
-import { NgtsEnvironmentInput, NgtsEnvironmentInputState } from './environment-input';
+import { NgtsEnvironmentInput, type NgtsEnvironmentInputState } from './environment-input';
 import { setEnvProps } from './utils';
 
 @Directive({
