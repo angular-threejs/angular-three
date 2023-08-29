@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.20](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.19...2.0.0-beta.20) (2023-08-29)
+
+
+### Bug Fixes
+
+* **core:** adjust experience generator ([fad08f6](https://github.com/angular-threejs/angular-three/commit/fad08f6ce20b43bdd9d08eef31642fbc62dd80eb))
+
 ## [2.0.0-beta.19](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.18...2.0.0-beta.19) (2023-08-29)
 
 
