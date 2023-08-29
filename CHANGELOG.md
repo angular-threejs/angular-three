@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.21](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.20...2.0.0-beta.21) (2023-08-29)
+
+
+### Bug Fixes
+
+* **core:** adjust generator sourceRoot ([701b7c9](https://github.com/angular-threejs/angular-three/commit/701b7c9988e4e0a7acd053e91410a5817edbb395))
+
 ## [2.0.0-beta.20](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.19...2.0.0-beta.20) (2023-08-29)
 
 
