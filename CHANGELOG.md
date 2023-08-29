@@ -1,3 +1,12 @@
+
+
+## [2.0.0-beta.19](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.18...2.0.0-beta.19) (2023-08-29)
+
+
+### Features
+
+* **core:** add experience generation (beta) ([650eb26](https://github.com/angular-threejs/angular-three/commit/650eb262da15c06f83cbeb6ce46275265cc284cc))
+
 ## [2.0.0-beta.18](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.17...2.0.0-beta.18) (2023-08-28)
 
 ### Features
