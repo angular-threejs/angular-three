@@ -11,13 +11,7 @@ import {
 import { tsquery } from '@phenomnomnominal/tsquery';
 import { prompt } from 'enquirer';
 import { join } from 'node:path';
-import {
-	ArrayLiteralExpression,
-	ClassDeclaration,
-	NoSubstitutionTemplateLiteral,
-	SourceFile,
-	factory,
-} from 'typescript';
+import { ArrayLiteralExpression, NoSubstitutionTemplateLiteral } from 'typescript';
 import { addMetadataJson } from '../utils';
 import { ANGULAR_THREE_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../versions';
 
@@ -118,6 +112,7 @@ Please retry the generator with a "--project" specified.`);
 			const templateExist = tree.exists(appComponentTemplatePath);
 			const appComponentContent = exist ? tree.read(appComponentPath, 'utf8') : null;
 			const appComponentTemplateContent = templateExist ? tree.read(appComponentTemplatePath, 'utf8') : null;
+
 			if (isStandalone) {
 				if (!appComponentContent) {
 					logger.warn(`
@@ -126,41 +121,39 @@ AppComponent not found at ${appComponentPath}. Angular Three was initialized suc
 					let updatedContent = tsquery.replace(
 						appComponentContent,
 						'Identifier[name="imports"] ~ ArrayLiteralExpression',
-						(node: ArrayLiteralExpression) =>
-							factory
-								.updateArrayLiteralExpression(node, [
-									...node.elements,
-									factory.createIdentifier('NgtCanvas'),
-								])
-								.getFullText(),
+						(node: ArrayLiteralExpression) => {
+							return `[${node.elements.map((element) => element['escapedText']).join(', ')}, NgtCanvas]`;
+						},
 					);
-					updatedContent = tsquery.replace(updatedContent, 'SourceFile', (node: SourceFile) => {
+
+					updatedContent = tsquery.replace(updatedContent, 'SourceFile', (node) => {
 						return `
 import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience/experience.component';
-${node.getFullText()}`;
+
+${node.getFullText()}
+`;
 					});
-					updatedContent = tsquery.replace(updatedContent, 'ClassDeclaration', (node: ClassDeclaration) =>
-						factory
-							.updateClassDeclaration(
-								node,
-								node.modifiers,
-								node.name,
-								node.typeParameters,
-								node.heritageClauses,
-								[
-									factory.createPropertyDeclaration(
-										[],
-										'scene',
-										undefined,
-										undefined,
-										factory.createIdentifier('Experience'),
-									),
-									...node.members,
-								],
-							)
-							.getFullText(),
-					);
+
+					const contentNode = tsquery.ast(appComponentContent);
+					const classMembersQuery = 'ClassDeclaration > :matches(PropertyDeclaration,MethodDeclaration)';
+					const members = tsquery.match(contentNode, classMembersQuery);
+
+					if (members.length === 0) {
+						updatedContent = tsquery.replace(updatedContent, 'ClassDeclaration', (node) => {
+							const withoutBraces = node.getFullText().slice(0, -1);
+							return `
+${withoutBraces}
+  scene = Experience;
+}`;
+						});
+					} else {
+						updatedContent = tsquery.replace(updatedContent, classMembersQuery, (node) => {
+							return `
+scene = Experience;
+${node.getFullText()}`;
+						});
+					}
 					if (appComponentTemplateContent) {
 						const updatedTemplateContent =
 							generateExperience === 'append'
