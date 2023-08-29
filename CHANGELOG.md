@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.23](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.22...2.0.0-beta.23) (2023-08-29)
+
+
+### Bug Fixes
+
+* **core:** make sure escape template tag for generation ([6a702d6](https://github.com/angular-threejs/angular-three/commit/6a702d6bb57226b14584170c43521363fecd8df3))
+
 ## [2.0.0-beta.22](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.21...2.0.0-beta.22) (2023-08-29)
 
 
