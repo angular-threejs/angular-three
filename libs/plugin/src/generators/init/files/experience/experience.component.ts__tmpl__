@@ -1,4 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import { extend, type NgtBeforeRenderEvent } from 'angular-three';
 import { Mesh, BoxGeometry, MeshBasicMaterial } from 'three';
 
 extend({ Mesh, BoxGeometry, MeshBasicMaterial });
