@@ -97,7 +97,10 @@ Angular Three generator could not find a default "project".
 Please retry the generator with a "--project" specified.`);
 		}
 		const projectConfig = readProjectConfiguration(tree, project);
-		const sourceRoot = projectConfig.sourceRoot;
+		let sourceRoot = projectConfig.sourceRoot;
+		if (projectConfig['prefix']) {
+			sourceRoot += '/' + projectConfig['prefix'];
+		}
 
 		if (sourceRoot) {
 			// generate Experience component
