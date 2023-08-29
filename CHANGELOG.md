@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.25](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.24...2.0.0-beta.25) (2023-08-29)
+
+
+### Bug Fixes
+
+* **core:** adjust template for experience component to include angular-three imports ([1249f0f](https://github.com/angular-threejs/angular-three/commit/1249f0f0e440c0ba263b66f0441bba25fcbe9fd7))
+
 ## [2.0.0-beta.24](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.23...2.0.0-beta.24) (2023-08-29)
 
 
