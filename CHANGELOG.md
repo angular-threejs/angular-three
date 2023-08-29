@@ -1,21 +1,16 @@
-
-
 ## [2.0.0-beta.18](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.17...2.0.0-beta.18) (2023-08-28)
-
 
 ### Features
 
-* **soba:** gizmo ([8ac565c](https://github.com/angular-threejs/angular-three/commit/8ac565c50c8f8d8e3639d09f5a51f76393e5c163))
-
+-   **soba:** gizmo ([8ac565c](https://github.com/angular-threejs/angular-three/commit/8ac565c50c8f8d8e3639d09f5a51f76393e5c163))
 
 ### Bug Fixes
 
-* **soba:** reverse occlusion logic in HTML ([17c5123](https://github.com/angular-threejs/angular-three/commit/17c5123a0cd6e9362ccb91c7c8646b1f3e481e58))
-
+-   **soba:** reverse occlusion logic in HTML ([17c5123](https://github.com/angular-threejs/angular-three/commit/17c5123a0cd6e9362ccb91c7c8646b1f3e481e58))
 
 ### Documentations
 
-* more on aviator ([aea07c6](https://github.com/angular-threejs/angular-three/commit/aea07c6b1007887169ae4b645baac57b2a721ea9))
+-   more on aviator ([aea07c6](https://github.com/angular-threejs/angular-three/commit/aea07c6b1007887169ae4b645baac57b2a721ea9))
 
 ## [2.0.0-beta.17](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.16...2.0.0-beta.17) (2023-08-23)
 

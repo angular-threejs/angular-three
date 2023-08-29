@@ -1,0 +1,4 @@
+<ngt-mesh (beforeRender)="onBeforeRender($event)">
+  <ngt-box-geometry />
+  <ngt-mesh-basic-material color="hotpink" />
+</ngt-mesh>
