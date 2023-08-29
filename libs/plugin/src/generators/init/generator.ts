@@ -98,7 +98,7 @@ Please retry the generator with a "--project" specified.`);
 
 		if (sourceRoot) {
 			// generate Experience component
-			generateFiles(tree, join(__dirname, 'files'), sourceRoot, { __tmpl__: '' });
+			generateFiles(tree, join(__dirname, 'files'), sourceRoot, { tmpl: '' });
 
 			const { isStandalone } = await prompt<{ isStandalone: boolean }>({
 				type: 'confirm',
