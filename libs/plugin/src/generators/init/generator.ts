@@ -67,10 +67,10 @@ export default async function (tree: Tree, { project }: Schema) {
 
 	if (generateExperience !== 'none') {
 		const isNx = tree.exists('nx.json');
-		const rootProjectJson = readJson(tree, 'project.json');
 
 		if (!project) {
 			if (isNx) {
+				const rootProjectJson = readJson(tree, 'project.json');
 				if (!rootProjectJson) {
 					throw new Error(`
 It seems like your workspace is an Integrated workspace but you did not provide a "project" name.
@@ -80,6 +80,14 @@ Please retry the generator with a "--project" specified.`);
 				if (rootName === packageJson['name']) {
 					project = rootName;
 				}
+			} else {
+				const angularJson = readJson(tree, 'angular.json');
+				if (!angularJson) {
+					throw new Error(`
+Cannot find "angular.json" file.
+Please retry the generator with a "--project" specified in an Angular workspace.`);
+				}
+				project = packageJson['name'];
 			}
 		}
 
