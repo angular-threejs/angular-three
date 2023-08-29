@@ -168,10 +168,10 @@ ${appComponentTemplateContent}
 							'Identifier[name="template"] ~ NoSubstitutionTemplateLiteral',
 							(node: NoSubstitutionTemplateLiteral) => {
 								return generateExperience === 'append'
-									? `
+									? `\`
 ${node.getFullText()}
-<ngt-canvas [sceneGraph]="scene" />`
-									: `<ngt-canvas [sceneGraph]="scene" />`;
+<ngt-canvas [sceneGraph]="scene" />\``
+									: `\`<ngt-canvas [sceneGraph]="scene" />\``;
 							},
 						);
 					}
