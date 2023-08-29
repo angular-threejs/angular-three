@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.24](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.23...2.0.0-beta.24) (2023-08-29)
+
+
+### Bug Fixes
+
+* **core:** use correct syntax for substitution generate files ([4194370](https://github.com/angular-threejs/angular-three/commit/4194370ab6b3d52297c1ab435bf339d2f64f0df3))
+
 ## [2.0.0-beta.23](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.22...2.0.0-beta.23) (2023-08-29)
 
 
