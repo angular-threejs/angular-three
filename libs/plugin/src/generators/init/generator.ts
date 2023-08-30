@@ -100,12 +100,21 @@ Please retry the generator with a "--project" specified.`);
 			// generate Experience component
 			generateFiles(tree, join(__dirname, 'files'), sourceRoot, { tmpl: '' });
 
-			const { isStandalone } = await prompt<{ isStandalone: boolean }>({
-				type: 'confirm',
-				initial: false,
-				name: 'isStandalone',
-				message: 'Is your project standalone?',
-			});
+			let isStandalone = false;
+
+			while (!isStandalone) {
+				const answer = await prompt<{ isStandalone: boolean }>({
+					type: 'confirm',
+					initial: true,
+					name: 'isStandalone',
+					message: 'Is your project standalone?',
+				});
+				isStandalone = answer.isStandalone;
+				if (!isStandalone) {
+					logger.info(`Wrong answer. You should be using Standalone.`);
+				}
+			}
+
 			const appComponentPath = `${sourceRoot}/app.component.ts`;
 			const exist = tree.exists(appComponentPath);
 			const appComponentTemplatePath = `${sourceRoot}/app.component.html`;
@@ -178,7 +187,6 @@ ${node.getFullText()}
 
 					tree.write(appComponentPath, updatedContent);
 				}
-			} else {
 			}
 		} else {
 			logger.warn(`
