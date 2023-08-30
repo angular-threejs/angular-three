@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.26](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.25...2.0.0-beta.26) (2023-08-30)
+
+
+### Bug Fixes
+
+* **core:** force standalone for experience generation ([2b4c9fa](https://github.com/angular-threejs/angular-three/commit/2b4c9fae9365b473168023605a6f19ceed52332f))
+
 ## [2.0.0-beta.25](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.24...2.0.0-beta.25) (2023-08-29)
 
 
