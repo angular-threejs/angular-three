@@ -24,3 +24,4 @@ export * from './lib/utils/make';
 export * from './lib/utils/safe-detect-changes';
 export * from './lib/utils/signal-store';
 export * from './lib/utils/update';
+import './lib/three-types';

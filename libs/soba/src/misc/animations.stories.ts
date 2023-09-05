@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, effect, signal, type Signal } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { injectNgtsGLTFLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
@@ -24,16 +24,18 @@ type YBotGLTF = NgtsGLTF<{
 		<ngt-group *ngIf="yBotGltf() as yBot" [dispose]="null" [position]="[0, -1, 0]" [ref]="animations.ref">
 			<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 				<ngt-primitive *args="[yBot.nodes.mixamorigHips]" />
-				<ngt-skinned-mesh [geometry]="yBot.nodes.YB_Body.geometry" [skeleton]="yBot.nodes.YB_Body.skeleton">
-					<ngt-mesh-matcap-material [matcap]="matcapBody.texture()" [skinning]="true" />
-				</ngt-skinned-mesh>
-				<ngt-skinned-mesh [geometry]="yBot.nodes.YB_Joints.geometry" [skeleton]="yBot.nodes.YB_Joints.skeleton">
-					<ngt-mesh-matcap-material [matcap]="matcapJoints.texture()" [skinning]="true" />
-				</ngt-skinned-mesh>
+				<ng-container *ngTemplateOutlet="skin; context: { matcap: matcapBody, yb: yBot.nodes.YB_Body }" />
+				<ng-container *ngTemplateOutlet="skin; context: { matcap: matcapJoints, yb: yBot.nodes.YB_Joints }" />
 			</ngt-group>
 		</ngt-group>
+
+		<ng-template #skin let-matcap="matcap" let-yb="yb">
+			<ngt-skinned-mesh [geometry]="yb.geometry" [skeleton]="yb.skeleton">
+				<ngt-mesh-matcap-material [matcap]="matcap.texture()" [skinning]="true" />
+			</ngt-skinned-mesh>
+		</ng-template>
 	`,
-	imports: [NgtArgs, NgIf],
+	imports: [NgtArgs, NgIf, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DefaultAnimationsStory {
