@@ -9,7 +9,7 @@ import {
 	type Injector,
 } from '@angular/core';
 import {
-	assertInjectionContext,
+	assertInjector,
 	checkUpdate,
 	extend,
 	injectBeforeRender,
@@ -34,7 +34,7 @@ function injectShadowMeshCommon(
 	distance: () => number,
 	injector?: Injector,
 ) {
-	injector = assertInjectionContext(injectShadowMeshCommon, injector);
+	injector = assertInjector(injectShadowMeshCommon, injector);
 	runInInjectionContext(injector, () => {
 		const pos = new THREE.Vector3();
 		const dir = new THREE.Vector3();

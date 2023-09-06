@@ -1,12 +1,12 @@
 import { Injector, computed, runInInjectionContext } from '@angular/core';
-import { assertInjectionContext, injectBeforeRender, type NgtThreeEvent } from 'angular-three';
+import { assertInjector, injectBeforeRender, type NgtThreeEvent } from 'angular-three';
 import { TrailTexture, type TrailConfig } from './trail-texture';
 
 export function injectNgtsTrailTexture(
 	trailConfigFn: () => Partial<TrailConfig>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsTrailTexture, injector);
+	injector = assertInjector(injectNgtsTrailTexture, injector);
 	return runInInjectionContext(injector, () => {
 		const config = computed(() => trailConfigFn() || {});
 		const trail = computed(() => new TrailTexture(config()));

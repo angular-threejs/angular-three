@@ -25,7 +25,7 @@ import type {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { assertInjectionContext, injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
+import { assertInjector, injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi, type NgtcCannonEvents } from 'angular-three-cannon';
 import { injectNgtcDebugApi } from 'angular-three-cannon/debug';
 import * as THREE from 'three';
@@ -233,7 +233,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 	argsFn: NgtcArgFn<TBodyProps['args']>,
 	{ ref, injector, deps = () => ({}) }: NgtcBodyOptions<TObject> = {},
 ): NgtcBodyReturn<TObject> {
-	injector = assertInjectionContext(injectBody, injector);
+	injector = assertInjector(injectBody, injector);
 	return runInInjectionContext(injector, () => {
 		const bodyRef = ref || injectNgtRef<TObject>();
 

@@ -1,5 +1,5 @@
 import { effect, runInInjectionContext, type Injector, type Signal } from '@angular/core';
-import { assertInjectionContext, injectNgtLoader, injectNgtStore, type NgtLoaderResults } from 'angular-three';
+import { assertInjector, injectNgtLoader, injectNgtStore, type NgtLoaderResults } from 'angular-three';
 import * as THREE from 'three';
 
 export function injectNgtsTextureLoader<TInput extends string[] | string | Record<string, string>>(
@@ -12,7 +12,7 @@ export function injectNgtsTextureLoader<TInput extends string[] | string | Recor
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TInput, THREE.Texture> | null> {
-	injector = assertInjectionContext(injectNgtsTextureLoader, injector);
+	injector = assertInjector(injectNgtsTextureLoader, injector);
 	return runInInjectionContext(injector, () => {
 		const store = injectNgtStore();
 		const result = injectNgtLoader(() => THREE.TextureLoader, input, { injector });

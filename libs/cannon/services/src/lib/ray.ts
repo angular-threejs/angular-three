@@ -1,6 +1,6 @@
 import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
 import type { RayMode, RayOptions, RayhitEvent } from '@pmndrs/cannon-worker-api';
-import { assertInjectionContext, makeId, type NgtAnyRecord } from 'angular-three';
+import { assertInjector, makeId, type NgtAnyRecord } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 
 export type NgtcRayOptions = {
@@ -23,7 +23,7 @@ export function useRaycastAll(opts: NgtcRayOptions) {
 }
 
 function injectRay(mode: RayMode, { options, callback, deps = () => ({}), injector }: NgtcRayOptions) {
-	injector = assertInjectionContext(injectRay, injector);
+	injector = assertInjector(injectRay, injector);
 	return runInInjectionContext(injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
 		const [worker, events] = [physicsApi.select('worker'), physicsApi.get('events')];

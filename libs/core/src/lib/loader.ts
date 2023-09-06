@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Injector, effect, inject, runInInjectionContext, signal, type Signal } from '@angular/core';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtAnyRecord } from './types';
-import { assertInjectionContext } from './utils/assert-injection-context';
+import { assertInjector } from './utils/assert-injector';
 import { makeObjectGraph, type NgtObjectMap } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';
 
@@ -101,7 +101,7 @@ export function injectNgtLoader<
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null> {
-	injector = assertInjectionContext(injectNgtLoader, injector);
+	injector = assertInjector(injectNgtLoader, injector);
 	const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null>(
 		null,
 	);

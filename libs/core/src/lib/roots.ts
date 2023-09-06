@@ -6,7 +6,7 @@ import { injectNgtLoop } from './loop';
 import { injectNgtStore, type NgtSize, type NgtState } from './store';
 import type { NgtAnyRecord, NgtEquConfig } from './types';
 import { applyProps } from './utils/apply-props';
-import { assertInjectionContext } from './utils/assert-injection-context';
+import { assertInjector } from './utils/assert-injector';
 import { is } from './utils/is';
 import { makeDefaultCamera, makeDefaultRenderer, makeDpr } from './utils/make';
 import type { NgtSignalStore } from './utils/signal-store';
@@ -17,7 +17,7 @@ const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
 export const roots = new Map<HTMLCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
-	injector = assertInjectionContext(injectCanvasRootInitializer, injector);
+	injector = assertInjector(injectCanvasRootInitializer, injector);
 
 	return runInInjectionContext(injector, () => {
 		const injectedStore = injectNgtStore();

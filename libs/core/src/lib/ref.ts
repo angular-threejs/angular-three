@@ -10,7 +10,7 @@ import {
 	type Signal,
 } from '@angular/core';
 import { getLocalState, type NgtInstanceNode } from './instance';
-import { assertInjectionContext } from './utils/assert-injection-context';
+import { assertInjector } from './utils/assert-injector';
 import { is } from './utils/is';
 
 export type NgtInjectedRef<TElement> = ElementRef<TElement> & {
@@ -26,7 +26,7 @@ export function injectNgtRef<TElement>(
 	initial: ElementRef<TElement> | TElement = null!,
 	injector?: Injector,
 ): NgtInjectedRef<TElement> {
-	injector = assertInjectionContext(injectNgtRef);
+	injector = assertInjector(injectNgtRef);
 	const ref = is.ref(initial) ? initial : new ElementRef(initial as TElement);
 	const signalRef = signal(ref.nativeElement);
 	const readonlySignal = signalRef.asReadonly();

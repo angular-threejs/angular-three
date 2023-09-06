@@ -1,5 +1,5 @@
 import { computed, effect, runInInjectionContext, signal, untracked, type Injector, type Signal } from '@angular/core';
-import { assertInjectionContext } from 'angular-three';
+import { assertInjector } from 'angular-three';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 
 function getFormatString(format: number) {
@@ -35,7 +35,7 @@ export function injectNgtsMatcapTexture(
 	matcapTextureState: () => Partial<NgtsMatcapTextureState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsMatcapTexture, injector);
+	injector = assertInjector(injectNgtsMatcapTexture, injector);
 	return runInInjectionContext(injector, () => {
 		const state = computed(() => ({ ...defaultState, ...matcapTextureState() }));
 

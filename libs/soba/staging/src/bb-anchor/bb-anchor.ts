@@ -64,16 +64,16 @@ export class NgtsBBAnchor {
 
 	private beforeRender() {
 		injectBeforeRender(() => {
-			const [parent, group, anchor] = [this.parentRef.nativeElement, this.groupRef.nativeElement, this.xyz()];
+			const [parent, group, [x, y, z]] = [this.parentRef.nativeElement, this.groupRef.nativeElement, this.xyz()];
 
 			if (parent) {
 				boundingBox.setFromObject(parent);
 				boundingBox.getSize(boundingBoxSize);
 
 				group.position.set(
-					parent.position.x + (boundingBoxSize.x * anchor[0]) / 2,
-					parent.position.y + (boundingBoxSize.y * anchor[1]) / 2,
-					parent.position.z + (boundingBoxSize.z * anchor[2]) / 2,
+					parent.position.x + (boundingBoxSize.x * x) / 2,
+					parent.position.y + (boundingBoxSize.y * y) / 2,
+					parent.position.z + (boundingBoxSize.z * z) / 2,
 				);
 			}
 		});

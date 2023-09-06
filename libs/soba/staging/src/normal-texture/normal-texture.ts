@@ -1,5 +1,5 @@
 import { computed, effect, runInInjectionContext, signal, untracked, type Injector, type Signal } from '@angular/core';
-import { assertInjectionContext } from 'angular-three';
+import { assertInjector } from 'angular-three';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 
@@ -25,7 +25,7 @@ export function injectNgtsNormalTexture(
 	normalTextureState: () => Partial<NgtsNormalTextureState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsNormalTexture, injector);
+	injector = assertInjector(injectNgtsNormalTexture, injector);
 	return runInInjectionContext(injector, () => {
 		const state = computed(() => ({ ...defaultState, ...normalTextureState() }));
 		const normalsList = signal<Record<string, string>>({});

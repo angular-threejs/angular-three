@@ -7,7 +7,7 @@ import {
 	runInInjectionContext,
 	type Injector,
 } from '@angular/core';
-import { assertInjectionContext, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import { assertInjector, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 
 interface FBOSettings extends THREE.WebGLRenderTargetOptions {
@@ -24,7 +24,7 @@ export interface NgtsFBOParams {
 }
 
 export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { injector?: Injector } = {}) {
-	injector = assertInjectionContext(injectNgtsFBO, injector);
+	injector = assertInjector(injectNgtsFBO, injector);
 	return runInInjectionContext(injector, () => {
 		const store = injectNgtStore();
 		const cdr = inject(ChangeDetectorRef);

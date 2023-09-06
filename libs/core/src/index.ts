@@ -16,7 +16,7 @@ export * from './lib/store';
 export * from './lib/three-types';
 export * from './lib/types';
 export * from './lib/utils/apply-props';
-export * from './lib/utils/assert-injection-context';
+export * from './lib/utils/assert-injector';
 export { createAttachFunction } from './lib/utils/attach';
 export * from './lib/utils/create-injection-token';
 export * from './lib/utils/is';

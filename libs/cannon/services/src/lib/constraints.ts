@@ -5,14 +5,7 @@ import type {
 	HingeConstraintOpts,
 	PointToPointConstraintOpts,
 } from '@pmndrs/cannon-worker-api';
-import {
-	assertInjectionContext,
-	injectNgtRef,
-	is,
-	makeId,
-	type NgtAnyRecord,
-	type NgtInjectedRef,
-} from 'angular-three';
+import { assertInjector, injectNgtRef, is, makeId, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import * as THREE from 'three';
 
@@ -103,7 +96,7 @@ function injectConstraint<
 		opts = () => ({}) as TOptions,
 	}: NgtcConstraintOptions<TConstraintType, TOptions> = {},
 ): NgtcConstraintReturn<TConstraintType, A, B> {
-	injector = assertInjectionContext(injectConstraint, injector);
+	injector = assertInjector(injectConstraint, injector);
 	return runInInjectionContext(injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
 		const worker = physicsApi.select('worker');

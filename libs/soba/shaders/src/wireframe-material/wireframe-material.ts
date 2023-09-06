@@ -1,5 +1,5 @@
 import { computed, effect, runInInjectionContext, type Injector } from '@angular/core';
-import { assertInjectionContext, type NgtShaderMaterial } from 'angular-three';
+import { assertInjector, type NgtShaderMaterial } from 'angular-three';
 import * as THREE from 'three';
 import { shaderMaterial } from '../shader-material/shader-material';
 
@@ -232,7 +232,7 @@ export function injectNgtsWireframeUniforms(
 	stateFactory: () => Partial<WireframeMaterialState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsWireframeUniforms, injector);
+	injector = assertInjector(injectNgtsWireframeUniforms, injector);
 	return runInInjectionContext(injector, () => {
 		const uniforms = uniformsFactory();
 		const state = computed(() => stateFactory());

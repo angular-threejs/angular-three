@@ -1,5 +1,5 @@
 import { Injector, computed, effect, runInInjectionContext } from '@angular/core';
-import { assertInjectionContext, injectBeforeRender, injectNgtRef, type NgtRef } from 'angular-three';
+import { assertInjector, injectBeforeRender, injectNgtRef, type NgtRef } from 'angular-three';
 import * as THREE from 'three';
 
 export function injectNgtsAnimations(
@@ -10,7 +10,7 @@ export function injectNgtsAnimations(
 		playFirstClip = true,
 	}: { ref?: NgtRef<THREE.Object3D>; playFirstClip?: boolean; injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsAnimations, injector);
+	injector = assertInjector(injectNgtsAnimations, injector);
 	return runInInjectionContext(injector, () => {
 		let actualRef = injectNgtRef<THREE.Object3D>();
 

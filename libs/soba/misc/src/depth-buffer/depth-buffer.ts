@@ -1,11 +1,5 @@
 import { ChangeDetectorRef, computed, effect, inject, runInInjectionContext, type Injector } from '@angular/core';
-import {
-	assertInjectionContext,
-	injectBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	safeDetectChanges,
-} from 'angular-three';
+import { assertInjector, injectBeforeRender, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
 import * as THREE from 'three';
 import { injectNgtsFBO } from '../fbo/fbo';
 
@@ -18,7 +12,7 @@ export function injectNgtsDepthBuffer(
 	paramsFactory: () => Partial<NgtsDepthBufferParams> = () => ({}),
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsDepthBuffer, injector);
+	injector = assertInjector(injectNgtsDepthBuffer, injector);
 	return runInInjectionContext(injector, () => {
 		const depthBufferRef = injectNgtRef<THREE.DepthTexture | null>(null);
 		const store = injectNgtStore();

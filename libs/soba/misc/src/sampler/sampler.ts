@@ -11,7 +11,7 @@ import {
 	untracked,
 } from '@angular/core';
 import {
-	assertInjectionContext,
+	assertInjector,
 	checkUpdate,
 	extend,
 	injectNgtRef,
@@ -72,7 +72,7 @@ export function injectNgtsSurfaceSampler(
 	surfaceSamplerState: () => (Partial<Omit<NgtsSurfaceSamplerState, 'mesh'>> & { mesh: NgtRef<THREE.Mesh> }) | null,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsSurfaceSampler, injector);
+	injector = assertInjector(injectNgtsSurfaceSampler, injector);
 	return runInInjectionContext(injector, () => {
 		const state = computed(() => {
 			const _state = surfaceSamplerState();

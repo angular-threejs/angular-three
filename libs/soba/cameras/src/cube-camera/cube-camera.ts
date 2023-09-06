@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
-	assertInjectionContext,
+	assertInjector,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -55,7 +55,7 @@ export function injectNgtsCubeCamera(
 	cubeCameraState: () => Partial<NgtsCubeCameraState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsCubeCamera, injector);
+	injector = assertInjector(injectNgtsCubeCamera, injector);
 	return runInInjectionContext(injector, () => {
 		const state = computed(() => ({ ...defaultCubeCameraState, ...cubeCameraState() }));
 		const resolution = computed(() => state().resolution);

@@ -10,7 +10,7 @@ import {
 import {
 	NgtPortal,
 	NgtPortalContent,
-	assertInjectionContext,
+	assertInjector,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -57,7 +57,7 @@ export function injectNgtsTrail(
 	settingsFactory: () => Partial<NgtsTrailSettings>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjectionContext(injectNgtsTrail, injector);
+	injector = assertInjector(injectNgtsTrail, injector);
 	return runInInjectionContext(injector, () => {
 		const points = injectNgtRef<Float32Array>();
 		let frameCount = 0;
