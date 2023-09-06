@@ -3,6 +3,7 @@ import { injectNgtLoader, type NgtLoaderResults, type NgtObjectMap } from 'angul
 import { DRACOLoader, GLTFLoader, MeshoptDecoder, type GLTF } from 'three-stdlib';
 
 let dracoLoader: DRACOLoader | null = null;
+let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
 
 function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions?: (loader: GLTFLoader) => void) {
 	return (loader: THREE.Loader) => {
@@ -15,12 +16,9 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 				dracoLoader = new DRACOLoader();
 			}
 
-			dracoLoader.setDecoderPath(
-				typeof useDraco === 'string' ? useDraco : 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/',
-			);
+			dracoLoader.setDecoderPath(typeof useDraco === 'string' ? useDraco : decoderPath);
 			(loader as GLTFLoader).setDRACOLoader(dracoLoader);
 		}
-
 		if (useMeshOpt) {
 			(loader as GLTFLoader).setMeshoptDecoder(
 				typeof MeshoptDecoder === 'function' ? MeshoptDecoder() : MeshoptDecoder,
@@ -64,4 +62,7 @@ injectNgtsGLTFLoader['preload'] = <TUrl extends string | string[] | Record<strin
 	} = {},
 ) => {
 	(injectNgtLoader as any)['preload'](() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions));
+};
+injectNgtsGLTFLoader['setDecoderPath'] = (path: string) => {
+	decoderPath = path;
 };
