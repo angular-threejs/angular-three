@@ -1,5 +1,20 @@
 
 
+## [2.0.0-beta.27](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.26...2.0.0-beta.27) (2023-09-06)
+
+
+### Features
+
+* **core:** update nx ([27ca571](https://github.com/angular-threejs/angular-three/commit/27ca571909095f65dc63c03b7a052e08b9bb05a2))
+* **soba:** allow set global decoder path ([cbe0cc4](https://github.com/angular-threejs/angular-three/commit/cbe0cc4d438c9d0ad15e7755abbbe2c49f887426))
+
+
+### Bug Fixes
+
+* **core:** rename assertInjectionContext to assertInjector ([79c68aa](https://github.com/angular-threejs/angular-three/commit/79c68aae3b96904e2ca88c37f0437caff699d7d3))
+* **soba:** ensure default intensity for accumulative shadows is taking legacy lights into account ([89f060f](https://github.com/angular-threejs/angular-three/commit/89f060f22c4720c8aea9db53b7a707c69fdb1e07))
+* **soba:** use texture params for progressive light maps ([72fef8c](https://github.com/angular-threejs/angular-three/commit/72fef8cf387f567fd943f02d8f9eda0e04a4d8c5))
+
 ## [2.0.0-beta.26](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.25...2.0.0-beta.26) (2023-08-30)
 
 
