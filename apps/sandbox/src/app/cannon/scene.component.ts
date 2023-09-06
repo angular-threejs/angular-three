@@ -11,7 +11,7 @@ import { injectBox, injectPlane } from 'angular-three-cannon/services';
 	standalone: true,
 	template: `
 		<ngt-mesh [ref]="planeApi.ref" [receiveShadow]="true">
-			<ngt-plane-geometry *args="[1000, 1000]" />
+			<ngt-plane-geometry *args="planeArgs" />
 			<ngt-mesh-standard-material color="#171717" />
 		</ngt-mesh>
 	`,
@@ -19,10 +19,10 @@ import { injectBox, injectPlane } from 'angular-three-cannon/services';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Plane {
-	Math = Math;
 	@Input() position: Triplet = [0, 0, 0];
+	planeArgs = [1000, 1000];
 
-	planeApi = injectPlane(() => ({ mass: 0, position: this.position, args: [1000, 1000] }));
+	planeApi = injectPlane(() => ({ mass: 0, position: this.position, args: this.planeArgs }));
 }
 
 @Component({
@@ -30,7 +30,7 @@ export class Plane {
 	standalone: true,
 	template: `
 		<ngt-mesh [ref]="boxApi.ref" [receiveShadow]="true" [castShadow]="true">
-			<ngt-box-geometry *args="[2, 2, 2]" />
+			<ngt-box-geometry *args="boxArgs" />
 			<ngt-mesh-standard-material [roughness]="0.5" color="#575757" />
 		</ngt-mesh>
 	`,
@@ -39,8 +39,9 @@ export class Plane {
 })
 export class Box {
 	@Input() position: Triplet = [0, 0, 0];
+	boxArgs: Triplet = [2, 2, 2];
 
-	boxApi = injectBox(() => ({ mass: 10000, position: this.position, args: [2, 2, 2] }));
+	boxApi = injectBox(() => ({ mass: 10000, position: this.position, args: this.boxArgs }));
 }
 
 @Component({

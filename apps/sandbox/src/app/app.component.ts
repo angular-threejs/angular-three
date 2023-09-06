@@ -1,5 +1,5 @@
 import { Component, Type, ViewChild, ViewContainerRef, effect, signal } from '@angular/core';
-import { NgtCanvas, NgtKey, extend } from 'angular-three';
+import { extend } from 'angular-three';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 import { AviatorCanvas } from './aviator/canvas.component';
@@ -23,7 +23,7 @@ type AvailableCanvas = (typeof availableCanvases)[number];
 
 @Component({
 	standalone: true,
-	imports: [NgtCanvas, NgtKey, NgtsLoader],
+	imports: [NgtsLoader],
 	selector: 'sandbox-root',
 	template: `
 		<ng-container #anchor />
@@ -36,7 +36,7 @@ type AvailableCanvas = (typeof availableCanvases)[number];
 	},
 })
 export class AppComponent {
-	canvas = signal<AvailableCanvas>('aviator');
+	canvas = signal<AvailableCanvas>('cannon');
 
 	@ViewChild('anchor', { static: true, read: ViewContainerRef }) vcr!: ViewContainerRef;
 
