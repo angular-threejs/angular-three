@@ -1,5 +1,18 @@
 
 
+## [2.0.0-beta.28](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.27...2.0.0-beta.28) (2023-09-08)
+
+
+### Bug Fixes
+
+* **core:** update type for afterAttach ([3b01ce5](https://github.com/angular-threejs/angular-three/commit/3b01ce5094d869b0a9b77a4b51e30e4fa99e889d))
+* **soba:** add content projection for orbit controls ([8a6526c](https://github.com/angular-threejs/angular-three/commit/8a6526c557d0028754a9c3c35173c249d7e4ddfa))
+
+
+### Documentations
+
+* **soba:** add mesh transmission material story ([b138255](https://github.com/angular-threejs/angular-three/commit/b13825593eb85d31c8206f6e0db7f7bff443e5d5))
+
 ## [2.0.0-beta.27](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.26...2.0.0-beta.27) (2023-09-06)
 
 
