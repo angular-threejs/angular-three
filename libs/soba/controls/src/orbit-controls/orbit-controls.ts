@@ -33,7 +33,9 @@ declare global {
 	selector: 'ngts-orbit-controls',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="args()" ngtCompound [enableDamping]="enableDamping()" />
+		<ngt-primitive *args="args()" ngtCompound [enableDamping]="enableDamping()">
+			<ng-content />
+		</ngt-primitive>
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
