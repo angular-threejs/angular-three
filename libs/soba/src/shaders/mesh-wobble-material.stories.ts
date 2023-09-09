@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { injectBeforeRender, injectNgtRef, NgtArgs } from 'angular-three';
 import { NgtsMeshWobbleMaterial } from 'angular-three-soba/materials';
 import { MeshWobbleMaterial } from 'angular-three-soba/shaders';
-import { makeDecorators, makeStoryFunction, makeStoryObject, number } from '../setup-canvas';
+import { makeCanvasOptions, makeDecorators, makeStoryFunction, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
 	standalone: true,
@@ -50,11 +50,14 @@ export default {
 	decorators: makeDecorators(),
 };
 
+const canvasOptions = makeCanvasOptions({ useLegacyLights: true });
+
 export const Default = makeStoryObject(DefaultMeshWobbleMaterialStory, {
+	canvasOptions,
 	argsOptions: {
 		speed: number(1, { range: true, max: 10, step: 0.1 }),
 		factor: number(0.6, { range: true, max: 1, step: 0.1 }),
 	},
 });
 
-export const Ref = makeStoryFunction(RefMeshWobbleMaterialStory);
+export const Ref = makeStoryFunction(RefMeshWobbleMaterialStory, canvasOptions);

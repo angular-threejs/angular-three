@@ -5,7 +5,7 @@ import { injectBeforeRender, injectNgtRef, NgtArgs } from 'angular-three';
 import distortShader from 'angular-three-soba/assets/distort.vert.glsl';
 import { NgtsMeshDistortMaterial } from 'angular-three-soba/materials';
 import { provideNgtsMeshDistortMaterialShader, type MeshDistortMaterial } from 'angular-three-soba/shaders';
-import { makeDecorators, makeStoryFunction, makeStoryObject, number } from '../setup-canvas';
+import { makeCanvasOptions, makeDecorators, makeStoryFunction, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
 	standalone: true,
@@ -52,7 +52,10 @@ export default {
 	decorators: makeDecorators([provideNgtsMeshDistortMaterialShader(distortShader)]),
 };
 
+const canvasOptions = makeCanvasOptions({ useLegacyLights: true });
+
 export const Default = makeStoryObject(DefaultMeshDistortMaterialStory, {
+	canvasOptions,
 	argsOptions: {
 		speed: number(1, { range: true, max: 10, step: 0.1 }),
 		distort: number(0.6, { range: true, max: 1, step: 0.1 }),
@@ -60,4 +63,4 @@ export const Default = makeStoryObject(DefaultMeshDistortMaterialStory, {
 	},
 });
 
-export const Ref = makeStoryFunction(RefMeshDistortMaterialStory);
+export const Ref = makeStoryFunction(RefMeshDistortMaterialStory, canvasOptions);

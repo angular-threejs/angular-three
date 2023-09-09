@@ -5,7 +5,7 @@ import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 import { NgtsMeshReflectorMaterial } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import * as THREE from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { makeCanvasOptions, makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 interface State {
 	blur: [number, number];
@@ -180,7 +180,7 @@ export default {
 	decorators: makeDecorators(),
 };
 
-const canvasOptions = { camera: { fov: 20, position: [-6, 6, 15] } };
+const canvasOptions = makeCanvasOptions({ camera: { fov: 20, position: [-6, 6, 15] }, useLegacyLights: true });
 
 export const Default = makeStoryFunction(DefaultMeshReflectorMaterialStory, canvasOptions);
 export const Plain = makeStoryFunction(PlainMeshReflectorMaterialStory, canvasOptions);

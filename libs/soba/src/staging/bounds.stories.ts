@@ -73,8 +73,8 @@ class Models {
 	template: `
 		<ngt-color *args="['pink']" attach="background" />
 
-		<ngt-spot-light [position]="-100" [intensity]="0.2" [angle]="0.3" [penumbra]="1" />
-		<ngt-hemisphere-light color="white" groundColor="#ff0f00" [position]="[-7, 25, 13]" [intensity]="1" />
+		<ngt-spot-light [position]="-100" [intensity]="0.2 * Math.PI" [angle]="0.3" [penumbra]="1" />
+		<ngt-hemisphere-light color="white" groundColor="#ff0f00" [position]="[-7, 25, 13]" [intensity]="Math.PI" />
 
 		<ngts-bounds>
 			<bounds-models />
