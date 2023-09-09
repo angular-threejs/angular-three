@@ -1,5 +1,18 @@
 
 
+## [2.0.0-beta.29](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.28...2.0.0-beta.29) (2023-09-09)
+
+
+### Features
+
+* **core:** bump three 0.156 ([3f847ef](https://github.com/angular-threejs/angular-three/commit/3f847efe476679252b0817b60298475ecabd3c82))
+
+
+### Documentations
+
+* **soba:** adjust lightings on some stories ([fb7f24b](https://github.com/angular-threejs/angular-three/commit/fb7f24ba17cf744ce10ad942e071939a6b8f27a7))
+* **soba:** remove useLegacyLights from accumulative shadows story ([909f661](https://github.com/angular-threejs/angular-three/commit/909f661c10a3ea9a768d44352fb8e962d05c62ba))
+
 ## [2.0.0-beta.28](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.27...2.0.0-beta.28) (2023-09-08)
 
 
