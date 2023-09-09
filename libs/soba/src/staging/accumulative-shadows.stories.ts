@@ -89,6 +89,4 @@ export default {
 
 export const Default = makeStoryFunction(DefaultAccumulativeShadowsStory, {
 	compoundPrefixes: ['accumulative-shadows-suzi'],
-	// NOTE: only works with this
-	useLegacyLights: true,
 });
