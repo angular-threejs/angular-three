@@ -161,8 +161,7 @@ export class NgtsContactShadows {
 		return [-width / 2, width / 2, height / 2, -height / 2, 0, this.far()];
 	});
 	contactShadows = computed(() => {
-		const color = this.color();
-		const resolution = this.resolution();
+		const [color, resolution] = [this.color(), this.resolution()];
 		const renderTarget = new THREE.WebGLRenderTarget(resolution, resolution);
 		const renderTargetBlur = new THREE.WebGLRenderTarget(resolution, resolution);
 		renderTargetBlur.texture.generateMipmaps = renderTarget.texture.generateMipmaps = false;
@@ -178,8 +177,7 @@ export class NgtsContactShadows {
 			shader.fragmentShader = shader.fragmentShader.replace(
 				`void main() {`, //
 				`uniform vec3 ucolor;
-                 void main() {
-                `,
+         void main() {`,
 			);
 			shader.fragmentShader = shader.fragmentShader.replace(
 				'vec4( vec3( 1.0 - fragCoordZ ), opacity );',
