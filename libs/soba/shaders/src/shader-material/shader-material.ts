@@ -33,10 +33,8 @@ export function shaderMaterial<
 			super({
 				uniforms: entries.reduce((acc, [name, value]) => {
 					const uniform = THREE.UniformsUtils.clone({ [name]: { value } });
-					return {
-						...acc,
-						...uniform,
-					};
+					Object.assign(acc, uniform);
+					return acc;
 				}, {}),
 				vertexShader,
 				fragmentShader,
