@@ -44,7 +44,8 @@ export function injectNgtsGLTFLoader<TUrl extends string | string[] | Record<str
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
 	return injectNgtLoader(() => GLTFLoader, path, {
-		extensions: _extensions(useDraco, useMeshOpt, extensions),
+		// TODO: fix "as any" when three-stdlib is updated with THREE 0.156
+		extensions: _extensions(useDraco, useMeshOpt, extensions) as any,
 		injector,
 	});
 }

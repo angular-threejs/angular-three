@@ -40,7 +40,7 @@ dependencies:
     version: 16.2.3(@angular/common@16.2.3)(@angular/core@16.2.3)(@angular/platform-browser@16.2.3)(rxjs@7.8.1)
   '@pmndrs/cannon-worker-api':
     specifier: ^2.4.0
-    version: 2.4.0(three@0.155.0)
+    version: 2.4.0(three@0.156.1)
   '@swc/helpers':
     specifier: ~0.5.2
     version: 0.5.2
@@ -49,7 +49,7 @@ dependencies:
     version: 0.20.0
   cannon-es-debugger:
     specifier: ^1.0.0
-    version: 1.0.0(cannon-es@0.20.0)(three@0.155.0)(typescript@5.1.6)
+    version: 1.0.0(cannon-es@0.20.0)(three@0.156.1)(typescript@5.1.6)
   front-matter:
     specifier: ^4.0.2
     version: 4.0.2
@@ -58,7 +58,7 @@ dependencies:
     version: 3.12.2
   maath:
     specifier: ^0.7.0
-    version: 0.7.0(@types/three@0.155.1)(three@0.155.0)
+    version: 0.7.0(@types/three@0.156.0)(three@0.156.1)
   marked:
     specifier: ^7.0.5
     version: 7.0.5
@@ -73,7 +73,7 @@ dependencies:
     version: 10.4.0
   meshline:
     specifier: ^3.1.6
-    version: 3.1.6(three@0.155.0)
+    version: 3.1.6(three@0.156.1)
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
@@ -94,13 +94,13 @@ dependencies:
     version: 1.0.5
   three-mesh-bvh:
     specifier: ^0.6.7
-    version: 0.6.7(three@0.155.0)
+    version: 0.6.7(three@0.156.1)
   three-stdlib:
     specifier: ^2.25.1
-    version: 2.25.1(three@0.155.0)
+    version: 2.25.1(three@0.156.1)
   troika-three-text:
     specifier: ^0.47.2
-    version: 0.47.2(three@0.155.0)
+    version: 0.47.2(three@0.156.1)
   tslib:
     specifier: ^2.6.2
     version: 2.6.2
@@ -230,8 +230,8 @@ devDependencies:
     specifier: 20.6.0
     version: 20.6.0
   '@types/three':
-    specifier: ^0.155.1
-    version: 0.155.1
+    specifier: ^0.156.0
+    version: 0.156.0
   '@typescript-eslint/eslint-plugin':
     specifier: 6.6.0
     version: 6.6.0(@typescript-eslint/parser@6.6.0)(eslint@8.49.0)(typescript@5.1.6)
@@ -294,7 +294,7 @@ devDependencies:
     version: 10.1.3(postcss@8.4.29)
   postprocessing:
     specifier: ^6.33.0
-    version: 6.33.0(three@0.155.0)
+    version: 6.33.0(three@0.156.1)
   prettier:
     specifier: ^3.0.3
     version: 3.0.3
@@ -311,8 +311,8 @@ devDependencies:
     specifier: ^3.3.3
     version: 3.3.3(ts-node@10.9.1)
   three:
-    specifier: ^0.155.0
-    version: 0.155.0
+    specifier: ^0.156.1
+    version: 0.156.1
   ts-jest:
     specifier: ^29.1.1
     version: 29.1.1(@babel/core@7.22.9)(esbuild@0.18.17)(jest@29.6.4)(typescript@5.1.6)
@@ -4919,12 +4919,12 @@ packages:
     dev: true
     optional: true
 
-  /@pmndrs/cannon-worker-api@2.4.0(three@0.155.0):
+  /@pmndrs/cannon-worker-api@2.4.0(three@0.156.1):
     resolution: {integrity: sha512-oJA1Bboc+WObksRaGDKJG0Wna9Q75xi1MdXVAZ9qXzBOyPsadmAnrmiKOEF0R8v/4zsuJElvscNZmyo3msbZjA==}
     peerDependencies:
       three: '>=0.139'
     dependencies:
-      three: 0.155.0
+      three: 0.156.1
     dev: false
 
   /@pnpm/config.env-replace@1.1.0:
@@ -7115,9 +7115,6 @@ packages:
       minimatch: 9.0.3
     dev: true
 
-  /@tweenjs/tween.js@18.6.4:
-    resolution: {integrity: sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ==}
-
   /@types/aria-query@5.0.1:
     resolution: {integrity: sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==}
     dev: true
@@ -7512,14 +7509,12 @@ packages:
   /@types/stats.js@0.17.0:
     resolution: {integrity: sha512-9w+a7bR8PeB0dCT/HBULU2fMqf6BAzvKbxFboYhmDtDkKPiyXYbjoe2auwsXlEFI7CFNMF1dCv3dFH5Poy9R1w==}
 
-  /@types/three@0.155.1:
-    resolution: {integrity: sha512-uNUwnz/wWRxahjIqTtDYQ1qdE1R1py21obxfuILkT+kKrjocMwRLQQA1l8nMxfQU7VXb7CXu04ucMo8OqZt4ZA==}
+  /@types/three@0.156.0:
+    resolution: {integrity: sha512-733bXDSRdlrxqOmQuOmfC1UBRuJ2pREPk8sWnx9MtIJEVDQMx8U0NQO5MVVaOrjzDPyLI+cFPim2X/ss9v0+LQ==}
     dependencies:
-      '@tweenjs/tween.js': 18.6.4
       '@types/stats.js': 0.17.0
       '@types/webxr': 0.5.2
       fflate: 0.6.10
-      lil-gui: 0.17.0
       meshoptimizer: 0.18.1
 
   /@types/tough-cookie@4.0.2:
@@ -9224,7 +9219,7 @@ packages:
     resolution: {integrity: sha512-TKiyTVZxJGhsTszLuzb+6vUZSjVOAhClszBr2Ta2k9IwtNBT/4dzmL6aywt0HCgEZlmwJzXJd8yNiob6HgwTRg==}
     dev: true
 
-  /cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.155.0)(typescript@5.1.6):
+  /cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.156.1)(typescript@5.1.6):
     resolution: {integrity: sha512-sE9lDOBAYFKlh+0w+cvWKwUhJef8HYnUSVPWPL0jD15MAuVRQKno4QYZSGxgOoJkMR3mQqxL4bxys2b3RSWH8g==}
     peerDependencies:
       cannon-es: 0.x
@@ -9235,7 +9230,7 @@ packages:
         optional: true
     dependencies:
       cannon-es: 0.20.0
-      three: 0.155.0
+      three: 0.156.1
       typescript: 5.1.6
     dev: false
 
@@ -15574,9 +15569,6 @@ packages:
       webpack-sources: 3.2.3
     dev: true
 
-  /lil-gui@0.17.0:
-    resolution: {integrity: sha512-MVBHmgY+uEbmJNApAaPbtvNh1RCAeMnKym82SBjtp5rODTYKWtM+MXHCifLe2H2Ti1HuBGBtK/5SyG4ShQ3pUQ==}
-
   /lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
@@ -15819,14 +15811,14 @@ packages:
     hasBin: true
     dev: true
 
-  /maath@0.7.0(@types/three@0.155.1)(three@0.155.0):
+  /maath@0.7.0(@types/three@0.156.0)(three@0.156.1):
     resolution: {integrity: sha512-JQ1JZrQLDgJ59snCk2AcSb/jdGwNgGQXlLcfZChN8lmpMR7g3bpMM3ugcqGfU1ROwjVvX5CvcVJHc8TkxljG8Q==}
     peerDependencies:
       '@types/three': '>=0.144.0'
       three: '>=0.144.0'
     dependencies:
-      '@types/three': 0.155.1
-      three: 0.155.0
+      '@types/three': 0.156.0
+      three: 0.156.1
     dev: false
 
   /macos-release@3.2.0:
@@ -16064,12 +16056,12 @@ packages:
       - supports-color
     dev: false
 
-  /meshline@3.1.6(three@0.155.0):
+  /meshline@3.1.6(three@0.156.1):
     resolution: {integrity: sha512-8JZJOdaL5oz3PI/upG8JvP/5FfzYUOhrkJ8np/WKvXzl0/PZ2V9pqTvCIjSKv+w9ccg2xb+yyBhXAwt6ier3ug==}
     peerDependencies:
       three: '>=0.137'
     dependencies:
-      three: 0.155.0
+      three: 0.156.1
     dev: false
 
   /meshoptimizer@0.18.1:
@@ -18616,13 +18608,13 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /postprocessing@6.33.0(three@0.155.0):
+  /postprocessing@6.33.0(three@0.156.1):
     resolution: {integrity: sha512-W6KGnF8OVyPtB9f5o2z8abJOefDeT9aoOrI/HmMmJM6/gXTKRc66MrL+qNoGmeeA3moWWsTk0mc9M+shN3vXaA==}
     engines: {node: '>= 0.13.2'}
     peerDependencies:
       three: '>= 0.138.0 < 0.156.0'
     dependencies:
-      three: 0.155.0
+      three: 0.156.1
     dev: true
 
   /potpack@1.0.2:
@@ -20806,15 +20798,15 @@ packages:
       any-promise: 1.3.0
     dev: true
 
-  /three-mesh-bvh@0.6.7(three@0.155.0):
+  /three-mesh-bvh@0.6.7(three@0.156.1):
     resolution: {integrity: sha512-RYdjMsH+vZvjLwA+ehI4+ZqTaTehAz4iho2yfL5PdGsIHyxpB78g0iy4Emj8079m/9KBX02TzddkvPSKSruQjg==}
     peerDependencies:
       three: '>= 0.151.0'
     dependencies:
-      three: 0.155.0
+      three: 0.156.1
     dev: false
 
-  /three-stdlib@2.25.1(three@0.155.0):
+  /three-stdlib@2.25.1(three@0.156.1):
     resolution: {integrity: sha512-cFlxaTJjlSM10NGoUVEoQkMRpSOftuAh3OCpSKiLTsUfA7/HuhpoBJy3StiOor/LZm5M+onegqsbr5UBCCYYjQ==}
     peerDependencies:
       three: '>=0.128.0'
@@ -20828,12 +20820,12 @@ packages:
       mmd-parser: 1.0.4
       opentype.js: 1.3.4
       potpack: 1.0.2
-      three: 0.155.0
+      three: 0.156.1
       zstddec: 0.0.2
     dev: false
 
-  /three@0.155.0:
-    resolution: {integrity: sha512-sNgCYmDijnIqkD/bMfk+1pHg3YzsxW7V2ChpuP6HCQ8NiZr3RufsXQr8M3SSUMjW4hG+sUk7YbyuY0DncaDTJQ==}
+  /three@0.156.1:
+    resolution: {integrity: sha512-kP7H0FK9d/k6t/XvQ9FO6i+QrePoDcNhwl0I02+wmUJRNSLCUIDMcfObnzQvxb37/0Uc9TDT0T1HgsRRrO6SYQ==}
 
   /through2@0.6.5:
     resolution: {integrity: sha512-RkK/CCESdTKQZHdmKICijdKKsCRVHs5KsLZ6pACAmF/1GPUQhonHSXWNERctxEp7RmvjdNbZTL5z9V7nSCXKcg==}
@@ -20983,24 +20975,24 @@ packages:
       escape-string-regexp: 5.0.0
     dev: true
 
-  /troika-three-text@0.47.2(three@0.155.0):
+  /troika-three-text@0.47.2(three@0.156.1):
     resolution: {integrity: sha512-qylT0F+U7xGs+/PEf3ujBdJMYWbn0Qci0kLqI5BJG2kW1wdg4T1XSxneypnF05DxFqJhEzuaOR9S2SjiyknMng==}
     peerDependencies:
       three: '>=0.125.0'
     dependencies:
       bidi-js: 1.0.3
-      three: 0.155.0
-      troika-three-utils: 0.47.2(three@0.155.0)
+      three: 0.156.1
+      troika-three-utils: 0.47.2(three@0.156.1)
       troika-worker-utils: 0.47.2
       webgl-sdf-generator: 1.1.1
     dev: false
 
-  /troika-three-utils@0.47.2(three@0.155.0):
+  /troika-three-utils@0.47.2(three@0.156.1):
     resolution: {integrity: sha512-/28plhCxfKtH7MSxEGx8e3b/OXU5A0xlwl+Sbdp0H8FXUHKZDoksduEKmjQayXYtxAyuUiCRunYIv/8Vi7aiyg==}
     peerDependencies:
       three: '>=0.125.0'
     dependencies:
-      three: 0.155.0
+      three: 0.156.1
     dev: false
 
   /troika-worker-utils@0.47.2:

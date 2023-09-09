@@ -167,7 +167,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 			state.events.compute?.(event, store, null);
 		}
 
-		function handleRaycast(obj: THREE.Object3D<THREE.Event>) {
+		function handleRaycast(obj: THREE.Object3D) {
 			const objLocalState = getLocalState(obj);
 			const objStore = objLocalState.store;
 			const objState = objStore?.get();
@@ -186,7 +186,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		}
 
 		// Collect events
-		let hits: THREE.Intersection<THREE.Object3D<THREE.Event>>[] = eventsObjects
+		let hits: THREE.Intersection<THREE.Object3D>[] = eventsObjects
 			// Intersect objects
 			.flatMap(handleRaycast)
 			// Sort by event priority and distance
