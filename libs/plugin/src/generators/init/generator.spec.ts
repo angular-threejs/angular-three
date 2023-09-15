@@ -11,7 +11,7 @@ describe('init generator', () => {
 	});
 
 	it('should add three dependencies', async () => {
-		await init(appTree);
+		await init(appTree, { project: '' });
 
 		const packageJson = readJson(appTree, 'package.json');
 
@@ -21,7 +21,7 @@ describe('init generator', () => {
 	});
 
 	it('should update skipLibCheck in tsconfig.base.json', async () => {
-		await init(appTree);
+		await init(appTree, { project: '' });
 
 		const tsConfig = readJson(appTree, 'tsconfig.base.json');
 		expect(tsConfig.compilerOptions.skipLibCheck).toEqual(true);
@@ -29,7 +29,7 @@ describe('init generator', () => {
 
 	it('should update skipLibCheck in tsconfig.json', async () => {
 		appTree.rename('tsconfig.base.json', 'tsconfig.json');
-		await init(appTree);
+		await init(appTree, { project: '' });
 
 		const tsConfig = readJson(appTree, 'tsconfig.json');
 		expect(tsConfig.compilerOptions.skipLibCheck).toEqual(true);
