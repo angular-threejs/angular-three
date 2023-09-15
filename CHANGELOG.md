@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.30](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.29...2.0.0-beta.30) (2023-09-15)
+
+
+### Features
+
+* use ngxtension ([f785e1d](https://github.com/angular-threejs/angular-three/commit/f785e1d1f05775070ee2975ef0e924d7188d0934))
+
 ## [2.0.0-beta.29](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.28...2.0.0-beta.29) (2023-09-09)
 
 
