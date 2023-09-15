@@ -9,7 +9,6 @@ import {
 	type Signal,
 } from '@angular/core';
 import {
-	createInjectionToken,
 	extend,
 	getLocalState,
 	injectBeforeRender,
@@ -19,6 +18,7 @@ import {
 	type NgtGroup,
 } from 'angular-three';
 import { SoftShadowMaterial, type NgtSoftShadowMaterialState } from 'angular-three-soba/shaders';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, Mesh, PlaneGeometry } from 'three';
 import { ProgressiveLightMap } from './progressive-light-map';
 

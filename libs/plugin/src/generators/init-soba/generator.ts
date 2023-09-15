@@ -3,6 +3,7 @@ import { addMetadataJson } from '../utils';
 import {
 	ANGULAR_THREE_VERSION,
 	MESH_LINE_VERSION,
+	NGXTENSION_VERSION,
 	STATS_GL_VERSION,
 	THREE_MESH_BVH_VERSION,
 	THREE_STDLIB_VERSION,
@@ -28,6 +29,7 @@ export default async function (tree: Tree) {
 			'stats-gl': STATS_GL_VERSION,
 			'three-mesh-bvh': THREE_MESH_BVH_VERSION,
 			'troika-three-text': TROIKA_THREE_TEXT_VERSION,
+			ngxtension: NGXTENSION_VERSION,
 		},
 		{},
 	);

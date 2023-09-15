@@ -8,7 +8,8 @@ import {
 	inject,
 	runInInjectionContext,
 } from '@angular/core';
-import { assertInjector, injectNgtLoader, injectNgtRef, is, safeDetectChanges } from 'angular-three';
+import { injectNgtLoader, injectNgtRef, is, safeDetectChanges } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import { CubeReflectionMapping, CubeTexture, CubeTextureLoader, EquirectangularReflectionMapping } from 'three';
 import { EXRLoader, RGBELoader } from 'three-stdlib';
 import { ENVIRONMENT_PRESETS } from './assets';

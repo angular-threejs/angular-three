@@ -13,3 +13,5 @@ export const POSTPROCESSING_VERSION = '^6.0.0';
 export const CANNON_WORKER_API_VERSION = '^2.0.0';
 export const CANNON_ES_VERSION = '^0.20.0';
 export const CANNON_ES_DEBUGGER_VERSION = '^1.0.0';
+
+export const NGXTENSION_VERSION = '^0.1.0';

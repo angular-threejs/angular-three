@@ -13,7 +13,7 @@ import { prompt } from 'enquirer';
 import { join } from 'node:path';
 import { ArrayLiteralExpression, NoSubstitutionTemplateLiteral } from 'typescript';
 import { addMetadataJson } from '../utils';
-import { ANGULAR_THREE_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../versions';
+import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../versions';
 
 type Schema = {
 	project?: string;
@@ -31,7 +31,7 @@ export default async function (tree: Tree, { project }: Schema) {
 
 	addDependenciesToPackageJson(
 		tree,
-		{ 'angular-three': version, three: THREE_VERSION },
+		{ 'angular-three': version, three: THREE_VERSION, ngxtension: NGXTENSION_VERSION },
 		{ '@types/three': THREE_TYPE_VERSION },
 	);
 

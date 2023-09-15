@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, inject, runInInjectionContext, signal, untracked, type Injector } from '@angular/core';
-import { assertInjector, safeDetectChanges } from 'angular-three';
+import { safeDetectChanges } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 export function injectNgtsProgress(injector?: Injector) {

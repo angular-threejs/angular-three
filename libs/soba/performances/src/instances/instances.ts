@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import {
 	checkUpdate,
-	createInjectionToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -28,6 +27,7 @@ import {
 	type NgtRef,
 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { InstancedBufferAttribute, InstancedMesh } from 'three';
 import { PositionMesh } from './position-mesh';

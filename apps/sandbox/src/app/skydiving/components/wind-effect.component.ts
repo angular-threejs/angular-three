@@ -1,7 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, computed } from '@angular/core';
-import { NgtArgs, NgtRepeat, injectBeforeRender, injectNgtRef, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectBeforeRender, injectNgtRef, injectNgtStore } from 'angular-three';
 import { NgtsInstance, NgtsInstances, PositionMesh } from 'angular-three-soba/performances';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { Repeat } from 'ngxtension/repeat';
 import * as THREE from 'three';
 
 @Component({
@@ -65,7 +66,7 @@ export class WindShape {
 			</ngts-instances>
 		</ngt-group>
 	`,
-	imports: [NgtsInstances, NgtsSobaContent, NgtArgs, WindShape, NgtRepeat],
+	imports: [NgtsInstances, NgtsSobaContent, NgtArgs, WindShape, Repeat],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class WindEffect {

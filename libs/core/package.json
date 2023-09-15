@@ -23,10 +23,10 @@
 	"peerDependencies": {
 		"@angular/common": "^16.0.0",
 		"@angular/core": "^16.0.0",
+		"ngxtension": "^0.1.0",
 		"three": ">=0.148.0"
 	},
 	"dependencies": {
-		"ngx-resize": "^2.0.0",
 		"tslib": "^2.3.0",
 		"@nx/devkit": "^16.0.0",
 		"@phenomnomnominal/tsquery": "^6.0.0",
@@ -35,5 +35,11 @@
 	"sideEffects": false,
 	"generators": "./plugin/generators.json",
 	"schematics": "./plugin/generators.json",
+	"nx-migrations": {
+		"migrations": "./migrations.json"
+	},
+	"ng-update": {
+		"migrations": "./migrations.json"
+	},
 	"web-types": "./web-types.json"
 }

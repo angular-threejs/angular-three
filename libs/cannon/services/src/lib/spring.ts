@@ -1,7 +1,8 @@
 import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
 import type { SpringOptns } from '@pmndrs/cannon-worker-api';
-import { assertInjector, injectNgtRef, is, makeId, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
+import { injectNgtRef, is, makeId, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { assertInjector } from 'ngxtension/assert-injector';
 
 export type NgtcSpringApi = {
 	setDamping: (value: number) => void;

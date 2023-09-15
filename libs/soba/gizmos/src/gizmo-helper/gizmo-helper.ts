@@ -15,7 +15,6 @@ import {
 import {
 	NgtPortal,
 	NgtPortalContent,
-	createInjectionToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -25,6 +24,7 @@ import {
 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, Matrix4, Object3D, OrthographicCamera, Quaternion, Vector3 } from 'three';
 import { OrbitControls } from 'three-stdlib';
 

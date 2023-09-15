@@ -1,5 +1,5 @@
 import { addDependenciesToPackageJson, installPackagesTask, logger, readJson, type Tree } from '@nx/devkit';
-import { ANGULAR_THREE_VERSION, POSTPROCESSING_VERSION } from '../versions';
+import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, POSTPROCESSING_VERSION } from '../versions';
 
 export default async function (tree: Tree) {
 	logger.log('Initializing Angular Three Postprocessing...');
@@ -16,6 +16,7 @@ export default async function (tree: Tree) {
 		{
 			'angular-three-postprocessing': version,
 			postprocessing: POSTPROCESSING_VERSION,
+			ngxtension: NGXTENSION_VERSION,
 		},
 		{},
 	);

@@ -1,7 +1,8 @@
 import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
 import type { WheelInfoOptions } from '@pmndrs/cannon-worker-api';
-import { assertInjector, injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
+import { injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { getUUID, subscribe } from './body';
 

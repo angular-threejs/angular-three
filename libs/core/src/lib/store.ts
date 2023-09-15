@@ -10,12 +10,12 @@ import {
 	inject,
 	runInInjectionContext,
 } from '@angular/core';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Subject, type Observable } from 'rxjs';
 import * as THREE from 'three';
 import type { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
 import type { NgtInstanceNode } from './instance';
 import { NGT_LOOP, type NgtLoop } from './loop';
-import { createInjectionToken } from './utils/create-injection-token';
 import { is } from './utils/is';
 import { makeDpr } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';

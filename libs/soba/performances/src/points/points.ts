@@ -17,7 +17,6 @@ import {
 } from '@angular/core';
 import {
 	checkUpdate,
-	createInjectionToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -28,6 +27,7 @@ import {
 	type NgtRef,
 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
 import { NgtsPointsInput, type NgtsPointsBuffersState, type NgtsPointsInstancesState } from './points-input';

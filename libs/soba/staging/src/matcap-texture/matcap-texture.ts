@@ -1,6 +1,6 @@
 import { computed, effect, runInInjectionContext, signal, untracked, type Injector, type Signal } from '@angular/core';
-import { assertInjector } from 'angular-three';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
+import { assertInjector } from 'ngxtension/assert-injector';
 
 function getFormatString(format: number) {
 	switch (format) {

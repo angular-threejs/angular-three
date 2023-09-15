@@ -10,7 +10,6 @@ import {
 import {
 	NgtPortal,
 	NgtPortalContent,
-	assertInjector,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -20,6 +19,7 @@ import {
 	type NgtRef,
 } from 'angular-three';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { Group, Mesh } from 'three';
 

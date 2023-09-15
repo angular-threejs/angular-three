@@ -1,5 +1,6 @@
 import { computed, effect, runInInjectionContext, type Injector } from '@angular/core';
-import { assertInjector, type NgtShaderMaterial } from 'angular-three';
+import type { NgtShaderMaterial } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { shaderMaterial } from '../shader-material/shader-material';
 

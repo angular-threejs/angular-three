@@ -1,13 +1,14 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, EventEmitter, Output } from '@angular/core';
-import { NgtArgs, NgtRepeat, injectNgtRef, type NgtAfterAttach, type NgtBeforeRenderEvent } from 'angular-three';
+import { NgtArgs, injectNgtRef, type NgtAfterAttach, type NgtBeforeRenderEvent } from 'angular-three';
+import { Repeat } from 'ngxtension/repeat';
 import { Colors } from '../../../utils/colors';
 
 @Component({
 	selector: 'app-cloud',
 	standalone: true,
 	templateUrl: './cloud.component.html',
-	imports: [NgtArgs, NgtRepeat, NgIf],
+	imports: [NgtArgs, Repeat, NgIf],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Cloud {

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Injector, effect, inject, runInInjectionContext, signal, type Signal } from '@angular/core';
+import { assertInjector } from 'ngxtension/assert-injector';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtAnyRecord } from './types';
-import { assertInjector } from './utils/assert-injector';
 import { makeObjectGraph, type NgtObjectMap } from './utils/make';
 import { safeDetectChanges } from './utils/safe-detect-changes';
 

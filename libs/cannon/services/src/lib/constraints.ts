@@ -5,8 +5,9 @@ import type {
 	HingeConstraintOpts,
 	PointToPointConstraintOpts,
 } from '@pmndrs/cannon-worker-api';
-import { assertInjector, injectNgtRef, is, makeId, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
+import { injectNgtRef, is, makeId, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 export type NgtcConstraintApi = {

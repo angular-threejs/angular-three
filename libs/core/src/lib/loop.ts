@@ -1,6 +1,6 @@
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { roots } from './roots';
 import type { NgtState } from './store';
-import { createInjectionToken } from './utils/create-injection-token';
 import type { NgtSignalStore } from './utils/signal-store';
 
 export type NgtGlobalRenderCallback = (timeStamp: number) => void;

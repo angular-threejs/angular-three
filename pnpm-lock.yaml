@@ -74,6 +74,9 @@ dependencies:
   meshline:
     specifier: ^3.1.6
     version: 3.1.6(three@0.156.1)
+  ngxtension:
+    specifier: ^0.1.0
+    version: 0.1.0(@angular/common@16.2.3)(@angular/core@16.2.3)(rxjs@7.8.1)
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
@@ -16633,6 +16636,20 @@ packages:
       '@angular/core': 16.2.3(rxjs@7.8.1)(zone.js@0.13.1)
       tslib: 2.6.2
     dev: true
+
+  /ngxtension@0.1.0(@angular/common@16.2.3)(@angular/core@16.2.3)(rxjs@7.8.1):
+    resolution: {integrity: sha512-5vSQAqK1oI0VbnxOxNYwpV4TMzyASYNzuUiSfq0sSsLE9QiDODkHGyWHJyrm1JFFuxmGlQd2Ev8frizWLVbGdg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@angular/common': ^16.0.0
+      '@angular/core': ^16.0.0
+      rxjs: ^6.0.0 || ^7.0.0
+    dependencies:
+      '@angular/common': 16.2.3(@angular/core@16.2.3)(rxjs@7.8.1)
+      '@angular/core': 16.2.3(rxjs@7.8.1)(zone.js@0.13.1)
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
 
   /nice-color-palettes@3.0.0:
     resolution: {integrity: sha512-lL4AjabAAFi313tjrtmgm/bxCRzp4l3vCshojfV/ij3IPdtnRqv6Chcw+SqJUhbe7g3o3BecaqCJYUNLswGBhQ==}

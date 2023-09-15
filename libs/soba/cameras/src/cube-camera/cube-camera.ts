@@ -21,7 +21,6 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
-	assertInjector,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -29,6 +28,7 @@ import {
 	signalStore,
 	type NgtGroup,
 } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { Group } from 'three';
 

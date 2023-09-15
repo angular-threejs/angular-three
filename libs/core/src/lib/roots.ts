@@ -1,4 +1,5 @@
 import { DestroyRef, effect, inject, runInInjectionContext, type EffectRef, type Injector } from '@angular/core';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import type { NgtCanvasInputs } from './canvas';
 import { prepare } from './instance';
@@ -6,7 +7,6 @@ import { injectNgtLoop } from './loop';
 import { injectNgtStore, type NgtSize, type NgtState } from './store';
 import type { NgtAnyRecord, NgtEquConfig } from './types';
 import { applyProps } from './utils/apply-props';
-import { assertInjector } from './utils/assert-injector';
 import { is } from './utils/is';
 import { makeDefaultCamera, makeDefaultRenderer, makeDpr } from './utils/make';
 import type { NgtSignalStore } from './utils/signal-store';

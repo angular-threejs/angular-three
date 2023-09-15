@@ -1,4 +1,4 @@
-import { createInjectionToken } from '../utils/create-injection-token';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 
 export type NgtAnyConstructor = new (...args: any[]) => any;
 

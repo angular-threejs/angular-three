@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, forwardRef, signal } from '@angular/core';
-import { NgtArgs, createInjectionToken, extend, injectNgtRef, type NgtSpotLight } from 'angular-three';
+import { NgtArgs, extend, injectNgtRef, type NgtSpotLight } from 'angular-three';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, SpotLight, SpotLightHelper } from 'three';
 import { NgtsSpotLightInput, type NgtsSpotLightInputState } from './spot-light-input';
 import { NgtsVolumetricMesh } from './volumetric-mesh';

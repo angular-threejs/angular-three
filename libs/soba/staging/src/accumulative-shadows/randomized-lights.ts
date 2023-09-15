@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect } from '@angular/core';
-import { NgtArgs, NgtRepeat, extend, injectNgtRef, signalStore, type NgtGroup } from 'angular-three';
+import { NgtArgs, extend, injectNgtRef, signalStore, type NgtGroup } from 'angular-three';
+import { Repeat } from 'ngxtension/repeat';
 import * as THREE from 'three';
 import { DirectionalLight, Group, OrthographicCamera, Vector2 } from 'three';
 import { injectNgtsAccumulativeShadowsApi } from './accumulative-shadows';
@@ -60,7 +61,7 @@ declare global {
 			<ng-content />
 		</ngt-group>
 	`,
-	imports: [NgtRepeat, NgtArgs],
+	imports: [Repeat, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsRandomizedLights {

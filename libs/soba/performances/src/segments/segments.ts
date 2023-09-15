@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
-	createInjectionToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -24,6 +23,7 @@ import {
 	type NgtRef,
 	type NgtVector3,
 } from 'angular-three';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Line2, LineMaterial, LineSegmentsGeometry } from 'three-stdlib';
 import { SegmentObject } from './segment-object';

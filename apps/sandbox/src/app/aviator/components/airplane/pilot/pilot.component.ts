@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, inject } from '@angular/core';
-import { NgtArgs, NgtRepeat, type NgtAfterAttach, type NgtBeforeRenderEvent } from 'angular-three';
+import { NgtArgs, type NgtAfterAttach, type NgtBeforeRenderEvent } from 'angular-three';
+import { Repeat } from 'ngxtension/repeat';
 import * as THREE from 'three';
 import { GameService } from '../../../services/game.service';
 import { Colors } from '../../../utils/colors';
@@ -8,7 +9,7 @@ import { Colors } from '../../../utils/colors';
 	selector: 'app-pilot',
 	standalone: true,
 	templateUrl: './pilot.component.html',
-	imports: [NgtArgs, NgtRepeat],
+	imports: [NgtArgs, Repeat],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Pilot {

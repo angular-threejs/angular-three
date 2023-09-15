@@ -25,9 +25,10 @@ import type {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { assertInjector, injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
+import { injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi, type NgtcCannonEvents } from 'angular-three-cannon';
 import { injectNgtcDebugApi } from 'angular-three-cannon/debug';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 export type NgtcAtomicApi<K extends AtomicName> = {

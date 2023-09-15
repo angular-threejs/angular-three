@@ -7,7 +7,8 @@ import {
 	runInInjectionContext,
 	type Injector,
 } from '@angular/core';
-import { assertInjector, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import { injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 interface FBOSettings extends THREE.WebGLRenderTargetOptions {

@@ -4,6 +4,7 @@ import {
 	CANNON_ES_DEBUGGER_VERSION,
 	CANNON_ES_VERSION,
 	CANNON_WORKER_API_VERSION,
+	NGXTENSION_VERSION,
 } from '../versions';
 
 export default async function (tree: Tree) {
@@ -23,6 +24,7 @@ export default async function (tree: Tree) {
 			'@pmndrs/cannon-worker-api': CANNON_WORKER_API_VERSION,
 			'cannon-es': CANNON_ES_VERSION,
 			'cannon-es-debugger': CANNON_ES_DEBUGGER_VERSION,
+			ngxtension: NGXTENSION_VERSION,
 		},
 		{},
 	);

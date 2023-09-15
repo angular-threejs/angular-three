@@ -8,14 +8,8 @@ import {
 	runInInjectionContext,
 	type Injector,
 } from '@angular/core';
-import {
-	assertInjector,
-	checkUpdate,
-	extend,
-	injectBeforeRender,
-	injectNgtRef,
-	type NgtInjectedRef,
-} from 'angular-three';
+import { checkUpdate, extend, injectBeforeRender, injectNgtRef, type NgtInjectedRef } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { FullScreenQuad } from 'three-stdlib';

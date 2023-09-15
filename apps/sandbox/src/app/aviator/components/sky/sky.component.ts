@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, inject } from '@angular/core';
-import { NgtArgs, NgtRepeat, type NgtBeforeRenderEvent } from 'angular-three';
+import { NgtArgs, type NgtBeforeRenderEvent } from 'angular-three';
+import { Repeat } from 'ngxtension/repeat';
 import { GameService } from '../../services/game.service';
 import { WorldService } from '../../services/world.service';
 import { Cloud } from './cloud/cloud.component';
@@ -8,7 +9,7 @@ import { Cloud } from './cloud/cloud.component';
 	selector: 'app-sky',
 	standalone: true,
 	templateUrl: './sky.component.html',
-	imports: [NgtArgs, NgtRepeat, Cloud],
+	imports: [NgtArgs, Cloud, Repeat],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Sky {

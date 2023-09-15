@@ -8,14 +8,8 @@ import {
 	forwardRef,
 	inject,
 } from '@angular/core';
-import {
-	createInjectionToken,
-	extend,
-	injectBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	signalStore,
-} from 'angular-three';
+import { extend, injectBeforeRender, injectNgtRef, injectNgtStore, signalStore } from 'angular-three';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import {
 	DepthDownsamplingPass,
 	Effect,

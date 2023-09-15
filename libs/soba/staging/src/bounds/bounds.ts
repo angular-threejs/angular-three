@@ -11,7 +11,6 @@ import {
 	type Signal,
 } from '@angular/core';
 import {
-	createInjectionToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -20,6 +19,7 @@ import {
 	signalStore,
 	type NgtGroup,
 } from 'angular-three';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group } from 'three';
 

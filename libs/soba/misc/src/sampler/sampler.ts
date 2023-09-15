@@ -10,16 +10,8 @@ import {
 	signal,
 	untracked,
 } from '@angular/core';
-import {
-	assertInjector,
-	checkUpdate,
-	extend,
-	injectNgtRef,
-	is,
-	signalStore,
-	type NgtGroup,
-	type NgtRef,
-} from 'angular-three';
+import { checkUpdate, extend, injectNgtRef, is, signalStore, type NgtGroup, type NgtRef } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { Group } from 'three';
 import { MeshSurfaceSampler } from 'three-stdlib';

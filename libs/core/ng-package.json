@@ -4,5 +4,5 @@
 	"lib": {
 		"entryFile": "src/index.ts"
 	},
-	"allowedNonPeerDependencies": ["ngx-resize", "@nx/devkit", "nx", "@phenomnomnominal/tsquery"]
+	"allowedNonPeerDependencies": ["@nx/devkit", "nx", "@phenomnomnominal/tsquery"]
 }

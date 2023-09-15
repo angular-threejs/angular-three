@@ -10,17 +10,9 @@ import {
 	computed,
 	forwardRef,
 } from '@angular/core';
-import {
-	createInjectionToken,
-	extend,
-	injectNgtRef,
-	is,
-	signalStore,
-	type NgtGroup,
-	type NgtRef,
-	type NgtVector3,
-} from 'angular-three';
+import { extend, injectNgtRef, is, signalStore, type NgtGroup, type NgtRef, type NgtVector3 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import { NgtsHtmlWrapper, defaultCalculatePosition } from './html-wrapper';

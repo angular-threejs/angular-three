@@ -1,7 +1,8 @@
 import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
 import type { RayMode, RayOptions, RayhitEvent } from '@pmndrs/cannon-worker-api';
-import { assertInjector, makeId, type NgtAnyRecord } from 'angular-three';
+import { makeId, type NgtAnyRecord } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { assertInjector } from 'ngxtension/assert-injector';
 
 export type NgtcRayOptions = {
 	options: () => RayOptions;

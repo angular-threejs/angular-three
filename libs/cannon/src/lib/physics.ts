@@ -18,7 +18,8 @@ import {
 	type WorkerFrameMessage,
 	type WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { createInjectionToken, injectBeforeRender, injectNgtStore, signalStore } from 'angular-three';
+import { injectBeforeRender, injectNgtStore, signalStore } from 'angular-three';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 
 const v = new THREE.Vector3();

@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, Input, signal } from '@angular/core';
-import { extend, injectNgtStore, NgtRepeat, signalStore, type NgtThreeEvent } from 'angular-three';
+import { extend, injectNgtStore, signalStore, type NgtThreeEvent } from 'angular-three';
+import { Repeat } from 'ngxtension/repeat';
 import { BoxGeometry, CanvasTexture, Mesh, MeshLambertMaterial } from 'three';
 import { injectNgtsGizmoHelperApi } from '../gizmo-helper';
 import { colors, defaultFaces } from './constants';
@@ -95,7 +96,7 @@ export class NgtsGizmoViewcubeFaceMaterial {
 			<ngts-gizmo-viewcube-face-material *ngFor="let i; repeat: 6" [hover]="hover() === i" [index]="i" />
 		</ngt-mesh>
 	`,
-	imports: [NgtsGizmoViewcubeFaceMaterial, NgtRepeat],
+	imports: [NgtsGizmoViewcubeFaceMaterial, Repeat],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsGizmoViewcubeFaceCube {

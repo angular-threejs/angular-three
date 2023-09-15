@@ -1,8 +1,9 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, forwardRef, signal } from '@angular/core';
-import { createInjectionToken, extend, injectNgtRef, signalStore } from 'angular-three';
+import { extend, injectNgtRef, signalStore } from 'angular-three';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsCenter } from 'angular-three-soba/staging';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, MeshNormalMaterial, MeshStandardMaterial } from 'three';
 
 /**

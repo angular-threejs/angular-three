@@ -23,7 +23,7 @@ import {
 	type SimpleChanges,
 	type Type,
 } from '@angular/core';
-import { NgxResize, provideNgxResizeOptions, type NgxResizeResult } from 'ngx-resize';
+import { NgxResize, provideResizeOptions, type ResizeOptions, type ResizeResult } from 'ngxtension/resize';
 import * as THREE from 'three';
 import { createPointerEvents } from './dom/events';
 import type { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
@@ -120,7 +120,10 @@ export type NgtCanvasInputs = {
 		</div>
 	`,
 	imports: [NgxResize],
-	providers: [provideNgxResizeOptions({ emitInZone: false, emitInitialResult: true }), provideNgtStore()],
+	providers: [
+		provideResizeOptions({ emitInZone: false, emitInitialResult: true } as ResizeOptions),
+		provideNgtStore(),
+	],
 	host: {
 		style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
 		'[style.pointerEvents]': 'hbPointerEvents()',
@@ -246,7 +249,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 	}
 
 	// NOTE: runs outside of Zone due to emitInZone: false
-	onResize(result: NgxResizeResult) {
+	onResize(result: ResizeResult) {
 		if (result.width > 0 && result.height > 0) {
 			this.resizeEffectRef?.destroy();
 

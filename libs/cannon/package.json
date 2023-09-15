@@ -29,6 +29,7 @@
 		"angular-three": "^2.0.0",
 		"cannon-es": "^0.20.0",
 		"cannon-es-debugger": "^1.0.0",
+		"ngxtension": "^0.1.0",
 		"three": ">=0.148.0"
 	},
 	"dependencies": {

@@ -1,5 +1,6 @@
 import { effect, runInInjectionContext, type Injector, type Signal } from '@angular/core';
-import { assertInjector, injectNgtLoader, injectNgtStore, type NgtLoaderResults } from 'angular-three';
+import { injectNgtLoader, injectNgtStore, type NgtLoaderResults } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 export function injectNgtsTextureLoader<TInput extends string[] | string | Record<string, string>>(

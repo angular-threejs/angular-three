@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, computed, effect, inject, runInInjectionContext, type Injector } from '@angular/core';
-import { assertInjector, injectBeforeRender, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import { injectBeforeRender, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { injectNgtsFBO } from '../fbo/fbo';
 

@@ -1,6 +1,6 @@
 import { computed, effect, runInInjectionContext, signal, untracked, type Injector, type Signal } from '@angular/core';
-import { assertInjector } from 'angular-three';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
+import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 const NORMAL_ROOT = 'https://rawcdn.githack.com/pmndrs/drei-assets/7a3104997e1576f83472829815b00880d88b32fb';

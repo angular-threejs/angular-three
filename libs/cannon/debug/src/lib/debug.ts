@@ -1,9 +1,10 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, forwardRef, Input, type OnInit } from '@angular/core';
 import { propsToBody, type BodyProps, type BodyShapeType } from '@pmndrs/cannon-worker-api';
-import { createInjectionToken, injectBeforeRender, NgtArgs } from 'angular-three';
+import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import type { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 
 const q = new THREE.Quaternion();
