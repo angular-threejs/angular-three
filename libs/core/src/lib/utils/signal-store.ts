@@ -134,31 +134,36 @@ const selector =
 export function signalStore<State extends object>(
 	initialState:
 		| Partial<State>
-		| ((storeApi: Pick<NgtSignalStore<State>, 'get' | 'set' | 'patch'>) => Partial<State>) = {},
+		| ((storeApi: Pick<NgtSignalStore<State>, 'get' | 'set' | 'patch' | 'select'>) => Partial<State>) = {},
 	options?: CreateSignalOptions<State>,
 ): NgtSignalStore<State> {
 	let source: WritableSignal<State>;
 	let set: NgtSignalStore<State>['set'];
 	let get: NgtSignalStore<State>['get'];
 	let patch: NgtSignalStore<State>['patch'];
+	let select: NgtSignalStore<State>['select'];
+	let state: Signal<State>;
+
+	const computedCache = new Map();
 
 	if (typeof initialState === 'function') {
 		source = signal({} as State, options);
+		state = source.asReadonly();
 		get = getter(source);
 		set = setter(source);
 		patch = patcher(source);
-		source.set(initialState({ set, get, patch }) as State);
+		select = selector(state, computedCache);
+		source.set(initialState({ set, get, patch, select }) as State);
 	} else {
 		source = signal(initialState as State, options);
+		state = source.asReadonly();
 		get = getter(source);
 		set = setter(source);
 		patch = patcher(source);
+		select = selector(state, computedCache);
 	}
 
-	const state = source.asReadonly();
-	const computedCache = new Map();
-
-	const store = { select: selector(state, computedCache), get, set, patch, state };
+	const store = { select, get, set, patch, state };
 
 	// NOTE: internal _snapshot to debug current state
 	Object.defineProperty(store, '_snapshot', {

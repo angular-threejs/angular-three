@@ -4,9 +4,9 @@
 	"nx-migrations": {
 		"migrations": "./migrations.json"
 	},
-  "ng-update": {
+	"ng-update": {
 		"migrations": "./migrations.json"
-  },
+	},
 	"dependencies": {
 		"@nx/devkit": "16.8.1"
 	}
