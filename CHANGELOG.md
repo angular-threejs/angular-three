@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.34](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.33...2.0.0-beta.34) (2023-09-18)
+
+
+### Bug Fixes
+
+* make sure to install ngxtension ([6ee16a7](https://github.com/angular-threejs/angular-three/commit/6ee16a71c481b6ded84c10fa81a1d53dc8292e80))
+
 ## [2.0.0-beta.33](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.32...2.0.0-beta.33) (2023-09-18)
 
 
