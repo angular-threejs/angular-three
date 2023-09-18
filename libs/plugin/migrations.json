@@ -12,5 +12,16 @@
 			"description": "Migrate some APIs to ngxtension",
 			"factory": "./src/migrations/migrate-to-ngxtension/compat"
 		}
+	},
+	"packageJsonUpdates": {
+		"2.0.0-beta.30": {
+			"version": "2.0.0-beta.30",
+			"packages": {
+				"ngxtension": {
+					"version": "^0.3.0",
+					"alwaysAddToPackageJson": true
+				}
+			}
+		}
 	}
 }
