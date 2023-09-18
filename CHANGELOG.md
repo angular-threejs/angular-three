@@ -1,5 +1,13 @@
 
 
+## [2.0.0-beta.31](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.30...2.0.0-beta.31) (2023-09-18)
+
+
+### Features
+
+* add select to storeApi ([9d5da39](https://github.com/angular-threejs/angular-three/commit/9d5da39111fc4dfeb55305a6df0bb3acb194bd43))
+* adjust migration ([04d2924](https://github.com/angular-threejs/angular-three/commit/04d2924d5f4c2647e2001c3e53c0cef36b175913))
+
 ## [2.0.0-beta.30](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.29...2.0.0-beta.30) (2023-09-15)
 
 
