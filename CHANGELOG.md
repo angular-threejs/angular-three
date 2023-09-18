@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.33](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.32...2.0.0-beta.33) (2023-09-18)
+
+
+### Bug Fixes
+
+* migration migrates all the times ([83ca9c6](https://github.com/angular-threejs/angular-three/commit/83ca9c62e10f6b3661f390208ce2675b3a4c65e3))
+
 ## [2.0.0-beta.32](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.31...2.0.0-beta.32) (2023-09-18)
 
 ## [2.0.0-beta.31](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.30...2.0.0-beta.31) (2023-09-18)
