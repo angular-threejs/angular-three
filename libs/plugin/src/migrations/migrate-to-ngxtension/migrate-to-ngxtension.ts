@@ -17,16 +17,19 @@ export default function update(host: Tree) {
 }
 
 function migrateApi(host: Tree, path: string, apiName: string, apiImport: string, alias?: string) {
+	let transformDidRun = false;
 	const content = host.read(path, 'utf8');
 	let updatedContent = tsquery.replace(
 		content,
 		`ImportDeclaration:has(StringLiteral[value="angular-three"]):has(Identifier[name="${apiName}"])`,
-		(node: ImportDeclaration) => node.getText().replace(`${apiName},`, '').replace(apiName, ''),
+		(node: ImportDeclaration) => {
+			transformDidRun = true;
+			return node.getText().replace(`${apiName},`, '').replace(apiName, '');
+		},
 	);
 
-	if (content === updatedContent) {
-		// NOTE: transformer did not run
-		return;
+	if (!transformDidRun) {
+		return transformDidRun;
 	}
 
 	if (
@@ -49,4 +52,5 @@ ${sf.getFullText()}`;
 	});
 
 	host.write(path, updatedContent);
+	return transformDidRun;
 }
