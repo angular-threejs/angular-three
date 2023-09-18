@@ -41,6 +41,6 @@
 	},
 	"hooks": {
 		"before:bump": "pnpm exec nx package core",
-		"after:bump": ["git checkout -- package.json"]
+		"after:bump": ["git checkout -- package.json", "node tools/scripts/update-package-group.mjs"]
 	}
 }
