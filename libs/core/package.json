@@ -36,10 +36,20 @@
 	"generators": "./plugin/generators.json",
 	"schematics": "./plugin/generators.json",
 	"nx-migrations": {
-		"migrations": "./migrations.json"
+		"migrations": "./plugin/migrations.json",
+		"packageGroup": {
+			"angular-three-soba": "*",
+			"angular-three-postprocessing": "*",
+			"angular-three-cannon": "*"
+		}
 	},
 	"ng-update": {
-		"migrations": "./migrations.json"
+		"migrations": "./plugin/migrations.json",
+		"packageGroup": {
+			"angular-three-soba": "*",
+			"angular-three-postprocessing": "*",
+			"angular-three-cannon": "*"
+		}
 	},
 	"web-types": "./web-types.json"
 }

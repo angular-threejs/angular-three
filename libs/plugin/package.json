@@ -2,10 +2,20 @@
 	"type": "commonjs",
 	"generators": "./generators.json",
 	"nx-migrations": {
-		"migrations": "./migrations.json"
+		"migrations": "./migrations.json",
+		"packageGroup": {
+			"angular-three-soba": "*",
+			"angular-three-postprocessing": "*",
+			"angular-three-cannon": "*"
+		}
 	},
 	"ng-update": {
-		"migrations": "./migrations.json"
+		"migrations": "./migrations.json",
+		"packageGroup": {
+			"angular-three-soba": "*",
+			"angular-three-postprocessing": "*",
+			"angular-three-cannon": "*"
+		}
 	},
 	"dependencies": {
 		"@nx/devkit": "16.8.1"
