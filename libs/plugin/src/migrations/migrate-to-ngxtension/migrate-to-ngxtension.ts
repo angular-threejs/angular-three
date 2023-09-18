@@ -1,8 +1,17 @@
-import { Tree, getProjects, visitNotIgnoredFiles } from '@nx/devkit';
+import {
+	Tree,
+	addDependenciesToPackageJson,
+	formatFiles,
+	getProjects,
+	installPackagesTask,
+	readJson,
+	visitNotIgnoredFiles,
+} from '@nx/devkit';
 import { tsquery } from '@phenomnomnominal/tsquery';
 import { ImportDeclaration } from 'typescript';
+import { NGXTENSION_VERSION } from '../../generators/versions';
 
-export default function update(host: Tree) {
+export default async function update(host: Tree) {
 	const projects = getProjects(host);
 
 	for (const [, projectConfiguration] of projects.entries()) {
@@ -14,6 +23,19 @@ export default function update(host: Tree) {
 			}
 		});
 	}
+
+	// add ngxtension
+	const packageJson = readJson(host, 'package.json');
+
+	if (!packageJson.dependencies['ngxtension'] || !packageJson.devDependencies['ngxtension']) {
+		addDependenciesToPackageJson(host, { ngxtension: NGXTENSION_VERSION }, {});
+	}
+
+	await formatFiles(host);
+
+	return () => {
+		installPackagesTask(host);
+	};
 }
 
 function migrateApi(host: Tree, path: string, apiName: string, apiImport: string, alias?: string) {

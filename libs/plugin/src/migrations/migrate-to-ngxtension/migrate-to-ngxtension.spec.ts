@@ -41,8 +41,7 @@ ${content}`,
 	].forEach(([api, entry, alias]) => {
 		it(`should migrate ${api} successfully`, async () => {
 			await setup(api);
-
-			update(tree);
+			await update(tree);
 
 			const content = tree.read('libs/lib-one/src/lib/lib-one.component.ts', 'utf8');
 			const finalImport = alias ? `${alias} as ${api}` : api;
