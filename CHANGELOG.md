@@ -1,5 +1,7 @@
 
 
+## [2.0.0-beta.36](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.35...2.0.0-beta.36) (2023-09-18)
+
 ## [2.0.0-beta.35](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.34...2.0.0-beta.35) (2023-09-18)
 
 
