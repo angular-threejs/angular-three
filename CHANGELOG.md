@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.35](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.34...2.0.0-beta.35) (2023-09-18)
+
+
+### Bug Fixes
+
+* adjust version of ngxtension ([7c5b54a](https://github.com/angular-threejs/angular-three/commit/7c5b54a950df526cfab0262b9168184355fa9c99))
+
 ## [2.0.0-beta.34](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.33...2.0.0-beta.34) (2023-09-18)
 
 
