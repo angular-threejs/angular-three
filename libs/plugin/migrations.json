@@ -3,14 +3,14 @@
 		"migrate-to-ngxtension": {
 			"version": "2.0.0-beta.30",
 			"description": "Migrate some APIs to ngxtension",
-			"implementation": "./src/migrations/migrate-to-ngxtension/migrate-to-ngxtension"
+			"factory": "./src/migrations/migrate-to-ngxtension/migrate-to-ngxtension"
 		}
 	},
 	"schematics": {
 		"migrate-to-ngxtension": {
 			"version": "2.0.0-beta.30",
 			"description": "Migrate some APIs to ngxtension",
-			"implementation": "./src/migrations/migrate-to-ngxtension/compat"
+			"factory": "./src/migrations/migrate-to-ngxtension/compat"
 		}
 	}
 }
