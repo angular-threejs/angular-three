@@ -191,8 +191,8 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 			.flatMap(handleRaycast)
 			// Sort by event priority and distance
 			.sort((a, b) => {
-				const aState = getLocalState(a.object).store.get();
-				const bState = getLocalState(b.object).store.get();
+				const aState = getLocalState(a.object).store?.get();
+				const bState = getLocalState(b.object).store?.get();
 				if (!aState || !bState) return a.distance - b.distance;
 				return bState.events.priority - aState.events.priority || a.distance - b.distance;
 			})
