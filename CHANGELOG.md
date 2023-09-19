@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.37](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.36...2.0.0-beta.37) (2023-09-19)
+
+
+### Bug Fixes
+
+* only get state if it's available ([33aa00f](https://github.com/angular-threejs/angular-three/commit/33aa00f6206ec0344875819b0a1292be9c34ff3f))
+
 ## [2.0.0-beta.36](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.35...2.0.0-beta.36) (2023-09-18)
 
 ## [2.0.0-beta.35](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.34...2.0.0-beta.35) (2023-09-18)
