@@ -118,11 +118,11 @@ declare global {
 			<ngt-mesh [renderOrder]="2" [ref]="planeRef" [rotation]="[-Math.PI / 2, 0, 0]">
 				<ngt-plane-geometry />
 				<ngt-caustics-projection-material
-					*ngIf="causticsTargetFbo() as targetFbo && causticsTargetBFbo() as targetBFbo"
+					*ngIf="causticsTargetFbo() && causticsTargetBFbo()"
 					[transparent]="true"
 					[color]="color()"
-					[causticsTexture]="targetFbo.texture"
-					[causticsTextureB]="targetBFbo.texture"
+					[causticsTexture]="causticsTargetFbo()!.texture"
+					[causticsTextureB]="causticsTargetBFbo()!.texture"
 					[blending]="CustomBlending"
 					[blendSrc]="OneFactor"
 					[blendDst]="SrcAlphaFactor"
