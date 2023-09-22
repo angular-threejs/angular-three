@@ -12,6 +12,14 @@ export function injectNgtsAnimations(
 	}: { ref?: NgtRef<THREE.Object3D>; playFirstClip?: boolean; injector?: Injector } = {},
 ) {
 	injector = assertInjector(injectNgtsAnimations, injector);
+
+	const mixer = new THREE.AnimationMixer(null!);
+	const actions = {} as Record<string, THREE.AnimationAction>;
+	let cached = {} as Record<string, THREE.AnimationAction>;
+	let object: THREE.Object3D | null = null;
+	const names = [] as string[];
+	const clips = [] as THREE.AnimationClip[];
+
 	return runInInjectionContext(injector, () => {
 		let actualRef = injectNgtRef<THREE.Object3D>();
 
@@ -22,14 +30,6 @@ export function injectNgtsAnimations(
 				actualRef = ref;
 			}
 		}
-
-		const mixer = new THREE.AnimationMixer(null!);
-		const actions = {} as Record<string, THREE.AnimationAction>;
-		let cached = {} as Record<string, THREE.AnimationAction>;
-		let object: THREE.Object3D | null = null;
-
-		const clips = [] as THREE.AnimationClip[];
-		const names = [] as string[];
 
 		injectBeforeRender(({ delta }) => mixer.update(delta));
 
