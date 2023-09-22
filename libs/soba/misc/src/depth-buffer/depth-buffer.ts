@@ -1,5 +1,14 @@
-import { ChangeDetectorRef, computed, effect, inject, runInInjectionContext, type Injector } from '@angular/core';
-import { injectBeforeRender, injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import {
+	ChangeDetectorRef,
+	computed,
+	effect,
+	inject,
+	runInInjectionContext,
+	signal,
+	untracked,
+	type Injector,
+} from '@angular/core';
+import { injectBeforeRender, injectNgtStore, safeDetectChanges } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { injectNgtsFBO } from '../fbo/fbo';
@@ -15,29 +24,34 @@ export function injectNgtsDepthBuffer(
 ) {
 	injector = assertInjector(injectNgtsDepthBuffer, injector);
 	return runInInjectionContext(injector, () => {
-		const depthBufferRef = injectNgtRef<THREE.DepthTexture | null>(null);
+		const depthBufferSignal = signal<THREE.DepthTexture | null>(null);
 		const store = injectNgtStore();
 		const cdr = inject(ChangeDetectorRef);
 
-		const size = store.select('size');
-		const dpr = store.select('viewport', 'dpr');
+		const [defaultWidth, defaultHeight, dpr] = [
+			store.select('size', 'width'),
+			store.select('size', 'height'),
+			store.select('viewport', 'dpr'),
+		];
 
 		const fboParams = computed(() => {
 			const params = { size: 256, frames: Infinity, ...paramsFactory() };
-			const width = params.size || size().width * dpr();
-			const height = params.size || size().height * dpr();
+			const width = params.size || defaultWidth() * dpr();
+			const height = params.size || defaultHeight() * dpr();
 			const depthTexture = new THREE.DepthTexture(width, height);
 			depthTexture.format = THREE.DepthFormat;
 			depthTexture.type = THREE.UnsignedShortType;
 			return { width, height, settings: { depthTexture } };
 		});
 
-		const fboRef = injectNgtsFBO(fboParams, { injector });
+		const _fbo = injectNgtsFBO(fboParams, { injector });
 
 		effect(() => {
-			const fbo = fboRef.nativeElement;
+			const fbo = _fbo();
 			if (fbo) {
-				depthBufferRef.nativeElement = fbo.depthTexture;
+				untracked(() => {
+					depthBufferSignal.set(fbo.depthTexture);
+				});
 				safeDetectChanges(cdr);
 			}
 		});
@@ -46,7 +60,7 @@ export function injectNgtsDepthBuffer(
 		injectBeforeRender(
 			({ gl, scene, camera }) => {
 				const params = { size: 256, frames: Infinity, ...paramsFactory() };
-				const fbo = fboRef.untracked;
+				const fbo = _fbo();
 				if ((params.frames === Infinity || count < params.frames) && fbo) {
 					gl.setRenderTarget(fbo);
 					gl.render(scene, camera);
@@ -57,6 +71,6 @@ export function injectNgtsDepthBuffer(
 			{ injector },
 		);
 
-		return depthBufferRef;
+		return depthBufferSignal.asReadonly();
 	});
 }

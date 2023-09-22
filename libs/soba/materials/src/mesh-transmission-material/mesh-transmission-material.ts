@@ -74,7 +74,7 @@ declare global {
 			ngtCompound
 			*args="[samples(), transmissionSampler()]"
 			[ref]="materialRef"
-			[buffer]="buffer() || fboMainRef.nativeElement?.texture"
+			[buffer]="buffer() || fboMainRef()?.texture"
 			[_transmission]="transmission()"
 			[transmission]="transmissionSampler() ? transmission() : 0"
 			[thickness]="thickness()"
@@ -227,10 +227,7 @@ export class NgtsMeshTranmissionMaterial {
 
 			this.materialRef.nativeElement.time = state.clock.getElapsedTime();
 			// Render only if the buffer matches the built-in and no transmission sampler is set
-			if (
-				this.materialRef.nativeElement.buffer === this.fboMainRef.nativeElement?.texture &&
-				!transmissionSampler
-			) {
+			if (this.materialRef.nativeElement.buffer === this.fboMainRef()?.texture && !transmissionSampler) {
 				parent = getLocalState(this.materialRef.nativeElement).parent?.() as THREE.Object3D;
 				if (parent) {
 					// Save defaults
@@ -246,22 +243,22 @@ export class NgtsMeshTranmissionMaterial {
 
 					if (backside) {
 						// Render into the backside buffer
-						state.gl.setRenderTarget(this.fboBackRef.nativeElement);
+						state.gl.setRenderTarget(this.fboBackRef());
 						state.gl.render(state.scene, state.camera);
 						// And now prepare the material for the main render using the backside buffer
 						(parent as NgtAnyRecord)['material'] = this.materialRef.nativeElement;
-						(parent as NgtAnyRecord)['material'].buffer = this.fboBackRef.nativeElement?.texture;
+						(parent as NgtAnyRecord)['material'].buffer = this.fboBackRef()?.texture;
 						(parent as NgtAnyRecord)['material'].thickness = backsideThickness;
 						(parent as NgtAnyRecord)['material'].side = THREE.BackSide;
 					}
 
 					// Render into the main buffer
-					state.gl.setRenderTarget(this.fboMainRef.nativeElement);
+					state.gl.setRenderTarget(this.fboMainRef());
 					state.gl.render(state.scene, state.camera);
 
 					(parent as NgtAnyRecord)['material'].thickness = thickness;
 					(parent as NgtAnyRecord)['material'].side = this.side;
-					(parent as NgtAnyRecord)['material'].buffer = this.fboMainRef.nativeElement?.texture;
+					(parent as NgtAnyRecord)['material'].buffer = this.fboMainRef()?.texture;
 
 					// Set old state back
 					state.scene.background = oldBg;

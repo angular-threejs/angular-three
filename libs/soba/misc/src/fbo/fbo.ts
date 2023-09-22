@@ -5,9 +5,11 @@ import {
 	effect,
 	inject,
 	runInInjectionContext,
+	signal,
+	untracked,
 	type Injector,
 } from '@angular/core';
-import { injectNgtRef, injectNgtStore, safeDetectChanges } from 'angular-three';
+import { injectNgtStore, safeDetectChanges } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
@@ -30,37 +32,41 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
 		const store = injectNgtStore();
 		const cdr = inject(ChangeDetectorRef);
 
-		const targetRef = injectNgtRef<THREE.WebGLRenderTarget | null>(null);
+		const targetSignal = signal<THREE.WebGLRenderTarget | null>(null);
 
-		inject(DestroyRef).onDestroy(() => targetRef.nativeElement?.dispose());
+		inject(DestroyRef).onDestroy(() => targetSignal()?.dispose());
 
-		const size = store.select('size');
-		const dpr = store.select('viewport', 'dpr');
+		const [defaultWidth, defaultHeight, dpr] = [
+			store.select('size', 'width'),
+			store.select('size', 'height'),
+			store.select('viewport', 'dpr'),
+		];
 		const fboSettings = computed(() => {
 			const { width, height, settings } = fboParams();
-			const _width = typeof width === 'number' ? width : size().width * dpr();
-			const _height = typeof height === 'number' ? height : size().height * dpr();
-			const _settings = (typeof width === 'number' ? settings : (width as FBOSettings)) || {};
-
-			return { width: _width, height: _height, settings: _settings };
+			return [
+				typeof width === 'number' ? width : defaultWidth() * dpr(),
+				typeof height === 'number' ? height : defaultHeight() * dpr(),
+				(typeof width === 'number' ? settings : (width as FBOSettings)) || {},
+			] as const;
 		});
 
 		effect(() => {
-			const { width, height, settings } = fboSettings();
-			const { samples = 0, depth, ...targetSettings } = settings;
-			let untrackedTarget = targetRef.untracked;
+			const [width, height, { samples = 0, depth, ...settings }] = fboSettings();
+			let untrackedTarget = untracked(targetSignal);
 			if (!untrackedTarget) {
 				const target = new THREE.WebGLRenderTarget(width, height, {
 					minFilter: THREE.LinearFilter,
 					magFilter: THREE.LinearFilter,
 					type: THREE.HalfFloatType,
-					...targetSettings,
+					...settings,
 				});
 				if (depth) target.depthTexture = new THREE.DepthTexture(width, height, THREE.FloatType);
 
 				target.samples = samples;
-				targetRef.nativeElement = target;
-				untrackedTarget = targetRef.untracked;
+				untracked(() => {
+					targetSignal.set(target);
+				});
+				untrackedTarget = untracked(targetSignal);
 			}
 
 			if (untrackedTarget) {
@@ -70,6 +76,6 @@ export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { in
 			}
 		});
 
-		return targetRef;
+		return targetSignal.asReadonly();
 	});
 }
