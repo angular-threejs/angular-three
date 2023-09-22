@@ -143,8 +143,8 @@ export class NgtsMeshRefractionMaterial {
 		injectBeforeRender(({ camera }) => {
 			const material = this.materialRef.nativeElement;
 			if (material) {
-				(material as any).viewMatrixInverse = camera.matrixWorld;
-				(material as any).projectionMatrixInverse = camera.projectionMatrixInverse;
+				(material as any)['viewMatrixInverse'] = camera.matrixWorld;
+				(material as any)['projectionMatrixInverse'] = camera.projectionMatrixInverse;
 			}
 		});
 		this.setupGeometry();
