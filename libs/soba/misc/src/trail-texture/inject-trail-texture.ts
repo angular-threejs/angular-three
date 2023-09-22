@@ -9,8 +9,7 @@ export function injectNgtsTrailTexture(
 ) {
 	injector = assertInjector(injectNgtsTrailTexture, injector);
 	return runInInjectionContext(injector, () => {
-		const config = computed(() => trailConfigFn() || {});
-		const trail = computed(() => new TrailTexture(config()));
+		const trail = computed(() => new TrailTexture(trailConfigFn() || {}));
 		const texture = computed(() => trail().texture);
 
 		injectBeforeRender(({ delta }) => {
