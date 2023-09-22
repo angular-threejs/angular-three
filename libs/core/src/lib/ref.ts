@@ -28,19 +28,19 @@ export function injectNgtRef<TElement>(
 ): NgtInjectedRef<TElement> {
 	injector = assertInjector(injectNgtRef, injector);
 	const ref = is.ref(initial) ? initial : new ElementRef(initial as TElement);
-	const signalRef = signal(ref.nativeElement);
-	const readonlySignal = signalRef.asReadonly();
-	const cached = new Map();
+	const refSignal = signal(ref.nativeElement);
+	const readonlyRef = refSignal.asReadonly();
+	const computedCached = new Map();
 
 	return runInInjectionContext(injector, () => {
-		inject(DestroyRef).onDestroy(() => void cached.clear());
+		inject(DestroyRef).onDestroy(() => void computedCached.clear());
 
 		const children = (type: 'objects' | 'nonObjects' | 'both' = 'objects') => {
-			if (!cached.has(type)) {
-				cached.set(
+			if (!computedCached.has(type)) {
+				computedCached.set(
 					type,
 					computed(() => {
-						const instance = readonlySignal();
+						const instance = readonlyRef();
 						if (!instance) return [];
 						const localState = getLocalState(instance);
 						if (!localState.objects || !localState.nonObjects) return [];
@@ -50,21 +50,21 @@ export function injectNgtRef<TElement>(
 					}),
 				);
 			}
-			return cached.get(type)!;
+			return computedCached.get(type)!;
 		};
 
 		Object.defineProperties(ref, {
 			nativeElement: {
 				set: (newElement) => {
 					untracked(() => {
-						if (newElement !== signalRef()) {
-							signalRef.set(newElement);
+						if (newElement !== refSignal()) {
+							refSignal.set(newElement);
 						}
 					});
 				},
-				get: readonlySignal,
+				get: readonlyRef,
 			},
-			untracked: { get: () => untracked(readonlySignal) },
+			untracked: { get: () => untracked(readonlyRef) },
 			children: { get: () => children },
 		});
 
