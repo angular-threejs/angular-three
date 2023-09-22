@@ -3,20 +3,14 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	Component,
 	ContentChild,
-	DestroyRef,
 	Directive,
-	EmbeddedViewRef,
 	Input,
 	TemplateRef,
-	ViewChild,
-	ViewContainerRef,
 	computed,
 	effect,
-	inject,
 	runInInjectionContext,
 	untracked,
 	type Injector,
-	type OnInit,
 	type Signal,
 } from '@angular/core';
 import {
@@ -64,8 +58,7 @@ export function injectNgtsCubeCamera(
 
 		const store = injectNgtStore();
 
-		const _gl = store.select('gl');
-		const _scene = store.select('scene');
+		const [_gl, _scene] = [store.select('gl'), store.select('scene')];
 
 		const _fbo = computed(() => {
 			const renderTarget = new THREE.WebGLCubeRenderTarget(resolution());
@@ -133,23 +126,20 @@ export class NgtsCubeCameraContent {
 		<ngt-group ngtCompound>
 			<ngt-primitive *args="[cubeCamera.camera()]" />
 			<ngt-group [ref]="cameraRef">
-				<ng-container #anchor />
+				<ng-container *ngTemplateOutlet="cameraContent; context: { texture }" />
 			</ngt-group>
 		</ngt-group>
 	`,
 	imports: [NgtArgs, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class NgtsCubeCamera implements OnInit {
+export class NgtsCubeCamera {
 	private inputs = signalStore<NgtsCubeCameraComponentState>({ frames: Infinity });
 
 	@Input() cameraRef = injectNgtRef<Group>();
 
 	@ContentChild(NgtsCubeCameraContent, { static: true, read: TemplateRef })
-	private cameraContent!: TemplateRef<{ texture: Signal<THREE.WebGLRenderTarget['texture']> }>;
-
-	@ViewChild('anchor', { static: true, read: ViewContainerRef })
-	private anchor!: ViewContainerRef;
+	cameraContent!: TemplateRef<{ texture: Signal<THREE.WebGLRenderTarget['texture']> }>;
 
 	/** Resolution of the FBO, 256 */
 	@Input({ alias: 'resolution' }) set _resolution(resolution: number) {
@@ -177,18 +167,10 @@ export class NgtsCubeCamera implements OnInit {
 	}
 
 	cubeCamera = injectNgtsCubeCamera(this.inputs.state);
-	private texture = computed(() => this.cubeCamera.fbo().texture);
-	private contentRef?: EmbeddedViewRef<unknown>;
+	texture = computed(() => this.cubeCamera.fbo().texture);
 
 	constructor() {
 		this.beforeRender();
-		inject(DestroyRef).onDestroy(() => {
-			this.contentRef?.destroy();
-		});
-	}
-
-	ngOnInit() {
-		this.contentRef = this.anchor.createEmbeddedView(this.cameraContent, { texture: this.texture });
 	}
 
 	private beforeRender() {
@@ -196,8 +178,7 @@ export class NgtsCubeCamera implements OnInit {
 		injectBeforeRender(() => {
 			const camera = this.cameraRef.nativeElement;
 			if (!camera) return;
-			const update = this.cubeCamera.update();
-			const frames = this.inputs.get('frames');
+			const [update, frames] = [this.cubeCamera.update(), this.inputs.get('frames')];
 			if (frames === Infinity || count < frames) {
 				camera.visible = false;
 				update();
