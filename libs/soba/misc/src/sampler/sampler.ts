@@ -5,7 +5,6 @@ import {
 	Input,
 	computed,
 	effect,
-	inject,
 	runInInjectionContext,
 	signal,
 	untracked,
@@ -66,14 +65,10 @@ export function injectNgtsSurfaceSampler(
 ) {
 	injector = assertInjector(injectNgtsSurfaceSampler, injector);
 	return runInInjectionContext(injector, () => {
-		const state = computed(() => {
-			const _state = surfaceSamplerState();
-			if (!_state) return null;
-			return { ...defaultState, ..._state };
-		});
+		const state = computed(() => ({ ...defaultState, ...(surfaceSamplerState() || {}) }));
 		const _buffer = signal(
 			(() => {
-				const arr = Array.from({ length: state()?.count || defaultState.count }, () => [
+				const arr = Array.from({ length: state().count }, () => [
 					1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
 				]).flat();
 				return new THREE.InstancedBufferAttribute(Float32Array.from(arr), 16);
@@ -81,9 +76,7 @@ export function injectNgtsSurfaceSampler(
 		);
 
 		effect(() => {
-			const _state = state();
-			if (!_state) return;
-			const { mesh, count, transform, instancedMesh, weight } = _state;
+			const { mesh, count, transform, instancedMesh, weight } = state();
 			const meshObj = is.ref(mesh) ? mesh.nativeElement : mesh;
 			if (!meshObj) return;
 			const instancedMeshObj = is.ref(instancedMesh) ? instancedMesh.nativeElement : instancedMesh;
@@ -198,9 +191,6 @@ export class NgtsSampler {
 	});
 
 	constructor() {
-		const injector = inject(Injector);
-		effect(() => {
-			injectNgtsSurfaceSampler(this.surfaceSamplerState, { injector });
-		});
+		injectNgtsSurfaceSampler(this.surfaceSamplerState);
 	}
 }
