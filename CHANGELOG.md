@@ -1,5 +1,25 @@
 
 
+## [2.0.0-beta.38](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.37...2.0.0-beta.38) (2023-09-22)
+
+
+### Bug Fixes
+
+* **core:** clean up ngt ref ([1125c86](https://github.com/angular-threejs/angular-three/commit/1125c86798d203edbdfbb876bc21396bef0828b7))
+* **soba:** clean up animations ([90545c6](https://github.com/angular-threejs/angular-three/commit/90545c6b361b0c52e1783d71b272fba4f506ebcf))
+* **soba:** clean up cube camera ([ce60420](https://github.com/angular-threejs/angular-three/commit/ce60420e21bf37efc11d766e3be76ede52eaff6c))
+* **soba:** clean up sampler ([d7426b7](https://github.com/angular-threejs/angular-three/commit/d7426b7a57f5cf1c2ade86717b6fa528a0454ef9))
+* **soba:** clean up trail texture ([e8a94c2](https://github.com/angular-threejs/angular-three/commit/e8a94c290132b67607fcc865908dc384b4c480b3))
+* **soba:** make fbo return a Signal instead of NgtInjectedRef ([6160a2e](https://github.com/angular-threejs/angular-three/commit/6160a2e708dc8edfb4e49126d3d59ac705f4c404))
+* **soba:** make ngtsTrail return a Signal instead of NgtInjectedRef ([5d30c3a](https://github.com/angular-threejs/angular-three/commit/5d30c3aa82219bf0ed5aa267f318187dbd82eb1f))
+* **soba:** match MeshTransmissionMaterial with Drei ([0d09a28](https://github.com/angular-threejs/angular-three/commit/0d09a288abfc21adcc0bd7c104c73be771eb3ddd))
+* **soba:** use valid angular for caustics ([70f4f32](https://github.com/angular-threejs/angular-three/commit/70f4f32e117da99e424d5e1d1a1b11fcd189205e))
+
+
+### Documentations
+
+* **soba:** update storybook ([089da91](https://github.com/angular-threejs/angular-three/commit/089da9136bced8f8c2272cfda597ae8c349d2216))
+
 ## [2.0.0-beta.37](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.36...2.0.0-beta.37) (2023-09-19)
 
 
