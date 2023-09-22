@@ -53,6 +53,10 @@ export class MeshTransmissionMaterial extends THREE.MeshPhysicalMaterial {
 				...this.uniforms,
 			};
 
+			if (this.anisotropy && this.anisotropy > 0) {
+				shader.defines['USE_ANISOTROPY'] = '';
+			}
+
 			// If the transmission sampler is active inject a flag
 			if (transmissionSampler) shader.defines['USE_SAMPLER'] = '';
 			// Otherwise we do use use .transmission and must therefore force USE_TRANSMISSION
