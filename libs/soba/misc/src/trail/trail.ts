@@ -5,6 +5,8 @@ import {
 	computed,
 	effect,
 	runInInjectionContext,
+	signal,
+	untracked,
 	type Injector,
 } from '@angular/core';
 import {
@@ -59,7 +61,7 @@ export function injectNgtsTrail(
 ) {
 	injector = assertInjector(injectNgtsTrail, injector);
 	return runInInjectionContext(injector, () => {
-		const points = injectNgtRef<Float32Array>();
+		const _points = signal<Float32Array>(new Float32Array());
 		let frameCount = 0;
 
 		const prevPosition = new THREE.Vector3();
@@ -77,20 +79,17 @@ export function injectNgtsTrail(
 		effect(() => {
 			const [target, length] = [_target(), _length()];
 			if (target) {
-				points.nativeElement = Float32Array.from({ length: length * 10 * 3 }, (_, i) =>
-					target.position.getComponent(i % 3),
-				);
+				untracked(() => {
+					_points.set(
+						Float32Array.from({ length: length * 10 * 3 }, (_, i) => target.position.getComponent(i % 3)),
+					);
+				});
 			}
 		});
 
 		injectBeforeRender(() => {
-			const [target, _points, { local, decay, stride, interval }] = [
-				_target(),
-				points.nativeElement,
-				_settings(),
-			];
-			if (!target) return;
-			if (!_points) return;
+			const [target, points, { local, decay, stride, interval }] = [_target(), _points(), _settings()];
+			if (!target || !points) return;
 
 			if (frameCount === 0) {
 				let newPosition: THREE.Vector3;
@@ -105,8 +104,8 @@ export function injectNgtsTrail(
 				for (let i = 0; i < steps; i++) {
 					if (newPosition.distanceTo(prevPosition) < stride) continue;
 
-					shiftLeft(_points, 3);
-					_points.set(newPosition.toArray(), _points.length - 3);
+					shiftLeft(points, 3);
+					points.set(newPosition.toArray(), points.length - 3);
 				}
 				prevPosition.copy(newPosition);
 			}
@@ -115,7 +114,7 @@ export function injectNgtsTrail(
 			frameCount = frameCount % interval;
 		});
 
-		return points;
+		return _points.asReadonly();
 	});
 }
 
@@ -247,8 +246,7 @@ export class NgtsTrail {
 
 	private beforeRender() {
 		injectBeforeRender(() => {
-			const [points, attenuation] = [this.points.nativeElement, this.attenuation()];
-			if (!points) return;
+			const [points, attenuation] = [this.points(), this.attenuation()];
 			this.geometry.setPoints(points, attenuation);
 		});
 	}
