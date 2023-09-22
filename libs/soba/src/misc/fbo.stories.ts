@@ -35,7 +35,7 @@ class SpinningThing {
 
 		<ngt-mesh>
 			<ngt-box-geometry *args="[3, 3, 3]" />
-			<ngt-mesh-standard-material [map]="target.nativeElement?.texture" />
+			<ngt-mesh-standard-material [map]="texture()" />
 		</ngt-mesh>
 	`,
 	imports: [SpinningThing, NgtsPerspectiveCamera, NgtPortal, NgtPortalContent, NgtArgs],
@@ -63,11 +63,12 @@ class DefaultFBOStory {
 		return scene;
 	});
 
-	target = injectNgtsFBO(() => ({ width: this.inputs.select('fboParams')() }));
+	private target = injectNgtsFBO(() => ({ width: this.inputs.select('fboParams')() }));
+	texture = computed(() => this.target()?.texture);
 
 	constructor() {
 		injectBeforeRender((state) => {
-			const [camera, target, scene] = [this.cameraRef.nativeElement, this.target.nativeElement, this.scene()];
+			const [camera, target, scene] = [this.cameraRef.nativeElement, this.target(), this.scene()];
 			if (!target) return;
 			camera.position.z = 5 + Math.sin(state.clock.getElapsedTime() * 1.5) * 2;
 			state.gl.setRenderTarget(target);

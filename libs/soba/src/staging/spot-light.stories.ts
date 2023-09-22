@@ -115,7 +115,7 @@ class ShadowsSpotLightStory {
 @Component({
 	standalone: true,
 	template: `
-		<ng-container *ngIf="depthBuffer.nativeElement as depthBuffer">
+		<ng-container *ngIf="depthBuffer() as depthBuffer">
 			<ngts-spot-light
 				[penumbra]="0.5"
 				[depthBuffer]="depthBuffer"

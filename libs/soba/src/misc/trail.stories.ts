@@ -62,8 +62,8 @@ class InjectNgtsTrailInstanceStory {
 		});
 
 		injectBeforeRender(() => {
-			const [instanced, positions] = [this.instancedRef.nativeElement, this.positions.nativeElement];
-			if (!instanced || !positions) return;
+			const [instanced, positions] = [this.instancedRef.nativeElement, this.positions()];
+			if (!instanced) return;
 
 			for (let i = 0; i < 1000; i += 1) {
 				const x = positions.slice(i * 3, i * 3 + 3);
@@ -130,28 +130,3 @@ const canvasOptions = makeCanvasOptions({ camera: { position: [0, 0, 5] } });
 export const Default = makeStoryFunction(DefaultTrailStory, canvasOptions);
 export const TrailsWithInstance = makeStoryFunction(InjectNgtsTrailInstanceStory, canvasOptions);
 export const TrailWithFloat = makeStoryFunction(TrailFloatStory, canvasOptions);
-
-// function UseTrailFloat() {
-//   const ref = React.useRef(null!)
-//   return (
-//     <>
-//       <Trail
-//         width={1}
-//         length={4}
-//         color={'#F8D628'}
-//         attenuation={(t: number) => {
-//           return t * t
-//         }}
-//         target={ref}
-//       />
-//       <Float speed={5} floatIntensity={10} ref={ref}>
-//         <Sphere args={[0.1, 32, 32]} position-x={0}>
-//           <meshNormalMaterial />
-//         </Sphere>
-//       </Float>
-//     </>
-//   )
-// }
-//
-// export const TrailFloat = () => <UseTrailFloat />
-// TrailFloat.storyName = 'Trail with Ref target'
