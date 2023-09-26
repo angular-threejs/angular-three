@@ -1,5 +1,13 @@
 
 
+## [2.0.0-beta.39](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.38...2.0.0-beta.39) (2023-09-26)
+
+
+### Features
+
+* **core:** update ngxtension ([f3bbd0c](https://github.com/angular-threejs/angular-three/commit/f3bbd0cf7aa37620a309e0222444171c3d48c1c1))
+* **core:** update nx ([3e55988](https://github.com/angular-threejs/angular-three/commit/3e559884557e68d1cff7c87ce38618541bb86526))
+
 ## [2.0.0-beta.38](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.37...2.0.0-beta.38) (2023-09-22)
 
 
