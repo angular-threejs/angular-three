@@ -1,4 +1,5 @@
 import type { NgtShaderMaterial } from 'angular-three';
+import { revision } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 import { shaderMaterial } from '../shader-material/shader-material';
 
@@ -74,7 +75,7 @@ export const GridMaterial = shaderMaterial(
       if (gl_FragColor.a <= 0.0) discard;
 
       #include <tonemapping_fragment>
-      #include <${parseInt(THREE.REVISION.replace(/\D+/g, '')) >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
+      #include <${revision >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
     }
   `,
 );

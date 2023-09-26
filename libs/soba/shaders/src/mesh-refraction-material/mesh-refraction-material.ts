@@ -1,6 +1,7 @@
 // Author: N8Programs
 // https://github.com/N8python/diamonds
 
+import { revision } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 // @ts-expect-error: shaderIntersectFunction is available but typescript complains
 import { MeshBVHUniformStruct, shaderIntersectFunction, shaderStructs } from 'three-mesh-bvh';
@@ -168,6 +169,6 @@ export const MeshRefractionMaterial = shaderMaterial(
     float nFresnel = fresnelFunc(viewDirection, normal) * fresnel;
     gl_FragColor = vec4(mix(finalColor, vec3(1.0), nFresnel), 1.0);
     #include <tonemapping_fragment>
-    #include <${parseInt(THREE.REVISION.replace(/\D+/g, '')) >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
+    #include <${revision >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
   }`,
 );

@@ -21,13 +21,16 @@ export function injectNgtsTextureLoader<TInput extends string[] | string | Recor
 		effect(() => {
 			const textures = result();
 			if (!textures) return;
-			const array = Array.isArray(textures)
-				? textures
-				: textures instanceof THREE.Texture
-				? [textures]
-				: Object.values(textures);
-			if (onLoad) onLoad(array);
-			array.forEach(store.get('gl').initTexture);
+			const gl = store.get('gl');
+			if ('initTexture' in gl) {
+				const array = Array.isArray(textures)
+					? textures
+					: textures instanceof THREE.Texture
+					? [textures]
+					: Object.values(textures);
+				if (onLoad) onLoad(array);
+				array.forEach(store.get('gl').initTexture);
+			}
 		});
 
 		return result;

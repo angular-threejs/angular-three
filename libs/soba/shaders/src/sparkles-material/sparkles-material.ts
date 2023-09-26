@@ -1,5 +1,5 @@
 import type { NgtShaderMaterial } from 'angular-three';
-import * as THREE from 'three';
+import { revision } from 'angular-three-soba/utils';
 import { shaderMaterial } from '../shader-material/shader-material';
 
 export const SparklesMaterial = shaderMaterial(
@@ -33,7 +33,7 @@ export const SparklesMaterial = shaderMaterial(
       float strength = 0.05 / distanceToCenter - 0.1;
       gl_FragColor = vec4(vColor, strength * vOpacity);
       #include <tonemapping_fragment>
-      #include <${parseInt(THREE.REVISION.replace(/\D+/g, '')) >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
+      #include <${revision >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
     }`,
 );
 

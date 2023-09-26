@@ -1,3 +1,4 @@
+import { revision } from 'angular-three-soba/utils';
 import { NoBlending, ShaderMaterial, Uniform, Vector2 } from 'three';
 
 export class ConvolutionMaterial extends ShaderMaterial {
@@ -53,7 +54,7 @@ export class ConvolutionMaterial extends ShaderMaterial {
 
           #include <dithering_fragment>
           #include <tonemapping_fragment>
-          #include <encodings_fragment>
+          #include <${revision >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
         }`,
 			vertexShader: `uniform vec2 texelSize;
         uniform vec2 halfTexelSize;

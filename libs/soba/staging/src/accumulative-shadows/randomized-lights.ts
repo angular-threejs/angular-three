@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect } from '@angular/core';
 import { NgtArgs, extend, injectNgtRef, signalStore, type NgtGroup } from 'angular-three';
+import { revision } from 'angular-three-soba/utils';
 import { Repeat } from 'ngxtension/repeat';
 import * as THREE from 'three';
 import { DirectionalLight, Group, OrthographicCamera, Vector2 } from 'three';
@@ -76,7 +77,7 @@ export class NgtsRandomizedLights {
 		position: [0, 0, 0],
 		radius: 1,
 		amount: 8,
-		intensity: parseInt(THREE.REVISION.replace(/\D+/g, '')) >= 155 ? Math.PI : 1,
+		intensity: revision >= 155 ? Math.PI : 1,
 		ambient: 0.5,
 	});
 	Math = Math;

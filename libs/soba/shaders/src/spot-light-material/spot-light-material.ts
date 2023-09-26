@@ -1,4 +1,5 @@
 import type { NgtShaderMaterial } from 'angular-three';
+import { revision } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 
 export class SpotLightMaterial extends THREE.ShaderMaterial {
@@ -80,7 +81,7 @@ export class SpotLightMaterial extends THREE.ShaderMaterial {
         gl_FragColor = vec4(lightColor, intensity * opacity);
 
         #include <tonemapping_fragment>
-	      #include <${parseInt(THREE.REVISION.replace(/\D+/g, '')) >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
+	      #include <${revision >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
       }`,
 		});
 	}

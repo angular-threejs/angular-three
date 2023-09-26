@@ -1,3 +1,4 @@
+import { revision } from 'angular-three-soba/utils';
 import * as THREE from 'three';
 import { shaderMaterial } from '../shader-material/shader-material';
 
@@ -30,6 +31,6 @@ export const CausticsProjectionMaterial = shaderMaterial(
     vec3 back = texture2D(causticsTextureB, lightSpacePos.xy).rgb;
     gl_FragColor = vec4((front + back) * color, 1.0);
     #include <tonemapping_fragment>
-    #include <${parseInt(THREE.REVISION.replace(/\D+/g, '')) >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
+    #include <${revision >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
    }`,
 );
