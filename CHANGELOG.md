@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.40](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.39...2.0.0-beta.40) (2023-09-27)
+
+
+### Bug Fixes
+
+* **core:** fix core type for loader ([9c741ea](https://github.com/angular-threejs/angular-three/commit/9c741eaaad6b95847cd15ca580592d1693c7d5d3))
+
 ## [2.0.0-beta.39](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.38...2.0.0-beta.39) (2023-09-26)
 
 
