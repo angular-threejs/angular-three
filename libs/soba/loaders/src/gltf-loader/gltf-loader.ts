@@ -1,5 +1,6 @@
 import type { Injector, Signal } from '@angular/core';
 import { injectNgtLoader, type NgtLoaderResults, type NgtObjectMap } from 'angular-three';
+import { assertInjector } from 'ngxtension/assert-injector';
 import { DRACOLoader, GLTFLoader, MeshoptDecoder, type GLTF } from 'three-stdlib';
 
 let dracoLoader: DRACOLoader | null = null;
@@ -29,7 +30,7 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 
 export type NgtsGLTF<T extends Partial<NgtObjectMap>> = GLTF & NgtObjectMap & T;
 
-export function injectNgtsGLTFLoader<TUrl extends string | string[] | Record<string, string>>(
+function _injectNgtsGLTFLoader<TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -43,6 +44,7 @@ export function injectNgtsGLTFLoader<TUrl extends string | string[] | Record<str
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
+	injector = assertInjector(_injectNgtsGLTFLoader, injector);
 	return injectNgtLoader(() => GLTFLoader, path, {
 		// TODO: fix "as any" when three-stdlib is updated with THREE 0.156
 		extensions: _extensions(useDraco, useMeshOpt, extensions) as any,
@@ -50,7 +52,7 @@ export function injectNgtsGLTFLoader<TUrl extends string | string[] | Record<str
 	});
 }
 
-injectNgtsGLTFLoader['preload'] = <TUrl extends string | string[] | Record<string, string>>(
+_injectNgtsGLTFLoader.preload = <TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -62,8 +64,11 @@ injectNgtsGLTFLoader['preload'] = <TUrl extends string | string[] | Record<strin
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ) => {
-	(injectNgtLoader as any)['preload'](() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions));
+	injectNgtLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions) as any);
 };
-injectNgtsGLTFLoader['setDecoderPath'] = (path: string) => {
+
+_injectNgtsGLTFLoader.setDecoderPath = (path: string) => {
 	decoderPath = path;
 };
+
+export const injectNgtsGLTFLoader = _injectNgtsGLTFLoader;

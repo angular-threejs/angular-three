@@ -83,7 +83,7 @@ function load<
 	};
 }
 
-export function injectNgtLoader<
+function _injectNgtLoader<
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
 	TLoaderConstructor extends NgtLoaderProto<TData>,
@@ -101,7 +101,7 @@ export function injectNgtLoader<
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null> {
-	injector = assertInjector(injectNgtLoader, injector);
+	injector = assertInjector(_injectNgtLoader, injector);
 	const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null>(
 		null,
 	);
@@ -132,7 +132,7 @@ export function injectNgtLoader<
 	});
 }
 
-injectNgtLoader['preload'] = <
+_injectNgtLoader.preload = <
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
 	TLoaderConstructor extends NgtLoaderProto<TData>,
@@ -144,6 +144,9 @@ injectNgtLoader['preload'] = <
 	Promise.all(load(loaderConstructorFactory, inputs, { extensions })());
 };
 
-injectNgtLoader['destroy'] = () => {
+_injectNgtLoader.destroy = () => {
 	cached.clear();
 };
+
+export type NgtInjectedLoader = typeof _injectNgtLoader;
+export const injectNgtLoader: NgtInjectedLoader = _injectNgtLoader;

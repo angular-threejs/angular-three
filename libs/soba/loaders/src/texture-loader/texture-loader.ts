@@ -3,7 +3,7 @@ import { injectNgtLoader, injectNgtStore, type NgtLoaderResults } from 'angular-
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
-export function injectNgtsTextureLoader<TInput extends string[] | string | Record<string, string>>(
+function _injectNgtsTextureLoader<TInput extends string[] | string | Record<string, string>>(
 	input: () => TInput,
 	{
 		onLoad,
@@ -13,7 +13,7 @@ export function injectNgtsTextureLoader<TInput extends string[] | string | Recor
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TInput, THREE.Texture> | null> {
-	injector = assertInjector(injectNgtsTextureLoader, injector);
+	injector = assertInjector(_injectNgtsTextureLoader, injector);
 	return runInInjectionContext(injector, () => {
 		const store = injectNgtStore();
 		const result = injectNgtLoader(() => THREE.TextureLoader, input, { injector });
@@ -37,8 +37,8 @@ export function injectNgtsTextureLoader<TInput extends string[] | string | Recor
 	});
 }
 
-injectNgtsTextureLoader['preload'] = <TInput extends string[] | string | Record<string, string>>(
-	input: () => TInput,
-) => {
-	(injectNgtLoader as any).preload(() => THREE.TextureLoader, input);
+_injectNgtsTextureLoader.preload = <TInput extends string[] | string | Record<string, string>>(input: () => TInput) => {
+	injectNgtLoader.preload(() => THREE.TextureLoader, input);
 };
+
+export const injectNgtsTextureLoader = _injectNgtsTextureLoader;
