@@ -4,7 +4,7 @@ import { injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-th
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
-import { getUUID, subscribe } from './body';
+import { createSubscribe, getUUID } from './body';
 
 function isString(v: unknown): v is string {
 	return typeof v === 'string';
@@ -101,7 +101,7 @@ export function injectRaycastVehicle<TObject extends THREE.Object3D = THREE.Obje
 					});
 			},
 			sliding: {
-				subscribe: subscribe(instanceRef, worker(), subscriptions, 'sliding', undefined, 'vehicles'),
+				subscribe: createSubscribe(instanceRef, worker(), subscriptions, 'sliding', undefined, 'vehicles'),
 			},
 
 			remove: () => {

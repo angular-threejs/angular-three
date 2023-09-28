@@ -1,4 +1,5 @@
-import { Component, Type, ViewChild, ViewContainerRef, effect, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component, Type, ViewChild, ViewContainerRef, computed, effect, signal } from '@angular/core';
 import { extend } from 'angular-three';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
@@ -6,6 +7,7 @@ import { AviatorCanvas } from './aviator/canvas.component';
 import { BotCanvas } from './bot/canvas.component';
 import { CannonCanvas } from './cannon/canvas.component';
 import { SkyDivingCanvas } from './skydiving/canvas.component';
+import { gravity, isDebugging } from './states';
 import { VaporwareCanvas } from './vaporware/canvas.component';
 
 extend(THREE);
@@ -23,12 +25,20 @@ type AvailableCanvas = (typeof availableCanvases)[number];
 
 @Component({
 	standalone: true,
-	imports: [NgtsLoader],
+	imports: [NgtsLoader, NgIf],
 	selector: 'sandbox-root',
 	template: `
 		<ng-container #anchor />
 		<ngts-loader />
 		<button class="cycle" (click)="cycleCanvas()">Current canvas: {{ canvas() }}</button>
+		<ng-container *ngIf="showDebugging()">
+			<button class="cycle" style="left: 12rem" (click)="isDebugging.toggle()">
+				Is debugging? {{ isDebugging.isDebugging() }}
+			</button>
+			<button class="cycle" style="left: 22rem" (click)="gravity.change()">
+				{{ gravity.btnText() }}
+			</button>
+		</ng-container>
 	`,
 	host: {
 		'[style.--background]': 'background',
@@ -37,6 +47,9 @@ type AvailableCanvas = (typeof availableCanvases)[number];
 })
 export class AppComponent {
 	canvas = signal<AvailableCanvas>('cannon');
+	isDebugging = isDebugging;
+	gravity = gravity;
+	showDebugging = computed(() => this.canvas() === 'cannon');
 
 	@ViewChild('anchor', { static: true, read: ViewContainerRef }) vcr!: ViewContainerRef;
 

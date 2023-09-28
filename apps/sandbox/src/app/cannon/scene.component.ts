@@ -5,6 +5,7 @@ import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectBox, injectPlane } from 'angular-three-cannon/services';
+import { gravity, isDebugging } from '../states';
 
 @Component({
 	selector: 'app-plane',
@@ -55,8 +56,8 @@ export class Box {
 			[penumbra]="1"
 			[castShadow]="true"
 		/>
-		<ngtc-physics [gravity]="[0, 0, -25]" [iterations]="10">
-			<ngtc-debug color="white" [disabled]="true">
+		<ngtc-physics [gravity]="[0, 0, gravity.gravity()]" [iterations]="10">
+			<ngtc-debug color="white" [disabled]="!isDebugging.isDebugging()">
 				<app-plane [position]="[0, 0, -10]" />
 				<app-plane *ngIf="showPlane()" />
 				<app-box [position]="[1, 0, 1]" />
@@ -75,6 +76,8 @@ export class Box {
 export class CannonScene {
 	Math = Math;
 	showPlane = signal(true);
+	isDebugging = isDebugging;
+	gravity = gravity;
 
 	ngOnInit() {
 		setTimeout(() => {

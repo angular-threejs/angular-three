@@ -99,7 +99,7 @@ const quaternionToRotation = (callback: (v: Triplet) => void) => {
 
 let incrementingId = 0;
 
-export function subscribe<T extends SubscriptionName>(
+export function createSubscribe<T extends SubscriptionName>(
 	ref: ElementRef<THREE.Object3D>,
 	worker: CannonWorkerAPI,
 	subscriptions: Subscriptions,
@@ -236,14 +236,17 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 ): NgtcBodyReturn<TObject> {
 	injector = assertInjector(injectBody, injector);
 	return runInInjectionContext(injector, () => {
-		const bodyRef = ref || injectNgtRef<TObject>();
+		const [bodyRef, physicsApi, debugApi] = [
+			ref || injectNgtRef<TObject>(),
+			injectNgtcPhysicsApi(),
+			injectNgtcDebugApi({ optional: true }),
+		];
 
-		const physicsApi = injectNgtcPhysicsApi();
-		const debugApi = injectNgtcDebugApi({ optional: true });
-
-		const { add: debugAdd, remove: debugRemove } = debugApi || {};
-		const { refs, subscriptions, scaleOverrides, events, bodies } = physicsApi.get();
-		const worker = physicsApi.select('worker');
+		const [
+			{ add: addToDebug, remove: removeFromDebug },
+			{ refs, subscriptions, scaleOverrides, events, bodies },
+			worker,
+		] = [debugApi || {}, physicsApi.get(), physicsApi.select('worker')];
 
 		effect((onCleanup) => {
 			// register deps
@@ -277,7 +280,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 							object.setMatrixAt(i, temp.matrix);
 							object.instanceMatrix.needsUpdate = true;
 							refs[id] = object;
-							debugAdd?.(id, props, type);
+							addToDebug?.(id, props, type);
 							setupCollision(events, props, id);
 							return { ...props, args: argsFn(props.args) };
 					  })
@@ -285,7 +288,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 							const props = getPropsFn(i);
 							prepare(object, props);
 							refs[id] = object;
-							debugAdd?.(id, props, type);
+							addToDebug?.(id, props, type);
 							setupCollision(events, props, id);
 							return { ...props, args: argsFn(props.args) };
 					  });
@@ -302,7 +305,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 			onCleanup(() => {
 				uuid.forEach((id) => {
 					delete refs[id];
-					debugRemove?.(id);
+					removeFromDebug?.(id);
 					delete events[id];
 				});
 				currentWorker.removeBodies({ uuid });
@@ -322,7 +325,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 								uuid,
 							} as never);
 					},
-					subscribe: subscribe(bodyRef, worker(), subscriptions, type, index),
+					subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
 				};
 			};
 
@@ -337,7 +340,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 						const uuid = getUUID(bodyRef, index);
 						uuid && bodies[uuid] != null && worker().setQuaternion({ props: [x, y, z, w], uuid });
 					},
-					subscribe: subscribe(bodyRef, worker(), subscriptions, type, index),
+					subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
 				};
 			};
 
@@ -378,7 +381,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 						const uuid = getUUID(bodyRef, index);
 						uuid && bodies[uuid] != null && worker()[op]({ props: [x, y, z], uuid });
 					},
-					subscribe: subscribe(bodyRef, worker(), subscriptions, type, index),
+					subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
 				};
 			};
 
