@@ -22,6 +22,11 @@
 			"factory": "./src/generators/init-cannon/generator",
 			"schema": "./src/generators/init-cannon/schema.json",
 			"description": "Init Angular Three cannon with proper packages "
+		},
+		"rapier": {
+			"factory": "./src/generators/init-rapier/generator",
+			"schema": "./src/generators/init-rapier/schema.json",
+			"description": "Init Angular Three rapier with proper packages "
 		}
 	},
 	"schematics": {
@@ -44,6 +49,11 @@
 			"factory": "./src/generators/init-cannon/compat",
 			"schema": "./src/generators/init-cannon/schema.json",
 			"description": "Init Angular Three cannon with proper packages "
+		},
+		"rapier": {
+			"factory": "./src/generators/init-rapier/compat",
+			"schema": "./src/generators/init-rapier/schema.json",
+			"description": "Init Angular Three rapier with proper packages "
 		}
 	}
 }

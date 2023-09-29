@@ -1,5 +1,13 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed } from '@angular/core';
-import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender, injectNgtRef, signalStore } from 'angular-three';
+import {
+	NgtArgs,
+	NgtKey,
+	NgtPortal,
+	NgtPortalContent,
+	injectBeforeRender,
+	injectNgtRef,
+	signalStore,
+} from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { injectNgtsFBO, type NgtsFBOParams } from 'angular-three-soba/misc';
 import * as THREE from 'three';
@@ -29,7 +37,7 @@ class SpinningThing {
 	template: `
 		<ngts-perspective-camera [position]="[0, 0, 3]" [cameraRef]="cameraRef" />
 
-		<ngt-portal [container]="scene()" [autoRender]="false">
+		<ngt-portal *key="scene()" [container]="scene()" [autoRender]="false">
 			<fbo-spinning-thing *ngtPortalContent />
 		</ngt-portal>
 
@@ -38,7 +46,7 @@ class SpinningThing {
 			<ngt-mesh-standard-material [map]="texture()" />
 		</ngt-mesh>
 	`,
-	imports: [SpinningThing, NgtsPerspectiveCamera, NgtPortal, NgtPortalContent, NgtArgs],
+	imports: [SpinningThing, NgtsPerspectiveCamera, NgtPortal, NgtPortalContent, NgtArgs, NgtKey],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DefaultFBOStory {
@@ -56,6 +64,7 @@ class DefaultFBOStory {
 	}
 
 	private _color = this.inputs.select('color');
+	private _params = this.inputs.select('fboParams');
 
 	scene = computed(() => {
 		const scene = new THREE.Scene();
@@ -63,7 +72,7 @@ class DefaultFBOStory {
 		return scene;
 	});
 
-	private target = injectNgtsFBO(() => ({ width: this.inputs.select('fboParams')() }));
+	private target = injectNgtsFBO(() => ({ width: this._params() }));
 	texture = computed(() => this.target()?.texture);
 
 	constructor() {

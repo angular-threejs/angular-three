@@ -214,6 +214,7 @@ export class NgtPortal implements OnInit {
 		requestAnimationFrame(() => {
 			this.portalStore.set((injectState) => this.inject(this.parentStore.get(), injectState));
 		});
+
 		this.portalContentView = this.portalContentAnchor.createEmbeddedView(this.portalContentTemplate);
 		safeDetectChanges(this.portalContentView);
 		this.portalContentRendered = true;

@@ -138,7 +138,7 @@ export class NgtsHtmlWrapper {
 
 	private store = injectNgtStore();
 	private gl = this.store.select('gl');
-	private connected = this.store.select('events', 'connected', { equal: Object.is });
+	private connected = this.store.select('events', 'connected');
 	private viewport = this.store.select('viewport');
 	private scene = this.store.select('scene');
 	private camera = this.store.select('camera');

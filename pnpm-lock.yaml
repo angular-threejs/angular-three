@@ -38,6 +38,9 @@ dependencies:
   '@angular/router':
     specifier: 16.2.3
     version: 16.2.3(@angular/common@16.2.3)(@angular/core@16.2.3)(@angular/platform-browser@16.2.3)(rxjs@7.8.1)
+  '@dimforge/rapier3d-compat':
+    specifier: ^0.11.2
+    version: 0.11.2
   '@pmndrs/cannon-worker-api':
     specifier: ^2.4.0
     version: 2.4.0(three@0.156.1)
@@ -75,8 +78,8 @@ dependencies:
     specifier: ^3.1.6
     version: 3.1.6(three@0.156.1)
   ngxtension:
-    specifier: ^0.3.3
-    version: 0.3.3(@angular/common@16.2.3)(@angular/core@16.2.3)(rxjs@7.8.1)
+    specifier: ^0.4.0
+    version: 0.4.0(@angular/common@16.2.3)(@angular/core@16.2.3)(rxjs@7.8.1)
   nice-color-palettes:
     specifier: ^3.0.0
     version: 3.0.0
@@ -274,6 +277,9 @@ devDependencies:
   jsdom:
     specifier: ^22.1.0
     version: 22.1.0
+  jsonc-eslint-parser:
+    specifier: ^2.1.0
+    version: 2.3.0
   ng-packagr:
     specifier: 16.2.3
     version: 16.2.3(@angular/compiler-cli@16.2.3)(tailwindcss@3.3.3)(tslib@2.6.2)(typescript@5.1.6)
@@ -2694,6 +2700,10 @@ packages:
     dependencies:
       postcss-selector-parser: 6.0.13
     dev: true
+
+  /@dimforge/rapier3d-compat@0.11.2:
+    resolution: {integrity: sha512-vdWmlkpS3G8nGAzLuK7GYTpNdrkn/0NKCe0l1Jqxc7ZZOB3N0q9uG/Ap9l9bothWuAvxscIt0U97GVLr0lXWLg==}
+    dev: false
 
   /@discoveryjs/json-ext@0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -17200,8 +17210,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /ngxtension@0.3.3(@angular/common@16.2.3)(@angular/core@16.2.3)(rxjs@7.8.1):
-    resolution: {integrity: sha512-23v4MUV/Kswlb8HcYHHhDFMipmkdJT6D33umSdQTiwB5y7EGgT18ASiN5R9KdlGcIIzPM4w6veVS6q1KS2Aocw==}
+  /ngxtension@0.4.0(@angular/common@16.2.3)(@angular/core@16.2.3)(rxjs@7.8.1):
+    resolution: {integrity: sha512-Qp+rWdIvPQndzrA4Z7E9QZOm8gdmXCqvTFTRaYs5N0h2eO5fZ7yKQJcKyJ4LbbsCNcKYXO2ZkbPdl/C8NN60AA==}
     engines: {node: '>=16'}
     peerDependencies:
       '@angular/common': ^16.0.0

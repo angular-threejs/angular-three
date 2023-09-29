@@ -1,0 +1,38 @@
+{
+	"name": "angular-three-rapier",
+	"version": "0.0.0-replace",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/angular-threejs/angular-three/tree/main/libs/rapier"
+	},
+	"author": {
+		"name": "Chau Tran",
+		"email": "nartc7789@gmail.com",
+		"url": "https://nartc.me"
+	},
+	"description": "Cannon.js physics integration with Angular Three",
+	"keywords": [
+		"angular",
+		"threejs",
+		"renderer",
+		"rapier",
+		"physics"
+	],
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": " ^16.0.0",
+		"@angular/core": " ^16.0.0",
+		"@dimforge/rapier3d-compat": "0.11.2",
+		"angular-three": "^2.0.0",
+		"angular-three-soba": "^2.0.0",
+		"ngxtension": "^0.1.0",
+		"three": ">=0.148.0"
+	},
+	"dependencies": {
+		"tslib": "^2.3.0"
+	},
+	"sideEffects": false
+}

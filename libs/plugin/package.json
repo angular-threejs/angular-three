@@ -6,7 +6,8 @@
 		"packageGroup": [
 			"angular-three-soba",
 			"angular-three-postprocessing",
-			"angular-three-cannon"
+			"angular-three-cannon",
+			"angular-three-rapier"
 		]
 	},
 	"ng-update": {
@@ -14,7 +15,8 @@
 		"packageGroup": [
 			"angular-three-soba",
 			"angular-three-postprocessing",
-			"angular-three-cannon"
+			"angular-three-cannon",
+			"angular-three-rapier"
 		]
 	},
 	"dependencies": {

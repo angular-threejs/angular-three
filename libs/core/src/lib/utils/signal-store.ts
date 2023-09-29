@@ -146,6 +146,10 @@ export function signalStore<State extends object>(
 
 	const computedCache = new Map();
 
+	if (!options) {
+		options = { equal: Object.is };
+	}
+
 	if (typeof initialState === 'function') {
 		source = signal({} as State, options);
 		state = source.asReadonly();
@@ -180,5 +184,5 @@ function parseStoreOptions(keysAndOptions: any[]): [string[], CreateComputedOpti
 		return [keysAndOptions.slice(0, -1), keysAndOptions.at(-1)];
 	}
 
-	return [keysAndOptions];
+	return [keysAndOptions, { equal: Object.is }];
 }
