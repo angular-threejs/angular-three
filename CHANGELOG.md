@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.41](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.40...2.0.0-beta.41) (2023-10-04)
+
+
+### Features
+
+* **rapier:** add rapier ([ff76de7](https://github.com/angular-threejs/angular-three/commit/ff76de72eb57a9b299aceeaa760e00d677f101fd))
+
 ## [2.0.0-beta.40](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.39...2.0.0-beta.40) (2023-09-27)
 
 
