@@ -261,9 +261,13 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (state.frameloop !== frameloop) state.setFrameloop(frameloop);
 
 					isConfigured = true;
-
+				},
+				startInvalidate: () => {
 					invalidateRef?.destroy();
-					invalidateRef = effect(() => void store.state().invalidate(), { manualCleanup: true, injector });
+					return (invalidateRef = effect(() => void store.state().invalidate(), {
+						manualCleanup: true,
+						injector,
+					}));
 				},
 			};
 		};

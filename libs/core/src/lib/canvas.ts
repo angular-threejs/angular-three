@@ -262,9 +262,10 @@ export class NgtCanvas implements OnInit, OnChanges {
 						this.zone.runOutsideAngular(() => {
 							if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
 							this.configurator.configure({ ...inputs(), size: result });
+							this.configurator.startInvalidate();
 
 							if (this.glRef) {
-								this.cdr.detectChanges();
+								safeDetectChanges(this.cdr);
 							} else {
 								this.render();
 							}
@@ -346,7 +347,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 				for (const [key, value] of Object.entries(this.sceneGraphInputs)) {
 					this.glRef.setInput(key, value);
 				}
-				this.glRef.changeDetectorRef.detectChanges();
+				safeDetectChanges(this.glRef.changeDetectorRef);
 			}
 		});
 	}
