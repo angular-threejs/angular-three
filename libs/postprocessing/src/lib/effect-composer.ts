@@ -1,15 +1,5 @@
-import {
-	CUSTOM_ELEMENTS_SCHEMA,
-	Component,
-	Injector,
-	Input,
-	computed,
-	effect,
-	forwardRef,
-	inject,
-} from '@angular/core';
-import { extend, injectBeforeRender, injectNgtRef, injectNgtStore, signalStore } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Injector, Input, computed, effect, inject } from '@angular/core';
+import { createApiToken, extend, injectBeforeRender, injectNgtRef, injectNgtStore, signalStore } from 'angular-three';
 import {
 	DepthDownsamplingPass,
 	Effect,
@@ -39,10 +29,7 @@ export type NgtpEffectComposerState = {
 	scene?: THREE.Scene;
 };
 
-export const [injectNgtpEffectComposerApi, provideNgtpEffectComposerApi] = createInjectionToken(
-	(composer: NgtpEffectComposer) => composer.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtpEffectComposer)] },
-);
+export const [injectNgtpEffectComposerApi, provideNgtpEffectComposerApi] = createApiToken(() => NgtpEffectComposer);
 
 @Component({
 	selector: 'ngtp-effect-composer',

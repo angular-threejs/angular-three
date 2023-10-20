@@ -5,7 +5,6 @@ import {
 	ContentChild,
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
-	forwardRef,
 	inject,
 	Injector,
 	Input,
@@ -16,6 +15,7 @@ import {
 } from '@angular/core';
 import {
 	checkUpdate,
+	createApiToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -27,7 +27,6 @@ import {
 	type NgtRef,
 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { InstancedBufferAttribute, InstancedMesh } from 'three';
 import { PositionMesh } from './position-mesh';
@@ -60,10 +59,7 @@ const translation = /*@__PURE__*/ new THREE.Vector3();
 const rotation = /*@__PURE__*/ new THREE.Quaternion();
 const scale = /*@__PURE__*/ new THREE.Vector3();
 
-export const [injectNgtsInstancesApi, provideNgtsInstancesApi] = createInjectionToken(
-	(instances: NgtsInstances) => instances.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtsInstances)] },
-);
+export const [injectNgtsInstancesApi, provideNgtsInstancesApi] = createApiToken(() => NgtsInstances);
 
 @Component({
 	selector: 'ngts-instance',

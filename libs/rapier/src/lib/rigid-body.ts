@@ -1,14 +1,10 @@
-import { Component, forwardRef } from '@angular/core';
-import { extend } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { Component } from '@angular/core';
+import { createApiToken, extend } from 'angular-three';
 import { Object3D } from 'three';
 
 extend({ Object3D });
 
-export const [injectNgtrRigidBodyApi, provideNgtrRigidBodyApi] = createInjectionToken(
-	(body: NgtrRigidBody) => body.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtrRigidBody)] },
-);
+export const [injectNgtrRigidBodyApi, provideNgtrRigidBodyApi] = createApiToken(() => NgtrRigidBody);
 
 @Component({
 	selector: 'ngtr-rigid-body',

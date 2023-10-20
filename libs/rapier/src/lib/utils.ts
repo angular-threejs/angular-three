@@ -1,4 +1,4 @@
-import { effect, runInInjectionContext, type Injector } from '@angular/core';
+import { effect, type Injector } from '@angular/core';
 import type { Quaternion as RapierQuaternion, Vector3 as RapierVector3 } from '@dimforge/rapier3d-compat';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -10,8 +10,7 @@ export const rapierVector3ToVector3 = ({ x, y, z }: RapierVector3) => _vector3.s
 export const rapierQuaternionToQuaternion = ({ x, y, z, w }: RapierQuaternion) => _quaternion.set(x, y, z, w);
 
 export function injectNgtrRaf(callback: (dt: number) => void, injector?: Injector) {
-	injector = assertInjector(injectNgtrRaf, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtrRaf, injector, () => {
 		let [raf, lastFrame] = [0, 0];
 
 		effect((onCleanup) => {

@@ -8,7 +8,6 @@ import {
 	TemplateRef,
 	computed,
 	effect,
-	runInInjectionContext,
 	untracked,
 	type Injector,
 	type Signal,
@@ -49,8 +48,7 @@ export function injectNgtsCubeCamera(
 	cubeCameraState: () => Partial<NgtsCubeCameraState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjector(injectNgtsCubeCamera, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsCubeCamera, injector, () => {
 		const state = computed(() => ({ ...defaultCubeCameraState, ...cubeCameraState() }));
 		const resolution = computed(() => state().resolution);
 		const near = computed(() => state().near);

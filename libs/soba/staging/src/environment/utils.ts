@@ -1,13 +1,4 @@
-import {
-	ChangeDetectorRef,
-	DestroyRef,
-	ElementRef,
-	Injector,
-	computed,
-	effect,
-	inject,
-	runInInjectionContext,
-} from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, ElementRef, Injector, computed, effect, inject } from '@angular/core';
 import { injectNgtLoader, injectNgtRef, is, safeDetectChanges } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { CubeReflectionMapping, CubeTexture, CubeTextureLoader, EquirectangularReflectionMapping } from 'three';
@@ -49,8 +40,7 @@ type NgtsInjectEnvironmentParams = Partial<
 const CUBEMAP_ROOT = 'https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/';
 
 export function injectNgtsEnvironment(paramsFactory: () => Partial<NgtsInjectEnvironmentParams>, injector?: Injector) {
-	injector = assertInjector(injectNgtsEnvironment, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsEnvironment, injector, () => {
 		const textureRef = injectNgtRef<THREE.Texture | CubeTexture>();
 		const cdr = inject(ChangeDetectorRef);
 

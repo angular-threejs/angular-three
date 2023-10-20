@@ -1,4 +1,4 @@
-import { DestroyRef, effect, inject, runInInjectionContext, type EffectRef, type Injector } from '@angular/core';
+import { DestroyRef, effect, inject, type EffectRef, type Injector } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import type { NgtCanvasInputs } from './canvas';
@@ -17,9 +17,7 @@ const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
 export const roots = new Map<HTMLCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
-	injector = assertInjector(injectCanvasRootInitializer, injector);
-
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectCanvasRootInitializer, injector, () => {
 		const injectedStore = injectNgtStore();
 		const loop = injectNgtLoop();
 		const destroyRef = inject(DestroyRef);
@@ -261,13 +259,13 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (state.frameloop !== frameloop) state.setFrameloop(frameloop);
 
 					isConfigured = true;
-				},
-				startInvalidate: () => {
-					invalidateRef?.destroy();
-					return (invalidateRef = effect(() => void store.state().invalidate(), {
-						manualCleanup: true,
-						injector,
-					}));
+					queueMicrotask(() => {
+						invalidateRef?.destroy();
+						invalidateRef = effect(() => void store.state().invalidate(), {
+							manualCleanup: true,
+							injector,
+						});
+					});
 				},
 			};
 		};

@@ -254,29 +254,24 @@ export class NgtCanvas implements OnInit, OnChanges {
 			this.resizeEffectRef?.destroy();
 
 			const inputs = this.inputs.select();
-			// NOTE: go back into zone so that effect runs
 			// TODO: Double-check when effect is made not depended on zone
-			this.resizeEffectRef = this.zone.run(() =>
-				effect(
-					() => {
-						this.zone.runOutsideAngular(() => {
-							if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
-							this.configurator.configure({ ...inputs(), size: result });
-							this.configurator.startInvalidate();
+			this.resizeEffectRef = effect(
+				() => {
+					if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
+					this.configurator.configure({ ...inputs(), size: result });
 
-							if (this.glRef) {
-								safeDetectChanges(this.cdr);
-							} else {
-								this.render();
-							}
-						});
-					},
-					{ manualCleanup: true, injector: this.injector },
-				),
+					if (this.glRef) {
+						safeDetectChanges(this.cdr);
+					} else {
+						this.render();
+					}
+				},
+				{ manualCleanup: true, injector: this.injector },
 			);
 		}
 	}
 
+	// NOTE: render outside of zone
 	private render() {
 		this.glEnvironmentInjector?.destroy();
 		this.glRef?.destroy();
@@ -284,8 +279,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 		// Flag the canvas active, rendering will now begin
 		this.store.set((state) => ({ internal: { ...state.internal, active: true } }));
 
-		const inputs = this.inputs.get();
-		const state = this.store.get();
+		const [inputs, state] = [this.inputs.get(), this.store.get()];
 
 		// connect to event source
 		state.events.connect?.(
@@ -300,11 +294,11 @@ export class NgtCanvas implements OnInit, OnChanges {
 		if (inputs.eventPrefix) {
 			state.setEvents({
 				compute: (event, store) => {
-					const innerState = store.get();
+					const { pointer, raycaster, camera, size } = store.get();
 					const x = event[(inputs.eventPrefix + 'X') as keyof NgtDomEvent] as number;
 					const y = event[(inputs.eventPrefix + 'Y') as keyof NgtDomEvent] as number;
-					innerState.pointer.set((x / innerState.size.width) * 2 - 1, -(y / innerState.size.height) * 2 + 1);
-					innerState.raycaster.setFromCamera(innerState.pointer, innerState.camera);
+					pointer.set((x / size.width) * 2 - 1, -(y / size.height) * 2 + 1);
+					raycaster.setFromCamera(pointer, camera);
 				},
 			});
 		}
@@ -337,7 +331,7 @@ export class NgtCanvas implements OnInit, OnChanges {
 		const originalDetectChanges = this.cdr.detectChanges.bind(this.cdr);
 		this.cdr.detectChanges = () => {
 			originalDetectChanges();
-			safeDetectChanges(this.glRef?.changeDetectorRef);
+			this.glRef && safeDetectChanges(this.glRef.changeDetectorRef);
 		};
 	}
 

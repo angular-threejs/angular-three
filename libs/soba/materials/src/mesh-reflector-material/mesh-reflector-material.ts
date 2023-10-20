@@ -271,7 +271,7 @@ export class NgtsMeshReflectorMaterial {
 
 	private onBeforeRender(state: NgtRenderState) {
 		if (!this.materialRef.nativeElement) return;
-		const parent = getLocalState(this.materialRef.nativeElement).parent?.();
+		const parent = getLocalState(this.materialRef.nativeElement).instanceStore?.get('parent');
 		if (!parent) return;
 
 		const { gl, scene } = state;
@@ -298,7 +298,7 @@ export class NgtsMeshReflectorMaterial {
 	}
 
 	private beforeRender(state: NgtRenderState) {
-		const parent = getLocalState(this.materialRef.nativeElement).parent?.();
+		const parent = getLocalState(this.materialRef.nativeElement).instanceStore?.get('parent');
 		if (!parent) return;
 
 		const { camera } = state;

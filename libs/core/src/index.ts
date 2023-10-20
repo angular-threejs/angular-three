@@ -16,6 +16,7 @@ export * from './lib/three-types';
 export * from './lib/types';
 export * from './lib/utils/apply-props';
 export { createAttachFunction } from './lib/utils/attach';
+export * from './lib/utils/create-api-token';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
 export * from './lib/utils/safe-detect-changes';

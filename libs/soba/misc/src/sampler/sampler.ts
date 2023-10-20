@@ -1,14 +1,4 @@
-import {
-	CUSTOM_ELEMENTS_SCHEMA,
-	Component,
-	Injector,
-	Input,
-	computed,
-	effect,
-	runInInjectionContext,
-	signal,
-	untracked,
-} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Injector, Input, computed, effect, signal, untracked } from '@angular/core';
 import { checkUpdate, extend, injectNgtRef, is, signalStore, type NgtGroup, type NgtRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -63,8 +53,7 @@ export function injectNgtsSurfaceSampler(
 	surfaceSamplerState: () => (Partial<Omit<NgtsSurfaceSamplerState, 'mesh'>> & { mesh: NgtRef<THREE.Mesh> }) | null,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjector(injectNgtsSurfaceSampler, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsSurfaceSampler, injector, () => {
 		const state = computed(() => ({ ...defaultState, ...(surfaceSamplerState() || {}) }));
 		const _buffer = signal(
 			(() => {

@@ -9,12 +9,12 @@ import {
 	TemplateRef,
 	computed,
 	effect,
-	forwardRef,
 	type Signal,
 } from '@angular/core';
 import {
 	NgtPortal,
 	NgtPortalContent,
+	createApiToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -24,7 +24,6 @@ import {
 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, Matrix4, Object3D, OrthographicCamera, Quaternion, Vector3 } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
@@ -58,10 +57,7 @@ declare global {
 	}
 }
 
-export const [injectNgtsGizmoHelperApi, provideNgtsGizmoHelperApi] = createInjectionToken(
-	(gizmoHelper: NgtsGizmoHelper) => gizmoHelper.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtsGizmoHelper)] },
-);
+export const [injectNgtsGizmoHelperApi, provideNgtsGizmoHelperApi] = createApiToken(() => NgtsGizmoHelper);
 
 @Component({
 	selector: 'ngts-gizmo-helper',

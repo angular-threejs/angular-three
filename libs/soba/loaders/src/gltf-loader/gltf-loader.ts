@@ -44,12 +44,12 @@ function _injectNgtsGLTFLoader<TUrl extends string | string[] | Record<string, s
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
-	injector = assertInjector(_injectNgtsGLTFLoader, injector);
-	return injectNgtLoader(() => GLTFLoader, path, {
-		// TODO: fix "as any" when three-stdlib is updated with THREE 0.156
-		extensions: _extensions(useDraco, useMeshOpt, extensions) as any,
-		injector,
-	});
+	return assertInjector(_injectNgtsGLTFLoader, injector, () =>
+		injectNgtLoader(() => GLTFLoader, path, {
+			// TODO: fix "as any" when three-stdlib is updated with THREE 0.156
+			extensions: _extensions(useDraco, useMeshOpt, extensions) as any,
+		}),
+	);
 }
 
 _injectNgtsGLTFLoader.preload = <TUrl extends string | string[] | Record<string, string>>(
@@ -71,4 +71,5 @@ _injectNgtsGLTFLoader.setDecoderPath = (path: string) => {
 	decoderPath = path;
 };
 
-export const injectNgtsGLTFLoader = _injectNgtsGLTFLoader;
+export type NgtsGLTFLoader = typeof _injectNgtsGLTFLoader;
+export const injectNgtsGLTFLoader: NgtsGLTFLoader = _injectNgtsGLTFLoader;

@@ -4,7 +4,6 @@ import {
 	Input,
 	computed,
 	effect,
-	runInInjectionContext,
 	signal,
 	untracked,
 	type Injector,
@@ -59,8 +58,7 @@ export function injectNgtsTrail(
 	settingsFactory: () => Partial<NgtsTrailSettings>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjector(injectNgtsTrail, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsTrail, injector, () => {
 		const _points = signal<Float32Array>(new Float32Array());
 		let frameCount = 0;
 

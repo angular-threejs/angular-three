@@ -11,7 +11,6 @@ import {
 	makeEnvironmentProviders,
 	provideZoneChangeDetection,
 	signal,
-	untracked,
 	type Renderer2,
 	type RendererType2,
 } from '@angular/core';
@@ -264,7 +263,7 @@ class NgtRenderer implements Renderer2 {
 		// if both are three instances, straightforward case
 		if (pRS[NgtRendererClassId.type] === 'three' && cRS?.[NgtRendererClassId.type] === 'three') {
 			// if child already attached to a parent, skip
-			if (getLocalState(newChild).parent && untracked(getLocalState(newChild).parent)) return;
+			if (getLocalState(newChild).instanceStore?.get('parent')) return;
 			// attach THREE child
 			attachThreeChild(parent, newChild);
 			// here, we handle the special case of if the parent has a compoundParent, which means this child is part of a compound parent template
@@ -480,7 +479,7 @@ class NgtRenderer implements Renderer2 {
 		const isChildCompounded = cRS[NgtRendererClassId.compounded];
 
 		// if child is three but haven't been attached to a parent yet
-		const isDanglingThreeChild = cType === 'three' && !untracked(getLocalState(child).parent);
+		const isDanglingThreeChild = cType === 'three' && !getLocalState(child).instanceStore?.get('parent');
 		// or both parent and child are DOM elements
 		// or they are compound AND haven't had a THREE instance yet
 		const isParentStillDOM = pType === 'dom' || (pType === 'compound' && !isParentCompounded);

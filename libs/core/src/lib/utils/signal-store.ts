@@ -120,7 +120,7 @@ const selector =
 		}
 		const [keys, options] = parseStoreOptions(keysAndOptions);
 		const joinedKeys = keys.join('-');
-		const cachedKeys = joinedKeys.concat(options ? JSON.stringify(options) : '');
+		const cachedKeys = joinedKeys.concat(JSON.stringify(options));
 
 		if (!computedCache.has(cachedKeys)) {
 			computedCache.set(
@@ -171,7 +171,7 @@ export function signalStore<State extends object>(
 
 	// NOTE: internal _snapshot to debug current state
 	Object.defineProperty(store, '_snapshot', {
-		get: state,
+		get: untracked.bind({}, state),
 		configurable: false,
 		enumerable: false,
 	});

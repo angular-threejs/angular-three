@@ -1,13 +1,5 @@
 import { NgIf } from '@angular/common';
-import {
-	CUSTOM_ELEMENTS_SCHEMA,
-	Component,
-	computed,
-	effect,
-	inject,
-	runInInjectionContext,
-	type Injector,
-} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, computed, effect, inject, type Injector } from '@angular/core';
 import { checkUpdate, extend, injectBeforeRender, injectNgtRef, type NgtInjectedRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -28,8 +20,7 @@ function injectShadowMeshCommon(
 	distance: () => number,
 	injector?: Injector,
 ) {
-	injector = assertInjector(injectShadowMeshCommon, injector);
-	runInInjectionContext(injector, () => {
+	return assertInjector(injectShadowMeshCommon, injector, () => {
 		const pos = new THREE.Vector3();
 		const dir = new THREE.Vector3();
 

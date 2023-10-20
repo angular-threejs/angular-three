@@ -1,4 +1,4 @@
-import { computed, effect, runInInjectionContext, type Injector } from '@angular/core';
+import { computed, effect, type Injector } from '@angular/core';
 import type { NgtShaderMaterial } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -233,8 +233,7 @@ export function injectNgtsWireframeUniforms(
 	stateFactory: () => Partial<WireframeMaterialState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjector(injectNgtsWireframeUniforms, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsWireframeUniforms, injector, () => {
 		const uniforms = uniformsFactory();
 		const state = computed(() => stateFactory());
 		const fillOpacity = computed(() => state().fillOpacity);

@@ -1,4 +1,3 @@
-import { untracked } from '@angular/core';
 import * as THREE from 'three';
 import { getLocalState, invalidateInstance, type NgtInstanceNode } from '../instance';
 import type { NgtAnyRecord } from '../types';
@@ -31,8 +30,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 	// if props is empty
 	if (!Object.keys(props).length) return instance;
 
-	// Filter equals, events and reserved props
-	// filter equals, events , and reserved props
+	// filter equals, and reserved props
 	const localState = getLocalState(instance);
 	const rootState = localState.store?.get();
 	const changes = diffProps(instance, props);
@@ -117,10 +115,10 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 		invalidateInstance(instance);
 	}
 
-	const instanceHandlers = localState.eventCount;
-	const parent = localState.parent ? untracked(localState.parent) : null;
+	const instanceHandlersCount = localState.eventCount;
+	const parent = localState.instanceStore?.get('parent');
 
-	if (parent && rootState.internal && instance['raycast'] && instanceHandlers !== localState.eventCount) {
+	if (parent && rootState.internal && instance['raycast'] && instanceHandlersCount !== localState.eventCount) {
 		// Pre-emptively remove the instance from the interaction manager
 		const index = rootState.internal.interaction.indexOf(instance);
 		if (index > -1) rootState.internal.interaction.splice(index, 1);

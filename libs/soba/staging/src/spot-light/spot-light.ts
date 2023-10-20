@@ -1,7 +1,6 @@
 import { NgIf } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, forwardRef, signal } from '@angular/core';
-import { NgtArgs, extend, injectNgtRef, type NgtSpotLight } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, signal } from '@angular/core';
+import { NgtArgs, createApiToken, extend, injectNgtRef, type NgtSpotLight } from 'angular-three';
 import { Group, SpotLight, SpotLightHelper } from 'three';
 import { NgtsSpotLightInput, type NgtsSpotLightInputState } from './spot-light-input';
 import { NgtsVolumetricMesh } from './volumetric-mesh';
@@ -17,10 +16,7 @@ declare global {
 	}
 }
 
-export const [injectNgtsSpotLightApi, provideNgtsSpotLightApi] = createInjectionToken(
-	(spotLight: NgtsSpotLight) => ({ spotLight: spotLight.spotLightRef, debug: spotLight.debug }),
-	{ isRoot: false, deps: [forwardRef(() => NgtsSpotLight)] },
-);
+export const [injectNgtsSpotLightApi, provideNgtsSpotLightApi] = createApiToken(() => NgtsSpotLight);
 
 @Component({
 	selector: 'ngts-spot-light',
@@ -54,6 +50,11 @@ export class NgtsSpotLight extends NgtsSpotLightInput {
 	@Input({ alias: 'volumetric' }) set _volumetric(volumetric: boolean) {
 		this.volumetric.set(volumetric);
 	}
+
+	api = {
+		debug: this.debug,
+		spotLight: this.spotLightRef,
+	};
 
 	constructor() {
 		super();

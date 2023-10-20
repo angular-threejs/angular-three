@@ -1,4 +1,4 @@
-import { InjectionToken, Injector, Type, getDebugNode, untracked } from '@angular/core';
+import { InjectionToken, Injector, Type, getDebugNode } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import type { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
@@ -236,7 +236,7 @@ export class NgtRendererStore {
 			return;
 		}
 
-		const parent = untracked(getLocalState(node).parent) || rS[NgtRendererClassId.parent];
+		const parent = getLocalState(node)?.instanceStore.get('parent') || rS[NgtRendererClassId.parent];
 
 		// [rawValue]
 		if (getLocalState(node).isRaw && name === SPECIAL_PROPERTIES.VALUE) {
@@ -351,12 +351,9 @@ export class NgtRendererStore {
 			rS[NgtRendererClassId.compoundParent] = undefined!;
 
 			const localState = getLocalState(node);
-			if (localState.objects) {
-				untracked(localState.objects).forEach((obj) => this.destroy(obj, parent));
-			}
-
-			if (localState.nonObjects) {
-				untracked(localState.nonObjects).forEach((obj) => this.destroy(obj, parent));
+			if (localState.instanceStore) {
+				localState.instanceStore.get('objects').forEach((obj) => this.destroy(obj, parent));
+				localState.instanceStore.get('nonObjects').forEach((obj) => this.destroy(obj, parent));
 			}
 
 			if (localState.afterUpdate) localState.afterUpdate.complete();
@@ -434,8 +431,9 @@ export class NgtRendererStore {
 
 	private updateNativeProps(node: NgtInstanceNode, key: string, value: any) {
 		const localState = getLocalState(node);
-		if (!localState || !localState.nativeProps) return;
-		localState.nativeProps.set({ [key]: value });
+		if (localState.instanceStore) {
+			localState.setNativeProps(key, value);
+		}
 	}
 
 	private firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {

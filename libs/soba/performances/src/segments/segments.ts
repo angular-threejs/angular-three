@@ -6,7 +6,6 @@ import {
 	NgZone,
 	computed,
 	effect,
-	forwardRef,
 	inject,
 	signal,
 	untracked,
@@ -14,6 +13,7 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
+	createApiToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -23,7 +23,6 @@ import {
 	type NgtRef,
 	type NgtVector3,
 } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Line2, LineMaterial, LineSegmentsGeometry } from 'three-stdlib';
 import { SegmentObject } from './segment-object';
@@ -54,10 +53,7 @@ const normPos = (pos: NgtsSegmentState['start']): SegmentObject['start'] =>
 
 extend({ SegmentObject });
 
-export const [injectNgtsSegmentsApi, provideNgtsSegmentsApi] = createInjectionToken(
-	(segments: NgtsSegments) => segments.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtsSegments)] },
-);
+export const [injectNgtsSegmentsApi, provideNgtsSegmentsApi] = createApiToken(() => NgtsSegments);
 
 @Component({
 	selector: 'ngts-segment',

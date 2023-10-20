@@ -18,9 +18,7 @@ declare global {
 	standalone: true,
 	template: `
 		<ngt-portal [container]="sceneRef" [autoRender]="false">
-			<ng-template ngtPortalContent>
-				<ng-content />
-			</ng-template>
+			<ng-content *ngtPortalContent />
 		</ngt-portal>
 		<ngt-primitive *args="[modifierObject()]" />
 	`,

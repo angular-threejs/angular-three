@@ -4,7 +4,6 @@ import {
 	computed,
 	effect,
 	inject,
-	runInInjectionContext,
 	signal,
 	untracked,
 	type Injector,
@@ -27,8 +26,7 @@ export interface NgtsFBOParams {
 }
 
 export function injectNgtsFBO(fboParams: () => NgtsFBOParams, { injector }: { injector?: Injector } = {}) {
-	injector = assertInjector(injectNgtsFBO, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsFBO, injector, () => {
 		const store = injectNgtStore();
 		const cdr = inject(ChangeDetectorRef);
 

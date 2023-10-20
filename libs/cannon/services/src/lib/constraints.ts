@@ -1,4 +1,4 @@
-import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
+import { effect, untracked, type Injector } from '@angular/core';
 import type {
 	ConstraintOptns,
 	ConstraintTypes,
@@ -97,8 +97,7 @@ function injectConstraint<
 		opts = () => ({}) as TOptions,
 	}: NgtcConstraintOptions<TConstraintType, TOptions> = {},
 ): NgtcConstraintReturn<TConstraintType, A, B> {
-	injector = assertInjector(injectConstraint, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectConstraint, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
 		const worker = physicsApi.select('worker');
 
@@ -109,9 +108,10 @@ function injectConstraint<
 
 		effect((onCleanup) => {
 			deps();
-			if (bodyARef.nativeElement && bodyBRef.nativeElement) {
+			const [a, b] = [bodyARef.nativeElement, bodyBRef.nativeElement];
+			if (a && b) {
 				worker().addConstraint({
-					props: [bodyARef.untracked.uuid, bodyBRef.untracked.uuid, untracked(opts)],
+					props: [a.uuid, b.uuid, untracked(opts)],
 					type,
 					uuid,
 				});

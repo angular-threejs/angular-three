@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input, computed, effect, forwardRef, signal, untracked } from '@angular/core';
+import { Component, Input, computed, effect, signal, untracked } from '@angular/core';
 import {
 	EventQueue,
 	type Collider,
@@ -8,8 +8,7 @@ import {
 	type RigidBodyHandle,
 	type World,
 } from '@dimforge/rapier3d-compat';
-import { injectNgtStore, signalStore } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { createApiToken, injectNgtStore, signalStore } from 'angular-three';
 import { createSingletonProxy } from 'ngxtension/singleton-proxy';
 import { MathUtils, Quaternion, type Matrix4, type Object3D, type Vector3 } from 'three';
 import { NgtrDebug } from './debug';
@@ -190,10 +189,7 @@ type CollisionSource = {
 	rigidBody: { object?: RigidBody; events?: EventMapValue; state?: RigidBodyState };
 };
 
-export const [injectNgtrPhysicsApi, provideNgtrPhysicsApi] = createInjectionToken(
-	(physics: NgtrPhysics) => physics.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtrPhysics)] },
-);
+export const [injectNgtrPhysicsApi, provideNgtrPhysicsApi] = createApiToken(() => NgtrPhysics);
 
 @Component({
 	selector: 'ngtr-physics',

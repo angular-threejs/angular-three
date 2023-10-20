@@ -1,4 +1,4 @@
-import { EventEmitter, signal, untracked, type WritableSignal } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import type { NgtEventHandlers } from './events';
 import type { NgtState } from './store';
 import type { NgtAnyRecord } from './types';
@@ -17,19 +17,20 @@ export type NgtAfterAttach<
 > = { parent: TParent; node: TChild };
 
 export type NgtInstanceLocalState = {
-	/** the state getter of the canvas that the instance is being rendered to */
+	/** the store of the canvas that the instance is being rendered to */
 	store: NgtSignalStore<NgtState>;
-	// objects and parent are used when children are added with `attach` instead of being added to the Object3D scene graph
-	nonObjects: WritableSignal<NgtInstanceNode[]>;
-	// objects that are Object3D
-	objects: WritableSignal<NgtInstanceNode[]>;
+	// objects related to this instance
+	instanceStore: NgtSignalStore<{
+		objects: NgtInstanceNode[];
+		nonObjects: NgtInstanceNode[];
+		parent: NgtInstanceNode | null;
+		nativeProps: NgtAnyRecord;
+	}>;
 	// shortcut to add/remove object to list
 	add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
 	remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
-	// native props signal
-	nativeProps: NgtSignalStore<NgtAnyRecord>;
-	// parent based on attach three instance
-	parent: WritableSignal<NgtInstanceNode | null>;
+	setNativeProps: (key: string, value: any) => void;
+	setParent: (parent: NgtInstanceNode | null) => void;
 	// if this THREE instance is a ngt-primitive
 	primitive?: boolean;
 	// if this THREE object has any events bound to it
@@ -78,40 +79,48 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 
 	if (localState?.primitive || !instance.__ngt__) {
 		const {
-			objects = signal<NgtInstanceNode[]>([]),
-			nonObjects = signal<NgtInstanceNode[]>([]),
+			instanceStore = signalStore<{
+				objects: NgtInstanceNode[];
+				nonObjects: NgtInstanceNode[];
+				parent: NgtInstanceNode | null;
+				nativeProps: NgtAnyRecord;
+			}>({
+				nativeProps: {},
+				parent: null,
+				objects: [],
+				nonObjects: [],
+			}),
 			...rest
 		} = localState || {};
 
 		instance.__ngt__ = {
 			previousAttach: null,
 			store: null,
-			parent: signal(null),
 			memoized: {},
 			eventCount: 0,
 			handlers: {},
-			objects,
-			nonObjects,
-			nativeProps: signalStore<NgtAnyRecord>(),
+			instanceStore,
 			add: (object, type) => {
-				untracked(() => {
-					const current = instance.__ngt__[type]();
-					const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);
-					if (foundIndex > -1) {
-						// if we add an object with the same reference, then we switch it out
-						current.splice(foundIndex, 1, object);
-						instance.__ngt__[type].set(current);
-					} else {
-						instance.__ngt__[type].update((prev) => [...prev, object]);
-					}
-					notifyAncestors(instance.__ngt__.parent());
-				});
+				const current = instance.__ngt__.instanceStore.get(type);
+				const foundIndex = current.indexOf((obj: NgtInstanceNode) => obj === object);
+				if (foundIndex > -1) {
+					// if we add an object with the same reference, then we switch it out
+					current.splice(foundIndex, 1, object);
+					instance.__ngt__.instanceStore.set({ [type]: current });
+				} else {
+					instance.__ngt__.instanceStore.set((prev) => ({ [type]: [...prev[type], object] }));
+				}
+				notifyAncestors(instance.__ngt__.instanceStore.get('parent'));
 			},
 			remove: (object, type) => {
-				untracked(() => {
-					instance.__ngt__[type].update((prev) => prev.filter((o) => o !== object));
-					notifyAncestors(instance.__ngt__.parent());
-				});
+				instance.__ngt__.instanceStore.set((prev) => ({ [type]: prev[type].filter((o) => o !== object) }));
+				notifyAncestors(instance.__ngt__.instanceStore.get('parent'));
+			},
+			setNativeProps: (key, value) => {
+				instance.__ngt__.instanceStore.set((prev) => ({ nativeProps: { ...prev.nativeProps, [key]: value } }));
+			},
+			setParent: (parent) => {
+				instance.__ngt__.instanceStore.set({ parent });
 			},
 			...rest,
 		} as NgtInstanceLocalState;
@@ -123,7 +132,8 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 function notifyAncestors(instance: NgtInstanceNode | null) {
 	if (!instance) return;
 	const localState = getLocalState(instance);
-	if (localState.objects) localState.objects.update((prev) => prev);
-	if (localState.nonObjects) localState.nonObjects.update((prev) => prev);
-	notifyAncestors(localState.parent());
+	if (localState.instanceStore) {
+		localState.instanceStore.set((prev) => ({ objects: prev.objects, nonObjects: prev.nonObjects }));
+		notifyAncestors(localState.instanceStore.get('parent'));
+	}
 }

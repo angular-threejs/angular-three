@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, EventEmitter, NgZone, untracked } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, NgZone } from '@angular/core';
 import { removeInteractivity } from '../events';
 import { getLocalState, invalidateInstance, type NgtInstanceNode } from '../instance';
 import { attach, detach } from '../utils/attach';
@@ -81,10 +81,8 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 			// attach
 			if (cLS.isRaw) {
-				if (cLS.parent && cLS.parent() !== parent) {
-					untracked(() => {
-						cLS.parent.set(parent);
-					});
+				if (cLS.instanceStore.get('parent') !== parent) {
+					cLS.setParent(parent);
 				}
 				// at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
 				if (child.__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
@@ -102,10 +100,8 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 	pLS.add(child, added ? 'objects' : 'nonObjects');
 
-	if (cLS.parent && cLS.parent() !== parent) {
-		untracked(() => {
-			cLS.parent.set(parent);
-		});
+	if (cLS.instanceStore.get('parent') !== parent) {
+		cLS.setParent(parent);
 	}
 
 	if (cLS.afterAttach) cLS.afterAttach.emit({ parent, node: child });
@@ -119,13 +115,11 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 	const cLS = getLocalState(child);
 
 	// clear parent ref
-	untracked(() => {
-		cLS.parent?.set(null);
-	});
+	cLS.setParent?.(null);
 
 	// remove child from parent
-	if (pLS.objects && untracked(pLS.objects)) pLS.remove(child, 'objects');
-	if (pLS.nonObjects && untracked(pLS.nonObjects)) pLS.remove(child, 'nonObjects');
+	pLS.remove?.(child, 'objects');
+	pLS.remove?.(child, 'nonObjects');
 
 	if (cLS.attach) {
 		detach(parent, child, cLS.attach);
@@ -136,7 +130,7 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 	const isPrimitive = cLS.primitive;
 	if (!isPrimitive) {
-		removeThreeRecursive(cLS.objects ? untracked(cLS.objects) : [], child, !!dispose);
+		removeThreeRecursive(cLS.instanceStore?.get('objects') || [], child, !!dispose);
 		removeThreeRecursive(child.children, child, !!dispose);
 	}
 

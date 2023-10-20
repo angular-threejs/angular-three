@@ -6,11 +6,11 @@ import {
 	Output,
 	computed,
 	effect,
-	forwardRef,
 	untracked,
 	type Signal,
 } from '@angular/core';
 import {
+	createApiToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -19,7 +19,6 @@ import {
 	signalStore,
 	type NgtGroup,
 } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group } from 'three';
 
@@ -70,10 +69,7 @@ declare global {
 	}
 }
 
-export const [injectNgtsBoundsApi, provideNgtsBoundsApi] = createInjectionToken((bounds: NgtsBounds) => bounds.api, {
-	isRoot: false,
-	deps: [forwardRef(() => NgtsBounds)],
-});
+export const [injectNgtsBoundsApi, provideNgtsBoundsApi] = createApiToken(() => NgtsBounds);
 
 @Component({
 	selector: 'ngts-bounds',

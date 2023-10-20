@@ -1,14 +1,6 @@
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, effect, untracked, type Signal } from '@angular/core';
 import {
-	CUSTOM_ELEMENTS_SCHEMA,
-	Component,
-	Input,
-	computed,
-	effect,
-	forwardRef,
-	untracked,
-	type Signal,
-} from '@angular/core';
-import {
+	createApiToken,
 	extend,
 	getLocalState,
 	injectBeforeRender,
@@ -18,7 +10,6 @@ import {
 	type NgtGroup,
 } from 'angular-three';
 import { SoftShadowMaterial, type NgtSoftShadowMaterialState } from 'angular-three-soba/shaders';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, Mesh, PlaneGeometry } from 'three';
 import { ProgressiveLightMap } from './progressive-light-map';
 
@@ -60,9 +51,8 @@ declare global {
 
 export type NgtsAccumulativeShadowsLightApi = { update: () => void };
 
-export const [injectNgtsAccumulativeShadowsApi, provideNgtsAccumulativeShadowsApi] = createInjectionToken(
-	(shadows: NgtsAccumulativeShadows) => shadows.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtsAccumulativeShadows)] },
+export const [injectNgtsAccumulativeShadowsApi, provideNgtsAccumulativeShadowsApi] = createApiToken(
+	() => NgtsAccumulativeShadows,
 );
 
 @Component({
@@ -264,7 +254,7 @@ export class NgtsAccumulativeShadows {
 		effect(() => {
 			const [, , mesh] = [
 				this.inputs.state(),
-				getLocalState(untracked(this.scene)).objects(),
+				getLocalState(untracked(this.scene)).instanceStore?.select('objects')(),
 				this.meshRef.nativeElement,
 			];
 			if (!mesh) return;

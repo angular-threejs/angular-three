@@ -1,11 +1,10 @@
-import { ChangeDetectorRef, inject, runInInjectionContext, signal, untracked, type Injector } from '@angular/core';
+import { ChangeDetectorRef, inject, signal, untracked, type Injector } from '@angular/core';
 import { safeDetectChanges } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 export function injectNgtsProgress(injector?: Injector) {
-	injector = assertInjector(injectNgtsProgress, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsProgress, injector, () => {
 		const cdr = inject(ChangeDetectorRef);
 
 		const progress = signal<{

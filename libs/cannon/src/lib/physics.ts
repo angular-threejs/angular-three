@@ -1,4 +1,4 @@
-import { Component, Injector, Input, NgZone, effect, forwardRef, inject, untracked, type OnInit } from '@angular/core';
+import { Component, Injector, Input, NgZone, effect, inject, untracked, type OnInit } from '@angular/core';
 import {
 	CannonWorkerAPI,
 	type Broadphase,
@@ -18,8 +18,7 @@ import {
 	type WorkerFrameMessage,
 	type WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { injectBeforeRender, injectNgtStore, signalStore } from 'angular-three';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { createApiToken, injectBeforeRender, injectNgtStore, signalStore } from 'angular-three';
 import * as THREE from 'three';
 
 const v = new THREE.Vector3();
@@ -69,10 +68,7 @@ export type NgtcPhysicsApi = {
 	worker: CannonWorkerAPI;
 };
 
-export const [injectNgtcPhysicsApi, provideNgtcPhysicsApi] = createInjectionToken(
-	(physics: NgtcPhysics) => physics.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtcPhysics)] },
-);
+export const [injectNgtcPhysicsApi, provideNgtcPhysicsApi] = createApiToken(() => NgtcPhysics);
 
 @Component({
 	selector: 'ngtc-physics',

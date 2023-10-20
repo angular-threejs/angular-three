@@ -1,13 +1,4 @@
-import {
-	ChangeDetectorRef,
-	computed,
-	effect,
-	inject,
-	runInInjectionContext,
-	signal,
-	untracked,
-	type Injector,
-} from '@angular/core';
+import { ChangeDetectorRef, computed, effect, inject, signal, untracked, type Injector } from '@angular/core';
 import { injectBeforeRender, injectNgtStore, safeDetectChanges } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -22,8 +13,7 @@ export function injectNgtsDepthBuffer(
 	paramsFactory: () => Partial<NgtsDepthBufferParams> = () => ({}),
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjector(injectNgtsDepthBuffer, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsDepthBuffer, injector, () => {
 		const depthBufferSignal = signal<THREE.DepthTexture | null>(null);
 		const store = injectNgtStore();
 		const cdr = inject(ChangeDetectorRef);
@@ -44,7 +34,7 @@ export function injectNgtsDepthBuffer(
 			return { width, height, settings: { depthTexture } };
 		});
 
-		const _fbo = injectNgtsFBO(fboParams, { injector });
+		const _fbo = injectNgtsFBO(fboParams);
 
 		effect(() => {
 			const fbo = _fbo();
@@ -57,19 +47,16 @@ export function injectNgtsDepthBuffer(
 		});
 
 		let count = 0;
-		injectBeforeRender(
-			({ gl, scene, camera }) => {
-				const params = { size: 256, frames: Infinity, ...paramsFactory() };
-				const fbo = _fbo();
-				if ((params.frames === Infinity || count < params.frames) && fbo) {
-					gl.setRenderTarget(fbo);
-					gl.render(scene, camera);
-					gl.setRenderTarget(null);
-					count++;
-				}
-			},
-			{ injector },
-		);
+		injectBeforeRender(({ gl, scene, camera }) => {
+			const params = { size: 256, frames: Infinity, ...paramsFactory() };
+			const fbo = _fbo();
+			if ((params.frames === Infinity || count < params.frames) && fbo) {
+				gl.setRenderTarget(fbo);
+				gl.render(scene, camera);
+				gl.setRenderTarget(null);
+				count++;
+			}
+		});
 
 		return depthBufferSignal.asReadonly();
 	});

@@ -1,14 +1,13 @@
 import { NgIf } from '@angular/common';
 import {
+	CUSTOM_ELEMENTS_SCHEMA,
 	Component,
 	ContentChild,
 	DestroyRef,
 	Directive,
-	EventEmitter,
 	Injector,
 	Input,
 	NgZone,
-	Output,
 	SkipSelf,
 	TemplateRef,
 	ViewChild,
@@ -25,7 +24,7 @@ import type { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
 import { injectNgtRef } from './ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { NGT_STORE, injectNgtStore, type NgtRenderState, type NgtSize, type NgtState } from './store';
+import { injectNgtStore, provideNgtStore, type NgtSize, type NgtState } from './store';
 import { is } from './utils/is';
 import { safeDetectChanges } from './utils/safe-detect-changes';
 import { signalStore } from './utils/signal-store';
@@ -57,7 +56,15 @@ export interface NgtPortalInputs {
 	>;
 }
 
-@Directive({ selector: '[ngtPortalBeforeRender]', standalone: true })
+@Component({
+	selector: 'ngt-portal-before-render',
+	standalone: true,
+	template: `
+		<!-- Without an element that receives pointer events state.pointer will always be 0/0 -->
+		<ngt-group (pointerover)="onPointerOver()" />
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
 export class NgtPortalBeforeRender implements OnInit {
 	private portalStore = injectNgtStore();
 	private injector = inject(Injector);
@@ -66,13 +73,10 @@ export class NgtPortalBeforeRender implements OnInit {
 	@Input({ required: true }) parentScene!: THREE.Scene;
 	@Input({ required: true }) parentCamera!: THREE.Camera;
 
-	@Output() beforeRender = new EventEmitter<NgtRenderState>();
-
 	ngOnInit() {
 		let oldClear: boolean;
 		injectBeforeRender(
-			({ delta, frame }) => {
-				this.beforeRender.emit({ ...this.portalStore.get(), delta, frame });
+			() => {
 				const { gl, scene, camera } = this.portalStore.get();
 				oldClear = gl.autoClear;
 				if (this.renderPriority === 1) {
@@ -89,6 +93,10 @@ export class NgtPortalBeforeRender implements OnInit {
 			},
 			{ priority: this.renderPriority, injector: this.injector },
 		);
+	}
+
+	onPointerOver() {
+		/* noop */
 	}
 }
 
@@ -108,18 +116,16 @@ export class NgtPortalContent {
 	standalone: true,
 	template: `
 		<ng-container #portalContentAnchor>
-			<ng-container
+			<ngt-portal-before-render
 				*ngIf="autoRender && portalContentRendered"
-				ngtPortalBeforeRender
 				[renderPriority]="autoRenderPriority"
 				[parentScene]="parentScene"
 				[parentCamera]="parentCamera"
-				(beforeRender)="onBeforeRender($event)"
 			/>
 		</ng-container>
 	`,
 	imports: [NgIf, NgtPortalBeforeRender],
-	providers: [{ provide: NGT_STORE, useFactory: () => signalStore<NgtState>({}) }],
+	providers: [provideNgtStore(signalStore<NgtState>({}))],
 })
 export class NgtPortal implements OnInit {
 	private inputs = signalStore<NgtPortalInputs>({ container: injectNgtRef<THREE.Scene>(prepare(new THREE.Scene())) });
@@ -134,8 +140,6 @@ export class NgtPortal implements OnInit {
 
 	@Input() autoRender = true;
 	@Input() autoRenderPriority = 1;
-
-	@Output() beforeRender = new EventEmitter<{ root: NgtRenderState; portal: NgtRenderState }>();
 
 	@ContentChild(NgtPortalContent, { read: TemplateRef, static: true })
 	portalContentTemplate!: TemplateRef<unknown>;
@@ -218,13 +222,6 @@ export class NgtPortal implements OnInit {
 		this.portalContentView = this.portalContentAnchor.createEmbeddedView(this.portalContentTemplate);
 		safeDetectChanges(this.portalContentView);
 		this.portalContentRendered = true;
-	}
-
-	onBeforeRender(portal: NgtRenderState) {
-		this.beforeRender.emit({
-			root: { ...this.parentStore.get(), delta: portal.delta, frame: portal.frame },
-			portal,
-		});
 	}
 
 	private inject(rootState: NgtState, injectState: NgtState) {

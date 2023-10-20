@@ -8,11 +8,18 @@ import {
 	Output,
 	TemplateRef,
 	computed,
-	forwardRef,
 } from '@angular/core';
-import { extend, injectNgtRef, is, signalStore, type NgtGroup, type NgtRef, type NgtVector3 } from 'angular-three';
+import {
+	createApiToken,
+	extend,
+	injectNgtRef,
+	is,
+	signalStore,
+	type NgtGroup,
+	type NgtRef,
+	type NgtVector3,
+} from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import { NgtsHtmlWrapper, defaultCalculatePosition } from './html-wrapper';
@@ -57,10 +64,7 @@ export type NgtsHtmlState = {
 	receiveShadow: boolean; // Receive shadow for occlusion plane
 };
 
-export const [injectNgtsHtmlInputs, provideNgtsHtmlInputs] = createInjectionToken(
-	(html: NgtsHtml) => ({ state: html.inputs.state, ...html.state }),
-	{ isRoot: false, deps: [forwardRef(() => NgtsHtml)] },
-);
+export const [injectNgtsHtmlInputs, provideNgtsHtmlInputs] = createApiToken(() => NgtsHtml);
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -301,5 +305,10 @@ export class NgtsHtml {
 		geometry: this.geometry,
 		scale: this.scale,
 		groupRef: this.groupRef,
+	};
+
+	api = {
+		state: this.inputs.state,
+		...this.state,
 	};
 }

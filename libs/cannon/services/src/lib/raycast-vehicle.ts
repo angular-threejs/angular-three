@@ -1,4 +1,4 @@
-import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
+import { effect, untracked, type Injector } from '@angular/core';
 import type { WheelInfoOptions } from '@pmndrs/cannon-worker-api';
 import { injectNgtRef, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
@@ -40,8 +40,7 @@ export function injectRaycastVehicle<TObject extends THREE.Object3D = THREE.Obje
 		deps = () => ({}),
 	}: { ref?: NgtInjectedRef<TObject>; injector?: Injector; deps?: () => NgtAnyRecord } = {},
 ): NgtcRaycastVehicleReturn<TObject> {
-	injector = assertInjector(injectRaycastVehicle, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectRaycastVehicle, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
 		const [worker, subscriptions] = [physicsApi.select('worker'), physicsApi.get('subscriptions')];
 

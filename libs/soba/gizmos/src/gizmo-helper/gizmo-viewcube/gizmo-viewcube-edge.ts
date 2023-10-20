@@ -36,9 +36,9 @@ export class NgtsGizmoViewcubeEdgeCube {
 		dimensions: [number, number, number];
 	}>();
 
-	gizmoApi = injectNgtsGizmoHelperApi();
-	viewcubeInput = inject(NgtsGizmoViewcubeInput);
+	private gizmoApi = injectNgtsGizmoHelperApi();
 
+	viewcubeInput = inject(NgtsGizmoViewcubeInput);
 	hover = signal(false);
 
 	@Input({ required: true, alias: 'dimensions' }) set _dimensions(dimensions: [number, number, number]) {

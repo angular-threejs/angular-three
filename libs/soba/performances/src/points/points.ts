@@ -9,7 +9,6 @@ import {
 	TemplateRef,
 	computed,
 	effect,
-	forwardRef,
 	inject,
 	signal,
 	untracked,
@@ -17,6 +16,7 @@ import {
 } from '@angular/core';
 import {
 	checkUpdate,
+	createApiToken,
 	extend,
 	injectBeforeRender,
 	injectNgtRef,
@@ -27,7 +27,6 @@ import {
 	type NgtRef,
 } from 'angular-three';
 import { NgtsSobaContent } from 'angular-three-soba/utils';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
 import { NgtsPointsInput, type NgtsPointsBuffersState, type NgtsPointsInstancesState } from './points-input';
@@ -56,12 +55,7 @@ declare global {
 	}
 }
 
-export const [injectNgtsPointsInstanceApi, provideNgtsPointsInstancesApi] = createInjectionToken(
-	function pointsInstancesApi(instances: NgtsPointsInstances) {
-		return instances.api;
-	},
-	{ isRoot: false, deps: [forwardRef(() => NgtsPointsInstances)] },
-);
+export const [injectNgtsPointsInstanceApi, provideNgtsPointsInstancesApi] = createApiToken(() => NgtsPointsInstances);
 
 @Component({
 	selector: 'ngts-points-instances',

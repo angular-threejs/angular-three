@@ -1,4 +1,4 @@
-import { effect, runInInjectionContext, type ElementRef, type Injector } from '@angular/core';
+import { effect, type ElementRef, type Injector } from '@angular/core';
 import type {
 	AtomicName,
 	AtomicProps,
@@ -19,8 +19,8 @@ import type {
 	SphereArgs,
 	SphereProps,
 	SubscriptionName,
-	SubscriptionTarget,
 	Subscriptions,
+	SubscriptionTarget,
 	TrimeshProps,
 	Triplet,
 	VectorName,
@@ -234,8 +234,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 	argsFn: NgtcArgFn<TBodyProps['args']>,
 	{ ref, injector, deps = () => ({}) }: NgtcBodyOptions<TObject> = {},
 ): NgtcBodyReturn<TObject> {
-	injector = assertInjector(injectBody, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectBody, injector, () => {
 		const [bodyRef, physicsApi, debugApi] = [
 			ref || injectNgtRef<TObject>(),
 			injectNgtcPhysicsApi(),

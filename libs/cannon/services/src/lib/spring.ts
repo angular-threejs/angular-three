@@ -1,4 +1,4 @@
-import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
+import { effect, untracked, type Injector } from '@angular/core';
 import type { SpringOptns } from '@pmndrs/cannon-worker-api';
 import { injectNgtRef, is, makeId, type NgtAnyRecord, type NgtInjectedRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
@@ -29,8 +29,7 @@ export function injectSpring<A extends THREE.Object3D, B extends THREE.Object3D>
 		deps = () => ({}),
 	}: { injector?: Injector; deps?: () => NgtAnyRecord; opts?: () => SpringOptns } = {},
 ): NgtcSpringReturn<A, B> {
-	injector = assertInjector(injectSpring, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectSpring, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
 		const worker = physicsApi.select('worker');
 

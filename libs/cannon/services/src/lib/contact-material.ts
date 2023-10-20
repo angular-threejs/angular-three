@@ -1,4 +1,4 @@
-import { effect, runInInjectionContext, untracked, type Injector } from '@angular/core';
+import { effect, untracked, type Injector } from '@angular/core';
 import type { ContactMaterialOptions, MaterialOptions } from '@pmndrs/cannon-worker-api';
 import { makeId, type NgtAnyRecord } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
@@ -13,8 +13,7 @@ export function injectContactMaterial(
 		injector,
 	}: { opts: () => ContactMaterialOptions; deps?: () => NgtAnyRecord; injector?: Injector },
 ): void {
-	injector = assertInjector(injectContactMaterial, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectContactMaterial, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
 		const worker = physicsApi.select('worker');
 		const uuid = makeId();

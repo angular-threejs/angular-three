@@ -1,11 +1,10 @@
 import type { NgtCameraManual, NgtSize } from '../store';
-import type { NgtAnyRecord } from '../types';
 import { is } from './is';
 
 export function checkNeedsUpdate(value: unknown) {
-	if (value !== null && is.obj(value) && 'needsUpdate' in (value as NgtAnyRecord)) {
-		(value as NgtAnyRecord)['needsUpdate'] = true;
-		if ('uniformsNeedUpdate' in (value as NgtAnyRecord)) (value as NgtAnyRecord)['uniformsNeedUpdate'] = true;
+	if (value !== null && is.obj(value) && 'needsUpdate' in value) {
+		value['needsUpdate'] = true;
+		if ('uniformsNeedUpdate' in value) value['uniformsNeedUpdate'] = true;
 	}
 }
 

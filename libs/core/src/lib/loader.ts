@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injector, effect, inject, runInInjectionContext, signal, type Signal } from '@angular/core';
+import { ChangeDetectorRef, Injector, effect, inject, signal, type Signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtAnyRecord } from './types';
@@ -65,11 +65,12 @@ function load<
 						loader.load(
 							url,
 							(data) => {
-								if ('scene' in (data as NgtAnyRecord))
+								if ('scene' in (data as NgtAnyRecord)) {
 									Object.assign(
 										data as NgtAnyRecord,
 										makeObjectGraph((data as NgtAnyRecord)['scene']),
 									);
+								}
 								resolve(data);
 							},
 							onProgress,
@@ -101,11 +102,10 @@ function _injectNgtLoader<
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null> {
-	injector = assertInjector(_injectNgtLoader, injector);
-	const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null>(
-		null,
-	);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(_injectNgtLoader, injector, () => {
+		const response = signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null>(
+			null,
+		);
 		const cdr = inject(ChangeDetectorRef);
 		const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
 

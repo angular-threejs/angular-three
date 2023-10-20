@@ -53,7 +53,7 @@ export class NgtsBillboard {
 
 	constructor() {
 		injectBeforeRender(({ camera }) => {
-			const ref = this.billboardRef.untracked;
+			const ref = this.billboardRef.nativeElement;
 			const { follow, lockX, lockY, lockZ } = this.inputs.get();
 			if (!ref || !follow) return;
 			// save previous rotation in case we're locking an axis

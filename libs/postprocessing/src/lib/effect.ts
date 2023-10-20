@@ -38,8 +38,8 @@ export abstract class NgtpEffect<TEffect extends Effect> {
 			const effect = this.effectRef.nativeElement;
 			if (!effect) return this.previousInputs || null;
 			const localState = getLocalState(effect);
-			if (!localState) return this.previousInputs || null;
-			const nativeProps = localState.nativeProps.state();
+			if (!localState || !localState.instanceStore) return this.previousInputs || null;
+			const nativeProps = localState.instanceStore.select('nativeProps')();
 			delete nativeProps['__ngt_dummy_state__'];
 			if ('camera' in nativeProps) {
 				delete nativeProps['camera'];
@@ -52,6 +52,7 @@ export abstract class NgtpEffect<TEffect extends Effect> {
 
 	args = computed(() => {
 		const [nativeInputs, nativeArgs] = [this.nativeInputs(), this.nativeArgs()];
+
 		if (nativeInputs) {
 			nativeArgs.push(nativeInputs);
 		}

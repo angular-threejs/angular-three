@@ -1,4 +1,4 @@
-import { computed, effect, runInInjectionContext, signal, untracked, type Injector, type Signal } from '@angular/core';
+import { computed, effect, signal, untracked, type Injector, type Signal } from '@angular/core';
 import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
 
@@ -35,8 +35,7 @@ export function injectNgtsMatcapTexture(
 	matcapTextureState: () => Partial<NgtsMatcapTextureState>,
 	{ injector }: { injector?: Injector } = {},
 ) {
-	injector = assertInjector(injectNgtsMatcapTexture, injector);
-	return runInInjectionContext(injector, () => {
+	return assertInjector(injectNgtsMatcapTexture, injector, () => {
 		const state = computed(() => ({ ...defaultState, ...matcapTextureState() }));
 
 		const matcapList = signal<Record<string, string>>({});

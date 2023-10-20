@@ -1,9 +1,8 @@
 import { NgIf } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, forwardRef, signal } from '@angular/core';
-import { extend, injectNgtRef, signalStore } from 'angular-three';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, computed, signal } from '@angular/core';
+import { createApiToken, extend, injectNgtRef, signalStore } from 'angular-three';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsCenter } from 'angular-three-soba/staging';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Group, MeshNormalMaterial, MeshStandardMaterial } from 'three';
 
 /**
@@ -42,10 +41,7 @@ extend({ Group, MeshNormalMaterial, MeshStandardMaterial });
  *
  * @see Bounds for example
  */
-export const [injectNgtsExampleApi, provideNgtsExampleApi] = createInjectionToken(
-	(example: NgtsExample) => example.api,
-	{ isRoot: false, deps: [forwardRef(() => NgtsExample)] },
-);
+export const [injectNgtsExampleApi, provideNgtsExampleApi] = createApiToken(() => NgtsExample);
 
 @Component({
 	selector: 'ngts-example',
