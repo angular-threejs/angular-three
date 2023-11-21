@@ -19,6 +19,7 @@ import type { NgtInjectedRef } from '../ref';
 import { injectNgtStore, provideNgtStore, type NgtStore } from '../store';
 import type { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
+import { safeDetectChanges } from '../utils/safe-detect-changes';
 import { injectNgtCatalogue, type NgtAnyConstructor } from './catalogue';
 import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
 import { NGT_COMPOUND_PREFIXES, NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
@@ -428,7 +429,13 @@ class NgtRenderer implements Renderer2 {
 		// if the target doesn't have __ngt_renderer__, we delegate
 		// if target is DOM node, then we pass that to delegate Renderer
 		if (!rS || this.store.isDOM(target)) {
-			return this.delegate.listen(target, eventName, callback);
+			const targetCdr = getDebugNode(target)?.injector.get(ChangeDetectorRef, null);
+			const updatedCallback = (event: any) => {
+				const callbackValue = callback(event);
+				safeDetectChanges(targetCdr || this.cdr);
+				return callbackValue;
+			};
+			return this.delegate.listen(target, eventName, updatedCallback);
 		}
 
 		if (

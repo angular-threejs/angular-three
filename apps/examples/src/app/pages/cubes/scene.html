@@ -1,5 +1,5 @@
 <ngt-spot-light #light [position]="[0, 1.5, 1.5]" [intensity]="5" />
-<ngt-spot-light-helper *args="[light, 'red']" />
+<!-- <ngt-spot-light-helper *args="[light, 'red']" /> -->
 
 <ngt-mesh
 	(beforeRender)="onBeforeRender($event.object)"
@@ -8,6 +8,9 @@
 >
 	<ngt-box-geometry />
 	<ngt-mesh-lambert-material [color]="hover() ? 'hotpink' : 'orange'" />
+	<ngts-html [position]="[0, 2, 0]" [transform]="true">
+		<cubes-html-button *ngtsSobaContent />
+	</ngts-html>
 </ngt-mesh>
 
 <ngts-orbit-controls />

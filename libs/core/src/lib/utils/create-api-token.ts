@@ -8,10 +8,6 @@ export function createApiToken<TObject extends { api: any }, TApi = TObject exte
 		return obj.api;
 	}
 
-	const object = forwardedObject();
-
-	apiFactory.name = `API for ${object.name || object}`;
-
 	const [injectFn, provideFn] = createInjectionToken(apiFactory, {
 		isRoot: false,
 		deps: [forwardRef(forwardedObject)],

@@ -1,1 +1,4 @@
-<ngt-canvas [sceneGraph]="sceneGraph" />
+<button (click)="active.set(!active())" class="px-4 py-2 bg-gray-800 text-white rounded">
+	Click me outside Canvas
+</button>
+<ngt-canvas [sceneGraph]="sceneGraph" [camera]="{position: [0, 3, 10]}" />

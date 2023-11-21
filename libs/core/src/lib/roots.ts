@@ -1,4 +1,4 @@
-import { DestroyRef, effect, inject, type EffectRef, type Injector } from '@angular/core';
+import { DestroyRef, Injector, effect, inject, type EffectRef } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import type { NgtCanvasInputs } from './canvas';
@@ -18,6 +18,7 @@ export const roots = new Map<HTMLCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
 	return assertInjector(injectCanvasRootInitializer, injector, () => {
+		const assertedInjector = inject(Injector);
 		const injectedStore = injectNgtStore();
 		const loop = injectNgtLoop();
 		const destroyRef = inject(DestroyRef);
@@ -263,7 +264,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						invalidateRef?.destroy();
 						invalidateRef = effect(() => void store.state().invalidate(), {
 							manualCleanup: true,
-							injector,
+							injector: assertedInjector,
 						});
 					});
 				},

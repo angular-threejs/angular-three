@@ -255,18 +255,22 @@ export class NgtCanvas implements OnInit, OnChanges {
 
 			const inputs = this.inputs.select();
 			// TODO: Double-check when effect is made not depended on zone
-			this.resizeEffectRef = effect(
-				() => {
-					if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
-					this.configurator.configure({ ...inputs(), size: result });
+			this.resizeEffectRef = this.zone.run(() =>
+				effect(
+					() => {
+						this.zone.runOutsideAngular(() => {
+							if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
+							this.configurator.configure({ ...inputs(), size: result });
 
-					if (this.glRef) {
-						safeDetectChanges(this.cdr);
-					} else {
-						this.render();
-					}
-				},
-				{ manualCleanup: true, injector: this.injector },
+							if (this.glRef) {
+								safeDetectChanges(this.cdr);
+							} else {
+								this.render();
+							}
+						});
+					},
+					{ manualCleanup: true, injector: this.injector },
+				),
 			);
 		}
 	}
