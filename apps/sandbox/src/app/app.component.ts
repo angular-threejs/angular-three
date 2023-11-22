@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, Type, ViewChild, ViewContainerRef, computed, effect, signal } from '@angular/core';
-import { extend } from 'angular-three';
-import { NgtsLoader } from 'angular-three-soba/loaders';
+import { extend } from 'angular-three-old';
+import { NgtsLoader } from 'angular-three-soba-old/loaders';
 import * as THREE from 'three';
 import { AviatorCanvas } from './aviator/canvas.component';
 import { BotCanvas } from './bot/canvas.component';

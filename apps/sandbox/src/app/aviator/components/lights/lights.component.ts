@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from 'angular-three-old';
 
 @Component({
 	selector: 'app-lights',

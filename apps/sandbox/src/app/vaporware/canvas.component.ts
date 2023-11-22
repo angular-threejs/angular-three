@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgtCanvas } from 'angular-three';
+import { NgtCanvas } from 'angular-three-old';
 import { VaporwareScene } from './scene.component';
 
 @Component({

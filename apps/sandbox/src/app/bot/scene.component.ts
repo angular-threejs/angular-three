@@ -1,10 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, computed, signal } from '@angular/core';
-import { NgtArgs } from 'angular-three';
-import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
-import { NgtsGrid } from 'angular-three-soba/abstractions';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
-import { injectNgtsAnimations } from 'angular-three-soba/misc';
+import { NgtArgs } from 'angular-three-old';
+import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing-old';
+import { NgtsGrid } from 'angular-three-soba-old/abstractions';
+import { NgtsOrbitControls } from 'angular-three-soba-old/controls';
+import { injectNgtsGLTFLoader } from 'angular-three-soba-old/loaders';
+import { injectNgtsAnimations } from 'angular-three-soba-old/misc';
 
 @Component({
 	standalone: true,

@@ -1,0 +1,121 @@
+{
+	"name": "soba-old",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/soba-old/src",
+	"prefix": "platform",
+	"tags": [],
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+			"options": {
+				"project": "libs/soba-old/ng-package.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/soba-old/tsconfig.lib.prod.json"
+				},
+				"development": {
+					"tsConfig": "libs/soba-old/tsconfig.lib.json"
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"publish": {
+			"command": "npm publish",
+			"options": {
+				"cwd": "dist/libs/soba-old"
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/soba-old/jest.config.ts"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"libs/soba-old/**/*.ts",
+					"libs/soba-old/**/*.html",
+					"libs/soba-old/package.json",
+					"libs/soba-old/abstractions/**/*.ts",
+					"libs/soba-old/abstractions/**/*.html",
+					"libs/soba-old/controls/**/*.ts",
+					"libs/soba-old/controls/**/*.html",
+					"libs/soba-old/misc/**/*.ts",
+					"libs/soba-old/misc/**/*.html",
+					"libs/soba-old/loaders/**/*.ts",
+					"libs/soba-old/loaders/**/*.html",
+					"libs/soba-old/cameras/**/*.ts",
+					"libs/soba-old/cameras/**/*.html",
+					"libs/soba-old/shaders/**/*.ts",
+					"libs/soba-old/shaders/**/*.html",
+					"libs/soba-old/staging/**/*.ts",
+					"libs/soba-old/staging/**/*.html",
+					"libs/soba-old/performances/**/*.ts",
+					"libs/soba-old/performances/**/*.html",
+					"libs/soba-old/materials/**/*.ts",
+					"libs/soba-old/materials/**/*.html",
+					"libs/soba-old/modifiers/**/*.ts",
+					"libs/soba-old/modifiers/**/*.html",
+					"libs/soba-old/utils/**/*.ts",
+					"libs/soba-old/utils/**/*.html",
+					"libs/soba-old/gizmos/**/*.ts",
+					"libs/soba-old/gizmos/**/*.html"
+				]
+			}
+		},
+		"storybook": {
+			"executor": "@storybook/angular:start-storybook",
+			"options": {
+				"port": 4400,
+				"configDir": "libs/soba-old/.storybook",
+				"browserTarget": "soba-old:build-storybook",
+				"compodoc": false
+			},
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			}
+		},
+		"build-storybook": {
+			"executor": "@storybook/angular:build-storybook",
+			"outputs": ["{options.outputDir}"],
+			"options": {
+				"outputDir": "dist/storybook/soba",
+				"configDir": "libs/soba-old/.storybook",
+				"browserTarget": "soba-old:build-storybook",
+				"compodoc": false
+			},
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			}
+		},
+		"test-storybook": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "test-storybook -c libs/soba-old/.storybook --url=http://localhost:4400"
+			}
+		},
+		"static-storybook": {
+			"executor": "@nx/web:file-server",
+			"options": {
+				"buildTarget": "soba-old:build-storybook",
+				"staticFilePath": "dist/storybook/soba"
+			},
+			"configurations": {
+				"ci": {
+					"buildTarget": "soba-old:build-storybook:ci"
+				}
+			}
+		}
+	}
+}

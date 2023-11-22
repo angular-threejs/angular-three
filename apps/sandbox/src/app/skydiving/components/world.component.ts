@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
-import { NgtArgs } from 'angular-three';
-import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
+import { NgtArgs } from 'angular-three-old';
+import { injectNgtsTextureLoader } from 'angular-three-soba-old/loaders';
 import * as THREE from 'three';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { NgtCanvas } from 'angular-three';
+import { NgtCanvas } from 'angular-three-old';
 import { AviatorScene } from './scene.component';
 import { GameService } from './services/game.service';
 import { WorldService } from './services/world.service';

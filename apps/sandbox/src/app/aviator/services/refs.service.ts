@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { injectNgtRef } from 'angular-three';
+import { injectNgtRef } from 'angular-three-old';
 
 @Injectable()
 export class RefsService {

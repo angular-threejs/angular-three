@@ -1,9 +1,9 @@
 import { NgIf } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { NgtArgs, NgtCanvas } from 'angular-three';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsHtml } from 'angular-three-soba/misc';
-import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { NgtArgs, NgtCanvas } from 'angular-three-old';
+import { NgtsOrbitControls } from 'angular-three-soba-old/controls';
+import { NgtsHtml } from 'angular-three-soba-old/misc';
+import { NgtsSobaContent } from 'angular-three-soba-old/utils';
 
 const active = signal(false);
 

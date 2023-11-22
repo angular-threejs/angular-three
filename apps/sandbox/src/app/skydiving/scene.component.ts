@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
-import { NgtpBloom, NgtpEffectComposer, NgtpVignette } from 'angular-three-postprocessing';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsCameraShake, NgtsEnvironment } from 'angular-three-soba/staging';
+import { NgtpBloom, NgtpEffectComposer, NgtpVignette } from 'angular-three-postprocessing-old';
+import { NgtsOrbitControls } from 'angular-three-soba-old/controls';
+import { NgtsCameraShake, NgtsEnvironment } from 'angular-three-soba-old/staging';
 import { Model } from './components/model.component';
 import { WindEffect } from './components/wind-effect.component';
 import { World } from './components/world.component';

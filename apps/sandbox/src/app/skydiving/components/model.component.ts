@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, effect, type Signal } from '@angular/core';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
-import { injectNgtsGLTFLoader, injectNgtsTextureLoader, type NgtsGLTF } from 'angular-three-soba/loaders';
-import { injectNgtsAnimations } from 'angular-three-soba/misc';
+import { NgtArgs, injectBeforeRender } from 'angular-three-old';
+import { injectNgtsGLTFLoader, injectNgtsTextureLoader, type NgtsGLTF } from 'angular-three-soba-old/loaders';
+import { injectNgtsAnimations } from 'angular-three-soba-old/misc';
 import * as THREE from 'three';
 
 type SkydiverGLTF = NgtsGLTF<{

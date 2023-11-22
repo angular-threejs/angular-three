@@ -65,6 +65,9 @@
 		},
 		"@nx/angular:component": {
 			"style": "css"
+		},
+		"@nx/workspace:move": {
+			"projectNameAndRootFormat": "as-provided"
 		}
 	}
 }

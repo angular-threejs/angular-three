@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, computed } from '@angular/core';
-import { NgtArgs, injectBeforeRender, injectNgtRef, injectNgtStore } from 'angular-three';
-import { NgtsInstance, NgtsInstances, PositionMesh } from 'angular-three-soba/performances';
-import { NgtsSobaContent } from 'angular-three-soba/utils';
+import { NgtArgs, injectBeforeRender, injectNgtRef, injectNgtStore } from 'angular-three-old';
+import { NgtsInstance, NgtsInstances, PositionMesh } from 'angular-three-soba-old/performances';
+import { NgtsSobaContent } from 'angular-three-soba-old/utils';
 import { Repeat } from 'ngxtension/repeat';
 import * as THREE from 'three';
 

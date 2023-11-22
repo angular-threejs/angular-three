@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from 'angular-three-old';
 import { Colors } from '../../../utils/colors';
 
 @Component({

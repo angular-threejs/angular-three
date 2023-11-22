@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, afterNextRender, inject } from '@angular/core';
-import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three-old';
+import { NgtsOrbitControls } from 'angular-three-soba-old/controls';
 import * as THREE from 'three';
 import { Airplane } from './components/airplane/airplane.component';
 import { Lights } from './components/lights/lights.component';

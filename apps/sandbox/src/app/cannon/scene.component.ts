@@ -1,10 +1,10 @@
 import { NgIf } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, signal } from '@angular/core';
 import type { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs } from 'angular-three';
-import { NgtcPhysics } from 'angular-three-cannon';
-import { NgtcDebug } from 'angular-three-cannon/debug';
-import { injectBox, injectPlane } from 'angular-three-cannon/services';
+import { NgtcPhysics } from 'angular-three-cannon-old';
+import { NgtcDebug } from 'angular-three-cannon-old/debug';
+import { injectBox, injectPlane } from 'angular-three-cannon-old/services';
+import { NgtArgs } from 'angular-three-old';
 import { gravity, isDebugging } from '../states';
 
 @Component({

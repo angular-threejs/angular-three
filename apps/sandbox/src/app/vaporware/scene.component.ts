@@ -8,9 +8,9 @@ import {
 	injectNgtRef,
 	injectNgtStore,
 	type NgtNode,
-} from 'angular-three';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectNgtsTextureLoader } from 'angular-three-soba/loaders';
+} from 'angular-three-old';
+import { NgtsOrbitControls } from 'angular-three-soba-old/controls';
+import { injectNgtsTextureLoader } from 'angular-three-soba-old/loaders';
 import { Mesh, PlaneGeometry } from 'three';
 import {
 	EffectComposer,
