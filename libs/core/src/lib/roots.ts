@@ -1,4 +1,4 @@
-import { DestroyRef, Injector, effect, inject, type EffectRef } from '@angular/core';
+import { Injector } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import type { NgtCanvasInputs } from './canvas';
@@ -8,7 +8,7 @@ import { injectNgtStore, type NgtSize, type NgtState } from './store';
 import type { NgtAnyRecord, NgtEquConfig } from './types';
 import { applyProps } from './utils/apply-props';
 import { is } from './utils/is';
-import { makeDefaultCamera, makeDefaultRenderer, makeDpr } from './utils/make';
+import { makeCameraInstance, makeDpr, makeRendererInstance } from './utils/make';
 import type { NgtSignalStore } from './utils/signal-store';
 import { checkNeedsUpdate } from './utils/update';
 
@@ -20,10 +20,8 @@ export const roots = new Map<NgtCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
 	return assertInjector(injectCanvasRootInitializer, injector, () => {
-		const assertedInjector = inject(Injector);
 		const injectedStore = injectNgtStore();
 		const loop = injectNgtLoop();
-		const destroyRef = inject(DestroyRef);
 
 		return (canvas: NgtCanvasElement) => {
 			const exist = roots.has(canvas);
@@ -45,16 +43,13 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 			let isConfigured = false;
 			let lastCamera: NgtCanvasInputs['camera'];
-			let invalidateRef: EffectRef;
-
-			destroyRef.onDestroy(() => invalidateRef?.destroy());
 
 			return {
 				isConfigured,
 				destroy: (timeout = 500) => {
 					const root = roots.get(canvas);
 					if (root) {
-						root.set((state) => ({ internal: { ...state.internal, active: false } }));
+						root.update((state) => ({ internal: { ...state.internal, active: false } }));
 						setTimeout(() => {
 							try {
 								const state = root.get();
@@ -72,29 +67,29 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 				},
 				configure: (inputs: NgtCanvasInputs) => {
 					const {
+						shadows = false,
+						linear = false,
+						flat = false,
+						legacy = false,
+						orthographic = false,
+						frameloop = 'always',
+						dpr = [1, 2],
 						gl: glOptions,
 						size: sizeOptions,
 						camera: cameraOptions,
 						raycaster: raycasterOptions,
 						scene: sceneOptions,
 						events,
-						orthographic,
 						lookAt,
-						shadows,
-						linear,
-						legacy,
-						flat,
-						dpr,
-						frameloop,
 						performance,
 					} = inputs;
 
-					const state = store.get();
+					const state = store.snapshot;
 					const stateToUpdate: Partial<NgtState> = {};
 
 					// setup renderer
 					let gl = state.gl;
-					if (!state.gl) stateToUpdate.gl = gl = makeDefaultRenderer(glOptions, canvas);
+					if (!state.gl) stateToUpdate.gl = gl = makeRendererInstance(glOptions, canvas);
 
 					// setup raycaster
 					let raycaster = state.raycaster;
@@ -102,24 +97,23 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 					// set raycaster options
 					const { params, ...options } = raycasterOptions || {};
-					if (!is.equ(options, raycaster, shallowLoose)) applyProps(raycaster, { ...options });
+					if (!is.equ(options, raycaster, shallowLoose)) applyProps(raycaster, options);
 					if (!is.equ(params, raycaster.params, shallowLoose)) {
 						applyProps(raycaster, { params: { ...raycaster.params, ...(params || {}) } });
 					}
 
-					// create default camera
-					if (!state.camera) {
+					// Create default camera, don't overwrite any user-set state
+					if (!state.camera || (state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose))) {
+						lastCamera = cameraOptions;
 						const isCamera = is.camera(cameraOptions);
-						let camera = isCamera ? cameraOptions : makeDefaultCamera(orthographic || false, state.size);
+						let camera = isCamera ? cameraOptions : makeCameraInstance(orthographic, state.size);
 
 						if (!isCamera) {
+							camera.position.z = 5;
 							if (cameraOptions) applyProps(camera, cameraOptions);
 
-							// set position.z
-							if (!cameraOptions?.position) camera.position.z = 5;
-
 							// always look at center or passed-in lookAt by default
-							if (!cameraOptions?.rotation && !cameraOptions?.quaternion) {
+							if (!state.camera && !cameraOptions?.rotation && !cameraOptions?.quaternion) {
 								if (Array.isArray(lookAt)) camera.lookAt(lookAt[0], lookAt[1], lookAt[2]);
 								else if (lookAt instanceof THREE.Vector3) camera.lookAt(lookAt);
 								else camera.lookAt(0, 0, 0);
@@ -132,6 +126,10 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						if (!is.instance(camera)) camera = prepare(camera, { store });
 
 						stateToUpdate.camera = camera;
+
+						// Configure raycaster
+						// https://github.com/pmndrs/react-xr/issues/300
+						raycaster.camera = camera;
 					}
 
 					// Set up scene (one time only!)
@@ -139,29 +137,28 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						let scene: THREE.Scene;
 
 						if (sceneOptions instanceof THREE.Scene) {
-							scene = prepare(sceneOptions, { store });
+							scene = sceneOptions;
 						} else {
-							scene = prepare(new THREE.Scene(), { store });
+							scene = new THREE.Scene();
 							if (sceneOptions) applyProps(scene, sceneOptions);
 						}
 
-						stateToUpdate.scene = scene;
+						stateToUpdate.scene = prepare(scene, { store });
 					}
 
 					// Set up XR (one time only!)
 					if (!state.xr) {
 						// Handle frame behavior in WebXR
 						const handleXRFrame: XRFrameRequestCallback = (timestamp: number, frame?: XRFrame) => {
-							const state = store.get();
+							const state = store.snapshot;
 							if (state.frameloop === 'never') return;
 							loop.advance(timestamp, true, store, frame);
 						};
 
 						// Toggle render switching on session
 						const handleSessionChange = () => {
-							const state = store.get();
+							const state = store.snapshot;
 							state.gl.xr.enabled = state.gl.xr.isPresenting;
-
 							state.gl.xr.setAnimationLoop(state.gl.xr.isPresenting ? handleXRFrame : null);
 							if (!state.gl.xr.isPresenting) loop.invalidate(store);
 						};
@@ -169,10 +166,12 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						// WebXR session manager
 						const xr = {
 							connect: () => {
+								const gl = store.snapshot.gl;
 								gl.xr.addEventListener('sessionstart', handleSessionChange);
 								gl.xr.addEventListener('sessionend', handleSessionChange);
 							},
 							disconnect: () => {
+								const gl = store.snapshot.gl;
 								gl.xr.removeEventListener('sessionstart', handleSessionChange);
 								gl.xr.removeEventListener('sessionend', handleSessionChange);
 							},
@@ -249,26 +248,20 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						stateToUpdate.performance = { ...state.performance, ...performance };
 					}
 
-					store.set(stateToUpdate);
+					store.update(stateToUpdate);
 
 					// Check size, allow it to take on container bounds initially
 					const size = computeInitialSize(canvas, sizeOptions);
 					if (!is.equ(size, state.size, shallowLoose)) {
 						state.setSize(size.width, size.height, size.top, size.left);
 					}
+
 					// Check pixelratio
 					if (dpr && state.viewport.dpr !== makeDpr(dpr)) state.setDpr(dpr);
 					// Check frameloop
 					if (state.frameloop !== frameloop) state.setFrameloop(frameloop);
 
 					isConfigured = true;
-					queueMicrotask(() => {
-						invalidateRef?.destroy();
-						invalidateRef = effect(() => void store.state().invalidate(), {
-							manualCleanup: true,
-							injector: assertedInjector,
-						});
-					});
 				},
 			};
 		};
@@ -277,11 +270,17 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 export type NgtCanvasConfigurator = ReturnType<ReturnType<typeof injectCanvasRootInitializer>>;
 
-function computeInitialSize(canvas: HTMLCanvasElement | THREE.OffscreenCanvas, defaultSize?: NgtSize): NgtSize {
-	if (defaultSize) return defaultSize;
+function computeInitialSize(canvas: NgtCanvasElement, defaultSize?: NgtSize): NgtSize {
+	if (defaultSize) {
+		return defaultSize;
+	}
 
-	if (canvas instanceof HTMLCanvasElement && canvas.parentElement) {
+	if (typeof HTMLCanvasElement !== 'undefined' && canvas instanceof HTMLCanvasElement && canvas.parentElement) {
 		return canvas.parentElement.getBoundingClientRect();
+	}
+
+	if (typeof OffscreenCanvas !== 'undefined' && canvas instanceof OffscreenCanvas) {
+		return { width: canvas.width, height: canvas.height, top: 0, left: 0 };
 	}
 
 	return { width: 0, height: 0, top: 0, left: 0 };

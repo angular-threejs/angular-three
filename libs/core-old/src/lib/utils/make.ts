@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { NgtGLOptions } from '../canvas';
 import type { NgtIntersection } from '../events';
+import type { NgtCanvasElement } from '../roots';
 import type { NgtDpr, NgtSize } from '../store';
 
 const idCache: { [id: string]: boolean | undefined } = {};
@@ -28,7 +29,7 @@ export function makeDefaultCamera(isOrthographic: boolean, size: NgtSize) {
 	return new THREE.PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
 }
 
-export function makeDefaultRenderer(glOptions: NgtGLOptions, canvasElement: HTMLCanvasElement): THREE.WebGLRenderer {
+export function makeDefaultRenderer(glOptions: NgtGLOptions, canvasElement: NgtCanvasElement): THREE.WebGLRenderer {
 	const customRenderer = (
 		typeof glOptions === 'function' ? glOptions(canvasElement) : glOptions
 	) as THREE.WebGLRenderer;
