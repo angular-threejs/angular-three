@@ -7,3 +7,5 @@ CHANGELOG.md
 libs/soba/.storybook/public/**/*.js
 apps/sandbox/src/assets/**/*.js
 apps/examples/src/assets/**/*.js
+
+/.nx/cache
