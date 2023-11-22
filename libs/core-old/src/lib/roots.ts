@@ -200,8 +200,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							Object.assign(gl.shadowMap, shadows);
 						}
 
-						if (oldEnabled !== gl.shadowMap.enabled || oldType !== gl.shadowMap.type)
-							checkNeedsUpdate(gl.shadowMap);
+						if (oldEnabled !== gl.shadowMap.enabled || oldType !== gl.shadowMap.type) checkNeedsUpdate(gl.shadowMap);
 					}
 
 					// Safely set color management if available.

@@ -115,11 +115,7 @@ export class NgtsCameraShake {
 			const pitch = maxPitch * shake * this.pitchNoise.noise(clock.elapsedTime * pitchFrequency, 1);
 			const roll = maxRoll * shake * this.rollNoise.noise(clock.elapsedTime * rollFrequency, 1);
 
-			camera.rotation.set(
-				this.initialRotation.x + pitch,
-				this.initialRotation.y + yaw,
-				this.initialRotation.z + roll,
-			);
+			camera.rotation.set(this.initialRotation.x + pitch, this.initialRotation.y + yaw, this.initialRotation.z + roll);
 
 			if (decay && intensity > 0) {
 				this.inputs.set((state) => ({ intensity: state.intensity - decayRate * delta }));

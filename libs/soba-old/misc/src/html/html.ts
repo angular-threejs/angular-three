@@ -208,9 +208,7 @@ export class NgtsHtml {
 		this.inputs.set({ pointerEvents });
 	}
 
-	@Input({ alias: 'calculatePosition' }) set _calculatePosition(
-		calculatePosition: NgtsHtmlState['calculatePosition'],
-	) {
+	@Input({ alias: 'calculatePosition' }) set _calculatePosition(calculatePosition: NgtsHtmlState['calculatePosition']) {
 		this.inputs.set({ calculatePosition });
 	}
 
@@ -222,9 +220,7 @@ export class NgtsHtml {
 
 	isRayCastOcclusion = computed(() => {
 		const occlude = this.occlude();
-		return (
-			(occlude && occlude !== 'blending') || (Array.isArray(occlude) && !!occlude.length && is.ref(occlude[0]))
-		);
+		return (occlude && occlude !== 'blending') || (Array.isArray(occlude) && !!occlude.length && is.ref(occlude[0]));
 	});
 
 	occlude = this.inputs.select('occlude');

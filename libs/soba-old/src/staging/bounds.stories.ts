@@ -80,14 +80,7 @@ class Models {
 			<bounds-models />
 		</ngts-bounds>
 
-		<ngts-contact-shadows
-			[position]="[0, -35, 0]"
-			[opacity]="1"
-			[width]="200"
-			[height]="200"
-			[blur]="1"
-			[far]="50"
-		/>
+		<ngts-contact-shadows [position]="[0, -35, 0]" [opacity]="1" [width]="200" [height]="200" [blur]="1" [far]="50" />
 
 		<ngts-orbit-controls [makeDefault]="true" [minPolarAngle]="0" [maxPolarAngle]="Math.PI * 1.75" />
 	`,

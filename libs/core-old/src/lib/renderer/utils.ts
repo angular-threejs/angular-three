@@ -206,9 +206,7 @@ export function processThreeEvent(
 		const localState = getLocalState(instance);
 		if (localState && localState.eventCount) {
 			localState.eventCount -= 1;
-			const index = localState.store
-				.get('internal', 'interaction')
-				.findIndex((obj) => obj.uuid === instance.uuid);
+			const index = localState.store.get('internal', 'interaction').findIndex((obj) => obj.uuid === instance.uuid);
 			if (index >= 0) localState.store.get('internal', 'interaction').splice(index, 1);
 		}
 	};

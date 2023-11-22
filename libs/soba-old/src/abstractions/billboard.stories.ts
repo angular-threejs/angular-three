@@ -71,13 +71,7 @@ class Plane {
 		</billboard-box>
 		<ngt-group [position]="[-2.5, -3, -1]">
 			<ngts-billboard [follow]="follow" [lockX]="lockX" [lockY]="lockY" [lockZ]="lockZ" [position]="[0, 1.05, 0]">
-				<ngts-text
-					text="cone"
-					[fontSize]="1"
-					[outlineWidth]="'5%'"
-					[outlineColor]="'#000'"
-					[outlineOpacity]="1"
-				/>
+				<ngts-text text="cone" [fontSize]="1" [outlineWidth]="'5%'" [outlineColor]="'#000'" [outlineOpacity]="1" />
 			</ngts-billboard>
 			<billboard-cone color="green">
 				<ngt-mesh-standard-material />

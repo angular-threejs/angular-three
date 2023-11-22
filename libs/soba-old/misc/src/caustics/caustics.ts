@@ -303,24 +303,12 @@ export class NgtsCaustics {
 
 				let count = 0;
 				const sub = this.store.get('internal').subscribe(({ gl }) => {
-					const {
-						frames,
-						lightSource,
-						resolution,
-						worldRadius,
-						intensity,
-						backside,
-						backsideIOR,
-						ior,
-						causticsOnly,
-					} = this.inputs.get();
+					const { frames, lightSource, resolution, worldRadius, intensity, backside, backsideIOR, ior, causticsOnly } =
+						this.inputs.get();
 
 					if (frames === Infinity || count++ < frames) {
 						if (Array.isArray(lightSource)) lightDir.fromArray(lightSource).normalize();
-						else
-							lightDir.copy(
-								caustics.worldToLocal(lightSource.nativeElement.getWorldPosition(v)).normalize(),
-							);
+						else lightDir.copy(caustics.worldToLocal(lightSource.nativeElement.getWorldPosition(v)).normalize());
 
 						lightDirInv.copy(lightDir).multiplyScalar(-1);
 
@@ -341,16 +329,12 @@ export class NgtsCaustics {
 						bounds.getCenter(focusPos);
 						boundsVertices = boundsVertices.map((v) => v.clone().sub(focusPos));
 						const lightPlane = lpP.set(lightDirInv, 0);
-						const projectedVerts = boundsVertices.map((v) =>
-							lightPlane.projectPoint(v, new THREE.Vector3()),
-						);
+						const projectedVerts = boundsVertices.map((v) => lightPlane.projectPoint(v, new THREE.Vector3()));
 
 						const centralVert = projectedVerts
 							.reduce((a, b) => a.add(b), v.set(0, 0, 0))
 							.divideScalar(projectedVerts.length);
-						const radius = projectedVerts
-							.map((v) => v.distanceTo(centralVert))
-							.reduce((a, b) => Math.max(a, b));
+						const radius = projectedVerts.map((v) => v.distanceTo(centralVert)).reduce((a, b) => Math.max(a, b));
 						const dirLength = boundsVertices.map((x) => x.dot(lightDir)).reduce((a, b) => Math.max(a, b));
 
 						// Shadows

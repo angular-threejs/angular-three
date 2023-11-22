@@ -14,11 +14,7 @@ $jscomp.makeIterator = function (f) {
 	return m ? m.call(f) : $jscomp.arrayIterator(f);
 };
 $jscomp.getGlobal = function (f) {
-	return 'undefined' != typeof window && window === f
-		? f
-		: 'undefined' != typeof global && null != global
-		  ? global
-		  : f;
+	return 'undefined' != typeof window && window === f ? f : 'undefined' != typeof global && null != global ? global : f;
 };
 $jscomp.global = $jscomp.getGlobal(this);
 $jscomp.ASSUME_ES5 = !1;
@@ -224,8 +220,7 @@ $jscomp.polyfill(
 		};
 		h.race = function (e) {
 			return new h(function (f, h) {
-				for (var l = $jscomp.makeIterator(e), m = l.next(); !m.done; m = l.next())
-					v(m.value).callWhenSettled_(f, h);
+				for (var l = $jscomp.makeIterator(e), m = l.next(); !m.done; m = l.next()) v(m.value).callWhenSettled_(f, h);
 			});
 		};
 		h.all = function (e) {
@@ -362,10 +357,10 @@ var DracoDecoderModule = (function () {
 						PWD: '/',
 						HOME: '/home/web_user',
 						LANG:
-							(
-								('object' === typeof navigator && navigator.languages && navigator.languages[0]) ||
-								'C'
-							).replace('-', '_') + '.UTF-8',
+							(('object' === typeof navigator && navigator.languages && navigator.languages[0]) || 'C').replace(
+								'-',
+								'_',
+							) + '.UTF-8',
 						_: na,
 					},
 					c;
@@ -811,12 +806,7 @@ var DracoDecoderModule = (function () {
 						return Y('Module.instantiateWasm callback failed with error: ' + Na), !1;
 					}
 				(function () {
-					if (
-						da ||
-						'function' !== typeof WebAssembly.instantiateStreaming ||
-						va(U) ||
-						'function' !== typeof fetch
-					)
+					if (da || 'function' !== typeof WebAssembly.instantiateStreaming || va(U) || 'function' !== typeof fetch)
 						return b(c);
 					fetch(U, { credentials: 'same-origin' }).then(function (a) {
 						return WebAssembly.instantiateStreaming(a, d).then(c, function (a) {
@@ -893,10 +883,7 @@ var DracoDecoderModule = (function () {
 				return a.asm.emscripten_bind_DracoUInt32Array___destroy___0.apply(null, arguments);
 			}),
 			Sa = (a._emscripten_bind_AttributeOctahedronTransform_AttributeOctahedronTransform_0 = function () {
-				return a.asm.emscripten_bind_AttributeOctahedronTransform_AttributeOctahedronTransform_0.apply(
-					null,
-					arguments,
-				);
+				return a.asm.emscripten_bind_AttributeOctahedronTransform_AttributeOctahedronTransform_0.apply(null, arguments);
 			}),
 			zb = (a._emscripten_bind_AttributeOctahedronTransform_InitFromAttribute_1 = function () {
 				return a.asm.emscripten_bind_AttributeOctahedronTransform_InitFromAttribute_1.apply(null, arguments);
@@ -1232,10 +1219,7 @@ var DracoDecoderModule = (function () {
 				return a.asm.emscripten_enum_draco_EncodedGeometryType_TRIANGULAR_MESH.apply(null, arguments);
 			}),
 			qd = (a._emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_INVALID_TRANSFORM = function () {
-				return a.asm.emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_INVALID_TRANSFORM.apply(
-					null,
-					arguments,
-				);
+				return a.asm.emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_INVALID_TRANSFORM.apply(null, arguments);
 			}),
 			rd = (a._emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_NO_TRANSFORM = function () {
 				return a.asm.emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_NO_TRANSFORM.apply(null, arguments);
@@ -1247,10 +1231,7 @@ var DracoDecoderModule = (function () {
 				);
 			}),
 			td = (a._emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_OCTAHEDRON_TRANSFORM = function () {
-				return a.asm.emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_OCTAHEDRON_TRANSFORM.apply(
-					null,
-					arguments,
-				);
+				return a.asm.emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_OCTAHEDRON_TRANSFORM.apply(null, arguments);
 			}),
 			ud = (a._emscripten_enum_draco_GeometryAttribute_Type_INVALID = function () {
 				return a.asm.emscripten_enum_draco_GeometryAttribute_Type_INVALID.apply(null, arguments);

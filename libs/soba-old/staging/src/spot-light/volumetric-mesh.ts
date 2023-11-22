@@ -53,11 +53,7 @@ export class NgtsVolumetricMesh {
 		this.spotLightInput.depthBuffer() ? [this.size().width * this.dpr(), this.size().height * this.dpr()] : [0, 0],
 	);
 	geometry = computed(() => {
-		const [radiusTop, radiusBottom, distance] = [
-			this.radiusTop(),
-			this.radiusBottom(),
-			this.spotLightInput.distance(),
-		];
+		const [radiusTop, radiusBottom, distance] = [this.radiusTop(), this.radiusBottom(), this.spotLightInput.distance()];
 
 		const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, distance, 128, 64, true);
 		geometry.applyMatrix4(new THREE.Matrix4().makeTranslation(0, -distance / 2, 0));

@@ -411,9 +411,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 					},
 					applyLocalImpulse(impulse: Triplet, localPoint: Triplet) {
 						const uuid = getUUID(bodyRef, index);
-						uuid &&
-							bodies[uuid] != null &&
-							worker().applyLocalImpulse({ props: [impulse, localPoint], uuid });
+						uuid && bodies[uuid] != null && worker().applyLocalImpulse({ props: [impulse, localPoint], uuid });
 					},
 					applyTorque(torque: Triplet) {
 						const uuid = getUUID(bodyRef, index);

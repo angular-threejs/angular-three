@@ -1,0 +1,58 @@
+{
+	"name": "angular-three",
+	"version": "0.0.0-replace",
+	"publishConfig": {
+		"access": "public"
+	},
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/angular-threejs/angular-three/tree/main/libs/core"
+	},
+	"author": {
+		"name": "Chau Tran",
+		"email": "nartc7789@gmail.com",
+		"url": "https://nartc.me"
+	},
+	"description": "Angular Renderer for THREE.js",
+	"keywords": [
+		"angular",
+		"threejs",
+		"renderer"
+	],
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": "^17.0.0",
+		"@angular/core": "^17.0.0",
+		"ngxtension": "^1.0.0",
+		"three": ">=0.148.0"
+	},
+	"dependencies": {
+		"tslib": "^2.3.0",
+		"@nx/devkit": "^17.0.0",
+		"@phenomnomnominal/tsquery": "^6.0.0",
+		"nx": "^17.0.0"
+	},
+	"sideEffects": false,
+	"generators": "./plugin/generators.json",
+	"schematics": "./plugin/generators.json",
+	"nx-migrations": {
+		"migrations": "./plugin/migrations.json",
+		"packageGroup": [
+			"angular-three-soba",
+			"angular-three-postprocessing",
+			"angular-three-cannon",
+			"angular-three-rapier"
+		]
+	},
+	"ng-update": {
+		"migrations": "./plugin/migrations.json",
+		"packageGroup": [
+			"angular-three-soba",
+			"angular-three-postprocessing",
+			"angular-three-cannon",
+			"angular-three-rapier"
+		]
+	},
+	"web-types": "./web-types.json"
+}

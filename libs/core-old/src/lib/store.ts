@@ -236,8 +236,7 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 						// Clear timeout
 						if (performanceTimeout) clearTimeout(performanceTimeout);
 						// Set lower bound performance
-						if (state.performance.current !== state.performance.min)
-							setPerformanceCurrent(state.performance.min);
+						if (state.performance.current !== state.performance.min) setPerformanceCurrent(state.performance.min);
 
 						// Go back to upper bound performance after a while unless something regresses meanwhile
 						performanceTimeout = setTimeout(() => {
@@ -323,9 +322,7 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 						internal.subscribers.push({ callback, priority, store });
 						// Register subscriber and sort layers from lowest to highest, meaning,
 						// highest priority renders last (on top of the other frames)
-						internal.subscribers = internal.subscribers.sort(
-							(a, b) => (a.priority || 0) - (b.priority || 0),
-						);
+						internal.subscribers = internal.subscribers.sort((a, b) => (a.priority || 0) - (b.priority || 0));
 						return () => {
 							const internal = get('internal');
 							if (internal?.subscribers) {
@@ -364,8 +361,7 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 				updateCamera(camera, size);
 				gl.setPixelRatio(viewport.dpr);
 
-				const updateStyle =
-					typeof HTMLCanvasElement !== 'undefined' && gl.domElement instanceof HTMLCanvasElement;
+				const updateStyle = typeof HTMLCanvasElement !== 'undefined' && gl.domElement instanceof HTMLCanvasElement;
 				gl.setSize(size.width, size.height, updateStyle);
 			}
 

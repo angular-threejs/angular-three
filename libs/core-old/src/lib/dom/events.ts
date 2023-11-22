@@ -61,12 +61,10 @@ export function createPointerEvents(store: NgtSignalStore<NgtState>): NgtEventMa
 
 			state.setEvents({ connected: target });
 
-			Object.entries(state.events.handlers ?? {}).forEach(
-				([eventName, eventHandler]: [string, EventListener]) => {
-					const passive = DOM_EVENTS[eventName as keyof typeof DOM_EVENTS];
-					target.addEventListener(eventName, eventHandler, { passive });
-				},
-			);
+			Object.entries(state.events.handlers ?? {}).forEach(([eventName, eventHandler]: [string, EventListener]) => {
+				const passive = DOM_EVENTS[eventName as keyof typeof DOM_EVENTS];
+				target.addEventListener(eventName, eventHandler, { passive });
+			});
 		},
 		disconnect: () => {
 			const { events, setEvents } = store.get();

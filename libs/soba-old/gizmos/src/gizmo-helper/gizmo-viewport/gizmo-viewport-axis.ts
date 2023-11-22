@@ -47,18 +47,8 @@ export class NgtsGizmoViewportAxis {
 	selector: 'ngts-gizmo-viewport-axis-head',
 	standalone: true,
 	template: `
-		<ngt-sprite
-			ngtCompound
-			[scale]="scale()"
-			(pointerover)="onPointerOver($event)"
-			(pointerout)="onPointerOut($event)"
-		>
-			<ngt-sprite-material
-				[map]="texture()"
-				[opacity]="label() ? 1 : 0.75"
-				[alphaTest]="0.3"
-				[toneMapped]="false"
-			>
+		<ngt-sprite ngtCompound [scale]="scale()" (pointerover)="onPointerOver($event)" (pointerout)="onPointerOut($event)">
+			<ngt-sprite-material [map]="texture()" [opacity]="label() ? 1 : 0.75" [alphaTest]="0.3" [toneMapped]="false">
 				<ngt-value [rawValue]="capabilities().getMaxAnisotropy() || 1" attach="map.anisotropy" />
 			</ngt-sprite-material>
 		</ngt-sprite>

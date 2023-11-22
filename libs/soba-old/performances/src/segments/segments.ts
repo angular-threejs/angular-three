@@ -171,12 +171,7 @@ export class NgtsSegments {
 
 	private beforeRender() {
 		injectBeforeRender(() => {
-			const [segments, limit, positions, colors] = [
-				this.segments(),
-				this.limit(),
-				this.positions(),
-				this.colors(),
-			];
+			const [segments, limit, positions, colors] = [this.segments(), this.limit(), this.positions(), this.colors()];
 			for (let i = 0; i < limit; i++) {
 				const segmentRef = segments[i];
 				const segment = is.ref(segmentRef) ? segmentRef.nativeElement : segmentRef;

@@ -9,13 +9,7 @@ import { makeCanvasOptions, makeDecorators, makeStoryFunction } from '../setup-c
 	standalone: true,
 	template: `
 		<ngts-segments [limit]="10_000" [lineWidth]="0.1">
-			<ngts-segment
-				*ngFor="let ref of refs"
-				color="orange"
-				[segmentRef]="ref"
-				[start]="[0, 0, 0]"
-				[end]="[0, 0, 0]"
-			/>
+			<ngts-segment *ngFor="let ref of refs" color="orange" [segmentRef]="ref" [start]="[0, 0, 0]" [end]="[0, 0, 0]" />
 		</ngts-segments>
 		<ngts-orbit-controls />
 	`,

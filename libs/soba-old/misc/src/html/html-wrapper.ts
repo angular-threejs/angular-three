@@ -269,11 +269,7 @@ export class NgtsHtmlWrapper {
 
 	private render() {
 		effect((onCleanup) => {
-			const [{ transform }, element, content] = [
-				this.htmlInputs.state(),
-				this.element(),
-				this.htmlInputs.content(),
-			];
+			const [{ transform }, element, content] = [this.htmlInputs.state(), this.element(), this.htmlInputs.content()];
 
 			if (element) {
 				this.isMeshSizeSet = false;
@@ -440,17 +436,11 @@ export class NgtsHtmlWrapper {
 						const { isOrthographicCamera, top, left, bottom, right } = camera as THREE.OrthographicCamera;
 						const cameraMatrix = getCameraCSSMatrix(camera.matrixWorldInverse);
 						const cameraTransform = isOrthographicCamera
-							? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon(
-									(top + bottom) / 2,
-							  )}px)`
+							? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
 							: `translateZ(${fov}px)`;
 						let matrix = group.matrixWorld;
 						if (sprite) {
-							matrix = camera.matrixWorldInverse
-								.clone()
-								.transpose()
-								.copyPosition(matrix)
-								.scale(group.scale);
+							matrix = camera.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(group.scale);
 							matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0;
 							matrix.elements[15] = 1;
 						}

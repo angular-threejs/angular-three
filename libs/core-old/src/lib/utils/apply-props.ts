@@ -79,11 +79,9 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 			else if (value !== undefined) {
 				const isColor = targetProp instanceof THREE.Color;
 				// allow setting array scalars
-				if (!isColor && (targetProp as NgtAnyRecord)['setScalar'])
-					(targetProp as NgtAnyRecord)['setScalar'](value);
+				if (!isColor && (targetProp as NgtAnyRecord)['setScalar']) (targetProp as NgtAnyRecord)['setScalar'](value);
 				// layers have no copy function, copy the mask
-				else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers)
-					targetProp.mask = value.mask;
+				else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) targetProp.mask = value.mask;
 				// otherwise just set ...
 				else targetProp['set'](value);
 

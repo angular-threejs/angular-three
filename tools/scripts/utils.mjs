@@ -234,14 +234,9 @@ export function createProgram(filePaths, sourceFilePath) {
 					const typeDeclaration = typesMap[typeReferenceName];
 					processTypeReferenceNode(metadata, typeDeclaration, sobaMap);
 				} else if (relativeImportPaths[typeReferenceName]) {
-					const { sourceFile: relativeModuleSourceFile } = createProgram([
-						relativeImportPaths[typeReferenceName],
-					]);
+					const { sourceFile: relativeModuleSourceFile } = createProgram([relativeImportPaths[typeReferenceName]]);
 					ts.forEachChild(relativeModuleSourceFile, (relativeModuleNode) => {
-						if (
-							ts.isTypeAliasDeclaration(relativeModuleNode) &&
-							relativeModuleNode.name.text === typeReferenceName
-						) {
+						if (ts.isTypeAliasDeclaration(relativeModuleNode) && relativeModuleNode.name.text === typeReferenceName) {
 							processTypeMembers(metadata, relativeModuleNode.type.members);
 						} else if (
 							ts.isInterfaceDeclaration(relativeModuleNode) &&
@@ -261,10 +256,7 @@ export function createProgram(filePaths, sourceFilePath) {
 						).concat('.ts');
 						const { sourceFile: sobaReferenceSourceFile } = createProgram([typeReferencePath]);
 						ts.forEachChild(sobaReferenceSourceFile, (sobaReferenceNode) => {
-							if (
-								ts.isTypeAliasDeclaration(sobaReferenceNode) &&
-								sobaReferenceNode.name.text === typeReferenceName
-							) {
+							if (ts.isTypeAliasDeclaration(sobaReferenceNode) && sobaReferenceNode.name.text === typeReferenceName) {
 								processTypeMembers(metadata, sobaReferenceNode.type.members);
 							} else if (
 								ts.isInterfaceDeclaration(sobaReferenceNode) &&
@@ -298,8 +290,7 @@ export function createProgram(filePaths, sourceFilePath) {
 
 export function createBareJsons(packageName = 'angular-three', libName = 'core') {
 	const metadataJson = {
-		$schema:
-			'https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json',
+		$schema: 'https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json',
 		version: 1.1,
 		tags: [],
 	};

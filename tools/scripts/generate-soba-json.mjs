@@ -98,9 +98,7 @@ for (const path of paths) {
 											const externalSymbolName = tag.comment.substring(1);
 											const externalDtsPath = externalsMap[externalSymbolName];
 											if (externalDtsPath) {
-												const { sourceFile: externalSourceFile } = createProgram([
-													externalDtsPath,
-												]);
+												const { sourceFile: externalSourceFile } = createProgram([externalDtsPath]);
 												ts.forEachChild(externalSourceFile, (externalChildNode) => {
 													if (
 														ts.isClassDeclaration(externalChildNode) &&
@@ -111,10 +109,7 @@ for (const path of paths) {
 														ts.isTypeAliasDeclaration(externalChildNode) &&
 														externalChildNode.name.text === externalSymbolName
 													) {
-														processTypeMembers(
-															metadataAtMember,
-															externalChildNode.type.members,
-														);
+														processTypeMembers(metadataAtMember, externalChildNode.type.members);
 													}
 												});
 											}

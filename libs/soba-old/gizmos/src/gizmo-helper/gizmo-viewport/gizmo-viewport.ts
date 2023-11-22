@@ -13,16 +13,8 @@ extend({ Group, AmbientLight, PointLight });
 	template: `
 		<ngt-group ngtCompound [scale]="40">
 			<ngts-gizmo-viewport-axis [color]="axisColors()[0]" [rotation]="[0, 0, 0]" [scale]="axisScale()" />
-			<ngts-gizmo-viewport-axis
-				[color]="axisColors()[1]"
-				[rotation]="[0, 0, Math.PI / 2]"
-				[scale]="axisScale()"
-			/>
-			<ngts-gizmo-viewport-axis
-				[color]="axisColors()[2]"
-				[rotation]="[0, -Math.PI / 2, 0]"
-				[scale]="axisScale()"
-			/>
+			<ngts-gizmo-viewport-axis [color]="axisColors()[1]" [rotation]="[0, 0, Math.PI / 2]" [scale]="axisScale()" />
+			<ngts-gizmo-viewport-axis [color]="axisColors()[2]" [rotation]="[0, -Math.PI / 2, 0]" [scale]="axisScale()" />
 			<ng-container *ngIf="!hideAxisHeads()">
 				<ngts-gizmo-viewport-axis-head
 					[arcStyle]="axisColors()[0]"

@@ -404,8 +404,7 @@ export class NgtrPhysics {
 
 		const rigidBodyHandle = collider?.parent()?.handle;
 		const rigidBody = rigidBodyHandle !== undefined ? worldProxy?.proxy.getRigidBody(rigidBodyHandle) : undefined;
-		const rbEvents =
-			rigidBody && rigidBodyHandle !== undefined ? this.rigidBodyEvents.get(rigidBodyHandle) : undefined;
+		const rbEvents = rigidBody && rigidBodyHandle !== undefined ? this.rigidBodyEvents.get(rigidBodyHandle) : undefined;
 		const rigidBodyState = rigidBodyHandle !== undefined ? this.rigidBodyStates.get(rigidBodyHandle) : undefined;
 
 		const source: CollisionSource = {

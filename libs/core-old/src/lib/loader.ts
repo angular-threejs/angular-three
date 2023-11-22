@@ -66,10 +66,7 @@ function load<
 							url,
 							(data) => {
 								if ('scene' in (data as NgtAnyRecord)) {
-									Object.assign(
-										data as NgtAnyRecord,
-										makeObjectGraph((data as NgtAnyRecord)['scene']),
-									);
+									Object.assign(data as NgtAnyRecord, makeObjectGraph((data as NgtAnyRecord)['scene']));
 								}
 								resolve(data);
 							},

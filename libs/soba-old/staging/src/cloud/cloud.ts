@@ -40,10 +40,7 @@ declare global {
 				[ref]="groupRef"
 				(beforeRender)="onBeforeRender($event)"
 			>
-				<ngts-billboard
-					*ngFor="let cloud of clouds(); let i = index"
-					[position]="[cloud.x, cloud.y, -i * depth()]"
-				>
+				<ngts-billboard *ngFor="let cloud of clouds(); let i = index" [position]="[cloud.x, cloud.y, -i * depth()]">
 					<ngt-mesh [scale]="cloud.scale" [rotation]="[0, 0, 0]">
 						<ngt-plane-geometry />
 						<ngt-mesh-standard-material

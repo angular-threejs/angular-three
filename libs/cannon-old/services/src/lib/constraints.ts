@@ -91,11 +91,7 @@ function injectConstraint<
 	type: TConstraintType,
 	bodyA: NgtInjectedRef<A> | A,
 	bodyB: NgtInjectedRef<B> | B,
-	{
-		injector,
-		deps = () => ({}),
-		opts = () => ({}) as TOptions,
-	}: NgtcConstraintOptions<TConstraintType, TOptions> = {},
+	{ injector, deps = () => ({}), opts = () => ({}) as TOptions }: NgtcConstraintOptions<TConstraintType, TOptions> = {},
 ): NgtcConstraintReturn<TConstraintType, A, B> {
 	return assertInjector(injectConstraint, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();

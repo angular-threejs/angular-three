@@ -159,11 +159,7 @@ export class NgtsGizmoHelper {
 
 	api = {
 		tweenCamera: (direction: Vector3) => {
-			const [defaultControls, mainCamera, invalidate] = [
-				this.defaultControls(),
-				this.mainCamera(),
-				this.invalidate(),
-			];
+			const [defaultControls, mainCamera, invalidate] = [this.defaultControls(), this.mainCamera(), this.invalidate()];
 			this.animating = true;
 			if (defaultControls) this.focusPoint = defaultControls?.target;
 			this.radius = mainCamera.position.distanceTo(this.target);
@@ -221,11 +217,7 @@ export class NgtsGizmoHelper {
 						// animate position by doing a slerp and then scaling the position on the unit sphere
 						this.q1.rotateTowards(this.q2, step);
 						// animate orientation
-						mainCamera.position
-							.set(0, 0, 1)
-							.applyQuaternion(this.q1)
-							.multiplyScalar(this.radius)
-							.add(this.focusPoint);
+						mainCamera.position.set(0, 0, 1).applyQuaternion(this.q1).multiplyScalar(this.radius).add(this.focusPoint);
 						mainCamera.up.set(0, 1, 0).applyQuaternion(this.q1).normalize();
 						mainCamera.quaternion.copy(this.q1);
 						if (this.update.observed) this.update.emit();

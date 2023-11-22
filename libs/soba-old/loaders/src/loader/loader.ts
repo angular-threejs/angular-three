@@ -36,11 +36,7 @@ export interface NgtsLoaderState {
 		>
 			<div>
 				<div class="ngts-loader-inner" [class]="inner() || ''">
-					<div
-						class="ngts-loader-bar"
-						[class]="bar() || ''"
-						[style.--ngts-loader-bar-scale]="progress() / 100"
-					></div>
+					<div class="ngts-loader-bar" [class]="bar() || ''" [style.--ngts-loader-bar-scale]="progress() / 100"></div>
 					<span #progressSpanRef class="ngts-loader-data" [class]="data() || ''"></span>
 				</div>
 			</div>

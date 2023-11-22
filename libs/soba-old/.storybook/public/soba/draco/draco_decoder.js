@@ -52,9 +52,7 @@ var DracoDecoderModule = (function () {
 		ENVIRONMENT_IS_WEB = typeof window === 'object';
 		ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
 		ENVIRONMENT_HAS_NODE =
-			typeof process === 'object' &&
-			typeof process.versions === 'object' &&
-			typeof process.versions.node === 'string';
+			typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node === 'string';
 		ENVIRONMENT_IS_NODE = ENVIRONMENT_HAS_NODE && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
 		ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
 		var scriptDirectory = '';
@@ -1277,9 +1275,7 @@ var DracoDecoderModule = (function () {
 									na = (fa + 8) | 0;
 									la = (fa + 4) | 0;
 									while (1) {
-										if (
-											!((o[(o[(a + 56) >> 2] + ((ma >>> 3) & 536870908)) >> 2] >>> (ma & 31)) & 1)
-										) {
+										if (!((o[(o[(a + 56) >> 2] + ((ma >>> 3) & 536870908)) >> 2] >>> (ma & 31)) & 1)) {
 											ia = u(ma, 3);
 											Zi(a, 0, ia);
 											sa = o[pa >> 2];
@@ -1293,13 +1289,7 @@ var DracoDecoderModule = (function () {
 											ga = ha >> 2;
 											ka = ia >>> 0 > ga >>> 0;
 											ka =
-												((o[ra >> 2] - o[(a + 32) >> 2]) >> 2) >>> 0 > (ka ? ia : ga) >>> 0
-													? 2
-													: ka
-													  ? 1
-													  : ha
-													    ? 0
-													    : -1;
+												((o[ra >> 2] - o[(a + 32) >> 2]) >> 2) >>> 0 > (ka ? ia : ga) >>> 0 ? 2 : ka ? 1 : ha ? 0 : -1;
 											b: {
 												if (o[(a + 68) >> 2] < 1) {
 													break b;
@@ -1323,12 +1313,7 @@ var DracoDecoderModule = (function () {
 														break d;
 													}
 													ha = ((ia >>> 0) / 3) | 0;
-													ha =
-														o[
-															(((o[(o[a >> 2] + 96) >> 2] + u(ha, 12)) | 0) +
-																((ia - u(ha, 3)) << 2)) >>
-																2
-														];
+													ha = o[(((o[(o[a >> 2] + 96) >> 2] + u(ha, 12)) | 0) + ((ia - u(ha, 3)) << 2)) >> 2];
 												}
 												o[(ga + 8) >> 2] = ha;
 												ga = o[la >> 2];
@@ -1527,11 +1512,7 @@ var DracoDecoderModule = (function () {
 													Ca =
 														(Aa | 0) < 0
 															? -1
-															: o[
-																	(((o[(o[a >> 2] + 96) >> 2] + u(Ga, 12)) | 0) +
-																		((Aa >>> 0) % 3 << 2)) >>
-																		2
-															  ];
+															: o[(((o[(o[a >> 2] + 96) >> 2] + u(Ga, 12)) | 0) + ((Aa >>> 0) % 3 << 2)) >> 2];
 													o[(Ea + 12) >> 2] = Ca;
 													Da = o[Fa >> 2];
 													c: {
@@ -1553,12 +1534,7 @@ var DracoDecoderModule = (function () {
 															break d;
 														}
 														Ca = ((Da >>> 0) / 3) | 0;
-														Ca =
-															o[
-																(((o[(o[a >> 2] + 96) >> 2] + u(Ca, 12)) | 0) +
-																	((Da - u(Ca, 3)) << 2)) >>
-																	2
-															];
+														Ca = o[(((o[(o[a >> 2] + 96) >> 2] + u(Ca, 12)) | 0) + ((Da - u(Ca, 3)) << 2)) >> 2];
 													}
 													o[(Ea + 12) >> 2] = Ca;
 													Da = o[Fa >> 2];
@@ -1582,12 +1558,7 @@ var DracoDecoderModule = (function () {
 															break f;
 														}
 														Ca = ((Ga >>> 0) / 3) | 0;
-														Ca =
-															o[
-																(((o[(o[a >> 2] + 96) >> 2] + u(Ca, 12)) | 0) +
-																	((Ga - u(Ca, 3)) << 2)) >>
-																	2
-															];
+														Ca = o[(((o[(o[a >> 2] + 96) >> 2] + u(Ca, 12)) | 0) + ((Ga - u(Ca, 3)) << 2)) >> 2];
 													}
 													o[(Da + 76) >> 2] = Ca;
 													o[(Ea + 12) >> 2] = Ca;
@@ -1603,11 +1574,7 @@ var DracoDecoderModule = (function () {
 												Ca =
 													(Aa | 0) < 0
 														? -1
-														: o[
-																(((o[(o[a >> 2] + 96) >> 2] + u(Ga, 12)) | 0) +
-																	((Aa >>> 0) % 3 << 2)) >>
-																	2
-														  ];
+														: o[(((o[(o[a >> 2] + 96) >> 2] + u(Ga, 12)) | 0) + ((Aa >>> 0) % 3 << 2)) >> 2];
 												o[(a + 76) >> 2] = Ca;
 												o[(Ea + 12) >> 2] = Ca;
 												Da = o[Fa >> 2];
@@ -1794,10 +1761,7 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
@@ -1806,10 +1770,7 @@ var DracoDecoderModule = (function () {
 															R = (R + 1) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -1824,10 +1785,7 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
@@ -1836,10 +1794,7 @@ var DracoDecoderModule = (function () {
 															R = (R + 1) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -1854,10 +1809,7 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
@@ -1866,10 +1818,7 @@ var DracoDecoderModule = (function () {
 															R = (R + 2) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -1884,10 +1833,7 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
@@ -1896,10 +1842,7 @@ var DracoDecoderModule = (function () {
 															R = (R + 2) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -1914,24 +1857,16 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
 															Wa = v(o[R >> 2]);
-															s[((Va << 2) + Pa) >> 2] = Xa
-																? v(Wa * v(4.656612873077393e-10))
-																: Wa;
+															s[((Va << 2) + Pa) >> 2] = Xa ? v(Wa * v(4.656612873077393e-10)) : Wa;
 															R = (R + 4) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -1946,24 +1881,16 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
 															Wa = v(r[R >> 2]);
-															s[((Va << 2) + Pa) >> 2] = Xa
-																? v(Wa * v(2.3283064365386963e-10))
-																: Wa;
+															s[((Va << 2) + Pa) >> 2] = Xa ? v(Wa * v(2.3283064365386963e-10)) : Wa;
 															R = (R + 4) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -1978,24 +1905,16 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
 															Wa = v(+r[R >> 2] + 4294967296 * +o[(R + 4) >> 2]);
-															s[((Va << 2) + Pa) >> 2] = Xa
-																? v(Wa * v(1.0842021724855044e-19))
-																: Wa;
+															s[((Va << 2) + Pa) >> 2] = Xa ? v(Wa * v(1.0842021724855044e-19)) : Wa;
 															R = (R + 8) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -2010,24 +1929,16 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														Xa = p[(a + 32) | 0];
 														while (1) {
 															Wa = v(+r[R >> 2] + 4294967296 * +r[(R + 4) >> 2]);
-															s[((Va << 2) + Pa) >> 2] = Xa
-																? v(Wa * v(5.421010862427522e-20))
-																: Wa;
+															s[((Va << 2) + Pa) >> 2] = Xa ? v(Wa * v(5.421010862427522e-20)) : Wa;
 															R = (R + 8) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -2042,20 +1953,14 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														while (1) {
 															o[((Va << 2) + Pa) >> 2] = o[R >> 2];
 															R = (R + 4) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -2070,20 +1975,14 @@ var DracoDecoderModule = (function () {
 													Ua = m[(a + 24) | 0];
 													if ((((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24 >= 1) {
 														Ua = o[o[a >> 2] >> 2];
-														R =
-															(o[(a + 48) >> 2] +
-																Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-															0;
+														R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 														R = (Ua + R) | 0;
 														while (1) {
 															s[((Va << 2) + Pa) >> 2] = t[R >> 3];
 															R = (R + 8) | 0;
 															Va = (Va + 1) | 0;
 															Ua = m[(a + 24) | 0];
-															if (
-																(Va | 0) <
-																(((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24
-															) {
+															if ((Va | 0) < (((Ua | 0) > (Aa | 0) ? Aa : Ua) << 24) >> 24) {
 																continue;
 															}
 															break;
@@ -2482,20 +2381,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = p[R | 0];
 																	R = (R + 1) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2510,20 +2403,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = p[R | 0];
 																	R = (R + 1) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2538,20 +2425,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = p[R | 0];
 																	R = (R + 2) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2566,20 +2447,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = p[R | 0];
 																	R = (R + 2) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2594,20 +2469,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2622,20 +2491,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2650,20 +2513,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2678,20 +2535,14 @@ var DracoDecoderModule = (function () {
 															Cb = m[(a + 24) | 0];
 															if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 																Cb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Cb + R) | 0;
 																while (1) {
 																	m[(Bb + Db) | 0] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Db = (Db + 1) | 0;
 																	Cb = m[(a + 24) | 0];
-																	if (
-																		(Db | 0) <
-																		(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																	) {
+																	if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -2708,10 +2559,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															Cb = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Cb + R) | 0;
 															while (1) {
 																Cb = (Bb + Db) | 0;
@@ -2727,10 +2575,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 4) | 0;
 																Db = (Db + 1) | 0;
 																Cb = m[(a + 24) | 0];
-																if (
-																	(Db | 0) <
-																	(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																) {
+																if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -2743,10 +2588,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															Cb = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Cb + R) | 0;
 															while (1) {
 																Cb = (Bb + Db) | 0;
@@ -2762,10 +2604,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 8) | 0;
 																Db = (Db + 1) | 0;
 																Cb = m[(a + 24) | 0];
-																if (
-																	(Db | 0) <
-																	(((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24
-																) {
+																if ((Db | 0) < (((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -2779,10 +2618,7 @@ var DracoDecoderModule = (function () {
 												Cb = m[(a + 24) | 0];
 												if ((((Cb | 0) > (Ab | 0) ? Ab : Cb) << 24) >> 24 >= 1) {
 													Cb = o[o[a >> 2] >> 2];
-													R =
-														(o[(a + 48) >> 2] +
-															Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-														0;
+													R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 													R = (Cb + R) | 0;
 													while (1) {
 														m[(Bb + Db) | 0] = p[R | 0];
@@ -2977,20 +2813,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = p[R | 0];
 																	R = (R + 1) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3005,20 +2835,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = p[R | 0];
 																	R = (R + 1) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3033,20 +2857,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = p[R | 0];
 																	R = (R + 2) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3061,20 +2879,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = p[R | 0];
 																	R = (R + 2) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3089,20 +2901,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3117,20 +2923,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3145,20 +2945,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3173,20 +2967,14 @@ var DracoDecoderModule = (function () {
 															Qb = m[(a + 24) | 0];
 															if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 																Qb = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qb + R) | 0;
 																while (1) {
 																	m[(Bb + Rb) | 0] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Rb = (Rb + 1) | 0;
 																	Qb = m[(a + 24) | 0];
-																	if (
-																		(Rb | 0) <
-																		(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																	) {
+																	if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3203,10 +2991,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															Qb = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Qb + R) | 0;
 															while (1) {
 																Qb = (Bb + Rb) | 0;
@@ -3222,10 +3007,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 4) | 0;
 																Rb = (Rb + 1) | 0;
 																Qb = m[(a + 24) | 0];
-																if (
-																	(Rb | 0) <
-																	(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																) {
+																if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -3238,10 +3020,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															Qb = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Qb + R) | 0;
 															while (1) {
 																Qb = (Bb + Rb) | 0;
@@ -3257,10 +3036,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 8) | 0;
 																Rb = (Rb + 1) | 0;
 																Qb = m[(a + 24) | 0];
-																if (
-																	(Rb | 0) <
-																	(((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24
-																) {
+																if ((Rb | 0) < (((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -3274,10 +3050,7 @@ var DracoDecoderModule = (function () {
 												Qb = m[(a + 24) | 0];
 												if ((((Qb | 0) > (Ab | 0) ? Ab : Qb) << 24) >> 24 >= 1) {
 													Qb = o[o[a >> 2] >> 2];
-													R =
-														(o[(a + 48) >> 2] +
-															Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-														0;
+													R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 													R = (Qb + R) | 0;
 													while (1) {
 														m[(Bb + Rb) | 0] = p[R | 0];
@@ -3468,8 +3241,7 @@ var DracoDecoderModule = (function () {
 									if ((ec | 0) > -1) {
 										hc = Ab << 1;
 										Bb = (Bb - dc) | 0;
-										Bb =
-											(Bb >> 1) >>> 0 < 1073741823 ? (Bb >>> 0 < ec >>> 0 ? ec : Bb) : 2147483647;
+										Bb = (Bb >> 1) >>> 0 < 1073741823 ? (Bb >>> 0 < ec >>> 0 ? ec : Bb) : 2147483647;
 										Ab = 0;
 										b: {
 											if (!Bb) {
@@ -3526,20 +3298,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = m[R | 0];
 																	R = (R + 1) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3554,20 +3320,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = p[R | 0];
 																	R = (R + 1) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3582,20 +3342,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = q[R >> 1];
 																	R = (R + 2) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3610,20 +3364,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = q[R >> 1];
 																	R = (R + 2) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3638,20 +3386,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3666,20 +3408,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3694,20 +3430,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3722,20 +3452,14 @@ var DracoDecoderModule = (function () {
 															mc = m[(a + 24) | 0];
 															if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 																mc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (mc + R) | 0;
 																while (1) {
 																	n[((nc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	nc = (nc + 1) | 0;
 																	mc = m[(a + 24) | 0];
-																	if (
-																		(nc | 0) <
-																		(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																	) {
+																	if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -3752,10 +3476,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															mc = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (mc + R) | 0;
 															while (1) {
 																mc = ((nc << 1) + lc) | 0;
@@ -3771,10 +3492,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 4) | 0;
 																nc = (nc + 1) | 0;
 																mc = m[(a + 24) | 0];
-																if (
-																	(nc | 0) <
-																	(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																) {
+																if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -3787,10 +3505,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															mc = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (mc + R) | 0;
 															while (1) {
 																mc = ((nc << 1) + lc) | 0;
@@ -3806,10 +3521,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 8) | 0;
 																nc = (nc + 1) | 0;
 																mc = m[(a + 24) | 0];
-																if (
-																	(nc | 0) <
-																	(((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24
-																) {
+																if ((nc | 0) < (((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -3823,10 +3535,7 @@ var DracoDecoderModule = (function () {
 												mc = m[(a + 24) | 0];
 												if ((((mc | 0) > (kc | 0) ? kc : mc) << 24) >> 24 >= 1) {
 													mc = o[o[a >> 2] >> 2];
-													R =
-														(o[(a + 48) >> 2] +
-															Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-														0;
+													R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 													R = (mc + R) | 0;
 													while (1) {
 														n[((nc << 1) + lc) >> 1] = p[R | 0];
@@ -4016,20 +3725,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = m[R | 0];
 																	R = (R + 1) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4044,20 +3747,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = p[R | 0];
 																	R = (R + 1) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4072,20 +3769,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = q[R >> 1];
 																	R = (R + 2) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4100,20 +3791,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = q[R >> 1];
 																	R = (R + 2) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4128,20 +3813,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4156,20 +3835,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4184,20 +3857,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4212,20 +3879,14 @@ var DracoDecoderModule = (function () {
 															Bc = m[(a + 24) | 0];
 															if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 																Bc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Bc + R) | 0;
 																while (1) {
 																	n[((Cc << 1) + lc) >> 1] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Cc = (Cc + 1) | 0;
 																	Bc = m[(a + 24) | 0];
-																	if (
-																		(Cc | 0) <
-																		(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																	) {
+																	if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4242,10 +3903,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															Bc = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Bc + R) | 0;
 															while (1) {
 																Bc = ((Cc << 1) + lc) | 0;
@@ -4261,10 +3919,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 4) | 0;
 																Cc = (Cc + 1) | 0;
 																Bc = m[(a + 24) | 0];
-																if (
-																	(Cc | 0) <
-																	(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																) {
+																if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -4277,10 +3932,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															Bc = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Bc + R) | 0;
 															while (1) {
 																Bc = ((Cc << 1) + lc) | 0;
@@ -4296,10 +3948,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 8) | 0;
 																Cc = (Cc + 1) | 0;
 																Bc = m[(a + 24) | 0];
-																if (
-																	(Cc | 0) <
-																	(((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24
-																) {
+																if ((Cc | 0) < (((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -4313,10 +3962,7 @@ var DracoDecoderModule = (function () {
 												Bc = m[(a + 24) | 0];
 												if ((((Bc | 0) > (kc | 0) ? kc : Bc) << 24) >> 24 >= 1) {
 													Bc = o[o[a >> 2] >> 2];
-													R =
-														(o[(a + 48) >> 2] +
-															Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-														0;
+													R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 													R = (Bc + R) | 0;
 													while (1) {
 														n[((Cc << 1) + lc) >> 1] = p[R | 0];
@@ -4515,20 +4161,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = m[R | 0];
 																	R = (R + 1) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4543,20 +4183,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = p[R | 0];
 																	R = (R + 1) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4571,20 +4205,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = n[R >> 1];
 																	R = (R + 2) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4599,20 +4227,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = q[R >> 1];
 																	R = (R + 2) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4627,20 +4249,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4655,20 +4271,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4683,20 +4293,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4711,20 +4315,14 @@ var DracoDecoderModule = (function () {
 															Qc = m[(a + 24) | 0];
 															if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 																Qc = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (Qc + R) | 0;
 																while (1) {
 																	o[((Rc << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	Rc = (Rc + 1) | 0;
 																	Qc = m[(a + 24) | 0];
-																	if (
-																		(Rc | 0) <
-																		(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																	) {
+																	if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -4741,10 +4339,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															Qc = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Qc + R) | 0;
 															while (1) {
 																Qc = ((Rc << 2) + lc) | 0;
@@ -4760,10 +4355,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 4) | 0;
 																Rc = (Rc + 1) | 0;
 																Qc = m[(a + 24) | 0];
-																if (
-																	(Rc | 0) <
-																	(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																) {
+																if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -4776,10 +4368,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															Qc = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (Qc + R) | 0;
 															while (1) {
 																Qc = ((Rc << 2) + lc) | 0;
@@ -4795,10 +4384,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 8) | 0;
 																Rc = (Rc + 1) | 0;
 																Qc = m[(a + 24) | 0];
-																if (
-																	(Rc | 0) <
-																	(((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24
-																) {
+																if ((Rc | 0) < (((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -4812,10 +4398,7 @@ var DracoDecoderModule = (function () {
 												Qc = m[(a + 24) | 0];
 												if ((((Qc | 0) > (kc | 0) ? kc : Qc) << 24) >> 24 >= 1) {
 													Qc = o[o[a >> 2] >> 2];
-													R =
-														(o[(a + 48) >> 2] +
-															Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-														0;
+													R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 													R = (Qc + R) | 0;
 													while (1) {
 														o[((Rc << 2) + lc) >> 2] = p[R | 0];
@@ -5014,20 +4597,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = m[R | 0];
 																	R = (R + 1) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5042,20 +4619,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = p[R | 0];
 																	R = (R + 1) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5070,20 +4641,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = n[R >> 1];
 																	R = (R + 2) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5098,20 +4663,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = q[R >> 1];
 																	R = (R + 2) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5126,20 +4685,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5154,20 +4707,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 4) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5182,20 +4729,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5210,20 +4751,14 @@ var DracoDecoderModule = (function () {
 															dd = m[(a + 24) | 0];
 															if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 																dd = o[o[a >> 2] >> 2];
-																R =
-																	(o[(a + 48) >> 2] +
-																		Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																	0;
+																R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 																R = (dd + R) | 0;
 																while (1) {
 																	o[((ed << 2) + lc) >> 2] = o[R >> 2];
 																	R = (R + 8) | 0;
 																	ed = (ed + 1) | 0;
 																	dd = m[(a + 24) | 0];
-																	if (
-																		(ed | 0) <
-																		(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																	) {
+																	if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -5240,10 +4775,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															dd = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (dd + R) | 0;
 															while (1) {
 																dd = ((ed << 2) + lc) | 0;
@@ -5259,10 +4791,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 4) | 0;
 																ed = (ed + 1) | 0;
 																dd = m[(a + 24) | 0];
-																if (
-																	(ed | 0) <
-																	(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																) {
+																if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -5275,10 +4804,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															dd = o[o[a >> 2] >> 2];
-															R =
-																(o[(a + 48) >> 2] +
-																	Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-																0;
+															R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 															R = (dd + R) | 0;
 															while (1) {
 																dd = ((ed << 2) + lc) | 0;
@@ -5294,10 +4820,7 @@ var DracoDecoderModule = (function () {
 																R = (R + 8) | 0;
 																ed = (ed + 1) | 0;
 																dd = m[(a + 24) | 0];
-																if (
-																	(ed | 0) <
-																	(((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24
-																) {
+																if ((ed | 0) < (((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -5311,10 +4834,7 @@ var DracoDecoderModule = (function () {
 												dd = m[(a + 24) | 0];
 												if ((((dd | 0) > (kc | 0) ? kc : dd) << 24) >> 24 >= 1) {
 													dd = o[o[a >> 2] >> 2];
-													R =
-														(o[(a + 48) >> 2] +
-															Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) |
-														0;
+													R = (o[(a + 48) >> 2] + Vl(o[(a + 40) >> 2], o[(a + 44) >> 2], R, 0)) | 0;
 													R = (dd + R) | 0;
 													while (1) {
 														o[((ed << 2) + lc) >> 2] = p[R | 0];
@@ -6283,9 +5803,7 @@ var DracoDecoderModule = (function () {
 										o[Be >> 2] = He;
 										Ce = (Fe - Ge) | 0;
 										if ((Ce | 0) >= 1) {
-											o[He >> 2] =
-												(o[He >> 2] & ((-1 >>> (32 - Ce)) ^ -1)) |
-												(De >>> (Ge + o[(jd + 4) >> 2]));
+											o[He >> 2] = (o[He >> 2] & ((-1 >>> (32 - Ce)) ^ -1)) | (De >>> (Ge + o[(jd + 4) >> 2]));
 											o[(Be + 4) >> 2] = Ce;
 											ue = Ce;
 										}
@@ -7009,9 +6527,7 @@ var DracoDecoderModule = (function () {
 									$e = Ye;
 									Ye = o[(Ze + 8) >> 2];
 									o[($e + 4) >> 2] =
-										p[Ye | 0] |
-										(p[(Ye + 1) | 0] << 8) |
-										((p[(Ye + 2) | 0] << 16) | (p[(Ye + 3) | 0] << 24));
+										p[Ye | 0] | (p[(Ye + 1) | 0] << 8) | ((p[(Ye + 2) | 0] << 16) | (p[(Ye + 3) | 0] << 24));
 									$e = 1;
 								}
 								return $e | 0;
@@ -7030,10 +6546,7 @@ var DracoDecoderModule = (function () {
 									af = o[Ze >> 2];
 								}
 								Ze = (af + bf) | 0;
-								Ye =
-									p[(Ye + 4) | 0] |
-									(p[(Ye + 5) | 0] << 8) |
-									((p[(Ye + 6) | 0] << 16) | (p[(Ye + 7) | 0] << 24));
+								Ye = p[(Ye + 4) | 0] | (p[(Ye + 5) | 0] << 8) | ((p[(Ye + 6) | 0] << 16) | (p[(Ye + 7) | 0] << 24));
 								m[Ze | 0] = Ye;
 								m[(Ze + 1) | 0] = Ye >>> 8;
 								m[(Ze + 2) | 0] = Ye >>> 16;
@@ -7066,9 +6579,7 @@ var DracoDecoderModule = (function () {
 									ef = o[ff >> 2];
 									cf = ef;
 									o[(Ye + 4) >> 2] =
-										p[cf | 0] |
-										(p[(cf + 1) | 0] << 8) |
-										((p[(cf + 2) | 0] << 16) | (p[(cf + 3) | 0] << 24));
+										p[cf | 0] | (p[(cf + 1) | 0] << 8) | ((p[(cf + 2) | 0] << 16) | (p[(cf + 3) | 0] << 24));
 									gf = (Ye + 8) | 0;
 									hf = o[(Ye + 8) >> 2];
 									df = (o[(Ye + 12) >> 2] - hf) >> 2;
@@ -7087,10 +6598,7 @@ var DracoDecoderModule = (function () {
 									}
 									ff = 1;
 									Ze = ef;
-									df =
-										p[(Ze + 4) | 0] |
-										(p[(Ze + 5) | 0] << 8) |
-										((p[(Ze + 6) | 0] << 16) | (p[(Ze + 7) | 0] << 24));
+									df = p[(Ze + 4) | 0] | (p[(Ze + 5) | 0] << 8) | ((p[(Ze + 6) | 0] << 16) | (p[(Ze + 7) | 0] << 24));
 									if ((cf << 24) >> 24 >= 1) {
 										hf = cf & 255;
 										gf = o[gf >> 2];
@@ -7100,10 +6608,7 @@ var DracoDecoderModule = (function () {
 											o[(gf + (Ze << 2)) >> 2] = df;
 											cf = (cf + 4) | 0;
 											df = (ef + cf) | 0;
-											df =
-												p[df | 0] |
-												(p[(df + 1) | 0] << 8) |
-												((p[(df + 2) | 0] << 16) | (p[(df + 3) | 0] << 24));
+											df = p[df | 0] | (p[(df + 1) | 0] << 8) | ((p[(df + 2) | 0] << 16) | (p[(df + 3) | 0] << 24));
 											Ze = (Ze + 1) | 0;
 											if (Ze >>> 0 < hf >>> 0) {
 												continue;
@@ -7133,10 +6638,7 @@ var DracoDecoderModule = (function () {
 									jf = o[mf >> 2];
 								}
 								kf = (jf + kf) | 0;
-								jf =
-									p[(Ye + 4) | 0] |
-									(p[(Ye + 5) | 0] << 8) |
-									((p[(Ye + 6) | 0] << 16) | (p[(Ye + 7) | 0] << 24));
+								jf = p[(Ye + 4) | 0] | (p[(Ye + 5) | 0] << 8) | ((p[(Ye + 6) | 0] << 16) | (p[(Ye + 7) | 0] << 24));
 								m[kf | 0] = jf;
 								m[(kf + 1) | 0] = jf >>> 8;
 								m[(kf + 2) | 0] = jf >>> 16;
@@ -7153,10 +6655,7 @@ var DracoDecoderModule = (function () {
 											jf = o[mf >> 2];
 										}
 										lf = (jf + lf) | 0;
-										jf =
-											p[kf | 0] |
-											(p[(kf + 1) | 0] << 8) |
-											((p[(kf + 2) | 0] << 16) | (p[(kf + 3) | 0] << 24));
+										jf = p[kf | 0] | (p[(kf + 1) | 0] << 8) | ((p[(kf + 2) | 0] << 16) | (p[(kf + 3) | 0] << 24));
 										m[lf | 0] = jf;
 										m[(lf + 1) | 0] = jf >>> 8;
 										m[(lf + 2) | 0] = jf >>> 16;
@@ -7177,10 +6676,7 @@ var DracoDecoderModule = (function () {
 									Ze = o[mf >> 2];
 								}
 								Ze = (Ze + jf) | 0;
-								Ye =
-									p[(Ye + 20) | 0] |
-									(p[(Ye + 21) | 0] << 8) |
-									((p[(Ye + 22) | 0] << 16) | (p[(Ye + 23) | 0] << 24));
+								Ye = p[(Ye + 20) | 0] | (p[(Ye + 21) | 0] << 8) | ((p[(Ye + 22) | 0] << 16) | (p[(Ye + 23) | 0] << 24));
 								m[Ze | 0] = Ye;
 								m[(Ze + 1) | 0] = Ye >>> 8;
 								m[(Ze + 2) | 0] = Ye >>> 16;
@@ -7788,15 +7284,7 @@ var DracoDecoderModule = (function () {
 										bg = o[(xf + 12) >> 2];
 										Tf = bg;
 										$f = o[(xf + 20) >> 2];
-										if (
-											(Tf | 0) < ($f | 0)
-												? 1
-												: (Tf | 0) <= ($f | 0)
-												  ? hg >>> 0 > gg >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Tf | 0) < ($f | 0) ? 1 : (Tf | 0) <= ($f | 0) ? (hg >>> 0 > gg >>> 0 ? 0 : 1) : 0) {
 											$f = 0;
 											break a;
 										}
@@ -7810,15 +7298,7 @@ var DracoDecoderModule = (function () {
 										cg = xf;
 										o[(xf + 16) >> 2] = dg;
 										o[(xf + 20) >> 2] = Tf;
-										if (
-											(bg | 0) < (Tf | 0)
-												? 1
-												: (bg | 0) <= (Tf | 0)
-												  ? hg >>> 0 > dg >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((bg | 0) < (Tf | 0) ? 1 : (bg | 0) <= (Tf | 0) ? (hg >>> 0 > dg >>> 0 ? 0 : 1) : 0) {
 											$f = 0;
 											break a;
 										}
@@ -7830,15 +7310,7 @@ var DracoDecoderModule = (function () {
 										}
 										o[(xf + 16) >> 2] = eg;
 										o[(cg + 20) >> 2] = Tf;
-										if (
-											(bg | 0) < (Tf | 0)
-												? 1
-												: (bg | 0) <= (Tf | 0)
-												  ? hg >>> 0 > eg >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((bg | 0) < (Tf | 0) ? 1 : (bg | 0) <= (Tf | 0) ? (hg >>> 0 > eg >>> 0 ? 0 : 1) : 0) {
 											$f = 0;
 											break a;
 										}
@@ -7850,15 +7322,7 @@ var DracoDecoderModule = (function () {
 										}
 										o[(xf + 16) >> 2] = jg;
 										o[(cg + 20) >> 2] = Tf;
-										if (
-											(bg | 0) < (Tf | 0)
-												? 1
-												: (bg | 0) <= (Tf | 0)
-												  ? hg >>> 0 > jg >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((bg | 0) < (Tf | 0) ? 1 : (bg | 0) <= (Tf | 0) ? (hg >>> 0 > jg >>> 0 ? 0 : 1) : 0) {
 											$f = 0;
 											break a;
 										}
@@ -7938,15 +7402,7 @@ var DracoDecoderModule = (function () {
 									tg = o[(qg + 16) >> 2];
 									rg = o[(qg + 12) >> 2];
 									sg = o[(qg + 20) >> 2];
-									if (
-										(rg | 0) < (sg | 0)
-											? 1
-											: (rg | 0) <= (sg | 0)
-											  ? r[(qg + 8) >> 2] > tg >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((rg | 0) < (sg | 0) ? 1 : (rg | 0) <= (sg | 0) ? (r[(qg + 8) >> 2] > tg >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									rg = p[(tg + o[qg >> 2]) | 0];
@@ -8210,10 +7666,7 @@ var DracoDecoderModule = (function () {
 									}
 									Ng = 0;
 									while (1) {
-										Mg = rj(
-											o[(o[(Ye + 4) >> 2] + 4) >> 2],
-											l[o[(o[Lg >> 2] + 24) >> 2]](Lg, Og) | 0,
-										);
+										Mg = rj(o[(o[(Ye + 4) >> 2] + 4) >> 2], l[o[(o[Lg >> 2] + 24) >> 2]](Lg, Og) | 0);
 										if ((Mg | 0) == -1) {
 											break a;
 										}
@@ -8266,15 +7719,7 @@ var DracoDecoderModule = (function () {
 											Qg = (Qg + 1) | 0;
 										}
 										Rg = Qg;
-										if (
-											(Vg | 0) < (Qg | 0)
-												? 1
-												: (Vg | 0) <= (Qg | 0)
-												  ? r[(Pg + 8) >> 2] >= Ug >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Vg | 0) < (Qg | 0) ? 1 : (Vg | 0) <= (Qg | 0) ? (r[(Pg + 8) >> 2] >= Ug >>> 0 ? 0 : 1) : 0) {
 											ul(Tg);
 											return 0;
 										}
@@ -8391,15 +7836,7 @@ var DracoDecoderModule = (function () {
 										eh = o[($g + 16) >> 2];
 										ch = o[($g + 12) >> 2];
 										bh = o[($g + 20) >> 2];
-										if (
-											(ch | 0) < (bh | 0)
-												? 1
-												: (ch | 0) <= (bh | 0)
-												  ? r[($g + 8) >> 2] > eh >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((ch | 0) < (bh | 0) ? 1 : (ch | 0) <= (bh | 0) ? (r[($g + 8) >> 2] > eh >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										hh = p[(eh + o[$g >> 2]) | 0];
@@ -8561,12 +7998,7 @@ var DracoDecoderModule = (function () {
 												Bh = o[((l[o[(o[Ye >> 2] + 28) >> 2]](Ye) | 0) + 4) >> 2];
 												Ch = l[o[(o[Ye >> 2] + 20) >> 2]](Ye, xh) | 0;
 												zh = o[Ah >> 2];
-												if (
-													!l[o[(o[zh >> 2] + 8) >> 2]](
-														zh,
-														o[(o[(Bh + 8) >> 2] + (Ch << 2)) >> 2],
-													)
-												) {
+												if (!l[o[(o[zh >> 2] + 8) >> 2]](zh, o[(o[(Bh + 8) >> 2] + (Ch << 2)) >> 2])) {
 													break c;
 												}
 												xh = (xh + 1) | 0;
@@ -9005,15 +8437,7 @@ var DracoDecoderModule = (function () {
 								mi = qi;
 								ni = o[(li + 20) >> 2];
 								a: {
-									if (
-										(mi | 0) < (ni | 0)
-											? 1
-											: (mi | 0) <= (ni | 0)
-											  ? si >>> 0 > pi >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((mi | 0) < (ni | 0) ? 1 : (mi | 0) <= (ni | 0) ? (si >>> 0 > pi >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									ti = o[li >> 2];
@@ -9029,15 +8453,7 @@ var DracoDecoderModule = (function () {
 										if ((ui | 0) == -2) {
 											break b;
 										}
-										if (
-											(qi | 0) < (mi | 0)
-												? 1
-												: (qi | 0) <= (mi | 0)
-												  ? si >>> 0 > ri >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((qi | 0) < (mi | 0) ? 1 : (qi | 0) <= (mi | 0) ? (si >>> 0 > ri >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										qi = m[(ri + ti) | 0];
@@ -9170,15 +8586,7 @@ var DracoDecoderModule = (function () {
 									Di = o[(li + 12) >> 2];
 									Hi = Di;
 									zi = o[(li + 20) >> 2];
-									if (
-										(Hi | 0) < (zi | 0)
-											? 1
-											: (Hi | 0) <= (zi | 0)
-											  ? Gi >>> 0 > Fi >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Hi | 0) < (zi | 0) ? 1 : (Hi | 0) <= (zi | 0) ? (Gi >>> 0 > Fi >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Hi = u(Ei, Ki);
@@ -9204,15 +8612,7 @@ var DracoDecoderModule = (function () {
 													}
 													break a;
 												}
-												if (
-													(Di | 0) < (Ci | 0)
-														? 1
-														: (Di | 0) <= (Ci | 0)
-														  ? Gi >>> 0 > Ii >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((Di | 0) < (Ci | 0) ? 1 : (Di | 0) <= (Ci | 0) ? (Gi >>> 0 > Ii >>> 0 ? 0 : 1) : 0) {
 													break a;
 												}
 												Ei = p[(Ii + Li) | 0];
@@ -9241,13 +8641,7 @@ var DracoDecoderModule = (function () {
 															wi = (wi + 1) | 0;
 														}
 														if (
-															(Ci | 0) > (wi | 0)
-																? 1
-																: (Ci | 0) >= (wi | 0)
-																  ? r[(li + 8) >> 2] < Di >>> 0
-																		? 0
-																		: 1
-																  : 0
+															(Ci | 0) > (wi | 0) ? 1 : (Ci | 0) >= (wi | 0) ? (r[(li + 8) >> 2] < Di >>> 0 ? 0 : 1) : 0
 														) {
 															break e;
 														}
@@ -9279,15 +8673,7 @@ var DracoDecoderModule = (function () {
 													if (Gi >>> 0 < zi >>> 0) {
 														wi = (wi + 1) | 0;
 													}
-													if (
-														(Fi | 0) < (wi | 0)
-															? 1
-															: (Fi | 0) <= (wi | 0)
-															  ? Ci >>> 0 >= Gi >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Fi | 0) < (wi | 0) ? 1 : (Fi | 0) <= (wi | 0) ? (Ci >>> 0 >= Gi >>> 0 ? 0 : 1) : 0) {
 														break b;
 													}
 													Gi = 0;
@@ -9310,13 +8696,7 @@ var DracoDecoderModule = (function () {
 															wi = (wi + 1) | 0;
 														}
 														if (
-															(Fi | 0) > (wi | 0)
-																? 1
-																: (Fi | 0) >= (wi | 0)
-																  ? r[(li + 8) >> 2] < Li >>> 0
-																		? 0
-																		: 1
-																  : 0
+															(Fi | 0) > (wi | 0) ? 1 : (Fi | 0) >= (wi | 0) ? (r[(li + 8) >> 2] < Li >>> 0 ? 0 : 1) : 0
 														) {
 															continue;
 														}
@@ -10114,23 +9494,12 @@ var DracoDecoderModule = (function () {
 								Ej = Bj;
 								Bj = zj;
 								a: {
-									if (
-										(Aj | 0) < (zj | 0)
-											? 1
-											: (Aj | 0) <= (zj | 0)
-											  ? Gj >>> 0 >= Ej >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Aj | 0) < (zj | 0) ? 1 : (Aj | 0) <= (zj | 0) ? (Gj >>> 0 >= Ej >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Hj = o[yj >> 2];
 									zj = (Hj + Dj) | 0;
-									Aj =
-										p[zj | 0] |
-										(p[(zj + 1) | 0] << 8) |
-										((p[(zj + 2) | 0] << 16) | (p[(zj + 3) | 0] << 24));
+									Aj = p[zj | 0] | (p[(zj + 1) | 0] << 8) | ((p[(zj + 2) | 0] << 16) | (p[(zj + 3) | 0] << 24));
 									o[(yj + 16) >> 2] = Ej;
 									o[(yj + 20) >> 2] = Bj;
 									zj = Cj;
@@ -10140,22 +9509,11 @@ var DracoDecoderModule = (function () {
 									}
 									Bj = Cj;
 									Cj = zj;
-									if (
-										(Fj | 0) < (zj | 0)
-											? 1
-											: (Fj | 0) <= (zj | 0)
-											  ? Gj >>> 0 >= Bj >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Fj | 0) < (zj | 0) ? 1 : (Fj | 0) <= (zj | 0) ? (Gj >>> 0 >= Bj >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									zj = (Ej + Hj) | 0;
-									zj =
-										p[zj | 0] |
-										(p[(zj + 1) | 0] << 8) |
-										((p[(zj + 2) | 0] << 16) | (p[(zj + 3) | 0] << 24));
+									zj = p[zj | 0] | (p[(zj + 1) | 0] << 8) | ((p[(zj + 2) | 0] << 16) | (p[(zj + 3) | 0] << 24));
 									o[(yj + 16) >> 2] = Bj;
 									o[(yj + 20) >> 2] = Cj;
 									if ((Aj | 0) > (zj | 0)) {
@@ -10312,9 +9670,7 @@ var DracoDecoderModule = (function () {
 													Ye = o[((Pj << 2) + Zj) >> 2];
 													if (
 														((Ye | 0) == -1) |
-														((o[(o[Yj >> 2] + ((Ye >>> 3) & 536870908)) >> 2] >>>
-															(Ye & 31)) &
-															1)
+														((o[(o[Yj >> 2] + ((Ye >>> 3) & 536870908)) >> 2] >>> (Ye & 31)) & 1)
 													) {
 														break f;
 													}
@@ -10329,32 +9685,11 @@ var DracoDecoderModule = (function () {
 														break f;
 													}
 													Qj = (Ye + 1) | 0;
-													Qj =
-														o[
-															(Nj +
-																(o[
-																	(Kj +
-																		(((Qj >>> 0) % 3 | 0 ? Qj : (Ye + -2) | 0) <<
-																			2)) >>
-																		2
-																] <<
-																	2)) >>
-																2
-														];
+													Qj = o[(Nj + (o[(Kj + (((Qj >>> 0) % 3 | 0 ? Qj : (Ye + -2) | 0) << 2)) >> 2] << 2)) >> 2];
 													if ((Qj | 0) >= (Pj | 0)) {
 														break f;
 													}
-													Ye =
-														o[
-															(Nj +
-																(o[
-																	(Kj +
-																		((Ye + ((Ye >>> 0) % 3 | 0 ? -1 : 2)) << 2)) >>
-																		2
-																] <<
-																	2)) >>
-																2
-														];
+													Ye = o[(Nj + (o[(Kj + ((Ye + ((Ye >>> 0) % 3 | 0 ? -1 : 2)) << 2)) >> 2] << 2)) >> 2];
 													if ((Ye | 0) >= (Pj | 0)) {
 														break f;
 													}
@@ -10365,9 +9700,7 @@ var DracoDecoderModule = (function () {
 														Kj = 0;
 														while (1) {
 															o[((Kj << 2) + Wj) >> 2] =
-																((o[(((Ye + Kj) << 2) + Jj) >> 2] +
-																	o[(((Kj + Nj) << 2) + Jj) >> 2]) |
-																	0) -
+																((o[(((Ye + Kj) << 2) + Jj) >> 2] + o[(((Kj + Nj) << 2) + Jj) >> 2]) | 0) -
 																o[(((Kj + Oj) << 2) + Jj) >> 2];
 															Kj = (Kj + 1) | 0;
 															if ((Lj | 0) != (Kj | 0)) {
@@ -10641,23 +9974,12 @@ var DracoDecoderModule = (function () {
 										ik = o[(Kj + 8) >> 2];
 										hk = ck;
 										ck = Lj;
-										if (
-											(Mj | 0) < (Lj | 0)
-												? 1
-												: (Mj | 0) <= (Lj | 0)
-												  ? ik >>> 0 >= hk >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Mj | 0) < (Lj | 0) ? 1 : (Mj | 0) <= (Lj | 0) ? (ik >>> 0 >= hk >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										jk = o[Kj >> 2];
 										Lj = (jk + ek) | 0;
-										Mj =
-											p[Lj | 0] |
-											(p[(Lj + 1) | 0] << 8) |
-											((p[(Lj + 2) | 0] << 16) | (p[(Lj + 3) | 0] << 24));
+										Mj = p[Lj | 0] | (p[(Lj + 1) | 0] << 8) | ((p[(Lj + 2) | 0] << 16) | (p[(Lj + 3) | 0] << 24));
 										o[(Kj + 16) >> 2] = hk;
 										o[(Kj + 20) >> 2] = ck;
 										Lj = bk;
@@ -10667,22 +9989,11 @@ var DracoDecoderModule = (function () {
 										}
 										ck = bk;
 										bk = Lj;
-										if (
-											(gk | 0) < (Lj | 0)
-												? 1
-												: (gk | 0) <= (Lj | 0)
-												  ? ik >>> 0 >= ck >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((gk | 0) < (Lj | 0) ? 1 : (gk | 0) <= (Lj | 0) ? (ik >>> 0 >= ck >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										Lj = (hk + jk) | 0;
-										Lj =
-											p[Lj | 0] |
-											(p[(Lj + 1) | 0] << 8) |
-											((p[(Lj + 2) | 0] << 16) | (p[(Lj + 3) | 0] << 24));
+										Lj = p[Lj | 0] | (p[(Lj + 1) | 0] << 8) | ((p[(Lj + 2) | 0] << 16) | (p[(Lj + 3) | 0] << 24));
 										o[(Kj + 16) >> 2] = ck;
 										o[(Kj + 20) >> 2] = bk;
 										if ((Mj | 0) > (Lj | 0)) {
@@ -10726,15 +10037,7 @@ var DracoDecoderModule = (function () {
 									nk = o[(kk + 16) >> 2];
 									lk = o[(kk + 12) >> 2];
 									mk = o[(kk + 20) >> 2];
-									if (
-										(lk | 0) < (mk | 0)
-											? 1
-											: (lk | 0) <= (mk | 0)
-											  ? r[(kk + 8) >> 2] > nk >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((lk | 0) < (mk | 0) ? 1 : (lk | 0) <= (mk | 0) ? (r[(kk + 8) >> 2] > nk >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									lk = p[(nk + o[kk >> 2]) | 0];
@@ -11099,38 +10402,16 @@ var DracoDecoderModule = (function () {
 																	o: {
 																		while (1) {
 																			p: {
-																				if (
-																					(o[
-																						(Tk +
-																							((vk >>> 3) & 536870908)) >>
-																							2
-																					] >>>
-																						(vk & 31)) &
-																					1
-																				) {
+																				if ((o[(Tk + ((vk >>> 3) & 536870908)) >> 2] >>> (vk & 31)) & 1) {
 																					break p;
 																				}
-																				yk =
-																					o[
-																						(o[
-																							(o[(Ek + 64) >> 2] + 12) >>
-																								2
-																						] +
-																							(vk << 2)) >>
-																							2
-																					];
+																				yk = o[(o[(o[(Ek + 64) >> 2] + 12) >> 2] + (vk << 2)) >> 2];
 																				if ((yk | 0) == -1) {
 																					break p;
 																				}
 																				Kk = o[Wk >> 2];
 																				zk = o[_k >> 2];
-																				Lk =
-																					o[
-																						(Kk +
-																							(o[(zk + (yk << 2)) >> 2] <<
-																								2)) >>
-																							2
-																					];
+																				Lk = o[(Kk + (o[(zk + (yk << 2)) >> 2] << 2)) >> 2];
 																				if ((Lk | 0) >= (Dk | 0)) {
 																					break p;
 																				}
@@ -11138,16 +10419,7 @@ var DracoDecoderModule = (function () {
 																				Jk =
 																					o[
 																						(Kk +
-																							(o[
-																								(zk +
-																									(((Jk >>> 0) % 3 | 0
-																										? Jk
-																										: (yk + -2) |
-																										  0) <<
-																										2)) >>
-																									2
-																							] <<
-																								2)) >>
+																							(o[(zk + (((Jk >>> 0) % 3 | 0 ? Jk : (yk + -2) | 0) << 2)) >> 2] << 2)) >>
 																							2
 																					];
 																				if ((Jk | 0) >= (Dk | 0)) {
@@ -11155,53 +10427,23 @@ var DracoDecoderModule = (function () {
 																				}
 																				yk =
 																					o[
-																						(Kk +
-																							(o[
-																								(zk +
-																									((yk +
-																										((yk >>> 0) %
-																											3 |
-																										0
-																											? -1
-																											: 2)) <<
-																										2)) >>
-																									2
-																							] <<
-																								2)) >>
+																						(Kk + (o[(zk + ((yk + ((yk >>> 0) % 3 | 0 ? -1 : 2)) << 2)) >> 2] << 2)) >>
 																							2
 																					];
 																				if ((yk | 0) >= (Dk | 0)) {
 																					break p;
 																				}
 																				if ((wk | 0) >= 1) {
-																					Kk =
-																						o[
-																							(((Ak + 16) | 0) +
-																								u(xk, 12)) >>
-																								2
-																						];
+																					Kk = o[(((Ak + 16) | 0) + u(xk, 12)) >> 2];
 																					yk = u(wk, yk);
 																					Jk = u(wk, Jk);
 																					Lk = u(wk, Lk);
 																					zk = 0;
 																					while (1) {
 																						o[(Kk + (zk << 2)) >> 2] =
-																							((o[
-																								(((yk + zk) << 2) +
-																									uk) >>
-																									2
-																							] +
-																								o[
-																									(((zk + Jk) << 2) +
-																										uk) >>
-																										2
-																								]) |
+																							((o[(((yk + zk) << 2) + uk) >> 2] + o[(((zk + Jk) << 2) + uk) >> 2]) |
 																								0) -
-																							o[
-																								(((zk + Lk) << 2) +
-																									uk) >>
-																									2
-																							];
+																							o[(((zk + Lk) << 2) + uk) >> 2];
 																						zk = (zk + 1) | 0;
 																						if ((zk | 0) != (wk | 0)) {
 																							continue;
@@ -11219,69 +10461,30 @@ var DracoDecoderModule = (function () {
 																				if (Ck & 1) {
 																					zk = -1;
 																					yk = (vk + 1) | 0;
-																					vk =
-																						(yk >>> 0) % 3 | 0
-																							? yk
-																							: (vk + -2) | 0;
+																					vk = (yk >>> 0) % 3 | 0 ? yk : (vk + -2) | 0;
 																					if (
 																						((vk | 0) == -1) |
-																						((o[
-																							(o[Ek >> 2] +
-																								((vk >>> 3) &
-																									536870908)) >>
-																								2
-																						] >>>
-																							(vk & 31)) &
-																							1)
+																						((o[(o[Ek >> 2] + ((vk >>> 3) & 536870908)) >> 2] >>> (vk & 31)) & 1)
 																					) {
 																						break q;
 																					}
-																					vk =
-																						o[
-																							(o[
-																								(o[(Ek + 64) >> 2] +
-																									12) >>
-																									2
-																							] +
-																								(vk << 2)) >>
-																								2
-																						];
+																					vk = o[(o[(o[(Ek + 64) >> 2] + 12) >> 2] + (vk << 2)) >> 2];
 																					if ((vk | 0) == -1) {
 																						break q;
 																					}
 																					yk = (vk + 1) | 0;
-																					zk =
-																						(yk >>> 0) % 3 | 0
-																							? yk
-																							: (vk + -2) | 0;
+																					zk = (yk >>> 0) % 3 | 0 ? yk : (vk + -2) | 0;
 																					break q;
 																				}
 																				zk = -1;
-																				vk =
-																					(((vk >>> 0) % 3 | 0 ? -1 : 2) +
-																						vk) |
-																					0;
+																				vk = (((vk >>> 0) % 3 | 0 ? -1 : 2) + vk) | 0;
 																				if (
 																					((vk | 0) == -1) |
-																					((o[
-																						(o[Ek >> 2] +
-																							((vk >>> 3) & 536870908)) >>
-																							2
-																					] >>>
-																						(vk & 31)) &
-																						1)
+																					((o[(o[Ek >> 2] + ((vk >>> 3) & 536870908)) >> 2] >>> (vk & 31)) & 1)
 																				) {
 																					break q;
 																				}
-																				vk =
-																					o[
-																						(o[
-																							(o[(Ek + 64) >> 2] + 12) >>
-																								2
-																						] +
-																							(vk << 2)) >>
-																							2
-																					];
+																				vk = o[(o[(o[(Ek + 64) >> 2] + 12) >> 2] + (vk << 2)) >> 2];
 																				if ((vk | 0) == -1) {
 																					break q;
 																				}
@@ -11301,24 +10504,10 @@ var DracoDecoderModule = (function () {
 																				vk = zk ? vk : -1;
 																				Ck = yk & Ck;
 																				if (!(((Fk | 0) == -1) | zk)) {
-																					if (
-																						o[
-																							(o[Ek >> 2] + (Rk << 2)) >>
-																								2
-																						] & Sk
-																					) {
+																					if (o[(o[Ek >> 2] + (Rk << 2)) >> 2] & Sk) {
 																						break r;
 																					}
-																					yk =
-																						o[
-																							(o[
-																								(o[(Ek + 64) >> 2] +
-																									12) >>
-																									2
-																							] +
-																								(Fk << 2)) >>
-																								2
-																						];
+																					yk = o[(o[(o[(Ek + 64) >> 2] + 12) >> 2] + (Fk << 2)) >> 2];
 																					if ((yk | 0) == -1) {
 																						break r;
 																					}
@@ -11360,15 +10549,7 @@ var DracoDecoderModule = (function () {
 																			break i;
 																		}
 																		s: {
-																			if (
-																				(o[
-																					(o[Kk >> 2] +
-																						((zk >>> 3) & 536870908)) >>
-																						2
-																				] >>>
-																					(zk & 31)) &
-																				1
-																			) {
+																			if ((o[(o[Kk >> 2] + ((zk >>> 3) & 536870908)) >> 2] >>> (zk & 31)) & 1) {
 																				break s;
 																			}
 																			xk = (xk + 1) | 0;
@@ -11380,8 +10561,7 @@ var DracoDecoderModule = (function () {
 																			while (1) {
 																				Lk = zk << 2;
 																				Jk = (Lk + Sk) | 0;
-																				o[Jk >> 2] =
-																					o[Jk >> 2] + o[(Lk + Tk) >> 2];
+																				o[Jk >> 2] = o[Jk >> 2] + o[(Lk + Tk) >> 2];
 																				zk = (zk + 1) | 0;
 																				if ((zk | 0) != (wk | 0)) {
 																					continue;
@@ -11621,13 +10801,7 @@ var DracoDecoderModule = (function () {
 							}
 							function He(Ye) {
 								Ye = Ye | 0;
-								if (
-									!(
-										!o[(Ye + 60) >> 2] |
-										!o[(Ye + 44) >> 2] |
-										(!o[(Ye + 48) >> 2] | !o[(Ye + 52) >> 2])
-									)
-								) {
+								if (!(!o[(Ye + 60) >> 2] | !o[(Ye + 44) >> 2] | (!o[(Ye + 48) >> 2] | !o[(Ye + 52) >> 2]))) {
 									return (o[(Ye + 56) >> 2] != 0) | 0;
 								}
 								return 0;
@@ -11668,22 +10842,11 @@ var DracoDecoderModule = (function () {
 								$k = Hk;
 								Hk = xk;
 								a: {
-									if (
-										(Yk | 0) < (xk | 0)
-											? 1
-											: (Yk | 0) <= (xk | 0)
-											  ? r[(vk + 8) >> 2] >= $k >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Yk | 0) < (xk | 0) ? 1 : (Yk | 0) <= (xk | 0) ? (r[(vk + 8) >> 2] >= $k >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									xk = (Zk + o[vk >> 2]) | 0;
-									xk =
-										p[xk | 0] |
-										(p[(xk + 1) | 0] << 8) |
-										((p[(xk + 2) | 0] << 16) | (p[(xk + 3) | 0] << 24));
+									xk = p[xk | 0] | (p[(xk + 1) | 0] << 8) | ((p[(xk + 2) | 0] << 16) | (p[(xk + 3) | 0] << 24));
 									o[(vk + 16) >> 2] = $k;
 									o[(vk + 20) >> 2] = Hk;
 									if ((xk | 0) < 0) {
@@ -11731,23 +10894,12 @@ var DracoDecoderModule = (function () {
 										dl = o[(vk + 8) >> 2];
 										al = Zk;
 										Zk = xk;
-										if (
-											(Hk | 0) < (xk | 0)
-												? 1
-												: (Hk | 0) <= (xk | 0)
-												  ? dl >>> 0 >= al >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Hk | 0) < (xk | 0) ? 1 : (Hk | 0) <= (xk | 0) ? (dl >>> 0 >= al >>> 0 ? 0 : 1) : 0) {
 											break b;
 										}
 										el = o[vk >> 2];
 										xk = (el + $k) | 0;
-										Hk =
-											p[xk | 0] |
-											(p[(xk + 1) | 0] << 8) |
-											((p[(xk + 2) | 0] << 16) | (p[(xk + 3) | 0] << 24));
+										Hk = p[xk | 0] | (p[(xk + 1) | 0] << 8) | ((p[(xk + 2) | 0] << 16) | (p[(xk + 3) | 0] << 24));
 										o[(vk + 16) >> 2] = al;
 										o[(vk + 20) >> 2] = Zk;
 										xk = Yk;
@@ -11757,22 +10909,11 @@ var DracoDecoderModule = (function () {
 										}
 										Zk = Yk;
 										Yk = xk;
-										if (
-											(bl | 0) < (xk | 0)
-												? 1
-												: (bl | 0) <= (xk | 0)
-												  ? dl >>> 0 >= Zk >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((bl | 0) < (xk | 0) ? 1 : (bl | 0) <= (xk | 0) ? (dl >>> 0 >= Zk >>> 0 ? 0 : 1) : 0) {
 											break b;
 										}
 										xk = (al + el) | 0;
-										xk =
-											p[xk | 0] |
-											(p[(xk + 1) | 0] << 8) |
-											((p[(xk + 2) | 0] << 16) | (p[(xk + 3) | 0] << 24));
+										xk = p[xk | 0] | (p[(xk + 1) | 0] << 8) | ((p[(xk + 2) | 0] << 16) | (p[(xk + 3) | 0] << 24));
 										o[(vk + 16) >> 2] = Zk;
 										o[(vk + 20) >> 2] = Yk;
 										if ((Hk | 0) > (xk | 0)) {
@@ -12066,10 +11207,7 @@ var DracoDecoderModule = (function () {
 															vk = o[(wl + 16) >> 2];
 															yl = o[(wl + 40) >> 2];
 															il = yl;
-															jl =
-																(o[(wl + 20) >> 2] -
-																	((Ll + (vk >>> 0 < il >>> 0)) | 0)) |
-																0;
+															jl = (o[(wl + 20) >> 2] - ((Ll + (vk >>> 0 < il >>> 0)) | 0)) | 0;
 															Nl = (vk - il) | 0;
 															vk = Vl(Nl, jl, Nl, jl);
 															il = T;
@@ -12078,10 +11216,7 @@ var DracoDecoderModule = (function () {
 															vk = o[(wl + 8) >> 2];
 															Al = o[(wl + 32) >> 2];
 															zl = Al;
-															xl =
-																(o[(wl + 12) >> 2] -
-																	((Ml + (vk >>> 0 < zl >>> 0)) | 0)) |
-																0;
+															xl = (o[(wl + 12) >> 2] - ((Ml + (vk >>> 0 < zl >>> 0)) | 0)) | 0;
 															Ol = (vk - zl) | 0;
 															zl = Vl(Ol, xl, Ol, xl);
 															vk = (Bl + zl) | 0;
@@ -12092,10 +11227,7 @@ var DracoDecoderModule = (function () {
 															vk = o[(wl + 24) >> 2];
 															Bl = o[(wl + 48) >> 2];
 															zl = Bl;
-															El =
-																(o[(wl + 28) >> 2] -
-																	((Ql + (vk >>> 0 < zl >>> 0)) | 0)) |
-																0;
+															El = (o[(wl + 28) >> 2] - ((Ql + (vk >>> 0 < zl >>> 0)) | 0)) | 0;
 															Pl = (vk - zl) | 0;
 															zl = Vl(Pl, El, Pl, El);
 															vk = (Gl + zl) | 0;
@@ -12108,10 +11240,7 @@ var DracoDecoderModule = (function () {
 															hl = 1;
 															vk = 0;
 															il = o[(wl + 64) >> 2];
-															gl =
-																(o[(wl + 68) >> 2] -
-																	(((il >>> 0 < yl >>> 0) + Ll) | 0)) |
-																0;
+															gl = (o[(wl + 68) >> 2] - (((il >>> 0 < yl >>> 0) + Ll) | 0)) | 0;
 															il = (il - yl) | 0;
 															Cl = il;
 															Fl = gl;
@@ -12120,10 +11249,7 @@ var DracoDecoderModule = (function () {
 															Gl = gl;
 															yl = o[(wl + 56) >> 2];
 															gl = (yl - Al) | 0;
-															Ll =
-																(o[(wl + 60) >> 2] -
-																	(((yl >>> 0 < Al >>> 0) + Ml) | 0)) |
-																0;
+															Ll = (o[(wl + 60) >> 2] - (((yl >>> 0 < Al >>> 0) + Ml) | 0)) | 0;
 															Al = Vl(gl, Ll, Ol, xl);
 															yl = (Gl + Al) | 0;
 															il = (T + il) | 0;
@@ -12131,10 +11257,7 @@ var DracoDecoderModule = (function () {
 															Gl = yl;
 															yl = o[(wl + 72) >> 2];
 															Al = (yl - Bl) | 0;
-															Ml =
-																(o[(wl + 76) >> 2] -
-																	(((yl >>> 0 < Bl >>> 0) + Ql) | 0)) |
-																0;
+															Ml = (o[(wl + 76) >> 2] - (((yl >>> 0 < Bl >>> 0) + Ql) | 0)) | 0;
 															Bl = Vl(Al, Ml, Pl, El);
 															yl = (Gl + Bl) | 0;
 															il = (T + il) | 0;
@@ -12161,12 +11284,7 @@ var DracoDecoderModule = (function () {
 															jl = Vl(gl, jl, gl, jl);
 															gl = (xl + jl) | 0;
 															il = (T + il) | 0;
-															jl = Vl(
-																gl,
-																gl >>> 0 < jl >>> 0 ? (il + 1) | 0 : il,
-																Il,
-																zl,
-															);
+															jl = Vl(gl, gl >>> 0 < jl >>> 0 ? (il + 1) | 0 : il, Il, zl);
 															gl = T;
 															xl = gl;
 															if ((!gl & (jl >>> 0 <= 1)) | (gl >>> 0 < 0)) {
@@ -12223,10 +11341,7 @@ var DracoDecoderModule = (function () {
 											vk = il >>> 1;
 											gl = Vl(hl, vk, hl, vk);
 											il = T;
-											if (
-												(((xl | 0) == (il | 0)) & (gl >>> 0 > jl >>> 0)) |
-												(il >>> 0 > xl >>> 0)
-											) {
+											if ((((xl | 0) == (il | 0)) & (gl >>> 0 > jl >>> 0)) | (il >>> 0 > xl >>> 0)) {
 												continue;
 											}
 											break;
@@ -12265,9 +11380,7 @@ var DracoDecoderModule = (function () {
 									El = il;
 									il = T;
 									il = (El + (gl ? (0 - ((il + (0 < Hl >>> 0)) | 0)) | 0 : il)) | 0;
-									(Rl = Ye),
-										(Sl = Wl(xl, xl >>> 0 < Fl >>> 0 ? (il + 1) | 0 : il, Il, zl)),
-										(o[(Rl + 12) >> 2] = Sl);
+									(Rl = Ye), (Sl = Wl(xl, xl >>> 0 < Fl >>> 0 ? (il + 1) | 0 : il, Il, zl)), (o[(Rl + 12) >> 2] = Sl);
 									il = Vl(Bl, yl, Cl, Dl);
 									xl = T;
 									Hl = Ye;
@@ -12282,9 +11395,7 @@ var DracoDecoderModule = (function () {
 									yl = il;
 									il = T;
 									Ye = (yl + (gl ? il : (0 - (((0 < Ye >>> 0) + il) | 0)) | 0)) | 0;
-									(Rl = Hl),
-										(Sl = Wl(vk, vk >>> 0 < hl >>> 0 ? (Ye + 1) | 0 : Ye, Il, zl)),
-										(o[(Rl + 8) >> 2] = Sl);
+									(Rl = Hl), (Sl = Wl(vk, vk >>> 0 < hl >>> 0 ? (Ye + 1) | 0 : Ye, Il, zl)), (o[(Rl + 8) >> 2] = Sl);
 									gl = 1;
 								}
 								R = (wl + 80) | 0;
@@ -12315,15 +11426,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Tl = ((Ul << 3) + hl) | 0;
@@ -12333,10 +11436,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 1) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12350,15 +11450,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Tl = ((Ul << 3) + hl) | 0;
@@ -12367,10 +11459,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 1) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12384,15 +11473,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Tl = ((Ul << 3) + hl) | 0;
@@ -12402,10 +11483,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 2) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12419,15 +11497,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Tl = ((Ul << 3) + hl) | 0;
@@ -12436,10 +11506,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 2) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12453,15 +11520,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Tl = ((Ul << 3) + hl) | 0;
@@ -12471,10 +11530,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 4) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12488,15 +11544,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Tl = ((Ul << 3) + hl) | 0;
@@ -12505,10 +11553,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 4) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12522,15 +11567,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Xl = o[(vk + 4) >> 2];
@@ -12540,10 +11577,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 8) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12557,15 +11591,7 @@ var DracoDecoderModule = (function () {
 															Tl = m[(Ye + 24) | 0];
 															if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 																Wl = o[o[Ye >> 2] >> 2];
-																Tl =
-																	(o[(Ye + 48) >> 2] +
-																		Vl(
-																			o[(Ye + 40) >> 2],
-																			o[(Ye + 44) >> 2],
-																			vk,
-																			0,
-																		)) |
-																	0;
+																Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 																vk = (Wl + Tl) | 0;
 																while (1) {
 																	Xl = o[(vk + 4) >> 2];
@@ -12575,10 +11601,7 @@ var DracoDecoderModule = (function () {
 																	vk = (vk + 8) | 0;
 																	Ul = (Ul + 1) | 0;
 																	Tl = m[(Ye + 24) | 0];
-																	if (
-																		(Ul | 0) <
-																		(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																	) {
+																	if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																		continue;
 																	}
 																	break;
@@ -12594,10 +11617,7 @@ var DracoDecoderModule = (function () {
 																break c;
 															}
 															Wl = o[o[Ye >> 2] >> 2];
-															Tl =
-																(o[(Ye + 48) >> 2] +
-																	Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) |
-																0;
+															Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 															vk = (Wl + Tl) | 0;
 															while (1) {
 																Tl = ((Ul << 3) + hl) | 0;
@@ -12608,35 +11628,8 @@ var DracoDecoderModule = (function () {
 																		Xl =
 																			v(w(Yl)) >= v(1)
 																				? Yl > v(0)
-																					? ~~v(
-																							y(
-																								v(
-																									A(
-																										v(
-																											Yl /
-																												v(
-																													4294967296,
-																												),
-																										),
-																									),
-																								),
-																								v(4294967296),
-																							),
-																					  ) >>> 0
-																					: ~~v(
-																							B(
-																								v(
-																									v(
-																										Yl -
-																											v(
-																												(~~Yl >>>
-																													0) >>>
-																													0,
-																											),
-																									) / v(4294967296),
-																								),
-																							),
-																					  ) >>> 0
+																					? ~~v(y(v(A(v(Yl / v(4294967296)))), v(4294967296))) >>> 0
+																					: ~~v(B(v(v(Yl - v((~~Yl >>> 0) >>> 0)) / v(4294967296)))) >>> 0
 																				: 0;
 																		_l = ~~Yl >>> 0;
 																		break f;
@@ -12649,10 +11642,7 @@ var DracoDecoderModule = (function () {
 																vk = (vk + 4) | 0;
 																Ul = (Ul + 1) | 0;
 																Tl = m[(Ye + 24) | 0];
-																if (
-																	(Ul | 0) <
-																	(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																) {
+																if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -12664,10 +11654,7 @@ var DracoDecoderModule = (function () {
 																break d;
 															}
 															Wl = o[o[Ye >> 2] >> 2];
-															Tl =
-																(o[(Ye + 48) >> 2] +
-																	Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) |
-																0;
+															Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 															vk = (Wl + Tl) | 0;
 															while (1) {
 																Tl = ((Ul << 3) + hl) | 0;
@@ -12678,15 +11665,8 @@ var DracoDecoderModule = (function () {
 																		Xl =
 																			w(Zl) >= 1
 																				? Zl > 0
-																					? ~~y(
-																							A(Zl / 4294967296),
-																							4294967295,
-																					  ) >>> 0
-																					: ~~B(
-																							(Zl -
-																								+((~~Zl >>> 0) >>> 0)) /
-																								4294967296,
-																					  ) >>> 0
+																					? ~~y(A(Zl / 4294967296), 4294967295) >>> 0
+																					: ~~B((Zl - +((~~Zl >>> 0) >>> 0)) / 4294967296) >>> 0
 																				: 0;
 																		_l = ~~Zl >>> 0;
 																		break g;
@@ -12699,10 +11679,7 @@ var DracoDecoderModule = (function () {
 																vk = (vk + 8) | 0;
 																Ul = (Ul + 1) | 0;
 																Tl = m[(Ye + 24) | 0];
-																if (
-																	(Ul | 0) <
-																	(((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24
-																) {
+																if ((Ul | 0) < (((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24) {
 																	continue;
 																}
 																break;
@@ -12715,10 +11692,7 @@ var DracoDecoderModule = (function () {
 												Tl = m[(Ye + 24) | 0];
 												if ((((Tl | 0) > (gl | 0) ? gl : Tl) << 24) >> 24 >= 1) {
 													Wl = o[o[Ye >> 2] >> 2];
-													Tl =
-														(o[(Ye + 48) >> 2] +
-															Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) |
-														0;
+													Tl = (o[(Ye + 48) >> 2] + Vl(o[(Ye + 40) >> 2], o[(Ye + 44) >> 2], vk, 0)) | 0;
 													vk = (Wl + Tl) | 0;
 													while (1) {
 														Tl = ((Ul << 3) + hl) | 0;
@@ -12785,11 +11759,7 @@ var DracoDecoderModule = (function () {
 								Ye = Ye | 0;
 								var hl = 0;
 								a: {
-									if (
-										!o[(Ye - -64) >> 2] |
-										!o[(Ye + 68) >> 2] |
-										(!o[(Ye + 44) >> 2] | !o[(Ye + 48) >> 2])
-									) {
+									if (!o[(Ye - -64) >> 2] | !o[(Ye + 68) >> 2] | (!o[(Ye + 44) >> 2] | !o[(Ye + 48) >> 2])) {
 										break a;
 									}
 									if (!o[(Ye + 52) >> 2] | !o[(Ye + 56) >> 2]) {
@@ -12835,23 +11805,12 @@ var DracoDecoderModule = (function () {
 								gm = dm;
 								dm = am;
 								a: {
-									if (
-										(bm | 0) < (am | 0)
-											? 1
-											: (bm | 0) <= (am | 0)
-											  ? hm >>> 0 >= gm >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((bm | 0) < (am | 0) ? 1 : (bm | 0) <= (am | 0) ? (hm >>> 0 >= gm >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									im = o[Vl >> 2];
 									am = (im + fm) | 0;
-									bm =
-										p[am | 0] |
-										(p[(am + 1) | 0] << 8) |
-										((p[(am + 2) | 0] << 16) | (p[(am + 3) | 0] << 24));
+									bm = p[am | 0] | (p[(am + 1) | 0] << 8) | ((p[(am + 2) | 0] << 16) | (p[(am + 3) | 0] << 24));
 									o[(Vl + 16) >> 2] = gm;
 									o[(Vl + 20) >> 2] = dm;
 									am = em;
@@ -12861,22 +11820,11 @@ var DracoDecoderModule = (function () {
 									}
 									dm = em;
 									em = am;
-									if (
-										(cm | 0) < (am | 0)
-											? 1
-											: (cm | 0) <= (am | 0)
-											  ? hm >>> 0 >= dm >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((cm | 0) < (am | 0) ? 1 : (cm | 0) <= (am | 0) ? (hm >>> 0 >= dm >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									am = (gm + im) | 0;
-									am =
-										p[am | 0] |
-										(p[(am + 1) | 0] << 8) |
-										((p[(am + 2) | 0] << 16) | (p[(am + 3) | 0] << 24));
+									am = p[am | 0] | (p[(am + 1) | 0] << 8) | ((p[(am + 2) | 0] << 16) | (p[(am + 3) | 0] << 24));
 									o[(Vl + 16) >> 2] = dm;
 									o[(Vl + 20) >> 2] = em;
 									if ((bm | 0) > (am | 0)) {
@@ -12978,10 +11926,7 @@ var DracoDecoderModule = (function () {
 												o[(qm + 16) >> 2] = mm;
 												om = mm;
 												mm = mm >> 31;
-												mm =
-													(((rm - ((om + mm) ^ mm)) | 0) +
-														((nm | 0) < 0 ? nm : (0 - nm) | 0)) |
-													0;
+												mm = (((rm - ((om + mm) ^ mm)) | 0) + ((nm | 0) < 0 ? nm : (0 - nm) | 0)) | 0;
 												if ((um | 0) >= 0) {
 													o[(qm + 24) >> 2] = mm;
 													break b;
@@ -13297,28 +12242,21 @@ var DracoDecoderModule = (function () {
 														km = o[(nm + 56) >> 2];
 														Pm = (mm - km) | 0;
 														Qm = o[(nm + 60) >> 2];
-														om =
-															(o[(nm + 12) >> 2] - ((Qm + (mm >>> 0 < km >>> 0)) | 0)) |
-															0;
+														om = (o[(nm + 12) >> 2] - ((Qm + (mm >>> 0 < km >>> 0)) | 0)) | 0;
 														Rm = o[(nm + 40) >> 2];
 														mm = o[(nm + 64) >> 2];
 														Zm = (Rm - mm) | 0;
 														Sm = o[(nm + 68) >> 2];
-														Rm =
-															(o[(nm + 44) >> 2] - ((Sm + (Rm >>> 0 < mm >>> 0)) | 0)) |
-															0;
+														Rm = (o[(nm + 44) >> 2] - ((Sm + (Rm >>> 0 < mm >>> 0)) | 0)) | 0;
 														Tm = Vl(Pm, om, Zm, Rm);
 														Um = (Gm - Tm) | 0;
 														Jm = (Jm - ((T + (Gm >>> 0 < Tm >>> 0)) | 0)) | 0;
 														Gm = o[Im >> 2];
 														Tm = (Gm - mm) | 0;
-														Im =
-															(o[(Im + 4) >> 2] - (((Gm >>> 0 < mm >>> 0) + Sm) | 0)) | 0;
+														Im = (o[(Im + 4) >> 2] - (((Gm >>> 0 < mm >>> 0) + Sm) | 0)) | 0;
 														Gm = o[(nm + 32) >> 2];
 														Sm = (Gm - km) | 0;
-														Qm =
-															(o[(nm + 36) >> 2] - (((Gm >>> 0 < km >>> 0) + Qm) | 0)) |
-															0;
+														Qm = (o[(nm + 36) >> 2] - (((Gm >>> 0 < km >>> 0) + Qm) | 0)) | 0;
 														mm = Vl(Tm, Im, Sm, Qm);
 														Gm = (mm + Um) | 0;
 														km = (T + Jm) | 0;
@@ -13331,9 +12269,7 @@ var DracoDecoderModule = (function () {
 														km = o[(nm + 72) >> 2];
 														om = (Hm - km) | 0;
 														Pm = o[(nm + 76) >> 2];
-														Um =
-															(o[(nm + 52) >> 2] - ((Pm + (Hm >>> 0 < km >>> 0)) | 0)) |
-															0;
+														Um = (o[(nm + 52) >> 2] - ((Pm + (Hm >>> 0 < km >>> 0)) | 0)) | 0;
 														Lm = Vl(Lm, _m, om, Um);
 														Hm = (mm + Lm) | 0;
 														mm = (T + Mm) | 0;
@@ -13341,8 +12277,7 @@ var DracoDecoderModule = (function () {
 														Mm = Hm;
 														Hm = o[Fm >> 2];
 														Lm = (Hm - km) | 0;
-														km =
-															(o[(Fm + 4) >> 2] - (((Hm >>> 0 < km >>> 0) + Pm) | 0)) | 0;
+														km = (o[(Fm + 4) >> 2] - (((Hm >>> 0 < km >>> 0) + Pm) | 0)) | 0;
 														Fm = Vl(Lm, km, Sm, Qm);
 														Hm = (Mm - Fm) | 0;
 														Mm = (mm - ((T + (Mm >>> 0 < Fm >>> 0)) | 0)) | 0;
@@ -13385,20 +12320,10 @@ var DracoDecoderModule = (function () {
 													Ye = km ^ om;
 													om = Em ^ Om;
 													f: {
-														if (
-															(Jm | 0) < -1
-																? 1
-																: (Jm | 0) <= -1
-																  ? Gm >>> 0 > 4294967295
-																		? 0
-																		: 1
-																  : 0
-														) {
+														if ((Jm | 0) < -1 ? 1 : (Jm | 0) <= -1 ? (Gm >>> 0 > 4294967295 ? 0 : 1) : 0) {
 															km = Gm;
 															Em = (Ye + ((mm - km) | 0)) | 0;
-															km =
-																(om + ((Fm - (((mm >>> 0 < km >>> 0) + Jm) | 0)) | 0)) |
-																0;
+															km = (om + ((Fm - (((mm >>> 0 < km >>> 0) + Jm) | 0)) | 0)) | 0;
 															mm = Em;
 															Ye = mm >>> 0 < Ye >>> 0 ? (km + 1) | 0 : km;
 															if (!Im) {
@@ -13485,9 +12410,7 @@ var DracoDecoderModule = (function () {
 														Vl = (km >>> 0) % 3 | 0 ? km : (Vl + -2) | 0;
 														if (
 															((Vl | 0) == -1) |
-															((o[(o[lm >> 2] + ((Vl >>> 3) & 536870908)) >> 2] >>>
-																(Vl & 31)) &
-																1)
+															((o[(o[lm >> 2] + ((Vl >>> 3) & 536870908)) >> 2] >>> (Vl & 31)) & 1)
 														) {
 															break e;
 														}
@@ -13513,11 +12436,7 @@ var DracoDecoderModule = (function () {
 													break f;
 												}
 												km = (km + ((km >>> 0) % 3 | 0 ? -1 : 2)) | 0;
-												if (
-													((km | 0) == -1) |
-													((o[(o[lm >> 2] + ((km >>> 3) & 536870908)) >> 2] >>> (km & 31)) &
-														1)
-												) {
+												if (((km | 0) == -1) | ((o[(o[lm >> 2] + ((km >>> 3) & 536870908)) >> 2] >>> (km & 31)) & 1)) {
 													break f;
 												}
 												lm = o[(o[(o[(lm + 64) >> 2] + 12) >> 2] + (km << 2)) >> 2];
@@ -13546,10 +12465,7 @@ var DracoDecoderModule = (function () {
 											break g;
 										}
 										Vl = (Vl + ((Vl >>> 0) % 3 | 0 ? -1 : 2)) | 0;
-										if (
-											((Vl | 0) == -1) |
-											((o[(o[lm >> 2] + ((Vl >>> 3) & 536870908)) >> 2] >>> (Vl & 31)) & 1)
-										) {
+										if (((Vl | 0) == -1) | ((o[(o[lm >> 2] + ((Vl >>> 3) & 536870908)) >> 2] >>> (Vl & 31)) & 1)) {
 											break g;
 										}
 										Vl = o[(o[(o[(lm + 64) >> 2] + 12) >> 2] + (Vl << 2)) >> 2];
@@ -13792,9 +12708,7 @@ var DracoDecoderModule = (function () {
 														bn = 0;
 														while (1) {
 															o[((bn << 2) + yn) >> 2] =
-																((o[(((bn + nn) << 2) + an) >> 2] +
-																	o[(((Ye + bn) << 2) + an) >> 2]) |
-																	0) -
+																((o[(((bn + nn) << 2) + an) >> 2] + o[(((Ye + bn) << 2) + an) >> 2]) | 0) -
 																o[(((bn + pn) << 2) + an) >> 2];
 															bn = (bn + 1) | 0;
 															if ((ln | 0) != (bn | 0)) {
@@ -14236,27 +13150,15 @@ var DracoDecoderModule = (function () {
 																				Gn = -1;
 																				Qn = o[ao >> 2];
 																				On = o[Zn >> 2];
-																				Tn =
-																					o[
-																						(Qn +
-																							(o[(On + (Fn << 2)) >> 2] <<
-																								2)) >>
-																							2
-																					];
+																				Tn = o[(Qn + (o[(On + (Fn << 2)) >> 2] << 2)) >> 2];
 																				Pn = (Fn + 1) | 0;
-																				Pn =
-																					(Pn >>> 0) % 3 | 0
-																						? Pn
-																						: (Fn + -2) | 0;
+																				Pn = (Pn >>> 0) % 3 | 0 ? Pn : (Fn + -2) | 0;
 																				if ((Pn | 0) != -1) {
 																					Pn = o[(On + (Pn << 2)) >> 2];
 																				} else {
 																					Pn = -1;
 																				}
-																				Fn =
-																					(Fn +
-																						((Fn >>> 0) % 3 | 0 ? -1 : 2)) |
-																					0;
+																				Fn = (Fn + ((Fn >>> 0) % 3 | 0 ? -1 : 2)) | 0;
 																				if ((Fn | 0) != -1) {
 																					Gn = o[(On + (Fn << 2)) >> 2];
 																				}
@@ -14271,11 +13173,7 @@ var DracoDecoderModule = (function () {
 																				if ((Gn | 0) >= (Kn | 0)) {
 																					break p;
 																				}
-																				On =
-																					o[
-																						(((Hn + 16) | 0) + u(En, 12)) >>
-																							2
-																					];
+																				On = o[(((Hn + 16) | 0) + u(En, 12)) >> 2];
 																				if ((Dn | 0) >= 1) {
 																					Qn = u(Dn, Gn);
 																					Fn = u(Dn, Fn);
@@ -14283,22 +13181,9 @@ var DracoDecoderModule = (function () {
 																					Gn = 0;
 																					while (1) {
 																						o[(On + (Gn << 2)) >> 2] =
-																							((o[
-																								(((Gn + Qn) << 2) +
-																									ln) >>
-																									2
-																							] +
-																								o[
-																									(((Fn + Gn) << 2) +
-																										ln) >>
-																										2
-																								]) |
+																							((o[(((Gn + Qn) << 2) + ln) >> 2] + o[(((Fn + Gn) << 2) + ln) >> 2]) |
 																								0) -
-																							o[
-																								(((Gn + Tn) << 2) +
-																									ln) >>
-																									2
-																							];
+																							o[(((Gn + Tn) << 2) + ln) >> 2];
 																						Gn = (Gn + 1) | 0;
 																						if ((Gn | 0) != (Dn | 0)) {
 																							continue;
@@ -14315,10 +13200,7 @@ var DracoDecoderModule = (function () {
 																			q: {
 																				if (Jn & 1) {
 																					On = (mn + 1) | 0;
-																					mn =
-																						(On >>> 0) % 3 | 0
-																							? On
-																							: (mn + -2) | 0;
+																					mn = (On >>> 0) % 3 | 0 ? On : (mn + -2) | 0;
 																					Fn = -1;
 																					if ((mn | 0) == -1) {
 																						break q;
@@ -14329,16 +13211,10 @@ var DracoDecoderModule = (function () {
 																						break q;
 																					}
 																					Fn = (mn + 1) | 0;
-																					Fn =
-																						(Fn >>> 0) % 3 | 0
-																							? Fn
-																							: (mn + -2) | 0;
+																					Fn = (Fn >>> 0) % 3 | 0 ? Fn : (mn + -2) | 0;
 																					break q;
 																				}
-																				mn =
-																					(((mn >>> 0) % 3 | 0 ? -1 : 2) +
-																						mn) |
-																					0;
+																				mn = (((mn >>> 0) % 3 | 0 ? -1 : 2) + mn) | 0;
 																				Fn = -1;
 																				if ((mn | 0) == -1) {
 																					break q;
@@ -14406,15 +13282,7 @@ var DracoDecoderModule = (function () {
 																			break i;
 																		}
 																		s: {
-																			if (
-																				(o[
-																					(o[On >> 2] +
-																						((Gn >>> 3) & 536870908)) >>
-																						2
-																				] >>>
-																					(Gn & 31)) &
-																				1
-																			) {
+																			if ((o[(o[On >> 2] + ((Gn >>> 3) & 536870908)) >> 2] >>> (Gn & 31)) & 1) {
 																				break s;
 																			}
 																			En = (En + 1) | 0;
@@ -14426,8 +13294,7 @@ var DracoDecoderModule = (function () {
 																			while (1) {
 																				Un = Gn << 2;
 																				Xn = (Un + Tn) | 0;
-																				o[Xn >> 2] =
-																					o[Xn >> 2] + o[(Pn + Un) >> 2];
+																				o[Xn >> 2] = o[Xn >> 2] + o[(Pn + Un) >> 2];
 																				Gn = (Gn + 1) | 0;
 																				if ((Gn | 0) != (Dn | 0)) {
 																					continue;
@@ -14919,10 +13786,7 @@ var DracoDecoderModule = (function () {
 															mn = o[(ro + 16) >> 2];
 															uo = o[(ro + 40) >> 2];
 															co = uo;
-															eo =
-																(o[(ro + 20) >> 2] -
-																	((Go + (mn >>> 0 < co >>> 0)) | 0)) |
-																0;
+															eo = (o[(ro + 20) >> 2] - ((Go + (mn >>> 0 < co >>> 0)) | 0)) | 0;
 															Io = (mn - co) | 0;
 															mn = Vl(Io, eo, Io, eo);
 															co = T;
@@ -14931,10 +13795,7 @@ var DracoDecoderModule = (function () {
 															mn = o[(ro + 8) >> 2];
 															wo = o[(ro + 32) >> 2];
 															to = wo;
-															so =
-																(o[(ro + 12) >> 2] -
-																	((Ho + (mn >>> 0 < to >>> 0)) | 0)) |
-																0;
+															so = (o[(ro + 12) >> 2] - ((Ho + (mn >>> 0 < to >>> 0)) | 0)) | 0;
 															Jo = (mn - to) | 0;
 															to = Vl(Jo, so, Jo, so);
 															mn = (xo + to) | 0;
@@ -14945,10 +13806,7 @@ var DracoDecoderModule = (function () {
 															mn = o[(ro + 24) >> 2];
 															xo = o[(ro + 48) >> 2];
 															to = xo;
-															zo =
-																(o[(ro + 28) >> 2] -
-																	((Lo + (mn >>> 0 < to >>> 0)) | 0)) |
-																0;
+															zo = (o[(ro + 28) >> 2] - ((Lo + (mn >>> 0 < to >>> 0)) | 0)) | 0;
 															Ko = (mn - to) | 0;
 															to = Vl(Ko, zo, Ko, zo);
 															mn = (Bo + to) | 0;
@@ -14961,10 +13819,7 @@ var DracoDecoderModule = (function () {
 															En = 1;
 															mn = 0;
 															co = o[(ro + 64) >> 2];
-															Dn =
-																(o[(ro + 68) >> 2] -
-																	(((co >>> 0 < uo >>> 0) + Go) | 0)) |
-																0;
+															Dn = (o[(ro + 68) >> 2] - (((co >>> 0 < uo >>> 0) + Go) | 0)) | 0;
 															co = (co - uo) | 0;
 															yo = co;
 															Ao = Dn;
@@ -14973,10 +13828,7 @@ var DracoDecoderModule = (function () {
 															Bo = Dn;
 															uo = o[(ro + 56) >> 2];
 															Dn = (uo - wo) | 0;
-															Go =
-																(o[(ro + 60) >> 2] -
-																	(((uo >>> 0 < wo >>> 0) + Ho) | 0)) |
-																0;
+															Go = (o[(ro + 60) >> 2] - (((uo >>> 0 < wo >>> 0) + Ho) | 0)) | 0;
 															wo = Vl(Dn, Go, Jo, so);
 															uo = (Bo + wo) | 0;
 															co = (T + co) | 0;
@@ -14984,10 +13836,7 @@ var DracoDecoderModule = (function () {
 															Bo = uo;
 															uo = o[(ro + 72) >> 2];
 															wo = (uo - xo) | 0;
-															Ho =
-																(o[(ro + 76) >> 2] -
-																	(((uo >>> 0 < xo >>> 0) + Lo) | 0)) |
-																0;
+															Ho = (o[(ro + 76) >> 2] - (((uo >>> 0 < xo >>> 0) + Lo) | 0)) | 0;
 															xo = Vl(wo, Ho, Ko, zo);
 															uo = (Bo + xo) | 0;
 															co = (T + co) | 0;
@@ -15014,12 +13863,7 @@ var DracoDecoderModule = (function () {
 															eo = Vl(Dn, eo, Dn, eo);
 															Dn = (so + eo) | 0;
 															co = (T + co) | 0;
-															eo = Vl(
-																Dn,
-																Dn >>> 0 < eo >>> 0 ? (co + 1) | 0 : co,
-																Do,
-																to,
-															);
+															eo = Vl(Dn, Dn >>> 0 < eo >>> 0 ? (co + 1) | 0 : co, Do, to);
 															Dn = T;
 															so = Dn;
 															if ((!Dn & (eo >>> 0 <= 1)) | (Dn >>> 0 < 0)) {
@@ -15076,10 +13920,7 @@ var DracoDecoderModule = (function () {
 											mn = co >>> 1;
 											Dn = Vl(En, mn, En, mn);
 											co = T;
-											if (
-												(((so | 0) == (co | 0)) & (Dn >>> 0 > eo >>> 0)) |
-												(co >>> 0 > so >>> 0)
-											) {
+											if ((((so | 0) == (co | 0)) & (Dn >>> 0 > eo >>> 0)) | (co >>> 0 > so >>> 0)) {
 												continue;
 											}
 											break;
@@ -15118,9 +13959,7 @@ var DracoDecoderModule = (function () {
 									zo = co;
 									co = T;
 									co = (zo + (Dn ? (0 - ((co + (0 < Co >>> 0)) | 0)) | 0 : co)) | 0;
-									(Mo = Ye),
-										(No = Wl(so, so >>> 0 < Ao >>> 0 ? (co + 1) | 0 : co, Do, to)),
-										(o[(Mo + 12) >> 2] = No);
+									(Mo = Ye), (No = Wl(so, so >>> 0 < Ao >>> 0 ? (co + 1) | 0 : co, Do, to)), (o[(Mo + 12) >> 2] = No);
 									co = Vl(xo, uo, yo, vo);
 									so = T;
 									Co = Ye;
@@ -15135,9 +13974,7 @@ var DracoDecoderModule = (function () {
 									uo = co;
 									co = T;
 									Ye = (uo + (Dn ? co : (0 - (((0 < Ye >>> 0) + co) | 0)) | 0)) | 0;
-									(Mo = Co),
-										(No = Wl(mn, mn >>> 0 < En >>> 0 ? (Ye + 1) | 0 : Ye, Do, to)),
-										(o[(Mo + 8) >> 2] = No);
+									(Mo = Co), (No = Wl(mn, mn >>> 0 < En >>> 0 ? (Ye + 1) | 0 : Ye, Do, to)), (o[(Mo + 8) >> 2] = No);
 									Dn = 1;
 								}
 								R = (ro + 80) | 0;
@@ -15242,10 +14079,7 @@ var DracoDecoderModule = (function () {
 												o[(To + 16) >> 2] = Po;
 												Ro = Po;
 												Po = Po >> 31;
-												Po =
-													(((Uo - ((Ro + Po) ^ Po)) | 0) +
-														((Qo | 0) < 0 ? Qo : (0 - Qo) | 0)) |
-													0;
+												Po = (((Uo - ((Ro + Po) ^ Po)) | 0) + ((Qo | 0) < 0 ? Qo : (0 - Qo) | 0)) | 0;
 												if ((Xo | 0) >= 0) {
 													o[(To + 24) >> 2] = Po;
 													break b;
@@ -15518,10 +14352,7 @@ var DracoDecoderModule = (function () {
 															Po = (En + 2) | 0;
 														}
 														En = -1;
-														En =
-															(Qo | 0) != -1
-																? o[(o[o[(Ye + 16) >> 2] >> 2] + (Qo << 2)) >> 2]
-																: En;
+														En = (Qo | 0) != -1 ? o[(o[o[(Ye + 16) >> 2] >> 2] + (Qo << 2)) >> 2] : En;
 														gp = o[xp >> 2];
 														Qo = o[gp >> 2];
 														if (((o[(gp + 4) >> 2] - Qo) >> 2) >>> 0 <= En >>> 0) {
@@ -15541,10 +14372,7 @@ var DracoDecoderModule = (function () {
 														o[(Ro + 36) >> 2] = 0;
 														Me(En, Qo, m[(En + 24) | 0], (Ro + 32) | 0);
 														En = -1;
-														En =
-															(Po | 0) != -1
-																? o[(o[o[(Ye + 16) >> 2] >> 2] + (Po << 2)) >> 2]
-																: En;
+														En = (Po | 0) != -1 ? o[(o[o[(Ye + 16) >> 2] >> 2] + (Po << 2)) >> 2] : En;
 														Qo = o[xp >> 2];
 														Po = o[Qo >> 2];
 														if (((o[(Qo + 4) >> 2] - Po) >> 2) >>> 0 <= En >>> 0) {
@@ -15568,28 +14396,21 @@ var DracoDecoderModule = (function () {
 														En = o[(Ro + 56) >> 2];
 														qp = (Po - En) | 0;
 														rp = o[(Ro + 60) >> 2];
-														jp =
-															(o[(Ro + 12) >> 2] - ((rp + (Po >>> 0 < En >>> 0)) | 0)) |
-															0;
+														jp = (o[(Ro + 12) >> 2] - ((rp + (Po >>> 0 < En >>> 0)) | 0)) | 0;
 														sp = o[(Ro + 40) >> 2];
 														Po = o[(Ro + 64) >> 2];
 														Ap = (sp - Po) | 0;
 														tp = o[(Ro + 68) >> 2];
-														sp =
-															(o[(Ro + 44) >> 2] - ((tp + (sp >>> 0 < Po >>> 0)) | 0)) |
-															0;
+														sp = (o[(Ro + 44) >> 2] - ((tp + (sp >>> 0 < Po >>> 0)) | 0)) | 0;
 														up = Vl(qp, jp, Ap, sp);
 														vp = (hp - up) | 0;
 														kp = (kp - ((T + (hp >>> 0 < up >>> 0)) | 0)) | 0;
 														hp = o[gp >> 2];
 														up = (hp - Po) | 0;
-														gp =
-															(o[(gp + 4) >> 2] - (((hp >>> 0 < Po >>> 0) + tp) | 0)) | 0;
+														gp = (o[(gp + 4) >> 2] - (((hp >>> 0 < Po >>> 0) + tp) | 0)) | 0;
 														hp = o[(Ro + 32) >> 2];
 														tp = (hp - En) | 0;
-														rp =
-															(o[(Ro + 36) >> 2] - (((hp >>> 0 < En >>> 0) + rp) | 0)) |
-															0;
+														rp = (o[(Ro + 36) >> 2] - (((hp >>> 0 < En >>> 0) + rp) | 0)) | 0;
 														Po = Vl(up, gp, tp, rp);
 														hp = (Po + vp) | 0;
 														En = (T + kp) | 0;
@@ -15602,9 +14423,7 @@ var DracoDecoderModule = (function () {
 														En = o[(Ro + 72) >> 2];
 														jp = (ip - En) | 0;
 														qp = o[(Ro + 76) >> 2];
-														vp =
-															(o[(Ro + 52) >> 2] - ((qp + (ip >>> 0 < En >>> 0)) | 0)) |
-															0;
+														vp = (o[(Ro + 52) >> 2] - ((qp + (ip >>> 0 < En >>> 0)) | 0)) | 0;
 														mp = Vl(mp, Bp, jp, vp);
 														ip = (Po + mp) | 0;
 														Po = (T + np) | 0;
@@ -15612,8 +14431,7 @@ var DracoDecoderModule = (function () {
 														np = ip;
 														ip = o[Qo >> 2];
 														mp = (ip - En) | 0;
-														En =
-															(o[(Qo + 4) >> 2] - (((ip >>> 0 < En >>> 0) + qp) | 0)) | 0;
+														En = (o[(Qo + 4) >> 2] - (((ip >>> 0 < En >>> 0) + qp) | 0)) | 0;
 														Qo = Vl(mp, En, tp, rp);
 														ip = (np - Qo) | 0;
 														np = (Po - ((T + (np >>> 0 < Qo >>> 0)) | 0)) | 0;
@@ -15656,20 +14474,10 @@ var DracoDecoderModule = (function () {
 													Ye = En ^ Qo;
 													Qo = fp ^ pp;
 													f: {
-														if (
-															(kp | 0) < -1
-																? 1
-																: (kp | 0) <= -1
-																  ? hp >>> 0 > 4294967295
-																		? 0
-																		: 1
-																  : 0
-														) {
+														if ((kp | 0) < -1 ? 1 : (kp | 0) <= -1 ? (hp >>> 0 > 4294967295 ? 0 : 1) : 0) {
 															En = hp;
 															fp = (Ye + ((Po - En) | 0)) | 0;
-															En =
-																(Qo + ((gp - (((Po >>> 0 < En >>> 0) + kp) | 0)) | 0)) |
-																0;
+															En = (Qo + ((gp - (((Po >>> 0 < En >>> 0) + kp) | 0)) | 0)) | 0;
 															Po = fp;
 															Ye = Po >>> 0 < Ye >>> 0 ? (En + 1) | 0 : En;
 															if (!jp) {
@@ -16049,15 +14857,7 @@ var DracoDecoderModule = (function () {
 										Wp = o[(Ep + 20) >> 2];
 										Dp = Wp;
 										Yp = 0;
-										if (
-											(Hp | 0) < (Dp | 0)
-												? 1
-												: (Hp | 0) <= (Dp | 0)
-												  ? r[(Ep + 8) >> 2] > Xp >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Hp | 0) < (Dp | 0) ? 1 : (Hp | 0) <= (Dp | 0) ? (r[(Ep + 8) >> 2] > Xp >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										Dp = p[(Xp + o[Ep >> 2]) | 0];
@@ -16122,11 +14922,7 @@ var DracoDecoderModule = (function () {
 									while (1) {
 										bq = v(v(1) / v(_p | 0));
 										_p = Ep << 2;
-										pf(
-											v(bq * v(o[(_p + aq) >> 2])),
-											v(bq * v(o[((_p | 4) + aq) >> 2])),
-											(Zp + 20) | 0,
-										);
+										pf(v(bq * v(o[(_p + aq) >> 2])), v(bq * v(o[((_p | 4) + aq) >> 2])), (Zp + 20) | 0);
 										wl((o[o[(o[dq >> 2] - -64) >> 2] >> 2] + Ye) | 0, (Zp + 20) | 0, $p);
 										_p = 1;
 										cq = (cq + 1) | 0;
@@ -16246,14 +15042,7 @@ var DracoDecoderModule = (function () {
 										if ((l[o[(o[mq >> 2] + 8) >> 2]](mq) | 0) == 1) {
 											pq = Dp;
 											Dp = q[(mq + 36) >> 1];
-											rf(
-												(nq + 8) | 0,
-												mq,
-												eq,
-												pq,
-												(nq + 16) | 0,
-												((Dp << 24) | ((Dp << 8) & 16711680)) >>> 16,
-											);
+											rf((nq + 8) | 0, mq, eq, pq, (nq + 16) | 0, ((Dp << 24) | ((Dp << 8) & 16711680)) >>> 16);
 											Dp = o[(nq + 8) >> 2];
 											if (Dp) {
 												o[Ye >> 2] = Dp;
@@ -16379,11 +15168,7 @@ var DracoDecoderModule = (function () {
 								Ye = Ye | 0;
 								var Dp = 0;
 								a: {
-									if (
-										!o[(Ye + 44) >> 2] |
-										!o[(Ye + 48) >> 2] |
-										(!o[(Ye + 24) >> 2] | !o[(Ye + 28) >> 2])
-									) {
+									if (!o[(Ye + 44) >> 2] | !o[(Ye + 48) >> 2] | (!o[(Ye + 24) >> 2] | !o[(Ye + 28) >> 2])) {
 										break a;
 									}
 									if (!o[(Ye + 32) >> 2] | !o[(Ye + 36) >> 2]) {
@@ -16433,22 +15218,11 @@ var DracoDecoderModule = (function () {
 								Bq = rq;
 								rq = qq;
 								a: {
-									if (
-										(wq | 0) < (qq | 0)
-											? 1
-											: (wq | 0) <= (qq | 0)
-											  ? Aq >>> 0 >= Bq >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((wq | 0) < (qq | 0) ? 1 : (wq | 0) <= (qq | 0) ? (Aq >>> 0 >= Bq >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									qq = (yq + o[eq >> 2]) | 0;
-									wq =
-										p[qq | 0] |
-										(p[(qq + 1) | 0] << 8) |
-										((p[(qq + 2) | 0] << 16) | (p[(qq + 3) | 0] << 24));
+									wq = p[qq | 0] | (p[(qq + 1) | 0] << 8) | ((p[(qq + 2) | 0] << 16) | (p[(qq + 3) | 0] << 24));
 									o[(eq + 16) >> 2] = Bq;
 									o[(eq + 20) >> 2] = rq;
 									qq = xq;
@@ -16458,15 +15232,7 @@ var DracoDecoderModule = (function () {
 									}
 									xq = rq;
 									rq = qq;
-									if (
-										(zq | 0) < (qq | 0)
-											? 1
-											: (zq | 0) <= (qq | 0)
-											  ? Aq >>> 0 >= xq >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((zq | 0) < (qq | 0) ? 1 : (zq | 0) <= (qq | 0) ? (Aq >>> 0 >= xq >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									o[(eq + 16) >> 2] = xq;
@@ -16565,10 +15331,7 @@ var DracoDecoderModule = (function () {
 												o[(Hq + 8) >> 2] = Eq;
 												Gq = Eq;
 												Eq = Eq >> 31;
-												Eq =
-													(((Kq - ((Gq + Eq) ^ Eq)) | 0) +
-														((Fq | 0) < 0 ? Fq : (0 - Fq) | 0)) |
-													0;
+												Eq = (((Kq - ((Gq + Eq) ^ Eq)) | 0) + ((Fq | 0) < 0 ? Fq : (0 - Fq) | 0)) | 0;
 												if ((Mq | 0) >= 0) {
 													o[(Hq + 16) >> 2] = Eq;
 													break b;
@@ -16981,22 +15744,11 @@ var DracoDecoderModule = (function () {
 								br = Eq;
 								Eq = Dq;
 								a: {
-									if (
-										(Yq | 0) < (Dq | 0)
-											? 1
-											: (Yq | 0) <= (Dq | 0)
-											  ? ar >>> 0 >= br >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Yq | 0) < (Dq | 0) ? 1 : (Yq | 0) <= (Dq | 0) ? (ar >>> 0 >= br >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Dq = (_q + o[eq >> 2]) | 0;
-									Yq =
-										p[Dq | 0] |
-										(p[(Dq + 1) | 0] << 8) |
-										((p[(Dq + 2) | 0] << 16) | (p[(Dq + 3) | 0] << 24));
+									Yq = p[Dq | 0] | (p[(Dq + 1) | 0] << 8) | ((p[(Dq + 2) | 0] << 16) | (p[(Dq + 3) | 0] << 24));
 									o[(eq + 16) >> 2] = br;
 									o[(eq + 20) >> 2] = Eq;
 									Dq = Zq;
@@ -17006,15 +15758,7 @@ var DracoDecoderModule = (function () {
 									}
 									Zq = Eq;
 									Eq = Dq;
-									if (
-										($q | 0) < (Dq | 0)
-											? 1
-											: ($q | 0) <= (Dq | 0)
-											  ? ar >>> 0 >= Zq >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if (($q | 0) < (Dq | 0) ? 1 : ($q | 0) <= (Dq | 0) ? (ar >>> 0 >= Zq >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									o[(eq + 16) >> 2] = Zq;
@@ -17123,10 +15867,7 @@ var DracoDecoderModule = (function () {
 												o[(hr + 8) >> 2] = er;
 												gr = er;
 												er = er >> 31;
-												er =
-													(((kr - ((gr + er) ^ er)) | 0) +
-														((fr | 0) < 0 ? fr : (0 - fr) | 0)) |
-													0;
+												er = (((kr - ((gr + er) ^ er)) | 0) + ((fr | 0) < 0 ? fr : (0 - fr) | 0)) | 0;
 												if ((mr | 0) >= 0) {
 													o[(hr + 16) >> 2] = er;
 													break b;
@@ -17407,15 +16148,7 @@ var DracoDecoderModule = (function () {
 									gr = (gr + 1) | 0;
 								}
 								a: {
-									if (
-										(Dr | 0) < (gr | 0)
-											? 1
-											: (Dr | 0) <= (gr | 0)
-											  ? Ar >>> 0 >= fr >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Dr | 0) < (gr | 0) ? 1 : (Dr | 0) <= (gr | 0) ? (Ar >>> 0 >= fr >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									wl(o[(Ye + 28) >> 2], (Br + o[dr >> 2]) | 0, er);
@@ -17439,22 +16172,12 @@ var DracoDecoderModule = (function () {
 									if (eq >>> 0 < 4) {
 										Br = (Br + 1) | 0;
 									}
-									if (
-										(gr | 0) < (Br | 0)
-											? 1
-											: (gr | 0) <= (Br | 0)
-											  ? Ar >>> 0 >= eq >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((gr | 0) < (Br | 0) ? 1 : (gr | 0) <= (Br | 0) ? (Ar >>> 0 >= eq >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									eq = (dr + o[er >> 2]) | 0;
 									o[(Ye + 32) >> 2] =
-										p[eq | 0] |
-										(p[(eq + 1) | 0] << 8) |
-										((p[(eq + 2) | 0] << 16) | (p[(eq + 3) | 0] << 24));
+										p[eq | 0] | (p[(eq + 1) | 0] << 8) | ((p[(eq + 2) | 0] << 16) | (p[(eq + 3) | 0] << 24));
 									eq = er;
 									Ar = eq;
 									dr = o[(eq + 20) >> 2];
@@ -17469,15 +16192,7 @@ var DracoDecoderModule = (function () {
 									fr = o[(eq + 12) >> 2];
 									er = o[(eq + 20) >> 2];
 									dr = er;
-									if (
-										(fr | 0) < (dr | 0)
-											? 1
-											: (fr | 0) <= (dr | 0)
-											  ? r[(eq + 8) >> 2] > gr >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((fr | 0) < (dr | 0) ? 1 : (fr | 0) <= (dr | 0) ? (r[(eq + 8) >> 2] > gr >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									fr = p[(gr + o[eq >> 2]) | 0];
@@ -17557,8 +16272,7 @@ var DracoDecoderModule = (function () {
 											Gr = 0;
 											while (1) {
 												Or = Gr << 2;
-												s[(Or + Mr) >> 2] =
-													v(Ur * v(o[(Hr + (Ye << 2)) >> 2])) + s[(Tr + Or) >> 2];
+												s[(Or + Mr) >> 2] = v(Ur * v(o[(Hr + (Ye << 2)) >> 2])) + s[(Tr + Or) >> 2];
 												Ye = (Ye + 1) | 0;
 												Gr = (Gr + 1) | 0;
 												if ((Jr | 0) != (Gr | 0)) {
@@ -17666,15 +16380,7 @@ var DracoDecoderModule = (function () {
 								_r = o[(Yr + 12) >> 2];
 								Zr = o[(Yr + 20) >> 2];
 								a: {
-									if (
-										(_r | 0) < (Zr | 0)
-											? 1
-											: (_r | 0) <= (Zr | 0)
-											  ? r[(Yr + 8) >> 2] > as >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((_r | 0) < (Zr | 0) ? 1 : (_r | 0) <= (Zr | 0) ? (r[(Yr + 8) >> 2] > as >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									m[(Ye + 12) | 0] = p[(as + o[Yr >> 2]) | 0];
@@ -17764,15 +16470,7 @@ var DracoDecoderModule = (function () {
 									ls = o[(is + 16) >> 2];
 									js = o[(is + 12) >> 2];
 									ks = o[(is + 20) >> 2];
-									if (
-										(js | 0) < (ks | 0)
-											? 1
-											: (js | 0) <= (ks | 0)
-											  ? r[(is + 8) >> 2] > ls >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((js | 0) < (ks | 0) ? 1 : (js | 0) <= (ks | 0) ? (r[(is + 8) >> 2] > ls >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									js = p[(ls + o[is >> 2]) | 0];
@@ -18557,11 +17255,7 @@ var DracoDecoderModule = (function () {
 																$s = Xs >>> 0 < _s >>> 0 ? Xs : _s;
 																if ($s) {
 																	at = (Ws + 16) | 0;
-																	Us = Zj(
-																		Zs ? o[at >> 2] : at,
-																		Us ? o[Vs >> 2] : Vs,
-																		$s,
-																	);
+																	Us = Zj(Zs ? o[at >> 2] : at, Us ? o[Vs >> 2] : Vs, $s);
 																	if (Us) {
 																		break k;
 																	}
@@ -18773,15 +17467,7 @@ var DracoDecoderModule = (function () {
 								pt = o[(Ts + 20) >> 2];
 								ot = pt;
 								a: {
-									if (
-										(qt | 0) < (ot | 0)
-											? 1
-											: (qt | 0) <= (ot | 0)
-											  ? r[(Ts + 8) >> 2] > nt >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((qt | 0) < (ot | 0) ? 1 : (qt | 0) <= (ot | 0) ? (r[(Ts + 8) >> 2] > nt >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									ot = p[(nt + o[Ts >> 2]) | 0];
@@ -18957,15 +17643,7 @@ var DracoDecoderModule = (function () {
 										Jt = o[(Ds + 12) >> 2];
 										mt = o[(Ds + 20) >> 2];
 										c: {
-											if (
-												(Jt | 0) < (mt | 0)
-													? 1
-													: (Jt | 0) <= (mt | 0)
-													  ? r[(Ds + 8) >> 2] > It >>> 0
-															? 0
-															: 1
-													  : 0
-											) {
+											if ((Jt | 0) < (mt | 0) ? 1 : (Jt | 0) <= (mt | 0) ? (r[(Ds + 8) >> 2] > It >>> 0 ? 0 : 1) : 0) {
 												break c;
 											}
 											Jt = p[(It + o[Ds >> 2]) | 0];
@@ -19076,15 +17754,7 @@ var DracoDecoderModule = (function () {
 										Mt = o[(Ds + 16) >> 2];
 										Lt = o[(Ds + 20) >> 2];
 										Ts = Lt;
-										if (
-											(Qt | 0) < (Ts | 0)
-												? 1
-												: (Qt | 0) <= (Ts | 0)
-												  ? Ut >>> 0 > Mt >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Qt | 0) < (Ts | 0) ? 1 : (Qt | 0) <= (Ts | 0) ? (Ut >>> 0 > Mt >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										Vt = o[Ds >> 2];
@@ -19127,15 +17797,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(Qt | 0) < (Lt | 0)
-															? 1
-															: (Qt | 0) <= (Lt | 0)
-															  ? Ut >>> 0 > Pt >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Qt | 0) < (Lt | 0) ? 1 : (Qt | 0) <= (Lt | 0) ? (Ut >>> 0 > Pt >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													Rt = p[(Pt + Vt) | 0];
@@ -19302,10 +17964,7 @@ var DracoDecoderModule = (function () {
 											}
 											o[(Ye + 44) >> 2] = Xt + -3;
 											Ye = (((Xt + Yt) | 0) + -3) | 0;
-											Ye =
-												(p[(Ye + 1) | 0] << 8) |
-												((p[(Ye + 2) | 0] << 16) & 4128768) |
-												p[Ye | 0];
+											Ye = (p[(Ye + 1) | 0] << 8) | ((p[(Ye + 2) | 0] << 16) & 4128768) | p[Ye | 0];
 											break b;
 										}
 										o[(Ye + 44) >> 2] = Xt + -4;
@@ -19415,10 +18074,7 @@ var DracoDecoderModule = (function () {
 												Ds = (gu + -3) | 0;
 												o[(eu + 44) >> 2] = Ds;
 												fu = (((gu + ku) | 0) + -3) | 0;
-												fu =
-													(p[(fu + 1) | 0] << 8) |
-													((p[(fu + 2) | 0] << 16) & 4128768) |
-													p[fu | 0];
+												fu = (p[(fu + 1) | 0] << 8) | ((p[(fu + 2) | 0] << 16) & 4128768) | p[fu | 0];
 												break b;
 											}
 											Ds = (gu + -4) | 0;
@@ -19674,10 +18330,7 @@ var DracoDecoderModule = (function () {
 												Ds = (yu + -3) | 0;
 												o[(wu + 44) >> 2] = Ds;
 												xu = (((yu + Cu) | 0) + -3) | 0;
-												xu =
-													(p[(xu + 1) | 0] << 8) |
-													((p[(xu + 2) | 0] << 16) & 4128768) |
-													p[xu | 0];
+												xu = (p[(xu + 1) | 0] << 8) | ((p[(xu + 2) | 0] << 16) & 4128768) | p[xu | 0];
 												break b;
 											}
 											Ds = (yu + -4) | 0;
@@ -19845,10 +18498,7 @@ var DracoDecoderModule = (function () {
 												Ds = (Iu + -3) | 0;
 												o[(Gu + 44) >> 2] = Ds;
 												Hu = (((Iu + Mu) | 0) + -3) | 0;
-												Hu =
-													(p[(Hu + 1) | 0] << 8) |
-													((p[(Hu + 2) | 0] << 16) & 4128768) |
-													p[Hu | 0];
+												Hu = (p[(Hu + 1) | 0] << 8) | ((p[(Hu + 2) | 0] << 16) & 4128768) | p[Hu | 0];
 												break b;
 											}
 											Ds = (Iu + -4) | 0;
@@ -20016,10 +18666,7 @@ var DracoDecoderModule = (function () {
 												Ds = (Su + -3) | 0;
 												o[(Qu + 44) >> 2] = Ds;
 												Ru = (((Su + Wu) | 0) + -3) | 0;
-												Ru =
-													(p[(Ru + 1) | 0] << 8) |
-													((p[(Ru + 2) | 0] << 16) & 4128768) |
-													p[Ru | 0];
+												Ru = (p[(Ru + 1) | 0] << 8) | ((p[(Ru + 2) | 0] << 16) & 4128768) | p[Ru | 0];
 												break b;
 											}
 											Ds = (Su + -4) | 0;
@@ -20187,10 +18834,7 @@ var DracoDecoderModule = (function () {
 												Ds = (av + -3) | 0;
 												o[(_u + 44) >> 2] = Ds;
 												$u = (((av + ev) | 0) + -3) | 0;
-												$u =
-													(p[($u + 1) | 0] << 8) |
-													((p[($u + 2) | 0] << 16) & 4128768) |
-													p[$u | 0];
+												$u = (p[($u + 1) | 0] << 8) | ((p[($u + 2) | 0] << 16) & 4128768) | p[$u | 0];
 												break b;
 											}
 											Ds = (av + -4) | 0;
@@ -20358,10 +19002,7 @@ var DracoDecoderModule = (function () {
 												Ds = (kv + -3) | 0;
 												o[(iv + 44) >> 2] = Ds;
 												jv = (((kv + ov) | 0) + -3) | 0;
-												jv =
-													(p[(jv + 1) | 0] << 8) |
-													((p[(jv + 2) | 0] << 16) & 4128768) |
-													p[jv | 0];
+												jv = (p[(jv + 1) | 0] << 8) | ((p[(jv + 2) | 0] << 16) & 4128768) | p[jv | 0];
 												break b;
 											}
 											Ds = (kv + -4) | 0;
@@ -20529,10 +19170,7 @@ var DracoDecoderModule = (function () {
 												Ds = (uv + -3) | 0;
 												o[(sv + 44) >> 2] = Ds;
 												tv = (((uv + yv) | 0) + -3) | 0;
-												tv =
-													(p[(tv + 1) | 0] << 8) |
-													((p[(tv + 2) | 0] << 16) & 4128768) |
-													p[tv | 0];
+												tv = (p[(tv + 1) | 0] << 8) | ((p[(tv + 2) | 0] << 16) & 4128768) | p[tv | 0];
 												break b;
 											}
 											Ds = (uv + -4) | 0;
@@ -20620,15 +19258,7 @@ var DracoDecoderModule = (function () {
 									Ev = o[(du + 16) >> 2];
 									Cv = o[(du + 12) >> 2];
 									Dv = o[(du + 20) >> 2];
-									if (
-										(Cv | 0) < (Dv | 0)
-											? 1
-											: (Cv | 0) <= (Dv | 0)
-											  ? r[(du + 8) >> 2] > Ev >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Cv | 0) < (Dv | 0) ? 1 : (Cv | 0) <= (Dv | 0) ? (r[(du + 8) >> 2] > Ev >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Cv = p[(Ev + o[du >> 2]) | 0];
@@ -20689,12 +19319,7 @@ var DracoDecoderModule = (function () {
 											Lv = du << 3;
 											Hv = (Hv - Iv) | 0;
 											du = Hv >> 2;
-											Hv =
-												(Hv >> 3) >>> 0 < 268435455
-													? du >>> 0 < Gv >>> 0
-														? Gv
-														: du
-													: 536870911;
+											Hv = (Hv >> 3) >>> 0 < 268435455 ? (du >>> 0 < Gv >>> 0 ? Gv : du) : 536870911;
 											du = 0;
 											d: {
 												if (!Hv) {
@@ -20751,15 +19376,7 @@ var DracoDecoderModule = (function () {
 									Nv = o[(Mv + 12) >> 2];
 									Ov = o[(Mv + 20) >> 2];
 									Qv = Ov;
-									if (
-										(Nv | 0) < (Qv | 0)
-											? 1
-											: (Nv | 0) <= (Qv | 0)
-											  ? r[(Mv + 8) >> 2] > Pv >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Nv | 0) < (Qv | 0) ? 1 : (Nv | 0) <= (Qv | 0) ? (r[(Mv + 8) >> 2] > Pv >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Rv = m[(Pv + o[Mv >> 2]) | 0];
@@ -20842,15 +19459,7 @@ var DracoDecoderModule = (function () {
 										Uv = o[(Ds + 16) >> 2];
 										Tv = o[(Ds + 20) >> 2];
 										Mv = Tv;
-										if (
-											(Yv | 0) < (Mv | 0)
-												? 1
-												: (Yv | 0) <= (Mv | 0)
-												  ? aw >>> 0 > Uv >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Yv | 0) < (Mv | 0) ? 1 : (Yv | 0) <= (Mv | 0) ? (aw >>> 0 > Uv >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										bw = o[Ds >> 2];
@@ -20893,15 +19502,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(Yv | 0) < (Tv | 0)
-															? 1
-															: (Yv | 0) <= (Tv | 0)
-															  ? aw >>> 0 > Xv >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Yv | 0) < (Tv | 0) ? 1 : (Yv | 0) <= (Tv | 0) ? (aw >>> 0 > Xv >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													Zv = p[(Xv + bw) | 0];
@@ -21041,15 +19642,7 @@ var DracoDecoderModule = (function () {
 										fw = o[(Ds + 16) >> 2];
 										ew = o[(Ds + 20) >> 2];
 										dw = ew;
-										if (
-											(jw | 0) < (dw | 0)
-												? 1
-												: (jw | 0) <= (dw | 0)
-												  ? nw >>> 0 > fw >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((jw | 0) < (dw | 0) ? 1 : (jw | 0) <= (dw | 0) ? (nw >>> 0 > fw >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										ow = o[Ds >> 2];
@@ -21092,15 +19685,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(jw | 0) < (ew | 0)
-															? 1
-															: (jw | 0) <= (ew | 0)
-															  ? nw >>> 0 > iw >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((jw | 0) < (ew | 0) ? 1 : (jw | 0) <= (ew | 0) ? (nw >>> 0 > iw >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													kw = p[(iw + ow) | 0];
@@ -21240,15 +19825,7 @@ var DracoDecoderModule = (function () {
 										sw = o[(Ds + 16) >> 2];
 										rw = o[(Ds + 20) >> 2];
 										qw = rw;
-										if (
-											(ww | 0) < (qw | 0)
-												? 1
-												: (ww | 0) <= (qw | 0)
-												  ? Aw >>> 0 > sw >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((ww | 0) < (qw | 0) ? 1 : (ww | 0) <= (qw | 0) ? (Aw >>> 0 > sw >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										Bw = o[Ds >> 2];
@@ -21291,15 +19868,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(ww | 0) < (rw | 0)
-															? 1
-															: (ww | 0) <= (rw | 0)
-															  ? Aw >>> 0 > vw >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((ww | 0) < (rw | 0) ? 1 : (ww | 0) <= (rw | 0) ? (Aw >>> 0 > vw >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													xw = p[(vw + Bw) | 0];
@@ -21439,15 +20008,7 @@ var DracoDecoderModule = (function () {
 										Fw = o[(Ds + 16) >> 2];
 										Ew = o[(Ds + 20) >> 2];
 										Dw = Ew;
-										if (
-											(Jw | 0) < (Dw | 0)
-												? 1
-												: (Jw | 0) <= (Dw | 0)
-												  ? Nw >>> 0 > Fw >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Jw | 0) < (Dw | 0) ? 1 : (Jw | 0) <= (Dw | 0) ? (Nw >>> 0 > Fw >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										Ow = o[Ds >> 2];
@@ -21490,15 +20051,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(Jw | 0) < (Ew | 0)
-															? 1
-															: (Jw | 0) <= (Ew | 0)
-															  ? Nw >>> 0 > Iw >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Jw | 0) < (Ew | 0) ? 1 : (Jw | 0) <= (Ew | 0) ? (Nw >>> 0 > Iw >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													Kw = p[(Iw + Ow) | 0];
@@ -21638,15 +20191,7 @@ var DracoDecoderModule = (function () {
 										Sw = o[(Ds + 16) >> 2];
 										Rw = o[(Ds + 20) >> 2];
 										Qw = Rw;
-										if (
-											(Ww | 0) < (Qw | 0)
-												? 1
-												: (Ww | 0) <= (Qw | 0)
-												  ? _w >>> 0 > Sw >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((Ww | 0) < (Qw | 0) ? 1 : (Ww | 0) <= (Qw | 0) ? (_w >>> 0 > Sw >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										$w = o[Ds >> 2];
@@ -21689,15 +20234,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(Ww | 0) < (Rw | 0)
-															? 1
-															: (Ww | 0) <= (Rw | 0)
-															  ? _w >>> 0 > Vw >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Ww | 0) < (Rw | 0) ? 1 : (Ww | 0) <= (Rw | 0) ? (_w >>> 0 > Vw >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													Xw = p[(Vw + $w) | 0];
@@ -21837,15 +20374,7 @@ var DracoDecoderModule = (function () {
 										dx = o[(Ds + 16) >> 2];
 										cx = o[(Ds + 20) >> 2];
 										bx = cx;
-										if (
-											(hx | 0) < (bx | 0)
-												? 1
-												: (hx | 0) <= (bx | 0)
-												  ? lx >>> 0 > dx >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((hx | 0) < (bx | 0) ? 1 : (hx | 0) <= (bx | 0) ? (lx >>> 0 > dx >>> 0 ? 0 : 1) : 0) {
 											break a;
 										}
 										mx = o[Ds >> 2];
@@ -21888,15 +20417,7 @@ var DracoDecoderModule = (function () {
 													break c;
 												}
 												while (1) {
-													if (
-														(hx | 0) < (cx | 0)
-															? 1
-															: (hx | 0) <= (cx | 0)
-															  ? lx >>> 0 > gx >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((hx | 0) < (cx | 0) ? 1 : (hx | 0) <= (cx | 0) ? (lx >>> 0 > gx >>> 0 ? 0 : 1) : 0) {
 														return 0;
 													}
 													ix = p[(gx + mx) | 0];
@@ -22061,15 +20582,7 @@ var DracoDecoderModule = (function () {
 								ux = o[(sx + 16) >> 2];
 								vx = o[(sx + 12) >> 2];
 								tx = o[(sx + 20) >> 2];
-								if (
-									(vx | 0) > (tx | 0)
-										? 1
-										: (vx | 0) >= (tx | 0)
-										  ? r[(sx + 8) >> 2] <= ux >>> 0
-												? 0
-												: 1
-										  : 0
-								) {
+								if ((vx | 0) > (tx | 0) ? 1 : (vx | 0) >= (tx | 0) ? (r[(sx + 8) >> 2] <= ux >>> 0 ? 0 : 1) : 0) {
 									vx = p[(ux + o[sx >> 2]) | 0];
 									ux = (ux + 1) | 0;
 									if (ux >>> 0 < 1) {
@@ -22440,15 +20953,7 @@ var DracoDecoderModule = (function () {
 										z = o[(t + 20) >> 2];
 										y = z;
 										c: {
-											if (
-												(v | 0) < (y | 0)
-													? 1
-													: (v | 0) <= (y | 0)
-													  ? C >>> 0 > B >>> 0
-															? 0
-															: 1
-													  : 0
-											) {
+											if ((v | 0) < (y | 0) ? 1 : (v | 0) <= (y | 0) ? (C >>> 0 > B >>> 0 ? 0 : 1) : 0) {
 												break c;
 											}
 											I = o[t >> 2];
@@ -22461,15 +20966,7 @@ var DracoDecoderModule = (function () {
 											y = t;
 											o[(t + 16) >> 2] = A;
 											o[(t + 20) >> 2] = v;
-											if (
-												(F | 0) < (v | 0)
-													? 1
-													: (F | 0) <= (v | 0)
-													  ? C >>> 0 > A >>> 0
-															? 0
-															: 1
-													  : 0
-											) {
+											if ((F | 0) < (v | 0) ? 1 : (F | 0) <= (v | 0) ? (C >>> 0 > A >>> 0 ? 0 : 1) : 0) {
 												break c;
 											}
 											J = p[(A + I) | 0];
@@ -22503,15 +21000,7 @@ var DracoDecoderModule = (function () {
 											w = q[(H + 36) >> 1];
 											if ((((w << 24) | ((w << 8) & 16711680)) >>> 16) >>> 0 >= 258) {
 												w = 0;
-												if (
-													(F | 0) < (v | 0)
-														? 1
-														: (F | 0) <= (v | 0)
-														  ? C >>> 0 > A >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((F | 0) < (v | 0) ? 1 : (F | 0) <= (v | 0) ? (C >>> 0 > A >>> 0 ? 0 : 1) : 0) {
 													break c;
 												}
 												y = p[(A + I) | 0];
@@ -22602,11 +21091,7 @@ var DracoDecoderModule = (function () {
 														G = o[w >> 2];
 														w = o[(w + 4) >> 2];
 														m[(x + 79) | 0] = 0;
-														$a(
-															(x + 40) | 0,
-															((((w - G) >> 2) >>> 0) / 3) | 0,
-															(x + 79) | 0,
-														);
+														$a((x + 40) | 0, ((((w - G) >> 2) >>> 0) / 3) | 0, (x + 79) | 0);
 														w = o[(x + 20) >> 2];
 														G = o[(w + 56) >> 2];
 														w = o[(w + 52) >> 2];
@@ -23293,15 +21778,7 @@ var DracoDecoderModule = (function () {
 									ra = o[(la + 16) >> 2];
 									ma = o[(la + 12) >> 2];
 									ia = o[(la + 20) >> 2];
-									if (
-										(ma | 0) < (ia | 0)
-											? 1
-											: (ma | 0) <= (ia | 0)
-											  ? r[(la + 8) >> 2] > ra >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((ma | 0) < (ia | 0) ? 1 : (ma | 0) <= (ia | 0) ? (r[(la + 8) >> 2] > ra >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									pa = p[(ra + o[la >> 2]) | 0];
@@ -23483,12 +21960,7 @@ var DracoDecoderModule = (function () {
 									ma = o[((l[o[(o[a >> 2] + 32) >> 2]](a) | 0) + 32) >> 2];
 									la = o[(ma + 8) >> 2];
 									ia = o[(ma + 16) >> 2];
-									pi(
-										na,
-										oa,
-										(la - ia) | 0,
-										q[(o[((l[o[(o[a >> 2] + 32) >> 2]](a) | 0) + 32) >> 2] + 38) >> 1],
-									);
+									pi(na, oa, (la - ia) | 0, q[(o[((l[o[(o[a >> 2] + 32) >> 2]](a) | 0) + 32) >> 2] + 38) >> 1]);
 									o[(a + 372) >> 2] = pa;
 									la = oi(qa);
 									ia = o[(a + 268) >> 2];
@@ -23536,10 +22008,7 @@ var DracoDecoderModule = (function () {
 												oa = o[(ma + 4) >> 2];
 												ma = (ya - ((oa + (sa >>> 0 < ia >>> 0)) | 0)) | 0;
 												sa = o[(qa + 56) >> 2];
-												if (
-													(((wa | 0) == (ma | 0)) & (sa >>> 0 <= xa >>> 0)) |
-													(wa >>> 0 < ma >>> 0)
-												) {
+												if ((((wa | 0) == (ma | 0)) & (sa >>> 0 <= xa >>> 0)) | (wa >>> 0 < ma >>> 0)) {
 													break j;
 												}
 											}
@@ -23679,15 +22148,7 @@ var DracoDecoderModule = (function () {
 									Ca = o[(za + 16) >> 2];
 									Aa = o[(za + 12) >> 2];
 									Ba = o[(za + 20) >> 2];
-									if (
-										(Aa | 0) < (Ba | 0)
-											? 1
-											: (Aa | 0) <= (Ba | 0)
-											  ? r[(za + 8) >> 2] > Ca >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Aa | 0) < (Ba | 0) ? 1 : (Aa | 0) <= (Ba | 0) ? (r[(za + 8) >> 2] > Ca >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Aa = p[(Ca + o[za >> 2]) | 0];
@@ -24118,18 +22579,13 @@ var DracoDecoderModule = (function () {
 																							Ya = p[Ya | 0];
 																							Za = (gb + 1) | 0;
 																							o[(a + 304) >> 2] = Za;
-																							if (
-																								!((Ya >>> (gb & 7)) & 1)
-																							) {
+																							if (!((Ya >>> (gb & 7)) & 1)) {
 																								break m;
 																							}
 																							Ya = Za >>> 3;
 																							_a = (eb + Ya) | 0;
 																							n: {
-																								if (
-																									_a >>> 0 >=
-																									cb >>> 0
-																								) {
+																								if (_a >>> 0 >= cb >>> 0) {
 																									_a = Za;
 																									Za = 0;
 																									break n;
@@ -24138,20 +22594,13 @@ var DracoDecoderModule = (function () {
 																								_a = (gb + 2) | 0;
 																								o[(a + 304) >> 2] = _a;
 																								Ya = _a >>> 3;
-																								Za =
-																									(db >>> (Za & 7)) &
-																									1;
+																								Za = (db >>> (Za & 7)) & 1;
 																							}
 																							Ya = (Ya + eb) | 0;
 																							if (Ya >>> 0 < cb >>> 0) {
 																								Ya = p[Ya | 0];
-																								o[(a + 304) >> 2] =
-																									_a + 1;
-																								Ya =
-																									((Ya >>>
-																										(_a & 7)) <<
-																										1) &
-																									2;
+																								o[(a + 304) >> 2] = _a + 1;
+																								Ya = ((Ya >>> (_a & 7)) << 1) & 2;
 																							} else {
 																								Ya = 0;
 																							}
@@ -24171,10 +22620,7 @@ var DracoDecoderModule = (function () {
 																							}
 																						}
 																						Za = o[($a + 68) >> 2];
-																						if (
-																							(Za | 0) ==
-																							o[($a + 64) >> 2]
-																						) {
+																						if ((Za | 0) == o[($a + 64) >> 2]) {
 																							break d;
 																						}
 																						eb = -1;
@@ -24189,28 +22635,17 @@ var DracoDecoderModule = (function () {
 																								break o;
 																							}
 																							Za = (lb + 1) | 0;
-																							Za =
-																								(Za >>> 0) % 3 | 0
-																									? Za
-																									: (lb + -2) | 0;
+																							Za = (Za >>> 0) % 3 | 0 ? Za : (lb + -2) | 0;
 																							Ya = -1;
 																							if ((Za | 0) == -1) {
 																								break o;
 																							}
-																							Ya =
-																								o[
-																									(o[ib >> 2] +
-																										(Za << 2)) >>
-																										2
-																								];
+																							Ya = o[(o[ib >> 2] + (Za << 2)) >> 2];
 																						}
 																						_a = o[(_a + (Ya << 2)) >> 2];
 																						if ((_a | 0) != -1) {
 																							Za = (_a + 1) | 0;
-																							eb =
-																								(Za >>> 0) % 3 | 0
-																									? Za
-																									: (_a + -2) | 0;
+																							eb = (Za >>> 0) % 3 | 0 ? Za : (_a + -2) | 0;
 																						}
 																						_a = o[(ib + 12) >> 2];
 																						jb = u(bb, 3);
@@ -24231,64 +22666,35 @@ var DracoDecoderModule = (function () {
 																								break p;
 																							}
 																							Za = (eb + 1) | 0;
-																							Za =
-																								(Za >>> 0) % 3 | 0
-																									? Za
-																									: (eb + -2) | 0;
+																							Za = (Za >>> 0) % 3 | 0 ? Za : (eb + -2) | 0;
 																							fb = -1;
 																							if ((Za | 0) == -1) {
 																								break p;
 																							}
-																							fb =
-																								o[
-																									(kb + (Za << 2)) >>
-																										2
-																								];
+																							fb = o[(kb + (Za << 2)) >> 2];
 																						}
 																						o[_a >> 2] = fb;
 																						q: {
 																							r: {
 																								if ((lb | 0) != -1) {
-																									Za =
-																										(lb +
-																											((lb >>>
-																												0) %
-																												3 |
-																											0
-																												? -1
-																												: 2)) |
-																										0;
-																									if (
-																										(Za | 0) !=
-																										-1
-																									) {
+																									Za = (lb + ((lb >>> 0) % 3 | 0 ? -1 : 2)) | 0;
+																									if ((Za | 0) != -1) {
 																										break r;
 																									}
 																								}
 																								o[(gb + kb) >> 2] = -1;
 																								break q;
 																							}
-																							Za =
-																								o[
-																									(kb + (Za << 2)) >>
-																										2
-																								];
+																							Za = o[(kb + (Za << 2)) >> 2];
 																							o[(gb + kb) >> 2] = Za;
 																							if ((Za | 0) == -1) {
 																								break q;
 																							}
-																							o[(cb + (Za << 2)) >> 2] =
-																								hb;
+																							o[(cb + (Za << 2)) >> 2] = hb;
 																						}
-																						_a =
-																							(o[(a + 120) >> 2] +
-																								((Ya >>> 3) &
-																									536870908)) |
-																							0;
+																						_a = (o[(a + 120) >> 2] + ((Ya >>> 3) & 536870908)) | 0;
 																						Za = o[_a >> 2];
-																						(sb = _a),
-																							(tb = Zl(Ya) & Za),
-																							(o[sb >> 2] = tb);
+																						(sb = _a), (tb = Zl(Ya) & Za), (o[sb >> 2] = tb);
 																						o[db >> 2] = jb;
 																						break e;
 																					}
@@ -24309,10 +22715,7 @@ var DracoDecoderModule = (function () {
 																					_a = (gb + 28) | 0;
 																					Za = o[_a >> 2];
 																					s: {
-																						if (
-																							(Za | 0) !=
-																							o[(gb + 32) >> 2]
-																						) {
+																						if ((Za | 0) != o[(gb + 32) >> 2]) {
 																							o[Za >> 2] = -1;
 																							ib = (Za + 4) | 0;
 																							o[_a >> 2] = ib;
@@ -24324,10 +22727,7 @@ var DracoDecoderModule = (function () {
 																					_a = -1;
 																					Za = o[qb >> 2];
 																					gb = o[(Za + 24) >> 2];
-																					if (
-																						(o[(Za + 28) >> 2] - gb) >> 2 >
-																						(rb | 0)
-																					) {
+																					if ((o[(Za + 28) >> 2] - gb) >> 2 > (rb | 0)) {
 																						break c;
 																					}
 																					_a = (hb + 2) | 0;
@@ -24345,63 +22745,26 @@ var DracoDecoderModule = (function () {
 																						u: {
 																							v: {
 																								if ((kb | 0) != -1) {
-																									Ya =
-																										(kb +
-																											((kb >>>
-																												0) %
-																												3 |
-																											0
-																												? -1
-																												: 2)) |
-																										0;
-																									if (
-																										(Ya | 0) ==
-																										-1
-																									) {
+																									Ya = (kb + ((kb >>> 0) % 3 | 0 ? -1 : 2)) | 0;
+																									if ((Ya | 0) == -1) {
 																										break v;
 																									}
-																									Ya =
-																										o[
-																											(jb +
-																												(Ya <<
-																													2)) >>
-																												2
-																										];
-																									o[
-																										(jb +
-																											(_a <<
-																												2)) >>
-																											2
-																									] = Ya;
-																									if (
-																										(Ya | 0) ==
-																										-1
-																									) {
+																									Ya = o[(jb + (Ya << 2)) >> 2];
+																									o[(jb + (_a << 2)) >> 2] = Ya;
+																									if ((Ya | 0) == -1) {
 																										break u;
 																									}
-																									o[
-																										(gb +
-																											(Ya <<
-																												2)) >>
-																											2
-																									] = _a;
+																									o[(gb + (Ya << 2)) >> 2] = _a;
 																									break u;
 																								}
-																								o[
-																									(jb + (_a << 2)) >>
-																										2
-																								] = -1;
+																								o[(jb + (_a << 2)) >> 2] = -1;
 																								_a = -1;
 																								break t;
 																							}
-																							o[(jb + (_a << 2)) >> 2] =
-																								-1;
+																							o[(jb + (_a << 2)) >> 2] = -1;
 																						}
 																						Ya = (kb + 1) | 0;
-																						Ya =
-																							(Ya >>> 0) % 3 | 0
-																								? Ya
-																								: (kb + -2) | 0;
+																						Ya = (Ya >>> 0) % 3 | 0 ? Ya : (kb + -2) | 0;
 																						_a = -1;
 																						if ((Ya | 0) == -1) {
 																							break t;
@@ -24409,8 +22772,7 @@ var DracoDecoderModule = (function () {
 																						_a = o[(jb + (Ya << 2)) >> 2];
 																					}
 																					o[Za >> 2] = _a;
-																					o[(o[($a + 68) >> 2] + -4) >> 2] =
-																						hb;
+																					o[(o[($a + 68) >> 2] + -4) >> 2] = hb;
 																					break i;
 																				}
 																				_a = -1;
@@ -24439,8 +22801,7 @@ var DracoDecoderModule = (function () {
 																						if (bb >>> 0 < hb >>> 0) {
 																							break x;
 																						}
-																						db =
-																							(bb >>> 0) % (hb >>> 0) | 0;
+																						db = (bb >>> 0) % (hb >>> 0) | 0;
 																					}
 																					cb = o[(cb + (db << 2)) >> 2];
 																					if (!cb) {
@@ -24457,41 +22818,24 @@ var DracoDecoderModule = (function () {
 																						while (1) {
 																							eb = o[(fb + 4) >> 2];
 																							z: {
-																								if (
-																									(eb | 0) !=
-																									(bb | 0)
-																								) {
+																								if ((eb | 0) != (bb | 0)) {
 																									A: {
 																										if (!gb) {
-																											eb =
-																												eb & cb;
+																											eb = eb & cb;
 																											break A;
 																										}
-																										if (
-																											eb >>> 0 <
-																											hb >>> 0
-																										) {
+																										if (eb >>> 0 < hb >>> 0) {
 																											break A;
 																										}
-																										eb =
-																											(eb >>> 0) %
-																												(hb >>>
-																													0) |
-																											0;
+																										eb = (eb >>> 0) % (hb >>> 0) | 0;
 																									}
-																									if (
-																										(eb | 0) ==
-																										(db | 0)
-																									) {
+																									if ((eb | 0) == (db | 0)) {
 																										break z;
 																									}
 																									Ya = Za;
 																									break w;
 																								}
-																								if (
-																									o[(fb + 8) >> 2] ==
-																									(bb | 0)
-																								) {
+																								if (o[(fb + 8) >> 2] == (bb | 0)) {
 																									break y;
 																								}
 																							}
@@ -24520,25 +22864,13 @@ var DracoDecoderModule = (function () {
 																				lb = o[(Ya + -4) >> 2];
 																				db = (lb | 0) == -1;
 																				pb = o[qb >> 2];
-																				if (
-																					o[
-																						(o[(pb + 12) >> 2] +
-																							(lb << 2)) >>
-																							2
-																					] != -1
-																						? !db
-																						: 0
-																				) {
+																				if (o[(o[(pb + 12) >> 2] + (lb << 2)) >> 2] != -1 ? !db : 0) {
 																					break c;
 																				}
 																				gb = (mb | 0) == -1;
 																				hb = (pb + 12) | 0;
 																				cb = o[hb >> 2];
-																				if (
-																					o[(cb + (mb << 2)) >> 2] != -1
-																						? !gb
-																						: 0
-																				) {
+																				if (o[(cb + (mb << 2)) >> 2] != -1 ? !gb : 0) {
 																					break c;
 																				}
 																				kb = u(bb, 3);
@@ -24557,19 +22889,13 @@ var DracoDecoderModule = (function () {
 																				eb = -1;
 																				db = o[pb >> 2];
 																				fb = (db + (kb << 2)) | 0;
-																				Za =
-																					(lb +
-																						((lb >>> 0) % 3 | 0 ? -1 : 2)) |
-																					0;
+																				Za = (lb + ((lb >>> 0) % 3 | 0 ? -1 : 2)) | 0;
 																				if ((Za | 0) != -1) {
 																					eb = o[((Za << 2) + db) >> 2];
 																				}
 																				o[fb >> 2] = eb;
 																				Za = (lb + 1) | 0;
-																				Za =
-																					(Za >>> 0) % 3 | 0
-																						? Za
-																						: (lb + -2) | 0;
+																				Za = (Za >>> 0) % 3 | 0 ? Za : (lb + -2) | 0;
 																				if ((Za | 0) == -1) {
 																					break f;
 																				}
@@ -24614,8 +22940,7 @@ var DracoDecoderModule = (function () {
 																				Ya = o[db >> 2];
 																				eb = o[ib >> 2];
 																			}
-																			o[((Za << 2) + eb) >> 2] =
-																				((Ya - o[cb >> 2]) >> 2) + -1;
+																			o[((Za << 2) + eb) >> 2] = ((Ya - o[cb >> 2]) >> 2) + -1;
 																			Ya = (o[$a >> 2] + 2) | 0;
 																			cb = o[qb >> 2];
 																			Za = (cb + 28) | 0;
@@ -24630,14 +22955,10 @@ var DracoDecoderModule = (function () {
 																				bh((cb + 24) | 0, 8212);
 																				eb = o[Za >> 2];
 																			}
-																			o[(o[cb >> 2] + (Ya << 2)) >> 2] =
-																				((eb - o[(cb + 24) >> 2]) >> 2) + -1;
+																			o[(o[cb >> 2] + (Ya << 2)) >> 2] = ((eb - o[(cb + 24) >> 2]) >> 2) + -1;
 																			Ya = o[qb >> 2];
 																			Za = o[(Ya + 24) >> 2];
-																			if (
-																				(o[(Ya + 28) >> 2] - Za) >> 2 >
-																				(rb | 0)
-																			) {
+																			if ((o[(Ya + 28) >> 2] - Za) >> 2 > (rb | 0)) {
 																				break d;
 																			}
 																			Ya = o[$a >> 2];
@@ -24645,8 +22966,7 @@ var DracoDecoderModule = (function () {
 																				F: {
 																					if (!gb) {
 																						eb = 1;
-																						o[(Za + (hb << 2)) >> 2] =
-																							Ya + 1;
+																						o[(Za + (hb << 2)) >> 2] = Ya + 1;
 																						break F;
 																					}
 																					o[(Za + (_a << 2)) >> 2] = Ya;
@@ -24654,15 +22974,13 @@ var DracoDecoderModule = (function () {
 																					if ((gb | 0) == -4) {
 																						break F;
 																					}
-																					o[(Za + (hb << 2)) >> 2] =
-																						o[$a >> 2] + 1;
+																					o[(Za + (hb << 2)) >> 2] = o[$a >> 2] + 1;
 																					eb = (hb + 1) | 0;
 																					if ((eb | 0) == -1) {
 																						break E;
 																					}
 																				}
-																				o[(Za + (eb << 2)) >> 2] =
-																					o[$a >> 2] + 2;
+																				o[(Za + (eb << 2)) >> 2] = o[$a >> 2] + 2;
 																			}
 																			Ya = o[($a + 68) >> 2];
 																			if ((Ya | 0) != o[($a + 72) >> 2]) {
@@ -24696,12 +23014,7 @@ var DracoDecoderModule = (function () {
 																			_a = o[(o[($a + 68) >> 2] + -4) >> 2];
 																			o[($a + 20) >> 2] = (db ^ -1) + Xa;
 																			o[($a + 88) >> 2] = $a + 20;
-																			ch(
-																				$a,
-																				($a + 40) | 0,
-																				($a + 20) | 0,
-																				($a + 88) | 0,
-																			);
+																			ch($a, ($a + 40) | 0, ($a + 20) | 0, ($a + 88) | 0);
 																			db = o[$a >> 2];
 																			G: {
 																				if (Za & 1) {
@@ -24710,10 +23023,7 @@ var DracoDecoderModule = (function () {
 																						break G;
 																					}
 																					Ya = (_a + 1) | 0;
-																					Ya =
-																						(Ya >>> 0) % 3 | 0
-																							? Ya
-																							: (_a + -2) | 0;
+																					Ya = (Ya >>> 0) % 3 | 0 ? Ya : (_a + -2) | 0;
 																					break G;
 																				}
 																				Ya = -1;
@@ -24746,9 +23056,7 @@ var DracoDecoderModule = (function () {
 																I: {
 																	J: {
 																		if (!gb) {
-																			Za =
-																				(mb + ((mb >>> 0) % 3 | 0 ? -1 : 2)) |
-																				0;
+																			Za = (mb + ((mb >>> 0) % 3 | 0 ? -1 : 2)) | 0;
 																			if ((Za | 0) == -1) {
 																				break J;
 																			}
@@ -24757,8 +23065,7 @@ var DracoDecoderModule = (function () {
 																			if ((Za | 0) == -1) {
 																				break I;
 																			}
-																			o[(o[(pb + 24) >> 2] + (Za << 2)) >> 2] =
-																				ib;
+																			o[(o[(pb + 24) >> 2] + (Za << 2)) >> 2] = ib;
 																			break I;
 																		}
 																		o[(db + jb) >> 2] = -1;
@@ -24854,10 +23161,7 @@ var DracoDecoderModule = (function () {
 															if (Pf(ib)) {
 																hb = o[nb >> 2];
 																mb = o[hb >> 2];
-																if (
-																	(eb | 0) >=
-																	(((((o[(hb + 4) >> 2] - mb) >> 2) >>> 0) / 3) | 0)
-																) {
+																if ((eb | 0) >= (((((o[(hb + 4) >> 2] - mb) >> 2) >>> 0) / 3) | 0)) {
 																	break d;
 																}
 																Ya = -1;
@@ -25016,10 +23320,7 @@ var DracoDecoderModule = (function () {
 													}
 													fb = o[(a + 8) >> 2];
 												}
-												if (
-													(((((o[(fb + 4) >> 2] - o[fb >> 2]) >> 2) >>> 0) / 3) | 0) !=
-													(eb | 0)
-												) {
+												if ((((((o[(fb + 4) >> 2] - o[fb >> 2]) >> 2) >>> 0) / 3) | 0) != (eb | 0)) {
 													break c;
 												}
 												_a = (o[(fb + 28) >> 2] - o[(fb + 24) >> 2]) >> 2;
@@ -25375,8 +23676,7 @@ var DracoDecoderModule = (function () {
 															Nb = 0;
 															break d;
 														}
-														o[(Lb + 36) >> 2] =
-															o[(o[o[(a + 8) >> 2] >> 2] + (Pb << 2)) >> 2];
+														o[(Lb + 36) >> 2] = o[(o[o[(a + 8) >> 2] >> 2] + (Pb << 2)) >> 2];
 														Nb = (Nb + 2) | 0;
 														Vb = -1;
 														if ((Nb | 0) == -1) {
@@ -25422,9 +23722,7 @@ var DracoDecoderModule = (function () {
 													Kb = Hk(Xa);
 													o[(Lb + 16) >> 2] = Kb;
 													o[(Lb + 24) >> 2] = Kb + (Mb << 2);
-													(Yb = Lb),
-														(Zb = (xl(Kb, 0, Xa) + Xa) | 0),
-														(o[(Yb + 20) >> 2] = Zb);
+													(Yb = Lb), (Zb = (xl(Kb, 0, Xa) + Xa) | 0), (o[(Yb + 20) >> 2] = Zb);
 												}
 												if (((o[(Nb + 28) >> 2] - o[(Nb + 24) >> 2]) | 0) < 1) {
 													break g;
@@ -25438,13 +23736,7 @@ var DracoDecoderModule = (function () {
 															break i;
 														}
 														j: {
-															if (
-																(o[
-																	(o[(a + 120) >> 2] + ((Qb >>> 3) & 536870908)) >> 2
-																] >>>
-																	(Qb & 31)) &
-																1
-															) {
+															if ((o[(o[(a + 120) >> 2] + ((Qb >>> 3) & 536870908)) >> 2] >>> (Qb & 31)) & 1) {
 																break j;
 															}
 															Xa = o[Sb >> 2];
@@ -25460,17 +23752,7 @@ var DracoDecoderModule = (function () {
 																Rb = (Ub + u(Pb, 144)) | 0;
 																Xa = o[(Xb + o[o[(Rb + 68) >> 2] >> 2]) >> 2];
 																k: {
-																	if (
-																		!(
-																			(o[
-																				(o[(Rb + 16) >> 2] +
-																					((Xa >>> 3) & 536870908)) >>
-																					2
-																			] >>>
-																				(Xa & 31)) &
-																			1
-																		)
-																	) {
+																	if (!((o[(o[(Rb + 16) >> 2] + ((Xa >>> 3) & 536870908)) >> 2] >>> (Xa & 31)) & 1)) {
 																		break k;
 																	}
 																	Xa = Mb;
@@ -25511,8 +23793,7 @@ var DracoDecoderModule = (function () {
 																			if ((Kb | 0) == -1) {
 																				break m;
 																			}
-																			Kb =
-																				o[(o[(Nb + 12) >> 2] + (Kb << 2)) >> 2];
+																			Kb = o[(o[(Nb + 12) >> 2] + (Kb << 2)) >> 2];
 																			Xa = -1;
 																			if ((Kb | 0) == -1) {
 																				break m;
@@ -25538,8 +23819,7 @@ var DracoDecoderModule = (function () {
 															}
 														}
 														Xa = o[(Lb + 36) >> 2];
-														o[(o[(Lb + 16) >> 2] + (Mb << 2)) >> 2] =
-															(Xa - o[(Lb + 32) >> 2]) >> 2;
+														o[(o[(Lb + 16) >> 2] + (Mb << 2)) >> 2] = (Xa - o[(Lb + 32) >> 2]) >> 2;
 														o[Lb >> 2] = Mb;
 														n: {
 															if (r[(Lb + 40) >> 2] > Xa >>> 0) {
@@ -25583,10 +23863,7 @@ var DracoDecoderModule = (function () {
 																	while (1) {
 																		Wb = o[(((Pb + u(Kb, 144)) | 0) + 32) >> 2];
 																		Rb = Xa << 2;
-																		if (
-																			o[(Wb + Rb) >> 2] ==
-																			o[(Wb + (Ob << 2)) >> 2]
-																		) {
+																		if (o[(Wb + Rb) >> 2] == o[(Wb + (Ob << 2)) >> 2]) {
 																			Kb = (Kb + 1) | 0;
 																			if (Kb >>> 0 < Ub >>> 0) {
 																				continue;
@@ -25596,8 +23873,7 @@ var DracoDecoderModule = (function () {
 																		break;
 																	}
 																	Kb = o[(Lb + 36) >> 2];
-																	o[(Rb + o[(Lb + 16) >> 2]) >> 2] =
-																		(Kb - o[(Lb + 32) >> 2]) >> 2;
+																	o[(Rb + o[(Lb + 16) >> 2]) >> 2] = (Kb - o[(Lb + 32) >> 2]) >> 2;
 																	o[Lb >> 2] = Xa;
 																	if (r[(Lb + 40) >> 2] > Kb >>> 0) {
 																		o[Kb >> 2] = Xa;
@@ -26140,15 +24416,7 @@ var DracoDecoderModule = (function () {
 									Cc = o[(Xa + 16) >> 2];
 									zc = o[(Xa + 12) >> 2];
 									kc = o[(Xa + 20) >> 2];
-									if (
-										(zc | 0) < (kc | 0)
-											? 1
-											: (zc | 0) <= (kc | 0)
-											  ? r[(Xa + 8) >> 2] > Cc >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((zc | 0) < (kc | 0) ? 1 : (zc | 0) <= (kc | 0) ? (r[(Xa + 8) >> 2] > Cc >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Dc = p[(Cc + o[Xa >> 2]) | 0];
@@ -26330,12 +24598,7 @@ var DracoDecoderModule = (function () {
 									zc = o[((l[o[(o[a >> 2] + 32) >> 2]](a) | 0) + 32) >> 2];
 									Xa = o[(zc + 8) >> 2];
 									kc = o[(zc + 16) >> 2];
-									pi(
-										Ac,
-										Ic,
-										(Xa - kc) | 0,
-										q[(o[((l[o[(o[a >> 2] + 32) >> 2]](a) | 0) + 32) >> 2] + 38) >> 1],
-									);
+									pi(Ac, Ic, (Xa - kc) | 0, q[(o[((l[o[(o[a >> 2] + 32) >> 2]](a) | 0) + 32) >> 2] + 38) >> 1]);
 									(Jc = a), (Kc = l[o[(o[a >> 2] + 36) >> 2]](a) | 0), (o[(Jc + 380) >> 2] = Kc);
 									o[(a + 372) >> 2] = Dc;
 									o[(a + 384) >> 2] = Ec + o[(a + 156) >> 2];
@@ -26657,16 +24920,7 @@ var DracoDecoderModule = (function () {
 																			if ((_c | 0) < 1) {
 																				break c;
 																			}
-																			Yc =
-																				o[
-																					(o[
-																						(o[ld >> 2] +
-																							u(o[(a + 404) >> 2], 12)) >>
-																							2
-																					] +
-																						(Yc << 2)) >>
-																						2
-																				];
+																			Yc = o[(o[(o[ld >> 2] + u(o[(a + 404) >> 2], 12)) >> 2] + (Yc << 2)) >> 2];
 																			Zc = o[((Yc << 2) + 8848) >> 2];
 																			o[(a + 400) >> 2] = Zc;
 																			if (!Yc) {
@@ -26686,27 +24940,17 @@ var DracoDecoderModule = (function () {
 																						break i;
 																					}
 																					fd = ($c + 1) | 0;
-																					fd =
-																						(fd >>> 0) % 3 | 0
-																							? fd
-																							: ($c + -2) | 0;
+																					fd = (fd >>> 0) % 3 | 0 ? fd : ($c + -2) | 0;
 																					Zc = -1;
 																					if ((fd | 0) == -1) {
 																						break i;
 																					}
-																					Zc =
-																						o[
-																							(o[_c >> 2] + (fd << 2)) >>
-																								2
-																						];
+																					Zc = o[(o[_c >> 2] + (fd << 2)) >> 2];
 																				}
 																				bd = o[(bd + (Zc << 2)) >> 2];
 																				if ((bd | 0) != -1) {
 																					cd = (bd + 1) | 0;
-																					cd =
-																						(cd >>> 0) % 3 | 0
-																							? cd
-																							: (bd + -2) | 0;
+																					cd = (cd >>> 0) % 3 | 0 ? cd : (bd + -2) | 0;
 																				}
 																				bd = o[(_c + 12) >> 2];
 																				fd = u(dd, 3);
@@ -26727,10 +24971,7 @@ var DracoDecoderModule = (function () {
 																						break j;
 																					}
 																					od = (cd + 1) | 0;
-																					cd =
-																						(od >>> 0) % 3 | 0
-																							? od
-																							: (cd + -2) | 0;
+																					cd = (od >>> 0) % 3 | 0 ? od : (cd + -2) | 0;
 																					kd = -1;
 																					if ((cd | 0) == -1) {
 																						break j;
@@ -26741,12 +24982,7 @@ var DracoDecoderModule = (function () {
 																				k: {
 																					l: {
 																						if (($c | 0) != -1) {
-																							$c =
-																								($c +
-																									(($c >>> 0) % 3 | 0
-																										? -1
-																										: 2)) |
-																								0;
+																							$c = ($c + (($c >>> 0) % 3 | 0 ? -1 : 2)) | 0;
 																							if (($c | 0) != -1) {
 																								break l;
 																							}
@@ -26761,14 +24997,9 @@ var DracoDecoderModule = (function () {
 																					}
 																					o[(id + ($c << 2)) >> 2] = ed;
 																				}
-																				$c =
-																					(o[(a + 120) >> 2] +
-																						((Zc >>> 3) & 536870908)) |
-																					0;
+																				$c = (o[(a + 120) >> 2] + ((Zc >>> 3) & 536870908)) | 0;
 																				_c = o[$c >> 2];
-																				(vd = $c),
-																					(wd = Zl(Zc) & _c),
-																					(o[vd >> 2] = wd);
+																				(vd = $c), (wd = Zl(Zc) & _c), (o[vd >> 2] = wd);
 																				o[md >> 2] = fd;
 																				Zc = 0;
 																				break d;
@@ -26782,10 +25013,7 @@ var DracoDecoderModule = (function () {
 																					case 1:
 																					case 3:
 																						cd = o[(ad + 68) >> 2];
-																						if (
-																							(cd | 0) ==
-																							o[(ad + 64) >> 2]
-																						) {
+																						if ((cd | 0) == o[(ad + 64) >> 2]) {
 																							break c;
 																						}
 																						Zc = o[hd >> 2];
@@ -26814,11 +25042,7 @@ var DracoDecoderModule = (function () {
 																						$c = -1;
 																						Zc = o[hd >> 2];
 																						cd = o[(Zc + 24) >> 2];
-																						if (
-																							(o[(Zc + 28) >> 2] - cd) >>
-																								2 >
-																							(jd | 0)
-																						) {
+																						if ((o[(Zc + 28) >> 2] - cd) >> 2 > (jd | 0)) {
 																							break c;
 																						}
 																						$c = (_c + 2) | 0;
@@ -26827,89 +25051,39 @@ var DracoDecoderModule = (function () {
 																						gd = ((ed >> 2) + -1) | 0;
 																						o[(Zc + id) >> 2] = gd;
 																						if (ed) {
-																							o[(cd + (gd << 2)) >> 2] =
-																								fd;
+																							o[(cd + (gd << 2)) >> 2] = fd;
 																						}
 																						$c = bd ? _c : $c;
-																						id =
-																							(Zc + ((_c + bd) << 2)) | 0;
+																						id = (Zc + ((_c + bd) << 2)) | 0;
 																						o: {
 																							p: {
 																								q: {
-																									if (
-																										(Yc | 0) !=
-																										-1
-																									) {
-																										bd =
-																											(Yc +
-																												((Yc >>>
-																													0) %
-																													3 |
-																												0
-																													? -1
-																													: 2)) |
-																											0;
-																										if (
-																											(bd | 0) ==
-																											-1
-																										) {
+																									if ((Yc | 0) != -1) {
+																										bd = (Yc + ((Yc >>> 0) % 3 | 0 ? -1 : 2)) | 0;
+																										if ((bd | 0) == -1) {
 																											break q;
 																										}
-																										bd =
-																											o[
-																												(Zc +
-																													(bd <<
-																														2)) >>
-																													2
-																											];
-																										o[
-																											(Zc +
-																												($c <<
-																													2)) >>
-																												2
-																										] = bd;
-																										if (
-																											(bd | 0) ==
-																											-1
-																										) {
+																										bd = o[(Zc + (bd << 2)) >> 2];
+																										o[(Zc + ($c << 2)) >> 2] = bd;
+																										if ((bd | 0) == -1) {
 																											break p;
 																										}
-																										o[
-																											(cd +
-																												(bd <<
-																													2)) >>
-																												2
-																										] = $c;
+																										o[(cd + (bd << 2)) >> 2] = $c;
 																										break p;
 																									}
-																									o[
-																										(Zc +
-																											($c <<
-																												2)) >>
-																											2
-																									] = -1;
+																									o[(Zc + ($c << 2)) >> 2] = -1;
 																									$c = -1;
 																									break o;
 																								}
-																								o[
-																									(Zc + ($c << 2)) >>
-																										2
-																								] = -1;
+																								o[(Zc + ($c << 2)) >> 2] = -1;
 																							}
 																							cd = (Yc + 1) | 0;
-																							Yc =
-																								(cd >>> 0) % 3 | 0
-																									? cd
-																									: (Yc + -2) | 0;
+																							Yc = (cd >>> 0) % 3 | 0 ? cd : (Yc + -2) | 0;
 																							$c = -1;
 																							if ((Yc | 0) == -1) {
 																								break o;
 																							}
-																							$c =
-																								o[
-																									(Zc + (Yc << 2)) >>
-																										2
-																								];
+																							$c = o[(Zc + (Yc << 2)) >> 2];
 																						}
 																						o[id >> 2] = $c;
 																						Yc = o[(ad + 68) >> 2];
@@ -26951,12 +25125,7 @@ var DracoDecoderModule = (function () {
 																					}
 																					_c = (dd >>> 0) % (ed >>> 0) | 0;
 																				}
-																				cd =
-																					o[
-																						(o[(ad + 40) >> 2] +
-																							(_c << 2)) >>
-																							2
-																					];
+																				cd = o[(o[(ad + 40) >> 2] + (_c << 2)) >> 2];
 																				if (!cd) {
 																					Yc = Zc;
 																					break r;
@@ -26977,30 +25146,18 @@ var DracoDecoderModule = (function () {
 																										cd = cd & md;
 																										break v;
 																									}
-																									if (
-																										cd >>> 0 <
-																										ed >>> 0
-																									) {
+																									if (cd >>> 0 < ed >>> 0) {
 																										break v;
 																									}
-																									cd =
-																										(cd >>> 0) %
-																											(ed >>> 0) |
-																										0;
+																									cd = (cd >>> 0) % (ed >>> 0) | 0;
 																								}
-																								if (
-																									(_c | 0) ==
-																									(cd | 0)
-																								) {
+																								if ((_c | 0) == (cd | 0)) {
 																									break u;
 																								}
 																								Yc = Zc;
 																								break r;
 																							}
-																							if (
-																								o[(bd + 8) >> 2] ==
-																								(dd | 0)
-																							) {
+																							if (o[(bd + 8) >> 2] == (dd | 0)) {
 																								break t;
 																							}
 																						}
@@ -27029,21 +25186,13 @@ var DracoDecoderModule = (function () {
 																			Zc = o[(Yc + -4) >> 2];
 																			cd = (Zc | 0) == -1;
 																			ed = o[hd >> 2];
-																			if (
-																				o[
-																					(o[(ed + 12) >> 2] + (Zc << 2)) >> 2
-																				] != -1
-																					? !cd
-																					: 0
-																			) {
+																			if (o[(o[(ed + 12) >> 2] + (Zc << 2)) >> 2] != -1 ? !cd : 0) {
 																				break c;
 																			}
 																			kd = (fd | 0) == -1;
 																			md = (ed + 12) | 0;
 																			_c = o[md >> 2];
-																			if (
-																				o[(_c + (fd << 2)) >> 2] != -1 ? !kd : 0
-																			) {
+																			if (o[(_c + (fd << 2)) >> 2] != -1 ? !kd : 0) {
 																				break c;
 																			}
 																			gd = u(dd, 3);
@@ -27062,16 +25211,13 @@ var DracoDecoderModule = (function () {
 																			cd = -1;
 																			_c = o[ed >> 2];
 																			ud = (_c + (gd << 2)) | 0;
-																			pd =
-																				(Zc + ((Zc >>> 0) % 3 | 0 ? -1 : 2)) |
-																				0;
+																			pd = (Zc + ((Zc >>> 0) % 3 | 0 ? -1 : 2)) | 0;
 																			if ((pd | 0) != -1) {
 																				cd = o[((pd << 2) + _c) >> 2];
 																			}
 																			o[ud >> 2] = cd;
 																			pd = (Zc + 1) | 0;
-																			Zc =
-																				(pd >>> 0) % 3 | 0 ? pd : (Zc + -2) | 0;
+																			Zc = (pd >>> 0) % 3 | 0 ? pd : (Zc + -2) | 0;
 																			if ((Zc | 0) == -1) {
 																				break e;
 																			}
@@ -27120,8 +25266,7 @@ var DracoDecoderModule = (function () {
 																		Yc = o[Yc >> 2];
 																		bd = o[Zc >> 2];
 																	}
-																	o[((gd << 2) + bd) >> 2] =
-																		((Yc - o[cd >> 2]) >> 2) + -1;
+																	o[((gd << 2) + bd) >> 2] = ((Yc - o[cd >> 2]) >> 2) + -1;
 																	fd = (o[ad >> 2] + 2) | 0;
 																	Yc = o[hd >> 2];
 																	cd = (Yc + 28) | 0;
@@ -27136,8 +25281,7 @@ var DracoDecoderModule = (function () {
 																		bh((Yc + 24) | 0, 8212);
 																		bd = o[cd >> 2];
 																	}
-																	o[(o[Yc >> 2] + (fd << 2)) >> 2] =
-																		((bd - o[(Yc + 24) >> 2]) >> 2) + -1;
+																	o[(o[Yc >> 2] + (fd << 2)) >> 2] = ((bd - o[(Yc + 24) >> 2]) >> 2) + -1;
 																	Zc = o[hd >> 2];
 																	Yc = o[(Zc + 24) >> 2];
 																	z: {
@@ -27147,8 +25291,7 @@ var DracoDecoderModule = (function () {
 																				B: {
 																					if (!_c) {
 																						bd = 1;
-																						o[(Yc + ($c << 2)) >> 2] =
-																							Zc + 1;
+																						o[(Yc + ($c << 2)) >> 2] = Zc + 1;
 																						break B;
 																					}
 																					o[(Yc + (ed << 2)) >> 2] = Zc;
@@ -27156,15 +25299,13 @@ var DracoDecoderModule = (function () {
 																					if ((_c | 0) == -4) {
 																						break B;
 																					}
-																					o[(Yc + ($c << 2)) >> 2] =
-																						o[ad >> 2] + 1;
+																					o[(Yc + ($c << 2)) >> 2] = o[ad >> 2] + 1;
 																					bd = ($c + 1) | 0;
 																					if ((bd | 0) == -1) {
 																						break A;
 																					}
 																				}
-																				o[(Yc + (bd << 2)) >> 2] =
-																					o[ad >> 2] + 2;
+																				o[(Yc + (bd << 2)) >> 2] = o[ad >> 2] + 2;
 																			}
 																			Yc = o[(ad + 68) >> 2];
 																			if ((Yc | 0) == o[(ad + 72) >> 2]) {
@@ -27363,10 +25504,7 @@ var DracoDecoderModule = (function () {
 														if (Pf(sd)) {
 															gd = o[td >> 2];
 															hd = o[gd >> 2];
-															if (
-																(Zc | 0) >=
-																(((((o[(gd + 4) >> 2] - hd) >> 2) >>> 0) / 3) | 0)
-															) {
+															if ((Zc | 0) >= (((((o[(gd + 4) >> 2] - hd) >> 2) >>> 0) / 3) | 0)) {
 																break c;
 															}
 															Yc = -1;
@@ -27524,10 +25662,7 @@ var DracoDecoderModule = (function () {
 												}
 												bd = o[(a + 8) >> 2];
 											}
-											if (
-												(((((o[(bd + 4) >> 2] - o[bd >> 2]) >> 2) >>> 0) / 3) | 0) !=
-												(Zc | 0)
-											) {
+											if ((((((o[(bd + 4) >> 2] - o[bd >> 2]) >> 2) >>> 0) / 3) | 0) != (Zc | 0)) {
 												break c;
 											}
 											$c = (o[(bd + 28) >> 2] - o[(bd + 24) >> 2]) >> 2;
@@ -27765,17 +25900,9 @@ var DracoDecoderModule = (function () {
 													Gd = o[(a + 148) >> 2];
 													Id = 1;
 													Lc = o[(a + 156) >> 2];
-													Kd =
-														(Lc +
-															(((Jd | 0) != -1 ? o[(o[Gd >> 2] + (Jd << 2)) >> 2] : -1) <<
-																2)) |
-														0;
+													Kd = (Lc + (((Jd | 0) != -1 ? o[(o[Gd >> 2] + (Jd << 2)) >> 2] : -1) << 2)) | 0;
 													o[Kd >> 2] = o[Kd >> 2] + 1;
-													Lc =
-														((((Hd | 0) != -1 ? o[(o[Gd >> 2] + (Hd << 2)) >> 2] : -1) <<
-															2) +
-															Lc) |
-														0;
+													Lc = ((((Hd | 0) != -1 ? o[(o[Gd >> 2] + (Hd << 2)) >> 2] : -1) << 2) + Lc) | 0;
 													break c;
 												case 3:
 													Id = o[(a + 148) >> 2];
@@ -27784,11 +25911,7 @@ var DracoDecoderModule = (function () {
 													Lc = o[(a + 156) >> 2];
 													Gd = (Gd + Lc) | 0;
 													o[Gd >> 2] = o[Gd >> 2] + 1;
-													Gd =
-														((((Jd | 0) != -1 ? o[(o[Id >> 2] + (Jd << 2)) >> 2] : -1) <<
-															2) +
-															Lc) |
-														0;
+													Gd = ((((Jd | 0) != -1 ? o[(o[Id >> 2] + (Jd << 2)) >> 2] : -1) << 2) + Lc) | 0;
 													o[Gd >> 2] = o[Gd >> 2] + 1;
 													Gd = -1;
 													Gd = (Hd | 0) != -1 ? o[(o[Id >> 2] + (Hd << 2)) >> 2] : Gd;
@@ -27802,17 +25925,9 @@ var DracoDecoderModule = (function () {
 													Lc = o[(a + 156) >> 2];
 													Gd = (Gd + Lc) | 0;
 													o[Gd >> 2] = o[Gd >> 2] + 1;
-													Gd =
-														((((Jd | 0) != -1 ? o[(o[Id >> 2] + (Jd << 2)) >> 2] : -1) <<
-															2) +
-															Lc) |
-														0;
+													Gd = ((((Jd | 0) != -1 ? o[(o[Id >> 2] + (Jd << 2)) >> 2] : -1) << 2) + Lc) | 0;
 													o[Gd >> 2] = o[Gd >> 2] + 2;
-													Lc =
-														((((Hd | 0) != -1 ? o[(o[Id >> 2] + (Hd << 2)) >> 2] : -1) <<
-															2) +
-															Lc) |
-														0;
+													Lc = ((((Hd | 0) != -1 ? o[(o[Id >> 2] + (Hd << 2)) >> 2] : -1) << 2) + Lc) | 0;
 													Id = 1;
 													break c;
 												case 0:
@@ -28719,12 +26834,7 @@ var DracoDecoderModule = (function () {
 										o[(Ge + 16) >> 2] = De;
 										Ee = o[(a + 20) >> 2];
 										He = ((De >>> 0) / 3) | 0;
-										He =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(He, 12)) | 0) +
-													((De - u(He, 3)) << 2)) >>
-													2
-											];
+										He = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(He, 12)) | 0) + ((De - u(He, 3)) << 2)) >> 2];
 										o[(Ge + 24) >> 2] = He;
 										Ee = o[(Ee + 4) >> 2];
 										Je = (Ee + 4) | 0;
@@ -28776,12 +26886,7 @@ var DracoDecoderModule = (function () {
 										o[(Ke + 16) >> 2] = De;
 										Ce = o[(a + 20) >> 2];
 										Ee = ((De >>> 0) / 3) | 0;
-										Ee =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(Ee, 12)) | 0) +
-													((De - u(Ee, 3)) << 2)) >>
-													2
-											];
+										Ee = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(Ee, 12)) | 0) + ((De - u(Ee, 3)) << 2)) >> 2];
 										o[(Ge + 24) >> 2] = Ee;
 										De = o[(Ce + 4) >> 2];
 										He = (De + 4) | 0;
@@ -28824,12 +26929,7 @@ var DracoDecoderModule = (function () {
 										o[(Ge + 16) >> 2] = De;
 										Fe = o[(a + 20) >> 2];
 										Ee = ((De >>> 0) / 3) | 0;
-										Ee =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(Ee, 12)) | 0) +
-													((De - u(Ee, 3)) << 2)) >>
-													2
-											];
+										Ee = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(Ee, 12)) | 0) + ((De - u(Ee, 3)) << 2)) >> 2];
 										o[(Ge + 24) >> 2] = Ee;
 										Fe = o[(Fe + 4) >> 2];
 										He = (Fe + 4) | 0;
@@ -28913,12 +27013,7 @@ var DracoDecoderModule = (function () {
 															o[(Ge + 16) >> 2] = De;
 															Fe = o[Pe >> 2];
 															Ee = ((De >>> 0) / 3) | 0;
-															Ee =
-																o[
-																	(((o[(o[Oe >> 2] + 96) >> 2] + u(Ee, 12)) | 0) +
-																		((De - u(Ee, 3)) << 2)) >>
-																		2
-																];
+															Ee = o[(((o[(o[Oe >> 2] + 96) >> 2] + u(Ee, 12)) | 0) + ((De - u(Ee, 3)) << 2)) >> 2];
 															o[(Ge + 24) >> 2] = Ee;
 															Fe = o[(Fe + 4) >> 2];
 															Ie = (Fe + 4) | 0;
@@ -28973,10 +27068,7 @@ var DracoDecoderModule = (function () {
 																break p;
 															}
 															Fe = Ke ? -1 : Le;
-															Fe =
-																(o[(o[He >> 2] + ((Fe >>> 3) & 536870908)) >> 2] >>>
-																	(Fe & 31)) &
-																1;
+															Fe = (o[(o[He >> 2] + ((Fe >>> 3) & 536870908)) >> 2] >>> (Fe & 31)) & 1;
 														}
 														q: {
 															r: {
@@ -28989,31 +27081,13 @@ var DracoDecoderModule = (function () {
 																	}
 																	Ee = (Ce | 0) == -1 ? -1 : Ee;
 																	t: {
-																		if (
-																			(o[
-																				(o[He >> 2] +
-																					((Ee >>> 3) & 536870908)) >>
-																					2
-																			] >>>
-																				(Ee & 31)) &
-																			1
-																		) {
+																		if ((o[(o[He >> 2] + ((Ee >>> 3) & 536870908)) >> 2] >>> (Ee & 31)) & 1) {
 																			break t;
 																		}
 																		Ee = 0;
 																		Ke = Fe;
 																		Ie = o[(o[Ie >> 2] + (Ce << 2)) >> 2];
-																		if (
-																			!(
-																				(o[
-																					(o[Je >> 2] +
-																						((Ie >>> 3) & 536870908)) >>
-																						2
-																				] >>>
-																					(Ie & 31)) &
-																				1
-																			)
-																		) {
+																		if (!((o[(o[Je >> 2] + ((Ie >>> 3) & 536870908)) >> 2] >>> (Ie & 31)) & 1)) {
 																			Ie = (o[Me >> 2] + (Ie << 2)) | 0;
 																			Ee = o[Ie >> 2];
 																			o[Ie >> 2] = Ee + 1;
@@ -29045,19 +27119,8 @@ var DracoDecoderModule = (function () {
 																}
 																Ce = -1;
 																Fe = 0;
-																Ce =
-																	(De | 0) != -1
-																		? o[(o[o[Ne >> 2] >> 2] + (De << 2)) >> 2]
-																		: Ce;
-																if (
-																	!(
-																		(o[
-																			(o[Je >> 2] + ((Ce >>> 3) & 536870908)) >> 2
-																		] >>>
-																			(Ce & 31)) &
-																		1
-																	)
-																) {
+																Ce = (De | 0) != -1 ? o[(o[o[Ne >> 2] >> 2] + (De << 2)) >> 2] : Ce;
+																if (!((o[(o[Je >> 2] + ((Ce >>> 3) & 536870908)) >> 2] >>> (Ce & 31)) & 1)) {
 																	Fe = (o[Me >> 2] + (Ce << 2)) | 0;
 																	Ce = o[Fe >> 2];
 																	o[Fe >> 2] = Ce + 1;
@@ -29512,12 +27575,7 @@ var DracoDecoderModule = (function () {
 										o[(tf + 16) >> 2] = qf;
 										rf = o[(a + 20) >> 2];
 										of = ((qf >>> 0) / 3) | 0;
-										pf =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(of, 12)) | 0) +
-													((qf - u(of, 3)) << 2)) >>
-													2
-											];
+										pf = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(of, 12)) | 0) + ((qf - u(of, 3)) << 2)) >> 2];
 										o[(tf + 24) >> 2] = pf;
 										rf = o[(rf + 4) >> 2];
 										of = (rf + 4) | 0;
@@ -29569,12 +27627,7 @@ var DracoDecoderModule = (function () {
 										o[(rf + 16) >> 2] = qf;
 										rf = o[(a + 20) >> 2];
 										of = ((qf >>> 0) / 3) | 0;
-										pf =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(of, 12)) | 0) +
-													((qf - u(of, 3)) << 2)) >>
-													2
-											];
+										pf = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(of, 12)) | 0) + ((qf - u(of, 3)) << 2)) >> 2];
 										o[(tf + 24) >> 2] = pf;
 										rf = o[(rf + 4) >> 2];
 										of = (rf + 4) | 0;
@@ -29666,25 +27719,17 @@ var DracoDecoderModule = (function () {
 																				break p;
 																			}
 																			of = (pf + 1) | 0;
-																			of =
-																				(of >>> 0) % 3 | 0 ? of : (pf + -2) | 0;
+																			of = (of >>> 0) % 3 | 0 ? of : (pf + -2) | 0;
 																			if ((of | 0) == -1) {
 																				break p;
 																			}
-																			vf =
-																				o[(o[(vf + 12) >> 2] + (of << 2)) >> 2];
+																			vf = o[(o[(vf + 12) >> 2] + (of << 2)) >> 2];
 																			if ((vf | 0) == -1) {
 																				break p;
 																			}
 																			of = (vf + 1) | 0;
 																			pf = 0;
-																			if (
-																				(((of >>> 0) % 3 | 0
-																					? of
-																					: (vf + -2) | 0) |
-																					0) !=
-																				-1
-																			) {
+																			if ((((of >>> 0) % 3 | 0 ? of : (vf + -2) | 0) | 0) != -1) {
 																				break o;
 																			}
 																		}
@@ -29695,13 +27740,7 @@ var DracoDecoderModule = (function () {
 																	o[(tf + 16) >> 2] = rf;
 																	qf = o[Cf >> 2];
 																	of = ((rf >>> 0) / 3) | 0;
-																	rf =
-																		o[
-																			(((o[(o[Bf >> 2] + 96) >> 2] + u(of, 12)) |
-																				0) +
-																				((rf - u(of, 3)) << 2)) >>
-																				2
-																		];
+																	rf = o[(((o[(o[Bf >> 2] + 96) >> 2] + u(of, 12)) | 0) + ((rf - u(of, 3)) << 2)) >> 2];
 																	o[(tf + 24) >> 2] = rf;
 																	qf = o[(qf + 4) >> 2];
 																	of = (qf + 4) | 0;
@@ -29727,8 +27766,7 @@ var DracoDecoderModule = (function () {
 																		bh(of, (tf + 16) | 0);
 																		of = o[qf >> 2];
 																	}
-																	o[(o[(of + 12) >> 2] + sf) >> 2] =
-																		o[(of + 24) >> 2];
+																	o[(o[(of + 12) >> 2] + sf) >> 2] = o[(of + 24) >> 2];
 																	o[(of + 24) >> 2] = o[(of + 24) >> 2] + 1;
 																	vf = o[zf >> 2];
 																	of = o[(tf + 8) >> 2];
@@ -29740,14 +27778,12 @@ var DracoDecoderModule = (function () {
 																				break s;
 																			}
 																			rf = (of + 1) | 0;
-																			of =
-																				(rf >>> 0) % 3 | 0 ? rf : (of + -2) | 0;
+																			of = (rf >>> 0) % 3 | 0 ? rf : (of + -2) | 0;
 																			qf = -1;
 																			if ((of | 0) == -1) {
 																				break s;
 																			}
-																			qf =
-																				o[(o[(vf + 12) >> 2] + (of << 2)) >> 2];
+																			qf = o[(o[(vf + 12) >> 2] + (of << 2)) >> 2];
 																		}
 																		o[(pf + 8) >> 2] = qf;
 																		of = ((qf >>> 0) / 3) | 0;
@@ -29779,23 +27815,12 @@ var DracoDecoderModule = (function () {
 																		break t;
 																	}
 																	pf = pf ? -1 : of;
-																	pf =
-																		(o[
-																			(o[xf >> 2] + ((pf >>> 3) & 536870908)) >> 2
-																		] >>>
-																			(pf & 31)) &
-																		1;
+																	pf = (o[(o[xf >> 2] + ((pf >>> 3) & 536870908)) >> 2] >>> (pf & 31)) & 1;
 																}
 																u: {
 																	if ((qf | 0) != -1) {
 																		uf = (qf | 0) == -1 ? -1 : rf;
-																		uf =
-																			o[
-																				(o[xf >> 2] +
-																					((uf >>> 3) & 536870908)) >>
-																					2
-																			] &
-																			(1 << (uf & 31));
+																		uf = o[(o[xf >> 2] + ((uf >>> 3) & 536870908)) >> 2] & (1 << (uf & 31));
 																		if (pf) {
 																			sf = qf;
 																			of = rf;
@@ -30192,12 +28217,7 @@ var DracoDecoderModule = (function () {
 										o[(dg + 16) >> 2] = ag;
 										_f = o[(a + 20) >> 2];
 										bg = ((ag >>> 0) / 3) | 0;
-										ag =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(bg, 12)) | 0) +
-													((ag - u(bg, 3)) << 2)) >>
-													2
-											];
+										ag = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(bg, 12)) | 0) + ((ag - u(bg, 3)) << 2)) >> 2];
 										o[(dg + 24) >> 2] = ag;
 										bg = o[(_f + 4) >> 2];
 										eg = (bg + 4) | 0;
@@ -30249,12 +28269,7 @@ var DracoDecoderModule = (function () {
 										o[(ag + 16) >> 2] = $f;
 										_f = o[(a + 20) >> 2];
 										bg = (($f >>> 0) / 3) | 0;
-										bg =
-											o[
-												(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(bg, 12)) | 0) +
-													(($f - u(bg, 3)) << 2)) >>
-													2
-											];
+										bg = o[(((o[(o[(a + 16) >> 2] + 96) >> 2] + u(bg, 12)) | 0) + (($f - u(bg, 3)) << 2)) >> 2];
 										o[(dg + 24) >> 2] = bg;
 										$f = o[(_f + 4) >> 2];
 										ag = ($f + 4) | 0;
@@ -30349,34 +28364,17 @@ var DracoDecoderModule = (function () {
 																		r: {
 																			if (
 																				((_f | 0) == -1) |
-																				((o[
-																					(o[ag >> 2] +
-																						((_f >>> 3) & 536870908)) >>
-																						2
-																				] >>>
-																					(_f & 31)) &
-																					1)
+																				((o[(o[ag >> 2] + ((_f >>> 3) & 536870908)) >> 2] >>> (_f & 31)) & 1)
 																			) {
 																				break r;
 																			}
-																			$f =
-																				o[
-																					(o[(o[(ag + 64) >> 2] + 12) >> 2] +
-																						(_f << 2)) >>
-																						2
-																				];
+																			$f = o[(o[(o[(ag + 64) >> 2] + 12) >> 2] + (_f << 2)) >> 2];
 																			if (($f | 0) == -1) {
 																				break r;
 																			}
 																			ag = ($f + 1) | 0;
 																			_f = 0;
-																			if (
-																				(((ag >>> 0) % 3 | 0
-																					? ag
-																					: ($f + -2) | 0) |
-																					0) !=
-																				-1
-																			) {
+																			if ((((ag >>> 0) % 3 | 0 ? ag : ($f + -2) | 0) | 0) != -1) {
 																				break q;
 																			}
 																		}
@@ -30388,13 +28386,7 @@ var DracoDecoderModule = (function () {
 																	o[(dg + 16) >> 2] = _f;
 																	cg = o[mg >> 2];
 																	bg = ((_f >>> 0) / 3) | 0;
-																	bg =
-																		o[
-																			(((o[(o[lg >> 2] + 96) >> 2] + u(bg, 12)) |
-																				0) +
-																				((_f - u(bg, 3)) << 2)) >>
-																				2
-																		];
+																	bg = o[(((o[(o[lg >> 2] + 96) >> 2] + u(bg, 12)) | 0) + ((_f - u(bg, 3)) << 2)) >> 2];
 																	o[(dg + 24) >> 2] = bg;
 																	cg = o[(cg + 4) >> 2];
 																	ag = (cg + 4) | 0;
@@ -30420,8 +28412,7 @@ var DracoDecoderModule = (function () {
 																		bh(_f, (dg + 16) | 0);
 																		_f = o[bg >> 2];
 																	}
-																	o[(o[(_f + 12) >> 2] + jg) >> 2] =
-																		o[(_f + 24) >> 2];
+																	o[(o[(_f + 12) >> 2] + jg) >> 2] = o[(_f + 24) >> 2];
 																	o[(_f + 24) >> 2] = o[(_f + 24) >> 2] + 1;
 																	ag = o[hg >> 2];
 																	_f = o[(dg + 8) >> 2];
@@ -30437,22 +28428,11 @@ var DracoDecoderModule = (function () {
 																		_f = (cg >>> 0) % 3 | 0 ? cg : (_f + -2) | 0;
 																		if (
 																			((_f | 0) == -1) |
-																			((o[
-																				(o[ag >> 2] +
-																					((_f >>> 3) & 536870908)) >>
-																					2
-																			] >>>
-																				(_f & 31)) &
-																				1)
+																			((o[(o[ag >> 2] + ((_f >>> 3) & 536870908)) >> 2] >>> (_f & 31)) & 1)
 																		) {
 																			break u;
 																		}
-																		$f =
-																			o[
-																				(o[(o[(ag + 64) >> 2] + 12) >> 2] +
-																					(_f << 2)) >>
-																					2
-																			];
+																		$f = o[(o[(o[(ag + 64) >> 2] + 12) >> 2] + (_f << 2)) >> 2];
 																	}
 																	o[(dg + 8) >> 2] = $f;
 																	_f = (($f >>> 0) / 3) | 0;
@@ -30471,40 +28451,20 @@ var DracoDecoderModule = (function () {
 																		break v;
 																	}
 																	$f = -1;
-																	if (
-																		(o[
-																			(o[ag >> 2] + ((fg >>> 3) & 536870908)) >> 2
-																		] >>>
-																			(fg & 31)) &
-																		1
-																	) {
+																	if ((o[(o[ag >> 2] + ((fg >>> 3) & 536870908)) >> 2] >>> (fg & 31)) & 1) {
 																		break v;
 																	}
-																	$f =
-																		o[
-																			(o[(o[(ag + 64) >> 2] + 12) >> 2] +
-																				(fg << 2)) >>
-																				2
-																		];
+																	$f = o[(o[(o[(ag + 64) >> 2] + 12) >> 2] + (fg << 2)) >> 2];
 																}
 																o[(bg + 24) >> 2] = $f;
 																_f = (((_f >>> 0) % 3 | 0 ? -1 : 2) + _f) | 0;
 																if (
 																	!(
 																		((_f | 0) == -1) |
-																		((o[
-																			(o[ag >> 2] + ((_f >>> 3) & 536870908)) >> 2
-																		] >>>
-																			(_f & 31)) &
-																			1)
+																		((o[(o[ag >> 2] + ((_f >>> 3) & 536870908)) >> 2] >>> (_f & 31)) & 1)
 																	)
 																) {
-																	cg =
-																		o[
-																			(o[(o[(ag + 64) >> 2] + 12) >> 2] +
-																				(_f << 2)) >>
-																				2
-																		];
+																	cg = o[(o[(o[(ag + 64) >> 2] + 12) >> 2] + (_f << 2)) >> 2];
 																}
 																bg = ((cg >>> 0) / 3) | 0;
 																_f = (($f >>> 0) / 3) | 0;
@@ -30516,23 +28476,12 @@ var DracoDecoderModule = (function () {
 																		break w;
 																	}
 																	ag = ag ? -1 : _f;
-																	ag =
-																		(o[
-																			(o[gg >> 2] + ((ag >>> 3) & 536870908)) >> 2
-																		] >>>
-																			(ag & 31)) &
-																		1;
+																	ag = (o[(o[gg >> 2] + ((ag >>> 3) & 536870908)) >> 2] >>> (ag & 31)) & 1;
 																}
 																x: {
 																	if ((cg | 0) != -1) {
 																		fg = (cg | 0) == -1 ? -1 : bg;
-																		fg =
-																			o[
-																				(o[gg >> 2] +
-																					((fg >>> 3) & 536870908)) >>
-																					2
-																			] &
-																			(1 << (fg & 31));
+																		fg = o[(o[gg >> 2] + ((fg >>> 3) & 536870908)) >> 2] & (1 << (fg & 31));
 																		if (ag) {
 																			$f = cg;
 																			_f = bg;
@@ -31011,15 +28960,7 @@ var DracoDecoderModule = (function () {
 												Lg = o[(Ig + 8) >> 2];
 												Jg = o[(Ig + 12) >> 2];
 												tg = Jg;
-												if (
-													(tg | 0) < (Gg | 0)
-														? 1
-														: (tg | 0) <= (Gg | 0)
-														  ? Lg >>> 0 > Og >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((tg | 0) < (Gg | 0) ? 1 : (tg | 0) <= (Gg | 0) ? (Lg >>> 0 > Og >>> 0 ? 0 : 1) : 0) {
 													break c;
 												}
 												Qg = (a + 44) | 0;
@@ -31036,15 +28977,7 @@ var DracoDecoderModule = (function () {
 													o[(Ig + 16) >> 2] = Mg;
 													o[(Ig + 20) >> 2] = tg;
 													o[(Hg + 8) >> 2] = Ug;
-													if (
-														(Jg | 0) < (tg | 0)
-															? 1
-															: (Jg | 0) <= (tg | 0)
-															  ? Lg >>> 0 > Mg >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Jg | 0) < (tg | 0) ? 1 : (Jg | 0) <= (tg | 0) ? (Lg >>> 0 > Mg >>> 0 ? 0 : 1) : 0) {
 														break c;
 													}
 													Ug = p[(Mg + Pg) | 0];
@@ -31056,15 +28989,7 @@ var DracoDecoderModule = (function () {
 													o[(Ig + 16) >> 2] = Mg;
 													o[(Ng + 20) >> 2] = tg;
 													o[(Hg + 12) >> 2] = Ug;
-													if (
-														(Jg | 0) < (tg | 0)
-															? 1
-															: (Jg | 0) <= (tg | 0)
-															  ? Lg >>> 0 > Mg >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Jg | 0) < (tg | 0) ? 1 : (Jg | 0) <= (tg | 0) ? (Lg >>> 0 > Mg >>> 0 ? 0 : 1) : 0) {
 														break c;
 													}
 													tg = p[(Mg + Pg) | 0];
@@ -31103,15 +29028,7 @@ var DracoDecoderModule = (function () {
 													Lg = o[(tg + 8) >> 2];
 													Jg = o[(tg + 12) >> 2];
 													tg = Jg;
-													if (
-														(tg | 0) > (Gg | 0)
-															? 1
-															: (tg | 0) >= (Gg | 0)
-															  ? Lg >>> 0 <= Og >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((tg | 0) > (Gg | 0) ? 1 : (tg | 0) >= (Gg | 0) ? (Lg >>> 0 <= Og >>> 0 ? 0 : 1) : 0) {
 														continue;
 													}
 													break;
@@ -31135,15 +29052,7 @@ var DracoDecoderModule = (function () {
 												Pg = o[(Ig + 8) >> 2];
 												Lg = Jg;
 												Jg = tg;
-												if (
-													(Qg | 0) < (tg | 0)
-														? 1
-														: (Qg | 0) <= (tg | 0)
-														  ? Pg >>> 0 >= Lg >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((Qg | 0) < (tg | 0) ? 1 : (Qg | 0) <= (tg | 0) ? (Pg >>> 0 >= Lg >>> 0 ? 0 : 1) : 0) {
 													break c;
 												}
 												Ug = (a + 44) | 0;
@@ -31163,15 +29072,7 @@ var DracoDecoderModule = (function () {
 													}
 													Tg = Kg;
 													Kg = tg;
-													if (
-														(Jg | 0) < (tg | 0)
-															? 1
-															: (Jg | 0) <= (tg | 0)
-															  ? Pg >>> 0 >= Tg >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Jg | 0) < (tg | 0) ? 1 : (Jg | 0) <= (tg | 0) ? (Pg >>> 0 >= Tg >>> 0 ? 0 : 1) : 0) {
 														break c;
 													}
 													tg = (Lg + Qg) | 0;
@@ -31185,15 +29086,7 @@ var DracoDecoderModule = (function () {
 													}
 													Jg = tg;
 													tg = Gg;
-													if (
-														(Ng | 0) < (tg | 0)
-															? 1
-															: (Ng | 0) <= (tg | 0)
-															  ? Pg >>> 0 >= Jg >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Ng | 0) < (tg | 0) ? 1 : (Ng | 0) <= (tg | 0) ? (Pg >>> 0 >= Jg >>> 0 ? 0 : 1) : 0) {
 														break c;
 													}
 													Gg = (Qg + Tg) | 0;
@@ -31237,15 +29130,7 @@ var DracoDecoderModule = (function () {
 													}
 													Lg = Jg;
 													Jg = tg;
-													if (
-														(Kg | 0) > (tg | 0)
-															? 1
-															: (Kg | 0) >= (tg | 0)
-															  ? Qg >>> 0 < Lg >>> 0
-																	? 0
-																	: 1
-															  : 0
-													) {
+													if ((Kg | 0) > (tg | 0) ? 1 : (Kg | 0) >= (tg | 0) ? (Qg >>> 0 < Lg >>> 0 ? 0 : 1) : 0) {
 														continue;
 													}
 													break;
@@ -31327,15 +29212,7 @@ var DracoDecoderModule = (function () {
 											Pg = o[(Ig + 8) >> 2];
 											Lg = Jg;
 											Jg = tg;
-											if (
-												(Mg | 0) < (tg | 0)
-													? 1
-													: (Mg | 0) <= (tg | 0)
-													  ? Pg >>> 0 >= Lg >>> 0
-															? 0
-															: 1
-													  : 0
-											) {
+											if ((Mg | 0) < (tg | 0) ? 1 : (Mg | 0) <= (tg | 0) ? (Pg >>> 0 >= Lg >>> 0 ? 0 : 1) : 0) {
 												break c;
 											}
 											Tg = (a + 44) | 0;
@@ -31343,10 +29220,7 @@ var DracoDecoderModule = (function () {
 											while (1) {
 												Mg = o[Ig >> 2];
 												tg = (Mg + Og) | 0;
-												tg =
-													p[tg | 0] |
-													(p[(tg + 1) | 0] << 8) |
-													((p[(tg + 2) | 0] << 16) | (p[(tg + 3) | 0] << 24));
+												tg = p[tg | 0] | (p[(tg + 1) | 0] << 8) | ((p[(tg + 2) | 0] << 16) | (p[(tg + 3) | 0] << 24));
 												o[(Ig + 16) >> 2] = Lg;
 												o[(Ig + 20) >> 2] = Jg;
 												o[(Hg + 8) >> 2] = tg;
@@ -31358,22 +29232,11 @@ var DracoDecoderModule = (function () {
 												}
 												Qg = Kg;
 												Kg = tg;
-												if (
-													(Jg | 0) < (tg | 0)
-														? 1
-														: (Jg | 0) <= (tg | 0)
-														  ? Pg >>> 0 >= Qg >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((Jg | 0) < (tg | 0) ? 1 : (Jg | 0) <= (tg | 0) ? (Pg >>> 0 >= Qg >>> 0 ? 0 : 1) : 0) {
 													break c;
 												}
 												tg = (Mg + Lg) | 0;
-												tg =
-													p[tg | 0] |
-													(p[(tg + 1) | 0] << 8) |
-													((p[(tg + 2) | 0] << 16) | (p[(tg + 3) | 0] << 24));
+												tg = p[tg | 0] | (p[(tg + 1) | 0] << 8) | ((p[(tg + 2) | 0] << 16) | (p[(tg + 3) | 0] << 24));
 												o[(Ig + 16) >> 2] = Qg;
 												o[(Ig + 20) >> 2] = Kg;
 												o[(Hg + 12) >> 2] = tg;
@@ -31384,22 +29247,11 @@ var DracoDecoderModule = (function () {
 												}
 												Jg = Gg;
 												Gg = tg;
-												if (
-													(Ng | 0) < (tg | 0)
-														? 1
-														: (Ng | 0) <= (tg | 0)
-														  ? Pg >>> 0 >= Jg >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((Ng | 0) < (tg | 0) ? 1 : (Ng | 0) <= (tg | 0) ? (Pg >>> 0 >= Jg >>> 0 ? 0 : 1) : 0) {
 													break c;
 												}
 												tg = (Mg + Qg) | 0;
-												tg =
-													p[tg | 0] |
-													(p[(tg + 1) | 0] << 8) |
-													((p[(tg + 2) | 0] << 16) | (p[(tg + 3) | 0] << 24));
+												tg = p[tg | 0] | (p[(tg + 1) | 0] << 8) | ((p[(tg + 2) | 0] << 16) | (p[(tg + 3) | 0] << 24));
 												o[(Ig + 16) >> 2] = Jg;
 												o[(Ig + 20) >> 2] = Gg;
 												o[(Hg + 16) >> 2] = tg;
@@ -31439,15 +29291,7 @@ var DracoDecoderModule = (function () {
 												}
 												Lg = Jg;
 												Jg = tg;
-												if (
-													(Kg | 0) > (tg | 0)
-														? 1
-														: (Kg | 0) >= (tg | 0)
-														  ? Qg >>> 0 < Lg >>> 0
-																? 0
-																: 1
-														  : 0
-												) {
+												if ((Kg | 0) > (tg | 0) ? 1 : (Kg | 0) >= (tg | 0) ? (Qg >>> 0 < Lg >>> 0 ? 0 : 1) : 0) {
 													continue;
 												}
 												break;
@@ -31474,15 +29318,7 @@ var DracoDecoderModule = (function () {
 									$g = o[(Yg + 16) >> 2];
 									Zg = o[(Yg + 12) >> 2];
 									_g = o[(Yg + 20) >> 2];
-									if (
-										(Zg | 0) < (_g | 0)
-											? 1
-											: (Zg | 0) <= (_g | 0)
-											  ? r[(Yg + 8) >> 2] > $g >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Zg | 0) < (_g | 0) ? 1 : (Zg | 0) <= (_g | 0) ? (r[(Yg + 8) >> 2] > $g >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Zg = p[($g + o[Yg >> 2]) | 0];
@@ -31912,15 +29748,7 @@ var DracoDecoderModule = (function () {
 									Qh = (Qh + 1) | 0;
 								}
 								a: {
-									if (
-										(Th | 0) < (Qh | 0)
-											? 1
-											: (Th | 0) <= (Qh | 0)
-											  ? r[(Fh + 8) >> 2] >= Uh >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Th | 0) < (Qh | 0) ? 1 : (Th | 0) <= (Qh | 0) ? (r[(Fh + 8) >> 2] >= Uh >>> 0 ? 0 : 1) : 0) {
 										Fh = Hk(32);
 										o[Rh >> 2] = Fh;
 										o[(Rh + 4) >> 2] = 29;
@@ -31975,10 +29803,7 @@ var DracoDecoderModule = (function () {
 										break a;
 									}
 									Qh = (Sh + o[Fh >> 2]) | 0;
-									Th =
-										p[Qh | 0] |
-										(p[(Qh + 1) | 0] << 8) |
-										((p[(Qh + 2) | 0] << 16) | (p[(Qh + 3) | 0] << 24));
+									Th = p[Qh | 0] | (p[(Qh + 1) | 0] << 8) | ((p[(Qh + 2) | 0] << 16) | (p[(Qh + 3) | 0] << 24));
 									m[Ph | 0] = Th;
 									m[(Ph + 1) | 0] = Th >>> 8;
 									m[(Ph + 2) | 0] = Th >>> 16;
@@ -32030,15 +29855,7 @@ var DracoDecoderModule = (function () {
 										break a;
 									}
 									Qh = o[(Fh + 12) >> 2];
-									if (
-										(Qh | 0) < (Sh | 0)
-											? 1
-											: (Qh | 0) <= (Sh | 0)
-											  ? r[(Fh + 8) >> 2] > Uh >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Qh | 0) < (Sh | 0) ? 1 : (Qh | 0) <= (Sh | 0) ? (r[(Fh + 8) >> 2] > Uh >>> 0 ? 0 : 1) : 0) {
 										Fh = Hk(32);
 										o[Rh >> 2] = Fh;
 										o[(Rh + 4) >> 2] = 29;
@@ -32101,15 +29918,7 @@ var DracoDecoderModule = (function () {
 									o[(Fh + 16) >> 2] = Sh;
 									o[(Th + 20) >> 2] = Qh;
 									Th = o[(Fh + 12) >> 2];
-									if (
-										(Th | 0) < (Qh | 0)
-											? 1
-											: (Th | 0) <= (Qh | 0)
-											  ? r[(Fh + 8) >> 2] > Sh >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Th | 0) < (Qh | 0) ? 1 : (Th | 0) <= (Qh | 0) ? (r[(Fh + 8) >> 2] > Sh >>> 0 ? 0 : 1) : 0) {
 										Fh = Hk(32);
 										o[Rh >> 2] = Fh;
 										o[(Rh + 4) >> 2] = 29;
@@ -32172,15 +29981,7 @@ var DracoDecoderModule = (function () {
 									o[(Fh + 16) >> 2] = Sh;
 									o[(Fh + 20) >> 2] = Qh;
 									Th = o[(Fh + 12) >> 2];
-									if (
-										(Th | 0) < (Qh | 0)
-											? 1
-											: (Th | 0) <= (Qh | 0)
-											  ? r[(Fh + 8) >> 2] > Sh >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Th | 0) < (Qh | 0) ? 1 : (Th | 0) <= (Qh | 0) ? (r[(Fh + 8) >> 2] > Sh >>> 0 ? 0 : 1) : 0) {
 										Fh = Hk(32);
 										o[Rh >> 2] = Fh;
 										o[(Rh + 4) >> 2] = 29;
@@ -32243,15 +30044,7 @@ var DracoDecoderModule = (function () {
 									o[(Fh + 16) >> 2] = Sh;
 									o[(Fh + 20) >> 2] = Qh;
 									Th = o[(Fh + 12) >> 2];
-									if (
-										(Th | 0) < (Qh | 0)
-											? 1
-											: (Th | 0) <= (Qh | 0)
-											  ? r[(Fh + 8) >> 2] > Sh >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Th | 0) < (Qh | 0) ? 1 : (Th | 0) <= (Qh | 0) ? (r[(Fh + 8) >> 2] > Sh >>> 0 ? 0 : 1) : 0) {
 										Fh = Hk(32);
 										o[Rh >> 2] = Fh;
 										o[(Rh + 4) >> 2] = 29;
@@ -32321,15 +30114,7 @@ var DracoDecoderModule = (function () {
 									if (Sh >>> 0 < 3) {
 										Qh = (Qh + 1) | 0;
 									}
-									if (
-										(Th | 0) < (Qh | 0)
-											? 1
-											: (Th | 0) <= (Qh | 0)
-											  ? r[(Fh + 8) >> 2] >= Sh >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Th | 0) < (Qh | 0) ? 1 : (Th | 0) <= (Qh | 0) ? (r[(Fh + 8) >> 2] >= Sh >>> 0 ? 0 : 1) : 0) {
 										Fh = Hk(32);
 										o[Rh >> 2] = Fh;
 										o[(Rh + 4) >> 2] = 29;
@@ -32943,15 +30728,7 @@ var DracoDecoderModule = (function () {
 									gi = o[(bi + 12) >> 2];
 									di = o[(bi + 20) >> 2];
 									b: {
-										if (
-											(gi | 0) < (di | 0)
-												? 1
-												: (gi | 0) <= (di | 0)
-												  ? r[(bi + 8) >> 2] > ei >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((gi | 0) < (di | 0) ? 1 : (gi | 0) <= (di | 0) ? (r[(bi + 8) >> 2] > ei >>> 0 ? 0 : 1) : 0) {
 											break b;
 										}
 										fi = p[(ei + o[bi >> 2]) | 0];
@@ -33291,15 +31068,7 @@ var DracoDecoderModule = (function () {
 									Gi = o[(Ei + 12) >> 2];
 									Hi = o[(Ei + 20) >> 2];
 									Ji = Hi;
-									if (
-										(Gi | 0) < (Ji | 0)
-											? 1
-											: (Gi | 0) <= (Ji | 0)
-											  ? r[(Ei + 8) >> 2] > Ii >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Gi | 0) < (Ji | 0) ? 1 : (Gi | 0) <= (Ji | 0) ? (r[(Ei + 8) >> 2] > Ii >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Ki = m[(Ii + o[Ei >> 2]) | 0];
@@ -34129,13 +31898,7 @@ var DracoDecoderModule = (function () {
 														if (((Xj | 0) == (ej | 0)) | ((ej | 0) == -1)) {
 															break c;
 														}
-														if (
-															!(
-																(o[(((ej >>> 3) & 536870908) + Vj) >> 2] >>>
-																	(ej & 31)) &
-																1
-															)
-														) {
+														if (!((o[(((ej >>> 3) & 536870908) + Vj) >> 2] >>> (ej & 31)) & 1)) {
 															continue;
 														}
 													}
@@ -34158,18 +31921,12 @@ var DracoDecoderModule = (function () {
 																}
 																Tj = -1;
 																$j = o[(ej + 4) >> 2];
-																Tj =
-																	(Vj | 0) != -1
-																		? o[(o[Zj >> 2] + (Vj << 2)) >> 2]
-																		: Tj;
+																Tj = (Vj | 0) != -1 ? o[(o[Zj >> 2] + (Vj << 2)) >> 2] : Tj;
 																if (($j | 0) == (Tj | 0)) {
 																	break d;
 																}
 																Wj = -1;
-																Wj =
-																	($j | 0) != -1
-																		? o[(o[Zj >> 2] + ($j << 2)) >> 2]
-																		: Wj;
+																Wj = ($j | 0) != -1 ? o[(o[Zj >> 2] + ($j << 2)) >> 2] : Wj;
 																if ((Tj | 0) != -1) {
 																	o[(o[Zj >> 2] + (Tj << 2)) >> 2] = -1;
 																}
@@ -34326,22 +32083,13 @@ var DracoDecoderModule = (function () {
 											ik = o[((kk << 2) + gk) >> 2];
 										}
 										d: {
-											if (
-												!(
-													((ik | 0) == (hk | 0)) |
-													((hk | 0) == (jk | 0)) |
-													((ik | 0) == (jk | 0))
-												)
-											) {
+											if (!(((ik | 0) == (hk | 0)) | ((hk | 0) == (jk | 0)) | ((ik | 0) == (jk | 0)))) {
 												nk = o[ok >> 2];
 												qk = 0;
 												while (1) {
 													ik = (pk + qk) | 0;
 													e: {
-														if (
-															(o[(((ik >>> 3) & 536870908) + nk) >> 2] >>> (ik & 31)) &
-															1
-														) {
+														if ((o[(((ik >>> 3) & 536870908) + nk) >> 2] >>> (ik & 31)) & 1) {
 															break e;
 														}
 														kk = o[(o[a >> 2] + (ik << 2)) >> 2];
@@ -35308,25 +33056,14 @@ var DracoDecoderModule = (function () {
 											o[(wl + 16) >> 2] = ul;
 											o[(wl + 8) >> 2] = 0;
 											c: {
-												if (
-													!(
-														(o[(o[(a + 12) >> 2] + ((Ll >>> 3) & 536870908)) >> 2] >>>
-															(Ll & 31)) &
-														1
-													)
-												) {
+												if (!((o[(o[(a + 12) >> 2] + ((Ll >>> 3) & 536870908)) >> 2] >>> (Ll & 31)) & 1)) {
 													break c;
 												}
 												d: {
 													fl = (ul + 1) | 0;
 													fl = (fl >>> 0) % 3 | 0 ? fl : (ul + -2) | 0;
 													if (
-														!(
-															((fl | 0) == -1) |
-															((o[(o[a >> 2] + ((fl >>> 3) & 536870908)) >> 2] >>>
-																(fl & 31)) &
-																1)
-														)
+														!(((fl | 0) == -1) | ((o[(o[a >> 2] + ((fl >>> 3) & 536870908)) >> 2] >>> (fl & 31)) & 1))
 													) {
 														fl = o[(o[(o[(a + 64) >> 2] + 12) >> 2] + (fl << 2)) >> 2];
 														if ((fl | 0) != -1) {
@@ -35349,12 +33086,7 @@ var DracoDecoderModule = (function () {
 														ul = fl;
 														fl = (Hl >>> 0) % 3 | 0 ? Hl : (fl + -2) | 0;
 														if (
-															!(
-																((fl | 0) == -1) |
-																((o[(o[a >> 2] + ((fl >>> 3) & 536870908)) >> 2] >>>
-																	(fl & 31)) &
-																	1)
-															)
+															!(((fl | 0) == -1) | ((o[(o[a >> 2] + ((fl >>> 3) & 536870908)) >> 2] >>> (fl & 31)) & 1))
 														) {
 															fl = o[(o[(o[(a + 64) >> 2] + 12) >> 2] + (fl << 2)) >> 2];
 															if ((fl | 0) != -1) {
@@ -35408,13 +33140,7 @@ var DracoDecoderModule = (function () {
 													fl = (ul + 1) | 0;
 													fl = (fl >>> 0) % 3 | 0 ? fl : (ul + -2) | 0;
 													h: {
-														if (
-															!(
-																(o[(o[a >> 2] + ((fl >>> 3) & 536870908)) >> 2] >>>
-																	(fl & 31)) &
-																1
-															)
-														) {
+														if (!((o[(o[a >> 2] + ((fl >>> 3) & 536870908)) >> 2] >>> (fl & 31)) & 1)) {
 															break h;
 														}
 														o[(wl + 24) >> 2] = Il;
@@ -35725,10 +33451,7 @@ var DracoDecoderModule = (function () {
 												_i(a, -1);
 												break a;
 											}
-											if (
-												((qm | 0) == -1) |
-												((_i(a, (((qm >>> 0) % 3 | 0 ? -1 : 2) + qm) | 0) | 0) == -1)
-											) {
+											if (((qm | 0) == -1) | ((_i(a, (((qm >>> 0) % 3 | 0 ? -1 : 2) + qm) | 0) | 0) == -1)) {
 												break a;
 											}
 											nm = (qm + 1) | 0;
@@ -35869,12 +33592,7 @@ var DracoDecoderModule = (function () {
 										nm = (nm >>> 0) % 3 | 0 ? nm : (Rl + -2) | 0;
 										if ((nm | 0) >= 0) {
 											Fm = ((nm >>> 0) / 3) | 0;
-											Fm =
-												o[
-													(((o[(o[a >> 2] + 96) >> 2] + u(Fm, 12)) | 0) +
-														((nm - u(Fm, 3)) << 2)) >>
-														2
-												];
+											Fm = o[(((o[(o[a >> 2] + 96) >> 2] + u(Fm, 12)) | 0) + ((nm - u(Fm, 3)) << 2)) >> 2];
 										}
 										c: {
 											if ((Gm | 0) == -1) {
@@ -35886,12 +33604,7 @@ var DracoDecoderModule = (function () {
 												break c;
 											}
 											Em = ((nm >>> 0) / 3) | 0;
-											Em =
-												o[
-													(((o[(o[a >> 2] + 96) >> 2] + u(Em, 12)) | 0) +
-														((nm - u(Em, 3)) << 2)) >>
-														2
-												];
+											Em = o[(((o[(o[a >> 2] + 96) >> 2] + u(Em, 12)) | 0) + ((nm - u(Em, 3)) << 2)) >> 2];
 										}
 										nm = -1;
 										if ((Em | 0) != (Fm | 0)) {
@@ -35902,12 +33615,7 @@ var DracoDecoderModule = (function () {
 											Rl = (((Rl >>> 0) % 3 | 0 ? -1 : 2) + Rl) | 0;
 											if ((Rl | 0) >= 0) {
 												Em = ((Rl >>> 0) / 3) | 0;
-												Em =
-													o[
-														(((o[(o[a >> 2] + 96) >> 2] + u(Em, 12)) | 0) +
-															((Rl - u(Em, 3)) << 2)) >>
-															2
-													];
+												Em = o[(((o[(o[a >> 2] + 96) >> 2] + u(Em, 12)) | 0) + ((Rl - u(Em, 3)) << 2)) >> 2];
 												if (Hm) {
 													break b;
 												}
@@ -36103,12 +33811,7 @@ var DracoDecoderModule = (function () {
 																Lm = Rl << 3;
 																Km = (Im - Om) | 0;
 																Im = Km >> 2;
-																Km =
-																	(Km >> 3) >>> 0 < 268435455
-																		? Im >>> 0 < Qm >>> 0
-																			? Qm
-																			: Im
-																		: 536870911;
+																Km = (Km >> 3) >>> 0 < 268435455 ? (Im >>> 0 < Qm >>> 0 ? Qm : Im) : 536870911;
 																Rl = 0;
 																g: {
 																	if (!Km) {
@@ -36180,15 +33883,7 @@ var DracoDecoderModule = (function () {
 									Wm = o[(Tm + 16) >> 2];
 									Um = o[(Tm + 12) >> 2];
 									Vm = o[(Tm + 20) >> 2];
-									if (
-										(Um | 0) < (Vm | 0)
-											? 1
-											: (Um | 0) <= (Vm | 0)
-											  ? r[(Tm + 8) >> 2] > Wm >>> 0
-													? 0
-													: 1
-											  : 0
-									) {
+									if ((Um | 0) < (Vm | 0) ? 1 : (Um | 0) <= (Vm | 0) ? (r[(Tm + 8) >> 2] > Wm >>> 0 ? 0 : 1) : 0) {
 										break a;
 									}
 									Um = p[(Wm + o[Tm >> 2]) | 0];
@@ -36259,15 +33954,7 @@ var DracoDecoderModule = (function () {
 											if (Tm >>> 0 < Zm >>> 0) {
 												$m = ($m + 1) | 0;
 											}
-											if (
-												(en | 0) < ($m | 0)
-													? 1
-													: (en | 0) <= ($m | 0)
-													  ? r[(_m + 8) >> 2] >= Tm >>> 0
-															? 0
-															: 1
-													  : 0
-											) {
+											if ((en | 0) < ($m | 0) ? 1 : (en | 0) <= ($m | 0) ? (r[(_m + 8) >> 2] >= Tm >>> 0 ? 0 : 1) : 0) {
 												break b;
 											}
 											wl(cn, (dn + o[_m >> 2]) | 0, an);
@@ -36320,15 +34007,7 @@ var DracoDecoderModule = (function () {
 										if (an >>> 0 < Zm >>> 0) {
 											cn = (cn + 1) | 0;
 										}
-										if (
-											(dn | 0) > (cn | 0)
-												? 1
-												: (dn | 0) >= (cn | 0)
-												  ? _m >>> 0 < an >>> 0
-														? 0
-														: 1
-												  : 0
-										) {
+										if ((dn | 0) > (cn | 0) ? 1 : (dn | 0) >= (cn | 0) ? (_m >>> 0 < an >>> 0 ? 0 : 1) : 0) {
 											wl(o[Ym >> 2], ($m + o[Tm >> 2]) | 0, Zm);
 											Zm = Tm;
 											an = Tm;
@@ -36569,12 +34248,7 @@ var DracoDecoderModule = (function () {
 											if (An >>> 0 < 1073741824) {
 												Cn = (o[(a + 8) >> 2] - Cn) | 0;
 												En = Cn >> 1;
-												An =
-													(Cn >> 2) >>> 0 < 536870911
-														? En >>> 0 < An >>> 0
-															? An
-															: En
-														: 1073741823;
+												An = (Cn >> 2) >>> 0 < 536870911 ? (En >>> 0 < An >>> 0 ? An : En) : 1073741823;
 												if (An) {
 													if (An >>> 0 >= 1073741824) {
 														break c;
@@ -36769,10 +34443,7 @@ var DracoDecoderModule = (function () {
 									if (((Rl - a) | 0) != 4) {
 										break a;
 									}
-									o[Mn >> 2] =
-										p[a | 0] |
-										(p[(a + 1) | 0] << 8) |
-										((p[(a + 2) | 0] << 16) | (p[(a + 3) | 0] << 24));
+									o[Mn >> 2] = p[a | 0] | (p[(a + 1) | 0] << 8) | ((p[(a + 2) | 0] << 16) | (p[(a + 3) | 0] << 24));
 								}
 							}
 							function kj(a, Rl, Mn) {
@@ -36838,14 +34509,8 @@ var DracoDecoderModule = (function () {
 									if (((Rl - a) | 0) != 8) {
 										break a;
 									}
-									Rl =
-										p[(a + 4) | 0] |
-										(p[(a + 5) | 0] << 8) |
-										((p[(a + 6) | 0] << 16) | (p[(a + 7) | 0] << 24));
-									o[Mn >> 2] =
-										p[a | 0] |
-										(p[(a + 1) | 0] << 8) |
-										((p[(a + 2) | 0] << 16) | (p[(a + 3) | 0] << 24));
+									Rl = p[(a + 4) | 0] | (p[(a + 5) | 0] << 8) | ((p[(a + 6) | 0] << 16) | (p[(a + 7) | 0] << 24));
+									o[Mn >> 2] = p[a | 0] | (p[(a + 1) | 0] << 8) | ((p[(a + 2) | 0] << 16) | (p[(a + 3) | 0] << 24));
 									o[(Mn + 4) >> 2] = Rl;
 								}
 							}
@@ -37060,10 +34725,7 @@ var DracoDecoderModule = (function () {
 																	}
 																	o[(jo + 8) >> 2] = o[(ho + 8) >> 2];
 																	Rl = o[(ho + 8) >> 2];
-																	o[
-																		((ho | 0) == o[Rl >> 2] ? Rl : (Rl + 4) | 0) >>
-																			2
-																	] = jo;
+																	o[((ho | 0) == o[Rl >> 2] ? Rl : (Rl + 4) | 0) >> 2] = jo;
 																	o[jo >> 2] = ho;
 																	o[(ho + 8) >> 2] = jo;
 																	Rl = o[Mn >> 2];
@@ -37970,736 +35632,241 @@ var DracoDecoderModule = (function () {
 																									while (1) {
 																										r: {
 																											s: {
-																												op =
-																													qp &
-																													255;
+																												op = qp & 255;
 																												t: {
-																													if (
-																														!op
-																													) {
-																														qp =
-																															cp;
+																													if (!op) {
+																														qp = cp;
 																														break t;
 																													}
-																													if (
-																														(op |
-																															0) !=
-																														37
-																													) {
+																													if ((op | 0) != 37) {
 																														break s;
 																													}
-																													qp =
-																														cp;
-																													while (
-																														1
-																													) {
-																														if (
-																															p[
-																																(cp +
-																																	1) |
-																																	0
-																															] !=
-																															37
-																														) {
+																													qp = cp;
+																													while (1) {
+																														if (p[(cp + 1) | 0] != 37) {
 																															break t;
 																														}
-																														op =
-																															(cp +
-																																2) |
-																															0;
-																														o[
-																															(np +
-																																76) >>
-																																2
-																														] =
-																															op;
-																														qp =
-																															(qp +
-																																1) |
-																															0;
-																														pp =
-																															p[
-																																(cp +
-																																	2) |
-																																	0
-																															];
-																														cp =
-																															op;
-																														if (
-																															(pp |
-																																0) ==
-																															37
-																														) {
+																														op = (cp + 2) | 0;
+																														o[(np + 76) >> 2] = op;
+																														qp = (qp + 1) | 0;
+																														pp = p[(cp + 2) | 0];
+																														cp = op;
+																														if ((pp | 0) == 37) {
 																															continue;
 																														}
 																														break;
 																													}
 																												}
-																												cp =
-																													(qp -
-																														rp) |
-																													0;
+																												cp = (qp - rp) | 0;
 																												if (a) {
-																													Hj(
-																														a,
-																														rp,
-																														cp,
-																													);
+																													Hj(a, rp, cp);
 																												}
-																												if (
-																													cp
-																												) {
+																												if (cp) {
 																													continue b;
 																												}
 																												wp = -1;
 																												qp = 1;
 																												op = np;
-																												sp =
-																													!Uj(
-																														m[
-																															(o[
-																																(np +
-																																	76) >>
-																																	2
-																															] +
-																																1) |
-																																0
-																														],
-																													);
-																												cp =
-																													o[
-																														(np +
-																															76) >>
-																															2
-																													];
-																												if (
-																													!(
-																														sp |
-																														(p[
-																															(cp +
-																																2) |
-																																0
-																														] !=
-																															36)
-																													)
-																												) {
-																													wp =
-																														(m[
-																															(cp +
-																																1) |
-																																0
-																														] +
-																															-48) |
-																														0;
+																												sp = !Uj(m[(o[(np + 76) >> 2] + 1) | 0]);
+																												cp = o[(np + 76) >> 2];
+																												if (!(sp | (p[(cp + 2) | 0] != 36))) {
+																													wp = (m[(cp + 1) | 0] + -48) | 0;
 																													zp = 1;
 																													qp = 3;
 																												}
-																												cp =
-																													(qp +
-																														cp) |
-																													0;
-																												o[
-																													(op +
-																														76) >>
-																														2
-																												] = cp;
+																												cp = (qp + cp) | 0;
+																												o[(op + 76) >> 2] = cp;
 																												qp = 0;
-																												xp =
-																													m[
-																														cp |
-																															0
-																													];
-																												pp =
-																													(xp +
-																														-32) |
-																													0;
+																												xp = m[cp | 0];
+																												pp = (xp + -32) | 0;
 																												u: {
-																													if (
-																														pp >>>
-																															0 >
-																														31
-																													) {
-																														op =
-																															cp;
+																													if (pp >>> 0 > 31) {
+																														op = cp;
 																														break u;
 																													}
-																													op =
-																														cp;
-																													pp =
-																														1 <<
-																														pp;
-																													if (
-																														!(
-																															pp &
-																															75913
-																														)
-																													) {
+																													op = cp;
+																													pp = 1 << pp;
+																													if (!(pp & 75913)) {
 																														break u;
 																													}
-																													while (
-																														1
-																													) {
-																														op =
-																															(cp +
-																																1) |
-																															0;
-																														o[
-																															(np +
-																																76) >>
-																																2
-																														] =
-																															op;
-																														qp =
-																															pp |
-																															qp;
-																														xp =
-																															m[
-																																(cp +
-																																	1) |
-																																	0
-																															];
-																														pp =
-																															(xp +
-																																-32) |
-																															0;
-																														if (
-																															pp >>>
-																																0 >
-																															31
-																														) {
+																													while (1) {
+																														op = (cp + 1) | 0;
+																														o[(np + 76) >> 2] = op;
+																														qp = pp | qp;
+																														xp = m[(cp + 1) | 0];
+																														pp = (xp + -32) | 0;
+																														if (pp >>> 0 > 31) {
 																															break u;
 																														}
-																														cp =
-																															op;
-																														pp =
-																															1 <<
-																															pp;
-																														if (
-																															pp &
-																															75913
-																														) {
+																														cp = op;
+																														pp = 1 << pp;
+																														if (pp & 75913) {
 																															continue;
 																														}
 																														break;
 																													}
 																												}
 																												v: {
-																													if (
-																														(xp |
-																															0) ==
-																														42
-																													) {
-																														sp =
-																															np;
+																													if ((xp | 0) == 42) {
+																														sp = np;
 																														w: {
 																															x: {
-																																if (
-																																	!Uj(
-																																		m[
-																																			(op +
-																																				1) |
-																																				0
-																																		],
-																																	)
-																																) {
+																																if (!Uj(m[(op + 1) | 0])) {
 																																	break x;
 																																}
-																																cp =
-																																	o[
-																																		(np +
-																																			76) >>
-																																			2
-																																	];
-																																if (
-																																	p[
-																																		(cp +
-																																			2) |
-																																			0
-																																	] !=
-																																	36
-																																) {
+																																cp = o[(np + 76) >> 2];
+																																if (p[(cp + 2) | 0] != 36) {
 																																	break x;
 																																}
-																																o[
-																																	((((m[
-																																		(cp +
-																																			1) |
-																																			0
-																																	] <<
-																																		2) +
-																																		mp) |
-																																		0) +
-																																		-192) >>
-																																		2
-																																] =
+																																o[((((m[(cp + 1) | 0] << 2) + mp) | 0) + -192) >> 2] =
 																																	10;
 																																tp =
-																																	o[
-																																		((((m[
-																																			(cp +
-																																				1) |
-																																				0
-																																		] <<
-																																			3) +
-																																			lp) |
-																																			0) +
-																																			-384) >>
-																																			2
-																																	];
+																																	o[((((m[(cp + 1) | 0] << 3) + lp) | 0) + -384) >> 2];
 																																zp = 1;
-																																cp =
-																																	(cp +
-																																		3) |
-																																	0;
+																																cp = (cp + 3) | 0;
 																																break w;
 																															}
-																															if (
-																																zp
-																															) {
+																															if (zp) {
 																																break q;
 																															}
 																															zp = 0;
 																															tp = 0;
-																															if (
-																																a
-																															) {
-																																cp =
-																																	o[
-																																		dp >>
-																																			2
-																																	];
-																																o[
-																																	dp >>
-																																		2
-																																] =
-																																	cp +
-																																	4;
-																																tp =
-																																	o[
-																																		cp >>
-																																			2
-																																	];
+																															if (a) {
+																																cp = o[dp >> 2];
+																																o[dp >> 2] = cp + 4;
+																																tp = o[cp >> 2];
 																															}
-																															cp =
-																																(o[
-																																	(np +
-																																		76) >>
-																																		2
-																																] +
-																																	1) |
-																																0;
+																															cp = (o[(np + 76) >> 2] + 1) | 0;
 																														}
-																														o[
-																															(sp +
-																																76) >>
-																																2
-																														] =
-																															cp;
-																														if (
-																															(tp |
-																																0) >
-																															-1
-																														) {
+																														o[(sp + 76) >> 2] = cp;
+																														if ((tp | 0) > -1) {
 																															break v;
 																														}
-																														tp =
-																															(0 -
-																																tp) |
-																															0;
-																														qp =
-																															qp |
-																															8192;
+																														tp = (0 - tp) | 0;
+																														qp = qp | 8192;
 																														break v;
 																													}
-																													tp =
-																														Ij(
-																															(np +
-																																76) |
-																																0,
-																														);
-																													if (
-																														(tp |
-																															0) <
-																														0
-																													) {
+																													tp = Ij((np + 76) | 0);
+																													if ((tp | 0) < 0) {
 																														break q;
 																													}
-																													cp =
-																														o[
-																															(np +
-																																76) >>
-																																2
-																														];
+																													cp = o[(np + 76) >> 2];
 																												}
 																												pp = -1;
 																												y: {
-																													if (
-																														p[
-																															cp |
-																																0
-																														] !=
-																														46
-																													) {
+																													if (p[cp | 0] != 46) {
 																														break y;
 																													}
-																													if (
-																														p[
-																															(cp +
-																																1) |
-																																0
-																														] ==
-																														42
-																													) {
+																													if (p[(cp + 1) | 0] == 42) {
 																														z: {
-																															if (
-																																!Uj(
-																																	m[
-																																		(cp +
-																																			2) |
-																																			0
-																																	],
-																																)
-																															) {
+																															if (!Uj(m[(cp + 2) | 0])) {
 																																break z;
 																															}
-																															cp =
-																																o[
-																																	(np +
-																																		76) >>
-																																		2
-																																];
-																															if (
-																																p[
-																																	(cp +
-																																		3) |
-																																		0
-																																] !=
-																																36
-																															) {
+																															cp = o[(np + 76) >> 2];
+																															if (p[(cp + 3) | 0] != 36) {
 																																break z;
 																															}
-																															o[
-																																((((m[
-																																	(cp +
-																																		2) |
-																																		0
-																																] <<
-																																	2) +
-																																	mp) |
-																																	0) +
-																																	-192) >>
-																																	2
-																															] =
-																																10;
-																															pp =
-																																o[
-																																	((((m[
-																																		(cp +
-																																			2) |
-																																			0
-																																	] <<
-																																		3) +
-																																		lp) |
-																																		0) +
-																																		-384) >>
-																																		2
-																																];
-																															cp =
-																																(cp +
-																																	4) |
-																																0;
-																															o[
-																																(np +
-																																	76) >>
-																																	2
-																															] =
-																																cp;
+																															o[((((m[(cp + 2) | 0] << 2) + mp) | 0) + -192) >> 2] = 10;
+																															pp = o[((((m[(cp + 2) | 0] << 3) + lp) | 0) + -384) >> 2];
+																															cp = (cp + 4) | 0;
+																															o[(np + 76) >> 2] = cp;
 																															break y;
 																														}
-																														if (
-																															zp
-																														) {
+																														if (zp) {
 																															break q;
 																														}
-																														if (
-																															a
-																														) {
-																															cp =
-																																o[
-																																	dp >>
-																																		2
-																																];
-																															o[
-																																dp >>
-																																	2
-																															] =
-																																cp +
-																																4;
-																															pp =
-																																o[
-																																	cp >>
-																																		2
-																																];
+																														if (a) {
+																															cp = o[dp >> 2];
+																															o[dp >> 2] = cp + 4;
+																															pp = o[cp >> 2];
 																														} else {
 																															pp = 0;
 																														}
-																														cp =
-																															(o[
-																																(np +
-																																	76) >>
-																																	2
-																															] +
-																																2) |
-																															0;
-																														o[
-																															(np +
-																																76) >>
-																																2
-																														] =
-																															cp;
+																														cp = (o[(np + 76) >> 2] + 2) | 0;
+																														o[(np + 76) >> 2] = cp;
 																														break y;
 																													}
-																													o[
-																														(np +
-																															76) >>
-																															2
-																													] =
-																														cp +
-																														1;
-																													pp =
-																														Ij(
-																															(np +
-																																76) |
-																																0,
-																														);
-																													cp =
-																														o[
-																															(np +
-																																76) >>
-																																2
-																														];
+																													o[(np + 76) >> 2] = cp + 1;
+																													pp = Ij((np + 76) | 0);
+																													cp = o[(np + 76) >> 2];
 																												}
 																												op = 0;
-																												while (
-																													1
-																												) {
-																													Ap =
-																														op;
-																													up =
-																														-1;
-																													if (
-																														(m[
-																															cp |
-																																0
-																														] +
-																															-65) >>>
-																															0 >
-																														57
-																													) {
+																												while (1) {
+																													Ap = op;
+																													up = -1;
+																													if ((m[cp | 0] + -65) >>> 0 > 57) {
 																														break a;
 																													}
-																													xp =
-																														(cp +
-																															1) |
-																														0;
-																													o[
-																														(np +
-																															76) >>
-																															2
-																													] =
-																														xp;
-																													op =
-																														m[
-																															cp |
-																																0
-																														];
-																													cp =
-																														xp;
-																													op =
-																														p[
-																															(((op +
-																																u(
-																																	Ap,
-																																	58,
-																																)) |
-																																0) +
-																																11023) |
-																																0
-																														];
-																													if (
-																														(op +
-																															-1) >>>
-																															0 <
-																														8
-																													) {
+																													xp = (cp + 1) | 0;
+																													o[(np + 76) >> 2] = xp;
+																													op = m[cp | 0];
+																													cp = xp;
+																													op = p[(((op + u(Ap, 58)) | 0) + 11023) | 0];
+																													if ((op + -1) >>> 0 < 8) {
 																														continue;
 																													}
 																													break;
 																												}
-																												if (
-																													!op
-																												) {
+																												if (!op) {
 																													break a;
 																												}
 																												A: {
 																													B: {
 																														C: {
-																															if (
-																																(op |
-																																	0) ==
-																																19
-																															) {
-																																if (
-																																	(wp |
-																																		0) <=
-																																	-1
-																																) {
+																															if ((op | 0) == 19) {
+																																if ((wp | 0) <= -1) {
 																																	break C;
 																																}
 																																break a;
 																															}
-																															if (
-																																(wp |
-																																	0) <
-																																0
-																															) {
+																															if ((wp | 0) < 0) {
 																																break B;
 																															}
-																															o[
-																																((wp <<
-																																	2) +
-																																	mp) >>
-																																	2
-																															] =
-																																op;
-																															cp =
-																																((wp <<
-																																	3) +
-																																	lp) |
-																																0;
-																															op =
-																																o[
-																																	(cp +
-																																		4) >>
-																																		2
-																																];
-																															o[
-																																(np +
-																																	64) >>
-																																	2
-																															] =
-																																o[
-																																	cp >>
-																																		2
-																																];
-																															o[
-																																(np +
-																																	68) >>
-																																	2
-																															] =
-																																op;
+																															o[((wp << 2) + mp) >> 2] = op;
+																															cp = ((wp << 3) + lp) | 0;
+																															op = o[(cp + 4) >> 2];
+																															o[(np + 64) >> 2] = o[cp >> 2];
+																															o[(np + 68) >> 2] = op;
 																														}
 																														cp = 0;
-																														if (
-																															!a
-																														) {
+																														if (!a) {
 																															continue b;
 																														}
 																														break A;
 																													}
-																													if (
-																														!a
-																													) {
+																													if (!a) {
 																														break d;
 																													}
-																													Jj(
-																														(np -
-																															-64) |
-																															0,
-																														op,
-																														dp,
-																													);
-																													xp =
-																														o[
-																															(np +
-																																76) >>
-																																2
-																														];
+																													Jj((np - -64) | 0, op, dp);
+																													xp = o[(np + 76) >> 2];
 																												}
-																												sp =
-																													qp &
-																													-65537;
-																												qp =
-																													qp &
-																													8192
-																														? sp
-																														: qp;
+																												sp = qp & -65537;
+																												qp = qp & 8192 ? sp : qp;
 																												up = 0;
 																												wp = 11060;
 																												op = yp;
-																												cp =
-																													m[
-																														(xp +
-																															-1) |
-																															0
-																													];
-																												cp = Ap
-																													? (cp &
-																															15) ==
-																													  3
-																														? cp &
-																														  -33
-																														: cp
-																													: cp;
-																												xp =
-																													(cp +
-																														-88) |
-																													0;
-																												if (
-																													xp >>>
-																														0 <=
-																													32
-																												) {
+																												cp = m[(xp + -1) | 0];
+																												cp = Ap ? ((cp & 15) == 3 ? cp & -33 : cp) : cp;
+																												xp = (cp + -88) | 0;
+																												if (xp >>> 0 <= 32) {
 																													break r;
 																												}
 																												D: {
 																													E: {
 																														F: {
 																															G: {
-																																sp =
-																																	(cp +
-																																		-65) |
-																																	0;
-																																if (
-																																	sp >>>
-																																		0 >
-																																	6
-																																) {
-																																	if (
-																																		(cp |
-																																			0) !=
-																																		83
-																																	) {
+																																sp = (cp + -65) | 0;
+																																if (sp >>> 0 > 6) {
+																																	if ((cp | 0) != 83) {
 																																		break e;
 																																	}
-																																	if (
-																																		!pp
-																																	) {
+																																	if (!pp) {
 																																		break G;
 																																	}
-																																	op =
-																																		o[
-																																			(np +
-																																				64) >>
-																																				2
-																																		];
+																																	op = o[(np + 64) >> 2];
 																																	break E;
 																																}
-																																switch (
-																																	(sp -
-																																		1) |
-																																	0
-																																) {
+																																switch ((sp - 1) | 0) {
 																																	case 1:
 																																		break F;
 																																	case 0:
@@ -38710,224 +35877,77 @@ var DracoDecoderModule = (function () {
 																																}
 																															}
 																															cp = 0;
-																															Kj(
-																																a,
-																																32,
-																																tp,
-																																0,
-																																qp,
-																															);
+																															Kj(a, 32, tp, 0, qp);
 																															break D;
 																														}
-																														o[
-																															(np +
-																																12) >>
-																																2
-																														] =
-																															0;
-																														o[
-																															(np +
-																																8) >>
-																																2
-																														] =
-																															o[
-																																(np +
-																																	64) >>
-																																	2
-																															];
-																														o[
-																															(np +
-																																64) >>
-																																2
-																														] =
-																															np +
-																															8;
-																														pp =
-																															-1;
-																														op =
-																															(np +
-																																8) |
-																															0;
+																														o[(np + 12) >> 2] = 0;
+																														o[(np + 8) >> 2] = o[(np + 64) >> 2];
+																														o[(np + 64) >> 2] = np + 8;
+																														pp = -1;
+																														op = (np + 8) | 0;
 																													}
 																													cp = 0;
 																													H: {
-																														while (
-																															1
-																														) {
-																															rp =
-																																o[
-																																	op >>
-																																		2
-																																];
-																															if (
-																																!rp
-																															) {
+																														while (1) {
+																															rp = o[op >> 2];
+																															if (!rp) {
 																																break H;
 																															}
-																															rp =
-																																Vj(
-																																	(np +
-																																		4) |
-																																		0,
-																																	rp,
-																																);
-																															sp =
-																																(rp |
-																																	0) <
-																																0;
-																															if (
-																																!(
-																																	sp |
-																																	(rp >>>
-																																		0 >
-																																		(pp -
-																																			cp) >>>
-																																			0)
-																																)
-																															) {
-																																op =
-																																	(op +
-																																		4) |
-																																	0;
-																																cp =
-																																	(cp +
-																																		rp) |
-																																	0;
-																																if (
-																																	pp >>>
-																																		0 >
-																																	cp >>>
-																																		0
-																																) {
+																															rp = Vj((np + 4) | 0, rp);
+																															sp = (rp | 0) < 0;
+																															if (!(sp | (rp >>> 0 > (pp - cp) >>> 0))) {
+																																op = (op + 4) | 0;
+																																cp = (cp + rp) | 0;
+																																if (pp >>> 0 > cp >>> 0) {
 																																	continue;
 																																}
 																																break H;
 																															}
 																															break;
 																														}
-																														up =
-																															-1;
-																														if (
-																															sp
-																														) {
+																														up = -1;
+																														if (sp) {
 																															break a;
 																														}
 																													}
-																													Kj(
-																														a,
-																														32,
-																														tp,
-																														cp,
-																														qp,
-																													);
-																													if (
-																														!cp
-																													) {
+																													Kj(a, 32, tp, cp, qp);
+																													if (!cp) {
 																														cp = 0;
 																														break D;
 																													}
 																													pp = 0;
-																													op =
-																														o[
-																															(np +
-																																64) >>
-																																2
-																														];
-																													while (
-																														1
-																													) {
-																														rp =
-																															o[
-																																op >>
-																																	2
-																															];
-																														if (
-																															!rp
-																														) {
+																													op = o[(np + 64) >> 2];
+																													while (1) {
+																														rp = o[op >> 2];
+																														if (!rp) {
 																															break D;
 																														}
-																														rp =
-																															Vj(
-																																(np +
-																																	4) |
-																																	0,
-																																rp,
-																															);
-																														pp =
-																															(rp +
-																																pp) |
-																															0;
-																														if (
-																															(pp |
-																																0) >
-																															(cp |
-																																0)
-																														) {
+																														rp = Vj((np + 4) | 0, rp);
+																														pp = (rp + pp) | 0;
+																														if ((pp | 0) > (cp | 0)) {
 																															break D;
 																														}
-																														Hj(
-																															a,
-																															(np +
-																																4) |
-																																0,
-																															rp,
-																														);
-																														op =
-																															(op +
-																																4) |
-																															0;
-																														if (
-																															pp >>>
-																																0 <
-																															cp >>>
-																																0
-																														) {
+																														Hj(a, (np + 4) | 0, rp);
+																														op = (op + 4) | 0;
+																														if (pp >>> 0 < cp >>> 0) {
 																															continue;
 																														}
 																														break;
 																													}
 																												}
-																												Kj(
-																													a,
-																													32,
-																													tp,
-																													cp,
-																													qp ^
-																														8192,
-																												);
-																												cp =
-																													(tp |
-																														0) >
-																													(cp |
-																														0)
-																														? tp
-																														: cp;
+																												Kj(a, 32, tp, cp, qp ^ 8192);
+																												cp = (tp | 0) > (cp | 0) ? tp : cp;
 																												continue b;
 																											}
-																											op =
-																												(cp +
-																													1) |
-																												0;
-																											o[
-																												(np +
-																													76) >>
-																													2
-																											] = op;
-																											qp =
-																												p[
-																													(cp +
-																														1) |
-																														0
-																												];
+																											op = (cp + 1) | 0;
+																											o[(np + 76) >> 2] = op;
+																											qp = p[(cp + 1) | 0];
 																											cp = op;
 																											continue;
 																										}
 																										break;
 																									}
-																									switch (
-																										(xp - 1) |
-																										0
-																									) {
+																									switch ((xp - 1) | 0) {
 																										case 21:
 																											break i;
 																										case 23:
@@ -38981,28 +36001,12 @@ var DracoDecoderModule = (function () {
 																								}
 																								cp = 1;
 																								while (1) {
-																									a =
-																										o[
-																											((cp << 2) +
-																												mp) >>
-																												2
-																										];
+																									a = o[((cp << 2) + mp) >> 2];
 																									if (a) {
-																										Jj(
-																											((cp << 3) +
-																												lp) |
-																												0,
-																											a,
-																											dp,
-																										);
+																										Jj(((cp << 3) + lp) | 0, a, dp);
 																										up = 1;
-																										cp =
-																											(cp + 1) |
-																											0;
-																										if (
-																											(cp | 0) !=
-																											10
-																										) {
+																										cp = (cp + 1) | 0;
+																										if ((cp | 0) != 10) {
 																											continue;
 																										}
 																										break a;
@@ -39014,13 +36018,7 @@ var DracoDecoderModule = (function () {
 																									break a;
 																								}
 																								while (1) {
-																									if (
-																										o[
-																											((cp << 2) +
-																												mp) >>
-																												2
-																										]
-																									) {
+																									if (o[((cp << 2) + mp) >> 2]) {
 																										break q;
 																									}
 																									a = cp >>> 0 > 8;
@@ -39035,15 +36033,7 @@ var DracoDecoderModule = (function () {
 																							up = -1;
 																							break a;
 																						}
-																						cp =
-																							l[269](
-																								a,
-																								t[(np + 64) >> 3],
-																								tp,
-																								pp,
-																								qp,
-																								cp,
-																							) | 0;
+																						cp = l[269](a, t[(np + 64) >> 3], tp, pp, qp, cp) | 0;
 																						continue;
 																					}
 																					cp = o[(np + 64) >> 2];
@@ -39063,18 +36053,8 @@ var DracoDecoderModule = (function () {
 																			sp = o[(np + 68) >> 2];
 																			cp = sp;
 																			rp = o[(np + 64) >> 2];
-																			if (
-																				(cp | 0) < -1
-																					? 1
-																					: (cp | 0) <= -1
-																					  ? rp >>> 0 > 4294967295
-																							? 0
-																							: 1
-																					  : 0
-																			) {
-																				cp =
-																					(0 - ((cp + (0 < rp >>> 0)) | 0)) |
-																					0;
+																			if ((cp | 0) < -1 ? 1 : (cp | 0) <= -1 ? (rp >>> 0 > 4294967295 ? 0 : 1) : 0) {
+																				cp = (0 - ((cp + (0 < rp >>> 0)) | 0)) | 0;
 																				rp = (0 - rp) | 0;
 																				o[(np + 64) >> 2] = rp;
 																				o[(np + 68) >> 2] = cp;
@@ -39091,11 +36071,7 @@ var DracoDecoderModule = (function () {
 																			wp = up ? 11062 : 11060;
 																			break g;
 																		}
-																		rp = Lj(
-																			o[(np + 64) >> 2],
-																			o[(np + 68) >> 2],
-																			yp,
-																		);
+																		rp = Lj(o[(np + 64) >> 2], o[(np + 68) >> 2], yp);
 																		if (!(qp & 8)) {
 																			break f;
 																		}
@@ -39107,15 +36083,8 @@ var DracoDecoderModule = (function () {
 																	qp = qp | 8;
 																	cp = 120;
 																}
-																rp = Mj(
-																	o[(np + 64) >> 2],
-																	o[(np + 68) >> 2],
-																	yp,
-																	cp & 32,
-																);
-																if (
-																	!(qp & 8) | !(o[(np + 64) >> 2] | o[(np + 68) >> 2])
-																) {
+																rp = Mj(o[(np + 64) >> 2], o[(np + 68) >> 2], yp, cp & 32);
+																if (!(qp & 8) | !(o[(np + 64) >> 2] | o[(np + 68) >> 2])) {
 																	break f;
 																}
 																wp = ((cp >>> 4) + 11060) | 0;
@@ -39435,11 +36404,7 @@ var DracoDecoderModule = (function () {
 								a: {
 									if (
 										((dq = 1),
-										(eq =
-											((gq = e(0) >>> 0 > 4294967295 ? 0 : 1),
-											(hq = 0),
-											(iq = (Mp | 0) <= -1),
-											iq ? gq : hq)),
+										(eq = ((gq = e(0) >>> 0 > 4294967295 ? 0 : 1), (hq = 0), (iq = (Mp | 0) <= -1), iq ? gq : hq)),
 										(fq = (Mp | 0) < -1),
 										fq ? dq : eq)
 									) {
@@ -39526,12 +36491,7 @@ var DracoDecoderModule = (function () {
 											m[Op | 0] = Sp | p[(Mp + 11552) | 0];
 											mp = (mp - +(Mp | 0)) * 16;
 											Op = (Lp + 1) | 0;
-											if (
-												!(
-													(((Op - ((Qp + 16) | 0)) | 0) != 1) |
-													(mp == 0 ? !(((Jp | 0) > 0) | $p) : 0)
-												)
-											) {
+											if (!((((Op - ((Qp + 16) | 0)) | 0) != 1) | (mp == 0 ? !(((Jp | 0) > 0) | $p) : 0))) {
 												m[(Lp + 1) | 0] = 46;
 												Op = (Lp + 2) | 0;
 											}
@@ -39715,10 +36675,7 @@ var DracoDecoderModule = (function () {
 											break;
 										}
 									}
-									Jp =
-										(((Rp - ((aq | 0) == 102 ? 0 : Pp)) | 0) -
-											(((aq | 0) == 103) & ((Rp | 0) != 0))) |
-										0;
+									Jp = (((Rp - ((aq | 0) == 102 ? 0 : Pp)) | 0) - (((aq | 0) == 103) & ((Rp | 0) != 0))) | 0;
 									if ((Jp | 0) < ((u((Mp - Up) >> 2, 9) + -9) | 0)) {
 										Np = (Jp + 9216) | 0;
 										Sp = ((Np | 0) / 9) | 0;
@@ -39745,14 +36702,7 @@ var DracoDecoderModule = (function () {
 												break i;
 											}
 											Wp = Jp >>> 1;
-											Yp =
-												Np >>> 0 < Wp >>> 0
-													? 0.5
-													: (Mp | 0) == (Zp | 0)
-													  ? (Wp | 0) == (Np | 0)
-															? 1
-															: 1.5
-													  : 1.5;
+											Yp = Np >>> 0 < Wp >>> 0 ? 0.5 : (Mp | 0) == (Zp | 0) ? ((Wp | 0) == (Np | 0) ? 1 : 1.5) : 1.5;
 											mp = Vp & 1 ? 9007199254740994 : 9007199254740992;
 											if (!(!_p | (p[$p | 0] != 45))) {
 												Yp = -Yp;
@@ -40615,10 +37565,7 @@ var DracoDecoderModule = (function () {
 									}
 									Jq = 0;
 									Iq = 2146435072;
-									if (
-										(((Uq | 0) == 1140785151) & (Tq >>> 0 > 4294967295)) |
-										(Uq >>> 0 > 1140785151)
-									) {
+									if ((((Uq | 0) == 1140785151) & (Tq >>> 0 > 4294967295)) | (Uq >>> 0 > 1140785151)) {
 										break a;
 									}
 									Iq = 0;
@@ -40637,8 +37584,7 @@ var DracoDecoderModule = (function () {
 									Gq = a;
 									Cq =
 										o[Sq >> 2] |
-										(((o[(Sq + 16) >> 2] | o[(Sq + 24) >> 2]) != 0) |
-											((o[(Sq + 20) >> 2] | o[(Sq + 28) >> 2]) != 0));
+										(((o[(Sq + 16) >> 2] | o[(Sq + 24) >> 2]) != 0) | ((o[(Sq + 20) >> 2] | o[(Sq + 28) >> 2]) != 0));
 									if ((((a | 0) == 134217728) & (Cq >>> 0 >= 1)) | (a >>> 0 > 134217728)) {
 										a = (Jq + 1) | 0;
 										if (a >>> 0 < 1) {
@@ -42151,9 +39097,7 @@ var DracoDecoderModule = (function () {
 																					b = (b + 13192) | 0;
 																					l: {
 																						if ((c | 0) == (b | 0)) {
-																							(m = 13152),
-																								(n = Zl(d) & f),
-																								(o[m >> 2] = n);
+																							(m = 13152), (n = Zl(d) & f), (o[m >> 2] = n);
 																							break l;
 																						}
 																						o[(c + 12) >> 2] = b;
@@ -42162,8 +39106,7 @@ var DracoDecoderModule = (function () {
 																					b = d << 3;
 																					o[(e + 4) >> 2] = b | 3;
 																					b = (b + e) | 0;
-																					o[(b + 4) >> 2] =
-																						o[(b + 4) >> 2] | 1;
+																					o[(b + 4) >> 2] = o[(b + 4) >> 2] | 1;
 																					break a;
 																				}
 																				k = o[3290];
@@ -42249,12 +39192,7 @@ var DracoDecoderModule = (function () {
 																				c = c | a;
 																				b = b >>> a;
 																				a = (b >>> 1) & 1;
-																				b =
-																					o[
-																						((((c | a) + (b >>> a)) << 2) +
-																							13456) >>
-																							2
-																					];
+																				b = o[((((c | a) + (b >>> a)) << 2) + 13456) >> 2];
 																				d = ((o[(b + 4) >> 2] & -8) - h) | 0;
 																				c = b;
 																				while (1) {
@@ -42266,10 +39204,7 @@ var DracoDecoderModule = (function () {
 																								break o;
 																							}
 																						}
-																						c =
-																							((o[(a + 4) >> 2] & -8) -
-																								h) |
-																							0;
+																						c = ((o[(a + 4) >> 2] & -8) - h) | 0;
 																						e = c >>> 0 < d >>> 0;
 																						d = e ? c : d;
 																						b = e ? a : b;
@@ -42338,15 +39273,8 @@ var DracoDecoderModule = (function () {
 																				d = ((a + 520192) >>> 16) & 4;
 																				a = a << d;
 																				c = ((a + 245760) >>> 16) & 2;
-																				a =
-																					(((a << c) >>> 15) -
-																						(c | (b | d))) |
-																					0;
-																				g =
-																					(((a << 1) |
-																						((h >>> (a + 21)) & 1)) +
-																						28) |
-																					0;
+																				a = (((a << c) >>> 15) - (c | (b | d))) | 0;
+																				g = (((a << 1) | ((h >>> (a + 21)) & 1)) + 28) | 0;
 																			}
 																			c = (0 - h) | 0;
 																			d = o[((g << 2) + 13456) >> 2];
@@ -42357,23 +39285,12 @@ var DracoDecoderModule = (function () {
 																							a = 0;
 																							break s;
 																						}
-																						b =
-																							h <<
-																							((g | 0) == 31
-																								? 0
-																								: (25 - (g >>> 1)) | 0);
+																						b = h << ((g | 0) == 31 ? 0 : (25 - (g >>> 1)) | 0);
 																						a = 0;
 																						while (1) {
 																							t: {
-																								f =
-																									((o[(d + 4) >> 2] &
-																										-8) -
-																										h) |
-																									0;
-																								if (
-																									f >>> 0 >=
-																									c >>> 0
-																								) {
+																								f = ((o[(d + 4) >> 2] & -8) - h) | 0;
+																								if (f >>> 0 >= c >>> 0) {
 																									break t;
 																								}
 																								e = d;
@@ -42386,20 +39303,8 @@ var DracoDecoderModule = (function () {
 																								break r;
 																							}
 																							f = o[(d + 20) >> 2];
-																							d =
-																								o[
-																									(((((b >>> 29) &
-																										4) +
-																										d) |
-																										0) +
-																										16) >>
-																										2
-																								];
-																							a = f
-																								? (f | 0) == (d | 0)
-																									? a
-																									: f
-																								: a;
+																							d = o[(((((b >>> 29) & 4) + d) | 0) + 16) >> 2];
+																							a = f ? ((f | 0) == (d | 0) ? a : f) : a;
 																							b = b << ((d | 0) != 0);
 																							if (d) {
 																								continue;
@@ -42427,23 +39332,14 @@ var DracoDecoderModule = (function () {
 																						d = d | a;
 																						b = b >>> a;
 																						a = (b >>> 1) & 1;
-																						a =
-																							o[
-																								((((d | a) +
-																									(b >>> a)) <<
-																									2) +
-																									13456) >>
-																									2
-																							];
+																						a = o[((((d | a) + (b >>> a)) << 2) + 13456) >> 2];
 																					}
 																					if (!a) {
 																						break q;
 																					}
 																				}
 																				while (1) {
-																					b =
-																						((o[(a + 4) >> 2] & -8) - h) |
-																						0;
+																					b = ((o[(a + 4) >> 2] & -8) - h) | 0;
 																					d = b >>> 0 < c >>> 0;
 																					c = d ? b : c;
 																					e = d ? a : e;
@@ -42557,10 +39453,7 @@ var DracoDecoderModule = (function () {
 																		if (e) {
 																			d = o[3396];
 																			b = (d + c) | 0;
-																			if (
-																				(b >>> 0 <= d >>> 0) |
-																				(b >>> 0 > e >>> 0)
-																			) {
+																			if ((b >>> 0 <= d >>> 0) | (b >>> 0 > e >>> 0)) {
 																				break a;
 																			}
 																		}
@@ -42574,13 +39467,7 @@ var DracoDecoderModule = (function () {
 																					a = 13600;
 																					while (1) {
 																						b = o[a >> 2];
-																						if (
-																							(b + o[(a + 4) >> 2]) >>>
-																								0 >
-																							d >>> 0
-																								? b >>> 0 <= d >>> 0
-																								: 0
-																						) {
+																						if ((b + o[(a + 4) >> 2]) >>> 0 > d >>> 0 ? b >>> 0 <= d >>> 0 : 0) {
 																							break w;
 																						}
 																						a = o[(a + 8) >> 2];
@@ -42598,25 +39485,16 @@ var DracoDecoderModule = (function () {
 																				d = o[3407];
 																				a = (d + -1) | 0;
 																				if (a & b) {
-																					f =
-																						(((c - b) | 0) +
-																							((a + b) & (0 - d))) |
-																						0;
+																					f = (((c - b) | 0) + ((a + b) & (0 - d))) | 0;
 																				}
-																				if (
-																					(f >>> 0 <= h >>> 0) |
-																					(f >>> 0 > 2147483646)
-																				) {
+																				if ((f >>> 0 <= h >>> 0) | (f >>> 0 > 2147483646)) {
 																					break g;
 																				}
 																				e = o[3398];
 																				if (e) {
 																					d = o[3396];
 																					a = (d + f) | 0;
-																					if (
-																						(a >>> 0 <= d >>> 0) |
-																						(a >>> 0 > e >>> 0)
-																					) {
+																					if ((a >>> 0 <= d >>> 0) | (a >>> 0 > e >>> 0)) {
 																						break g;
 																					}
 																				}
@@ -42631,22 +39509,13 @@ var DracoDecoderModule = (function () {
 																				break g;
 																			}
 																			b = vl(f);
-																			if (
-																				(b | 0) ==
-																				((o[a >> 2] + o[(a + 4) >> 2]) | 0)
-																			) {
+																			if ((b | 0) == ((o[a >> 2] + o[(a + 4) >> 2]) | 0)) {
 																				break h;
 																			}
 																			a = b;
 																		}
 																		b = a;
-																		if (
-																			!(
-																				((h + 48) >>> 0 <= f >>> 0) |
-																				(f >>> 0 > 2147483646) |
-																				((a | 0) == -1)
-																			)
-																		) {
+																		if (!(((h + 48) >>> 0 <= f >>> 0) | (f >>> 0 > 2147483646) | ((a | 0) == -1))) {
 																			a = o[3408];
 																			a = (a + ((i - f) | 0)) & (0 - a);
 																			if (a >>> 0 > 2147483646) {
@@ -42746,11 +39615,7 @@ var DracoDecoderModule = (function () {
 															o[3295] = o[3410];
 															break x;
 														}
-														if (
-															(p[(a + 12) | 0] & 8) |
-															(b >>> 0 <= d >>> 0) |
-															(e >>> 0 > d >>> 0)
-														) {
+														if ((p[(a + 12) | 0] & 8) | (b >>> 0 <= d >>> 0) | (e >>> 0 > d >>> 0)) {
 															break y;
 														}
 														o[(a + 4) >> 2] = c + f;
@@ -42836,9 +39701,7 @@ var DracoDecoderModule = (function () {
 																				c = c >>> 3;
 																				d = o[(b + 12) >> 2];
 																				if ((d | 0) == (e | 0)) {
-																					(m = 13152),
-																						(n = o[3288] & Zl(c)),
-																						(o[m >> 2] = n);
+																					(m = 13152), (n = o[3288] & Zl(c)), (o[m >> 2] = n);
 																					break G;
 																				}
 																				o[(e + 12) >> 2] = d;
@@ -42896,18 +39759,10 @@ var DracoDecoderModule = (function () {
 																					if (f) {
 																						break J;
 																					}
-																					(m = 13156),
-																						(n = o[3289] & Zl(d)),
-																						(o[m >> 2] = n);
+																					(m = 13156), (n = o[3289] & Zl(d)), (o[m >> 2] = n);
 																					break G;
 																				}
-																				o[
-																					(k +
-																						(o[(k + 16) >> 2] == (b | 0)
-																							? 16
-																							: 20)) >>
-																						2
-																				] = f;
+																				o[(k + (o[(k + 16) >> 2] == (b | 0) ? 16 : 20)) >> 2] = f;
 																				if (!f) {
 																					break G;
 																				}
@@ -42968,9 +39823,7 @@ var DracoDecoderModule = (function () {
 																		c = c << f;
 																		e = ((c + 245760) >>> 16) & 2;
 																		c = (((c << e) >>> 15) - (e | (d | f))) | 0;
-																		c =
-																			(((c << 1) | ((a >>> (c + 21)) & 1)) + 28) |
-																			0;
+																		c = (((c << 1) | ((a >>> (c + 21)) & 1)) + 28) | 0;
 																	}
 																	o[(b + 28) >> 2] = c;
 																	o[(g + 16) >> 2] = 0;
@@ -42985,9 +39838,7 @@ var DracoDecoderModule = (function () {
 																			o[(g + 24) >> 2] = e;
 																			break M;
 																		}
-																		d =
-																			a <<
-																			((c | 0) == 31 ? 0 : (25 - (c >>> 1)) | 0);
+																		d = a << ((c | 0) == 31 ? 0 : (25 - (c >>> 1)) | 0);
 																		b = o[e >> 2];
 																		while (1) {
 																			c = b;
@@ -43019,10 +39870,7 @@ var DracoDecoderModule = (function () {
 																o[(a + 4) >> 2] = c | 1;
 																o[(((b + e) | 0) + 4) >> 2] = 40;
 																o[3295] = o[3410];
-																a =
-																	(((g + ((g + -39) & 7 ? (39 - g) & 7 : 0)) | 0) +
-																		-47) |
-																	0;
+																a = (((g + ((g + -39) & 7 ? (39 - g) & 7 : 0)) | 0) + -47) | 0;
 																c = a >>> 0 < (d + 16) >>> 0 ? d : a;
 																o[(c + 4) >> 2] = 27;
 																a = o[3403];
@@ -44264,10 +41112,7 @@ var DracoDecoderModule = (function () {
 																			}
 																			break b;
 																		}
-																		if (
-																			(((A | 0) == 1) & (z >>> 0 >= 0)) |
-																			(A >>> 0 > 1)
-																		) {
+																		if ((((A | 0) == 1) & (z >>> 0 >= 0)) | (A >>> 0 > 1)) {
 																			break b;
 																		}
 																		o = ((a >>> 0) / (z >>> 0)) | 0;
@@ -45367,9 +42212,7 @@ var DracoDecoderModule = (function () {
 		}
 		var dataURIPrefix = 'data:application/octet-stream;base64,';
 		function isDataURI(filename) {
-			return String.prototype.startsWith
-				? filename.startsWith(dataURIPrefix)
-				: filename.indexOf(dataURIPrefix) === 0;
+			return String.prototype.startsWith ? filename.startsWith(dataURIPrefix) : filename.indexOf(dataURIPrefix) === 0;
 		}
 		var wasmBinaryFile = 'draco_decoder.wasm';
 		if (!isDataURI(wasmBinaryFile)) {
@@ -45567,10 +42410,10 @@ var DracoDecoderModule = (function () {
 					PWD: '/',
 					HOME: '/home/web_user',
 					LANG:
-						(
-							(typeof navigator === 'object' && navigator.languages && navigator.languages[0]) ||
-							'C'
-						).replace('-', '_') + '.UTF-8',
+						((typeof navigator === 'object' && navigator.languages && navigator.languages[0]) || 'C').replace(
+							'-',
+							'_',
+						) + '.UTF-8',
 					_: thisProgram,
 				};
 				for (var x in ENV) {
@@ -45757,13 +42600,7 @@ var DracoDecoderModule = (function () {
 					if (ASSERTIONS) {
 						assert(
 							false,
-							'Character code ' +
-								chr +
-								' (' +
-								String.fromCharCode(chr) +
-								')  at offset ' +
-								i +
-								' not in 0x00-0xFF.',
+							'Character code ' + chr + ' (' + String.fromCharCode(chr) + ')  at offset ' + i + ' not in 0x00-0xFF.',
 						);
 					}
 					chr &= 255;
@@ -45870,31 +42707,26 @@ var DracoDecoderModule = (function () {
 			function () {
 				return Module['asm']['emscripten_bind_DracoUInt16Array_GetValue_1'].apply(null, arguments);
 			});
-		var _emscripten_bind_DracoUInt16Array_size_0 = (Module['_emscripten_bind_DracoUInt16Array_size_0'] =
-			function () {
-				return Module['asm']['emscripten_bind_DracoUInt16Array_size_0'].apply(null, arguments);
-			});
-		var _emscripten_bind_DracoUInt16Array___destroy___0 = (Module[
-			'_emscripten_bind_DracoUInt16Array___destroy___0'
-		] = function () {
-			return Module['asm']['emscripten_bind_DracoUInt16Array___destroy___0'].apply(null, arguments);
+		var _emscripten_bind_DracoUInt16Array_size_0 = (Module['_emscripten_bind_DracoUInt16Array_size_0'] = function () {
+			return Module['asm']['emscripten_bind_DracoUInt16Array_size_0'].apply(null, arguments);
 		});
-		var _emscripten_bind_PointCloud_PointCloud_0 = (Module['_emscripten_bind_PointCloud_PointCloud_0'] =
+		var _emscripten_bind_DracoUInt16Array___destroy___0 = (Module['_emscripten_bind_DracoUInt16Array___destroy___0'] =
 			function () {
-				return Module['asm']['emscripten_bind_PointCloud_PointCloud_0'].apply(null, arguments);
+				return Module['asm']['emscripten_bind_DracoUInt16Array___destroy___0'].apply(null, arguments);
 			});
+		var _emscripten_bind_PointCloud_PointCloud_0 = (Module['_emscripten_bind_PointCloud_PointCloud_0'] = function () {
+			return Module['asm']['emscripten_bind_PointCloud_PointCloud_0'].apply(null, arguments);
+		});
 		var _emscripten_bind_PointCloud_num_attributes_0 = (Module['_emscripten_bind_PointCloud_num_attributes_0'] =
 			function () {
 				return Module['asm']['emscripten_bind_PointCloud_num_attributes_0'].apply(null, arguments);
 			});
-		var _emscripten_bind_PointCloud_num_points_0 = (Module['_emscripten_bind_PointCloud_num_points_0'] =
-			function () {
-				return Module['asm']['emscripten_bind_PointCloud_num_points_0'].apply(null, arguments);
-			});
-		var _emscripten_bind_PointCloud___destroy___0 = (Module['_emscripten_bind_PointCloud___destroy___0'] =
-			function () {
-				return Module['asm']['emscripten_bind_PointCloud___destroy___0'].apply(null, arguments);
-			});
+		var _emscripten_bind_PointCloud_num_points_0 = (Module['_emscripten_bind_PointCloud_num_points_0'] = function () {
+			return Module['asm']['emscripten_bind_PointCloud_num_points_0'].apply(null, arguments);
+		});
+		var _emscripten_bind_PointCloud___destroy___0 = (Module['_emscripten_bind_PointCloud___destroy___0'] = function () {
+			return Module['asm']['emscripten_bind_PointCloud___destroy___0'].apply(null, arguments);
+		});
 		var _emscripten_bind_DracoUInt8Array_DracoUInt8Array_0 = (Module[
 			'_emscripten_bind_DracoUInt8Array_DracoUInt8Array_0'
 		] = function () {
@@ -45920,15 +42752,13 @@ var DracoDecoderModule = (function () {
 			function () {
 				return Module['asm']['emscripten_bind_DracoUInt32Array_GetValue_1'].apply(null, arguments);
 			});
-		var _emscripten_bind_DracoUInt32Array_size_0 = (Module['_emscripten_bind_DracoUInt32Array_size_0'] =
-			function () {
-				return Module['asm']['emscripten_bind_DracoUInt32Array_size_0'].apply(null, arguments);
-			});
-		var _emscripten_bind_DracoUInt32Array___destroy___0 = (Module[
-			'_emscripten_bind_DracoUInt32Array___destroy___0'
-		] = function () {
-			return Module['asm']['emscripten_bind_DracoUInt32Array___destroy___0'].apply(null, arguments);
+		var _emscripten_bind_DracoUInt32Array_size_0 = (Module['_emscripten_bind_DracoUInt32Array_size_0'] = function () {
+			return Module['asm']['emscripten_bind_DracoUInt32Array_size_0'].apply(null, arguments);
 		});
+		var _emscripten_bind_DracoUInt32Array___destroy___0 = (Module['_emscripten_bind_DracoUInt32Array___destroy___0'] =
+			function () {
+				return Module['asm']['emscripten_bind_DracoUInt32Array___destroy___0'].apply(null, arguments);
+			});
 		var _emscripten_bind_AttributeOctahedronTransform_AttributeOctahedronTransform_0 = (Module[
 			'_emscripten_bind_AttributeOctahedronTransform_AttributeOctahedronTransform_0'
 		] = function () {
@@ -45940,29 +42770,22 @@ var DracoDecoderModule = (function () {
 		var _emscripten_bind_AttributeOctahedronTransform_InitFromAttribute_1 = (Module[
 			'_emscripten_bind_AttributeOctahedronTransform_InitFromAttribute_1'
 		] = function () {
-			return Module['asm']['emscripten_bind_AttributeOctahedronTransform_InitFromAttribute_1'].apply(
-				null,
-				arguments,
-			);
+			return Module['asm']['emscripten_bind_AttributeOctahedronTransform_InitFromAttribute_1'].apply(null, arguments);
 		});
 		var _emscripten_bind_AttributeOctahedronTransform_quantization_bits_0 = (Module[
 			'_emscripten_bind_AttributeOctahedronTransform_quantization_bits_0'
 		] = function () {
-			return Module['asm']['emscripten_bind_AttributeOctahedronTransform_quantization_bits_0'].apply(
-				null,
-				arguments,
-			);
+			return Module['asm']['emscripten_bind_AttributeOctahedronTransform_quantization_bits_0'].apply(null, arguments);
 		});
 		var _emscripten_bind_AttributeOctahedronTransform___destroy___0 = (Module[
 			'_emscripten_bind_AttributeOctahedronTransform___destroy___0'
 		] = function () {
 			return Module['asm']['emscripten_bind_AttributeOctahedronTransform___destroy___0'].apply(null, arguments);
 		});
-		var _emscripten_bind_PointAttribute_PointAttribute_0 = (Module[
-			'_emscripten_bind_PointAttribute_PointAttribute_0'
-		] = function () {
-			return Module['asm']['emscripten_bind_PointAttribute_PointAttribute_0'].apply(null, arguments);
-		});
+		var _emscripten_bind_PointAttribute_PointAttribute_0 = (Module['_emscripten_bind_PointAttribute_PointAttribute_0'] =
+			function () {
+				return Module['asm']['emscripten_bind_PointAttribute_PointAttribute_0'].apply(null, arguments);
+			});
 		var _emscripten_bind_PointAttribute_size_0 = (Module['_emscripten_bind_PointAttribute_size_0'] = function () {
 			return Module['asm']['emscripten_bind_PointAttribute_size_0'].apply(null, arguments);
 		});
@@ -45971,20 +42794,18 @@ var DracoDecoderModule = (function () {
 		] = function () {
 			return Module['asm']['emscripten_bind_PointAttribute_GetAttributeTransformData_0'].apply(null, arguments);
 		});
-		var _emscripten_bind_PointAttribute_attribute_type_0 = (Module[
-			'_emscripten_bind_PointAttribute_attribute_type_0'
-		] = function () {
-			return Module['asm']['emscripten_bind_PointAttribute_attribute_type_0'].apply(null, arguments);
-		});
+		var _emscripten_bind_PointAttribute_attribute_type_0 = (Module['_emscripten_bind_PointAttribute_attribute_type_0'] =
+			function () {
+				return Module['asm']['emscripten_bind_PointAttribute_attribute_type_0'].apply(null, arguments);
+			});
 		var _emscripten_bind_PointAttribute_data_type_0 = (Module['_emscripten_bind_PointAttribute_data_type_0'] =
 			function () {
 				return Module['asm']['emscripten_bind_PointAttribute_data_type_0'].apply(null, arguments);
 			});
-		var _emscripten_bind_PointAttribute_num_components_0 = (Module[
-			'_emscripten_bind_PointAttribute_num_components_0'
-		] = function () {
-			return Module['asm']['emscripten_bind_PointAttribute_num_components_0'].apply(null, arguments);
-		});
+		var _emscripten_bind_PointAttribute_num_components_0 = (Module['_emscripten_bind_PointAttribute_num_components_0'] =
+			function () {
+				return Module['asm']['emscripten_bind_PointAttribute_num_components_0'].apply(null, arguments);
+			});
 		var _emscripten_bind_PointAttribute_normalized_0 = (Module['_emscripten_bind_PointAttribute_normalized_0'] =
 			function () {
 				return Module['asm']['emscripten_bind_PointAttribute_normalized_0'].apply(null, arguments);
@@ -46008,10 +42829,7 @@ var DracoDecoderModule = (function () {
 		var _emscripten_bind_AttributeTransformData_AttributeTransformData_0 = (Module[
 			'_emscripten_bind_AttributeTransformData_AttributeTransformData_0'
 		] = function () {
-			return Module['asm']['emscripten_bind_AttributeTransformData_AttributeTransformData_0'].apply(
-				null,
-				arguments,
-			);
+			return Module['asm']['emscripten_bind_AttributeTransformData_AttributeTransformData_0'].apply(null, arguments);
 		});
 		var _emscripten_bind_AttributeTransformData_transform_type_0 = (Module[
 			'_emscripten_bind_AttributeTransformData_transform_type_0'
@@ -46026,25 +42844,20 @@ var DracoDecoderModule = (function () {
 		var _emscripten_bind_AttributeQuantizationTransform_AttributeQuantizationTransform_0 = (Module[
 			'_emscripten_bind_AttributeQuantizationTransform_AttributeQuantizationTransform_0'
 		] = function () {
-			return Module['asm'][
-				'emscripten_bind_AttributeQuantizationTransform_AttributeQuantizationTransform_0'
-			].apply(null, arguments);
+			return Module['asm']['emscripten_bind_AttributeQuantizationTransform_AttributeQuantizationTransform_0'].apply(
+				null,
+				arguments,
+			);
 		});
 		var _emscripten_bind_AttributeQuantizationTransform_InitFromAttribute_1 = (Module[
 			'_emscripten_bind_AttributeQuantizationTransform_InitFromAttribute_1'
 		] = function () {
-			return Module['asm']['emscripten_bind_AttributeQuantizationTransform_InitFromAttribute_1'].apply(
-				null,
-				arguments,
-			);
+			return Module['asm']['emscripten_bind_AttributeQuantizationTransform_InitFromAttribute_1'].apply(null, arguments);
 		});
 		var _emscripten_bind_AttributeQuantizationTransform_quantization_bits_0 = (Module[
 			'_emscripten_bind_AttributeQuantizationTransform_quantization_bits_0'
 		] = function () {
-			return Module['asm']['emscripten_bind_AttributeQuantizationTransform_quantization_bits_0'].apply(
-				null,
-				arguments,
-			);
+			return Module['asm']['emscripten_bind_AttributeQuantizationTransform_quantization_bits_0'].apply(null, arguments);
 		});
 		var _emscripten_bind_AttributeQuantizationTransform_min_value_1 = (Module[
 			'_emscripten_bind_AttributeQuantizationTransform_min_value_1'
@@ -46061,11 +42874,10 @@ var DracoDecoderModule = (function () {
 		] = function () {
 			return Module['asm']['emscripten_bind_AttributeQuantizationTransform___destroy___0'].apply(null, arguments);
 		});
-		var _emscripten_bind_DracoInt8Array_DracoInt8Array_0 = (Module[
-			'_emscripten_bind_DracoInt8Array_DracoInt8Array_0'
-		] = function () {
-			return Module['asm']['emscripten_bind_DracoInt8Array_DracoInt8Array_0'].apply(null, arguments);
-		});
+		var _emscripten_bind_DracoInt8Array_DracoInt8Array_0 = (Module['_emscripten_bind_DracoInt8Array_DracoInt8Array_0'] =
+			function () {
+				return Module['asm']['emscripten_bind_DracoInt8Array_DracoInt8Array_0'].apply(null, arguments);
+			});
 		var _emscripten_bind_DracoInt8Array_GetValue_1 = (Module['_emscripten_bind_DracoInt8Array_GetValue_1'] =
 			function () {
 				return Module['asm']['emscripten_bind_DracoInt8Array_GetValue_1'].apply(null, arguments);
@@ -46109,11 +42921,10 @@ var DracoDecoderModule = (function () {
 			function () {
 				return Module['asm']['emscripten_bind_MetadataQuerier_NumEntries_1'].apply(null, arguments);
 			});
-		var _emscripten_bind_MetadataQuerier_GetEntryName_2 = (Module[
-			'_emscripten_bind_MetadataQuerier_GetEntryName_2'
-		] = function () {
-			return Module['asm']['emscripten_bind_MetadataQuerier_GetEntryName_2'].apply(null, arguments);
-		});
+		var _emscripten_bind_MetadataQuerier_GetEntryName_2 = (Module['_emscripten_bind_MetadataQuerier_GetEntryName_2'] =
+			function () {
+				return Module['asm']['emscripten_bind_MetadataQuerier_GetEntryName_2'].apply(null, arguments);
+			});
 		var _emscripten_bind_MetadataQuerier___destroy___0 = (Module['_emscripten_bind_MetadataQuerier___destroy___0'] =
 			function () {
 				return Module['asm']['emscripten_bind_MetadataQuerier___destroy___0'].apply(null, arguments);
@@ -46143,25 +42954,22 @@ var DracoDecoderModule = (function () {
 			function () {
 				return Module['asm']['emscripten_bind_DracoFloat32Array_GetValue_1'].apply(null, arguments);
 			});
-		var _emscripten_bind_DracoFloat32Array_size_0 = (Module['_emscripten_bind_DracoFloat32Array_size_0'] =
-			function () {
-				return Module['asm']['emscripten_bind_DracoFloat32Array_size_0'].apply(null, arguments);
-			});
-		var _emscripten_bind_DracoFloat32Array___destroy___0 = (Module[
-			'_emscripten_bind_DracoFloat32Array___destroy___0'
-		] = function () {
-			return Module['asm']['emscripten_bind_DracoFloat32Array___destroy___0'].apply(null, arguments);
+		var _emscripten_bind_DracoFloat32Array_size_0 = (Module['_emscripten_bind_DracoFloat32Array_size_0'] = function () {
+			return Module['asm']['emscripten_bind_DracoFloat32Array_size_0'].apply(null, arguments);
 		});
+		var _emscripten_bind_DracoFloat32Array___destroy___0 = (Module['_emscripten_bind_DracoFloat32Array___destroy___0'] =
+			function () {
+				return Module['asm']['emscripten_bind_DracoFloat32Array___destroy___0'].apply(null, arguments);
+			});
 		var _emscripten_bind_GeometryAttribute_GeometryAttribute_0 = (Module[
 			'_emscripten_bind_GeometryAttribute_GeometryAttribute_0'
 		] = function () {
 			return Module['asm']['emscripten_bind_GeometryAttribute_GeometryAttribute_0'].apply(null, arguments);
 		});
-		var _emscripten_bind_GeometryAttribute___destroy___0 = (Module[
-			'_emscripten_bind_GeometryAttribute___destroy___0'
-		] = function () {
-			return Module['asm']['emscripten_bind_GeometryAttribute___destroy___0'].apply(null, arguments);
-		});
+		var _emscripten_bind_GeometryAttribute___destroy___0 = (Module['_emscripten_bind_GeometryAttribute___destroy___0'] =
+			function () {
+				return Module['asm']['emscripten_bind_GeometryAttribute___destroy___0'].apply(null, arguments);
+			});
 		var _emscripten_bind_DecoderBuffer_DecoderBuffer_0 = (Module['_emscripten_bind_DecoderBuffer_DecoderBuffer_0'] =
 			function () {
 				return Module['asm']['emscripten_bind_DecoderBuffer_DecoderBuffer_0'].apply(null, arguments);
@@ -46190,15 +42998,13 @@ var DracoDecoderModule = (function () {
 			function () {
 				return Module['asm']['emscripten_bind_Decoder_DecodeBufferToMesh_2'].apply(null, arguments);
 			});
-		var _emscripten_bind_Decoder_GetAttributeId_2 = (Module['_emscripten_bind_Decoder_GetAttributeId_2'] =
-			function () {
-				return Module['asm']['emscripten_bind_Decoder_GetAttributeId_2'].apply(null, arguments);
-			});
-		var _emscripten_bind_Decoder_GetAttributeIdByName_2 = (Module[
-			'_emscripten_bind_Decoder_GetAttributeIdByName_2'
-		] = function () {
-			return Module['asm']['emscripten_bind_Decoder_GetAttributeIdByName_2'].apply(null, arguments);
+		var _emscripten_bind_Decoder_GetAttributeId_2 = (Module['_emscripten_bind_Decoder_GetAttributeId_2'] = function () {
+			return Module['asm']['emscripten_bind_Decoder_GetAttributeId_2'].apply(null, arguments);
 		});
+		var _emscripten_bind_Decoder_GetAttributeIdByName_2 = (Module['_emscripten_bind_Decoder_GetAttributeIdByName_2'] =
+			function () {
+				return Module['asm']['emscripten_bind_Decoder_GetAttributeIdByName_2'].apply(null, arguments);
+			});
 		var _emscripten_bind_Decoder_GetAttributeIdByMetadataEntry_3 = (Module[
 			'_emscripten_bind_Decoder_GetAttributeIdByMetadataEntry_3'
 		] = function () {
@@ -46215,11 +43021,10 @@ var DracoDecoderModule = (function () {
 		var _emscripten_bind_Decoder_GetMetadata_1 = (Module['_emscripten_bind_Decoder_GetMetadata_1'] = function () {
 			return Module['asm']['emscripten_bind_Decoder_GetMetadata_1'].apply(null, arguments);
 		});
-		var _emscripten_bind_Decoder_GetAttributeMetadata_2 = (Module[
-			'_emscripten_bind_Decoder_GetAttributeMetadata_2'
-		] = function () {
-			return Module['asm']['emscripten_bind_Decoder_GetAttributeMetadata_2'].apply(null, arguments);
-		});
+		var _emscripten_bind_Decoder_GetAttributeMetadata_2 = (Module['_emscripten_bind_Decoder_GetAttributeMetadata_2'] =
+			function () {
+				return Module['asm']['emscripten_bind_Decoder_GetAttributeMetadata_2'].apply(null, arguments);
+			});
 		var _emscripten_bind_Decoder_GetFaceFromMesh_3 = (Module['_emscripten_bind_Decoder_GetFaceFromMesh_3'] =
 			function () {
 				return Module['asm']['emscripten_bind_Decoder_GetFaceFromMesh_3'].apply(null, arguments);
@@ -46369,34 +43174,27 @@ var DracoDecoderModule = (function () {
 		var _emscripten_enum_draco_DataType_DT_INT8 = (Module['_emscripten_enum_draco_DataType_DT_INT8'] = function () {
 			return Module['asm']['emscripten_enum_draco_DataType_DT_INT8'].apply(null, arguments);
 		});
-		var _emscripten_enum_draco_DataType_DT_UINT8 = (Module['_emscripten_enum_draco_DataType_DT_UINT8'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_UINT8'].apply(null, arguments);
-			});
-		var _emscripten_enum_draco_DataType_DT_INT16 = (Module['_emscripten_enum_draco_DataType_DT_INT16'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_INT16'].apply(null, arguments);
-			});
-		var _emscripten_enum_draco_DataType_DT_UINT16 = (Module['_emscripten_enum_draco_DataType_DT_UINT16'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_UINT16'].apply(null, arguments);
-			});
-		var _emscripten_enum_draco_DataType_DT_INT32 = (Module['_emscripten_enum_draco_DataType_DT_INT32'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_INT32'].apply(null, arguments);
-			});
-		var _emscripten_enum_draco_DataType_DT_UINT32 = (Module['_emscripten_enum_draco_DataType_DT_UINT32'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_UINT32'].apply(null, arguments);
-			});
-		var _emscripten_enum_draco_DataType_DT_INT64 = (Module['_emscripten_enum_draco_DataType_DT_INT64'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_INT64'].apply(null, arguments);
-			});
-		var _emscripten_enum_draco_DataType_DT_UINT64 = (Module['_emscripten_enum_draco_DataType_DT_UINT64'] =
-			function () {
-				return Module['asm']['emscripten_enum_draco_DataType_DT_UINT64'].apply(null, arguments);
-			});
+		var _emscripten_enum_draco_DataType_DT_UINT8 = (Module['_emscripten_enum_draco_DataType_DT_UINT8'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_UINT8'].apply(null, arguments);
+		});
+		var _emscripten_enum_draco_DataType_DT_INT16 = (Module['_emscripten_enum_draco_DataType_DT_INT16'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_INT16'].apply(null, arguments);
+		});
+		var _emscripten_enum_draco_DataType_DT_UINT16 = (Module['_emscripten_enum_draco_DataType_DT_UINT16'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_UINT16'].apply(null, arguments);
+		});
+		var _emscripten_enum_draco_DataType_DT_INT32 = (Module['_emscripten_enum_draco_DataType_DT_INT32'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_INT32'].apply(null, arguments);
+		});
+		var _emscripten_enum_draco_DataType_DT_UINT32 = (Module['_emscripten_enum_draco_DataType_DT_UINT32'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_UINT32'].apply(null, arguments);
+		});
+		var _emscripten_enum_draco_DataType_DT_INT64 = (Module['_emscripten_enum_draco_DataType_DT_INT64'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_INT64'].apply(null, arguments);
+		});
+		var _emscripten_enum_draco_DataType_DT_UINT64 = (Module['_emscripten_enum_draco_DataType_DT_UINT64'] = function () {
+			return Module['asm']['emscripten_enum_draco_DataType_DT_UINT64'].apply(null, arguments);
+		});
 		var _emscripten_enum_draco_DataType_DT_FLOAT32 = (Module['_emscripten_enum_draco_DataType_DT_FLOAT32'] =
 			function () {
 				return Module['asm']['emscripten_enum_draco_DataType_DT_FLOAT32'].apply(null, arguments);
@@ -46415,10 +43213,7 @@ var DracoDecoderModule = (function () {
 		var _emscripten_enum_draco_EncodedGeometryType_INVALID_GEOMETRY_TYPE = (Module[
 			'_emscripten_enum_draco_EncodedGeometryType_INVALID_GEOMETRY_TYPE'
 		] = function () {
-			return Module['asm']['emscripten_enum_draco_EncodedGeometryType_INVALID_GEOMETRY_TYPE'].apply(
-				null,
-				arguments,
-			);
+			return Module['asm']['emscripten_enum_draco_EncodedGeometryType_INVALID_GEOMETRY_TYPE'].apply(null, arguments);
 		});
 		var _emscripten_enum_draco_EncodedGeometryType_POINT_CLOUD = (Module[
 			'_emscripten_enum_draco_EncodedGeometryType_POINT_CLOUD'
@@ -46886,10 +43681,7 @@ var DracoDecoderModule = (function () {
 		PointAttribute.prototype['GetAttributeTransformData'] = PointAttribute.prototype.GetAttributeTransformData =
 			function () {
 				var self = this.ptr;
-				return wrapPointer(
-					_emscripten_bind_PointAttribute_GetAttributeTransformData_0(self),
-					AttributeTransformData,
-				);
+				return wrapPointer(_emscripten_bind_PointAttribute_GetAttributeTransformData_0(self), AttributeTransformData);
 			};
 		PointAttribute.prototype['attribute_type'] = PointAttribute.prototype.attribute_type = function () {
 			var self = this.ptr;
@@ -46932,11 +43724,10 @@ var DracoDecoderModule = (function () {
 		AttributeTransformData.prototype.__class__ = AttributeTransformData;
 		AttributeTransformData.__cache__ = {};
 		Module['AttributeTransformData'] = AttributeTransformData;
-		AttributeTransformData.prototype['transform_type'] = AttributeTransformData.prototype.transform_type =
-			function () {
-				var self = this.ptr;
-				return _emscripten_bind_AttributeTransformData_transform_type_0(self);
-			};
+		AttributeTransformData.prototype['transform_type'] = AttributeTransformData.prototype.transform_type = function () {
+			var self = this.ptr;
+			return _emscripten_bind_AttributeTransformData_transform_type_0(self);
+		};
 		AttributeTransformData.prototype['__destroy__'] = AttributeTransformData.prototype.__destroy__ = function () {
 			var self = this.ptr;
 			_emscripten_bind_AttributeTransformData___destroy___0(self);
@@ -46967,11 +43758,10 @@ var DracoDecoderModule = (function () {
 				if (axis && typeof axis === 'object') axis = axis.ptr;
 				return _emscripten_bind_AttributeQuantizationTransform_min_value_1(self, axis);
 			};
-		AttributeQuantizationTransform.prototype['range'] = AttributeQuantizationTransform.prototype.range =
-			function () {
-				var self = this.ptr;
-				return _emscripten_bind_AttributeQuantizationTransform_range_0(self);
-			};
+		AttributeQuantizationTransform.prototype['range'] = AttributeQuantizationTransform.prototype.range = function () {
+			var self = this.ptr;
+			return _emscripten_bind_AttributeQuantizationTransform_range_0(self);
+		};
 		AttributeQuantizationTransform.prototype['__destroy__'] = AttributeQuantizationTransform.prototype.__destroy__ =
 			function () {
 				var self = this.ptr;
@@ -47016,10 +43806,7 @@ var DracoDecoderModule = (function () {
 			else entry_name = ensureString(entry_name);
 			return !!_emscripten_bind_MetadataQuerier_HasEntry_2(self, metadata, entry_name);
 		};
-		MetadataQuerier.prototype['GetIntEntry'] = MetadataQuerier.prototype.GetIntEntry = function (
-			metadata,
-			entry_name,
-		) {
+		MetadataQuerier.prototype['GetIntEntry'] = MetadataQuerier.prototype.GetIntEntry = function (metadata, entry_name) {
 			var self = this.ptr;
 			ensureCache.prepare();
 			if (metadata && typeof metadata === 'object') metadata = metadata.ptr;
@@ -47067,10 +43854,7 @@ var DracoDecoderModule = (function () {
 			if (metadata && typeof metadata === 'object') metadata = metadata.ptr;
 			return _emscripten_bind_MetadataQuerier_NumEntries_1(self, metadata);
 		};
-		MetadataQuerier.prototype['GetEntryName'] = MetadataQuerier.prototype.GetEntryName = function (
-			metadata,
-			entry_id,
-		) {
+		MetadataQuerier.prototype['GetEntryName'] = MetadataQuerier.prototype.GetEntryName = function (metadata, entry_id) {
 			var self = this.ptr;
 			if (metadata && typeof metadata === 'object') metadata = metadata.ptr;
 			if (entry_id && typeof entry_id === 'object') entry_id = entry_id.ptr;
@@ -47180,15 +43964,9 @@ var DracoDecoderModule = (function () {
 			var self = this.ptr;
 			if (in_buffer && typeof in_buffer === 'object') in_buffer = in_buffer.ptr;
 			if (out_point_cloud && typeof out_point_cloud === 'object') out_point_cloud = out_point_cloud.ptr;
-			return wrapPointer(
-				_emscripten_bind_Decoder_DecodeBufferToPointCloud_2(self, in_buffer, out_point_cloud),
-				Status,
-			);
+			return wrapPointer(_emscripten_bind_Decoder_DecodeBufferToPointCloud_2(self, in_buffer, out_point_cloud), Status);
 		};
-		Decoder.prototype['DecodeBufferToMesh'] = Decoder.prototype.DecodeBufferToMesh = function (
-			in_buffer,
-			out_mesh,
-		) {
+		Decoder.prototype['DecodeBufferToMesh'] = Decoder.prototype.DecodeBufferToMesh = function (in_buffer, out_mesh) {
 			var self = this.ptr;
 			if (in_buffer && typeof in_buffer === 'object') in_buffer = in_buffer.ptr;
 			if (out_mesh && typeof out_mesh === 'object') out_mesh = out_mesh.ptr;
@@ -47208,27 +43986,27 @@ var DracoDecoderModule = (function () {
 			else name = ensureString(name);
 			return _emscripten_bind_Decoder_GetAttributeIdByName_2(self, pc, name);
 		};
-		Decoder.prototype['GetAttributeIdByMetadataEntry'] = Decoder.prototype.GetAttributeIdByMetadataEntry =
-			function (pc, name, value) {
-				var self = this.ptr;
-				ensureCache.prepare();
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (name && typeof name === 'object') name = name.ptr;
-				else name = ensureString(name);
-				if (value && typeof value === 'object') value = value.ptr;
-				else value = ensureString(value);
-				return _emscripten_bind_Decoder_GetAttributeIdByMetadataEntry_3(self, pc, name, value);
-			};
+		Decoder.prototype['GetAttributeIdByMetadataEntry'] = Decoder.prototype.GetAttributeIdByMetadataEntry = function (
+			pc,
+			name,
+			value,
+		) {
+			var self = this.ptr;
+			ensureCache.prepare();
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (name && typeof name === 'object') name = name.ptr;
+			else name = ensureString(name);
+			if (value && typeof value === 'object') value = value.ptr;
+			else value = ensureString(value);
+			return _emscripten_bind_Decoder_GetAttributeIdByMetadataEntry_3(self, pc, name, value);
+		};
 		Decoder.prototype['GetAttribute'] = Decoder.prototype.GetAttribute = function (pc, att_id) {
 			var self = this.ptr;
 			if (pc && typeof pc === 'object') pc = pc.ptr;
 			if (att_id && typeof att_id === 'object') att_id = att_id.ptr;
 			return wrapPointer(_emscripten_bind_Decoder_GetAttribute_2(self, pc, att_id), PointAttribute);
 		};
-		Decoder.prototype['GetAttributeByUniqueId'] = Decoder.prototype.GetAttributeByUniqueId = function (
-			pc,
-			unique_id,
-		) {
+		Decoder.prototype['GetAttributeByUniqueId'] = Decoder.prototype.GetAttributeByUniqueId = function (pc, unique_id) {
 			var self = this.ptr;
 			if (pc && typeof pc === 'object') pc = pc.ptr;
 			if (unique_id && typeof unique_id === 'object') unique_id = unique_id.ptr;
@@ -47294,14 +44072,17 @@ var DracoDecoderModule = (function () {
 			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
 			return !!_emscripten_bind_Decoder_GetAttributeFloat_3(self, pa, att_index, out_values);
 		};
-		Decoder.prototype['GetAttributeFloatForAllPoints'] = Decoder.prototype.GetAttributeFloatForAllPoints =
-			function (pc, pa, out_values) {
-				var self = this.ptr;
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (pa && typeof pa === 'object') pa = pa.ptr;
-				if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
-				return !!_emscripten_bind_Decoder_GetAttributeFloatForAllPoints_3(self, pc, pa, out_values);
-			};
+		Decoder.prototype['GetAttributeFloatForAllPoints'] = Decoder.prototype.GetAttributeFloatForAllPoints = function (
+			pc,
+			pa,
+			out_values,
+		) {
+			var self = this.ptr;
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (pa && typeof pa === 'object') pa = pa.ptr;
+			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
+			return !!_emscripten_bind_Decoder_GetAttributeFloatForAllPoints_3(self, pc, pa, out_values);
+		};
 		Decoder.prototype['GetAttributeIntForAllPoints'] = Decoder.prototype.GetAttributeIntForAllPoints = function (
 			pc,
 			pa,
@@ -47324,46 +44105,61 @@ var DracoDecoderModule = (function () {
 			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
 			return !!_emscripten_bind_Decoder_GetAttributeInt8ForAllPoints_3(self, pc, pa, out_values);
 		};
-		Decoder.prototype['GetAttributeUInt8ForAllPoints'] = Decoder.prototype.GetAttributeUInt8ForAllPoints =
-			function (pc, pa, out_values) {
-				var self = this.ptr;
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (pa && typeof pa === 'object') pa = pa.ptr;
-				if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
-				return !!_emscripten_bind_Decoder_GetAttributeUInt8ForAllPoints_3(self, pc, pa, out_values);
-			};
-		Decoder.prototype['GetAttributeInt16ForAllPoints'] = Decoder.prototype.GetAttributeInt16ForAllPoints =
-			function (pc, pa, out_values) {
-				var self = this.ptr;
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (pa && typeof pa === 'object') pa = pa.ptr;
-				if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
-				return !!_emscripten_bind_Decoder_GetAttributeInt16ForAllPoints_3(self, pc, pa, out_values);
-			};
-		Decoder.prototype['GetAttributeUInt16ForAllPoints'] = Decoder.prototype.GetAttributeUInt16ForAllPoints =
-			function (pc, pa, out_values) {
-				var self = this.ptr;
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (pa && typeof pa === 'object') pa = pa.ptr;
-				if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
-				return !!_emscripten_bind_Decoder_GetAttributeUInt16ForAllPoints_3(self, pc, pa, out_values);
-			};
-		Decoder.prototype['GetAttributeInt32ForAllPoints'] = Decoder.prototype.GetAttributeInt32ForAllPoints =
-			function (pc, pa, out_values) {
-				var self = this.ptr;
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (pa && typeof pa === 'object') pa = pa.ptr;
-				if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
-				return !!_emscripten_bind_Decoder_GetAttributeInt32ForAllPoints_3(self, pc, pa, out_values);
-			};
-		Decoder.prototype['GetAttributeUInt32ForAllPoints'] = Decoder.prototype.GetAttributeUInt32ForAllPoints =
-			function (pc, pa, out_values) {
-				var self = this.ptr;
-				if (pc && typeof pc === 'object') pc = pc.ptr;
-				if (pa && typeof pa === 'object') pa = pa.ptr;
-				if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
-				return !!_emscripten_bind_Decoder_GetAttributeUInt32ForAllPoints_3(self, pc, pa, out_values);
-			};
+		Decoder.prototype['GetAttributeUInt8ForAllPoints'] = Decoder.prototype.GetAttributeUInt8ForAllPoints = function (
+			pc,
+			pa,
+			out_values,
+		) {
+			var self = this.ptr;
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (pa && typeof pa === 'object') pa = pa.ptr;
+			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
+			return !!_emscripten_bind_Decoder_GetAttributeUInt8ForAllPoints_3(self, pc, pa, out_values);
+		};
+		Decoder.prototype['GetAttributeInt16ForAllPoints'] = Decoder.prototype.GetAttributeInt16ForAllPoints = function (
+			pc,
+			pa,
+			out_values,
+		) {
+			var self = this.ptr;
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (pa && typeof pa === 'object') pa = pa.ptr;
+			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
+			return !!_emscripten_bind_Decoder_GetAttributeInt16ForAllPoints_3(self, pc, pa, out_values);
+		};
+		Decoder.prototype['GetAttributeUInt16ForAllPoints'] = Decoder.prototype.GetAttributeUInt16ForAllPoints = function (
+			pc,
+			pa,
+			out_values,
+		) {
+			var self = this.ptr;
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (pa && typeof pa === 'object') pa = pa.ptr;
+			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
+			return !!_emscripten_bind_Decoder_GetAttributeUInt16ForAllPoints_3(self, pc, pa, out_values);
+		};
+		Decoder.prototype['GetAttributeInt32ForAllPoints'] = Decoder.prototype.GetAttributeInt32ForAllPoints = function (
+			pc,
+			pa,
+			out_values,
+		) {
+			var self = this.ptr;
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (pa && typeof pa === 'object') pa = pa.ptr;
+			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
+			return !!_emscripten_bind_Decoder_GetAttributeInt32ForAllPoints_3(self, pc, pa, out_values);
+		};
+		Decoder.prototype['GetAttributeUInt32ForAllPoints'] = Decoder.prototype.GetAttributeUInt32ForAllPoints = function (
+			pc,
+			pa,
+			out_values,
+		) {
+			var self = this.ptr;
+			if (pc && typeof pc === 'object') pc = pc.ptr;
+			if (pa && typeof pa === 'object') pa = pa.ptr;
+			if (out_values && typeof out_values === 'object') out_values = out_values.ptr;
+			return !!_emscripten_bind_Decoder_GetAttributeUInt32ForAllPoints_3(self, pc, pa, out_values);
+		};
 		Decoder.prototype['GetAttributeDataArrayForAllPoints'] = Decoder.prototype.GetAttributeDataArrayForAllPoints =
 			function (pc, pa, data_type, out_size, out_values) {
 				var self = this.ptr;
@@ -47488,8 +44284,7 @@ var DracoDecoderModule = (function () {
 				Module['TRIANGULAR_MESH'] = _emscripten_enum_draco_EncodedGeometryType_TRIANGULAR_MESH();
 				Module['ATTRIBUTE_INVALID_TRANSFORM'] =
 					_emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_INVALID_TRANSFORM();
-				Module['ATTRIBUTE_NO_TRANSFORM'] =
-					_emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_NO_TRANSFORM();
+				Module['ATTRIBUTE_NO_TRANSFORM'] = _emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_NO_TRANSFORM();
 				Module['ATTRIBUTE_QUANTIZATION_TRANSFORM'] =
 					_emscripten_enum_draco_AttributeTransformType_ATTRIBUTE_QUANTIZATION_TRANSFORM();
 				Module['ATTRIBUTE_OCTAHEDRON_TRANSFORM'] =

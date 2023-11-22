@@ -1,7 +1,7 @@
 {
-	"name": "rapier-old",
+	"name": "core",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/rapier-old/src",
+	"sourceRoot": "libs/core/src",
 	"prefix": "platform",
 	"tags": [],
 	"projectType": "library",
@@ -10,14 +10,14 @@
 			"executor": "@nx/angular:package",
 			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
-				"project": "libs/rapier-old/ng-package.json"
+				"project": "libs/core/ng-package.json"
 			},
 			"configurations": {
 				"production": {
-					"tsConfig": "libs/rapier-old/tsconfig.lib.prod.json"
+					"tsConfig": "libs/core/tsconfig.lib.prod.json"
 				},
 				"development": {
-					"tsConfig": "libs/rapier-old/tsconfig.lib.json"
+					"tsConfig": "libs/core/tsconfig.lib.json"
 				}
 			},
 			"defaultConfiguration": "production"
@@ -26,14 +26,14 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "libs/rapier-old/jest.config.ts"
+				"jestConfig": "libs/core/jest.config.ts"
 			}
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["libs/rapier-old/**/*.ts", "libs/rapier-old/**/*.html", "libs/rapier-old/package.json"]
+				"lintFilePatterns": ["libs/core/**/*.ts", "libs/core/**/*.html", "libs/core/package.json"]
 			}
 		}
 	}

@@ -221,9 +221,8 @@ class NgtRenderer implements Renderer2 {
 				}
 				const watcher = effect(
 					() => {
-						const injectedParent = (
-							cRS[NgtRendererClassId.injectedParent] as NgtInjectedRef<NgtRendererNode>
-						).nativeElement;
+						const injectedParent = (cRS[NgtRendererClassId.injectedParent] as NgtInjectedRef<NgtRendererNode>)
+							.nativeElement;
 						if (injectedParent && injectedParent !== parent) {
 							this.appendChild(injectedParent, newChild);
 							// only run this effect once
@@ -405,9 +404,7 @@ class NgtRenderer implements Renderer2 {
 
 			if (rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound]) {
 				Object.assign(
-					rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound][
-						NgtCompoundClassId.props
-					],
+					rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound][NgtCompoundClassId.props],
 					{ [name]: value },
 				);
 			}
@@ -495,9 +492,7 @@ class NgtRenderer implements Renderer2 {
 		const isCompoundChildCompounded = cType === 'compound' && !!isChildCompounded;
 
 		return (
-			isDanglingThreeChild ||
-			(isParentStillDOM && isChildStillDOM) ||
-			(isParentStillDOM && isCompoundChildCompounded)
+			isDanglingThreeChild || (isParentStillDOM && isChildStillDOM) || (isParentStillDOM && isCompoundChildCompounded)
 		);
 	}
 

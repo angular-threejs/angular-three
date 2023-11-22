@@ -158,11 +158,7 @@ export class NgtsPointsInstances {
 			points.updateMatrixWorld();
 			this.parentMatrix.copy(points.matrixWorld).invert();
 
-			points.geometry.drawRange.count = Math.min(
-				limit,
-				range !== undefined ? range : limit,
-				positionPoints.length,
-			);
+			points.geometry.drawRange.count = Math.min(limit, range !== undefined ? range : limit, positionPoints.length);
 
 			for (let i = 0; i < positionPoints.length; i++) {
 				const positionPointRef = positionPoints[i];

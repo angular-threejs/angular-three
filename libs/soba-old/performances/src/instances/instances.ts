@@ -110,11 +110,7 @@ export class NgtsInstance {
 				attach="instanceMatrix"
 				[usage]="DynamicDrawUsage"
 			/>
-			<ngt-instanced-buffer-attribute
-				*args="[buffers().colors, 3]"
-				attach="instanceColor"
-				[usage]="DynamicDrawUsage"
-			/>
+			<ngt-instanced-buffer-attribute *args="[buffers().colors, 3]" attach="instanceColor" [usage]="DynamicDrawUsage" />
 			<ng-container *ngTemplateOutlet="content" />
 		</ngt-instanced-mesh>
 	`,

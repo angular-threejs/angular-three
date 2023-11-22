@@ -52,12 +52,7 @@ export const [injectNgtsExampleApi, provideNgtsExampleApi] = createApiToken(() =
 		<!-- [ref] is used with the Input so that the consumer can pass an external ref and control this internal ngt-group -->
 		<ngt-group ngtCompound [ref]="exampleRef">
 			<ngts-center [top]="true">
-				<ngts-text-3d
-					[bevelEnabled]="true"
-					[bevelSize]="bevelSize()"
-					[font]="font()"
-					[text]="count().toString()"
-				>
+				<ngts-text-3d [bevelEnabled]="true" [bevelSize]="bevelSize()" [font]="font()" [text]="count().toString()">
 					<ngt-mesh-standard-material *ngIf="!debug(); else withDebug" [color]="color()" />
 					<ng-template #withDebug>
 						<ngt-mesh-normal-material [wireframe]="true" />

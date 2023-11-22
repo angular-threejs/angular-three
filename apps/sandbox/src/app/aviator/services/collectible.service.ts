@@ -36,9 +36,7 @@ export class CollectibleService {
 	spawnCoins() {
 		const nCoins = 1 + Math.floor(Math.random() * 10);
 		const d =
-			this.world.seaRadius +
-			this.world.planeDefaultHeight +
-			randomFromRange(-1, 1) * (this.world.planeAmpHeight - 20);
+			this.world.seaRadius + this.world.planeDefaultHeight + randomFromRange(-1, 1) * (this.world.planeAmpHeight - 20);
 		const amplitude = 10 + Math.round(Math.random() * 10);
 		for (let i = 0; i < nCoins; i++) {
 			const coin = new Coin(this.world, this.game, this.refs, this, this.scene());

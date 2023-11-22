@@ -200,8 +200,7 @@ export class NgtPortal implements OnInit {
 			events: { ...previousState.events, ...(events || {}) },
 			size: { ...previousState.size, ...(size || {}) },
 			...restInputsState,
-			setEvents: (events) =>
-				this.portalStore.set((state) => ({ ...state, events: { ...state.events, ...events } })),
+			setEvents: (events) => this.portalStore.set((state) => ({ ...state, events: { ...state.events, ...events } })),
 		});
 
 		const parentState = this.parentStore.select();

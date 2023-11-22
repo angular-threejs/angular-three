@@ -120,10 +120,7 @@ export type NgtCanvasInputs = {
 		</div>
 	`,
 	imports: [NgxResize],
-	providers: [
-		provideResizeOptions({ emitInZone: false, emitInitialResult: true } as ResizeOptions),
-		provideNgtStore(),
-	],
+	providers: [provideResizeOptions({ emitInZone: false, emitInitialResult: true } as ResizeOptions), provideNgtStore()],
 	host: {
 		style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
 		'[style.pointerEvents]': 'hbPointerEvents()',

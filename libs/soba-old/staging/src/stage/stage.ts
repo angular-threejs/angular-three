@@ -126,12 +126,7 @@ export class NgtsStageRefit implements OnChanges {
 			[intensity]="intensity()"
 		/>
 
-		<ngts-bounds
-			[fit]="!!adjustCamera()"
-			[clip]="!!adjustCamera()"
-			[margin]="Number(adjustCamera())"
-			[observe]="true"
-		>
+		<ngts-bounds [fit]="!!adjustCamera()" [clip]="!!adjustCamera()" [margin]="Number(adjustCamera())" [observe]="true">
 			<ngts-stage-refit [radius]="boundingState.get('radius')" [adjustCamera]="adjustCamera()" />
 			<ngts-center
 				[position]="[0, shadowsState().shadowOffset / 2, 0]"

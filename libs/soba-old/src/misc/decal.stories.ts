@@ -63,13 +63,7 @@ class LoopOverInstancedBufferAttribute {
 
 		<decal-loop-over-instanced-buffer-attribute [buffer]="buffer()">
 			<ng-template let-a="attribute">
-				<ngts-decal
-					[mesh]="ref"
-					[position]="a.position"
-					[rotation]="a.rotation"
-					[scale]="a.scale"
-					[debug]="debug"
-				>
+				<ngts-decal [mesh]="ref" [position]="a.position" [rotation]="a.rotation" [scale]="a.scale" [debug]="debug">
 					<ngt-mesh-physical-material
 						[roughness]="0.2"
 						[transparent]="true"

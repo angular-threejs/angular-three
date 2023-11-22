@@ -128,10 +128,7 @@ export class NgtRendererStore {
 		if (instanceRS && instanceRS[NgtRendererClassId.parent]) {
 			const parentRS = instanceRS[NgtRendererClassId.parent].__ngt_renderer__;
 			// NOTE: if instance is already compounded by its parent. skip
-			if (
-				parentRS[NgtRendererClassId.type] === 'compound' &&
-				parentRS[NgtRendererClassId.compounded] === instance
-			) {
+			if (parentRS[NgtRendererClassId.type] === 'compound' && parentRS[NgtRendererClassId.compounded] === instance) {
 				return;
 			}
 		}

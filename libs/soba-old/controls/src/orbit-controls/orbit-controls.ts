@@ -115,11 +115,7 @@ export class NgtsOrbitControls {
 
 	private setControls() {
 		effect(() => {
-			const [camera, defaultCamera, controls] = [
-				this.camera(),
-				this.defaultCamera(),
-				this.controlsRef.nativeElement,
-			];
+			const [camera, defaultCamera, controls] = [this.camera(), this.defaultCamera(), this.controlsRef.nativeElement];
 			const controlsCamera = camera || defaultCamera;
 			if (!controls || controls.object !== controlsCamera) {
 				this.controlsRef.nativeElement = new OrbitControls(controlsCamera as NgtCamera);

@@ -78,9 +78,7 @@ export function injectNgtsTrail(
 			const [target, length] = [_target(), _length()];
 			if (target) {
 				untracked(() => {
-					_points.set(
-						Float32Array.from({ length: length * 10 * 3 }, (_, i) => target.position.getComponent(i % 3)),
-					);
+					_points.set(Float32Array.from({ length: length * 10 * 3 }, (_, i) => target.position.getComponent(i % 3)));
 				});
 			}
 		});
