@@ -15,7 +15,7 @@ export type NgtExtendedColors<T> = {
 /**
  * If **T** contains a constructor, @see ConstructorParameters must be used, otherwise **T**.
  */
-type NgtArgs<T> = T extends new (...args: any) => any ? ConstructorParameters<T> : T;
+type NgtArguments<T> = T extends new (...args: any) => any ? ConstructorParameters<T> : T;
 
 export type NgtEuler = THREE.Euler | Parameters<THREE.Euler['set']>;
 export type NgtMatrix4 = THREE.Matrix4 | Parameters<THREE.Matrix4['set']> | Readonly<THREE.Matrix4['set']>;
@@ -52,7 +52,7 @@ export type NgtNodeElement<TOriginal, TConstructor> = {
 		type: TEventKey,
 		listener: (this: NgtNodeElement<TOriginal, TConstructor>, ev: NgtNodeEventMap<TOriginal>[TEventKey]) => any,
 	): void;
-	__ngt_args__: NgtArgs<TConstructor>;
+	__ngt_args__: NgtArguments<TConstructor>;
 };
 
 export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = NgtExtendedColors<

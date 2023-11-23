@@ -1,5 +1,6 @@
+import { ElementRef } from '@angular/core';
 import type { NgtInstanceNode } from '../instance';
-import type { NgtRenderer } from '../store';
+import type { NgtRendererLike } from '../store';
 import type { NgtAnyRecord, NgtEquConfig } from '../types';
 
 export const is = {
@@ -13,13 +14,14 @@ export const is = {
 	camera: (a: unknown): a is THREE.Camera => !!a && (a as THREE.Camera).isCamera,
 	renderer: (a: unknown) => !!a && typeof a === 'object' && 'render' in a && typeof a['render'] === 'function',
 	scene: (a: unknown): a is THREE.Scene => !!a && (a as THREE.Scene).isScene,
+	ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
 	instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
 	object3D: (a: unknown): a is THREE.Object3D => !!a && (a as THREE.Object3D).isObject3D,
 	// instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
 	// ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
 	colorSpaceExist: <
-		T extends NgtRenderer | THREE.Texture | object,
-		P = T extends NgtRenderer ? { outputColorSpace: string } : { colorSpace: string },
+		T extends NgtRendererLike | THREE.Texture | object,
+		P = T extends NgtRendererLike ? { outputColorSpace: string } : { colorSpace: string },
 	>(
 		object: T,
 	): object is T & P => 'colorSpace' in object || 'outputColorSpace' in object,

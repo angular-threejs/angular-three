@@ -64,7 +64,7 @@ function render(timestamp: number, store: NgtSignalStore<NgtState>, frame?: XRFr
 		state.clock.oldTime = state.clock.elapsedTime;
 		state.clock.elapsedTime = timestamp;
 	}
-	// Call subscribers (useFrame)
+	// Call subscribers (beforeRender)
 	const subscribers = state.internal.subscribers;
 	for (let i = 0; i < subscribers.length; i++) {
 		const subscription = subscribers[i];

@@ -4,37 +4,46 @@ import {
 	DestroyRef,
 	ElementRef,
 	EnvironmentInjector,
+	EventEmitter,
 	Injector,
 	Input,
 	NgZone,
-	Type,
+	Output,
 	ViewChild,
+	ViewContainerRef,
 	afterNextRender,
+	computed,
+	createEnvironmentInjector,
 	inject,
 	signal,
+	untracked,
 	type ComponentRef,
+	type Type,
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { NgxResize, provideResizeOptions, type ResizeOptions, type ResizeResult } from 'ngxtension/resize';
 import * as THREE from 'three';
-import type { NgtCamera, NgtEventManager } from './events';
+import { createPointerEvents } from './dom/events';
+import type { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
+import { provideNgtRenderer } from './renderer';
 import { injectCanvasRootInitializer, type NgtCanvasConfigurator, type NgtCanvasElement } from './roots';
 import {
 	injectNgtStore,
 	provideNgtStore,
 	type NgtDpr,
 	type NgtPerformance,
-	type NgtRenderer,
+	type NgtRendererLike,
 	type NgtSize,
 	type NgtState,
 } from './store';
 import type { NgtObject3DNode } from './three-types';
 import type { NgtAnyRecord, NgtProperties } from './types';
-import type { NgtSignalStore } from './utils/signal-store';
+import { is } from './utils/is';
+import { signalStore, type NgtSignalStore } from './utils/signal-store';
 
 export type NgtGLOptions =
-	| NgtRenderer
-	| ((canvas: NgtCanvasElement) => NgtRenderer)
+	| NgtRendererLike
+	| ((canvas: NgtCanvasElement) => NgtRendererLike)
 	| Partial<NgtProperties<THREE.WebGLRenderer> | THREE.WebGLRendererParameters>
 	| undefined;
 
@@ -107,10 +116,13 @@ export type NgtCanvasInputs = {
 		</div>
 	`,
 	imports: [NgxResize],
-	providers: [provideResizeOptions({ emitInZone: false, emitInitialResult: true } as ResizeOptions), provideNgtStore()],
+	providers: [
+		provideResizeOptions({ emitInZone: false, emitInitialResult: true, debounce: 250 } as ResizeOptions),
+		provideNgtStore(),
+	],
 	host: {
 		style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
-		// '[style.pointerEvents]': 'hbPointerEvents()',
+		'[style.pointerEvents]': 'hbPointerEvents()',
 	},
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -119,21 +131,43 @@ export class NgtCanvas {
 	private initRoot = injectCanvasRootInitializer();
 	private autoEffect = injectAutoEffect();
 
+	private host = inject<ElementRef<HTMLElement>>(ElementRef);
+	private viewContainerRef = inject(ViewContainerRef);
 	private zone = inject(NgZone);
 	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
 
 	@Input({ required: true }) sceneGraph!: Type<unknown>;
+	@Input() compoundPrefixes: string[] = [];
 
-	private sceneGraphInputs = signal<NgtAnyRecord>({});
+	private sceneGraphInputs = signal<NgtAnyRecord>({}, { equal: Object.is });
 	@Input({ alias: 'sceneGraphInputs' }) set _sceneGraphInputs(value: NgtAnyRecord) {
 		this.sceneGraphInputs.set(value);
 	}
 
+	private canvasInputs = signalStore<NgtCanvasInputs>({
+		shadows: false,
+		linear: false,
+		flat: false,
+		legacy: false,
+		orthographic: false,
+		frameloop: 'always',
+		dpr: [1, 2],
+		events: createPointerEvents,
+	});
+	@Input({ alias: 'options' }) set _canvasInputs(value: Partial<NgtCanvasInputs>) {
+		this.canvasInputs.update(value);
+	}
+
+	@Output() created = new EventEmitter<NgtState>();
+
 	@ViewChild('glCanvas', { static: true }) glCanvas!: ElementRef<HTMLCanvasElement>;
 
 	// NOTE: this signal is updated outside of Zone
-	protected resizeResult = signal<ResizeResult>({} as ResizeResult);
+	protected resizeResult = signal<ResizeResult>({} as ResizeResult, { equal: Object.is });
+
+	private eventSource = this.canvasInputs.select('eventSource');
+	protected hbPointerEvents = computed(() => (!!this.eventSource() ? 'none' : 'auto'));
 
 	private configurator?: NgtCanvasConfigurator;
 	private glEnvironmentInjector?: EnvironmentInjector;
@@ -141,9 +175,8 @@ export class NgtCanvas {
 
 	constructor() {
 		afterNextRender(() => {
-			this.configurator = this.initRoot(this.glCanvas.nativeElement);
-
 			this.zone.runOutsideAngular(() => {
+				this.configurator = this.initRoot(this.glCanvas.nativeElement);
 				this.noZoneResizeEffect();
 				this.noZoneSceneGraphInputsEffect();
 			});
@@ -161,9 +194,10 @@ export class NgtCanvas {
 			const resizeResult = this.resizeResult();
 			if (resizeResult.width > 0 && resizeResult.height > 0) {
 				if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
-				// this.configurator.configure({ ...inputs(), size: result });
+				this.configurator.configure({ ...this.canvasInputs.state(), size: resizeResult });
 
 				if (this.glRef) {
+					this.glRef.changeDetectorRef.detectChanges();
 				} else {
 					this.noZoneRender();
 				}
@@ -178,6 +212,51 @@ export class NgtCanvas {
 
 		// NOTE: Flag the canvas active, rendering will now begin
 		this.store.update((state) => ({ internal: { ...state.internal, active: true } }));
+
+		const [inputs, state] = [this.canvasInputs.snapshot, this.store.snapshot];
+
+		// connect to event source
+		state.events.connect?.(
+			inputs.eventSource
+				? is.ref(inputs.eventSource)
+					? inputs.eventSource.nativeElement
+					: inputs.eventSource
+				: this.host.nativeElement,
+		);
+
+		// setup compute for eventPrefix
+		if (inputs.eventPrefix) {
+			state.setEvents({
+				compute: (event, store) => {
+					const { pointer, raycaster, camera, size } = store.snapshot;
+					const x = event[(inputs.eventPrefix + 'X') as keyof NgtDomEvent] as number;
+					const y = event[(inputs.eventPrefix + 'Y') as keyof NgtDomEvent] as number;
+					pointer.set((x / size.width) * 2 - 1, -(y / size.height) * 2 + 1);
+					raycaster.setFromCamera(pointer, camera);
+				},
+			});
+		}
+
+		// emit created event if observed
+		if (this.created.observed) {
+			this.created.emit(this.store.snapshot);
+		}
+
+		if (!this.store.get('events', 'connected')) {
+			this.store.get('events').connect?.(this.glCanvas.nativeElement);
+		}
+
+		this.glEnvironmentInjector = createEnvironmentInjector(
+			[provideNgtRenderer(this.store, this.compoundPrefixes)],
+			this.environmentInjector,
+		);
+		this.glRef = this.viewContainerRef.createComponent(this.sceneGraph, {
+			environmentInjector: this.glEnvironmentInjector,
+			injector: this.injector,
+		});
+
+		this.glRef.changeDetectorRef.detectChanges();
+		this.setSceneGraphInputs(untracked(this.sceneGraphInputs));
 	}
 
 	private noZoneSceneGraphInputsEffect() {

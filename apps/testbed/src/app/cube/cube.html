@@ -1,0 +1,11 @@
+<ngt-mesh
+	[withTimeline]="gsapTimeline['scale']"
+	[position]="position"
+	(beforeRender)="onBeforeRender($event)"
+	(pointerover)="hover.set(true)"
+	(pointerout)="hover.set(false)"
+	(click)="active.set(!active())"
+>
+	<ngt-box-geometry />
+	<ngt-mesh-standard-material [withTimeline]="gsapTimeline['color']" />
+</ngt-mesh>

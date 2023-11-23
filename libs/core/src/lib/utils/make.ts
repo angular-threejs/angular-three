@@ -46,3 +46,24 @@ export function makeCameraInstance(isOrthographic: boolean, size: NgtSize) {
 	if (isOrthographic) return new THREE.OrthographicCamera(0, 0, 0, 0, 0.1, 1000);
 	return new THREE.PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
 }
+
+export type NgtObjectMap = {
+	nodes: { [name: string]: THREE.Object3D };
+	materials: { [name: string]: THREE.Material };
+	[key: string]: any;
+};
+
+export function makeObjectGraph(object: THREE.Object3D): NgtObjectMap {
+	const data: NgtObjectMap = { nodes: {}, materials: {} };
+
+	if (object) {
+		object.traverse((child: THREE.Object3D) => {
+			if (child.name) data.nodes[child.name] = child;
+			if ('material' in child && !data.materials[((child as THREE.Mesh).material as THREE.Material).name]) {
+				data.materials[((child as THREE.Mesh).material as THREE.Material).name] = (child as THREE.Mesh)
+					.material as THREE.Material;
+			}
+		});
+	}
+	return data;
+}

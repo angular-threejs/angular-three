@@ -166,12 +166,10 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						// WebXR session manager
 						const xr = {
 							connect: () => {
-								const gl = store.snapshot.gl;
 								gl.xr.addEventListener('sessionstart', handleSessionChange);
 								gl.xr.addEventListener('sessionend', handleSessionChange);
 							},
 							disconnect: () => {
-								const gl = store.snapshot.gl;
 								gl.xr.removeEventListener('sessionstart', handleSessionChange);
 								gl.xr.removeEventListener('sessionend', handleSessionChange);
 							},

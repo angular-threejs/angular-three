@@ -1,0 +1,72 @@
+{
+	"name": "testbed",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"prefix": "platform",
+	"sourceRoot": "apps/testbed/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@angular-devkit/build-angular:application",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/apps/testbed",
+				"index": "apps/testbed/src/index.html",
+				"browser": "apps/testbed/src/main.ts",
+				"polyfills": ["zone.js"],
+				"tsConfig": "apps/testbed/tsconfig.app.json",
+				"assets": ["apps/testbed/src/favicon.ico", "apps/testbed/src/assets"],
+				"styles": ["apps/testbed/src/styles.css"],
+				"scripts": []
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "500kb",
+							"maximumError": "1mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "2kb",
+							"maximumError": "4kb"
+						}
+					],
+					"outputHashing": "all"
+				},
+				"development": {
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"serve": {
+			"executor": "@angular-devkit/build-angular:dev-server",
+			"configurations": {
+				"production": {
+					"buildTarget": "testbed:build:production"
+				},
+				"development": {
+					"buildTarget": "testbed:build:development"
+				}
+			},
+			"defaultConfiguration": "development"
+		},
+		"extract-i18n": {
+			"executor": "@angular-devkit/build-angular:extract-i18n",
+			"options": {
+				"buildTarget": "testbed:build"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["apps/testbed/**/*.ts", "apps/testbed/**/*.html"]
+			}
+		}
+	}
+}

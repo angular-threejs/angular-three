@@ -11,7 +11,7 @@ import { makeDpr } from './utils/make';
 import { signalStore, type NgtSignalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
-export type NgtRenderer = { render: (scene: THREE.Scene, camera: THREE.Camera) => any };
+export type NgtRendererLike = { render: (scene: THREE.Scene, camera: THREE.Camera) => any };
 export type NgtCameraManual = NgtCamera & { manual?: boolean };
 export type NgtDpr = number | [min: number, max: number];
 export type NgtSize = { width: number; height: number; top: number; left: number };
@@ -307,10 +307,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 		};
 	});
 
-	Object.defineProperties(store, {
-		pointerMissed$: { get: () => pointerMissed$ },
-		snapshot: { get: store.get.bind(store) },
-	});
+	Object.defineProperty(store, 'pointerMissed$', { get: () => pointerMissed$ });
 
 	let {
 		size: oldSize,
