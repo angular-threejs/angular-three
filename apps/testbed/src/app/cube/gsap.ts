@@ -1,66 +1,68 @@
 import {
+	afterNextRender,
+	AfterRenderPhase,
 	DestroyRef,
 	Directive,
+	effect,
 	ElementRef,
+	inject,
 	Injector,
 	Input,
-	afterNextRender,
-	effect,
-	inject,
 	signal,
 	untracked,
 	type WritableSignal,
 } from '@angular/core';
+import { applyProps } from 'angular-three';
 import { gsap } from 'gsap';
-import { applyProps } from 'libs/core/src/lib/utils/apply-props';
 
 export function injectGsap(config: Record<string, { value: () => any } & gsap.TweenVars>) {
 	const destroyRef = inject(DestroyRef);
-	const targets: Record<string, WritableSignal<any>> = {};
-	const timelines: Record<string, gsap.core.Timeline> = {};
-	let context: gsap.Context;
 
 	const entries = Object.entries(config);
 
-	afterNextRender(() => {
-		context = gsap.context(() => {
-			entries.forEach(([key]) => {
-				timelines[key] = gsap.timeline();
-				targets[key] = signal<any | null>(null);
-			});
+	const targets: Record<string, WritableSignal<any>> = entries.reduce(
+		(acc, [key]) => {
+			acc[key] = signal(null!);
+			return acc;
+		},
+		{} as Record<string, WritableSignal<any>>,
+	);
+	const timelines: Record<string, gsap.core.Timeline> = {};
+
+	const context = gsap.context(() => {
+		entries.forEach(([key]) => {
+			timelines[key] = gsap.timeline();
 		});
 	});
 
-	destroyRef.onDestroy(() => context?.revert());
+	destroyRef.onDestroy(() => context.revert());
 
 	return entries.reduce((acc, [key, { value, ...rest }]) => {
-		const preConfig = {
-			[key]: untracked(value),
-		};
+		const targetValue = untracked(value);
+		acc[key] = (target: any, injector: Injector) => {
+			queueMicrotask(() => {
+				effect(
+					(onCleanup) => {
+						const _target = targets[key]();
+						if (!_target) return;
+						timelines[key].to(targetValue, Object.assign(rest, value()));
+						onCleanup(() => timelines[key].clear());
+					},
+					{ injector },
+				);
+			});
 
-		acc[key] = {
-			start: (target: any, injector: Injector) => {
-				untracked(() => {
-					targets[key].set(target);
-					rest.onUpdate = () => {
-						if (timelines[key].isActive()) {
-							applyProps(target, preConfig);
-						}
-					};
-				});
-				queueMicrotask(() => {
-					effect(
-						(onCleanup) => {
-							if (!target) return;
-
-							timelines[key].to(preConfig, { ...rest, [key]: value() });
-
-							onCleanup(() => timelines[key].clear());
-						},
-						{ injector },
-					);
-				});
-			},
+			untracked(() => {
+				applyProps(target, targetValue);
+				targets[key].set(target);
+				const originalOnUpdate = rest.onUpdate;
+				rest.onUpdate = () => {
+					originalOnUpdate?.();
+					if (timelines[key].isActive()) {
+						applyProps(target, targetValue);
+					}
+				};
+			});
 		};
 
 		return acc;
@@ -72,8 +74,11 @@ export class WithTimeline {
 	@Input({ required: true }) withTimeline!: any;
 
 	constructor(elementRef: ElementRef<any>, injector: Injector) {
-		afterNextRender(() => {
-			this.withTimeline.start(elementRef.nativeElement, injector);
-		});
+		afterNextRender(
+			() => {
+				this.withTimeline(elementRef.nativeElement, injector);
+			},
+			{ phase: AfterRenderPhase.Read },
+		);
 	}
 }

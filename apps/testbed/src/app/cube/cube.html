@@ -6,6 +6,6 @@
 	(pointerout)="hover.set(false)"
 	(click)="active.set(!active())"
 >
-	<ngt-box-geometry />
+	<ngt-box-geometry *args="[1.5, 1.5, 1.5]" />
 	<ngt-mesh-standard-material [withTimeline]="gsapTimeline['color']" />
 </ngt-mesh>

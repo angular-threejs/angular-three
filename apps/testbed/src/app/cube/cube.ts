@@ -1,26 +1,32 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Input, computed } from '@angular/core';
-import { cdAwareSignal, type NgtBeforeRenderEvent } from 'angular-three';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	Input,
+	afterNextRender,
+	computed,
+} from '@angular/core';
+import { NgtArgs, cdAwareSignal, type NgtBeforeRenderEvent } from 'angular-three';
 import { WithTimeline, injectGsap } from './gsap';
 
 @Component({
 	selector: 'app-cube',
 	standalone: true,
-	templateUrl: './cube.html',
 	template: `
 		<ngt-mesh
-			[withTimeline]="gsapTimeline.scale"
+			[withTimeline]="gsapTimeline.mesh"
 			[position]="position"
 			(beforeRender)="onBeforeRender($event)"
 			(pointerover)="hover.set(true)"
 			(pointerout)="hover.set(false)"
 			(click)="active.set(!active())"
 		>
-			<ngt-box-geometry />
-			<ngt-mesh-standard-material [withTimeline]="gsapTimeline.color" />
+			<ngt-box-geometry *args="[1.5, 1.5, 1.5]" />
+			<ngt-mesh-standard-material [withTimeline]="gsapTimeline.material" />
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [WithTimeline],
+	imports: [WithTimeline, NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cube {
@@ -33,9 +39,15 @@ export class Cube {
 	protected scale = computed(() => (this.active() ? 1.5 : 1));
 
 	protected gsapTimeline = injectGsap({
-		scale: { value: this.scale, ease: 'bounce.out' },
-		color: { value: this.color },
+		mesh: { value: () => ({ scale: this.scale() }), ease: 'bounce.out' },
+		material: { value: () => ({ color: this.color() }) },
 	});
+
+	constructor() {
+		afterNextRender(() => {
+			console.log(this.gsapTimeline);
+		});
+	}
 
 	onBeforeRender(event: NgtBeforeRenderEvent<THREE.Mesh>) {
 		event.object.rotation.x += 0.01;

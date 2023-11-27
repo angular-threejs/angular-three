@@ -8,8 +8,6 @@ export * from './lib/ref';
 export * from './lib/renderer';
 export * from './lib/routed-scene';
 export * from './lib/store';
-export * from './lib/three-types';
-export * from './lib/types';
 export * from './lib/utils/apply-props';
 export { createAttachFunction } from './lib/utils/attach';
 export * from './lib/utils/before-render';

@@ -76,10 +76,6 @@ ts.forEachChild(sourceFile, (node) => {
 		const typeNode = typeToTypeNode(type, node);
 		const typeString = typeToString(type, node);
 
-		if (typeName === 'NgtMeshBasicMaterial') {
-			console.log('typeString -->', typeString);
-		}
-
 		// remove checker from type
 		delete type.checker;
 
