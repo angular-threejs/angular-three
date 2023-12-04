@@ -196,11 +196,13 @@ export class NgtCanvas {
 				if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
 				this.configurator.configure({ ...this.canvasInputs.state(), size: resizeResult });
 
-				if (this.glRef) {
-					this.glRef.changeDetectorRef.detectChanges();
-				} else {
-					this.noZoneRender();
-				}
+				untracked(() => {
+					if (this.glRef) {
+						this.glRef.changeDetectorRef.detectChanges();
+					} else {
+						this.noZoneRender();
+					}
+				});
 			}
 		});
 	}

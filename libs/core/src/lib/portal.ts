@@ -15,6 +15,7 @@ import {
 	afterNextRender,
 	computed,
 	inject,
+	untracked,
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { createInjectionToken } from 'ngxtension/create-injection-token';
@@ -205,9 +206,11 @@ export class NgtPortal {
 				this.portalStore.update((state) => this.inject(previous, state));
 			});
 
-			const portalView = this.portalContentAnchor.createEmbeddedView(this.portalContentTemplate);
-			portalView.detectChanges();
-			this.destroyRef.onDestroy(portalView.destroy.bind(portalView));
+			untracked(() => {
+				const portalView = this.portalContentAnchor.createEmbeddedView(this.portalContentTemplate);
+				portalView.detectChanges();
+				this.destroyRef.onDestroy(portalView.destroy.bind(portalView));
+			});
 
 			this.portalRendered.set(true);
 		});

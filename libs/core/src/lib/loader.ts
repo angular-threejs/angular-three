@@ -1,9 +1,10 @@
 import { Injector, effect, type Signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import type { NgtAnyRecord } from './types';
 import { cdAwareSignal } from './utils/cd-aware-signal';
 import { makeObjectGraph, type NgtObjectMap } from './utils/make';
+
+export type NgtGLTFLike = { scene: THREE.Object3D };
 
 export interface NgtLoader<T> extends THREE.Loader {
 	load(
@@ -95,11 +96,11 @@ function _injectNgtLoader<
 		onProgress?: (event: ProgressEvent) => void;
 		injector?: Injector;
 	} = {},
-): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>> | null> {
+): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
 	return assertInjector(_injectNgtLoader, injector, () => {
 		const response = cdAwareSignal<NgtLoaderResults<
 			TUrl,
-			NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap>
+			NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 		> | null>(null);
 		const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
 
@@ -115,7 +116,7 @@ function _injectNgtLoader<
 							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
 							return result;
 						},
-						{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, GLTF, GLTF & NgtObjectMap> },
+						{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
 					);
 				});
 			});
