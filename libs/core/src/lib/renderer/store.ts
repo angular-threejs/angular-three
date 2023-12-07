@@ -45,8 +45,9 @@ type NgtRendererRootState = {
 };
 
 export class NgtRendererStore {
-	private commentNodes: Array<NgtRendererNode> = [];
-	private portalNodes: Array<NgtRendererNode> = [];
+	private argsCommentNodes: Array<NgtRendererNode> = [];
+	private parentCommentNodes: Array<NgtRendererNode> = [];
+	private portalCommentsNodes: Array<NgtRendererNode> = [];
 
 	constructor(private rootState: NgtRendererRootState) {}
 
@@ -84,11 +85,13 @@ export class NgtRendererStore {
 			// NOTE: we attach an arrow function to the Comment node
 			// In our directives, we can call this function to then start tracking the RendererNode
 			// this is done to limit the amount of Nodes we need to process for getCreationState
-			rendererNode[SPECIAL_INTERNAL_ADD_COMMENT] = (node?: NgtRendererNode) => {
-				if (node && node.__ngt_renderer__[NgtRendererClassId.type] === 'portal') {
-					this.portalNodes.push(node);
+			rendererNode[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args' | 'parent') => {
+				if (node === 'args') {
+					this.argsCommentNodes.push(rendererNode);
+				} else if (node === 'parent') {
+					this.parentCommentNodes.push(rendererNode);
 				} else {
-					this.commentNodes.push(rendererNode);
+					this.portalCommentsNodes.push(node);
 				}
 			};
 			return rendererNode;
@@ -181,8 +184,8 @@ export class NgtRendererStore {
 
 	getCreationState() {
 		return [
-			this.firstNonInjectedDirective(NgtArgs)?.args || [],
-			this.firstNonInjectedDirective(NgtParent)?.parent || null,
+			this.firstNonInjectedDirective('argsCommentNodes', NgtArgs)?.args || [],
+			this.firstNonInjectedDirective('parentCommentNodes', NgtParent)?.parent || null,
 			this.tryGetPortalStore(),
 		] as const;
 	}
@@ -378,18 +381,14 @@ export class NgtRendererStore {
 		if (rS[NgtRendererClassId.type] === 'comment') {
 			rS[NgtRendererClassId.injectorFactory] = null!;
 			delete (node as NgtAnyRecord)[SPECIAL_INTERNAL_ADD_COMMENT];
-			const index = this.commentNodes.findIndex((comment) => comment === node);
-			if (index > -1) {
-				this.commentNodes.splice(index, 1);
+			if (!this.removeCommentNode(node, this.argsCommentNodes)) {
+				this.removeCommentNode(node, this.parentCommentNodes);
 			}
 		}
 
 		if (rS[NgtRendererClassId.type] === 'portal') {
 			rS[NgtRendererClassId.injectorFactory] = null!;
-			const index = this.portalNodes.findIndex((portal) => portal === node);
-			if (index > -1) {
-				this.portalNodes.splice(index, 1);
-			}
+			this.removeCommentNode(node, this.portalCommentsNodes);
 		}
 
 		if (rS[NgtRendererClassId.type] === 'compound') {
@@ -430,20 +429,32 @@ export class NgtRendererStore {
 		}
 	}
 
+	private removeCommentNode(node: NgtRendererNode, nodes: NgtRendererNode[]) {
+		const index = nodes.findIndex((comment) => comment === node);
+		if (index > -1) {
+			nodes.splice(index, 1);
+			return true;
+		}
+		return false;
+	}
+
 	private updateNativeProps(node: NgtInstanceNode, key: string, value: any) {
 		const localState = getLocalState(node);
 		localState?.setNativeProps(key, value);
 	}
 
 	// NOTE: opportunity to improve perf: a comment with a found directive won't be associated with a different directive
-	private firstNonInjectedDirective<T extends NgtCommonDirective>(dir: Type<T>) {
+	private firstNonInjectedDirective<T extends NgtCommonDirective>(
+		listProperty: 'argsCommentNodes' | 'parentCommentNodes',
+		dir: Type<T>,
+	) {
 		let directive: T | undefined;
 
 		const destroyed = [];
 
-		let i = this.commentNodes.length - 1;
+		let i = this[listProperty].length - 1;
 		while (i >= 0) {
-			const comment = this.commentNodes[i];
+			const comment = this[listProperty][i];
 			if (comment.__ngt_renderer__[NgtRendererClassId.destroyed]) {
 				destroyed.push(i);
 				i--;
@@ -464,7 +475,7 @@ export class NgtRendererStore {
 		}
 
 		destroyed.forEach((index) => {
-			this.commentNodes.splice(index, 1);
+			this[listProperty].splice(index, 1);
 		});
 
 		return directive;
@@ -474,10 +485,10 @@ export class NgtRendererStore {
 		let store: NgtSignalStore<NgtState> | undefined;
 		const destroyed = [];
 		// we only care about the portal states because NgtStore only differs per Portal
-		let i = this.portalNodes.length - 1;
+		let i = this.portalCommentsNodes.length - 1;
 		while (i >= 0) {
 			// loop through the portal state backwards to find the closest NgtStore
-			const portal = this.portalNodes[i];
+			const portal = this.portalCommentsNodes[i];
 			if (portal.__ngt_renderer__[NgtRendererClassId.destroyed]) {
 				destroyed.push(i);
 				i--;
@@ -499,7 +510,7 @@ export class NgtRendererStore {
 		}
 
 		destroyed.forEach((index) => {
-			this.portalNodes.splice(index, 1);
+			this.portalCommentsNodes.splice(index, 1);
 		});
 
 		return store || this.rootState.store;

@@ -3,6 +3,8 @@ import { NgtCommonDirective } from './common';
 
 @Directive({ selector: 'ng-template[args]', standalone: true })
 export class NgtArgs<TArgs extends any[] = any[]> extends NgtCommonDirective {
+	static override nodeType = 'args' as const;
+
 	private injectedArgs: TArgs = [] as unknown as TArgs;
 
 	@Input() set args(args: TArgs | null) {

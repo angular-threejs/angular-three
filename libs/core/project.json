@@ -25,8 +25,15 @@
 		"package": {
 			"executor": "nx:run-commands",
 			"options": {
-				"commands": ["pnpm exec nx build core", "pnpm exec nx build plugin"],
+				"commands": ["pnpm exec nx build core", "pnpm exec nx build plugin", "pnpm exec nx generate-json core"],
 				"parallel": false
+			}
+		},
+		"generate-json": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": ["node ./tools/scripts/generate-json.mjs"],
+				"parallel": true
 			}
 		},
 		"test": {
