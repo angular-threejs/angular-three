@@ -90,7 +90,7 @@ export class NgtRendererStore {
 					this.argsCommentNodes.push(rendererNode);
 				} else if (node === 'parent') {
 					this.parentCommentNodes.push(rendererNode);
-				} else {
+				} else if (typeof node === 'object') {
 					this.portalCommentsNodes.push(node);
 				}
 			};

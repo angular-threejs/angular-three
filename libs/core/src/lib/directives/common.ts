@@ -7,15 +7,19 @@ import {
 	inject,
 	type EmbeddedViewRef,
 } from '@angular/core';
+import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
+
+export const [injectNodeType, provideNodeType] = createInjectionToken(() => '' as 'args' | 'parent' | '', {
+	isRoot: false,
+});
 
 @Directive()
 export abstract class NgtCommonDirective {
-	protected static nodeType: 'args' | 'parent' | '' = '';
-
 	private vcr = inject(ViewContainerRef);
 	private zone = inject(NgZone);
 	private template = inject(TemplateRef);
+	private nodeType = injectNodeType();
 
 	protected injected = false;
 	protected shouldCreateView = true;
@@ -24,7 +28,7 @@ export abstract class NgtCommonDirective {
 	constructor() {
 		const commentNode = this.vcr.element.nativeElement;
 		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT](NgtCommonDirective.nodeType);
+			commentNode[SPECIAL_INTERNAL_ADD_COMMENT](this.nodeType);
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
 		}
 

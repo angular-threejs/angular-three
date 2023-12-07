@@ -1,0 +1,46 @@
+{
+	"name": "angular-three-soba",
+	"version": "0.0.0-replace",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/angular-threejs/angular-three/tree/main/libs/soba"
+	},
+	"author": {
+		"name": "Chau Tran",
+		"email": "nartc7789@gmail.com",
+		"url": "https://nartc.me"
+	},
+	"description": "Utilities for Angular Three",
+	"keywords": [
+		"angular",
+		"threejs",
+		"renderer",
+		"utilities",
+		"shaders"
+	],
+	"license": "MIT",
+	"exports": {
+		"./assets/*": "./assets/*"
+	},
+	"peerDependencies": {
+		"@angular/common": "^17.0.0",
+		"@angular/core": "^17.0.0",
+		"angular-three": "^2.0.0",
+		"meshline": "^3.1.0",
+		"ngxtension": "^1.0.0",
+		"stats-gl": "^1.0.0",
+		"stats.js": "^0.17.0",
+		"three": ">=0.148.0",
+		"three-mesh-bvh": "^0.5.0 || ^0.6.0",
+		"three-stdlib": "^2.0.0",
+		"troika-three-text": "^0.47.0"
+	},
+	"dependencies": {
+		"tslib": "^2.3.0"
+	},
+	"sideEffects": false,
+	"web-types": "./web-types.json"
+}

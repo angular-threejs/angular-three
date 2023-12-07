@@ -24,6 +24,7 @@
 			"angular-three-old": ["libs/core-old/src/index.ts"],
 			"angular-three-postprocessing-old": ["libs/postprocessing-old/src/index.ts"],
 			"angular-three-rapier-old": ["libs/rapier-old/src/index.ts"],
+			"angular-three-soba": ["libs/soba/src/index.ts"],
 			"angular-three-soba-old": ["libs/soba-old/src/index.ts"],
 			"angular-three-soba-old/abstractions": ["libs/soba-old/abstractions/src/index.ts"],
 			"angular-three-soba-old/assets/*": ["libs/soba-old/shaders/assets/*"],
@@ -38,6 +39,7 @@
 			"angular-three-soba-old/shaders": ["libs/soba-old/shaders/src/index.ts"],
 			"angular-three-soba-old/staging": ["libs/soba-old/staging/src/index.ts"],
 			"angular-three-soba-old/utils": ["libs/soba-old/utils/src/index.ts"],
+			"angular-three-soba/controls": ["libs/soba/controls/src/index.ts"],
 			"plugin": ["libs/plugin/src/index.ts"]
 		}
 	},
