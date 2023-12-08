@@ -12,11 +12,9 @@ import { makeDefaultCamera, makeDefaultRenderer, makeDpr } from './utils/make';
 import type { NgtSignalStore } from './utils/signal-store';
 import { checkNeedsUpdate } from './utils/update';
 
-export type NgtCanvasElement = HTMLCanvasElement | OffscreenCanvas;
-
 const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
 
-export const roots = new Map<NgtCanvasElement, NgtSignalStore<NgtState>>();
+export const roots = new Map<HTMLCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
 	return assertInjector(injectCanvasRootInitializer, injector, () => {
@@ -25,7 +23,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 		const loop = injectNgtLoop();
 		const destroyRef = inject(DestroyRef);
 
-		return (canvas: NgtCanvasElement) => {
+		return (canvas: HTMLCanvasElement) => {
 			const exist = roots.has(canvas);
 			let store = roots.get(canvas) as NgtSignalStore<NgtState>;
 
@@ -44,7 +42,6 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 			}
 
 			let isConfigured = false;
-			let lastCamera: NgtCanvasInputs['camera'];
 			let invalidateRef: EffectRef;
 
 			destroyRef.onDestroy(() => invalidateRef?.destroy());

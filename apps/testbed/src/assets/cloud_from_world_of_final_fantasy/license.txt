@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cloud from World of Final Fantasy
+* source:	https://sketchfab.com/3d-models/cloud-from-world-of-final-fantasy-375e9f2471994dc797b2b1b626cbb681
+* author:	Robukan (https://sketchfab.com/robukan)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cloud from World of Final Fantasy" (https://sketchfab.com/3d-models/cloud-from-world-of-final-fantasy-375e9f2471994dc797b2b1b626cbb681) by Robukan (https://sketchfab.com/robukan) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

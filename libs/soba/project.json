@@ -44,7 +44,9 @@
 					"libs/soba/**/*.html",
 					"libs/soba/package.json",
 					"libs/soba/controls/**/*.ts",
-					"libs/soba/controls/**/*.html"
+					"libs/soba/controls/**/*.html",
+					"libs/soba/loaders/**/*.ts",
+					"libs/soba/loaders/**/*.html"
 				]
 			}
 		}

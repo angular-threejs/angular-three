@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import { NgtCanvas, extend } from 'angular-three';
 import * as THREE from 'three';
-import { OrbitControls } from 'three-stdlib';
-import { Scene } from './scene/scene';
+import { VaporwareScene } from './vaporware/scene.component';
 
 extend(THREE);
-extend({ OrbitControls });
 
 @Component({
 	standalone: true,
 	imports: [NgtCanvas],
 	selector: 'platform-root',
-	template: `
-		<ngt-canvas [sceneGraph]="sceneGraph" />
-	`,
+	templateUrl: './app.component.html',
+	host: {
+		style: 'background: black; display: block; height: 100%; width: 100%',
+	},
 })
 export class AppComponent {
-	sceneGraph = Scene;
+	// sceneGraph = Scene;
+	scene = VaporwareScene;
 }

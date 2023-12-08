@@ -157,7 +157,9 @@ export function signalStore<State extends object>(
 		set = setter(source);
 		patch = patcher(source);
 		select = selector(state, computedCache);
-		source.set(initialState({ set, get, patch, select }) as State);
+		untracked(() => {
+			source.set(initialState({ set, get, patch, select }) as State);
+		});
 	} else {
 		source = signal(initialState as State, options);
 		state = source.asReadonly();

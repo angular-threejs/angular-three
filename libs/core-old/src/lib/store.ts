@@ -350,30 +350,36 @@ function storeFactory(loop: NgtLoop, document: Document, injector: Injector, par
 		const _size = store.select('size');
 		const _viewport = store.select('viewport');
 
-		effect(() => {
-			const [camera, size, viewport, gl] = [_camera(), _size(), _viewport(), store.get('gl')];
+		const injector = inject(Injector);
+		queueMicrotask(() => {
+			effect(
+				() => {
+					const [camera, size, viewport, gl] = [_camera(), _size(), _viewport(), store.get('gl')];
 
-			// Resize camera and renderer on changes to size and pixelratio
-			if (size !== oldSize || viewport.dpr !== oldDpr) {
-				oldSize = size;
-				oldDpr = viewport.dpr;
-				// Update camera & renderer
-				updateCamera(camera, size);
-				gl.setPixelRatio(viewport.dpr);
+					// Resize camera and renderer on changes to size and pixelratio
+					if (size !== oldSize || viewport.dpr !== oldDpr) {
+						oldSize = size;
+						oldDpr = viewport.dpr;
+						// Update camera & renderer
+						updateCamera(camera, size);
+						gl.setPixelRatio(viewport.dpr);
 
-				const updateStyle = typeof HTMLCanvasElement !== 'undefined' && gl.domElement instanceof HTMLCanvasElement;
-				gl.setSize(size.width, size.height, updateStyle);
-			}
+						const updateStyle = typeof HTMLCanvasElement !== 'undefined' && gl.domElement instanceof HTMLCanvasElement;
+						gl.setSize(size.width, size.height, updateStyle);
+					}
 
-			// Update viewport once the camera changes
-			if (camera !== oldCamera) {
-				oldCamera = camera;
-				updateCamera(camera, size);
-				// Update viewport
-				store.set((state) => ({
-					viewport: { ...state.viewport, ...state.viewport.getCurrentViewport(camera) },
-				}));
-			}
+					// Update viewport once the camera changes
+					if (camera !== oldCamera) {
+						oldCamera = camera;
+						updateCamera(camera, size);
+						// Update viewport
+						store.set((state) => ({
+							viewport: { ...state.viewport, ...state.viewport.getCurrentViewport(camera) },
+						}));
+					}
+				},
+				{ injector },
+			);
 		});
 
 		return store;

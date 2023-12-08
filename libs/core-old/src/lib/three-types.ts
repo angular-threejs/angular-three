@@ -173,8 +173,6 @@ export type NgtRectAreaLight = NgtLight<THREE.RectAreaLight, typeof THREE.RectAr
 export type NgtHemisphereLight = NgtLight<THREE.HemisphereLight, typeof THREE.HemisphereLight>;
 export type NgtDirectionalLight = NgtLight<THREE.DirectionalLight, typeof THREE.DirectionalLight>;
 export type NgtAmbientLight = NgtLight<THREE.AmbientLight, typeof THREE.AmbientLight>;
-export type NgtAmbientLightProbe = NgtLight<THREE.AmbientLightProbe, typeof THREE.AmbientLightProbe>;
-export type NgtHemisphereLightProbe = NgtLight<THREE.HemisphereLightProbe, typeof THREE.HemisphereLightProbe>;
 export type NgtLightProbe = NgtLight<THREE.LightProbe, typeof THREE.LightProbe>;
 
 export type NgtSpotLightHelper = NgtObject3DNode<THREE.SpotLightHelper, typeof THREE.SpotLightHelper>;
@@ -320,8 +318,6 @@ export interface ThreeElements {
 	'ngt-directional-light': NgtDirectionalLight;
 	'ngt-ambient-light': NgtAmbientLight;
 	'ngt-light-shadow': NgtLightShadow;
-	'ngt-ambient-light-probe': NgtAmbientLightProbe;
-	'ngt-hemisphere-light-probe': NgtHemisphereLightProbe;
 	'ngt-light-probe': NgtLightProbe;
 
 	// helpers
