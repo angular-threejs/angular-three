@@ -15,7 +15,7 @@
 			"options": {
 				"main": "apps/examples/src/main.ts",
 				"configFile": "apps/examples/vite.config.ts",
-				"outputPath": "dist/apps/examples/client"
+				"outputPath": "dist/apps/examples"
 			},
 			"defaultConfiguration": "production",
 			"configurations": {
@@ -54,10 +54,7 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": ["apps/examples/**/*.{ts,html}"]
-			}
+			"outputs": ["{options.outputFile}"]
 		}
 	},
 	"tags": []

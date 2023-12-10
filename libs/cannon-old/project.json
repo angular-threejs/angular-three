@@ -37,18 +37,7 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": [
-					"libs/cannon-old/**/*.ts",
-					"libs/cannon-old/**/*.html",
-					"libs/cannon-old/package.json",
-					"libs/cannon-old/debug/**/*.ts",
-					"libs/cannon-old/debug/**/*.html",
-					"libs/cannon-old/services/**/*.ts",
-					"libs/cannon-old/services/**/*.html"
-				]
-			}
+			"outputs": ["{options.outputFile}"]
 		}
 	}
 }

@@ -37,14 +37,7 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": [
-					"libs/postprocessing-old/**/*.ts",
-					"libs/postprocessing-old/**/*.html",
-					"libs/postprocessing-old/package.json"
-				]
-			}
+			"outputs": ["{options.outputFile}"]
 		}
 	}
 }

@@ -31,10 +31,7 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": ["libs/rapier-old/**/*.ts", "libs/rapier-old/**/*.html", "libs/rapier-old/package.json"]
-			}
+			"outputs": ["{options.outputFile}"]
 		}
 	}
 }

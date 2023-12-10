@@ -37,38 +37,7 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": [
-					"libs/soba-old/**/*.ts",
-					"libs/soba-old/**/*.html",
-					"libs/soba-old/package.json",
-					"libs/soba-old/abstractions/**/*.ts",
-					"libs/soba-old/abstractions/**/*.html",
-					"libs/soba-old/controls/**/*.ts",
-					"libs/soba-old/controls/**/*.html",
-					"libs/soba-old/misc/**/*.ts",
-					"libs/soba-old/misc/**/*.html",
-					"libs/soba-old/loaders/**/*.ts",
-					"libs/soba-old/loaders/**/*.html",
-					"libs/soba-old/cameras/**/*.ts",
-					"libs/soba-old/cameras/**/*.html",
-					"libs/soba-old/shaders/**/*.ts",
-					"libs/soba-old/shaders/**/*.html",
-					"libs/soba-old/staging/**/*.ts",
-					"libs/soba-old/staging/**/*.html",
-					"libs/soba-old/performances/**/*.ts",
-					"libs/soba-old/performances/**/*.html",
-					"libs/soba-old/materials/**/*.ts",
-					"libs/soba-old/materials/**/*.html",
-					"libs/soba-old/modifiers/**/*.ts",
-					"libs/soba-old/modifiers/**/*.html",
-					"libs/soba-old/utils/**/*.ts",
-					"libs/soba-old/utils/**/*.html",
-					"libs/soba-old/gizmos/**/*.ts",
-					"libs/soba-old/gizmos/**/*.html"
-				]
-			}
+			"outputs": ["{options.outputFile}"]
 		},
 		"storybook": {
 			"executor": "@storybook/angular:start-storybook",
