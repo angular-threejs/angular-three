@@ -32,7 +32,7 @@
 		"generate-json": {
 			"executor": "nx:run-commands",
 			"options": {
-				"commands": ["node ./tools/scripts/generate-json.mjs"],
+				"commands": ["node ./tools/scripts/generate-json.mjs", "node ./tools/scripts/generate-soba-json.mjs"],
 				"parallel": true
 			}
 		},
