@@ -183,8 +183,8 @@ export class NgtCanvas {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			this.glEnvironmentInjector?.destroy();
 			this.glRef?.destroy();
+			this.glEnvironmentInjector?.destroy();
 			this.configurator?.destroy();
 		});
 	}
