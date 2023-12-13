@@ -7,6 +7,7 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 // https://vitejs.dev/config/
 export default defineConfig(() => {
 	return {
+		root: __dirname,
 		publicDir: 'src/public',
 		build: {
 			outDir: '../../dist/apps/examples/client',
