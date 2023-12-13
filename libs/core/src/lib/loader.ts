@@ -135,7 +135,7 @@ _injectNgtLoader.preload = <
 	inputs: () => TUrl,
 	extensions?: NgtLoaderExtensions<TLoaderConstructor>,
 ) => {
-	Promise.all(load(loaderConstructorFactory, inputs, { extensions })());
+	void Promise.all(load(loaderConstructorFactory, inputs, { extensions })());
 };
 
 _injectNgtLoader.destroy = () => {

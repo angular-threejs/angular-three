@@ -129,7 +129,7 @@ export type NgtState = {
 	/** When the canvas was clicked but nothing was hit */
 	/** PointerMissed Observable */
 	pointerMissed$: Observable<MouseEvent>;
-	/** If this state model is layerd (via createPortal) then this contains the previous layer */
+	/** If this state model is layered (via createPortal) then this contains the previous layer */
 	previousRoot: NgtSignalStore<NgtState> | null;
 	/** Internals */
 	internal: NgtInternalState;
@@ -288,7 +288,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 					// As long as this flag is positive there can be no internal rendering at all
 					// because there could be multiple render subscriptions
 					internal.priority = internal.priority + (priority > 0 ? 1 : 0);
-					internal.subscribers.push({ callback, priority, store });
+					internal.subscribers.push({ callback, priority, store: _store });
 					// Register subscriber and sort layers from lowest to highest, meaning,
 					// highest priority renders last (on top of the other frames)
 					internal.subscribers = internal.subscribers.sort((a, b) => (a.priority || 0) - (b.priority || 0));
@@ -320,7 +320,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 	effect(() => {
 		const [newCamera, newSize, newDpr, gl] = [camera(), size(), viewportDpr(), store.snapshot.gl];
 
-		// Resize camera and renderer on changes to size and pixelratio
+		// Resize camera and renderer on changes to size and pixel-ratio
 		if (newSize !== oldSize || newDpr !== oldDpr) {
 			oldSize = newSize;
 			oldDpr = newDpr;
