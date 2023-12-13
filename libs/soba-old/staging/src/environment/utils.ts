@@ -78,17 +78,17 @@ export function injectNgtsEnvironment(paramsFactory: () => Partial<NgtsInjectEnv
 				const extension = Array.isArray(files)
 					? 'cube'
 					: files.startsWith('data:application/exr')
-					  ? 'exr'
-					  : files.startsWith('data:application/hdr')
-					    ? 'hdr'
-					    : files.split('.').pop()?.split('?')?.shift()?.toLowerCase();
+						? 'exr'
+						: files.startsWith('data:application/hdr')
+							? 'hdr'
+							: files.split('.').pop()?.split('?')?.shift()?.toLowerCase();
 				return isCubeMap
 					? CubeTextureLoader
 					: extension === 'hdr'
-					  ? RGBELoader
-					  : extension === 'exr'
-					    ? EXRLoader
-					    : null;
+						? RGBELoader
+						: extension === 'exr'
+							? EXRLoader
+							: null;
 			},
 			() => {
 				const { files } = params();

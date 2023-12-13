@@ -147,13 +147,13 @@ export class NgtsGizmoHelper {
 		const x = alignment.endsWith('-center')
 			? 0
 			: alignment.endsWith('-left')
-			  ? -width / 2 + marginX
-			  : width / 2 - marginX;
+				? -width / 2 + marginX
+				: width / 2 - marginX;
 		const y = alignment.startsWith('center-')
 			? 0
 			: alignment.startsWith('top-')
-			  ? height / 2 - marginY
-			  : -height / 2 + marginY;
+				? height / 2 - marginY
+				: -height / 2 + marginY;
 		return [x, y, 0];
 	});
 

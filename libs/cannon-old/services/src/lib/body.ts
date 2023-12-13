@@ -282,7 +282,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 							addToDebug?.(id, props, type);
 							setupCollision(events, props, id);
 							return { ...props, args: argsFn(props.args) };
-					  })
+						})
 					: uuid.map((id, i) => {
 							const props = getPropsFn(i);
 							prepare(object, props);
@@ -290,7 +290,7 @@ function injectBody<TBodyProps extends BodyProps, TObject extends THREE.Object3D
 							addToDebug?.(id, props, type);
 							setupCollision(events, props, id);
 							return { ...props, args: argsFn(props.args) };
-					  });
+						});
 
 			// Register on mount, unregister on unmount
 			currentWorker.addBodies({

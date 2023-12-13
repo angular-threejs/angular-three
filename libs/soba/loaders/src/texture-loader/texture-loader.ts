@@ -19,8 +19,8 @@ function _injectNgtsTextureLoader<TInput extends string[] | string | Record<stri
 				const array = Array.isArray(textures)
 					? textures
 					: textures instanceof THREE.Texture
-					  ? [textures]
-					  : Object.values(textures);
+						? [textures]
+						: Object.values(textures);
 				if (onLoad) onLoad(array);
 				array.forEach(gl.initTexture.bind(gl));
 			}

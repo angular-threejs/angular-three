@@ -26,7 +26,7 @@ $jscomp.defineProperty =
 		? Object.defineProperty
 		: function (f, m, v) {
 				f != Array.prototype && f != Object.prototype && (f[m] = v.value);
-		  };
+			};
 $jscomp.polyfill = function (f, m, v, t) {
 	if (m) {
 		v = $jscomp.global;
@@ -54,7 +54,7 @@ $jscomp.polyfill(
 				? e
 				: new h(function (l, f) {
 						l(e);
-				  });
+					});
 		}
 		if (f && !$jscomp.FORCE_POLYFILL_PROMISE) return f;
 		m.prototype.asyncExecute = function (e) {
@@ -181,7 +181,7 @@ $jscomp.polyfill(
 							} catch (p) {
 								v(p);
 							}
-					  }
+						}
 					: f;
 			}
 			var m,
@@ -240,7 +240,7 @@ $jscomp.polyfill(
 							z = 0;
 						do t.push(void 0), z++, v(m.value).callWhenSettled_(l(t.length - 1), h), (m = f.next());
 						while (!m.done);
-				  });
+					});
 		};
 		return h;
 	},
@@ -338,7 +338,7 @@ var DracoDecoderModule = (function () {
 			return da || (!ea && !Z) || 'function' !== typeof fetch
 				? new Promise(function (a, c) {
 						a(wa());
-				  })
+					})
 				: fetch(U, { credentials: 'same-origin' })
 						.then(function (a) {
 							if (!a.ok) throw "failed to load wasm binary file at '" + U + "'";
@@ -392,12 +392,12 @@ var DracoDecoderModule = (function () {
 				0 < aa ||
 					(a.setStatus
 						? (a.setStatus('Running...'),
-						  setTimeout(function () {
+							setTimeout(function () {
 								setTimeout(function () {
 									a.setStatus('');
 								}, 1);
 								c();
-						  }, 1))
+							}, 1))
 						: c());
 			}
 		}
@@ -555,10 +555,10 @@ var DracoDecoderModule = (function () {
 			return 2 > a.length || 3 < a.length
 				? !1
 				: 1 == a[0] && 0 <= a[1] && 3 >= a[1]
-				  ? !0
-				  : 0 != a[0] || 10 < a[1]
-				    ? !1
-				    : !0;
+					? !0
+					: 0 != a[0] || 10 < a[1]
+						? !1
+						: !0;
 		};
 		var ha = {},
 			W;
@@ -1968,7 +1968,7 @@ var DracoDecoderModule = (function () {
 'object' === typeof exports && 'object' === typeof module
 	? (module.exports = DracoDecoderModule)
 	: 'function' === typeof define && define.amd
-	  ? define([], function () {
+		? define([], function () {
 				return DracoDecoderModule;
-	    })
-	  : 'object' === typeof exports && (exports.DracoDecoderModule = DracoDecoderModule);
+			})
+		: 'object' === typeof exports && (exports.DracoDecoderModule = DracoDecoderModule);

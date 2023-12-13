@@ -194,10 +194,10 @@ export class StorybookSetup implements OnInit {
 type DeepPartial<T> = T extends Function
 	? T
 	: T extends Array<infer ArrayItemType>
-	  ? DeepPartialArray<ArrayItemType>
-	  : T extends object
-	    ? DeepPartialObject<T>
-	    : T | undefined;
+		? DeepPartialArray<ArrayItemType>
+		: T extends object
+			? DeepPartialObject<T>
+			: T | undefined;
 
 type DeepPartialArray<T> = Array<DeepPartial<T>>;
 

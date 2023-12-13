@@ -371,7 +371,7 @@ var DracoDecoderModule = (function () {
 									}
 								} while (i < input.length);
 								return output;
-						  };
+							};
 				function intArrayFromBase64(s) {
 					if (typeof ENVIRONMENT_IS_NODE === 'boolean' && ENVIRONMENT_IS_NODE) {
 						var buf;
@@ -33687,10 +33687,10 @@ var DracoDecoderModule = (function () {
 																(Lm | 0) < (Im | 0)
 																	? 1
 																	: (Lm | 0) <= (Im | 0)
-																	  ? r[(Rl + 8) >> 2] > Mm >>> 0
+																		? r[(Rl + 8) >> 2] > Mm >>> 0
 																			? 0
 																			: 1
-																	  : 0
+																		: 0
 															) {
 																break e;
 															}
@@ -33717,10 +33717,10 @@ var DracoDecoderModule = (function () {
 																	(Om | 0) < (Mm | 0)
 																		? 1
 																		: (Om | 0) <= (Mm | 0)
-																		  ? r[(Lm + 8) >> 2] >= Im >>> 0
+																			? r[(Lm + 8) >> 2] >= Im >>> 0
 																				? 0
 																				: 1
-																		  : 0
+																			: 0
 																) {
 																	break e;
 																}
@@ -42636,7 +42636,7 @@ var DracoDecoderModule = (function () {
 							}
 						} while (i < input.length);
 						return output;
-				  };
+					};
 		function intArrayFromBase64(s) {
 			if (typeof ENVIRONMENT_IS_NODE === 'boolean' && ENVIRONMENT_IS_NODE) {
 				var buf;
