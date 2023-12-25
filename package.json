@@ -128,6 +128,7 @@
     "troika-three-text": "^0.49.0",
     "tslib": "^2.6.2",
     "zone.js": "0.14.2"
-  }
+  },
+  "web-types": "./node_modules/angular-three/web-types.json"
 }
 

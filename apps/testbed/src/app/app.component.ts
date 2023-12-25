@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgtCanvas, extend } from 'angular-three';
 import * as THREE from 'three';
-import { VaporwareScene } from './vaporware/scene.component';
+import { Scene } from './scene/scene';
 
 extend(THREE);
 
@@ -15,6 +15,6 @@ extend(THREE);
 	},
 })
 export class AppComponent {
-	// sceneGraph = Scene;
-	scene = VaporwareScene;
+	sceneGraph = Scene;
+	// scene = VaporwareScene;
 }

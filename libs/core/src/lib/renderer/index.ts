@@ -265,7 +265,7 @@ export class NgtRenderer implements Renderer2 {
 
 		// if only the parent is the THREE instance
 		if (pRS[NgtRendererClassId.type] === 'three') {
-			for (const renderChild of cRS?.[NgtRendererClassId.children]) {
+			for (const renderChild of cRS?.[NgtRendererClassId.children] || []) {
 				this.appendChild(parent, renderChild);
 			}
 		}

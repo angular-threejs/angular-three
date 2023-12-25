@@ -137,7 +137,7 @@ export class NgtCanvas {
 	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
 
-	@Input({ required: true }) sceneGraph!: Type<unknown>;
+	@Input({ required: true }) sceneGraph!: Type<any>;
 	@Input() compoundPrefixes: string[] = [];
 
 	private sceneGraphInputs = signal<NgtAnyRecord>({}, { equal: Object.is });
@@ -231,8 +231,8 @@ export class NgtCanvas {
 			state.setEvents({
 				compute: (event, store) => {
 					const { pointer, raycaster, camera, size } = store.snapshot;
-					const x = event[inputs.eventPrefix + 'X' as keyof NgtDomEvent] as number;
-					const y = event[inputs.eventPrefix + 'Y' as keyof NgtDomEvent] as number;
+					const x = event[(inputs.eventPrefix + 'X') as keyof NgtDomEvent] as number;
+					const y = event[(inputs.eventPrefix + 'Y') as keyof NgtDomEvent] as number;
 					pointer.set((x / size.width) * 2 - 1, -(y / size.height) * 2 + 1);
 					raycaster.setFromCamera(pointer, camera);
 				},

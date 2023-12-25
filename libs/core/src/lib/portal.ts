@@ -1,21 +1,22 @@
 import {
-	CUSTOM_ELEMENTS_SCHEMA,
+	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
 	ContentChild,
+	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
 	Directive,
 	ElementRef,
+	inject,
 	Injector,
 	Input,
+	signal,
 	SkipSelf,
 	TemplateRef,
+	untracked,
 	ViewChild,
 	ViewContainerRef,
-	afterNextRender,
-	computed,
-	inject,
-	untracked,
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { createInjectionToken } from 'ngxtension/create-injection-token';
@@ -24,9 +25,8 @@ import type { NgtEventManager } from './events';
 import { prepare } from './instance';
 import { injectNgtRef } from './ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { NGT_STORE, injectNgtStore, type NgtSize, type NgtState } from './store';
+import { injectNgtStore, NGT_STORE, type NgtSize, type NgtState } from './store';
 import { injectBeforeRender } from './utils/before-render';
-import { cdAwareSignal } from './utils/cd-aware-signal';
 import { is } from './utils/is';
 import { signalStore, type NgtSignalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
@@ -62,7 +62,7 @@ const [, providePortalStore] = createInjectionToken(
 		const parentState = parentStore.snapshot;
 		const pointer = new THREE.Vector2();
 		const raycaster = new THREE.Raycaster();
-		const store = signalStore<NgtState>(({ update }) => {
+		return signalStore<NgtState>(({ update }) => {
 			return {
 				...parentState,
 				pointer,
@@ -72,8 +72,6 @@ const [, providePortalStore] = createInjectionToken(
 				setEvents: (events) => update((state) => ({ ...state, events: { ...state.events, ...events } })),
 			};
 		});
-
-		return store;
 	},
 	{ isRoot: false, token: NGT_STORE, deps: [[new SkipSelf(), NGT_STORE]] },
 );
@@ -162,7 +160,7 @@ export class NgtPortal {
 		this.portalInputs.update(value);
 	}
 
-	private autoRender = cdAwareSignal(false);
+	private autoRender = signal(false);
 	@Input({ alias: 'autoRender' }) set _autoRender(value: boolean) {
 		this.autoRender.set(value);
 	}
@@ -180,7 +178,7 @@ export class NgtPortal {
 	private parentStore = injectNgtStore({ skipSelf: true });
 	private portalStore = injectNgtStore({ self: true });
 
-	private portalRendered = cdAwareSignal(false);
+	private portalRendered = signal(false);
 
 	protected renderAutoBeforeRender = computed(() => this.portalRendered() && this.autoRender());
 	protected parentScene = this.parentStore.get('scene');

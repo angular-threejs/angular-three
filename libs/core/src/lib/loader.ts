@@ -1,7 +1,6 @@
-import { Injector, effect, type Signal } from '@angular/core';
+import { Injector, effect, signal, type Signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import type { NgtAnyRecord } from './types';
-import { cdAwareSignal } from './utils/cd-aware-signal';
 import { makeObjectGraph, type NgtObjectMap } from './utils/make';
 
 export type NgtGLTFLike = { scene: THREE.Object3D };
@@ -98,7 +97,7 @@ function _injectNgtLoader<
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
 	return assertInjector(_injectNgtLoader, injector, () => {
-		const response = cdAwareSignal<NgtLoaderResults<
+		const response = signal<NgtLoaderResults<
 			TUrl,
 			NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 		> | null>(null);

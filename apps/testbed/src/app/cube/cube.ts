@@ -14,7 +14,7 @@ import { WithTimeline, injectGsap } from './gsap';
 	standalone: true,
 	template: `
 		<ngt-mesh
-			[withTimeline]="gsapTimeline.mesh"
+			[withTimeline]="gsapTimeline['mesh']"
 			[position]="position"
 			(beforeRender)="onBeforeRender($event)"
 			(pointerover)="hover.set(true)"
@@ -22,7 +22,7 @@ import { WithTimeline, injectGsap } from './gsap';
 			(click)="active.set(!active())"
 		>
 			<ngt-box-geometry *args="[1.5, 1.5, 1.5]" />
-			<ngt-mesh-standard-material [withTimeline]="gsapTimeline.material" />
+			<ngt-mesh-standard-material [withTimeline]="gsapTimeline['material']" />
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
