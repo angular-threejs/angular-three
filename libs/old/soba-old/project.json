@@ -1,0 +1,90 @@
+{
+	"name": "soba-old",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/old/soba-old/src",
+	"prefix": "platform",
+	"tags": [],
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+			"options": {
+				"project": "libs/old/soba-old/ng-package.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/old/soba-old/tsconfig.lib.prod.json"
+				},
+				"development": {
+					"tsConfig": "libs/old/soba-old/tsconfig.lib.json"
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"publish": {
+			"command": "npm publish",
+			"options": {
+				"cwd": "dist/libs/old/soba-old"
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/old/soba-old/jest.config.ts"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		},
+		"storybook": {
+			"executor": "@storybook/angular:start-storybook",
+			"options": {
+				"port": 4400,
+				"configDir": "libs/old/soba-old/.storybook",
+				"browserTarget": "soba-old:build-storybook",
+				"compodoc": false
+			},
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			}
+		},
+		"build-storybook": {
+			"executor": "@storybook/angular:build-storybook",
+			"outputs": ["{options.outputDir}"],
+			"options": {
+				"outputDir": "dist/storybook/soba",
+				"configDir": "libs/old/soba-old/.storybook",
+				"browserTarget": "soba-old:build-storybook",
+				"compodoc": false
+			},
+			"configurations": {
+				"ci": {
+					"quiet": true
+				}
+			}
+		},
+		"test-storybook": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "test-storybook -c libs/old/soba-old/.storybook --url=http://localhost:4400"
+			}
+		},
+		"static-storybook": {
+			"executor": "@nx/web:file-server",
+			"options": {
+				"buildTarget": "soba-old:build-storybook",
+				"staticFilePath": "dist/storybook/soba"
+			},
+			"configurations": {
+				"ci": {
+					"buildTarget": "soba-old:build-storybook:ci"
+				}
+			}
+		}
+	}
+}

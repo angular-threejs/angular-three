@@ -1,0 +1,37 @@
+{
+	"name": "rapier-old",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/old/rapier-old/src",
+	"prefix": "platform",
+	"tags": [],
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+			"options": {
+				"project": "libs/old/rapier-old/ng-package.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/old/rapier-old/tsconfig.lib.prod.json"
+				},
+				"development": {
+					"tsConfig": "libs/old/rapier-old/tsconfig.lib.json"
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/old/rapier-old/jest.config.ts"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		}
+	}
+}

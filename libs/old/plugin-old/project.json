@@ -1,0 +1,52 @@
+{
+	"name": "plugin-old",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/old/plugin-old/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nx/js:tsc",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/libs/core/plugin",
+				"main": "libs/old/plugin-old/src/index.ts",
+				"tsConfig": "libs/old/plugin-old/tsconfig.lib.json",
+				"assets": [
+					"libs/old/plugin-old/*.md",
+					{
+						"input": "./libs/old/plugin-old/src",
+						"glob": "**/!(*.ts)",
+						"output": "./src"
+					},
+					{
+						"input": "./libs/old/plugin-old/src",
+						"glob": "**/*.d.ts",
+						"output": "./src"
+					},
+					{
+						"input": "./libs/old/plugin-old",
+						"glob": "generators.json",
+						"output": "."
+					},
+					{
+						"input": "./libs/old/plugin-old",
+						"glob": "migrations.json",
+						"output": "."
+					}
+				]
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/old/plugin-old/jest.config.ts"
+			}
+		}
+	},
+	"tags": []
+}
