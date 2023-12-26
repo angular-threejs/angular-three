@@ -202,11 +202,12 @@ export function processThreeEvent(
 
 	// clean up the event listener by removing the target from the interaction array
 	return () => {
-		const localState = getLocalState(instance);
-		if (localState && localState.eventCount) {
-			localState.eventCount -= 1;
-			const index = localState.store.get('internal', 'interaction').findIndex((obj) => obj.uuid === instance.uuid);
-			if (index >= 0) localState.store.get('internal', 'interaction').splice(index, 1);
+		const lS = getLocalState(instance);
+		if (lS) {
+			lS.eventCount -= 1;
+			const interactions = lS.store.get('internal', 'interaction') || [];
+			const index = interactions.findIndex((obj) => obj.uuid === instance.uuid);
+			if (index >= 0) interactions.splice(index, 1);
 		}
 	};
 }

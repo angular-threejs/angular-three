@@ -37,7 +37,7 @@ export class NgtRendererFactory implements RendererFactory2 {
 	private rendererMap = new Map<string, Renderer2>();
 	private routedSet = new Set<string>();
 
-	// NOTE: all Renderer instances share the same Store
+	// NOTE: all Renderer instances under the same NgtCanvas share the same Store
 	private rendererStore = new NgtRendererStore({
 		store: injectNgtStore(),
 		compoundPrefixes: inject(NGT_COMPOUND_PREFIXES),
@@ -48,10 +48,13 @@ export class NgtRendererFactory implements RendererFactory2 {
 		const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
 
 		if (!type) return delegateRenderer;
+
+		// NOTE: might need to revisit this
 		if ((type as NgtAnyRecord)['type'][HTML]) {
 			this.rendererMap.set(type.id, delegateRenderer);
 			return delegateRenderer;
 		}
+
 		if ((type as NgtAnyRecord)['type'][ROUTED_SCENE]) {
 			this.routedSet.add(type.id);
 		}
@@ -92,17 +95,14 @@ export class NgtRenderer implements Renderer2 {
 			return node;
 		}
 
-		// handle compound
 		if (this.store.isCompound(name)) {
 			return this.store.createNode('compound', element);
 		}
 
-		// handle portal
 		if (name === SPECIAL_DOM_TAG.NGT_PORTAL) {
 			return this.store.createNode('portal', element);
 		}
 
-		// handle raw value
 		if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
 			return this.store.createNode(
 				'three',
@@ -124,7 +124,6 @@ export class NgtRenderer implements Renderer2 {
 				.getObjectByName(injectedParent) as unknown as NgtRendererState[NgtRendererClassId.injectedParent];
 		}
 
-		// handle primitive
 		if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
 			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
 			const object = injectedArgs[0];
@@ -303,8 +302,8 @@ export class NgtRenderer implements Renderer2 {
 		parent: NgtRendererNode,
 		newChild: NgtRendererNode,
 		// TODO: we might need these?
-		_refChild: NgtRendererNode,
-		_isMove?: boolean | undefined,
+		// _refChild: NgtRendererNode,
+		// _isMove?: boolean | undefined,
 	): void {
 		if (parent == null || !parent.__ngt_renderer__ || parent === newChild) return;
 		this.appendChild(parent, newChild);
@@ -372,8 +371,7 @@ export class NgtRenderer implements Renderer2 {
 				return false;
 			}
 
-			this.setAttributeInternal(rS[NgtRendererClassId.compounded], name, value, namespace);
-			return false;
+			return this.setAttributeInternal(rS[NgtRendererClassId.compounded], name, value, namespace);
 		}
 
 		if (rS[NgtRendererClassId.type] === 'three') {

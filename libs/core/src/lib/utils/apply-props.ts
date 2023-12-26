@@ -6,7 +6,7 @@ import { is } from './is';
 import { checkUpdate } from './update';
 
 // This function prepares a set of changes to be applied to the instance
-export function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
+function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
 	const propsEntries = Object.entries(props);
 	const changes: [key: string, value: unknown][] = [];
 

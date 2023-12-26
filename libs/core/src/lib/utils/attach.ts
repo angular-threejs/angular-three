@@ -20,7 +20,7 @@ export function detach(parent: NgtAnyRecord, child: NgtAnyRecord, attachProp: st
 	const childLocalState = getLocalState(child);
 	if (childLocalState) {
 		if (Array.isArray(attachProp)) attach(parent, childLocalState.previousAttach, attachProp);
-		else (childLocalState.previousAttach as Function)();
+		else (childLocalState.previousAttach as () => void)();
 	}
 }
 

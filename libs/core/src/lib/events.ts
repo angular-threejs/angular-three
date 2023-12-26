@@ -223,7 +223,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 
 		// If the interaction is captured, make all capturing targets part of the intersect.
 		if ('pointerId' in event && state.internal.capturedMap.has(event.pointerId)) {
-			for (let captureData of state.internal.capturedMap.get(event.pointerId)!.values()) {
+			for (const captureData of state.internal.capturedMap.get(event.pointerId)!.values()) {
 				if (!duplicates.has(makeId(captureData.intersection))) intersections.push(captureData.intersection);
 			}
 		}
@@ -273,8 +273,8 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 				// Add native event props
 				const extractEventProps: any = {};
 				// This iterates over the event's properties including the inherited ones. Native PointerEvents have most of their props as getters which are inherited, but polyfilled PointerEvents have them all as their own properties (i.e. not inherited). We can't use Object.keys() or Object.entries() as they only return "own" properties; nor Object.getPrototypeOf(event) as that *doesn't* return "own" properties, only inherited ones.
-				for (let prop in event) {
-					let property = event[prop as keyof NgtDomEvent];
+				for (const prop in event) {
+					const property = event[prop as keyof NgtDomEvent];
 					// Only copy over atomics, leave functions alone as these should be
 					// called as event.nativeEvent.fn()
 					if (typeof property !== 'function') extractEventProps[prop] = property;
@@ -325,7 +325,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 				// Call subscribers
 				callback(raycastEvent);
 				// Event bubbling may be interrupted by stopPropagation
-				if (localState.stopped === true) break;
+				if (localState.stopped) break;
 			}
 		}
 		return intersections;

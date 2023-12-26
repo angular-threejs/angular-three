@@ -240,6 +240,7 @@ export class NgtRendererStore {
 
 	private executeOperation(node: NgtRendererNode, type: NgtQueueOp[NgtQueueOpClassId.type] = 'op') {
 		const rS = node.__ngt_renderer__;
+		// TODO: maybe an array with pop() would work better
 		if (rS[NgtRendererClassId.queueOps]?.size) {
 			rS[NgtRendererClassId.queueOps].forEach((op) => {
 				if (op[NgtQueueOpClassId.type] === type) {
@@ -443,7 +444,6 @@ export class NgtRendererStore {
 		localState?.setNativeProps(key, value);
 	}
 
-	// NOTE: opportunity to improve perf: a comment with a found directive won't be associated with a different directive
 	private firstNonInjectedDirective<T extends NgtCommonDirective>(
 		listProperty: 'argsCommentNodes' | 'parentCommentNodes',
 		dir: Type<T>,
