@@ -1,5 +1,12 @@
 
 
+## [2.0.0-beta.42](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.41...2.0.0-beta.42) (2024-01-03)
+
+
+### Bug Fixes
+
+* **core:** adjust nested effects ([59f0dda](https://github.com/angular-threejs/angular-three/commit/59f0dda41027e051ef266eb32c411371e80d0703))
+
 ## [2.0.0-beta.41](https://github.com/angular-threejs/angular-three/compare/2.0.0-beta.40...2.0.0-beta.41) (2023-10-04)
 
 
