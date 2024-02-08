@@ -64,5 +64,12 @@
 		"@nx/workspace:move": {
 			"projectNameAndRootFormat": "as-provided"
 		}
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"options": {
+				"cacheableOperations": ["build-storybook"]
+			}
+		}
 	}
 }
