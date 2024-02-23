@@ -12,7 +12,8 @@
 				"@angular-eslint/directive-class-suffix": 0,
 				"@angular-eslint/no-host-metadata-property": 0,
 				"@angular-eslint/no-input-rename": 0,
-				"@typescript-eslint/no-explicit-any": 0
+				"@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/no-empty-function": 0
 			}
 		},
 		{
