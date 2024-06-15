@@ -4,17 +4,16 @@ import {
 	DestroyRef,
 	ElementRef,
 	EnvironmentInjector,
-	EventEmitter,
 	Injector,
-	Input,
 	NgZone,
-	Output,
 	ViewChild,
 	ViewContainerRef,
 	afterNextRender,
+	booleanAttribute,
 	computed,
 	createEnvironmentInjector,
 	inject,
+	input,
 	signal,
 	untracked,
 	type ComponentRef,
@@ -22,6 +21,7 @@ import {
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { NgxResize, provideResizeOptions, type ResizeOptions, type ResizeResult } from 'ngxtension/resize';
+import type { Raycaster, Scene, Vector3 } from 'three';
 import * as THREE from 'three';
 import { createPointerEvents } from './dom/events';
 import type { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
@@ -39,7 +39,7 @@ import {
 import type { NgtObject3DNode } from './three-types';
 import type { NgtAnyRecord, NgtProperties } from './types';
 import { is } from './utils/is';
-import { signalStore, type NgtSignalStore } from './utils/signal-store';
+import { type NgtSignalStore } from './utils/signal-store';
 
 export type NgtGLOptions =
 	| NgtRendererLike
@@ -137,29 +137,33 @@ export class NgtCanvas {
 	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
 
-	@Input({ required: true }) sceneGraph!: Type<any>;
-	@Input() compoundPrefixes: string[] = [];
-
-	private sceneGraphInputs = signal<NgtAnyRecord>({}, { equal: Object.is });
-	@Input({ alias: 'sceneGraphInputs' }) set _sceneGraphInputs(value: NgtAnyRecord) {
-		this.sceneGraphInputs.set(value);
-	}
-
-	private canvasInputs = signalStore<NgtCanvasInputs>({
-		shadows: false,
-		linear: false,
-		flat: false,
-		legacy: false,
-		orthographic: false,
-		frameloop: 'always',
-		dpr: [1, 2],
-		events: createPointerEvents,
+	sceneGraph = input.required<Type<any>>();
+	compoundPrefixes = input<string[]>([]);
+	sceneGraphInputs = input<NgtAnyRecord>({});
+	gl = input<NgtGLOptions>();
+	size = input<NgtSize>();
+	shadows = input(false, {
+		transform: (value) => {
+			if (value === '') return booleanAttribute(value);
+			return value as NonNullable<NgtCanvasInputs['shadows']>;
+		},
 	});
-	@Input({ alias: 'options' }) set _canvasInputs(value: Partial<NgtCanvasInputs>) {
-		this.canvasInputs.update(value);
-	}
-
-	@Output() created = new EventEmitter<NgtState>();
+	legacy = input(false, { transform: booleanAttribute });
+	linear = input(false, { transform: booleanAttribute });
+	flat = input(false, { transform: booleanAttribute });
+	orthographic = input(false, { transform: booleanAttribute });
+	frameloop = input<NonNullable<NgtCanvasInputs['frameloop']>>('always');
+	performance = input<Partial<Omit<NgtPerformance, 'regress'>>>();
+	dpr = input<NgtDpr>([1, 2]);
+	raycaster = input<Partial<Raycaster>>();
+	scene = input<Scene | Partial<Scene>>();
+	camera = input<NonNullable<NgtCanvasInputs['camera']>>();
+	events = input(createPointerEvents);
+	eventSource = input<HTMLElement | ElementRef<HTMLElement>>();
+	eventPrefix = input<NonNullable<NgtCanvasInputs['eventPrefix']>>('offset');
+	lookAt = input<Vector3 | Parameters<Vector3['set']>>();
+	created = output<NgtState>();
+	pointerMissed = outputFromObservable(this.store.get('pointerMissed$'));
 
 	@ViewChild('glCanvas', { static: true }) glCanvas!: ElementRef<HTMLCanvasElement>;
 
