@@ -129,5 +129,6 @@
 		"tslib": "^2.6.2",
 		"zone.js": "0.14.4"
 	},
-	"web-types": "./node_modules/angular-three/web-types.json"
+	"web-types": "./node_modules/angular-three/web-types.json",
+	"packageManager": "pnpm@9.3.0"
 }
