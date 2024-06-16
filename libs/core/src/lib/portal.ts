@@ -25,10 +25,10 @@ import { NgtEventManager } from './events';
 import { prepare } from './instance';
 import { injectNgtRef } from './ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { injectNgtStore, NGT_STORE, type NgtSize, type NgtState } from './store';
+import { injectNgtStore, NGT_STORE, NgtSize, NgtState } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
-import { signalStore, type NgtSignalStore } from './utils/signal-store';
+import { NgtSignalStore, signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
 const privateKeys = [

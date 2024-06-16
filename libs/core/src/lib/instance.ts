@@ -3,7 +3,7 @@ import { ReplaySubject } from 'rxjs';
 import { NgtEventHandlers } from './events';
 import { NgtState } from './store';
 import { NgtAnyRecord } from './types';
-import { signalStore, type NgtSignalStore } from './utils/signal-store';
+import { NgtSignalStore, signalStore } from './utils/signal-store';
 import { checkUpdate } from './utils/update';
 
 export type NgtAttachFunction<TChild = any, TParent = any> = (

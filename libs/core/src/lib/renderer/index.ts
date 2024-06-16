@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { NgtInstanceNode, NgtLocalState, getLocalState, prepare } from '../instance';
 import { NgtInjectedRef } from '../ref';
-import { injectNgtStore, provideNgtStore, type NgtState } from '../store';
+import { NgtState, injectNgtStore, provideNgtStore } from '../store';
 import { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 import { NgtSignalStore, signalStore } from '../utils/signal-store';

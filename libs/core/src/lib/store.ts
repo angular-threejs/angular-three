@@ -8,7 +8,7 @@ import { NgtInstanceNode } from './instance';
 import { injectNgtLoop } from './loop';
 import { is } from './utils/is';
 import { makeDpr } from './utils/make';
-import { signalStore, type NgtSignalStore } from './utils/signal-store';
+import { NgtSignalStore, signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
 export type NgtRendererLike = { render: (scene: Scene, camera: Camera) => any };
