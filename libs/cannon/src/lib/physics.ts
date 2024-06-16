@@ -126,6 +126,7 @@ const defaultOptions: NgtcPhysicsInputs = {
 		<ng-container #anchor />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [provideNgtcPhysicsApi()],
 })
 export class NgtcPhysics {
 	private zone = inject(NgZone);

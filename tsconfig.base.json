@@ -21,6 +21,7 @@
 			"angular-three-cannon-old": ["libs/old/cannon-old/src/index.ts"],
 			"angular-three-cannon-old/debug": ["libs/old/cannon-old/debug/src/index.ts"],
 			"angular-three-cannon-old/services": ["libs/old/cannon-old/services/src/index.ts"],
+			"angular-three-cannon/debug": ["libs/cannon/debug/src/index.ts"],
 			"angular-three-old": ["libs/old/core-old/src/index.ts"],
 			"angular-three-postprocessing-old": ["libs/old/postprocessing-old/src/index.ts"],
 			"angular-three-rapier-old": ["libs/old/rapier-old/src/index.ts"],
