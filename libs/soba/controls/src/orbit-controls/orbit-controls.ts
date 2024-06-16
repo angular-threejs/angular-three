@@ -8,18 +8,19 @@ import {
 	NgtInjectedRef,
 	NgtVector3,
 } from 'angular-three';
-import { Event } from 'three';
+import { mergeInputs } from 'ngxtension/inject-inputs';
+import { Camera, Event } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
-export type NgtsOrbitControlsState = {
-	camera?: THREE.Camera;
+export interface NgtsOrbitControlsState {
+	camera?: Camera;
 	domElement?: HTMLElement;
 	target?: NgtVector3;
 	makeDefault: boolean;
 	regress: boolean;
 	enableDamping: boolean;
 	keyEvents: boolean | HTMLElement;
-};
+}
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -29,6 +30,13 @@ declare global {
 		'ngts-orbit-controls': OrbitControls & NgtsOrbitControlsState;
 	}
 }
+
+const defaultOptions: NgtsOrbitControlsState = {
+	enableDamping: true,
+	regress: false,
+	makeDefault: false,
+	keyEvents: false,
+};
 
 @Component({
 	selector: 'ngts-orbit-controls',
@@ -42,12 +50,7 @@ declare global {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsOrbitControls {
-	options = input<NgtsOrbitControlsState>({
-		enableDamping: true,
-		regress: false,
-		makeDefault: false,
-		keyEvents: false,
-	});
+	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	controlsRef = input<NgtInjectedRef<OrbitControls>>(injectNgtRef());
 
 	changed = output<Event>();
@@ -136,7 +139,7 @@ export class NgtsOrbitControls {
 				this.regress(),
 			];
 			if (!controls) return;
-			const changeCallback: (e: THREE.Event) => void = (e) => {
+			const changeCallback: (e: Event) => void = (e) => {
 				invalidate();
 				if (regress) performanceRegress();
 				this.changed.emit(e);

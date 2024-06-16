@@ -9,6 +9,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
+import { mergeInputs } from 'ngxtension/inject-inputs';
 import { injectNgtsProgress } from '../progress/progress';
 
 const defaultDataInterpolation = (p: number) => `Loading ${p.toFixed(2)}%`;
@@ -21,6 +22,15 @@ export interface NgtsLoaderState {
 	dataInterpolation: (value: number) => string;
 	initialState: (value: boolean) => boolean;
 }
+
+const defaultOptions: NgtsLoaderState = {
+	containerClass: '',
+	innerClass: '',
+	barClass: '',
+	dataClass: '',
+	dataInterpolation: defaultDataInterpolation,
+	initialState: (value) => value,
+};
 
 @Component({
 	selector: 'ngts-loader',
@@ -54,14 +64,7 @@ export class NgtsLoader {
 	active = computed(() => this.progressState().active);
 	progress = computed(() => this.progressState().progress);
 
-	options = input<NgtsLoaderState>({
-		containerClass: '',
-		innerClass: '',
-		barClass: '',
-		dataClass: '',
-		dataInterpolation: defaultDataInterpolation,
-		initialState: (value) => value,
-	});
+	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	containerClass = computed(() => this.options().containerClass);
 	innerClass = computed(() => this.options().innerClass);

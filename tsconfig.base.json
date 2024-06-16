@@ -17,6 +17,7 @@
 		"paths": {
 			"@platform/plugin-old": ["libs/old/plugin-old/src/index.ts"],
 			"angular-three": ["libs/core/src/index.ts"],
+			"angular-three-cannon": ["libs/cannon/src/index.ts"],
 			"angular-three-cannon-old": ["libs/old/cannon-old/src/index.ts"],
 			"angular-three-cannon-old/debug": ["libs/old/cannon-old/debug/src/index.ts"],
 			"angular-three-cannon-old/services": ["libs/old/cannon-old/services/src/index.ts"],

@@ -30,6 +30,11 @@
 		"@nx/eslint:lint": {
 			"inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"],
 			"cache": true
+		},
+		"@nx/angular:package": {
+			"cache": true,
+			"dependsOn": ["^build"],
+			"inputs": ["production", "^production"]
 		}
 	},
 	"namedInputs": {

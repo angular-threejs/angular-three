@@ -22,16 +22,16 @@
 	],
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "^17.0.0",
-		"@angular/core": "^17.0.0",
-		"ngxtension": "^1.0.0",
+		"@angular/common": "^18.0.0",
+		"@angular/core": "^18.0.0",
+		"ngxtension": "^3.0.0",
 		"three": ">=0.148.0"
 	},
 	"dependencies": {
 		"tslib": "^2.3.0",
-		"@nx/devkit": "^17.0.0",
+		"@nx/devkit": "^19.0.0",
 		"@phenomnomnominal/tsquery": "^6.0.0",
-		"nx": "^17.0.0"
+		"nx": "^19.0.0"
 	},
 	"sideEffects": [
 		"**/three-types.d.ts"

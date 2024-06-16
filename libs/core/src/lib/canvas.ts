@@ -23,7 +23,17 @@ import {
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { NgxResize, ResizeOptions, ResizeResult, provideResizeOptions } from 'ngxtension/resize';
-import { Camera, OrthographicCamera, PerspectiveCamera, Raycaster, Scene, Vector3 } from 'three';
+import {
+	Camera,
+	OrthographicCamera,
+	PerspectiveCamera,
+	Raycaster,
+	Scene,
+	Vector3,
+	WebGLRenderer,
+	WebGLRendererParameters,
+	WebGLShadowMap,
+} from 'three';
 import { createPointerEvents } from './dom/events';
 import { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
 import { provideNgtRenderer } from './renderer';
@@ -37,7 +47,7 @@ import { NgtSignalStore } from './utils/signal-store';
 export type NgtGLOptions =
 	| NgtRendererLike
 	| ((canvas: NgtCanvasElement) => NgtRendererLike)
-	| Partial<NgtProperties<THREE.WebGLRenderer> | THREE.WebGLRendererParameters>
+	| Partial<NgtProperties<WebGLRenderer> | WebGLRendererParameters>
 	| undefined;
 
 export interface NgtCanvasInputs {
@@ -50,7 +60,7 @@ export interface NgtCanvasInputs {
 	 * but also strings: 'basic' | 'percentage' | 'soft' | 'variance'.
 	 * @see https://threejs.org/docs/#api/en/renderers/WebGLRenderer.shadowMap
 	 */
-	shadows?: boolean | 'basic' | 'percentage' | 'soft' | 'variance' | Partial<THREE.WebGLShadowMap>;
+	shadows?: boolean | 'basic' | 'percentage' | 'soft' | 'variance' | Partial<WebGLShadowMap>;
 	/**
 	 * Disables three r139 color management.
 	 * @see https://threejs.org/docs/#manual/en/introduction/Color-management
@@ -97,7 +107,7 @@ export interface NgtCanvasInputs {
 	/** The event prefix that is cast into canvas pointer x/y events, default: "offset" */
 	eventPrefix?: 'offset' | 'client' | 'page' | 'layer' | 'screen';
 	/** Default coordinate for the camera to look at */
-	lookAt?: THREE.Vector3 | Parameters<THREE.Vector3['set']>;
+	lookAt?: Vector3 | Parameters<Vector3['set']>;
 }
 
 @Component({
