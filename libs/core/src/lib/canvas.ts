@@ -1,12 +1,13 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	ComponentRef,
 	DestroyRef,
 	ElementRef,
 	EnvironmentInjector,
 	Injector,
 	NgZone,
-	ViewChild,
+	Type,
 	ViewContainerRef,
 	afterNextRender,
 	booleanAttribute,
@@ -14,32 +15,24 @@ import {
 	createEnvironmentInjector,
 	inject,
 	input,
+	output,
 	signal,
 	untracked,
-	type ComponentRef,
-	type Type,
+	viewChild,
 } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
-import { NgxResize, provideResizeOptions, type ResizeOptions, type ResizeResult } from 'ngxtension/resize';
-import type { Raycaster, Scene, Vector3 } from 'three';
-import * as THREE from 'three';
+import { NgxResize, ResizeOptions, ResizeResult, provideResizeOptions } from 'ngxtension/resize';
+import { Camera, OrthographicCamera, PerspectiveCamera, Raycaster, Scene, Vector3 } from 'three';
 import { createPointerEvents } from './dom/events';
-import type { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
+import { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
 import { provideNgtRenderer } from './renderer';
-import { injectCanvasRootInitializer, type NgtCanvasConfigurator, type NgtCanvasElement } from './roots';
-import {
-	injectNgtStore,
-	provideNgtStore,
-	type NgtDpr,
-	type NgtPerformance,
-	type NgtRendererLike,
-	type NgtSize,
-	type NgtState,
-} from './store';
-import type { NgtObject3DNode } from './three-types';
-import type { NgtAnyRecord, NgtProperties } from './types';
+import { NgtCanvasConfigurator, NgtCanvasElement, injectCanvasRootInitializer } from './roots';
+import { NgtDpr, NgtPerformance, NgtRendererLike, NgtSize, NgtState, injectNgtStore, provideNgtStore } from './store';
+import { NgtObject3DNode } from './three-types';
+import { NgtAnyRecord, NgtProperties } from './types';
 import { is } from './utils/is';
-import { type NgtSignalStore } from './utils/signal-store';
+import { NgtSignalStore } from './utils/signal-store';
 
 export type NgtGLOptions =
 	| NgtRendererLike
@@ -47,7 +40,7 @@ export type NgtGLOptions =
 	| Partial<NgtProperties<THREE.WebGLRenderer> | THREE.WebGLRendererParameters>
 	| undefined;
 
-export type NgtCanvasInputs = {
+export interface NgtCanvasInputs {
 	/** A threejs renderer instance or props that go into the default renderer */
 	gl?: NgtGLOptions;
 	/** Dimensions to fit the renderer to. Will measure canvas dimensions if omitted */
@@ -82,16 +75,16 @@ export type NgtCanvasInputs = {
 	/** Target pixel ratio. Can clamp between a range: `[min, max]` */
 	dpr?: NgtDpr;
 	/** Props that go into the default raycaster */
-	raycaster?: Partial<THREE.Raycaster>;
-	/** A `THREE.Scene` instance or props that go into the default scene */
-	scene?: THREE.Scene | Partial<THREE.Scene>;
+	raycaster?: Partial<Raycaster>;
+	/** A `Scene` instance or props that go into the default scene */
+	scene?: Scene | Partial<Scene>;
 	/** A `Camera` instance or props that go into the default camera */
 	camera?: (
 		| NgtCamera
 		| Partial<
-				NgtObject3DNode<THREE.Camera, typeof THREE.Camera> &
-					NgtObject3DNode<THREE.PerspectiveCamera, typeof THREE.PerspectiveCamera> &
-					NgtObject3DNode<THREE.OrthographicCamera, typeof THREE.OrthographicCamera>
+				NgtObject3DNode<Camera, typeof Camera> &
+					NgtObject3DNode<PerspectiveCamera, typeof PerspectiveCamera> &
+					NgtObject3DNode<OrthographicCamera, typeof OrthographicCamera>
 		  >
 	) & {
 		/** Flags the camera as manual, putting projection into your own hands */
@@ -105,7 +98,7 @@ export type NgtCanvasInputs = {
 	eventPrefix?: 'offset' | 'client' | 'page' | 'layer' | 'screen';
 	/** Default coordinate for the camera to look at */
 	lookAt?: THREE.Vector3 | Parameters<THREE.Vector3['set']>;
-};
+}
 
 @Component({
 	selector: 'ngt-canvas',
@@ -165,12 +158,11 @@ export class NgtCanvas {
 	created = output<NgtState>();
 	pointerMissed = outputFromObservable(this.store.get('pointerMissed$'));
 
-	@ViewChild('glCanvas', { static: true }) glCanvas!: ElementRef<HTMLCanvasElement>;
+	glCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('glCanvas');
+	glCanvasViewContainerRef = viewChild.required('glCanvas', { read: ViewContainerRef });
 
 	// NOTE: this signal is updated outside of Zone
 	protected resizeResult = signal<ResizeResult>({} as ResizeResult, { equal: Object.is });
-
-	private eventSource = this.canvasInputs.select('eventSource');
 	protected hbPointerEvents = computed(() => (this.eventSource() ? 'none' : 'auto'));
 
 	private configurator?: NgtCanvasConfigurator;
@@ -180,7 +172,7 @@ export class NgtCanvas {
 	constructor() {
 		afterNextRender(() => {
 			this.zone.runOutsideAngular(() => {
-				this.configurator = this.initRoot(this.glCanvas.nativeElement);
+				this.configurator = this.initRoot(this.glCanvas().nativeElement);
 				this.noZoneResizeEffect();
 				this.noZoneSceneGraphInputsEffect();
 			});
@@ -197,8 +189,26 @@ export class NgtCanvas {
 		this.autoEffect(() => {
 			const resizeResult = this.resizeResult();
 			if (resizeResult.width > 0 && resizeResult.height > 0) {
-				if (!this.configurator) this.configurator = this.initRoot(this.glCanvas.nativeElement);
-				this.configurator.configure({ ...this.canvasInputs.state(), size: resizeResult });
+				if (!this.configurator) this.configurator = this.initRoot(this.glCanvas().nativeElement);
+				this.configurator.configure({
+					gl: this.gl(),
+					shadows: this.shadows(),
+					legacy: this.legacy(),
+					linear: this.linear(),
+					flat: this.flat(),
+					orthographic: this.orthographic(),
+					frameloop: this.frameloop(),
+					performance: this.performance(),
+					dpr: this.dpr(),
+					raycaster: this.raycaster(),
+					scene: this.scene(),
+					camera: this.camera(),
+					events: this.events(),
+					eventSource: this.eventSource(),
+					eventPrefix: this.eventPrefix(),
+					lookAt: this.lookAt(),
+					size: resizeResult,
+				});
 
 				untracked(() => {
 					if (this.glRef) {
@@ -219,24 +229,24 @@ export class NgtCanvas {
 		// NOTE: Flag the canvas active, rendering will now begin
 		this.store.update((state) => ({ internal: { ...state.internal, active: true } }));
 
-		const [inputs, state] = [this.canvasInputs.snapshot, this.store.snapshot];
+		const [state, eventSource, eventPrefix] = [
+			this.store.snapshot,
+			untracked(this.eventSource),
+			untracked(this.eventPrefix),
+		];
 
 		// connect to event source
 		state.events.connect?.(
-			inputs.eventSource
-				? is.ref(inputs.eventSource)
-					? inputs.eventSource.nativeElement
-					: inputs.eventSource
-				: this.host.nativeElement,
+			eventSource ? (is.ref(eventSource) ? eventSource.nativeElement : eventSource) : this.host.nativeElement,
 		);
 
 		// setup compute for eventPrefix
-		if (inputs.eventPrefix) {
+		if (eventPrefix) {
 			state.setEvents({
 				compute: (event, store) => {
 					const { pointer, raycaster, camera, size } = store.snapshot;
-					const x = event[(inputs.eventPrefix + 'X') as keyof NgtDomEvent] as number;
-					const y = event[(inputs.eventPrefix + 'Y') as keyof NgtDomEvent] as number;
+					const x = event[(eventPrefix + 'X') as keyof NgtDomEvent] as number;
+					const y = event[(eventPrefix + 'Y') as keyof NgtDomEvent] as number;
 					pointer.set((x / size.width) * 2 - 1, -(y / size.height) * 2 + 1);
 					raycaster.setFromCamera(pointer, camera);
 				},
@@ -244,19 +254,17 @@ export class NgtCanvas {
 		}
 
 		// emit created event if observed
-		if (this.created.observed) {
-			this.created.emit(this.store.snapshot);
-		}
+		this.created.emit(this.store.snapshot);
 
 		if (!this.store.get('events', 'connected')) {
-			this.store.get('events').connect?.(this.glCanvas.nativeElement);
+			this.store.get('events').connect?.(untracked(this.glCanvas).nativeElement);
 		}
 
 		this.glEnvironmentInjector = createEnvironmentInjector(
-			[provideNgtRenderer(this.store, this.compoundPrefixes)],
+			[provideNgtRenderer(this.store, untracked(this.compoundPrefixes))],
 			this.environmentInjector,
 		);
-		this.glRef = this.viewContainerRef.createComponent(this.sceneGraph, {
+		this.glRef = this.viewContainerRef.createComponent(untracked(this.sceneGraph), {
 			environmentInjector: this.glEnvironmentInjector,
 			injector: this.injector,
 		});

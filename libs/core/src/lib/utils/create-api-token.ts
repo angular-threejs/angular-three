@@ -1,5 +1,5 @@
-import { forwardRef, type Type } from '@angular/core';
-import { createInjectionToken, type CreateInjectionTokenOptions } from 'ngxtension/create-injection-token';
+import { forwardRef, Type } from '@angular/core';
+import { createInjectionToken, CreateInjectionTokenOptions } from 'ngxtension/create-injection-token';
 
 function apiFactory<TObject extends { api: any }, TApi = TObject extends { api: infer Api } ? Api : never>(
 	obj: TObject,

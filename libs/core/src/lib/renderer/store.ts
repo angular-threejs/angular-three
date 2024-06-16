@@ -1,14 +1,14 @@
 import { InjectionToken, Injector, Type, getDebugNode } from '@angular/core';
 import { NgtArgs } from '../directives/args';
-import type { NgtCommonDirective } from '../directives/common';
+import { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
-import { getLocalState, type NgtInstanceNode } from '../instance';
-import type { NgtRef } from '../ref';
-import { NGT_STORE, type NgtState } from '../store';
-import type { NgtAnyRecord } from '../types';
+import { NgtInstanceNode, getLocalState } from '../instance';
+import { NgtRef } from '../ref';
+import { NGT_STORE, NgtState } from '../store';
+import { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
-import type { NgtSignalStore } from '../utils/signal-store';
+import { NgtSignalStore } from '../utils/signal-store';
 import { SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_PROPERTIES } from './constants';
 import { NgtCompoundClassId, NgtQueueOpClassId, NgtRendererClassId, attachThreeChild, removeThreeChild } from './utils';
 
@@ -184,8 +184,8 @@ export class NgtRendererStore {
 
 	getCreationState() {
 		return [
-			this.firstNonInjectedDirective('argsCommentNodes', NgtArgs)?.args || [],
-			this.firstNonInjectedDirective('parentCommentNodes', NgtParent)?.parent || null,
+			this.firstNonInjectedDirective('argsCommentNodes', NgtArgs)?.value || [],
+			this.firstNonInjectedDirective('parentCommentNodes', NgtParent)?.value || null,
 			this.tryGetPortalStore(),
 		] as const;
 	}
@@ -286,20 +286,19 @@ export class NgtRendererStore {
 			return;
 		}
 
+		// NOTE: coercion
+		let maybeCoerced: any = value;
+		if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
+			maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
+		} else if (!isNaN(Number(maybeCoerced))) {
+			maybeCoerced = Number(maybeCoerced);
+		}
 		if (name === SPECIAL_PROPERTIES.RAW_VALUE) {
-			// NOTE: coercion
-			let maybeCoerced: string | number | boolean = value;
-			if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
-				maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
-			} else if (!isNaN(Number(maybeCoerced))) {
-				maybeCoerced = Number(maybeCoerced);
-			}
 			rS[NgtRendererClassId.rawValue] = maybeCoerced;
 			return;
 		}
-
-		applyProps(node, { [name]: value });
-		this.updateNativeProps(node, name, value);
+		applyProps(node, { [name]: maybeCoerced });
+		this.updateNativeProps(node, name, maybeCoerced);
 	}
 
 	applyProperty(node: NgtRendererNode, name: string, value: any) {
@@ -444,7 +443,7 @@ export class NgtRendererStore {
 		localState?.setNativeProps(key, value);
 	}
 
-	private firstNonInjectedDirective<T extends NgtCommonDirective>(
+	private firstNonInjectedDirective<T extends NgtCommonDirective<any>>(
 		listProperty: 'argsCommentNodes' | 'parentCommentNodes',
 		dir: Type<T>,
 	) {

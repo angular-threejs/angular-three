@@ -1,7 +1,6 @@
-import * as THREE from 'three';
-import type { NgtEventHandlers } from './events';
-import type { NgtAfterAttach, NgtAttachFunction, NgtInstanceNode } from './instance';
-import type { NgtBeforeRenderEvent } from './store';
+import { NgtEventHandlers } from './events';
+import { NgtAfterAttach, NgtAttachFunction, NgtInstanceNode } from './instance';
+import { NgtBeforeRenderEvent } from './store';
 
 type NoEvent<T> = Omit<T, 'addEventListener' | 'removeEventListener'>;
 

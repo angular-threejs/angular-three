@@ -1,6 +1,6 @@
-import { DestroyRef, ElementRef, computed, inject, signal, untracked, type Injector, type Signal } from '@angular/core';
+import { DestroyRef, ElementRef, Injector, Signal, computed, inject, signal, untracked } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { getLocalState, type NgtInstanceNode } from './instance';
+import { NgtInstanceNode, getLocalState } from './instance';
 import { is } from './utils/is';
 
 export type NgtInjectedRef<TElement> = ElementRef<TElement> & {

@@ -1,7 +1,7 @@
-import * as THREE from 'three';
-import { getLocalState, invalidateInstance, type NgtInstanceNode } from '../instance';
-import type { NgtState } from '../store';
-import type { NgtAnyRecord } from '../types';
+import { Color, ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
+import { NgtInstanceNode, getLocalState, invalidateInstance } from '../instance';
+import { NgtState } from '../store';
+import { NgtAnyRecord } from '../types';
 import { is } from './is';
 import { checkUpdate } from './update';
 
@@ -59,8 +59,8 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 		const targetProp = currentInstance[key];
 
 		// special treatmen for objects with support for set/copy, and layers
-		if (targetProp && targetProp['set'] && (targetProp['copy'] || targetProp instanceof THREE.Layers)) {
-			const isColor = targetProp instanceof THREE.Color;
+		if (targetProp && targetProp['set'] && (targetProp['copy'] || targetProp instanceof Layers)) {
+			const isColor = targetProp instanceof Color;
 			// if value is an array
 			if (Array.isArray(value)) {
 				if (targetProp['fromArray']) targetProp['fromArray'](value);
@@ -73,30 +73,30 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				targetProp.constructor.name === value.constructor.name
 			) {
 				targetProp['copy'](value);
-				if (!THREE.ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
+				if (!ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
 			} // if nothing else fits, just set the single value, ignore undefined
 			else if (value !== undefined) {
-				const isColor = targetProp instanceof THREE.Color;
+				const isColor = targetProp instanceof Color;
 				// allow setting array scalars
 				if (!isColor && targetProp['setScalar']) targetProp['setScalar'](value);
 				// layers have no copy function, copy the mask
-				else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) targetProp.mask = value.mask;
+				else if (targetProp instanceof Layers && value instanceof Layers) targetProp.mask = value.mask;
 				// otherwise just set ...
 				else targetProp['set'](value);
 
 				// auto-convert srgb
-				if (!THREE.ColorManagement && !rootState?.linear && isColor) targetProp.convertSRGBToLinear();
+				if (!ColorManagement && !rootState?.linear && isColor) targetProp.convertSRGBToLinear();
 			}
 		} // else just overwrite the value
 		else {
 			currentInstance[key] = value;
 			// auto-convert srgb textures
 			if (
-				currentInstance[key] instanceof THREE.Texture &&
-				currentInstance[key].format === THREE.RGBAFormat &&
-				currentInstance[key].type === THREE.UnsignedByteType
+				currentInstance[key] instanceof Texture &&
+				currentInstance[key].format === RGBAFormat &&
+				currentInstance[key].type === UnsignedByteType
 			) {
-				const texture = currentInstance[key] as THREE.Texture;
+				const texture = currentInstance[key] as Texture;
 				if (rootState?.gl) {
 					if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
 						texture.colorSpace = rootState.gl.outputColorSpace;
@@ -122,7 +122,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 	}
 
 	if (parent && localState?.afterUpdate && localState.afterUpdate.observed && changes.length) {
-		localState.afterUpdate.emit(instance);
+		localState.afterUpdate.next(instance);
 	}
 
 	return instance;

@@ -1,26 +1,34 @@
 import { ElementRef } from '@angular/core';
-import type { NgtInstanceNode } from '../instance';
-import type { NgtRendererLike } from '../store';
-import type { NgtAnyRecord, NgtEquConfig } from '../types';
+import {
+	BufferGeometry,
+	Camera,
+	Material,
+	Object3D,
+	OrthographicCamera,
+	PerspectiveCamera,
+	Scene,
+	Texture,
+} from 'three';
+import { NgtInstanceNode } from '../instance';
+import { NgtRendererLike } from '../store';
+import { NgtAnyRecord, NgtEquConfig } from '../types';
 
 export const is = {
 	obj: (a: unknown): a is object => a === Object(a) && !Array.isArray(a) && typeof a !== 'function',
-	material: (a: unknown): a is THREE.Material => !!a && (a as THREE.Material).isMaterial,
-	geometry: (a: unknown): a is THREE.BufferGeometry => !!a && (a as THREE.BufferGeometry).isBufferGeometry,
-	orthographicCamera: (a: unknown): a is THREE.OrthographicCamera =>
-		!!a && (a as THREE.OrthographicCamera).isOrthographicCamera,
-	perspectiveCamera: (a: unknown): a is THREE.PerspectiveCamera =>
-		!!a && (a as THREE.PerspectiveCamera).isPerspectiveCamera,
-	camera: (a: unknown): a is THREE.Camera => !!a && (a as THREE.Camera).isCamera,
+	material: (a: unknown): a is Material => !!a && (a as Material).isMaterial,
+	geometry: (a: unknown): a is BufferGeometry => !!a && (a as BufferGeometry).isBufferGeometry,
+	orthographicCamera: (a: unknown): a is OrthographicCamera => !!a && (a as OrthographicCamera).isOrthographicCamera,
+	perspectiveCamera: (a: unknown): a is PerspectiveCamera => !!a && (a as PerspectiveCamera).isPerspectiveCamera,
+	camera: (a: unknown): a is Camera => !!a && (a as Camera).isCamera,
 	renderer: (a: unknown) => !!a && typeof a === 'object' && 'render' in a && typeof a['render'] === 'function',
-	scene: (a: unknown): a is THREE.Scene => !!a && (a as THREE.Scene).isScene,
+	scene: (a: unknown): a is Scene => !!a && (a as Scene).isScene,
 	ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
 	instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
-	object3D: (a: unknown): a is THREE.Object3D => !!a && (a as THREE.Object3D).isObject3D,
+	object3D: (a: unknown): a is Object3D => !!a && (a as Object3D).isObject3D,
 	// instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
 	// ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
 	colorSpaceExist: <
-		T extends NgtRendererLike | THREE.Texture | object,
+		T extends NgtRendererLike | Texture | object,
 		P = T extends NgtRendererLike ? { outputColorSpace: string } : { colorSpace: string },
 	>(
 		object: T,

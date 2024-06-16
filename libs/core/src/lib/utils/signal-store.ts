@@ -1,13 +1,13 @@
 import {
+	CreateComputedOptions,
+	CreateSignalOptions,
+	Signal,
+	WritableSignal,
 	computed,
 	signal,
 	untracked,
-	type CreateComputedOptions,
-	type CreateSignalOptions,
-	type Signal,
-	type WritableSignal,
 } from '@angular/core';
-import type { NgtAnyRecord } from '../types';
+import { NgtAnyRecord } from '../types';
 
 const STORE_COMPUTED_KEY = '__ngt_signal_store_computed__';
 

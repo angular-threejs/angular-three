@@ -1,7 +1,7 @@
 import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { roots } from './roots';
-import type { NgtState } from './store';
-import type { NgtSignalStore } from './utils/signal-store';
+import { NgtState } from './store';
+import { NgtSignalStore } from './utils/signal-store';
 
 export type NgtGlobalRenderCallback = (timeStamp: number) => void;
 type SubItem = { callback: NgtGlobalRenderCallback };
@@ -81,6 +81,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 	let running = false;
 	let repeat: number;
 	let frame: number;
+	let beforeRenderInProgress = false;
 
 	function loop(timestamp: number): void {
 		frame = requestAnimationFrame(loop);
@@ -91,6 +92,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 		flushGlobalEffects('before', timestamp);
 
 		// Render all roots
+		beforeRenderInProgress = true;
 		for (const root of roots.values()) {
 			const state = root.snapshot;
 			// If the frameloop is invalidated, do not run another frame
@@ -102,6 +104,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 				repeat += render(timestamp, root);
 			}
 		}
+		beforeRenderInProgress = false;
 
 		// Run after-effects
 		flushGlobalEffects('after', timestamp);
@@ -121,8 +124,20 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 		const state = store?.snapshot;
 		if (!state) return roots.forEach((root) => invalidate(root, frames));
 		if (state.gl.xr?.isPresenting || !state.internal.active || state.frameloop === 'never') return;
-		// Increase frames, do not go higher than 60
-		state.internal.frames = Math.min(60, state.internal.frames + frames);
+		if (frames > 1) {
+			// legacy support for people using frames parameters
+			// Increase frames, do not go higher than 60
+			state.internal.frames = Math.min(60, state.internal.frames + frames);
+		} else {
+			if (beforeRenderInProgress) {
+				//called from within a beforeRender, it means the user wants an additional frame
+				state.internal.frames = 2;
+			} else {
+				//the user need a new frame, no need to increment further than 1
+				state.internal.frames = 1;
+			}
+		}
+
 		// If the render-loop isn't active, start it
 		if (!running) {
 			running = true;
@@ -142,19 +157,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 		if (runGlobalEffects) flushGlobalEffects('after', timestamp);
 	}
 
-	return {
-		loop,
-		/**
-		 * Invalidates the view, requesting a frame to be rendered. Will globally invalidate unless passed a root's state.
-		 * @see https://docs.pmnd.rs/react-three-fiber/api/additional-exports#invalidate
-		 */
-		invalidate,
-		/**
-		 * Advances the frameloop and runs render effects, useful for when manually rendering via `frameloop="never"`.
-		 * @see https://docs.pmnd.rs/react-three-fiber/api/additional-exports#advance
-		 */
-		advance,
-	};
+	return { loop, invalidate, advance };
 }
 
 export const [injectNgtLoop] = createInjectionToken(() => createLoop(roots));

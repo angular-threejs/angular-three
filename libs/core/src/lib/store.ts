@@ -1,17 +1,17 @@
 import { DOCUMENT } from '@angular/common';
 import { ElementRef, InjectionToken, Optional, SkipSelf, effect, inject } from '@angular/core';
 import { createInjectionToken } from 'ngxtension/create-injection-token';
-import { Subject, type Observable } from 'rxjs';
-import * as THREE from 'three';
-import type { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
-import type { NgtInstanceNode } from './instance';
+import { Observable, Subject } from 'rxjs';
+import { Camera, Clock, EventDispatcher, Object3D, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
+import { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
+import { NgtInstanceNode } from './instance';
 import { injectNgtLoop } from './loop';
 import { is } from './utils/is';
 import { makeDpr } from './utils/make';
 import { signalStore, type NgtSignalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
-export type NgtRendererLike = { render: (scene: THREE.Scene, camera: THREE.Camera) => any };
+export type NgtRendererLike = { render: (scene: Scene, camera: Camera) => any };
 export type NgtCameraManual = NgtCamera & { manual?: boolean };
 export type NgtDpr = number | [min: number, max: number];
 export type NgtSize = { width: number; height: number; top: number; left: number };
@@ -60,11 +60,11 @@ export type NgtInternalState = {
 	priority: number;
 	frames: number;
 	lastEvent: ElementRef<NgtDomEvent | null>;
-	interaction: THREE.Object3D[];
+	interaction: Object3D[];
 	hovered: Map<string, NgtThreeEvent<NgtDomEvent>>;
-	capturedMap: Map<number, Map<THREE.Object3D, NgtPointerCaptureTarget>>;
+	capturedMap: Map<number, Map<Object3D, NgtPointerCaptureTarget>>;
 	initialClick: [x: number, y: number];
-	initialHits: THREE.Object3D[];
+	initialHits: Object3D[];
 	subscribers: NgtBeforeRenderRecord[];
 	subscribe: (
 		callback: NgtBeforeRenderRecord['callback'],
@@ -75,26 +75,26 @@ export type NgtInternalState = {
 
 export type NgtState = {
 	/** The instance of the renderer */
-	gl: THREE.WebGLRenderer;
+	gl: WebGLRenderer;
 	/** Default camera */
 	camera: NgtCameraManual;
 	/** Default scene */
-	scene: THREE.Scene;
+	scene: Scene;
 	/** Default raycaster */
-	raycaster: THREE.Raycaster;
+	raycaster: Raycaster;
 	/** Default clock */
-	clock: THREE.Clock;
+	clock: Clock;
 	/** Event layer interface, contains the event handler and the node they're connected to */
 	events: NgtEventManager<any>;
 	/** XR interface */
 	xr: { connect: () => void; disconnect: () => void };
 	/** Currently used controls */
-	controls: THREE.EventDispatcher | null;
+	controls: EventDispatcher | null;
 	/** Normalized event coordinates */
-	pointer: THREE.Vector2;
-	/* Whether to enable r139's THREE.ColorManagement */
+	pointer: Vector2;
+	/* Whether to enable r139's ColorManagement */
 	legacy: boolean;
-	/** Shortcut to gl.outputColorSpace = THREE.LinearSRGBColorSpace */
+	/** Shortcut to gl.outputColorSpace = LinearSRGBColorSpace */
 	linear: boolean;
 	/** Shortcut to gl.toneMapping = NoTonemapping */
 	flat: boolean;
@@ -108,7 +108,7 @@ export type NgtState = {
 	viewport: NgtViewport & {
 		getCurrentViewport: (
 			camera?: NgtCamera,
-			target?: THREE.Vector3 | Parameters<THREE.Vector3['set']>,
+			target?: Vector3 | Parameters<Vector3['set']>,
 			size?: NgtSize,
 		) => Omit<NgtViewport, 'dpr' | 'initialDpr'>;
 	};
@@ -152,19 +152,19 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 	const store: NgtSignalStore<NgtState> = signalStore<NgtState>(({ get, update }) => {
 		const { invalidate, advance } = loop;
 
-		const position = new THREE.Vector3();
-		const defaultTarget = new THREE.Vector3();
-		const tempTarget = new THREE.Vector3();
+		const position = new Vector3();
+		const defaultTarget = new Vector3();
+		const tempTarget = new Vector3();
 
 		function getCurrentViewport(
 			camera: NgtCamera = get('camera'),
-			target: THREE.Vector3 | Parameters<THREE.Vector3['set']> = defaultTarget,
+			target: Vector3 | Parameters<Vector3['set']> = defaultTarget,
 			size: NgtSize = get('size'),
 		): Omit<NgtViewport, 'dpr' | 'initialDpr'> {
 			const { width, height, top, left } = size;
 			const aspect = width / height;
 
-			if (target instanceof THREE.Vector3) tempTarget.copy(target);
+			if (target instanceof Vector3) tempTarget.copy(target);
 			else tempTarget.set(...target);
 
 			const distance = camera.getWorldPosition(position).distanceTo(tempTarget);
@@ -183,7 +183,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 		const setPerformanceCurrent = (current: number) =>
 			update((state) => ({ performance: { ...state.performance, current } }));
 
-		const pointer = new THREE.Vector2();
+		const pointer = new Vector2();
 
 		return {
 			pointerMissed$: pointerMissed$.asObservable(),
@@ -197,7 +197,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 			flat: false,
 
 			controls: null,
-			clock: new THREE.Clock(),
+			clock: new Clock(),
 			pointer,
 
 			frameloop: 'always',

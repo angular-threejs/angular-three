@@ -1,26 +1,16 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { NgtCommonDirective, provideNodeType } from './common';
 
 @Directive({ selector: 'ng-template[args]', standalone: true, providers: [provideNodeType('args')] })
-export class NgtArgs<TArgs extends any[] = any[]> extends NgtCommonDirective {
-	private injectedArgs: TArgs = [] as unknown as TArgs;
+export class NgtArgs<TArgs extends any[] = any[]> extends NgtCommonDirective<TArgs> {
+	args = input.required<TArgs | null>();
 
-	@Input() set args(args: TArgs | null) {
-		if (args == null || !Array.isArray(args) || (args.length === 1 && args[0] === null)) return;
-		this.injected = false;
-		this.injectedArgs = args;
-		this.createView();
-	}
-
-	get args() {
-		if (this.validate()) {
-			this.injected = true;
-			return this.injectedArgs;
-		}
-		return null;
+	protected override inputValue = this.args;
+	protected override shouldSkipCreateView(value: TArgs | null): boolean {
+		return value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null);
 	}
 
 	validate() {
-		return !this.injected && !!this.injectedArgs.length;
+		return !this.injected && !!this.injectedValue?.length;
 	}
 }

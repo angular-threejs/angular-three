@@ -1,8 +1,8 @@
-import { getLocalState, type NgtAttachFunction } from '../instance';
-import type { NgtState } from '../store';
-import type { NgtAnyRecord } from '../types';
+import { getLocalState, NgtAttachFunction } from '../instance';
+import { NgtState } from '../store';
+import { NgtAnyRecord } from '../types';
 import { applyProps } from './apply-props';
-import type { NgtSignalStore } from './signal-store';
+import { NgtSignalStore } from './signal-store';
 
 export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = []): void {
 	const [base, ...remaining] = paths;

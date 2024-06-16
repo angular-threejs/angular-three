@@ -1,7 +1,8 @@
-import type { EventEmitter, Signal } from '@angular/core';
-import type { NgtEventHandlers } from './events';
-import type { NgtState } from './store';
-import type { NgtAnyRecord } from './types';
+import { Signal } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { NgtEventHandlers } from './events';
+import { NgtState } from './store';
+import { NgtAnyRecord } from './types';
 import { signalStore, type NgtSignalStore } from './utils/signal-store';
 import { checkUpdate } from './utils/update';
 
@@ -55,9 +56,9 @@ export type NgtLocalState = {
 	// priority for before render
 	priority?: number;
 	// emitter after props update
-	afterUpdate?: EventEmitter<NgtInstanceNode>;
+	afterUpdate?: ReplaySubject<NgtInstanceNode>;
 	// emitter after attaching to parent
-	afterAttach?: EventEmitter<NgtAfterAttach>;
+	afterAttach?: ReplaySubject<NgtAfterAttach>;
 };
 
 export type NgtInstanceNode<TNode = any> = { __ngt__: NgtLocalState } & NgtAnyRecord & TNode;

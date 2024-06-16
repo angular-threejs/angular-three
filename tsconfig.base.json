@@ -7,7 +7,6 @@
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"verbatimModuleSyntax": true,
 		"importHelpers": true,
 		"target": "es2022",
 		"module": "esnext",

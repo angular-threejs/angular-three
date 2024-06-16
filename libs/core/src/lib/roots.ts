@@ -1,15 +1,26 @@
 import { Injector } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import * as THREE from 'three';
-import type { NgtCanvasInputs } from './canvas';
+import {
+	ACESFilmicToneMapping,
+	BasicShadowMap,
+	ColorManagement,
+	NoToneMapping,
+	PCFShadowMap,
+	PCFSoftShadowMap,
+	Raycaster,
+	Scene,
+	VSMShadowMap,
+	Vector3,
+} from 'three';
+import { NgtCanvasInputs } from './canvas';
 import { prepare } from './instance';
 import { injectNgtLoop } from './loop';
-import { injectNgtStore, type NgtSize, type NgtState } from './store';
-import type { NgtAnyRecord, NgtEquConfig } from './types';
+import { NgtSize, NgtState, injectNgtStore } from './store';
+import { NgtAnyRecord, NgtEquConfig } from './types';
 import { applyProps } from './utils/apply-props';
 import { is } from './utils/is';
 import { makeCameraInstance, makeDpr, makeRendererInstance } from './utils/make';
-import type { NgtSignalStore } from './utils/signal-store';
+import { NgtSignalStore } from './utils/signal-store';
 import { checkNeedsUpdate } from './utils/update';
 
 export type NgtCanvasElement = HTMLCanvasElement | OffscreenCanvas;
@@ -93,7 +104,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 					// setup raycaster
 					let raycaster = state.raycaster;
-					if (!raycaster) stateToUpdate.raycaster = raycaster = new THREE.Raycaster();
+					if (!raycaster) stateToUpdate.raycaster = raycaster = new Raycaster();
 
 					// set raycaster options
 					const { params, ...options } = raycasterOptions || {};
@@ -110,12 +121,24 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 						if (!isCamera) {
 							camera.position.z = 5;
-							if (cameraOptions) applyProps(camera, cameraOptions);
+							if (cameraOptions) {
+								applyProps(camera, cameraOptions);
+								if (
+									'aspect' in cameraOptions ||
+									'left' in cameraOptions ||
+									'right' in cameraOptions ||
+									'top' in cameraOptions ||
+									'bottom' in cameraOptions
+								) {
+									Object.assign(camera, { manual: true });
+									camera?.updateProjectionMatrix();
+								}
+							}
 
 							// always look at center or passed-in lookAt by default
 							if (!state.camera && !cameraOptions?.rotation && !cameraOptions?.quaternion) {
 								if (Array.isArray(lookAt)) camera.lookAt(lookAt[0], lookAt[1], lookAt[2]);
-								else if (lookAt instanceof THREE.Vector3) camera.lookAt(lookAt);
+								else if (lookAt instanceof Vector3) camera.lookAt(lookAt);
 								else camera.lookAt(0, 0, 0);
 							}
 
@@ -134,12 +157,12 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 					// Set up scene (one time only!)
 					if (!state.scene) {
-						let scene: THREE.Scene;
+						let scene: Scene;
 
-						if (sceneOptions instanceof THREE.Scene) {
+						if (sceneOptions instanceof Scene) {
 							scene = sceneOptions;
 						} else {
-							scene = new THREE.Scene();
+							scene = new Scene();
 							if (sceneOptions) applyProps(scene, sceneOptions);
 						}
 
@@ -187,15 +210,15 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						gl.shadowMap.enabled = !!shadows;
 
 						if (typeof shadows === 'boolean') {
-							gl.shadowMap.type = THREE.PCFSoftShadowMap;
+							gl.shadowMap.type = PCFSoftShadowMap;
 						} else if (typeof shadows === 'string') {
 							const types = {
-								basic: THREE.BasicShadowMap,
-								percentage: THREE.PCFShadowMap,
-								soft: THREE.PCFSoftShadowMap,
-								variance: THREE.VSMShadowMap,
+								basic: BasicShadowMap,
+								percentage: PCFShadowMap,
+								soft: PCFSoftShadowMap,
+								variance: VSMShadowMap,
 							};
-							gl.shadowMap.type = types[shadows] ?? THREE.PCFSoftShadowMap;
+							gl.shadowMap.type = types[shadows] ?? PCFSoftShadowMap;
 						} else if (is.obj(shadows)) {
 							Object.assign(gl.shadowMap, shadows);
 						}
@@ -204,11 +227,11 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					}
 
 					// Safely set color management if available.
-					// Avoid accessing THREE.ColorManagement to play nice with older versions
-					if (THREE.ColorManagement) {
-						const ColorManagement = THREE.ColorManagement as NgtAnyRecord;
-						if ('enabled' in ColorManagement) ColorManagement['enabled'] = !legacy ?? false;
-						else if ('legacyMode' in ColorManagement) ColorManagement['legacyMode'] = legacy ?? true;
+					// Avoid accessing ColorManagement to play nice with older versions
+					if (ColorManagement) {
+						const colorManagement = ColorManagement as NgtAnyRecord;
+						if ('enabled' in colorManagement) colorManagement['enabled'] = !legacy ?? false;
+						else if ('legacyMode' in colorManagement) colorManagement['legacyMode'] = legacy ?? true;
 					}
 
 					if (!isConfigured) {
@@ -217,7 +240,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						const sRGBEncoding = 3001;
 						applyProps(gl, {
 							outputEncoding: linear ? LinearEncoding : sRGBEncoding,
-							toneMapping: flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping,
+							toneMapping: flat ? NoToneMapping : ACESFilmicToneMapping,
 						});
 					}
 

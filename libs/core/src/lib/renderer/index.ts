@@ -2,24 +2,23 @@ import { DOCUMENT } from '@angular/common';
 import {
 	Injectable,
 	Injector,
+	Renderer2,
 	RendererFactory2,
+	RendererType2,
 	effect,
 	getDebugNode,
 	inject,
 	makeEnvironmentProviders,
-	provideZoneChangeDetection,
-	type Renderer2,
-	type RendererType2,
 } from '@angular/core';
-import { getLocalState, prepare, type NgtLocalState } from '../instance';
-import type { NgtInjectedRef } from '../ref';
+import { NgtInstanceNode, NgtLocalState, getLocalState, prepare } from '../instance';
+import { NgtInjectedRef } from '../ref';
 import { injectNgtStore, provideNgtStore, type NgtState } from '../store';
-import type { NgtAnyRecord } from '../types';
+import { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
-import type { NgtSignalStore } from '../utils/signal-store';
-import { injectNgtCatalogue, type NgtAnyConstructor } from './catalogue';
+import { NgtSignalStore, signalStore } from '../utils/signal-store';
+import { NgtAnyConstructor, injectNgtCatalogue } from './catalogue';
 import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
-import { NGT_COMPOUND_PREFIXES, NgtRendererStore, type NgtRendererNode, type NgtRendererState } from './store';
+import { NGT_COMPOUND_PREFIXES, NgtRendererNode, NgtRendererState, NgtRendererStore } from './store';
 import {
 	NgtCompoundClassId,
 	NgtRendererClassId,
@@ -104,13 +103,30 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
+			const instanceStore = signalStore({
+				nativeProps: {},
+				parent: null,
+				objects: [],
+				nonObjects: [],
+			});
 			return this.store.createNode(
 				'three',
 				Object.assign(
 					{ __ngt_renderer__: { rawValue: undefined } },
 					// NOTE: we assign this manually to a raw value node
 					// because we say it is a 'three' node but we're not using prepare()
-					{ __ngt__: { isRaw: true, parent: () => null } },
+					{
+						__ngt__: {
+							isRaw: true,
+							instanceStore,
+							setNativeProps(key: string, value: any) {
+								instanceStore.update((prev) => ({ nativeProps: { ...prev.nativeProps, [key]: value } }));
+							},
+							setParent(parent: NgtInstanceNode) {
+								instanceStore.update({ parent });
+							},
+						},
+					},
 				),
 			);
 		}
@@ -443,7 +459,7 @@ export class NgtRenderer implements Renderer2 {
 			const instance = rS[NgtRendererClassId.compounded] || target;
 			const localState = getLocalState(instance);
 			const priority = localState?.priority ?? 0;
-			return processThreeEvent(instance, priority || 0, eventName, callback);
+			return processThreeEvent(instance, priority, eventName, callback);
 		}
 
 		if (rS[NgtRendererClassId.type] === 'compound' && !rS[NgtRendererClassId.compounded]) {
@@ -511,13 +527,14 @@ export function provideNgtRenderer(store: NgtSignalStore<NgtState>, compoundPref
 	if (!compoundPrefixes.includes('ngts')) compoundPrefixes.push('ngts');
 	if (!compoundPrefixes.includes('ngtp')) compoundPrefixes.push('ngtp');
 
-	return makeEnvironmentProviders([
+	const providers = [
 		NgtRendererFactory,
 		{ provide: RendererFactory2, useExisting: NgtRendererFactory },
 		{ provide: NGT_COMPOUND_PREFIXES, useValue: compoundPrefixes },
 		provideNgtStore(store),
-		provideZoneChangeDetection({ runCoalescing: true, eventCoalescing: true }),
-	]);
+	];
+
+	return makeEnvironmentProviders(providers);
 }
 
 export { extend } from './catalogue';

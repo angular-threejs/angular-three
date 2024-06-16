@@ -1,4 +1,4 @@
-import type { NgtCameraManual, NgtSize } from '../store';
+import { NgtCameraManual, NgtSize } from '../store';
 import { is } from './is';
 
 export function checkNeedsUpdate(value: unknown) {

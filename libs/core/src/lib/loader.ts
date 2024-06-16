@@ -1,7 +1,7 @@
-import { Injector, effect, signal, type Signal } from '@angular/core';
+import { Injector, Signal, effect, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import type { NgtAnyRecord } from './types';
-import { makeObjectGraph, type NgtObjectMap } from './utils/make';
+import { NgtAnyRecord } from './types';
+import { NgtObjectMap, makeObjectGraph } from './utils/make';
 
 export type NgtGLTFLike = { scene: THREE.Object3D };
 

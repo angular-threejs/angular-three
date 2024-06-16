@@ -1,7 +1,7 @@
-import { createEvents, type NgtDomEvent, type NgtEventManager, type NgtEvents } from '../events';
-import type { NgtState } from '../store';
-import type { NgtAnyRecord } from '../types';
-import type { NgtSignalStore } from '../utils/signal-store';
+import { createEvents, NgtDomEvent, NgtEventManager, NgtEvents } from '../events';
+import { NgtState } from '../store';
+import { NgtAnyRecord } from '../types';
+import { NgtSignalStore } from '../utils/signal-store';
 
 const DOM_EVENTS = {
 	click: false,

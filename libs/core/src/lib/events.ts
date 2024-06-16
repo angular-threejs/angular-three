@@ -1,29 +1,29 @@
-import type { Subject } from 'rxjs';
-import * as THREE from 'three';
+import { Subject } from 'rxjs';
+import { Intersection, Object3D, OrthographicCamera, PerspectiveCamera, Ray, Vector2, Vector3 } from 'three';
 import { getLocalState } from './instance';
-import type { NgtState } from './store';
-import type { NgtAnyRecord, NgtProperties } from './types';
+import { NgtState } from './store';
+import { NgtAnyRecord, NgtProperties } from './types';
 import { makeId } from './utils/make';
-import type { NgtSignalStore } from './utils/signal-store';
+import { NgtSignalStore } from './utils/signal-store';
 
-export interface NgtIntersection extends THREE.Intersection {
+export interface NgtIntersection extends Intersection {
 	/** The event source (the object which registered the handler) */
-	eventObject: THREE.Object3D;
+	eventObject: Object3D;
 }
 
 export interface NgtIntersectionEvent<TSourceEvent> extends NgtIntersection {
 	/** The event source (the object which registered the handler) */
-	eventObject: THREE.Object3D;
+	eventObject: Object3D;
 	/** An array of intersections */
 	intersections: NgtIntersection[];
 	/** vec3.set(pointer.x, pointer.y, 0).unproject(camera) */
-	unprojectedPoint: THREE.Vector3;
+	unprojectedPoint: Vector3;
 	/** Normalized event coordinates */
-	pointer: THREE.Vector2;
+	pointer: Vector2;
 	/** Delta between first click and this event */
 	delta: number;
 	/** The ray that pierced it */
-	ray: THREE.Ray;
+	ray: Ray;
 	/** The camera that was used by the raycaster */
 	camera: NgtCamera;
 	/** stopPropagation will stop underlying handlers from firing */
@@ -34,7 +34,7 @@ export interface NgtIntersectionEvent<TSourceEvent> extends NgtIntersection {
 	stopped: boolean;
 }
 
-export type NgtCamera = THREE.OrthographicCamera | THREE.PerspectiveCamera;
+export type NgtCamera = OrthographicCamera | PerspectiveCamera;
 export type NgtThreeEvent<TEvent> = NgtIntersectionEvent<TEvent> & NgtProperties<TEvent>;
 export type NgtDomEvent = PointerEvent | MouseEvent | WheelEvent;
 
@@ -58,7 +58,7 @@ export type NgtEvents = {
 	[TEvent in keyof NgtEventHandlers]-?: EventListener;
 };
 
-export type NgtFilterFunction = (items: THREE.Intersection[], store: NgtSignalStore<NgtState>) => THREE.Intersection[];
+export type NgtFilterFunction = (items: Intersection[], store: NgtSignalStore<NgtState>) => Intersection[];
 export type NgtComputeFunction = (
 	event: NgtDomEvent,
 	root: NgtSignalStore<NgtState>,
@@ -98,9 +98,9 @@ export interface NgtPointerCaptureTarget {
  * This is called by releasePointerCapture in the API, and when an object is removed.
  */
 function releaseInternalPointerCapture(
-	capturedMap: Map<number, Map<THREE.Object3D, NgtPointerCaptureTarget>>,
-	obj: THREE.Object3D,
-	captures: Map<THREE.Object3D, NgtPointerCaptureTarget>,
+	capturedMap: Map<number, Map<Object3D, NgtPointerCaptureTarget>>,
+	obj: Object3D,
+	captures: Map<Object3D, NgtPointerCaptureTarget>,
 	pointerId: number,
 ): void {
 	const captureData: NgtPointerCaptureTarget | undefined = captures.get(obj);
@@ -114,7 +114,7 @@ function releaseInternalPointerCapture(
 	}
 }
 
-export function removeInteractivity(store: NgtSignalStore<NgtState>, object: THREE.Object3D) {
+export function removeInteractivity(store: NgtSignalStore<NgtState>, object: Object3D) {
 	const { internal } = store.snapshot;
 	// Removes every trace of an object from the data store
 	internal.interaction = internal.interaction.filter((o) => o !== object);
@@ -140,7 +140,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 	}
 
 	/** Returns true if an instance has a valid pointer-event registered, this excludes scroll, clicks etc */
-	function filterPointerEvents(objects: THREE.Object3D[]) {
+	function filterPointerEvents(objects: Object3D[]) {
 		return objects.filter((obj) =>
 			['move', 'over', 'enter', 'out', 'leave'].some((name) => {
 				const eventName = `pointer${name}` as keyof NgtEventHandlers;
@@ -149,7 +149,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		);
 	}
 
-	function intersect(event: NgtDomEvent, filter?: (objects: THREE.Object3D[]) => THREE.Object3D[]) {
+	function intersect(event: NgtDomEvent, filter?: (objects: Object3D[]) => Object3D[]) {
 		const state = store.get();
 		const duplicates = new Set<string>();
 		const intersections: NgtIntersection[] = [];
@@ -157,9 +157,9 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		const eventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
 		// Reset all raycaster cameras to undefined
 		for (let i = 0; i < eventsObjects.length; i++) {
-			const state = getLocalState(eventsObjects[i])?.store.snapshot;
-			if (state) {
-				state.raycaster.camera = undefined!;
+			const objectRootState = getLocalState(eventsObjects[i])?.store.snapshot;
+			if (objectRootState) {
+				objectRootState.raycaster.camera = undefined!;
 			}
 		}
 
@@ -168,9 +168,8 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 			state.events.compute?.(event, store, null);
 		}
 
-		function handleRaycast(obj: THREE.Object3D) {
-			const objLocalState = getLocalState(obj);
-			const objStore = objLocalState?.store;
+		function handleRaycast(obj: Object3D) {
+			const objStore = getLocalState(obj)?.store;
 			const objState = objStore?.snapshot;
 			// Skip event handling when noEvents is set, or when the raycasters camera is null
 			if (!objState || !objState.events.enabled || objState.raycaster.camera === null) return [];
@@ -187,13 +186,13 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		}
 
 		// Collect events
-		let hits: THREE.Intersection<THREE.Object3D>[] = eventsObjects
+		let hits: Intersection<Object3D>[] = eventsObjects
 			// Intersect objects
 			.flatMap(handleRaycast)
 			// Sort by event priority and distance
 			.sort((a, b) => {
-				const aState = getLocalState(a.object)?.store?.snapshot;
-				const bState = getLocalState(b.object)?.store?.snapshot;
+				const aState = getLocalState(a.object)?.store.snapshot;
+				const bState = getLocalState(b.object)?.store.snapshot;
 				if (!aState || !bState) return a.distance - b.distance;
 				return bState.events.priority - aState.events.priority || a.distance - b.distance;
 			})
@@ -211,12 +210,10 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 
 		// Bubble up the events, find the event source (eventObject)
 		for (const hit of hits) {
-			let eventObject: THREE.Object3D | null = hit.object;
+			let eventObject: Object3D | null = hit.object;
 			// bubble event up
 			while (eventObject) {
-				if (getLocalState(eventObject)?.eventCount) {
-					intersections.push({ ...hit, eventObject });
-				}
+				if (getLocalState(eventObject)?.eventCount) intersections.push({ ...hit, eventObject });
 				eventObject = eventObject.parent;
 			}
 		}
@@ -243,8 +240,8 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		if (intersections.length) {
 			const localState = { stopped: false };
 			for (const hit of intersections) {
-				const { raycaster, pointer, camera, internal } = getLocalState(hit.object)?.store?.snapshot || rootState;
-				const unprojectedPoint = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
+				const { raycaster, pointer, camera, internal } = getLocalState(hit.object)?.store.snapshot || rootState;
+				const unprojectedPoint = new Vector3(pointer.x, pointer.y, 0).unproject(camera);
 				const hasPointerCapture = (id: number) => internal.capturedMap.get(id)?.has(hit.eventObject) ?? false;
 
 				const setPointerCapture = (id: number) => {
@@ -359,7 +356,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		}
 	}
 
-	function pointerMissed(event: MouseEvent, objects: THREE.Object3D[]) {
+	function pointerMissed(event: MouseEvent, objects: Object3D[]) {
 		for (let i = 0; i < objects.length; i++) {
 			const instance = getLocalState(objects[i]);
 			instance?.handlers.pointermissed?.(event);
@@ -393,6 +390,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 
 		// Any other pointer goes here ...
 		return function handleEvent(event: NgtDomEvent) {
+			// NOTE: pointerMissed$ on NgtStore is private
 			const pointerMissed$: Subject<MouseEvent> = (store as NgtAnyRecord)['pointerMissed$'];
 			const internal = store.get('internal');
 
