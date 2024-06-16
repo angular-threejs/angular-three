@@ -1,13 +1,14 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
 import {
 	injectBeforeRender,
 	injectNgtRef,
 	injectNgtStore,
 	NgtArgs,
-	signalStore,
-	type NgtCamera,
-	type NgtVector3,
+	NgtCamera,
+	NgtInjectedRef,
+	NgtVector3,
 } from 'angular-three';
+import { Event } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
 export type NgtsOrbitControlsState = {
@@ -41,42 +42,38 @@ declare global {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsOrbitControls {
-	private options = signalStore<NgtsOrbitControlsState>({
+	options = input<NgtsOrbitControlsState>({
 		enableDamping: true,
 		regress: false,
 		makeDefault: false,
 		keyEvents: false,
 	});
+	controlsRef = input<NgtInjectedRef<OrbitControls>>(injectNgtRef());
 
-	@Input({ alias: 'options' }) set _options(options: Partial<NgtsOrbitControlsState>) {
-		this.options.update(options);
-	}
-
-	@Input() controlsRef = injectNgtRef<OrbitControls>();
-
-	@Output() change = new EventEmitter<THREE.Event>();
-	@Output() start = new EventEmitter<THREE.Event>();
-	@Output() end = new EventEmitter<THREE.Event>();
+	changed = output<Event>();
+	started = output<Event>();
+	ended = output<Event>();
 
 	private store = injectNgtStore();
 	private invalidate = this.store.select('invalidate');
 	private performanceRegress = this.store.select('performance', 'regress');
 	private defaultCamera = this.store.select('camera');
 	private glDomElement = this.store.select('gl', 'domElement');
-	private regress = this.options.select('regress');
-	private camera = this.options.select('camera');
-	private domElement = this.options.select('domElement');
-	private keyEvents = this.options.select('keyEvents');
-	private makeDefault = this.options.select('makeDefault');
 
-	protected args = computed(() => [this.controlsRef.nativeElement]);
-	protected enableDamping = this.options.select('enableDamping');
+	private camera = computed(() => this.options().camera);
+	private regress = computed(() => this.options().regress);
+	private keyEvents = computed(() => this.options().keyEvents);
+	private domElement = computed(() => this.options().domElement);
+	private makeDefault = computed(() => this.options().makeDefault);
+
+	protected args = computed(() => [this.controlsRef().nativeElement]);
+	protected enableDamping = computed(() => this.options().enableDamping);
 
 	constructor() {
 		injectBeforeRender(
 			() => {
-				const controls = this.controlsRef.nativeElement;
-				if (controls && controls.enabled) {
+				const controls = this.controlsRef().nativeElement;
+				if (controls?.enabled) {
 					controls.update();
 				}
 			},
@@ -91,10 +88,10 @@ export class NgtsOrbitControls {
 
 	private setControls() {
 		effect(() => {
-			const [camera, defaultCamera, controls] = [this.camera(), this.defaultCamera(), this.controlsRef.nativeElement];
+			const [camera, defaultCamera, controlsRef] = [this.camera(), this.defaultCamera(), this.controlsRef()];
 			const controlsCamera = camera || defaultCamera;
-			if (!controls || controls.object !== controlsCamera) {
-				this.controlsRef.nativeElement = new OrbitControls(controlsCamera as NgtCamera);
+			if (!controlsRef.nativeElement || controlsRef.nativeElement.object !== controlsCamera) {
+				controlsRef.nativeElement = new OrbitControls(controlsCamera as NgtCamera);
 			}
 		});
 	}
@@ -104,7 +101,7 @@ export class NgtsOrbitControls {
 			const [keyEvents, domElement, controls] = [
 				this.keyEvents(),
 				this.domElement() || this.store.get('events', 'connected') || this.glDomElement(),
-				this.controlsRef.nativeElement,
+				this.controlsRef().nativeElement,
 				this.invalidate(),
 				this.regress(),
 			];
@@ -120,7 +117,7 @@ export class NgtsOrbitControls {
 
 	private makeControlsDefault() {
 		effect((onCleanup) => {
-			const [controls, makeDefault] = [this.controlsRef.nativeElement, this.makeDefault()];
+			const [controls, makeDefault] = [this.controlsRef().nativeElement, this.makeDefault()];
 			if (!controls) return;
 			if (makeDefault) {
 				const oldControls = this.store.get('controls');
@@ -133,7 +130,7 @@ export class NgtsOrbitControls {
 	private setEvents() {
 		effect((onCleanup) => {
 			const [controls, invalidate, performanceRegress, regress] = [
-				this.controlsRef.nativeElement,
+				this.controlsRef().nativeElement,
 				this.invalidate(),
 				this.performanceRegress(),
 				this.regress(),
@@ -142,20 +139,20 @@ export class NgtsOrbitControls {
 			const changeCallback: (e: THREE.Event) => void = (e) => {
 				invalidate();
 				if (regress) performanceRegress();
-				if (this.change.observed) this.change.emit(e);
+				this.changed.emit(e);
 			};
 
-			const startCallback = this.start.observed ? this.start.emit.bind(this.start) : null;
-			const endCallback = this.end.observed ? this.end.emit.bind(this.end) : null;
+			const startCallback = this.started.emit.bind(this.started);
+			const endCallback = this.ended.emit.bind(this.ended);
 
 			controls.addEventListener('change', changeCallback);
-			if (startCallback) controls.addEventListener('start', startCallback);
-			if (endCallback) controls.addEventListener('end', endCallback);
+			controls.addEventListener('start', startCallback);
+			controls.addEventListener('end', endCallback);
 
 			onCleanup(() => {
 				controls.removeEventListener('change', changeCallback);
-				if (startCallback) controls.removeEventListener('start', startCallback);
-				if (endCallback) controls.removeEventListener('end', endCallback);
+				controls.removeEventListener('start', startCallback);
+				controls.removeEventListener('end', endCallback);
 			});
 		});
 	}

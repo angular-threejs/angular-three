@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, inject, signal, untracked, type Injector } from '@angular/core';
+import { ChangeDetectorRef, Injector, inject, signal, untracked } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import * as THREE from 'three';
+import { DefaultLoadingManager } from 'three';
 
 export function injectNgtsProgress(injector?: Injector) {
 	return assertInjector(injectNgtsProgress, injector, () => {
@@ -17,7 +17,7 @@ export function injectNgtsProgress(injector?: Injector) {
 
 		let saveLastTotalLoaded = 0;
 
-		THREE.DefaultLoadingManager.onStart = (item, loaded, total) => {
+		DefaultLoadingManager.onStart = (item, loaded, total) => {
 			untracked(() => {
 				progress.update((prev) => ({
 					...prev,
@@ -32,21 +32,21 @@ export function injectNgtsProgress(injector?: Injector) {
 			cdr.detectChanges();
 		};
 
-		THREE.DefaultLoadingManager.onLoad = () => {
+		DefaultLoadingManager.onLoad = () => {
 			untracked(() => {
 				progress.update((prev) => ({ ...prev, active: false }));
 			});
 			cdr.detectChanges();
 		};
 
-		THREE.DefaultLoadingManager.onError = (url) => {
+		DefaultLoadingManager.onError = (url) => {
 			untracked(() => {
 				progress.update((prev) => ({ ...prev, errors: [...prev.errors, url] }));
 			});
 			cdr.detectChanges();
 		};
 
-		THREE.DefaultLoadingManager.onProgress = (item, loaded, total) => {
+		DefaultLoadingManager.onProgress = (item, loaded, total) => {
 			if (loaded === total) saveLastTotalLoaded = total;
 			untracked(() => {
 				progress.update((prev) => ({

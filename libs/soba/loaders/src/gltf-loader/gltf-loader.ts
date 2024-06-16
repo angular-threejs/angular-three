@@ -1,7 +1,7 @@
-import type { Injector, Signal } from '@angular/core';
-import { injectNgtLoader, type NgtLoaderResults, type NgtObjectMap } from 'angular-three';
+import { Injector, Signal } from '@angular/core';
+import { NgtLoaderResults, NgtObjectMap, injectNgtLoader } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { DRACOLoader, GLTFLoader, MeshoptDecoder, type GLTF } from 'three-stdlib';
+import { DRACOLoader, GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
 
 let dracoLoader: DRACOLoader | null = null;
 let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
@@ -45,10 +45,7 @@ function _injectNgtsGLTFLoader<TUrl extends string | string[] | Record<string, s
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
 	return assertInjector(_injectNgtsGLTFLoader, injector, () =>
-		injectNgtLoader(() => GLTFLoader, path, {
-			// TODO: fix "as any" when three-stdlib is updated with THREE 0.156
-			extensions: _extensions(useDraco, useMeshOpt, extensions),
-		}),
+		injectNgtLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) }),
 	) as Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null>;
 }
 
@@ -58,11 +55,7 @@ _injectNgtsGLTFLoader.preload = <TUrl extends string | string[] | Record<string,
 		useDraco = true,
 		useMeshOpt = true,
 		extensions,
-	}: {
-		useDraco?: boolean | string;
-		useMeshOpt?: boolean;
-		extensions?: (loader: GLTFLoader) => void;
-	} = {},
+	}: { useDraco?: boolean | string; useMeshOpt?: boolean; extensions?: (loader: GLTFLoader) => void } = {},
 ) => {
 	injectNgtLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions) as any);
 };

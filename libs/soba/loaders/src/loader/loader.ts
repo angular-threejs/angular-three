@@ -1,16 +1,14 @@
-import { NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	Input,
-	ViewChild,
 	computed,
 	effect,
+	input,
 	signal,
 	untracked,
+	viewChild,
 } from '@angular/core';
-import { signalStore } from 'angular-three';
 import { injectNgtsProgress } from '../progress/progress';
 
 const defaultDataInterpolation = (p: number) => `Loading ${p.toFixed(2)}%`;
@@ -28,67 +26,53 @@ export interface NgtsLoaderState {
 	selector: 'ngts-loader',
 	standalone: true,
 	template: `
-		<div
-			*ngIf="shown()"
-			class="ngts-loader-container"
-			[class]="container() || ''"
-			[style.--ngts-loader-container-opacity]="active() ? 1 : 0"
-		>
-			<div>
-				<div class="ngts-loader-inner" [class]="inner() || ''">
-					<div class="ngts-loader-bar" [class]="bar() || ''" [style.--ngts-loader-bar-scale]="progress() / 100"></div>
-					<span #progressSpanRef class="ngts-loader-data" [class]="data() || ''"></span>
+		@if (shown()) {
+			<div
+				class="ngts-loader-container"
+				[class]="containerClass() || ''"
+				[style.--ngts-loader-container-opacity]="active() ? 1 : 0"
+			>
+				<div>
+					<div class="ngts-loader-inner" [class]="innerClass() || ''">
+						<div
+							class="ngts-loader-bar"
+							[class]="barClass() || ''"
+							[style.--ngts-loader-bar-scale]="progress() / 100"
+						></div>
+						<span #progressSpanRef class="ngts-loader-data" [class]="dataClass() || ''"></span>
+					</div>
 				</div>
 			</div>
-		</div>
+		}
 	`,
 	styleUrls: ['./loader.css'],
-	imports: [NgIf],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsLoader {
-	private inputs = signalStore<NgtsLoaderState>({
-		dataInterpolation: defaultDataInterpolation,
-		initialState: (active) => active,
-	});
-
 	private progressState = injectNgtsProgress();
 
 	active = computed(() => this.progressState().active);
 	progress = computed(() => this.progressState().progress);
 
-	container = this.inputs.select('containerClass');
-	inner = this.inputs.select('innerClass');
-	bar = this.inputs.select('barClass');
-	data = this.inputs.select('dataClass');
+	options = input<NgtsLoaderState>({
+		containerClass: '',
+		innerClass: '',
+		barClass: '',
+		dataClass: '',
+		dataInterpolation: defaultDataInterpolation,
+		initialState: (value) => value,
+	});
 
-	@Input({ alias: 'containerClass' }) set _containerClass(containerClass: string) {
-		this.inputs.update({ containerClass });
-	}
+	containerClass = computed(() => this.options().containerClass);
+	innerClass = computed(() => this.options().innerClass);
+	barClass = computed(() => this.options().barClass);
+	dataClass = computed(() => this.options().dataClass);
+	initialState = computed(() => this.options().initialState);
+	dataInterpolation = computed(() => this.options().dataInterpolation);
 
-	@Input({ alias: 'innerClass' }) set _innerClass(innerClass: string) {
-		this.inputs.update({ innerClass });
-	}
+	progressSpanRef = viewChild<ElementRef<HTMLSpanElement>>('progressSpanRef');
 
-	@Input({ alias: 'barClass' }) set _barClass(barClass: string) {
-		this.inputs.update({ barClass });
-	}
-
-	@Input({ alias: 'dataClass' }) set _dataClass(dataClass: string) {
-		this.inputs.update({ dataClass });
-	}
-
-	@Input({ alias: 'dataInterpolation' }) set _dataInterpolation(dataInterpolation: (value: number) => string) {
-		this.inputs.update({ dataInterpolation });
-	}
-
-	@Input({ alias: 'initialState' }) set _initialState(initialState: (value: boolean) => boolean) {
-		this.inputs.update({ initialState });
-	}
-
-	@ViewChild('progressSpanRef') progressSpanRef?: ElementRef<HTMLSpanElement>;
-
-	shown = signal(this.inputs.get('initialState')(this.active()));
+	shown = signal(this.initialState()(this.active()));
 
 	constructor() {
 		this.setShown();
@@ -111,15 +95,14 @@ export class NgtsLoader {
 		let progressRef = 0;
 		let rafId: ReturnType<typeof requestAnimationFrame>;
 
-		const _dataInterpolation = this.inputs.select('dataInterpolation');
-
 		effect((onCleanup) => {
-			const [dataInterpolation, progress] = [_dataInterpolation(), this.progress()];
+			const [dataInterpolation, progress] = [this.dataInterpolation(), this.progress()];
 			const updateProgress = () => {
-				if (!this.progressSpanRef?.nativeElement) return;
+				const progressSpan = this.progressSpanRef()?.nativeElement;
+				if (!progressSpan) return;
 				progressRef += (progress - progressRef) / 2;
 				if (progressRef > 0.95 * progress || progress === 100) progressRef = progress;
-				this.progressSpanRef.nativeElement.innerText = dataInterpolation(progressRef);
+				progressSpan.innerText = dataInterpolation(progressRef);
 				if (progressRef < progress) {
 					rafId = requestAnimationFrame(updateProgress);
 				}
