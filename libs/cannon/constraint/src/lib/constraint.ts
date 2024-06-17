@@ -1,5 +1,12 @@
 import { Injector, afterNextRender } from '@angular/core';
-import { ConstraintOptns, ConstraintTypes, HingeConstraintOpts } from '@pmndrs/cannon-worker-api';
+import {
+	ConeTwistConstraintOpts,
+	ConstraintTypes,
+	DistanceConstraintOpts,
+	HingeConstraintOpts,
+	LockConstraintOpts,
+	PointToPointConstraintOpts,
+} from '@pmndrs/cannon-worker-api';
 import { NgtInjectedRef, injectNgtRef, is, makeId } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
@@ -33,38 +40,36 @@ export interface NgtcConstraintReturn<
 	api: NgtcConstraintORHingeApi<T>;
 }
 
-export type NgtcConstraintOptions<
-	TConstraintType extends 'Hinge' | ConstraintTypes,
-	TOptions extends HingeConstraintOpts | ConstraintOptns = TConstraintType extends 'Hinge'
-		? HingeConstraintOpts
-		: ConstraintOptns,
-> = { injector?: Injector; options?: TOptions };
+export type NgtcConstraintOptionsMap = {
+	ConeTwist: ConeTwistConstraintOpts;
+	PointToPoint: PointToPointConstraintOpts;
+	Distance: DistanceConstraintOpts;
+	Lock: LockConstraintOpts;
+	Hinge: HingeConstraintOpts;
+};
 
-function createInjectConstraint<
-	TConstraint extends ConstraintTypes | 'Hinge',
-	TOptions extends HingeConstraintOpts | ConstraintOptns = TConstraint extends 'Hinge'
-		? HingeConstraintOpts
-		: ConstraintOptns,
->(type: TConstraint) {
+export type NgtcConstraintOptions<TConstraintType extends 'Hinge' | ConstraintTypes> = {
+	injector?: Injector;
+	options?: NgtcConstraintOptionsMap[TConstraintType];
+};
+
+function createInjectConstraint<TConstraint extends ConstraintTypes | 'Hinge'>(type: TConstraint) {
 	return <A extends Object3D = Object3D, B extends Object3D = Object3D>(
 		bodyA: NgtInjectedRef<A> | A,
 		bodyB: NgtInjectedRef<B> | B,
-		options?: NgtcConstraintOptions<TConstraint, TOptions>,
-	) => injectConstraint<TConstraint, A, B, TOptions>(type, bodyA, bodyB, options);
+		options?: NgtcConstraintOptions<TConstraint>,
+	) => injectConstraint<TConstraint, A, B>(type, bodyA, bodyB, options);
 }
 
 function injectConstraint<
 	TConstraint extends ConstraintTypes | 'Hinge',
 	A extends Object3D = Object3D,
 	B extends Object3D = Object3D,
-	TOptions extends HingeConstraintOpts | ConstraintOptns = TConstraint extends 'Hinge'
-		? HingeConstraintOpts
-		: ConstraintOptns,
 >(
 	type: TConstraint,
 	bodyA: NgtInjectedRef<A> | A,
 	bodyB: NgtInjectedRef<B> | B,
-	{ injector, options = {} as TOptions }: NgtcConstraintOptions<TConstraint, TOptions> = {},
+	{ injector, options = {} as any }: NgtcConstraintOptions<TConstraint> = {},
 ): NgtcConstraintReturn<TConstraint, A, B> {
 	return assertInjector(injectConstraint, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();

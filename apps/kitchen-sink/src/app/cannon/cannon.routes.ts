@@ -14,6 +14,10 @@ const routes: Routes = [
 		loadComponent: () => import('./compound/compound'),
 	},
 	{
+		path: 'chain',
+		loadComponent: () => import('./chain/chain'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
