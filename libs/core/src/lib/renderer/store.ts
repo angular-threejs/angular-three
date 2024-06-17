@@ -286,19 +286,20 @@ export class NgtRendererStore {
 			return;
 		}
 
-		// NOTE: coercion
-		let maybeCoerced: any = value;
-		if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
-			maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
-		} else if (!isNaN(Number(maybeCoerced))) {
-			maybeCoerced = Number(maybeCoerced);
-		}
 		if (name === SPECIAL_PROPERTIES.RAW_VALUE) {
+			// NOTE: coercion
+			let maybeCoerced: string | number | boolean = value;
+			if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
+				maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
+			} else if (!isNaN(Number(maybeCoerced))) {
+				maybeCoerced = Number(maybeCoerced);
+			}
 			rS[NgtRendererClassId.rawValue] = maybeCoerced;
 			return;
 		}
-		applyProps(node, { [name]: maybeCoerced });
-		this.updateNativeProps(node, name, maybeCoerced);
+
+		applyProps(node, { [name]: value });
+		this.updateNativeProps(node, name, value);
 	}
 
 	applyProperty(node: NgtRendererNode, name: string, value: any) {
