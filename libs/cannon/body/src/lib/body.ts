@@ -42,7 +42,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 		const bodyResult = { ref: ref ?? injectNgtRef() };
 
 		afterNextRender(() => {
-			Object.assign(bodyResult, { api: makeBodyApi(bodyResult.ref, physicsApi.worker, () => physicsApi) });
+			Object.assign(bodyResult, { api: makeBodyApi(bodyResult.ref, physicsApi) });
 			autoEffect(() => {
 				const currentWorker = physicsApi.worker();
 				if (!currentWorker) return;

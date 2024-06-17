@@ -12,14 +12,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 			@for (example of examples; track example) {
 				<div class="h-6 w-6">
 					<a
-						#linkActive="routerLinkActive"
-						routerLinkActive
-						[routerLink]="example"
+						[routerLink]="['/cannon', example]"
 						[routerLinkActiveOptions]="{ exact: true }"
 						[title]="'Navigate to ' + example"
 						class="block rounded-full w-full h-full bg-white"
-						[class.opacity-50]="!linkActive.isActive"
-						[class.opacity-100]="linkActive.isActive"
+						routerLinkActive="bg-red-500"
 					></a>
 				</div>
 			}

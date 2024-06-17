@@ -1,4 +1,4 @@
-import { ElementRef, Signal } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import {
 	AtomicName,
 	BodyProps,
@@ -89,8 +89,7 @@ export function setupCollision(
 
 export function makeBodyApi(
 	bodyRef: NgtInjectedRef<Object3D>,
-	worker: Signal<CannonWorkerAPI>,
-	physicsApi: () => NgtcPhysicsApi,
+	{ subscriptions, bodies, scaleOverrides, worker }: NgtcPhysicsApi,
 ) {
 	const makeAtomic = <T extends AtomicName>(type: T, index?: number) => {
 		const op: SetOpName<T> = `set${capitalize(type)}`;
@@ -100,7 +99,7 @@ export function makeBodyApi(
 				const uuid = getUUID(bodyRef, index);
 				uuid && worker()[op]({ props: value, uuid } as never);
 			},
-			subscribe: createSubscribe(bodyRef, worker(), physicsApi().subscriptions, type, index),
+			subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
 		};
 	};
 
@@ -109,13 +108,13 @@ export function makeBodyApi(
 		return {
 			copy: ({ w, x, y, z }: Quaternion) => {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().setQuaternion({ props: [x, y, z, w], uuid });
+				uuid && worker().setQuaternion({ props: [x, y, z, w], uuid });
 			},
 			set: (x: number, y: number, z: number, w: number) => {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().setQuaternion({ props: [x, y, z, w], uuid });
+				uuid && worker().setQuaternion({ props: [x, y, z, w], uuid });
 			},
-			subscribe: createSubscribe(bodyRef, worker(), physicsApi().subscriptions, type, index),
+			subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
 		};
 	};
 
@@ -123,21 +122,21 @@ export function makeBodyApi(
 		return {
 			copy: ({ x, y, z }: Vector3 | Euler) => {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().setRotation({ props: [x, y, z], uuid });
+				uuid && worker().setRotation({ props: [x, y, z], uuid });
 			},
 			set: (x: number, y: number, z: number) => {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().setRotation({ props: [x, y, z], uuid });
+				uuid && worker().setRotation({ props: [x, y, z], uuid });
 			},
 			subscribe: (callback: (value: Triplet) => void) => {
 				const id = incrementingId++;
 				const target = 'bodies';
 				const type = 'quaternion';
 				const uuid = getUUID(bodyRef, index);
-				physicsApi().subscriptions[id] = { [type]: quaternionToRotation(callback) };
+				subscriptions[id] = { [type]: quaternionToRotation(callback) };
 				uuid && worker().subscribe({ props: { id, target, type }, uuid });
 				return () => {
-					delete physicsApi().subscriptions[id];
+					delete subscriptions[id];
 					worker().unsubscribe({ props: id });
 				};
 			},
@@ -148,13 +147,13 @@ export function makeBodyApi(
 		return {
 			copy: ({ x, y, z }: Vector3 | Euler) => {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker()[op]({ props: [x, y, z], uuid });
+				uuid && worker()[op]({ props: [x, y, z], uuid });
 			},
 			set: (x: number, y: number, z: number) => {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker()[op]({ props: [x, y, z], uuid });
+				uuid && worker()[op]({ props: [x, y, z], uuid });
 			},
-			subscribe: createSubscribe(bodyRef, worker(), physicsApi().subscriptions, type, index),
+			subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
 		};
 	};
 
@@ -173,23 +172,23 @@ export function makeBodyApi(
 			angularVelocity: makeVec('angularVelocity', index),
 			applyForce(force: Triplet, worldPoint: Triplet) {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().applyForce({ props: [force, worldPoint], uuid });
+				uuid && worker().applyForce({ props: [force, worldPoint], uuid });
 			},
 			applyImpulse(impulse: Triplet, worldPoint: Triplet) {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().applyImpulse({ props: [impulse, worldPoint], uuid });
+				uuid && worker().applyImpulse({ props: [impulse, worldPoint], uuid });
 			},
 			applyLocalForce(force: Triplet, localPoint: Triplet) {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().applyLocalForce({ props: [force, localPoint], uuid });
+				uuid && worker().applyLocalForce({ props: [force, localPoint], uuid });
 			},
 			applyLocalImpulse(impulse: Triplet, localPoint: Triplet) {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().applyLocalImpulse({ props: [impulse, localPoint], uuid });
+				uuid && worker().applyLocalImpulse({ props: [impulse, localPoint], uuid });
 			},
 			applyTorque(torque: Triplet) {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().applyTorque({ props: [torque], uuid });
+				uuid && worker().applyTorque({ props: [torque], uuid });
 			},
 			collisionFilterGroup: makeAtomic('collisionFilterGroup', index),
 			collisionFilterMask: makeAtomic('collisionFilterMask', index),
@@ -205,11 +204,11 @@ export function makeBodyApi(
 			rotation: makeRotation(index),
 			scaleOverride(scale) {
 				const uuid = getUUID(bodyRef, index);
-				if (uuid) physicsApi().scaleOverrides[uuid] = new Vector3(...scale);
+				if (uuid) scaleOverrides[uuid] = new Vector3(...scale);
 			},
 			sleep() {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().sleep({ uuid });
+				uuid && worker().sleep({ uuid });
 			},
 			sleepSpeedLimit: makeAtomic('sleepSpeedLimit', index),
 			sleepTimeLimit: makeAtomic('sleepTimeLimit', index),
@@ -218,7 +217,7 @@ export function makeBodyApi(
 			remove: makeRemove(index),
 			wakeUp() {
 				const uuid = getUUID(bodyRef, index);
-				uuid && physicsApi().bodies[uuid] != null && worker().wakeUp({ uuid });
+				uuid && worker().wakeUp({ uuid });
 			},
 		};
 	}

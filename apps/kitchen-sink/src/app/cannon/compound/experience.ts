@@ -120,8 +120,9 @@ export class CompoundBody {
 					[position]="[2.5, 3, 0.25]"
 					[rotation]="[1.25, -1.25, 0]"
 					(positionChanged)="!copy() && (position = $event)"
-					(rotationChanged)="onRotationChanged($event)"
+					(rotationChanged)="!copy() && (rotation = $event)"
 				/>
+
 				@if (ready()) {
 					<app-compound-body [position]="[2.5, 4, 0.25]" [rotation]="[1.25, -1.25, 0]" />
 				}
@@ -145,12 +146,6 @@ export class Experience {
 
 	position: Triplet = [0, 0, 0];
 	rotation: Triplet = [0, 0, 0];
-
-	onRotationChanged(value: Triplet) {
-		if (!this.copy()) {
-			this.rotation = value;
-		}
-	}
 
 	constructor() {
 		afterNextRender(() => {
