@@ -1,0 +1,166 @@
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	afterNextRender,
+	input,
+	output,
+	signal,
+} from '@angular/core';
+import { Triplet } from '@pmndrs/cannon-worker-api';
+import { NgtArgs, extend } from 'angular-three';
+import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { injectCompound, injectPlane } from 'angular-three-cannon/body';
+import { NgtcDebug } from 'angular-three-cannon/debug';
+import { injectAutoEffect } from 'ngxtension/auto-effect';
+import * as THREE from 'three';
+
+extend(THREE);
+
+@Component({
+	selector: 'app-plane',
+	standalone: true,
+	template: `
+		<ngt-group [ref]="plane.ref">
+			<ngt-mesh>
+				<ngt-plane-geometry *args="[8, 8]" />
+				<ngt-mesh-basic-material color="#ffb385" />
+			</ngt-mesh>
+			<ngt-mesh [receiveShadow]="true">
+				<ngt-plane-geometry *args="[8, 8]" />
+				<ngt-shadow-material color="lightsalmon" />
+			</ngt-mesh>
+		</ngt-group>
+	`,
+	imports: [NgtArgs],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class Plane {
+	rotation = input<Triplet>([0, 0, 0]);
+	plane = injectPlane(() => ({ type: 'Static', rotation: this.rotation() }));
+}
+
+@Component({
+	selector: 'app-compound-body',
+	standalone: true,
+	template: `
+		<ngt-group [ref]="compound.ref">
+			<ngt-mesh [castShadow]="true">
+				<ngt-box-geometry *args="boxSize" />
+				<ngt-mesh-normal-material />
+			</ngt-mesh>
+			<ngt-mesh [castShadow]="true" [position]="[1, 0, 0]">
+				<ngt-sphere-geometry *args="[sphereRadius, 16, 16]" />
+				<ngt-mesh-normal-material />
+			</ngt-mesh>
+		</ngt-group>
+	`,
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CompoundBody {
+	boxSize: Triplet = [1, 1, 1];
+	sphereRadius = 0.65;
+
+	position = input<Triplet>([0, 0, 0]);
+	rotation = input<Triplet>([0, 0, 0]);
+	isTrigger = input(false);
+	mass = input(12);
+
+	positionChanged = output<Triplet>();
+	rotationChanged = output<Triplet>();
+
+	compound = injectCompound(() => ({
+		isTrigger: this.isTrigger(),
+		mass: this.mass(),
+		position: this.position(),
+		rotation: this.rotation(),
+		shapes: [
+			{ args: this.boxSize, position: [0, 0, 0], rotation: [0, 0, 0], type: 'Box' },
+			{ args: [this.sphereRadius], position: [1, 0, 0], rotation: [0, 0, 0], type: 'Sphere' },
+		],
+	}));
+
+	constructor() {
+		const autoEffect = injectAutoEffect();
+		afterNextRender(() => {
+			autoEffect(() => {
+				const positionCleanup = this.compound.api.position.subscribe(
+					this.positionChanged.emit.bind(this.positionChanged),
+				);
+				const rotationCleanup = this.compound.api.rotation.subscribe(
+					this.rotationChanged.emit.bind(this.rotationChanged),
+				);
+
+				return () => {
+					positionCleanup();
+					rotationCleanup();
+				};
+			});
+		});
+	}
+}
+
+@Component({
+	standalone: true,
+	template: `
+		<ngt-color attach="background" *args="['#f6d186']" />
+		<ngt-hemisphere-light [intensity]="0.35" />
+		<ngt-spot-light [position]="[5, 5, 5]" [angle]="0.3" [penumbra]="1" [intensity]="2" [castShadow]="true">
+			<ngt-vector2 *args="[1028, 1028]" attach="shadow.mapSize" />
+		</ngt-spot-light>
+
+		<ngtc-physics [options]="{ iterations: 6 }" [debug]="{ scale: 1.1 }">
+			<ng-template physicsContent>
+				<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />
+				<app-compound-body [position]="[1.5, 5, 0.5]" [rotation]="[1.25, 0, 0]" />
+				<app-compound-body
+					[position]="[2.5, 3, 0.25]"
+					[rotation]="[1.25, -1.25, 0]"
+					(positionChanged)="!copy() && (position = $event)"
+					(rotationChanged)="onRotationChanged($event)"
+				/>
+				@if (ready()) {
+					<app-compound-body [position]="[2.5, 4, 0.25]" [rotation]="[1.25, -1.25, 0]" />
+				}
+
+				@if (copy()) {
+					<app-compound-body [isTrigger]="true" [mass]="0" [position]="position" [rotation]="rotation" />
+				}
+			</ng-template>
+		</ngtc-physics>
+	`,
+	imports: [NgtArgs, NgtcPhysics, NgtcPhysicsContent, NgtcDebug, Plane, CompoundBody],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'compound-experience' },
+})
+export class Experience {
+	Math = Math;
+
+	ready = signal(false);
+	copy = signal(false);
+
+	position: Triplet = [0, 0, 0];
+	rotation: Triplet = [0, 0, 0];
+
+	onRotationChanged(value: Triplet) {
+		if (!this.copy()) {
+			this.rotation = value;
+		}
+	}
+
+	constructor() {
+		afterNextRender(() => {
+			setTimeout(() => {
+				this.ready.set(true);
+			}, 2000);
+
+			setTimeout(() => {
+				this.copy.set(true);
+			}, 1000);
+		});
+	}
+}

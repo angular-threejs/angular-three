@@ -10,6 +10,10 @@ const routes: Routes = [
 		loadComponent: () => import('./kinematic-cube/kinematic-cube'),
 	},
 	{
+		path: 'compound',
+		loadComponent: () => import('./compound/compound'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
