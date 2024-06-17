@@ -18,6 +18,10 @@ const routes: Routes = [
 		loadComponent: () => import('./chain/chain'),
 	},
 	{
+		path: 'cube-heap',
+		loadComponent: () => import('./cube-heap/cube-heap'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
