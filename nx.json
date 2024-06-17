@@ -35,6 +35,11 @@
 			"cache": true,
 			"dependsOn": ["^build"],
 			"inputs": ["production", "^production"]
+		},
+		"@angular-devkit/build-angular:application": {
+			"cache": true,
+			"dependsOn": ["^build"],
+			"inputs": ["production", "^production"]
 		}
 	},
 	"namedInputs": {
@@ -54,10 +59,10 @@
 	},
 	"generators": {
 		"@nx/angular:application": {
-			"style": "css",
+			"e2eTestRunner": "none",
 			"linter": "eslint",
-			"unitTestRunner": "jest",
-			"e2eTestRunner": "none"
+			"style": "css",
+			"unitTestRunner": "jest"
 		},
 		"@nx/angular:library": {
 			"linter": "eslint",

@@ -1,0 +1,72 @@
+{
+	"name": "kitchen-sink",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"prefix": "app",
+	"sourceRoot": "apps/kitchen-sink/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@angular-devkit/build-angular:application",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/apps/kitchen-sink",
+				"index": "apps/kitchen-sink/src/index.html",
+				"browser": "apps/kitchen-sink/src/main.ts",
+				"tsConfig": "apps/kitchen-sink/tsconfig.app.json",
+				"assets": [
+					{
+						"glob": "**/*",
+						"input": "apps/kitchen-sink/public"
+					}
+				],
+				"styles": ["apps/kitchen-sink/src/styles.css"],
+				"scripts": []
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "500kb",
+							"maximumError": "1mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "2kb",
+							"maximumError": "4kb"
+						}
+					],
+					"outputHashing": "all"
+				},
+				"development": {
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"serve": {
+			"executor": "@angular-devkit/build-angular:dev-server",
+			"configurations": {
+				"production": {
+					"buildTarget": "kitchen-sink:build:production"
+				},
+				"development": {
+					"buildTarget": "kitchen-sink:build:development"
+				}
+			},
+			"defaultConfiguration": "development"
+		},
+		"extract-i18n": {
+			"executor": "@angular-devkit/build-angular:extract-i18n",
+			"options": {
+				"buildTarget": "kitchen-sink:build"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		}
+	}
+}

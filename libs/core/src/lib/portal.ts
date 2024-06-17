@@ -140,7 +140,7 @@ export class NgtPortalContent {
 		<ng-container #portalContentAnchor>
 			@if (renderAutoBeforeRender()) {
 				<ngt-portal-before-render
-					[renderPriority]="autoRenderPriority"
+					[renderPriority]="autoRenderPriority()"
 					[parentScene]="parentScene"
 					[parentCamera]="parentCamera"
 				/>

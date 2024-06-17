@@ -1,11 +1,12 @@
 import { Injector, Signal, effect, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
+import { Loader, Object3D } from 'three';
 import { NgtAnyRecord } from './types';
 import { NgtObjectMap, makeObjectGraph } from './utils/make';
 
-export type NgtGLTFLike = { scene: THREE.Object3D };
+export type NgtGLTFLike = { scene: Object3D };
 
-export interface NgtLoader<T> extends THREE.Loader {
+export interface NgtLoader<T> extends Loader {
 	load(
 		url: string,
 		onLoad?: (result: T) => void,

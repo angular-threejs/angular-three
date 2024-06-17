@@ -100,6 +100,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				if (rootState?.gl) {
 					if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
 						texture.colorSpace = rootState.gl.outputColorSpace;
+					// @ts-expect-error - old version of threejs
 					else texture.encoding = rootState.gl.outputEncoding;
 				}
 			}
