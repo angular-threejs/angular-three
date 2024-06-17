@@ -94,7 +94,7 @@ export class Box {
 	imports: [Box, Plane, NgtcPhysics, NgtcPhysicsContent, NgtcDebug],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	host: { class: 'cannon-basic-experience' },
+	host: { class: 'basic-experience' },
 })
 export class Experience {
 	Math = Math;
