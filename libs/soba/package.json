@@ -28,7 +28,6 @@
 	"peerDependencies": {
 		"@angular/common": "^18.0.0",
 		"@angular/core": "^18.0.0",
-		"angular-three": "^2.0.0",
 		"meshline": "^3.1.0",
 		"ngxtension": "^3.0.0",
 		"stats-gl": "^1.0.0",

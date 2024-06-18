@@ -26,7 +26,6 @@
 		"@angular/common": "^18.0.0",
 		"@angular/core": "^18.0.0",
 		"@pmndrs/cannon-worker-api": "^2.0.0",
-		"angular-three": "^2.0.0",
 		"cannon-es": "^0.20.0",
 		"cannon-es-debugger": "^1.0.0",
 		"ngxtension": "^3.0.0",
