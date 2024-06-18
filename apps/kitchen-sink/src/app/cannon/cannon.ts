@@ -27,5 +27,5 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 	host: { class: 'cannon' },
 })
 export default class Cannon {
-	examples = ['basic', 'kinematic-cube', 'compound', 'chain', 'cube-heap'];
+	examples = ['basic', 'kinematic-cube', 'compound', 'chain', 'cube-heap', 'convexpolyhedron'];
 }

@@ -22,6 +22,10 @@ const routes: Routes = [
 		loadComponent: () => import('./cube-heap/cube-heap'),
 	},
 	{
+		path: 'convexpolyhedron',
+		loadComponent: () => import('./convexpolyhedron/convexpolyhedron'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
