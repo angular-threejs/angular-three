@@ -8,19 +8,21 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 			<router-outlet />
 		</div>
 
-		<div class="absolute left-12 bottom-12 grid grid-cols-6 gap-4">
+		<ul class=" absolute left-12 bottom-12 grid grid-cols-6 gap-4">
 			@for (example of examples; track example) {
-				<div class="h-6 w-6">
+				<li class="h-6 w-6">
 					<a
-						[routerLink]="['/cannon', example]"
+						routerLinkActive
+						#rla="routerLinkActive"
+						class="inline-block h-full w-full rounded-full"
+						[class]="rla.isActive ? 'bg-red-500' : 'bg-white'"
 						[routerLinkActiveOptions]="{ exact: true }"
+						[routerLink]="['/cannon', example]"
 						[title]="'Navigate to ' + example"
-						class="block rounded-full w-full h-full bg-white"
-						routerLinkActive="bg-red-500"
 					></a>
-				</div>
+				</li>
 			}
-		</div>
+		</ul>
 	`,
 	imports: [RouterOutlet, RouterLink, RouterLinkActive],
 	changeDetection: ChangeDetectionStrategy.OnPush,
