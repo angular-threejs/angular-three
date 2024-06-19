@@ -9,7 +9,11 @@ import { PositionRotationInput } from './position-rotation-input';
 	template: `
 		<ngt-mesh [ref]="plane.ref" [receiveShadow]="true">
 			<ngt-plane-geometry *args="[size(), size()]" />
-			<ngt-shadow-material [color]="color()" />
+			@if (useShadowMaterial()) {
+				<ngt-shadow-material [color]="color()" />
+			} @else {
+				<ngt-mesh-standard-material [color]="color()" />
+			}
 		</ngt-mesh>
 	`,
 	imports: [NgtArgs],
@@ -21,6 +25,7 @@ export class UiPlane {
 	positionRotationInput = inject(PositionRotationInput, { host: true });
 	color = input('#171717');
 	size = input(10);
+	useShadowMaterial = input(true);
 	plane = injectPlane(() => ({
 		type: 'Static',
 		rotation: this.positionRotationInput.rotation(),

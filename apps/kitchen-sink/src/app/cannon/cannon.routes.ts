@@ -26,6 +26,10 @@ const routes: Routes = [
 		loadComponent: () => import('./convexpolyhedron/convexpolyhedron'),
 	},
 	{
+		path: 'monday-morning',
+		loadComponent: () => import('./monday-morning/monday-morning'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',

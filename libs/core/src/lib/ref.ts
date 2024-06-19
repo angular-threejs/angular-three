@@ -14,6 +14,10 @@ export function injectNgtRef<TElement>(
 	initial: ElementRef<TElement> | TElement = null!,
 	injector?: Injector,
 ): NgtInjectedRef<TElement> {
+	if (initial && Reflect.get(initial, '__ngtType')) {
+		return initial as NgtInjectedRef<TElement>;
+	}
+
 	return assertInjector(injectNgtRef, injector, () => {
 		const ref = is.ref(initial) ? initial : new ElementRef(initial as TElement);
 		const refSignal = signal(ref.nativeElement, { equal: Object.is });
@@ -52,6 +56,7 @@ export function injectNgtRef<TElement>(
 				get: readonlyRef,
 			},
 			children: { value: children },
+			__ngtType: { value: 'ngtRef' },
 		});
 
 		return ref as NgtInjectedRef<TElement>;

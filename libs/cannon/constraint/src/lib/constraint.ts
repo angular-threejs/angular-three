@@ -1,4 +1,4 @@
-import { Injector, afterNextRender } from '@angular/core';
+import { ElementRef, Injector, afterNextRender } from '@angular/core';
 import {
 	ConeTwistConstraintOpts,
 	ConstraintTypes,
@@ -7,7 +7,7 @@ import {
 	LockConstraintOpts,
 	PointToPointConstraintOpts,
 } from '@pmndrs/cannon-worker-api';
-import { NgtInjectedRef, injectNgtRef, is, makeId } from 'angular-three';
+import { NgtInjectedRef, injectNgtRef, makeId } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
@@ -50,13 +50,14 @@ export type NgtcConstraintOptionsMap = {
 
 export type NgtcConstraintOptions<TConstraintType extends 'Hinge' | ConstraintTypes> = {
 	injector?: Injector;
+	disableOnStart?: boolean;
 	options?: NgtcConstraintOptionsMap[TConstraintType];
 };
 
 function createInjectConstraint<TConstraint extends ConstraintTypes | 'Hinge'>(type: TConstraint) {
 	return <A extends Object3D = Object3D, B extends Object3D = Object3D>(
-		bodyA: NgtInjectedRef<A> | A,
-		bodyB: NgtInjectedRef<B> | B,
+		bodyA: ElementRef<A> | A,
+		bodyB: ElementRef<B> | B,
 		options?: NgtcConstraintOptions<TConstraint>,
 	) => injectConstraint<TConstraint, A, B>(type, bodyA, bodyB, options);
 }
@@ -67,9 +68,9 @@ function injectConstraint<
 	B extends Object3D = Object3D,
 >(
 	type: TConstraint,
-	bodyA: NgtInjectedRef<A> | A,
-	bodyB: NgtInjectedRef<B> | B,
-	{ injector, options = {} as any }: NgtcConstraintOptions<TConstraint> = {},
+	bodyA: ElementRef<A> | A,
+	bodyB: ElementRef<B> | B,
+	{ injector, options = {} as any, disableOnStart = false }: NgtcConstraintOptions<TConstraint> = {},
 ): NgtcConstraintReturn<TConstraint, A, B> {
 	return assertInjector(injectConstraint, injector, () => {
 		const physicsApi = injectNgtcPhysicsApi();
@@ -81,42 +82,49 @@ function injectConstraint<
 		const autoEffect = injectAutoEffect();
 
 		const uuid = makeId();
-		const bodyARef = is.ref(bodyA) ? bodyA : injectNgtRef(bodyA);
-		const bodyBRef = is.ref(bodyB) ? bodyB : injectNgtRef(bodyB);
-		const constraintResult = { bodyA: bodyARef, bodyB: bodyBRef };
+		const constraintResult = {
+			bodyA: injectNgtRef(bodyA),
+			bodyB: injectNgtRef(bodyB),
+			api: (() => {
+				const enableDisable = {
+					disable: () => physicsApi.worker().disableConstraint({ uuid }),
+					enable: () => physicsApi.worker().enableConstraint({ uuid }),
+					remove: () => physicsApi.worker().removeConstraint({ uuid }),
+				};
+				if (type === 'Hinge') {
+					return {
+						...enableDisable,
+						disableMotor: () => physicsApi.worker().disableConstraintMotor({ uuid }),
+						enableMotor: () => physicsApi.worker().enableConstraintMotor({ uuid }),
+						setMotorMaxForce: (value: number) => physicsApi.worker().setConstraintMotorMaxForce({ props: value, uuid }),
+						setMotorSpeed: (value: number) => physicsApi.worker().setConstraintMotorSpeed({ props: value, uuid }),
+					} as NgtcHingeConstraintApi;
+				}
+				return enableDisable as NgtcConstraintApi;
+			})(),
+		};
 
+		let alreadyDisabled = false;
 		afterNextRender(() => {
-			Object.assign(constraintResult, {
-				api: (() => {
-					const enableDisable = {
-						disable: () => physicsApi.worker().disableConstraint({ uuid }),
-						enable: () => physicsApi.worker().enableConstraint({ uuid }),
-						remove: () => physicsApi.worker().removeConstraint({ uuid }),
-					};
-					if (type === 'Hinge') {
-						return {
-							...enableDisable,
-							disableMotor: () => physicsApi.worker().disableConstraintMotor({ uuid }),
-							enableMotor: () => physicsApi.worker().enableConstraintMotor({ uuid }),
-							setMotorMaxForce: (value: number) =>
-								physicsApi.worker().setConstraintMotorMaxForce({ props: value, uuid }),
-							setMotorSpeed: (value: number) => physicsApi.worker().setConstraintMotorSpeed({ props: value, uuid }),
-						} as NgtcHingeConstraintApi;
-					}
-					return enableDisable as NgtcConstraintApi;
-				})(),
-			});
-
 			autoEffect(() => {
-				const [a, b] = [bodyARef.nativeElement, bodyBRef.nativeElement];
+				const worker = physicsApi.worker();
+				if (!worker) return;
+
+				const [a, b] = [constraintResult.bodyA.nativeElement, constraintResult.bodyB.nativeElement];
 
 				if (a && b) {
-					physicsApi.worker().addConstraint({
+					worker.addConstraint({
 						props: [a.uuid, b.uuid, options],
 						type,
 						uuid,
 					});
-					return () => physicsApi.worker().removeConstraint({ uuid });
+
+					if (disableOnStart && !alreadyDisabled) {
+						alreadyDisabled = true;
+						constraintResult.api.disable();
+					}
+
+					return () => worker.removeConstraint({ uuid });
 				}
 
 				return;

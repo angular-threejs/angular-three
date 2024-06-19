@@ -1,6 +1,6 @@
-import { Injector, afterNextRender } from '@angular/core';
+import { ElementRef, Injector, afterNextRender } from '@angular/core';
 import { BodyShapeType } from '@pmndrs/cannon-worker-api';
-import { NgtInjectedRef, injectNgtRef } from 'angular-three';
+import { injectNgtRef } from 'angular-three';
 import { injectNgtcPhysicsApi } from 'angular-three-cannon';
 import { injectNgtcDebugApi } from 'angular-three-cannon/debug';
 import { assertInjector } from 'ngxtension/assert-injector';
@@ -11,7 +11,7 @@ import { defaultTransformArgs, makeBodyApi, prepare, setupCollision } from './ut
 
 export interface NgtcBodyOptions<TShape extends BodyShapeType> {
 	transformArgs?: NgtcArgFn<NgtcBodyPropsMap[TShape]>;
-	ref?: NgtInjectedRef<Object3D>;
+	ref?: ElementRef<Object3D>;
 	injector?: Injector;
 }
 
@@ -39,17 +39,16 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 
 		const { add: addToDebug, remove: removeFromDebug } = debugApi || {};
 		const transform = transformArgs ?? defaultTransformArgs[type];
-		const bodyResult = { ref: ref ?? injectNgtRef() };
+		const bodyRef = injectNgtRef(ref);
+		const bodyResult = { ref: bodyRef, api: makeBodyApi(bodyRef, physicsApi) };
 
 		afterNextRender(() => {
-			Object.assign(bodyResult, { api: makeBodyApi(bodyResult.ref, physicsApi) });
 			autoEffect(() => {
 				const currentWorker = physicsApi.worker();
 				if (!currentWorker) return;
 
 				if (!bodyResult.ref.nativeElement) {
 					bodyResult.ref.nativeElement = new Object3D();
-					return;
 				}
 
 				const object = bodyResult.ref.nativeElement;
