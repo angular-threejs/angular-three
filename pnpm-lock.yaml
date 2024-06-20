@@ -142,7 +142,7 @@ importers:
         specifier: 18.0.1
         version: 18.0.1(eslint@9.5.0)(typescript@5.4.5)
       '@angular/cli':
-        specifier: ~18.0.4
+        specifier: ~18.0.0
         version: 18.0.4(chokidar@3.6.0)
       '@angular/compiler-cli':
         specifier: 18.0.3
@@ -15560,7 +15560,7 @@ snapshots:
       agent-base: 7.1.0
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
-      lru-cache: 10.0.3
+      lru-cache: 10.2.2
       socks-proxy-agent: 8.0.2
     transitivePeerDependencies:
       - supports-color
@@ -15572,7 +15572,7 @@ snapshots:
   '@npmcli/git@5.0.3':
     dependencies:
       '@npmcli/promise-spawn': 7.0.0
-      lru-cache: 10.0.3
+      lru-cache: 10.2.2
       npm-pick-manifest: 9.0.1
       proc-log: 3.0.0
       promise-inflight: 1.0.1
