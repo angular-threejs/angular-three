@@ -343,6 +343,14 @@ export class NgtRendererStore {
 		this.updateNativeProps(node, name, value);
 	}
 
+	applyParameters(node: NgtRendererNode, parameters: NgtAnyRecord) {
+		const rS = node.__ngt_renderer__;
+		if (rS[NgtRendererClassId.destroyed]) return;
+
+		applyProps(node, parameters);
+		this.updateNativeProps(node, 'parameters', parameters);
+	}
+
 	get rootScene() {
 		return this.rootState.store.get('scene');
 	}

@@ -13,6 +13,7 @@ export const SPECIAL_PROPERTIES = {
 	RENDER_PRIORITY: 'priority',
 	ATTACH: 'attach',
 	RAW_VALUE: 'rawValue',
+	PARAMETERS: 'parameters',
 	REF: 'ref',
 } as const;
 

@@ -17,7 +17,7 @@ import { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 import { NgtSignalStore, signalStore } from '../utils/signal-store';
 import { NgtAnyConstructor, injectNgtCatalogue } from './catalogue';
-import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG } from './constants';
+import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG, SPECIAL_PROPERTIES } from './constants';
 import { NGT_COMPOUND_PREFIXES, NgtRendererNode, NgtRendererState, NgtRendererStore } from './store';
 import {
 	NgtCompoundClassId,
@@ -436,7 +436,11 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (rS[NgtRendererClassId.type] === 'three') {
-			this.store.applyProperty(el, name, value);
+			if (name === SPECIAL_PROPERTIES.PARAMETERS) {
+				this.store.applyParameters(el, value);
+			} else {
+				this.store.applyProperty(el, name, value);
+			}
 			return;
 		}
 
