@@ -28,6 +28,12 @@
 				"cwd": "dist/libs/soba"
 			}
 		},
+		"publish-beta": {
+			"command": "npm publish --tag=beta",
+			"options": {
+				"cwd": "dist/libs/soba"
+			}
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],

@@ -48,6 +48,18 @@
 				"parallel": true
 			}
 		},
+		"publish": {
+			"command": "npm publish",
+			"options": {
+				"cwd": "dist/libs/core"
+			}
+		},
+		"publish-beta": {
+			"command": "npm publish --tag=beta",
+			"options": {
+				"cwd": "dist/libs/core"
+			}
+		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
