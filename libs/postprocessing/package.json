@@ -1,0 +1,34 @@
+{
+	"name": "angular-three-postprocessing",
+	"version": "0.0.0-replace",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/angular-threejs/angular-three/tree/main/libs/postprocessing"
+	},
+	"author": {
+		"name": "Chau Tran",
+		"email": "nartc7789@gmail.com",
+		"url": "https://nartc.me"
+	},
+	"description": "Postprocessing for Angular Three",
+	"keywords": [
+		"angular",
+		"threejs",
+		"renderer",
+		"postprocessing"
+	],
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": "^18.0.0",
+		"@angular/core": "^18.0.0",
+		"ngxtension": "^3.0.0",
+		"three": ">=0.148.0"
+	},
+	"dependencies": {
+		"tslib": "^2.3.0"
+	},
+	"sideEffects": false
+}
