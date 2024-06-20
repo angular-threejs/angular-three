@@ -351,9 +351,16 @@ export class NgtRenderer implements Renderer2 {
 			return;
 		}
 
-		if (pRS[NgtRendererClassId.type] === 'compound' && pRS[NgtRendererClassId.parent]) {
-			this.removeChild(pRS[NgtRendererClassId.parent], oldChild, isHostElement);
-			return;
+		if (pRS[NgtRendererClassId.type] === 'compound') {
+			if (pRS[NgtRendererClassId.compounded]) {
+				this.removeChild(pRS[NgtRendererClassId.compounded], oldChild, isHostElement);
+				return;
+			}
+
+			if (pRS[NgtRendererClassId.parent]) {
+				this.removeChild(pRS[NgtRendererClassId.parent], oldChild, isHostElement);
+				return;
+			}
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'three') {

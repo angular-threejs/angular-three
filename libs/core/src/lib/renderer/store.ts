@@ -121,6 +121,16 @@ export class NgtRendererStore {
 
 	getClosestParentWithInstance(node: NgtRendererNode): NgtRendererNode | null {
 		let parent = node.__ngt_renderer__[NgtRendererClassId.parent];
+
+		if (
+			parent &&
+			parent.__ngt_renderer__[NgtRendererClassId.type] === 'compound' &&
+			parent.__ngt_renderer__[NgtRendererClassId.compounded] &&
+			parent.__ngt_renderer__[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.type] === 'three'
+		) {
+			return parent.__ngt_renderer__[NgtRendererClassId.compounded];
+		}
+
 		while (parent && parent.__ngt_renderer__[NgtRendererClassId.type] !== 'three') {
 			parent = parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
 				? parent.__ngt_renderer__[NgtRendererClassId.portalContainer]

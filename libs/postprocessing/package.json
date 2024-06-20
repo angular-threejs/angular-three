@@ -25,7 +25,9 @@
 		"@angular/common": "^18.0.0",
 		"@angular/core": "^18.0.0",
 		"ngxtension": "^3.0.0",
-		"three": ">=0.148.0"
+		"postprocessing": "^6.0.0",
+		"three": ">=0.148.0",
+		"three-stdlib": "^2.0.0"
 	},
 	"dependencies": {
 		"tslib": "^2.3.0"

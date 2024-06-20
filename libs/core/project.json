@@ -25,7 +25,7 @@
 		"build-ecosystem": {
 			"executor": "nx:run-commands",
 			"options": {
-				"commands": ["pnpm exec nx build soba", "pnpm exec nx build cannon"],
+				"commands": ["pnpm exec nx build soba", "pnpm exec nx build cannon", "pnpm exec nx build postprocessing"],
 				"parallel": true
 			}
 		},
