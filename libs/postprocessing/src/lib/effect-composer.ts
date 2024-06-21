@@ -14,7 +14,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -31,6 +31,17 @@ import { Camera, Group, HalfFloatType, NoToneMapping, Scene, TextureDataType } f
 import { isWebGL2Available } from 'three-stdlib';
 
 extend({ Group });
+
+export interface NgtpEffectComposerApi {
+	composer: EffectComposer;
+	camera: Camera;
+	scene: Scene;
+	normalPass: NormalPass | null;
+	downSamplingPass: DepthDownsamplingPass | null;
+	resolutionScale?: number;
+}
+
+export const [injectEffectComposerApi, provideEffectComposerApi] = createApiToken(() => NgtpEffectComposer);
 
 interface NgtpEffectComposerOptions {
 	enabled: boolean;
@@ -68,6 +79,7 @@ export class NgtpEffects {}
 	template: `
 		<ngt-group #group ngtCompound></ngt-group>
 	`,
+	providers: [provideEffectComposerApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -145,6 +157,16 @@ export class NgtpEffectComposer {
 		}
 
 		return { composer, normalPass, downSamplingPass };
+	});
+
+	api = computed(() => {
+		const [{ composer, normalPass, downSamplingPass }, camera, scene, resolutionScale] = [
+			this.composerData(),
+			this.camera(),
+			this.scene(),
+			this.resolutionScale(),
+		];
+		return { composer, camera, scene, normalPass, downSamplingPass, resolutionScale };
 	});
 
 	constructor() {
