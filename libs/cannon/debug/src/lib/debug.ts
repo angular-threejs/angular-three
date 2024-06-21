@@ -1,7 +1,7 @@
 import { Directive, afterNextRender, input } from '@angular/core';
 import { BodyProps, BodyShapeType, propsToBody } from '@pmndrs/cannon-worker-api';
 import { createApiToken, injectBeforeRender, injectNgtStore } from 'angular-three';
-import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { injectPhysicsApi } from 'angular-three-cannon';
 import { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -38,7 +38,7 @@ const defaultOptions: NgtcDebugInputs = {
 @Directive({ selector: 'ngtc-physics[debug]', standalone: true, providers: [provideNgtcDebugApi()] })
 export class NgtcDebug {
 	private store = injectNgtStore();
-	private physicsApi = injectNgtcPhysicsApi();
+	private physicsApi = injectPhysicsApi();
 
 	debug = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 

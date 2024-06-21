@@ -66,7 +66,7 @@ function unique() {
 	return (value: unknown) => (values.includes(value) ? false : !!values.push(value));
 }
 
-export const [injectNgtcPhysicsApi, provideNgtcPhysicsApi] = createApiToken(() => NgtcPhysics);
+export const [injectPhysicsApi, providePhysicsApi] = createApiToken(() => NgtcPhysics);
 
 type NgtcCannonEvent = CollideBeginEvent | CollideEndEvent | CollideEvent | RayhitEvent;
 type NgtcCallbackByType<T extends { type: string }> = {
@@ -126,7 +126,7 @@ const defaultOptions: NgtcPhysicsInputs = {
 		<ng-container #anchor />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideNgtcPhysicsApi()],
+	providers: [providePhysicsApi()],
 })
 export class NgtcPhysics {
 	private zone = inject(NgZone);

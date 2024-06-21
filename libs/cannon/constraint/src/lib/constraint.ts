@@ -8,7 +8,7 @@ import {
 	PointToPointConstraintOpts,
 } from '@pmndrs/cannon-worker-api';
 import { NgtInjectedRef, injectNgtRef, makeId } from 'angular-three';
-import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { injectPhysicsApi } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Object3D } from 'three';
@@ -73,7 +73,7 @@ function injectConstraint<
 	{ injector, options = {} as any, disableOnStart = false }: NgtcConstraintOptions<TConstraint> = {},
 ): NgtcConstraintReturn<TConstraint, A, B> {
 	return assertInjector(injectConstraint, injector, () => {
-		const physicsApi = injectNgtcPhysicsApi();
+		const physicsApi = injectPhysicsApi({ optional: true });
 
 		if (!physicsApi) {
 			throw new Error(`[NGT Cannon] injectConstraint was called outside of <ngtc-physics>`);

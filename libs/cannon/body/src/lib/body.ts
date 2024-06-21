@@ -1,7 +1,7 @@
 import { ElementRef, Injector, afterNextRender } from '@angular/core';
 import { BodyShapeType } from '@pmndrs/cannon-worker-api';
 import { injectNgtRef } from 'angular-three';
-import { injectNgtcPhysicsApi } from 'angular-three-cannon';
+import { injectPhysicsApi } from 'angular-three-cannon';
 import { injectNgtcDebugApi } from 'angular-three-cannon/debug';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
@@ -28,7 +28,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 	{ transformArgs, ref, injector }: NgtcBodyOptions<TShape> = {},
 ): NgtcBodyReturn<TObject> {
 	return assertInjector(injectBody, injector, () => {
-		const physicsApi = injectNgtcPhysicsApi({ optional: true });
+		const physicsApi = injectPhysicsApi({ optional: true });
 
 		if (!physicsApi) {
 			throw new Error(`[NGT Cannon] injectBody was called outside of <ngtc-physics>`);
