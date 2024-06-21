@@ -6,3 +6,6 @@ export * from './color-average';
 export * from './color-depth';
 export * from './depth';
 export * from './depth-of-field';
+export * from './dot-screen';
+export * from './fxaa';
+export * from './glitch';

@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
-import { NgtpDepthOfField, NgtpEffectComposer, NgtpEffects } from 'angular-three-postprocessing';
+import { NgtpEffectComposer, NgtpEffects, NgtpGlitch } from 'angular-three-postprocessing';
 import * as THREE from 'three';
 import { Group, Vector2 } from 'three';
 
@@ -30,12 +30,12 @@ extend(THREE);
 
 		<ngtp-effect-composer>
 			<ng-template effects>
-				<ngtp-depth-of-field [options]="{ focusDistance: 0, focalLength: 0.02, bokehScale: 2 }" />
+				<ngtp-glitch />
 			</ng-template>
 		</ngtp-effect-composer>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtpEffectComposer, NgtpEffects, NgtArgs, NgtpDepthOfField],
+	imports: [NgtpEffectComposer, NgtpEffects, NgtArgs, NgtpGlitch],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-postprocessing' },
 })
