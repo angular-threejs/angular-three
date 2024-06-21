@@ -1,1 +1,1 @@
-export * from './orbit-controls/orbit-controls';
+export * from './lib/orbit-controls';

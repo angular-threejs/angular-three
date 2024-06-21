@@ -17,7 +17,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 						class="inline-block h-full w-full rounded-full"
 						[class]="rla.isActive ? 'bg-red-500' : 'bg-white'"
 						[routerLinkActiveOptions]="{ exact: true }"
-						[routerLink]="['/postprocessing', example]"
+						[routerLink]="['/soba', example]"
 						[title]="'Navigate to ' + example"
 					></a>
 				</li>
@@ -26,8 +26,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 	`,
 	imports: [RouterOutlet, RouterLink, RouterLinkActive],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'postprocessing' },
+	host: { class: 'soba' },
 })
-export default class Postprocessing {
+export default class Soba {
 	examples = ['basic'];
 }

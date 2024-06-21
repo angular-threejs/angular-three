@@ -26,7 +26,7 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 	selector: 'ngtp-glitch',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

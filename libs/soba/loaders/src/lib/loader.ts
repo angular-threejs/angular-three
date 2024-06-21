@@ -10,7 +10,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { injectNgtsProgress } from '../progress/progress';
+import { injectProgress } from './progress';
 
 const defaultDataInterpolation = (p: number) => `Loading ${p.toFixed(2)}%`;
 
@@ -59,7 +59,7 @@ const defaultOptions: NgtsLoaderState = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsLoader {
-	private progressState = injectNgtsProgress();
+	private progressState = injectProgress();
 
 	active = computed(() => this.progressState().active);
 	progress = computed(() => this.progressState().progress);

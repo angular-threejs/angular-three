@@ -12,9 +12,15 @@ export const appRoutes: Route[] = [
 		loadChildren: () => import('./postprocessing/postprocessing.routes'),
 	},
 	{
+		path: 'soba',
+		loadComponent: () => import('./soba/soba'),
+		loadChildren: () => import('./soba/soba.routes'),
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
-		redirectTo: 'postprocessing',
+		// redirectTo: 'postprocessing',
+		redirectTo: 'soba',
 		pathMatch: 'full',
 	},
 ];

@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Injector, inject, signal, untracked } from '@angular
 import { assertInjector } from 'ngxtension/assert-injector';
 import { DefaultLoadingManager } from 'three';
 
-export function injectNgtsProgress(injector?: Injector) {
-	return assertInjector(injectNgtsProgress, injector, () => {
+export function injectProgress(injector?: Injector) {
+	return assertInjector(injectProgress, injector, () => {
 		const cdr = inject(ChangeDetectorRef);
 
 		const progress = signal<{

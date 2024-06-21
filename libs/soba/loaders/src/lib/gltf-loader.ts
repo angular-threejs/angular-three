@@ -1,5 +1,5 @@
 import { Injector, Signal } from '@angular/core';
-import { NgtLoaderResults, NgtObjectMap, injectNgtLoader } from 'angular-three';
+import { NgtLoaderResults, NgtObjectMap, injectLoader } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Loader } from 'three';
 import { DRACOLoader, GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
@@ -31,7 +31,7 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 
 export type NgtsGLTF<T extends Partial<NgtObjectMap>> = GLTF & NgtObjectMap & T;
 
-function _injectNgtsGLTFLoader<TUrl extends string | string[] | Record<string, string>>(
+function _injectGLTFLoader<TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -45,12 +45,12 @@ function _injectNgtsGLTFLoader<TUrl extends string | string[] | Record<string, s
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
-	return assertInjector(_injectNgtsGLTFLoader, injector, () =>
-		injectNgtLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) }),
+	return assertInjector(_injectGLTFLoader, injector, () =>
+		injectLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) }),
 	) as Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null>;
 }
 
-_injectNgtsGLTFLoader.preload = <TUrl extends string | string[] | Record<string, string>>(
+_injectGLTFLoader.preload = <TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -58,12 +58,12 @@ _injectNgtsGLTFLoader.preload = <TUrl extends string | string[] | Record<string,
 		extensions,
 	}: { useDraco?: boolean | string; useMeshOpt?: boolean; extensions?: (loader: GLTFLoader) => void } = {},
 ) => {
-	injectNgtLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions) as any);
+	injectLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions) as any);
 };
 
-_injectNgtsGLTFLoader.setDecoderPath = (path: string) => {
+_injectGLTFLoader.setDecoderPath = (path: string) => {
 	decoderPath = path;
 };
 
-export type NgtsGLTFLoader = typeof _injectNgtsGLTFLoader;
-export const injectNgtsGLTFLoader: NgtsGLTFLoader = _injectNgtsGLTFLoader;
+export type NgtsGLTFLoader = typeof _injectGLTFLoader;
+export const injectGLTFLoader: NgtsGLTFLoader = _injectGLTFLoader;

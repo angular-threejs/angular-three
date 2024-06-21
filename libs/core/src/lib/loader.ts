@@ -50,8 +50,11 @@ function load<
 		onProgress,
 	}: { extensions?: NgtLoaderExtensions<TLoaderConstructor>; onProgress?: (event: ProgressEvent) => void } = {},
 ) {
-	return (): Array<Promise<any>> => {
+	return (): Array<Promise<any>> | null => {
 		const urls = normalizeInputs(inputs());
+
+		if (urls.some((url) => url.includes('undefined'))) return null;
+
 		const loader = new (loaderConstructorFactory(urls))();
 		if (extensions) extensions(loader);
 		// TODO: reevaluate this
@@ -79,7 +82,7 @@ function load<
 	};
 }
 
-function _injectNgtLoader<
+function _injectLoader<
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
 	TLoaderConstructor extends NgtLoaderProto<TData>,
@@ -97,7 +100,7 @@ function _injectNgtLoader<
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
-	return assertInjector(_injectNgtLoader, injector, () => {
+	return assertInjector(_injectLoader, injector, () => {
 		const response = signal<NgtLoaderResults<
 			TUrl,
 			NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
@@ -106,27 +109,32 @@ function _injectNgtLoader<
 
 		effect(() => {
 			const originalUrls = inputs();
-			Promise.all(effector()).then((results) => {
-				response.update(() => {
-					if (Array.isArray(originalUrls)) return results;
-					if (typeof originalUrls === 'string') return results[0];
-					const keys = Object.keys(originalUrls);
-					return keys.reduce(
-						(result, key) => {
-							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-							return result;
-						},
-						{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
-					);
+			const cachedEffect = effector();
+			if (cachedEffect === null) {
+				response.set(null);
+			} else {
+				Promise.all(cachedEffect).then((results) => {
+					response.update(() => {
+						if (Array.isArray(originalUrls)) return results;
+						if (typeof originalUrls === 'string') return results[0];
+						const keys = Object.keys(originalUrls);
+						return keys.reduce(
+							(result, key) => {
+								(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+								return result;
+							},
+							{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
+						);
+					});
 				});
-			});
+			}
 		});
 
 		return response.asReadonly();
 	});
 }
 
-_injectNgtLoader.preload = <
+_injectLoader.preload = <
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
 	TLoaderConstructor extends NgtLoaderProto<TData>,
@@ -135,12 +143,15 @@ _injectNgtLoader.preload = <
 	inputs: () => TUrl,
 	extensions?: NgtLoaderExtensions<TLoaderConstructor>,
 ) => {
-	void Promise.all(load(loaderConstructorFactory, inputs, { extensions })());
+	const effects = load(loaderConstructorFactory, inputs, { extensions })();
+	if (effects) {
+		void Promise.all(effects);
+	}
 };
 
-_injectNgtLoader.destroy = () => {
+_injectLoader.destroy = () => {
 	cached.clear();
 };
 
-export type NgtInjectedLoader = typeof _injectNgtLoader;
-export const injectNgtLoader: NgtInjectedLoader = _injectNgtLoader;
+export type NgtInjectedLoader = typeof _injectLoader;
+export const injectLoader: NgtInjectedLoader = _injectLoader;

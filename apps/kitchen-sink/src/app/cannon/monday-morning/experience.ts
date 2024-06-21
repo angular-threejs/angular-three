@@ -22,7 +22,7 @@ import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
 import { injectBox, injectCompound, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { NgtcConstraintReturn, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import { injectNgtsGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTFLoader } from 'angular-three-soba/loaders';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { createInjectionToken, createNoopInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
@@ -325,7 +325,7 @@ interface CupGLTF extends GLTF {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Mug {
-	gltf = injectNgtsGLTFLoader(() => './cup.glb') as Signal<CupGLTF | null>;
+	gltf = injectGLTFLoader(() => './cup.glb') as Signal<CupGLTF | null>;
 	cylinder = injectCylinder(() => ({
 		args: [0.6, 0.6, 1, 16],
 		mass: 1,
