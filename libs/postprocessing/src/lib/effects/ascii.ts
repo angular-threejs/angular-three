@@ -45,7 +45,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 }
 `;
 
-interface IASCIIEffectProps {
+interface ASCIIEffectOptions {
 	font?: string;
 	characters?: string;
 	fontSize?: number;
@@ -62,7 +62,7 @@ export class ASCIIEffect extends Effect {
 		cellSize = 16,
 		color = '#ffffff',
 		invert = false,
-	}: IASCIIEffectProps = {}) {
+	}: ASCIIEffectOptions = {}) {
 		const uniforms = new Map<string, Uniform>([
 			['uCharacters', new Uniform(new Texture())],
 			['uCellSize', new Uniform(cellSize)],
@@ -113,7 +113,7 @@ export class ASCIIEffect extends Effect {
 	}
 }
 
-const defaultOptions: IASCIIEffectProps = {
+const defaultOptions: ASCIIEffectOptions = {
 	font: 'arial',
 	characters: ` .:,'-^=*+?!|0#X%WM@`,
 	fontSize: 54,

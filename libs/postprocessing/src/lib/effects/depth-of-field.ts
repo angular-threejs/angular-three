@@ -12,7 +12,7 @@ import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
 import { DepthPackingStrategies, Texture, Vector3 } from 'three';
 import { injectEffectComposerApi } from '../effect-composer';
 
-type DOFProps = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1]> &
+type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1]> &
 	Partial<{
 		target: NgtVector3;
 		depthTexture: {
@@ -37,7 +37,7 @@ export class NgtpDepthOfField {
 	composerApi = injectEffectComposerApi();
 
 	effectRef = input(injectNgtRef<DepthOfFieldEffect>());
-	options = input({} as DOFProps);
+	options = input({} as DOFOptions);
 
 	autoFocus = computed(() => this.options().target != null);
 

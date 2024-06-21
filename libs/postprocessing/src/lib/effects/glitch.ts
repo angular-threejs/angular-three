@@ -12,7 +12,7 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { GlitchEffect, GlitchMode } from 'postprocessing';
 import { vector2 } from '../utils';
 
-export type GlitchProps = NonNullable<ConstructorParameters<typeof GlitchEffect>[0]> &
+export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffect>[0]> &
 	Partial<{
 		mode: GlitchMode;
 		active: boolean;
@@ -38,7 +38,7 @@ export class NgtpGlitch {
 	invalidate = this.store.select('invalidate');
 
 	effectRef = input(injectNgtRef<GlitchEffect>());
-	options = input({ active: true } as GlitchProps, { transform: mergeInputs({ active: true }) });
+	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });
 
 	active = computed(() => this.options().active);
 	mode = computed(() => this.options().mode);
