@@ -10,3 +10,7 @@ export * from './dot-screen';
 export * from './fxaa';
 export * from './glitch';
 export * from './god-rays';
+export * from './grid';
+export * from './hue-saturation';
+export * from './lens-flare';
+export * from './lut';

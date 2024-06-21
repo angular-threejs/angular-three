@@ -7,26 +7,13 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
-import { NgtpEffectComposer, NgtpEffects, NgtpGodRays } from 'angular-three-postprocessing';
+import { NgtpEffectComposer, NgtpEffects, NgtpLensFlare } from 'angular-three-postprocessing';
 import * as THREE from 'three';
 import { Group, Mesh } from 'three';
 
 extend(THREE);
 
-// const Sun = forwardRef(function Sun(props, forwardRef) {
-//   // useFrame(({ clock }) => {
-//   //   forwardRef.current.position.x = Math.sin(clock.getElapsedTime()) * -8;
-//   //   forwardRef.current.position.y = Math.cos(clock.getElapsedTime()) * -8;
-//   // });
-//
-//   return (
-//     <mesh ref={forwardRef} position={[0, 0, -15]}>
-//       <sphereGeometry args={[1, 36, 36]} />
-//       <meshBasicMaterial color={"#00FF00"} />
-//     </mesh>
-//   );
-// });
-
+// NOTE: this is to be used with GodRaysEffect as the effect needs a sun source
 @Component({
 	selector: 'app-sun',
 	standalone: true,
@@ -51,7 +38,7 @@ export class Sun {
 	template: `
 		<ngt-color *args="['#171717']" attach="background" />
 
-		<app-sun color="yellow" />
+		<!-- <app-sun color="yellow" /> -->
 
 		<ngt-group #group>
 			<ngt-mesh>
@@ -64,7 +51,7 @@ export class Sun {
 				<ngt-mesh-basic-material color="aquamarine" />
 			</ngt-mesh>
 
-			<ngt-mesh [position]="[-2, -2, -2]">
+			<ngt-mesh [position]="[-2, -2, -2]" [userData]="{ lensflare: 'no-occlusion' }">
 				<ngt-box-geometry />
 				<ngt-mesh-basic-material color="goldenrod" />
 			</ngt-mesh>
@@ -72,20 +59,18 @@ export class Sun {
 
 		<ngtp-effect-composer>
 			<ng-template effects>
-				@if (sun().sunRef().nativeElement; as sun) {
-					<ngtp-god-rays [options]="{ sun }" />
-				}
+				<ngtp-lens-flare [options]="{ followMouse: false }" />
 			</ng-template>
 		</ngtp-effect-composer>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtpEffectComposer, NgtpEffects, NgtArgs, NgtpGodRays, Sun],
+	imports: [NgtpEffectComposer, NgtpEffects, NgtArgs, NgtpLensFlare, Sun],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-postprocessing' },
 })
 export class Experience {
 	group = viewChild.required<ElementRef<Group>>('group');
-	sun = viewChild.required(Sun);
+	// sun = viewChild.required(Sun);
 
 	constructor() {
 		injectBeforeRender(() => {
