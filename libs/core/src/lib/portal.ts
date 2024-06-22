@@ -19,16 +19,15 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
 import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { NgtEventManager } from './events';
-import { prepare } from './instance';
+import { getLocalState, prepare } from './instance';
 import { injectNgtRef } from './ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { injectNgtStore, NGT_STORE, NgtSize, NgtState } from './store';
+import { injectNgtStore, NgtSize, NgtState, provideNgtStore } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
-import { NgtSignalStore, signalStore } from './utils/signal-store';
+import { signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
 const privateKeys = [
@@ -56,25 +55,6 @@ export interface NgtPortalInputs {
 		}
 	>;
 }
-
-const [, providePortalStore] = createInjectionToken(
-	(parentStore: NgtSignalStore<NgtState>) => {
-		const parentState = parentStore.snapshot;
-		const pointer = new Vector2();
-		const raycaster = new Raycaster();
-		return signalStore<NgtState>(({ update }) => {
-			return {
-				...parentState,
-				pointer,
-				raycaster,
-				previousRoot: parentStore,
-				// Layers are allowed to override events
-				setEvents: (events) => update((state) => ({ ...state, events: { ...state.events, ...events } })),
-			};
-		});
-	},
-	{ isRoot: false, token: NGT_STORE, deps: [[new SkipSelf(), NGT_STORE]] },
-);
 
 @Component({
 	selector: 'ngt-portal-before-render',
@@ -122,7 +102,7 @@ export class NgtPortalBeforeRender {
 	}
 }
 
-@Directive({ selector: 'ng-template[ngtPortalContent]', standalone: true })
+@Directive({ selector: 'ng-template[portalContent]', standalone: true })
 export class NgtPortalContent {
 	constructor(vcr: ViewContainerRef, @SkipSelf() parentVcr: ViewContainerRef) {
 		const commentNode = vcr.element.nativeElement;
@@ -148,7 +128,7 @@ export class NgtPortalContent {
 		</ng-container>
 	`,
 	imports: [NgtPortalBeforeRender],
-	providers: [providePortalStore()],
+	providers: [provideNgtStore(signalStore<NgtState>({}))],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtPortal {
@@ -180,16 +160,48 @@ export class NgtPortal {
 	protected parentScene = this.parentStore.get('scene');
 	protected parentCamera = this.parentStore.get('camera');
 
+	private raycaster = new Raycaster();
+	private pointer = new Vector2();
+
 	constructor() {
 		afterNextRender(() => {
 			const parentState = this.parentStore.snapshot;
-			const [container, { events = {}, size = {}, ...rest } = {}] = [this.container(), this.state()];
+			const [containerRef, state, autoRender, autoRenderPriority] = [
+				this.container(),
+				this.state(),
+				this.autoRender(),
+				this.autoRenderPriority(),
+			];
+
+			let stateFromInput = state;
+
+			if (!stateFromInput && autoRender) {
+				stateFromInput = { events: { priority: autoRenderPriority + 1 } };
+			}
+
+			const { events = {}, size = {}, ...rest } = stateFromInput || {};
+			let container = is.ref(containerRef) ? containerRef.nativeElement : containerRef;
+
+			if (!is.instance(container)) {
+				container = prepare(container);
+			}
+
+			const localState = getLocalState(container);
+			if (localState && !localState.store) {
+				localState.store = this.portalStore;
+			}
 
 			this.portalStore.update({
-				scene: (is.ref(container) ? container.nativeElement : container) as Scene,
+				...parentState,
+				scene: container as Scene,
+				raycaster: this.raycaster,
+				pointer: this.pointer,
+				previousRoot: this.parentStore,
 				events: { ...parentState.events, ...events },
 				size: { ...parentState.size, ...size },
 				...rest,
+				setEvents: (events) =>
+					this.portalStore.update((state) => ({ ...state, events: { ...state.events, ...events } })),
 			});
 
 			this.autoEffect(() => {
@@ -200,7 +212,10 @@ export class NgtPortal {
 			untracked(() => {
 				const portalView = this.portalContentAnchor().createEmbeddedView(this.portalContentTemplate());
 				portalView.detectChanges();
-				this.destroyRef.onDestroy(portalView.destroy.bind(portalView));
+				this.destroyRef.onDestroy(() => {
+					portalView.destroy();
+					console.log(this.portalStore.snapshot);
+				});
 			});
 
 			this.portalRendered.set(true);

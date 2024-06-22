@@ -131,6 +131,14 @@ export class NgtRendererStore {
 			return parent.__ngt_renderer__[NgtRendererClassId.compounded];
 		}
 
+		if (
+			parent &&
+			parent.__ngt_renderer__[NgtRendererClassId.type] === 'portal' &&
+			parent.__ngt_renderer__[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
+		) {
+			return parent.__ngt_renderer__[NgtRendererClassId.portalContainer];
+		}
+
 		while (parent && parent.__ngt_renderer__[NgtRendererClassId.type] !== 'three') {
 			parent = parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
 				? parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
@@ -433,6 +441,11 @@ export class NgtRendererStore {
 		rS[NgtRendererClassId.parent] = null;
 		for (const renderChild of rS[NgtRendererClassId.children] || []) {
 			if (renderChild.__ngt_renderer__?.[NgtRendererClassId.type] === 'three' && parent) {
+				if (parent.__ngt_renderer__?.[NgtRendererClassId.type] === 'three') {
+					removeThreeChild(parent, renderChild, true);
+					continue;
+				}
+
 				const closestInstance = this.getClosestParentWithInstance(parent);
 				if (closestInstance) {
 					removeThreeChild(closestInstance, renderChild, true);

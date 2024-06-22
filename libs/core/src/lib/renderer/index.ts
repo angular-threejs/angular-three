@@ -268,6 +268,7 @@ export class NgtRenderer implements Renderer2 {
 			const cLS = getLocalState(newChild);
 			// if child already attached to a parent, skip
 			if (cLS?.instanceStore?.get('parent')) return;
+			if (parent === newChild) return;
 			// attach THREE child
 			attachThreeChild(parent, newChild);
 			// here, we handle the special case of if the parent has a compoundParent, which means this child is part of a compound parent template
@@ -361,6 +362,14 @@ export class NgtRenderer implements Renderer2 {
 				this.removeChild(pRS[NgtRendererClassId.parent], oldChild, isHostElement);
 				return;
 			}
+		}
+
+		if (
+			pRS[NgtRendererClassId.type] === 'portal' &&
+			pRS[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
+		) {
+			this.removeChild(pRS[NgtRendererClassId.portalContainer], oldChild, isHostElement);
+			return;
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'three') {
