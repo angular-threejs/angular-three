@@ -3,6 +3,7 @@ import {
 	injectBeforeRender,
 	injectNgtRef,
 	injectNgtStore,
+	makeParameters,
 	NgtArgs,
 	NgtCamera,
 	NgtInjectedRef,
@@ -12,7 +13,7 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Camera, Event } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
-export interface NgtsOrbitControlsState {
+export interface NgtsOrbitControlsOptions {
 	camera?: Camera;
 	domElement?: HTMLElement;
 	target?: NgtVector3;
@@ -27,11 +28,11 @@ declare global {
 		/**
 		 * @extends three-stdlib|OrbitControls
 		 */
-		'ngts-orbit-controls': OrbitControls & NgtsOrbitControlsState;
+		'ngts-orbit-controls': OrbitControls & NgtsOrbitControlsOptions;
 	}
 }
 
-const defaultOptions: NgtsOrbitControlsState = {
+const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 	enableDamping: true,
 	regress: false,
 	makeDefault: false,
@@ -42,7 +43,7 @@ const defaultOptions: NgtsOrbitControlsState = {
 	selector: 'ngts-orbit-controls',
 	standalone: true,
 	template: `
-		<ngt-primitive ngtCompound *args="args()" [enableDamping]="enableDamping()">
+		<ngt-primitive ngtCompound *args="args()" [parameters]="parameters()" [enableDamping]="enableDamping()">
 			<ng-content />
 		</ngt-primitive>
 	`,
@@ -51,6 +52,14 @@ const defaultOptions: NgtsOrbitControlsState = {
 })
 export class NgtsOrbitControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+	parameters = makeParameters(this.options, [
+		'makeDefault',
+		'camera',
+		'regress',
+		'domElement',
+		'keyEvents',
+		'enableDamping',
+	]);
 	controlsRef = input<NgtInjectedRef<OrbitControls>>(injectNgtRef());
 
 	changed = output<Event>();

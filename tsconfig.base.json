@@ -43,6 +43,7 @@
 			"angular-three-soba-old/shaders": ["libs/old/soba-old/shaders/src/index.ts"],
 			"angular-three-soba-old/staging": ["libs/old/soba-old/staging/src/index.ts"],
 			"angular-three-soba-old/utils": ["libs/old/soba-old/utils/src/index.ts"],
+			"angular-three-soba/cameras": ["libs/soba/cameras/src/index.ts"],
 			"angular-three-soba/controls": ["libs/soba/controls/src/index.ts"],
 			"angular-three-soba/loaders": ["libs/soba/loaders/src/index.ts"],
 			"angular-three-soba/misc": ["libs/soba/misc/src/index.ts"],

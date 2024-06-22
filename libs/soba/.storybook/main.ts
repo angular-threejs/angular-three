@@ -1,8 +1,19 @@
 import type { StorybookConfig } from '@storybook/angular';
+import { resolve } from 'node:path';
 
 const config: StorybookConfig = {
 	stories: ['../**/*.stories.@(js|jsx|ts|tsx|mdx)'],
 	addons: ['@storybook/addon-essentials'],
+	webpackFinal: async (config) => {
+		config.module?.rules?.push({
+			test: /\.(glsl|vs|fs|vert|frag)$/,
+			exclude: /node_modules/,
+			use: ['raw-loader', 'glslify-loader'],
+			include: resolve(__dirname, '../'),
+		});
+		return config;
+	},
+	staticDirs: ['./public'],
 	framework: {
 		name: '@storybook/angular',
 		options: {},

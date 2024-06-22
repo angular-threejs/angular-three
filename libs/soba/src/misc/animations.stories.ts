@@ -8,23 +8,14 @@ import {
 	effect,
 	inject,
 	input,
-	signal,
 } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
-import { NgtpBloom, NgtpEffectComposer, NgtpEffects, NgtpGlitch } from 'angular-three-postprocessing';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtArgs } from 'angular-three';
 import { injectGLTFLoader } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
-import * as THREE from 'three';
 import { Bone, Group, MeshStandardMaterial, Object3D, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
-
-extend(THREE);
-
-export const selectedAction = signal('Strut');
-export const bloom = signal(false);
-export const glitch = signal(false);
+import { makeDecorators, makeStoryObject, select } from '../setup-canvas';
 
 type BotGLTF = GLTF & {
 	nodes: { 'Y-Bot': Object3D; YB_Body: SkinnedMesh; YB_Joints: SkinnedMesh; mixamorigHips: Bone };
@@ -32,15 +23,16 @@ type BotGLTF = GLTF & {
 };
 
 @Directive({ selector: '[animations]', standalone: true })
-export class BotAnimations {
+class BotAnimations {
 	animations = input.required<NgtsAnimation>();
+	animation = input('Strut');
 	host = inject<ElementRef<Group>>(ElementRef);
 	animationsApi = injectAnimations(this.animations, this.host);
 
 	constructor() {
 		effect((onCleanup) => {
 			if (this.animationsApi.ready()) {
-				const actionName = selectedAction();
+				const actionName = this.animation();
 				this.animationsApi.actions[actionName]?.reset().fadeIn(0.5).play();
 				onCleanup(() => {
 					this.animationsApi.actions[actionName]?.fadeOut(0.5);
@@ -51,13 +43,12 @@ export class BotAnimations {
 }
 
 @Component({
-	selector: 'app-bot',
 	standalone: true,
 	template: `
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />
 			@if (gltf(); as gltf) {
-				<ngt-group [dispose]="null" [animations]="gltf">
+				<ngt-group [dispose]="null" [animations]="gltf" [animation]="animation()">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 						<ngt-primitive *args="[gltf.nodes.mixamorigHips]" />
 						<ngt-skinned-mesh [geometry]="gltf.nodes.YB_Body.geometry" [skeleton]="gltf.nodes.YB_Body.skeleton">
@@ -75,44 +66,24 @@ export class BotAnimations {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Bot {
+class DefaultAnimationsStory {
 	Math = Math;
+
+	animation = input('Strut');
 
 	gltf = injectGLTFLoader(() => './ybot.glb') as Signal<BotGLTF | null>;
 	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
 	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
 }
 
-@Component({
-	standalone: true,
-	template: `
-		<ngt-color *args="['#303030']" attach="background" />
-		<ngt-ambient-light [intensity]="0.8" />
-		<ngt-point-light [intensity]="Math.PI" [decay]="0" [position]="[0, 6, 0]" />
+export default {
+	title: 'Misc/injectAnimations',
+	decorators: makeDecorators(),
+};
 
-		<app-bot />
-
-		<ngtp-effect-composer>
-			<ng-template effects>
-				@if (bloom()) {
-					<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
-				}
-
-				@if (glitch()) {
-					<ngtp-glitch />
-				}
-			</ng-template>
-		</ngtp-effect-composer>
-
-		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
-	`,
-	imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpEffects, NgtpBloom, NgtpGlitch],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	host: { class: 'soba-experience' },
-})
-export class Experience {
-	Math = Math;
-	bloom = bloom;
-	glitch = glitch;
-}
+export const Default = makeStoryObject(DefaultAnimationsStory, {
+	canvasOptions: { camera: { position: [0, 0, 3] } },
+	argsOptions: {
+		animation: select('Strut', { options: ['Strut', 'Dance', 'Idle'] }),
+	},
+});

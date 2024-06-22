@@ -14,6 +14,7 @@ export * from './lib/utils/before-render';
 export * from './lib/utils/create-api-token';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
+export * from './lib/utils/parameters';
 export * from './lib/utils/signal-store';
 export * from './lib/utils/update';
 
