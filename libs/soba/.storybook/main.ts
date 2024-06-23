@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 const config: StorybookConfig = {
 	stories: ['../**/*.stories.@(js|jsx|ts|tsx|mdx)'],
-	addons: ['@storybook/addon-essentials'],
+	addons: ['@storybook/addon-essentials', 'storybook-addon-deep-controls'],
 	webpackFinal: async (config) => {
 		config.module?.rules?.push({
 			test: /\.(glsl|vs|fs|vert|frag)$/,
@@ -11,9 +11,10 @@ const config: StorybookConfig = {
 			use: ['raw-loader', 'glslify-loader'],
 			include: resolve(__dirname, '../'),
 		});
+
 		return config;
 	},
-	staticDirs: ['./public'],
+	staticDirs: ['./public', './public/cube'],
 	framework: {
 		name: '@storybook/angular',
 		options: {},

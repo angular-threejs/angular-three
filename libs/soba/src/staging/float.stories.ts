@@ -52,6 +52,7 @@ export default {
 } as Meta;
 
 export const Default = makeStoryObject(DefaultFloatStory, {
+	canvasOptions: { camera: { position: [0, 0, 10] } },
 	argsOptions: {
 		floatingRange: [undefined, 1],
 		rotationIntensity: 4,

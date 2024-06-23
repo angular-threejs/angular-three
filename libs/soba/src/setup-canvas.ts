@@ -216,6 +216,19 @@ export function makeStoryObject(
 	const render = makeStoryFunction(story, canvasOptions);
 
 	for (const [argKey, argOption] of Object.entries(argsOptions)) {
+		if (argKey === 'options') {
+			args['options'] = {};
+			for (const [key, option] of Object.entries(argOption)) {
+				if ((option as any)['defaultValue']) {
+					args['options'][key] = (option as any)['defaultValue'];
+					argTypes[`options.${key}`] = (option as any)['control'];
+				} else {
+					args['options'][key] = option;
+				}
+			}
+			continue;
+		}
+
 		if (argOption['defaultValue']) {
 			args[argKey] = argOption.defaultValue;
 			argTypes[argKey] = argOption.control;

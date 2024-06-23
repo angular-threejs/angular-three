@@ -214,7 +214,6 @@ export class NgtPortal {
 				portalView.detectChanges();
 				this.destroyRef.onDestroy(() => {
 					portalView.destroy();
-					console.log(this.portalStore.snapshot);
 				});
 			});
 
