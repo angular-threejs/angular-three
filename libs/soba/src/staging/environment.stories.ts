@@ -3,7 +3,12 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { ENVIRONMENT_PRESETS, NgtsEnvironment, NgtsEnvironmentOptions } from 'angular-three-soba/staging';
+import {
+	ENVIRONMENT_PRESETS,
+	NgtsContactShadows,
+	NgtsEnvironment,
+	NgtsEnvironmentOptions,
+} from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject, number, select } from '../setup-canvas';
 
 @Component({
@@ -29,10 +34,13 @@ class Torus {}
 			<ngt-box-geometry *args="[10, 10, 10]" />
 			<ngt-mesh-standard-material [metalness]="1" [roughness]="0" />
 		</ngt-mesh>
+		<ngts-contact-shadows
+			[options]="{ scale: 100, resolution: 1024, position: [0, 0, 0], blur: 2, opacity: 1, far: 10 }"
+		/>
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 		<ngts-perspective-camera [options]="{ position: [40, 40, 40], makeDefault: true }" />
 	`,
-	imports: [NgtArgs, NgtsEnvironment, NgtsOrbitControls, NgtsPerspectiveCamera],
+	imports: [NgtArgs, NgtsEnvironment, NgtsOrbitControls, NgtsPerspectiveCamera, NgtsContactShadows],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
