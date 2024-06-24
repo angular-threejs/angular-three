@@ -3,18 +3,20 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	TemplateRef,
 	contentChild,
 	input,
+	viewChild,
 } from '@angular/core';
-import { extend, injectNextBeforeRender, injectNgtRef, makeParameters } from 'angular-three';
+import { NgtGroup, exclude, extend, injectNextBeforeRender } from 'angular-three';
 import { NgtsContent } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, MathUtils } from 'three';
 
 extend({ Group });
 
-export interface NgtsFloatOptions extends Partial<Group> {
+export interface NgtsFloatOptions extends Partial<NgtGroup> {
 	enabled: boolean;
 	speed: number;
 	rotationIntensity: number;
@@ -35,7 +37,7 @@ const defaultOptions: NgtsFloatOptions = {
 	standalone: true,
 	template: `
 		<ngt-group [parameters]="parameters()">
-			<ngt-group [ref]="floatRef()" [matrixAutoUpdate]="false">
+			<ngt-group #float [ref]="floatRef()" [matrixAutoUpdate]="false">
 				<ng-container [ngTemplateOutlet]="content()" />
 			</ngt-group>
 		</ngt-group>
@@ -45,16 +47,10 @@ const defaultOptions: NgtsFloatOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsFloat {
-	floatRef = input(injectNgtRef<Group>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = makeParameters(this.options, [
-		'enabled',
-		'speed',
-		'rotationIntensity',
-		'floatIntensity',
-		'floatingRange',
-	]);
+	parameters = exclude(this.options, ['enabled', 'speed', 'rotationIntensity', 'floatIntensity', 'floatingRange']);
 
+	floatRef = viewChild.required<ElementRef<Group>>('float');
 	content = contentChild.required(NgtsContent, { read: TemplateRef });
 
 	constructor() {

@@ -7,7 +7,16 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, extend, injectNextBeforeRender, injectNgtRef, injectNgtStore, makeParameters } from 'angular-three';
+import {
+	NgtArgs,
+	NgtGroup,
+	exclude,
+	extend,
+	injectNextBeforeRender,
+	injectNgtRef,
+	injectNgtStore,
+	pick,
+} from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	Color,
@@ -25,7 +34,7 @@ import {
 } from 'three';
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib';
 
-export interface NgtsContactShadowsOptions extends Partial<Omit<Group, 'scale'>> {
+export interface NgtsContactShadowsOptions extends Partial<Omit<NgtGroup, 'scale'>> {
 	opacity: number;
 	width: number;
 	height: number;
@@ -86,7 +95,7 @@ export class NgtsContactShadows {
 	Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = makeParameters(this.options, [
+	parameters = exclude(this.options, [
 		'scale',
 		'frames',
 		'opacity',
@@ -104,6 +113,8 @@ export class NgtsContactShadows {
 
 	contactShadowsRef = viewChild.required<ElementRef<Group>>('contactShadows');
 	shadowsCameraRef = injectNgtRef<OrthographicCamera>();
+	// TODO (chau): try to use viewChild instead of injectNgtRef later
+	// shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowsCamera');
 
 	private store = injectNgtStore();
 	private scene = this.store.select('scene');
@@ -117,10 +128,10 @@ export class NgtsContactShadows {
 		const { height, scale } = this.options();
 		return height * (Array.isArray(scale) ? scale[1] : scale);
 	});
-	private resolution = computed(() => this.options().resolution);
-	private color = computed(() => this.options().color);
-	private near = computed(() => this.options().near);
-	private far = computed(() => this.options().far);
+	private resolution = pick(this.options, 'resolution');
+	private color = pick(this.options, 'color');
+	private near = pick(this.options, 'near');
+	private far = pick(this.options, 'far');
 
 	private shadowsOptions = computed(() => {
 		const [width, height, resolution, color] = [
@@ -167,9 +178,9 @@ export class NgtsContactShadows {
 		};
 	});
 
-	renderOrder = computed(() => this.options().renderOrder);
-	opacity = computed(() => this.options().opacity);
-	depthWrite = computed(() => this.options().depthWrite);
+	renderOrder = pick(this.options, 'renderOrder');
+	opacity = pick(this.options, 'opacity');
+	depthWrite = pick(this.options, 'depthWrite');
 	planeGeometry = computed(() => this.shadowsOptions().planeGeometry);
 	texture = computed(() => this.shadowsOptions().renderTarget.texture);
 	cameraArgs = computed(() => {

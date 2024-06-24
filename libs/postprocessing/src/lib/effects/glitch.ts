@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector2, injectNgtRef, injectNgtStore } from 'angular-three';
+import { NgtArgs, NgtVector2, injectNgtRef, injectNgtStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { GlitchEffect, GlitchMode } from 'postprocessing';
@@ -40,8 +40,8 @@ export class NgtpGlitch {
 	effectRef = input(injectNgtRef<GlitchEffect>());
 	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });
 
-	active = computed(() => this.options().active);
-	mode = computed(() => this.options().mode);
+	active = pick(this.options, 'active');
+	mode = pick(this.options, 'mode');
 
 	delay = vector2(this.options, 'delay');
 	duration = vector2(this.options, 'duration');

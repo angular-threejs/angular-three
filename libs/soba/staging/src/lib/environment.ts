@@ -27,6 +27,7 @@ import {
 	injectNextBeforeRender,
 	injectNgtStore,
 	is,
+	pick,
 	prepare,
 } from 'angular-three';
 import { LinearEncoding, NgtsContent, TextureEncoding, sRGBEncoding } from 'angular-three-soba/misc';
@@ -334,7 +335,7 @@ export class NgtsEnvironmentMap {
 		};
 	});
 
-	map = computed(() => this.options().map);
+	map = pick(this.options, 'map');
 
 	constructor() {
 		afterNextRender(() => {
@@ -436,11 +437,11 @@ export class NgtsEnvironmentPortal {
 
 	camera = viewChild.required<ElementRef<CubeCamera>>('cubeCamera');
 
-	map = computed(() => this.options().map);
-	extensions = computed(() => this.options().extensions);
-	files = computed(() => this.options().files);
-	path = computed(() => this.options().path);
-	preset = computed(() => this.options().preset);
+	map = pick(this.options, 'map');
+	extensions = pick(this.options, 'extensions');
+	files = pick(this.options, 'files');
+	path = pick(this.options, 'path');
+	preset = pick(this.options, 'preset');
 
 	envMapOptions = computed(() => ({ background: true, map: this.map(), extensions: this.extensions() }));
 	envCubeOptions = computed(() => ({
@@ -450,9 +451,9 @@ export class NgtsEnvironmentPortal {
 		extensions: this.extensions(),
 	}));
 
-	private near = computed(() => this.options().near);
-	private far = computed(() => this.options().far);
-	private resolution = computed(() => this.options().resolution);
+	private near = pick(this.options, 'near');
+	private far = pick(this.options, 'far');
+	private resolution = pick(this.options, 'resolution');
 	private fbo = computed(() => {
 		const fbo = new WebGLCubeRenderTarget(this.resolution());
 		fbo.texture.type = HalfFloatType;

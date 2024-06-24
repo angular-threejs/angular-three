@@ -28,7 +28,7 @@ import { NgtsLoader } from '../loaders/src/lib/loader';
 
 extend(THREE);
 
-interface SetupCanvasOptions {
+export interface SetupCanvasOptions {
 	camera: { position?: [number, number, number]; fov?: number };
 	performance: Partial<Omit<NgtPerformance, 'regress'>>;
 	background: 'white' | 'black';

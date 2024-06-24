@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtRef, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectNgtRef, injectNgtStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GridEffect } from 'postprocessing';
 
@@ -30,7 +30,7 @@ export class NgtpGrid {
 
 	effectRef = input(injectNgtRef<GridEffect>());
 	options = input({} as GridOptions);
-	size = computed(() => this.options().size);
+	size = pick(this.options, 'size');
 
 	effect = computed(() => {
 		const { size: _, ...options } = this.options();

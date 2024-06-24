@@ -1,13 +1,14 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
 import {
+	exclude,
 	injectBeforeRender,
 	injectNgtRef,
 	injectNgtStore,
-	makeParameters,
 	NgtArgs,
 	NgtCamera,
 	NgtInjectedRef,
 	NgtVector3,
+	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Camera, Event } from 'three';
@@ -52,14 +53,7 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 })
 export class NgtsOrbitControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = makeParameters(this.options, [
-		'makeDefault',
-		'camera',
-		'regress',
-		'domElement',
-		'keyEvents',
-		'enableDamping',
-	]);
+	parameters = exclude(this.options, ['makeDefault', 'camera', 'regress', 'domElement', 'keyEvents', 'enableDamping']);
 	controlsRef = input<NgtInjectedRef<OrbitControls>>(injectNgtRef());
 
 	changed = output<Event>();
@@ -72,14 +66,14 @@ export class NgtsOrbitControls {
 	private defaultCamera = this.store.select('camera');
 	private glDomElement = this.store.select('gl', 'domElement');
 
-	private camera = computed(() => this.options().camera);
-	private regress = computed(() => this.options().regress);
-	private keyEvents = computed(() => this.options().keyEvents);
-	private domElement = computed(() => this.options().domElement);
-	private makeDefault = computed(() => this.options().makeDefault);
+	private camera = pick(this.options, 'camera');
+	private regress = pick(this.options, 'regress');
+	private keyEvents = pick(this.options, 'keyEvents');
+	private domElement = pick(this.options, 'domElement');
+	private makeDefault = pick(this.options, 'makeDefault');
 
 	protected args = computed(() => [this.controlsRef().nativeElement]);
-	protected enableDamping = computed(() => this.options().enableDamping);
+	protected enableDamping = pick(this.options, 'enableDamping');
 
 	constructor() {
 		injectBeforeRender(

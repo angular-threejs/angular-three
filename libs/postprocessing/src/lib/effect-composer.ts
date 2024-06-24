@@ -14,7 +14,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -94,14 +94,14 @@ export class NgtpEffectComposer {
 	defaultScene = this.store.select('scene');
 	defaultCamera = this.store.select('camera');
 
-	depthBuffer = computed(() => this.options().depthBuffer);
-	stencilBuffer = computed(() => this.options().stencilBuffer);
-	multisampling = computed(() => this.options().multisampling);
-	frameBufferType = computed(() => this.options().frameBufferType);
+	depthBuffer = pick(this.options, 'depthBuffer');
+	stencilBuffer = pick(this.options, 'stencilBuffer');
+	multisampling = pick(this.options, 'multisampling');
+	frameBufferType = pick(this.options, 'frameBufferType');
 	scene = computed(() => this.options().scene ?? this.defaultScene());
 	camera = computed(() => this.options().camera ?? this.defaultCamera());
-	enableNormalPass = computed(() => this.options().enableNormalPass);
-	resolutionScale = computed(() => this.options().resolutionScale);
+	enableNormalPass = pick(this.options, 'enableNormalPass');
+	resolutionScale = pick(this.options, 'resolutionScale');
 
 	group = viewChild.required<ElementRef<Group>>('group');
 	groupAnchor = viewChild.required('group', { read: ViewContainerRef });

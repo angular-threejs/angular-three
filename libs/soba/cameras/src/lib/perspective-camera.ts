@@ -5,12 +5,19 @@ import {
 	Component,
 	TemplateRef,
 	afterNextRender,
-	computed,
 	contentChild,
 	input,
 	untracked,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectNgtRef, injectNgtStore, makeParameters } from 'angular-three';
+import {
+	NgtPerspectiveCamera,
+	exclude,
+	extend,
+	injectBeforeRender,
+	injectNgtRef,
+	injectNgtStore,
+	pick,
+} from 'angular-three';
 import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -19,7 +26,7 @@ import { NgtsCameraContentWithFboTexture } from './camera-content';
 
 extend({ PerspectiveCamera, Group });
 
-export interface NgtsPerspectiveCameraOptions extends Partial<PerspectiveCamera> {
+export interface NgtsPerspectiveCameraOptions extends Partial<NgtPerspectiveCamera> {
 	/** Registers the camera as the system default, fiber will start rendering with it */
 	makeDefault?: boolean;
 	/** Making it manual will stop responsiveness and you have to calculate aspect ratio yourself. */
@@ -61,7 +68,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 export class NgtsPerspectiveCamera {
 	cameraRef = input(injectNgtRef<PerspectiveCamera>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = makeParameters(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
 	content = contentChild(NgtsContent, { read: TemplateRef });
 	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
@@ -74,11 +81,11 @@ export class NgtsPerspectiveCamera {
 	private camera = this.store.select('camera');
 	private size = this.store.select('size');
 
-	private manual = computed(() => this.options().manual);
-	private makeDefault = computed(() => this.options().makeDefault);
-	private resolution = computed(() => this.options().resolution);
+	private manual = pick(this.options, 'manual');
+	private makeDefault = pick(this.options, 'makeDefault');
+	private resolution = pick(this.options, 'resolution');
 	private fbo = injectFBO(() => ({ width: this.resolution() }));
-	texture = computed(() => this.fbo().texture);
+	texture = pick(this.fbo, 'texture');
 
 	constructor() {
 		afterNextRender(() => {

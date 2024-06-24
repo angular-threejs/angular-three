@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtRef, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectNgtRef, injectNgtStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { BlendFunction, LUT3DEffect } from 'postprocessing';
 import { Texture } from 'three';
@@ -34,7 +34,7 @@ export class NgtpLUT {
 
 	effectRef = input(injectNgtRef<LUT3DEffect>());
 	options = input({} as LUTOptions);
-	lut = computed(() => this.options().lut);
+	lut = pick(this.options, 'lut');
 
 	effect = computed(() => {
 		const [lut, { lut: _, ...options }] = [this.lut(), this.options()];

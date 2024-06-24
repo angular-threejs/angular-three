@@ -9,6 +9,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
+import { pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { injectProgress } from './progress';
 
@@ -66,12 +67,12 @@ export class NgtsLoader {
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	containerClass = computed(() => this.options().containerClass);
-	innerClass = computed(() => this.options().innerClass);
-	barClass = computed(() => this.options().barClass);
-	dataClass = computed(() => this.options().dataClass);
-	initialState = computed(() => this.options().initialState);
-	dataInterpolation = computed(() => this.options().dataInterpolation);
+	containerClass = pick(this.options, 'containerClass');
+	innerClass = pick(this.options, 'innerClass');
+	barClass = pick(this.options, 'barClass');
+	dataClass = pick(this.options, 'dataClass');
+	initialState = pick(this.options, 'initialState');
+	dataInterpolation = pick(this.options, 'dataInterpolation');
 
 	progressSpanRef = viewChild<ElementRef<HTMLSpanElement>>('progressSpanRef');
 
