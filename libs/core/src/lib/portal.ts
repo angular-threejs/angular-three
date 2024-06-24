@@ -22,7 +22,6 @@ import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
-import { injectNgtRef } from './ref';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
 import { injectNgtStore, NgtSize, NgtState, provideNgtStore } from './store';
 import { injectBeforeRender } from './utils/before-render';
@@ -132,7 +131,7 @@ export class NgtPortalContent {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtPortal {
-	container = input<ElementRef<Object3D> | Object3D>(injectNgtRef(prepare(new Scene())));
+	container = input<Object3D>(prepare(new Scene()));
 	camera = input<ElementRef<Camera> | Camera>();
 	state = input<
 		Partial<
@@ -166,7 +165,7 @@ export class NgtPortal {
 	constructor() {
 		afterNextRender(() => {
 			const parentState = this.parentStore.snapshot;
-			const [containerRef, state, autoRender, autoRenderPriority] = [
+			let [container, state, autoRender, autoRenderPriority] = [
 				this.container(),
 				this.state(),
 				this.autoRender(),
@@ -180,7 +179,6 @@ export class NgtPortal {
 			}
 
 			const { events = {}, size = {}, ...rest } = stateFromInput || {};
-			let container = is.ref(containerRef) ? containerRef.nativeElement : containerRef;
 
 			if (!is.instance(container)) {
 				container = prepare(container);
@@ -245,7 +243,7 @@ export class NgtPortal {
 
 		return {
 			...intersect,
-			scene: is.ref(container) ? container.nativeElement : container,
+			scene: container,
 			previousRoot: this.parentStore,
 			events: { ...rootState.events, ...(injectState?.events || {}), ...events },
 			size: { ...rootState.size, ...size },
