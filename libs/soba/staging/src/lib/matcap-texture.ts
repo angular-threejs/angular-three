@@ -1,4 +1,18 @@
-import { Injector, computed, signal } from '@angular/core';
+import {
+	DestroyRef,
+	Directive,
+	EmbeddedViewRef,
+	Injector,
+	Signal,
+	TemplateRef,
+	ViewContainerRef,
+	afterNextRender,
+	computed,
+	inject,
+	input,
+	output,
+	signal,
+} from '@angular/core';
 import { injectTextureLoader } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Texture } from 'three';
@@ -61,4 +75,45 @@ export function injectMatcapTexture(
 
 		return { url, texture: matcapTexture, numTot };
 	});
+}
+
+export interface NgtsMatcapTextureOptions {
+	id?: number | string;
+	format?: number;
+}
+
+@Directive({ selector: 'ng-template[matcapTexture]', standalone: true })
+export class NgtsMatcapTexture {
+	matcapTexture = input<NgtsMatcapTextureOptions>();
+	matcapTextureLoaded = output<Texture[]>();
+
+	private injector = inject(Injector);
+	private template = inject(TemplateRef);
+	private vcr = inject(ViewContainerRef);
+
+	private id = computed(() => this.matcapTexture()?.id ?? 0);
+	private format = computed(() => this.matcapTexture()?.format ?? 1024);
+
+	private ref?: EmbeddedViewRef<{ $implicit: Signal<Texture | null> }>;
+
+	constructor() {
+		afterNextRender(() => {
+			const { texture } = injectMatcapTexture(this.id, {
+				format: this.format,
+				onLoad: this.matcapTextureLoaded.emit.bind(this.matcapTextureLoaded),
+				injector: this.injector,
+			});
+
+			this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
+			this.ref.detectChanges();
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			this.ref?.destroy();
+		});
+	}
+
+	static ngTemplateContextGuard(_: NgtsMatcapTexture, ctx: unknown): ctx is { $implicit: Signal<Texture | null> } {
+		return true;
+	}
 }

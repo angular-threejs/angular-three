@@ -6,11 +6,10 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector2, injectNgtRef, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, NgtVector2, injectNgtRef, injectNgtStore, pick, vector2 } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { GlitchEffect, GlitchMode } from 'postprocessing';
-import { vector2 } from '../utils';
 
 export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffect>[0]> &
 	Partial<{

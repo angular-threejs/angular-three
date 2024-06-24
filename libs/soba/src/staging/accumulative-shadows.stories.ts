@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs, merge } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTFLoader } from 'angular-three-soba/loaders';
 import { NgtsContent } from 'angular-three-soba/misc';
@@ -82,7 +82,7 @@ class Suzi {
 })
 class DefaultAccumulativeShadowsStory {
 	options = input({} as NgtsAccumulativeShadowsOptions);
-	accumulativeShadowsOptions = computed(() => ({ ...this.options(), position: [0, -0.5, 0] }));
+	accumulativeShadowsOptions = merge(this.options, { position: [0, -0.5, 0] });
 }
 
 export default {

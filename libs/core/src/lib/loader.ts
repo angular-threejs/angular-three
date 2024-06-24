@@ -116,28 +116,31 @@ function _injectLoader<
 
 		afterNextRender(() => {
 			const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
-			autoEffect(() => {
-				const originalUrls = inputs();
-				const cachedEffect = effector();
-				if (cachedEffect === null) {
-					response.set(null);
-				} else {
-					Promise.all(cachedEffect).then((results) => {
-						response.update(() => {
-							if (Array.isArray(originalUrls)) return results;
-							if (typeof originalUrls === 'string') return results[0];
-							const keys = Object.keys(originalUrls);
-							return keys.reduce(
-								(result, key) => {
-									(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-									return result;
-								},
-								{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
-							);
+			autoEffect(
+				() => {
+					const originalUrls = inputs();
+					const cachedEffect = effector();
+					if (cachedEffect === null) {
+						response.set(null);
+					} else {
+						Promise.all(cachedEffect).then((results) => {
+							response.update(() => {
+								if (Array.isArray(originalUrls)) return results;
+								if (typeof originalUrls === 'string') return results[0];
+								const keys = Object.keys(originalUrls);
+								return keys.reduce(
+									(result, key) => {
+										(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+										return result;
+									},
+									{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
+								);
+							});
 						});
-					});
-				}
-			});
+					}
+				},
+				{ allowSignalWrites: true },
+			);
 		});
 
 		return response.asReadonly();

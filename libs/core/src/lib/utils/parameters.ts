@@ -1,4 +1,6 @@
 import { Signal, computed } from '@angular/core';
+import { Vector2, Vector2Tuple, Vector3, Vector3Tuple } from 'three';
+import { NgtVector2, NgtVector3 } from '../three-types';
 import { NgtAnyRecord } from '../types';
 
 export type Excluded<TOptions extends object, TKeys extends (keyof TOptions)[]> = {
@@ -53,4 +55,40 @@ export function pick<TOptions extends object, TKeyOption extends keyof TOptions 
 		: TKeyOption extends (keyof TOptions)[]
 			? Signal<Picked<TOptions, TKeyOption>>
 			: never;
+}
+
+export function merge<TOptions extends object>(
+	options: () => TOptions,
+	toMerge: Partial<TOptions>,
+	mode: 'override' | 'backfill' = 'override',
+) {
+	return computed(() => {
+		const opts = options();
+		return mode === 'override' ? { ...opts, ...toMerge } : { ...toMerge, ...opts };
+	});
+}
+
+type KeysOfType<TObject extends object, TType> = Exclude<
+	{
+		[K in keyof TObject]: TObject[K] extends TType | undefined | null ? K : never;
+	}[keyof TObject],
+	undefined
+>;
+
+export function vector2<TObject extends object>(options: Signal<TObject>, key: KeysOfType<TObject, NgtVector2>) {
+	return computed(() => {
+		const value = options()[key];
+		if (typeof value === 'number') return new Vector2(value, value);
+		else if (value) return new Vector2(...(value as Vector2Tuple));
+		else return new Vector2();
+	});
+}
+
+export function vector3<TObject extends object>(options: Signal<TObject>, key: KeysOfType<TObject, NgtVector3>) {
+	return computed(() => {
+		const value = options()[key];
+		if (typeof value === 'number') return new Vector3(value, value, value);
+		else if (value) return new Vector3(...(value as Vector3Tuple));
+		else return new Vector3();
+	});
 }
