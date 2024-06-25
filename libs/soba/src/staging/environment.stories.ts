@@ -30,28 +30,6 @@ class Torus {}
 	standalone: true,
 	template: `
 		<ngts-environment [options]="options()" />
-		<ngt-mesh [position]="[0, 5, 0]">
-			<ngt-box-geometry *args="[10, 10, 10]" />
-			<ngt-mesh-standard-material [metalness]="1" [roughness]="0" />
-		</ngt-mesh>
-		<ngts-contact-shadows
-			[options]="{ scale: 100, resolution: 1024, position: [0, 0, 0], blur: 2, opacity: 1, far: 10 }"
-		/>
-		<ngts-orbit-controls [options]="{ autoRotate: true }" />
-		<ngts-perspective-camera [options]="{ position: [40, 40, 40], makeDefault: true }" />
-	`,
-	imports: [NgtArgs, NgtsEnvironment, NgtsOrbitControls, NgtsPerspectiveCamera, NgtsContactShadows],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class GroundEnvironmentStory {
-	options = input({} as NgtsEnvironmentOptions);
-}
-
-@Component({
-	standalone: true,
-	template: `
-		<ngts-environment [options]="options()" />
 		<environment-torus />
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 	`,
@@ -104,6 +82,29 @@ export const Files = makeStoryObject(FilesEnvironmentStory, {
 		},
 	},
 });
+
+@Component({
+	standalone: true,
+	template: `
+		<ngts-environment [options]="options()" />
+		<ngt-mesh [position]="[0, 5, 0]">
+			<ngt-box-geometry *args="[10, 10, 10]" />
+			<ngt-mesh-standard-material [metalness]="1" [roughness]="0" />
+		</ngt-mesh>
+		<ngts-contact-shadows [options]="contactShadowsOptions" />
+		<ngts-orbit-controls [options]="oribitControlsOptions" />
+		<ngts-perspective-camera [options]="perspectiveCameraOptions" />
+	`,
+	imports: [NgtArgs, NgtsEnvironment, NgtsOrbitControls, NgtsPerspectiveCamera, NgtsContactShadows],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class GroundEnvironmentStory {
+	options = input({} as NgtsEnvironmentOptions);
+	contactShadowsOptions = { scale: 100, resolution: 1024, position: [0, 0, 0], blur: 2, opacity: 1, far: 10 };
+	oribitControlsOptions = { autoRotate: true };
+	perspectiveCameraOptions = { position: [40, 40, 40], makeDefault: true };
+}
 
 export const Ground = makeStoryObject(GroundEnvironmentStory, {
 	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },

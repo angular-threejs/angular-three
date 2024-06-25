@@ -343,7 +343,12 @@ export class NgtRendererStore {
 
 		// [attach]
 		if (name === SPECIAL_PROPERTIES.ATTACH) {
-			if (localState) localState.attach = Array.isArray(value) ? value.map((v) => v.toString()) : value;
+			if (localState)
+				localState.attach = Array.isArray(value)
+					? value.map((v) => v.toString())
+					: typeof value === 'function'
+						? value
+						: [value];
 			if (parent) attachThreeChild(parent, node);
 			return;
 		}

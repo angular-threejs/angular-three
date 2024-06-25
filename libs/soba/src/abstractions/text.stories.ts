@@ -37,19 +37,7 @@ class TextContainer {
 	selector: 'text-container',
 	standalone: true,
 	template: `
-		<ngts-text
-			[text]="text"
-			[options]="{
-				fontSize: 12,
-				maxWidth: 200,
-				lineHeight: 1,
-				letterSpacing: 0.02,
-				textAlign: 'left',
-				font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
-				anchorX: 'center',
-				anchorY: 'middle'
-			}"
-		>
+		<ngts-text [text]="text" [options]="options">
 			<ngt-mesh-basic-material
 				*ngtsContent
 				[side]="DoubleSide"
@@ -71,6 +59,16 @@ class TextCustomMaterialContainer {
       MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO
       CONSEQUAT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE VELIT ESSE CILLUM DOLORE EU FUGIAT NULLA PARIATUR.
       EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM.`;
+	options = {
+		fontSize: 12,
+		maxWidth: 200,
+		lineHeight: 1,
+		letterSpacing: 0.02,
+		textAlign: 'left',
+		font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
+		anchorX: 'center',
+		anchorY: 'middle',
+	};
 
 	textRef = viewChild.required(NgtsText);
 

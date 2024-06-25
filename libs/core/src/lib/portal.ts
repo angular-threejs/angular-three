@@ -12,7 +12,6 @@ import {
 	Injector,
 	input,
 	signal,
-	SkipSelf,
 	TemplateRef,
 	untracked,
 	viewChild,
@@ -103,10 +102,13 @@ export class NgtPortalBeforeRender {
 
 @Directive({ selector: 'ng-template[portalContent]', standalone: true })
 export class NgtPortalContent {
-	constructor(vcr: ViewContainerRef, @SkipSelf() parentVcr: ViewContainerRef) {
-		const commentNode = vcr.element.nativeElement;
+	constructor() {
+		const { element: comment } = inject(ViewContainerRef);
+		const { element: parentComment } = inject(ViewContainerRef, { skipSelf: true });
+
+		const commentNode = comment.nativeElement;
 		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT](parentVcr.element.nativeElement);
+			commentNode[SPECIAL_INTERNAL_ADD_COMMENT](parentComment.nativeElement);
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
 		}
 	}
@@ -148,6 +150,7 @@ export class NgtPortal {
 	portalContentTemplate = contentChild.required(NgtPortalContent, { read: TemplateRef });
 	portalContentAnchor = viewChild.required('portalContentAnchor', { read: ViewContainerRef });
 
+	private injector = inject(Injector);
 	private destroyRef = inject(DestroyRef);
 	private autoEffect = injectAutoEffect();
 	private parentStore = injectNgtStore({ skipSelf: true });
@@ -208,7 +211,9 @@ export class NgtPortal {
 			});
 
 			untracked(() => {
-				const portalView = this.portalContentAnchor().createEmbeddedView(this.portalContentTemplate());
+				const portalView = this.portalContentAnchor().createEmbeddedView(this.portalContentTemplate(), {
+					injector: this.injector,
+				});
 				portalView.detectChanges();
 				this.destroyRef.onDestroy(() => {
 					portalView.destroy();
