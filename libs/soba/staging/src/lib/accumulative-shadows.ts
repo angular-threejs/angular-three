@@ -93,10 +93,9 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-group #lights [traverse]="nullTraversal">
-				@if (lightsContent(); as content) {
-					<ng-container [ngTemplateOutlet]="content" />
-				}
+				<ng-container [ngTemplateOutlet]="lightsContent() ?? null" />
 			</ngt-group>
+
 			<ngt-mesh #plane [scale]="scale()" [rotation]="[-Math.PI / 2, 0, 0]" [receiveShadow]="true">
 				<ngt-plane-geometry />
 				<ngt-soft-shadow-material

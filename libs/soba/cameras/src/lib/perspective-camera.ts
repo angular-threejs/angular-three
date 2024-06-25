@@ -51,14 +51,14 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	standalone: true,
 	template: `
 		<ngt-perspective-camera [ref]="cameraRef()" [parameters]="parameters()">
-			@if (content(); as template) {
-				<ng-container [ngTemplateOutlet]="template" />
-			}
+			<ng-container [ngTemplateOutlet]="content() ?? null" />
 		</ngt-perspective-camera>
+
 		<ngt-group [ref]="groupRef">
-			@if (withTextureContent(); as withTextureTemplate) {
-				<ng-container [ngTemplateOutlet]="withTextureTemplate" [ngTemplateOutletContext]="{ $implicit: texture }" />
-			}
+			<ng-container
+				[ngTemplateOutlet]="withTextureContent() ?? null"
+				[ngTemplateOutletContext]="{ $implicit: texture }"
+			/>
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],

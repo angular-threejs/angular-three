@@ -16,6 +16,7 @@ import {
 	inject,
 	input,
 	reflectComponentType,
+	untracked,
 	viewChild,
 } from '@angular/core';
 import { Args, Decorator, moduleMetadata } from '@storybook/angular';
@@ -87,20 +88,23 @@ export class StorybookScene {
 		let ref: ComponentRef<unknown>;
 
 		afterNextRender(() => {
-			ref = this.anchor().createComponent(this.story);
+			untracked(() => {
+				ref = this.anchor().createComponent(this.story);
 
-			const componentInputs = this.storyMirror.inputs.map((input) => input.propName);
-			this.autoEffect(() => {
-				const storyOptions = this.storyOptions();
-				for (const key of componentInputs) {
-					ref.setInput(key, storyOptions[key]);
-				}
+				const componentInputs = this.storyMirror.inputs.map((input) => input.propName);
+				this.autoEffect(() => {
+					const storyOptions = this.storyOptions();
+					for (const key of componentInputs) {
+						ref.setInput(key, storyOptions[key]);
+					}
+				});
+
+				ref.changeDetectorRef.detectChanges();
 			});
-
-			ref.changeDetectorRef.detectChanges();
 		});
 
 		inject(DestroyRef).onDestroy(() => {
+			console.log('storybook-scene destroy');
 			ref?.destroy();
 		});
 	}
@@ -132,26 +136,29 @@ export class StorybookSetup {
 		let refEnvInjector: EnvironmentInjector;
 
 		afterNextRender(() => {
-			refEnvInjector = createEnvironmentInjector(
-				[
-					{ provide: CANVAS_OPTIONS, useValue: this.canvasOptions() },
-					{ provide: STORY_COMPONENT, useValue: this.story() },
-					{ provide: STORY_COMPONENT_MIRROR, useValue: reflectComponentType(this.story()) },
-					{ provide: STORY_OPTIONS, useValue: this.storyOptions },
-				],
-				envInjector,
-			);
+			untracked(() => {
+				refEnvInjector = createEnvironmentInjector(
+					[
+						{ provide: CANVAS_OPTIONS, useValue: this.canvasOptions() },
+						{ provide: STORY_COMPONENT, useValue: this.story() },
+						{ provide: STORY_COMPONENT_MIRROR, useValue: reflectComponentType(this.story()) },
+						{ provide: STORY_OPTIONS, useValue: this.storyOptions },
+					],
+					envInjector,
+				);
 
-			ref = this.anchor().createComponent(NgtCanvas, { environmentInjector: refEnvInjector });
-			ref.setInput('shadows', true);
-			ref.setInput('performance', this.canvasOptions().performance);
-			ref.setInput('camera', this.canvasOptions().camera);
-			ref.setInput('compoundPrefixes', this.canvasOptions().compoundPrefixes);
-			ref.setInput('sceneGraph', StorybookScene);
-			ref.changeDetectorRef.detectChanges();
+				ref = this.anchor().createComponent(NgtCanvas, { environmentInjector: refEnvInjector });
+				ref.setInput('shadows', true);
+				ref.setInput('performance', this.canvasOptions().performance);
+				ref.setInput('camera', this.canvasOptions().camera);
+				ref.setInput('compoundPrefixes', this.canvasOptions().compoundPrefixes);
+				ref.setInput('sceneGraph', StorybookScene);
+				ref.changeDetectorRef.detectChanges();
+			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {
+			console.log('storybook-setup destroy');
 			ref?.destroy();
 			refEnvInjector?.destroy();
 		});

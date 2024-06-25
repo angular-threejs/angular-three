@@ -12,6 +12,7 @@ import {
 	input,
 	output,
 	signal,
+	untracked,
 } from '@angular/core';
 import { injectTextureLoader } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
@@ -104,8 +105,10 @@ export class NgtsMatcapTexture {
 				injector: this.injector,
 			});
 
-			this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
-			this.ref.detectChanges();
+			untracked(() => {
+				this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
+				this.ref.detectChanges();
+			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {

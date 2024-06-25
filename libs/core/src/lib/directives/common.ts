@@ -7,6 +7,7 @@ import {
 	ViewContainerRef,
 	afterNextRender,
 	inject,
+	untracked,
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { createInjectionToken } from 'ngxtension/create-injection-token';
@@ -42,7 +43,9 @@ export abstract class NgtCommonDirective<TValue> {
 				if (this.shouldSkipCreateView(value)) return;
 				this.injected = false;
 				this.injectedValue = value;
-				this.createView();
+				untracked(() => {
+					this.createView();
+				});
 			});
 		});
 
@@ -66,7 +69,7 @@ export abstract class NgtCommonDirective<TValue> {
 		return null;
 	}
 
-	protected createView() {
+	private createView() {
 		this.zone.runOutsideAngular(() => {
 			if (this.shouldCreateView) {
 				if (this.view && !this.view.destroyed) {

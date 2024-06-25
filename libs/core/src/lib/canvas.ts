@@ -270,17 +270,19 @@ export class NgtCanvas {
 			this.store.get('events').connect?.(untracked(this.glCanvas).nativeElement);
 		}
 
-		this.glEnvironmentInjector = createEnvironmentInjector(
-			[provideNgtRenderer(this.store, untracked(this.compoundPrefixes))],
-			this.environmentInjector,
-		);
-		this.glRef = this.viewContainerRef.createComponent(untracked(this.sceneGraph), {
-			environmentInjector: this.glEnvironmentInjector,
-			injector: this.injector,
-		});
+		untracked(() => {
+			this.glEnvironmentInjector = createEnvironmentInjector(
+				[provideNgtRenderer(this.store, untracked(this.compoundPrefixes))],
+				this.environmentInjector,
+			);
+			this.glRef = this.viewContainerRef.createComponent(untracked(this.sceneGraph), {
+				environmentInjector: this.glEnvironmentInjector,
+				injector: this.injector,
+			});
 
-		this.glRef.changeDetectorRef.detectChanges();
-		this.setSceneGraphInputs(untracked(this.sceneGraphInputs));
+			this.glRef.changeDetectorRef.detectChanges();
+			this.setSceneGraphInputs(this.sceneGraphInputs());
+		});
 	}
 
 	private noZoneSceneGraphInputsEffect() {

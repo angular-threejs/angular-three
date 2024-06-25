@@ -130,8 +130,10 @@ export class NgtsFBO {
 	constructor() {
 		let ref: EmbeddedViewRef<{ $implicit: ReturnType<typeof injectFBO> }>;
 		afterNextRender(() => {
-			ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: this.fboTarget });
-			ref.detectChanges();
+			untracked(() => {
+				ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: this.fboTarget });
+				ref.detectChanges();
+			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {
@@ -139,7 +141,7 @@ export class NgtsFBO {
 		});
 	}
 
-	static ngTemplateContextGuard(dir: NgtsFBO, ctx: unknown): ctx is { $implicit: ReturnType<typeof injectFBO> } {
+	static ngTemplateContextGuard(_: NgtsFBO, ctx: unknown): ctx is { $implicit: ReturnType<typeof injectFBO> } {
 		return true;
 	}
 }

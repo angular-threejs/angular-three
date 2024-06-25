@@ -200,12 +200,10 @@ export class NgtcPhysics {
 
 	private renderContent() {
 		if (this.ref) this.ref.destroy();
-		this.ref = untracked(this.anchor).createEmbeddedView(
-			untracked(this.content),
-			{ $implicit: this.api },
-			{ injector: this.injector },
-		);
-		this.ref.detectChanges();
+		untracked(() => {
+			this.ref = this.anchor().createEmbeddedView(this.content(), { $implicit: this.api }, { injector: this.injector });
+			this.ref.detectChanges();
+		});
 	}
 
 	private updateWorkerState(key: keyof NgtcPhysicsInputs) {

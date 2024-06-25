@@ -12,6 +12,7 @@ import {
 	contentChild,
 	inject,
 	input,
+	untracked,
 	viewChild,
 } from '@angular/core';
 import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
@@ -77,7 +78,7 @@ export class NgtpEffects {}
 	selector: 'ngtp-effect-composer',
 	standalone: true,
 	template: `
-		<ngt-group #group ngtCompound></ngt-group>
+		<ngt-group #group ngtCompound />
 	`,
 	providers: [provideEffectComposerApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -221,10 +222,11 @@ export class NgtpEffectComposer {
 	private render() {
 		this.autoEffect(
 			(injector) => {
-				const ref = this.groupAnchor().createEmbeddedView(this.content(), {}, { injector });
-				ref.detectChanges();
-
-				return () => ref.destroy();
+				return untracked(() => {
+					const ref = this.groupAnchor().createEmbeddedView(this.content(), {}, { injector });
+					ref.detectChanges();
+					return () => ref.destroy();
+				});
 			},
 			{ allowSignalWrites: true },
 		);

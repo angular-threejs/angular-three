@@ -58,14 +58,14 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 			[bottom]="size().height / -2"
 			[parameters]="parameters()"
 		>
-			@if (content(); as template) {
-				<ng-container [ngTemplateOutlet]="template" />
-			}
+			<ng-container [ngTemplateOutlet]="content() ?? null" />
 		</ngt-orthographic-camera>
+
 		<ngt-group [ref]="groupRef">
-			@if (withTextureContent(); as withTextureTemplate) {
-				<ng-container [ngTemplateOutlet]="withTextureTemplate" [ngTemplateOutletContext]="{ $implicit: texture }" />
-			}
+			<ng-container
+				[ngTemplateOutlet]="withTextureContent() ?? null"
+				[ngTemplateOutletContext]="{ $implicit: texture }"
+			/>
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],
