@@ -8,6 +8,7 @@ import {
 	DestroyRef,
 	Directive,
 	ElementRef,
+	EmbeddedViewRef,
 	inject,
 	Injector,
 	input,
@@ -22,6 +23,7 @@ import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
+import { dispose } from './roots';
 import { injectNgtStore, NgtSize, NgtState, provideNgtStore } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
@@ -165,6 +167,8 @@ export class NgtPortal {
 	private raycaster = new Raycaster();
 	private pointer = new Vector2();
 
+	private portalView?: EmbeddedViewRef<unknown>;
+
 	constructor() {
 		afterNextRender(() => {
 			const parentState = this.parentStore.snapshot;
@@ -211,16 +215,24 @@ export class NgtPortal {
 			});
 
 			untracked(() => {
-				const portalView = this.portalContentAnchor().createEmbeddedView(this.portalContentTemplate(), {
-					injector: this.injector,
-				});
-				portalView.detectChanges();
-				this.destroyRef.onDestroy(() => {
-					portalView.destroy();
-				});
+				this.portalView = this.portalContentAnchor().createEmbeddedView(
+					this.portalContentTemplate(),
+					{ injector: this.injector },
+					{ injector: this.injector },
+				);
+				this.portalView.detectChanges();
 			});
 
 			this.portalRendered.set(true);
+		});
+
+		this.destroyRef.onDestroy(() => {
+			this.portalView?.destroy();
+			setTimeout(() => {
+				const state = this.portalStore.snapshot;
+				state.events?.disconnect?.();
+				dispose(state);
+			}, 500);
 		});
 	}
 
@@ -249,7 +261,7 @@ export class NgtPortal {
 		return {
 			...intersect,
 			scene: container,
-			previousRoot: this.parentStore,
+			// previousRoot: this.parentStore,
 			events: { ...rootState.events, ...(injectState?.events || {}), ...events },
 			size: { ...rootState.size, ...size },
 			viewport: { ...rootState.viewport, ...(viewport || {}) },

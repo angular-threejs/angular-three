@@ -8,25 +8,27 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContent } from 'angular-three-soba/misc';
 import { NgtsContactShadows, NgtsRenderTexture } from 'angular-three-soba/staging';
+import * as THREE from 'three';
 import { Mesh } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+
+extend(THREE);
 
 @Component({
-	selector: 'render-texture-dodecahedron',
+	selector: 'app-dodecahedron',
 	standalone: true,
 	template: `
 		<ngt-group [position]="position()" [scale]="scale()">
 			<ngt-mesh
 				#mesh
+				[name]="name()"
 				[scale]="meshScale()"
-				(click)="active.set(!active())"
+				(click)="onActive()"
 				(pointerover)="hover.set(true)"
 				(pointerout)="hover.set(false)"
 			>
@@ -39,9 +41,10 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 	imports: [NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class Dodecahedron {
+export class Dodecahedron {
 	position = input([0, 0, 0]);
 	scale = input(1);
+	name = input('');
 
 	hover = signal(false);
 	active = signal(false);
@@ -56,10 +59,14 @@ class Dodecahedron {
 			this.mesh().nativeElement.rotation.x += 0.01;
 		});
 	}
+
+	onActive() {
+		this.active.update((prev) => !prev);
+	}
 }
 
 @Component({
-	selector: 'render-texture-cube',
+	selector: 'app-cube',
 	standalone: true,
 	template: `
 		<ngt-mesh>
@@ -67,36 +74,29 @@ class Dodecahedron {
 			<ngt-mesh-standard-material>
 				<ngts-render-texture [options]="{ anisotropy: 16 }">
 					<ng-template ngtsContent>
-						<ngts-perspective-camera [options]="cameraOptions" />
+						<ngts-perspective-camera [options]="{ manual: true, makeDefault: true, aspect: 1, position: [0, 0, 5] }" />
 						<ngt-color attach="background" *args="['orange']" />
-						<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-						<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" />
-						<ngts-text text="hello" [options]="textOptions" />
-						<render-texture-dodecahedron />
+						<ngt-ambient-light [intensity]="0.5" />
+						<ngt-directional-light [position]="[10, 10, 5]" />
+						<ngts-text
+							text="hello"
+							[options]="{
+								font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
+								fontSize: 4,
+								color: '#555'
+							}"
+						/>
+						<app-dodecahedron />
 					</ng-template>
 				</ngts-render-texture>
 			</ngt-mesh-standard-material>
 		</ngt-mesh>
 	`,
-	imports: [Dodecahedron, NgtsRenderTexture, NgtArgs, NgtsPerspectiveCamera, NgtsText, NgtsContent],
+	imports: [Dodecahedron, NgtsRenderTexture, NgtsContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class Cube {
-	Math = Math;
-
-	cameraOptions = {
-		manual: true,
-		makeDefault: true,
-		aspect: 1,
-		position: [0, 0, 5],
-	};
-	textOptions = {
-		font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
-		fontSize: 4,
-		color: '#555',
-	};
-
+export class Cube {
 	textRef = viewChild(NgtsText);
 
 	constructor() {
@@ -112,30 +112,20 @@ class Cube {
 @Component({
 	standalone: true,
 	template: `
-		<render-texture-cube />
-		<render-texture-dodecahedron [position]="[0, 1, 0]" [scale]="0.2" />
+		<ngt-color *args="['#cecece']" attach="background" />
+		<ngt-ambient-light [intensity]="0.5" />
+		<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" [decay]="0" />
+		<app-cube />
+		<app-dodecahedron [position]="[0, 1, 0]" [scale]="0.2" name="root" />
 		<ngts-contact-shadows [options]="{ frames: 1, position: [0, -0.5, 0], blur: 1, opacity: 0.75 }" />
 		<ngts-contact-shadows [options]="{ frames: 1, position: [0, -0.5, 0], blur: 3, color: 'orange' }" />
 		<ngts-orbit-controls [options]="{ minPolarAngle: 0, maxPolarAngle: Math.PI / 2.1 }" />
 	`,
-	imports: [NgtsContactShadows, NgtsOrbitControls, Cube, Dodecahedron],
+	imports: [Cube, Dodecahedron, NgtArgs, NgtsOrbitControls, NgtsContactShadows],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'render-texture-experience' },
 })
-class DefaultRenderTextureStory {
+export class Experience {
 	Math = Math;
-
-	store = injectNgtStore();
-
-	constructor() {}
 }
-
-export default {
-	title: 'Staging/Render Texture',
-	decorators: makeDecorators(),
-} as Meta;
-
-export const Default = makeStoryFunction(DefaultRenderTextureStory, {
-	background: 'white',
-	camera: { position: [5, 5, 5], fov: 25 },
-});

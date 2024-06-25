@@ -1,11 +1,13 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
-	Directive,
 	Injector,
+	TemplateRef,
 	afterNextRender,
 	computed,
+	contentChild,
 	inject,
 	input,
 } from '@angular/core';
@@ -22,7 +24,7 @@ import {
 	pick,
 	prepare,
 } from 'angular-three';
-import { injectFBO } from 'angular-three-soba/misc';
+import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
 import { NgtComputeFunction } from 'libs/core/src/lib/events';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
@@ -52,24 +54,29 @@ export interface NgtsRenderTextureOptions extends Partial<Omit<NgtTexture, 'atta
 	compute?: (event: any, state: any, previous: any) => false | undefined;
 }
 
-@Directive({ hostDirectives: [NgtPortalContent], standalone: true, selector: 'ng-template[renderTexture]' })
+@Component({
+	standalone: true,
+	selector: 'ngts-render-texture-container',
+	template: `
+		<ng-content />
+	`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
 export class NgtsRenderTextureContainer {
-	renderTexture = input.required<{
-		frames: number;
-		renderPriority: number;
-		fbo: WebGLRenderTarget;
-	}>();
+	fbo = input.required<WebGLRenderTarget>();
+	renderPriority = input.required<number>();
+	frames = input.required<number>();
 
 	constructor() {
 		const injector = inject(Injector);
 		afterNextRender(() => {
-			const renderPriority = this.renderTexture().renderPriority;
+			const renderPriority = this.renderPriority();
 			let count = 0;
 			let oldAutoClear: boolean;
 			let oldXrEnabled: boolean;
 			injectBeforeRender(
 				({ gl, scene, camera }) => {
-					const { fbo, frames } = this.renderTexture();
+					const [fbo, frames] = [this.fbo(), this.frames()];
 					if (frames === Infinity || count < frames) {
 						oldAutoClear = gl.autoClear;
 						oldXrEnabled = gl.xr.enabled;
@@ -104,11 +111,15 @@ const defaultOptions: NgtsRenderTextureOptions = {
 	standalone: true,
 	template: `
 		<ngt-portal [container]="virtualScene" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
-			<ng-content *renderTexture="renderTextureOptions()" />
+			<ng-template portalContent let-injector="injector">
+				<ngts-render-texture-container [fbo]="fbo()" [renderPriority]="renderPriority()" [frames]="frames()">
+					<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
+				</ngts-render-texture-container>
+			</ng-template>
 		</ngt-portal>
 		<ngt-primitive *args="[fbo().texture]" [attach]="attach()" [parameters]="parameters()" />
 	`,
-	imports: [NgtPortal, NgtsRenderTextureContainer, NgtArgs],
+	imports: [NgtPortal, NgtsRenderTextureContainer, NgtPortalContent, NgtArgs, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -128,6 +139,8 @@ export class NgtsRenderTexture {
 		'height',
 	]);
 
+	content = contentChild.required(NgtsContent, { read: TemplateRef });
+
 	private store = injectNgtStore();
 	private size = this.store.select('size');
 	private viewport = this.store.select('viewport');
@@ -143,22 +156,14 @@ export class NgtsRenderTexture {
 		},
 	}));
 
-	private renderPriority = pick(this.options, 'renderPriority');
-	private frames = pick(this.options, 'frames');
-
+	renderPriority = pick(this.options, 'renderPriority');
+	frames = pick(this.options, 'frames');
 	fbo = injectFBO(this.fboParams);
 	virtualScene = prepare(new Scene());
 	eventPriority = pick(this.options, 'eventPriority');
-	renderTextureOptions = computed(() => ({
-		fbo: this.fbo(),
-		renderPriority: this.renderPriority(),
-		frames: this.frames(),
-	}));
 	compute = computed(() => this.options().compute || this.uvCompute.bind(this));
 
 	uvCompute: NgtComputeFunction = (event, root, previous) => {
-		console.log('here???', root, previous);
-
 		const fbo = this.fbo();
 		if (!fbo) return;
 		const state = root.snapshot;

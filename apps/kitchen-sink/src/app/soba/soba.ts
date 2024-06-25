@@ -29,5 +29,5 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 	host: { class: 'soba' },
 })
 export default class Soba {
-	examples = ['basic'];
+	examples = ['basic', 'render-texture'];
 }

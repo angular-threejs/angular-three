@@ -3,11 +3,9 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
-	Injector,
 	TemplateRef,
 	afterNextRender,
 	contentChild,
-	inject,
 	input,
 	untracked,
 } from '@angular/core';
@@ -90,11 +88,7 @@ export class NgtsPerspectiveCamera {
 	texture = pick(this.fbo, 'texture');
 
 	constructor() {
-		const injector = inject(Injector);
-
 		afterNextRender(() => {
-			console.log(injector);
-
 			this.autoEffect(() => {
 				if (!this.manual()) {
 					this.cameraRef().nativeElement.aspect = this.size().width / this.size().height;

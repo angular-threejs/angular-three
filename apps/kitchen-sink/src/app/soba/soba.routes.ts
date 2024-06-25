@@ -6,6 +6,10 @@ const routes: Routes = [
 		loadComponent: () => import('./basic/basic'),
 	},
 	{
+		path: 'render-texture',
+		loadComponent: () => import('./render-texture/render-texture'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
