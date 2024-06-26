@@ -11,11 +11,11 @@ export * from './lib/store';
 export * from './lib/utils/apply-props';
 export { createAttachFunction } from './lib/utils/attach';
 export * from './lib/utils/before-render';
-export * from './lib/utils/create-api-token';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
 export * from './lib/utils/parameters';
 export * from './lib/utils/signal-store';
+export * from './lib/utils/token';
 export * from './lib/utils/update';
 
 export type { NgtCamera, NgtThreeEvent } from './lib/events';

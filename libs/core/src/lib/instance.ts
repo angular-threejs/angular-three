@@ -68,16 +68,25 @@ export function getLocalState<TInstance extends object>(obj: TInstance | undefin
 	return (obj as NgtAnyRecord)['__ngt__'];
 }
 
-export function invalidateInstance<TInstance extends object>(instance: TInstance) {
+/**
+ * Returns the instances initial (outmost) root
+ */
+export function getRootStore<TInstance extends object>(instance: TInstance) {
 	let store = getLocalState(instance)?.store;
 
-	if (store) {
-		while (store.snapshot.previousRoot) {
-			store = store.snapshot.previousRoot;
-		}
-		if (store.snapshot.internal.frames === 0) {
-			store.snapshot.invalidate();
-		}
+	if (!store) return null;
+	while (store.snapshot.previousRoot) {
+		store = store.snapshot.previousRoot;
+	}
+
+	return store;
+}
+
+export function invalidateInstance<TInstance extends object>(instance: TInstance) {
+	const store = getRootStore(instance);
+
+	if (store && store.snapshot.internal.frames === 0) {
+		store.snapshot.invalidate();
 	}
 
 	checkUpdate(instance);

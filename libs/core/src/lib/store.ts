@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { ElementRef, InjectOptions, InjectionToken, WritableSignal, effect, inject } from '@angular/core';
+import { ElementRef, InjectionToken, inject } from '@angular/core';
+import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Observable, Subject } from 'rxjs';
 import { Camera, Clock, EventDispatcher, Object3D, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
 import { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
@@ -8,6 +9,7 @@ import { injectNgtLoop } from './loop';
 import { is } from './utils/is';
 import { makeDpr } from './utils/make';
 import { NgtSignalStore, signalStore } from './utils/signal-store';
+import { createInjectFn } from './utils/token';
 import { updateCamera } from './utils/update';
 
 export type NgtRendererLike = { render: (scene: Scene, camera: Camera) => any };
@@ -143,6 +145,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 		throw new Error(`[NGT] Window is not available.`);
 	}
 
+	const autoEffect = injectAutoEffect();
 	const loop = injectNgtLoop();
 
 	// NOTE: using Subject because we do not care about late-subscribers
@@ -269,7 +272,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 				active: false,
 				priority: 0,
 				frames: 0,
-				lastEvent: new ElementRef(null),
+				lastEvent: { nativeElement: null },
 				interaction: [],
 				hovered: new Map(),
 				subscribers: [],
@@ -316,7 +319,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 
 	const [camera, size, viewportDpr] = [store.select('camera'), store.select('size'), store.select('viewport', 'dpr')];
 
-	effect(() => {
+	autoEffect(() => {
 		const [newCamera, newSize, newDpr, gl] = [camera(), size(), viewportDpr(), store.snapshot.gl];
 
 		// Resize camera and renderer on changes to size and pixel-ratio
@@ -344,18 +347,9 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 }
 
 export const NGT_STORE = new InjectionToken<NgtSignalStore<NgtState>>('NgtStore Token');
-export const NGT_STORE_SIGNAL = new InjectionToken<WritableSignal<{ scene: Scene }>>('NgtStore Signal Token');
-
+export const injectNgtStore = createInjectFn(NGT_STORE);
 export function provideNgtStore(store?: NgtSignalStore<NgtState>) {
-	if (store) {
-		return { provide: NGT_STORE, useValue: store };
-	}
-	return { provide: NGT_STORE, useFactory: storeFactory };
-}
-
-export function injectNgtStore(options: InjectOptions & { optional?: false }): NgtSignalStore<NgtState>;
-export function injectNgtStore(options: InjectOptions): NgtSignalStore<NgtState> | null;
-export function injectNgtStore(): NgtSignalStore<NgtState>;
-export function injectNgtStore(options?: InjectOptions) {
-	return inject(NGT_STORE, options as InjectOptions);
+	let useFactory = storeFactory;
+	if (store) useFactory = () => store;
+	return { provide: NGT_STORE, useFactory };
 }

@@ -1,7 +1,8 @@
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { InjectionToken } from '@angular/core';
 import { roots } from './roots';
 import { NgtState } from './store';
 import { NgtSignalStore } from './utils/signal-store';
+import { createInjectFn } from './utils/token';
 
 export type NgtGlobalRenderCallback = (timeStamp: number) => void;
 type SubItem = { callback: NgtGlobalRenderCallback };
@@ -159,5 +160,5 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 
 	return { loop, invalidate, advance };
 }
-
-export const [injectNgtLoop] = createInjectionToken(() => createLoop(roots));
+const NGT_LOOP = new InjectionToken<ReturnType<typeof createLoop>>('NGT_LOOP', { factory: () => createLoop(roots) });
+export const injectNgtLoop = createInjectFn(NGT_LOOP);

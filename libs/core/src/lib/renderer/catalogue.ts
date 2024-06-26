@@ -1,4 +1,5 @@
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { InjectionToken } from '@angular/core';
+import { createInjectFn } from '../utils/token';
 
 export type NgtAnyConstructor = new (...args: any[]) => any;
 
@@ -8,4 +9,7 @@ export function extend(objects: object): void {
 	Object.assign(catalogue, objects);
 }
 
-export const [injectNgtCatalogue] = createInjectionToken(() => catalogue);
+export const NGT_CATALOGUE = new InjectionToken<Record<string, NgtAnyConstructor>>('NGT_CATALOGUE', {
+	factory: () => catalogue,
+});
+export const injectNgtCatalogue = createInjectFn(NGT_CATALOGUE);

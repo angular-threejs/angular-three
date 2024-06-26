@@ -22,11 +22,10 @@ export const is = {
 	camera: (a: unknown): a is Camera => !!a && (a as Camera).isCamera,
 	renderer: (a: unknown) => !!a && typeof a === 'object' && 'render' in a && typeof a['render'] === 'function',
 	scene: (a: unknown): a is Scene => !!a && (a as Scene).isScene,
-	ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
+	ref: (a: unknown): a is ElementRef =>
+		!!a && typeof a === 'object' && (a instanceof ElementRef || 'nativeElement' in a),
 	instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
 	object3D: (a: unknown): a is Object3D => !!a && (a as Object3D).isObject3D,
-	// instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
-	// ref: (a: unknown): a is ElementRef => a instanceof ElementRef,
 	colorSpaceExist: <
 		T extends NgtRendererLike | Texture | object,
 		P = T extends NgtRendererLike ? { outputColorSpace: string } : { colorSpace: string },
