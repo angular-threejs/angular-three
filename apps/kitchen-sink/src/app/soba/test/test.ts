@@ -4,8 +4,11 @@ import { Experience } from './experience';
 
 @Component({
 	standalone: true,
-	template: ``,
-	imports: [NgtCanvas],
+	template: `
+		<!-- <ngt-canvas [sceneGraph]="scene" /> -->
+		<app-experience />
+	`,
+	imports: [NgtCanvas, Experience],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'fbo-soba' },
 })

@@ -156,6 +156,10 @@ export class NgtsRenderTexture {
 		},
 	}));
 
+	constructor() {
+		console.log('in render texture', this.store);
+	}
+
 	renderPriority = pick(this.options, 'renderPriority');
 	frames = pick(this.options, 'frames');
 	fbo = injectFBO(this.fboParams);

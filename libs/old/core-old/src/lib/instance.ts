@@ -66,8 +66,13 @@ export function getLocalState<TInstance extends object = NgtAnyRecord>(
 }
 
 export function invalidateInstance<TInstance extends object>(instance: TInstance) {
-	const state = getLocalState(instance).store?.get();
-	if (state && state.internal.frames === 0) state.invalidate();
+	let store = getLocalState(instance).store;
+
+	while (store && store.get('previousRoot')) {
+		store = store.get('previousRoot')!;
+	}
+
+	if (store && store.get('internal').frames === 0) store.get('invalidate')();
 	checkUpdate(instance);
 }
 

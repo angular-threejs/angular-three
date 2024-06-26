@@ -13,6 +13,7 @@ import {
 	Injector,
 	input,
 	signal,
+	SkipSelf,
 	TemplateRef,
 	untracked,
 	viewChild,
@@ -23,11 +24,10 @@ import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { dispose } from './roots';
-import { injectNgtStore, NgtSize, NgtState, provideNgtStore } from './store';
+import { injectNgtStore, NGT_STORE, NgtSize, NgtState } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
-import { signalStore } from './utils/signal-store';
+import { NgtSignalStore, signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
 const privateKeys = [
@@ -66,9 +66,9 @@ export interface NgtPortalInputs {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtPortalBeforeRender {
-	private portalStore = injectNgtStore();
 	private injector = inject(Injector);
 
+	private portalStore = injectNgtStore();
 	renderPriority = input(1);
 	parentScene = input.required<Scene>();
 	parentCamera = input.required<Camera>();
@@ -120,18 +120,27 @@ export class NgtPortalContent {
 	selector: 'ngt-portal',
 	standalone: true,
 	template: `
-		<ng-container #portalContentAnchor>
-			@if (renderAutoBeforeRender()) {
-				<ngt-portal-before-render
-					[renderPriority]="autoRenderPriority()"
-					[parentScene]="parentScene"
-					[parentCamera]="parentCamera"
-				/>
-			}
-		</ng-container>
+		<ng-container #portalContentAnchor />
+		@if (renderAutoBeforeRender()) {
+			<ngt-portal-before-render
+				[renderPriority]="autoRenderPriority()"
+				[parentScene]="parentScene"
+				[parentCamera]="parentCamera"
+			/>
+		}
 	`,
 	imports: [NgtPortalBeforeRender],
-	providers: [provideNgtStore(signalStore<NgtState>({}))],
+	providers: [
+		{
+			provide: NGT_STORE,
+			useFactory: (parent: NgtSignalStore<NgtState>) => {
+				const store = signalStore<NgtState>({});
+				store.update({ ...store.snapshot, previousRoot: parent });
+				return store;
+			},
+			deps: [[new SkipSelf(), NGT_STORE]],
+		},
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtPortal {
@@ -146,6 +155,9 @@ export class NgtPortal {
 		>
 	>();
 
+	/**
+	 * @decsription turn this on to enable "HUD" like rendering
+	 */
 	autoRender = input(false);
 	autoRenderPriority = input(1);
 
@@ -155,8 +167,8 @@ export class NgtPortal {
 	private injector = inject(Injector);
 	private destroyRef = inject(DestroyRef);
 	private autoEffect = injectAutoEffect();
-	private parentStore = injectNgtStore({ skipSelf: true });
-	private portalStore = injectNgtStore({ self: true });
+	private parentStore = inject(NGT_STORE, { skipSelf: true });
+	portalStore = inject(NGT_STORE, { self: true });
 
 	private portalRendered = signal(false);
 
@@ -201,12 +213,18 @@ export class NgtPortal {
 				scene: container as Scene,
 				raycaster: this.raycaster,
 				pointer: this.pointer,
-				previousRoot: this.parentStore,
 				events: { ...parentState.events, ...events },
 				size: { ...parentState.size, ...size },
 				...rest,
 				setEvents: (events) =>
 					this.portalStore.update((state) => ({ ...state, events: { ...state.events, ...events } })),
+			});
+
+			console.log('in portal', {
+				container,
+				parent: this.parentStore.snapshot,
+				portal: this.portalStore.snapshot,
+				snapshotAtBeginning: { ...this.portalStore.snapshot },
 			});
 
 			this.autoEffect(() => {
@@ -215,11 +233,10 @@ export class NgtPortal {
 			});
 
 			untracked(() => {
-				this.portalView = this.portalContentAnchor().createEmbeddedView(
-					this.portalContentTemplate(),
-					{ injector: this.injector },
-					{ injector: this.injector },
-				);
+				this.portalView = this.portalContentAnchor().createEmbeddedView(this.portalContentTemplate(), {
+					injector: this.injector,
+					store: this.portalStore,
+				});
 				this.portalView.detectChanges();
 			});
 
@@ -231,7 +248,7 @@ export class NgtPortal {
 			setTimeout(() => {
 				const state = this.portalStore.snapshot;
 				state.events?.disconnect?.();
-				dispose(state);
+				// dispose(state);
 			}, 500);
 		});
 	}
@@ -261,7 +278,6 @@ export class NgtPortal {
 		return {
 			...intersect,
 			scene: container,
-			// previousRoot: this.parentStore,
 			events: { ...rootState.events, ...(injectState?.events || {}), ...events },
 			size: { ...rootState.size, ...size },
 			viewport: { ...rootState.viewport, ...(viewport || {}) },

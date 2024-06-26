@@ -210,7 +210,14 @@ export function processThreeEvent(
 	lS.eventCount += 1;
 	// but only add the instance (target) to the interaction array (so that it is handled by the EventManager with Raycast)
 	// the first time eventCount is incremented
-	if (lS.eventCount === 1 && instance['raycast']) lS.store.get('internal', 'interaction').push(instance);
+	if (lS.eventCount === 1 && instance['raycast']) {
+		let root = lS.store;
+		while (root.get('previousRoot')) {
+			root = root.get('previousRoot')!;
+		}
+		const interactions = root.get('internal', 'interaction') || [];
+		interactions.push(instance);
+	}
 
 	// clean up the event listener by removing the target from the interaction array
 	return () => {

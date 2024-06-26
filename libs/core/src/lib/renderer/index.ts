@@ -247,7 +247,9 @@ export class NgtRenderer implements Renderer2 {
 
 		// if new child is a portal
 		if (cRS?.[NgtRendererClassId.type] === 'portal') {
-			this.store.processPortalContainer(newChild);
+			if (!cRS[NgtRendererClassId.portalContainer]) {
+				this.store.processPortalContainer(newChild);
+			}
 			if (cRS[NgtRendererClassId.portalContainer]) {
 				this.appendChild(parent, cRS[NgtRendererClassId.portalContainer]);
 			}
@@ -256,7 +258,9 @@ export class NgtRenderer implements Renderer2 {
 
 		// if parent is a portal
 		if (pRS[NgtRendererClassId.type] === 'portal') {
-			this.store.processPortalContainer(parent);
+			if (!pRS[NgtRendererClassId.portalContainer]) {
+				this.store.processPortalContainer(parent);
+			}
 			if (pRS[NgtRendererClassId.portalContainer]) {
 				this.appendChild(pRS[NgtRendererClassId.portalContainer], newChild);
 			}

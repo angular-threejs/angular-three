@@ -66,37 +66,34 @@ export class Dodecahedron {
 }
 
 @Component({
-	selector: 'app-cube',
+	selector: 'app-material',
 	standalone: true,
 	template: `
-		<ngt-mesh>
-			<ngt-box-geometry />
-			<ngt-mesh-standard-material>
-				<ngts-render-texture [options]="{ anisotropy: 16 }">
-					<ng-template ngtsContent>
-						<ngts-perspective-camera [options]="{ manual: true, makeDefault: true, aspect: 1, position: [0, 0, 5] }" />
-						<ngt-color attach="background" *args="['orange']" />
-						<ngt-ambient-light [intensity]="0.5" />
-						<ngt-directional-light [position]="[10, 10, 5]" />
-						<ngts-text
-							text="hello"
-							[options]="{
-								font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
-								fontSize: 4,
-								color: '#555'
-							}"
-						/>
-						<app-dodecahedron />
-					</ng-template>
-				</ngts-render-texture>
-			</ngt-mesh-standard-material>
-		</ngt-mesh>
+		<ngt-mesh-standard-material>
+			<ngts-render-texture [options]="{ anisotropy: 16 }">
+				<ng-template ngtsContent>
+					<ngts-perspective-camera [options]="{ manual: true, makeDefault: true, aspect: 1, position: [0, 0, 5] }" />
+					<ngt-color attach="background" *args="['orange']" />
+					<ngt-ambient-light [intensity]="0.5" />
+					<ngt-directional-light [position]="[10, 10, 5]" />
+					<ngts-text
+						text="hello"
+						[options]="{
+							font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
+							fontSize: 4,
+							color: '#555'
+						}"
+					/>
+					<app-dodecahedron />
+				</ng-template>
+			</ngts-render-texture>
+		</ngt-mesh-standard-material>
 	`,
 	imports: [Dodecahedron, NgtsRenderTexture, NgtsContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Cube {
+export class Material {
 	textRef = viewChild(NgtsText);
 
 	constructor() {
@@ -108,6 +105,21 @@ export class Cube {
 		});
 	}
 }
+
+@Component({
+	selector: 'app-cube',
+	standalone: true,
+	template: `
+		<ngt-mesh>
+			<ngt-box-geometry />
+			<app-material />
+		</ngt-mesh>
+	`,
+	imports: [Material],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class Cube {}
 
 @Component({
 	standalone: true,

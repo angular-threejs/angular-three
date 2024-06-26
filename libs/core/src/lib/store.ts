@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ElementRef, InjectionToken, Optional, SkipSelf, effect, inject } from '@angular/core';
-import { createInjectionToken } from 'ngxtension/create-injection-token';
+import { ElementRef, InjectOptions, InjectionToken, WritableSignal, effect, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Camera, Clock, EventDispatcher, Object3D, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
 import { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
@@ -345,8 +344,18 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 }
 
 export const NGT_STORE = new InjectionToken<NgtSignalStore<NgtState>>('NgtStore Token');
-export const [injectNgtStore, provideNgtStore] = createInjectionToken(storeFactory, {
-	isRoot: false,
-	deps: [[new Optional(), new SkipSelf(), NGT_STORE]],
-	token: NGT_STORE,
-});
+export const NGT_STORE_SIGNAL = new InjectionToken<WritableSignal<{ scene: Scene }>>('NgtStore Signal Token');
+
+export function provideNgtStore(store?: NgtSignalStore<NgtState>) {
+	if (store) {
+		return { provide: NGT_STORE, useValue: store };
+	}
+	return { provide: NGT_STORE, useFactory: storeFactory };
+}
+
+export function injectNgtStore(options: InjectOptions & { optional?: false }): NgtSignalStore<NgtState>;
+export function injectNgtStore(options: InjectOptions): NgtSignalStore<NgtState> | null;
+export function injectNgtStore(): NgtSignalStore<NgtState>;
+export function injectNgtStore(options?: InjectOptions) {
+	return inject(NGT_STORE, options as InjectOptions);
+}

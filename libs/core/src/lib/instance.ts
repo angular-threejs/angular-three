@@ -69,8 +69,17 @@ export function getLocalState<TInstance extends object>(obj: TInstance | undefin
 }
 
 export function invalidateInstance<TInstance extends object>(instance: TInstance) {
-	const state = getLocalState(instance)?.store.snapshot;
-	if (state && state.internal.frames === 0) state.invalidate();
+	let store = getLocalState(instance)?.store;
+
+	if (store) {
+		while (store.snapshot.previousRoot) {
+			store = store.snapshot.previousRoot;
+		}
+		if (store.snapshot.internal.frames === 0) {
+			store.snapshot.invalidate();
+		}
+	}
+
 	checkUpdate(instance);
 }
 
