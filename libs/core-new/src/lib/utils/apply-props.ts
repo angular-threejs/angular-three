@@ -1,5 +1,6 @@
-import { Color, ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
-import { NgtInstanceNode, getLocalState, invalidateInstance } from '../instance';
+import { untracked } from '@angular/core';
+import { Color, ColorManagement, Layers, Object3D, RGBAFormat, Texture, UnsignedByteType } from 'three';
+import { getLocalState, getRootStore, invalidateInstance } from '../instance';
 import { NgtState } from '../store';
 import { NgtAnyRecord } from '../types';
 import { is } from './is';
@@ -26,22 +27,21 @@ function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
 	return changes;
 }
 
-// This function applies a set of changes to the instance
-export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
+export function applyProps(obj: NgtAnyRecord, props: NgtAnyRecord) {
 	// if props is empty
-	if (!Object.keys(props).length) return instance;
+	if (!Object.keys(props).length) return obj;
 
 	// filter equals, and reserved props
-	const localState = getLocalState(instance);
-	const rootState = localState?.store?.snapshot ?? ({} as NgtState);
-	const changes = diffProps(instance, props);
+	const localState = getLocalState(obj);
+	const rootState = localState?.store.snapshot ?? ({} as NgtState);
+	const changes = diffProps(obj, props);
 
 	for (let i = 0; i < changes.length; i++) {
 		let [key, value] = changes[i];
 
 		// Alias (output)encoding => (output)colorSpace (since r152)
 		// https://github.com/pmndrs/react-three-fiber/pull/2829
-		if (is.colorSpaceExist(instance)) {
+		if (is.colorSpaceExist(obj)) {
 			const sRGBEncoding = 3001;
 			const SRGBColorSpace = 'srgb';
 			const LinearSRGBColorSpace = 'srgb-linear';
@@ -55,12 +55,13 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 			}
 		}
 
-		const currentInstance = instance;
-		const targetProp = currentInstance[key];
+		const current = obj;
+		const targetProp = current[key];
 
 		// special treatmen for objects with support for set/copy, and layers
 		if (targetProp && targetProp['set'] && (targetProp['copy'] || targetProp instanceof Layers)) {
 			const isColor = targetProp instanceof Color;
+
 			// if value is an array
 			if (Array.isArray(value)) {
 				if (targetProp['fromArray']) targetProp['fromArray'](value);
@@ -76,7 +77,6 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				if (!ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
 			} // if nothing else fits, just set the single value, ignore undefined
 			else if (value !== undefined) {
-				const isColor = targetProp instanceof Color;
 				// allow setting array scalars
 				if (!isColor && targetProp['setScalar']) targetProp['setScalar'](value);
 				// layers have no copy function, copy the mask
@@ -87,44 +87,48 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				// auto-convert srgb
 				if (!ColorManagement && !rootState?.linear && isColor) targetProp.convertSRGBToLinear();
 			}
-		} // else just overwrite the value
-		else {
-			currentInstance[key] = value;
+		} else {
+			current[key] = value;
 			// auto-convert srgb textures
 			if (
-				currentInstance[key] instanceof Texture &&
-				currentInstance[key].format === RGBAFormat &&
-				currentInstance[key].type === UnsignedByteType
+				current[key] instanceof Texture &&
+				current[key].format === RGBAFormat &&
+				current[key].type === UnsignedByteType &&
+				rootState
 			) {
-				const texture = currentInstance[key] as Texture;
-				if (rootState?.gl) {
-					if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
-						texture.colorSpace = rootState.gl.outputColorSpace;
-					// @ts-expect-error - old version of threejs
-					else texture.encoding = rootState.gl.outputEncoding;
-				}
+				const texture = current[key] as Texture;
+				if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
+					texture.colorSpace = rootState.gl.outputColorSpace;
+				// @ts-expect-error - old version of threejs
+				else texture.encoding = rootState.gl.outputEncoding;
 			}
 		}
 
-		checkUpdate(currentInstance[key]);
+		checkUpdate(current[key]);
 		checkUpdate(targetProp);
-		invalidateInstance(instance);
 	}
 
-	const instanceHandlersCount = localState?.eventCount;
-	const parent = localState?.instanceStore?.get('parent');
+	invalidateInstance(obj);
 
-	if (parent && rootState.internal && instance['raycast']) {
+	const handlersCount = localState?.eventCount;
+	const parent = localState?.parent ? untracked(localState.parent) : null;
+
+	if (localState && parent && obj['raycast']) {
+		// Get the initial root state's internals
+		const initialRootStore = getRootStore(obj);
+		const internal = initialRootStore?.snapshot.internal;
+		if (!internal) return;
 		// Pre-emptively remove the instance from the interaction manager
-		const index = rootState.internal.interaction.indexOf(instance);
-		if (index > -1) rootState.internal.interaction.splice(index, 1);
+		const index = internal.interaction.indexOf(obj as Object3D);
+		if (index > -1) internal.interaction.splice(index, 1);
 		// Add the instance to the interaction manager only when it has handlers
-		if (localState?.eventCount) rootState.internal.interaction.push(instance);
+		if (handlersCount) internal.interaction.push(obj as Object3D);
 	}
 
-	if (parent && localState?.afterUpdate && localState.afterUpdate.observed && changes.length) {
-		localState.afterUpdate.next(instance);
+	if (localState && localState.onUpdate && changes.length) {
+		// (updated) event should add `onUpdate` to the instance
+		localState.onUpdate(obj);
 	}
 
-	return instance;
+	return obj;
 }
