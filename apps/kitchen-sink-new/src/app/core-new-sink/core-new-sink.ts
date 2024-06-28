@@ -1,6 +1,18 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, extend, injectStore } from 'angular-three-core-new';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	computed,
+	effect,
+	input,
+	output,
+	signal,
+	viewChild,
+} from '@angular/core';
+import { NgtArgs, NgtCanvas, extend, injectBeforeRender, injectStore } from 'angular-three-core-new';
 import * as THREE from 'three';
+import { Mesh } from 'three';
 
 extend(THREE);
 
@@ -8,34 +20,43 @@ extend(THREE);
 	selector: 'app-cube',
 	standalone: true,
 	template: `
-		<ngt-mesh>
+		<ngt-mesh name="within-app-cube" [position]="position()" (click)="clicked.emit()">
 			<ngt-box-geometry />
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Cube {}
+export class Cube {
+	position = input([0, 0, 0]);
+
+	clicked = output();
+}
 
 @Component({
 	selector: 'app-arbitrary-shape',
 	standalone: true,
 	template: `
-		<ngt-mesh>
-			<ngt-mesh-basic-material />
+		<ngt-mesh [position]="position()" name="the-arbitrary">
+			<ngt-mesh-basic-material>
+				<ngt-value [rawValue]="color()" attach="color" />
+			</ngt-mesh-basic-material>
 			<ng-content />
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArbitraryShape {}
+export class ArbitraryShape {
+	position = input([0, 0, 0]);
+	color = input('red');
+}
 
 @Component({
 	selector: 'app-cube-with-content',
 	standalone: true,
 	template: `
-		<ngt-mesh>
+		<ngt-mesh [position]="position()">
 			<ngt-box-geometry />
 			<ng-content select="[child]" />
 		</ngt-mesh>
@@ -45,45 +66,112 @@ export class ArbitraryShape {}
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CubeWithContent {}
+export class CubeWithContent {
+	position = input([0, 0, 0]);
+}
+
+@Component({
+	selector: 'app-arbitrary-plane',
+	standalone: true,
+	template: `
+		<ngt-plane-geometry *args="args()" />
+		@if (true) {
+			<ngt-mesh name="within-if" />
+		}
+		@if (true) {
+			<app-arbitrary-shape color="blue">
+				<ng-content />
+			</app-arbitrary-shape>
+		}
+	`,
+	imports: [NgtArgs, ArbitraryShape],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ArbitraryPlane {
+	args = input([5, 5]);
+}
 
 @Component({
 	selector: 'app-new-scene',
 	standalone: true,
 	template: `
-		<ngt-mesh>
+		<ngt-mesh #mesh [position]="[2, 2, 0]" [scale]="scale()" (click)="active.set(!active())" name="the-top-dawg">
 			<ngt-box-geometry />
+			<ngt-mesh-basic-material color="green" />
 		</ngt-mesh>
 
-		<app-cube />
+		<app-cube [position]="[-2, -2, 0]" (clicked)="onCubeClicked()" />
 
-		<app-arbitrary-shape>
-			<ngt-torus-geometry />
+		<app-arbitrary-shape [position]="[0, 0, -8]">
+			@if (bigPlane()) {
+				<app-arbitrary-plane [args]="[10, 10]">
+					<ngt-cylinder-geometry *args="[2, 2]" />
+				</app-arbitrary-plane>
+			} @else {
+				<app-arbitrary-plane>
+					<ngt-circle-geometry />
+				</app-arbitrary-plane>
+			}
 		</app-arbitrary-shape>
 
-		<app-cube-with-content>
-			<ngt-mesh-basic-material child />
+		<app-arbitrary-shape [position]="[-2, 2, 0]" color="hotpink">
+			<ngt-torus-geometry *args="[2, 0.4, 12, 48]" (attached)="onAttach($event)" />
+		</app-arbitrary-shape>
 
-			<app-arbitrary-shape>
+		<app-cube-with-content [position]="[2, -2, 0]">
+			<ngt-mesh-basic-material child color="orange" />
+
+			<app-arbitrary-shape [position]="[0, 4, -4]">
 				<ngt-torus-knot-geometry />
 			</app-arbitrary-shape>
 		</app-cube-with-content>
 
-		<app-cube-with-content>
-			<app-arbitrary-shape child>
+		<app-cube-with-content [position]="[0, -4, -4]">
+			<app-arbitrary-shape child [position]="[0, 1, 0]">
 				<ngt-cone-geometry />
 			</app-arbitrary-shape>
 		</app-cube-with-content>
 	`,
-	imports: [Cube, ArbitraryShape, CubeWithContent],
+	imports: [Cube, ArbitraryShape, CubeWithContent, NgtArgs, ArbitraryPlane],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
 	private store = injectStore();
 
+	active = signal(false);
+	scale = computed(() => (this.active() ? 1.5 : 1));
+
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	bigPlane = signal(true);
+	cubeArgs = computed(() => (this.bigPlane() ? [2, 2, 2] : [1, 1, 1]));
+
 	constructor() {
 		console.log(this.store.snapshot.scene);
+		injectBeforeRender(() => {
+			const mesh = this.mesh().nativeElement;
+			mesh.rotation.x += 0.01;
+			mesh.rotation.y += 0.01;
+		});
+
+		effect((onCleanup) => {
+			const id = setTimeout(() => {
+				this.bigPlane.set(false);
+			}, 6000);
+			onCleanup(() => {
+				clearTimeout(id);
+			});
+		});
+	}
+
+	onAttach(event: any) {
+		console.log(event);
+	}
+
+	onCubeClicked() {
+		console.log('cube clicked');
 	}
 }
 

@@ -17,10 +17,6 @@ export const appRoutes: Route[] = [
 		loadChildren: () => import('./soba/soba.routes'),
 	},
 	{
-		path: 'core-new-sink',
-		loadComponent: () => import('./core-new-sink/core-new-sink'),
-	},
-	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',

@@ -1,5 +1,14 @@
 import { ElementRef } from '@angular/core';
-import { BufferGeometry, Camera, Material, Object3D, OrthographicCamera, PerspectiveCamera, Texture } from 'three';
+import {
+	BufferGeometry,
+	Camera,
+	Material,
+	Object3D,
+	OrthographicCamera,
+	PerspectiveCamera,
+	Scene,
+	Texture,
+} from 'three';
 import { NgtInstanceNode } from '../instance';
 import { NgtRendererLike } from '../store';
 import { NgtAnyRecord, NgtEquConfig } from '../types';
@@ -15,6 +24,7 @@ export const is = {
 	object3D: (object: unknown): object is Object3D => !!object && (object as Object3D).isObject3D,
 	material: (object: unknown): object is Material => !!object && (object as Material).isMaterial,
 	geometry: (object: unknown): object is BufferGeometry => !!object && (object as BufferGeometry).isBufferGeometry,
+	scene: (object: unknown): object is Scene => !!object && (object as Scene).isScene,
 	renderer: (object: unknown) =>
 		!!object && typeof object === 'object' && 'render' in object && typeof object['render'] === 'function',
 	instance: (object: unknown): object is NgtInstanceNode => !!object && !!(object as NgtAnyRecord)['__ngt__'],
