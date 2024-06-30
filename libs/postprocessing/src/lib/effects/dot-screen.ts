@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs, extend } from 'angular-three-core-new';
 import { DotScreenEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective } from '../effect';
 
@@ -10,7 +10,7 @@ export type DotScreenEffectOptions = Partial<NonNullable<ConstructorParameters<t
 @Component({
 	selector: 'ngtp-dot-screen',
 	template: `
-		<ngt-dot-screen-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-dot-screen-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-dot-screen-effect>

@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs, extend } from 'angular-three-core-new';
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import { Uniform } from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
@@ -38,7 +38,7 @@ extend({ WaterEffect });
 	selector: 'ngtp-water',
 	standalone: true,
 	template: `
-		<ngt-water-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-water-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-water-effect>

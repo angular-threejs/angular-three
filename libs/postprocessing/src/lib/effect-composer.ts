@@ -2,20 +2,24 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
-	Directive,
 	ElementRef,
 	Injector,
-	TemplateRef,
-	ViewContainerRef,
 	afterNextRender,
 	computed,
-	contentChild,
+	effect,
 	inject,
 	input,
-	untracked,
 	viewChild,
 } from '@angular/core';
-import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
+import {
+	createApiToken,
+	extend,
+	getLocalState,
+	injectBeforeRender,
+	injectStore,
+	pick,
+	signalStore,
+} from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -42,7 +46,19 @@ export interface NgtpEffectComposerApi {
 	resolutionScale?: number;
 }
 
-export const [injectEffectComposerApi, provideEffectComposerApi] = createApiToken(() => NgtpEffectComposer);
+export const [injectEffectComposerApi, provideEffectComposerApi] = createApiToken(
+	'NGTP_EFFECT_COMPOSER_API',
+	() => NgtpEffectComposer,
+	(composer) => {
+		const store = signalStore<NgtpEffectComposerApi>({});
+
+		effect(() => {
+			store.update(composer.api());
+		});
+
+		return store;
+	},
+);
 
 interface NgtpEffectComposerOptions {
 	enabled: boolean;
@@ -71,14 +87,13 @@ function isConvolution(effect: Effect) {
 	return (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION;
 }
 
-@Directive({ selector: 'ng-template[effects]', standalone: true })
-export class NgtpEffects {}
-
 @Component({
 	selector: 'ngtp-effect-composer',
 	standalone: true,
 	template: `
-		<ngt-group #group ngtCompound />
+		<ngt-group #group>
+			<ng-content />
+		</ngt-group>
 	`,
 	providers: [provideEffectComposerApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -87,28 +102,26 @@ export class NgtpEffects {}
 export class NgtpEffectComposer {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	injector = inject(Injector);
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
-	size = this.store.select('size');
-	gl = this.store.select('gl');
-	defaultScene = this.store.select('scene');
-	defaultCamera = this.store.select('camera');
-
-	depthBuffer = pick(this.options, 'depthBuffer');
-	stencilBuffer = pick(this.options, 'stencilBuffer');
-	multisampling = pick(this.options, 'multisampling');
-	frameBufferType = pick(this.options, 'frameBufferType');
-	scene = computed(() => this.options().scene ?? this.defaultScene());
-	camera = computed(() => this.options().camera ?? this.defaultCamera());
-	enableNormalPass = pick(this.options, 'enableNormalPass');
-	resolutionScale = pick(this.options, 'resolutionScale');
-
 	group = viewChild.required<ElementRef<Group>>('group');
-	groupAnchor = viewChild.required('group', { read: ViewContainerRef });
-	content = contentChild.required(NgtpEffects, { read: TemplateRef });
 
-	composerData = computed(() => {
+	private injector = inject(Injector);
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private size = this.store.select('size');
+	private gl = this.store.select('gl');
+	private defaultScene = this.store.select('scene');
+	private defaultCamera = this.store.select('camera');
+
+	private depthBuffer = pick(this.options, 'depthBuffer');
+	private stencilBuffer = pick(this.options, 'stencilBuffer');
+	private multisampling = pick(this.options, 'multisampling');
+	private frameBufferType = pick(this.options, 'frameBufferType');
+	private scene = computed(() => this.options().scene ?? this.defaultScene());
+	private camera = computed(() => this.options().camera ?? this.defaultCamera());
+	private enableNormalPass = pick(this.options, 'enableNormalPass');
+	private resolutionScale = pick(this.options, 'resolutionScale');
+
+	private composerData = computed(() => {
 		const webGL2Available = isWebGL2Available();
 		const [
 			gl,
@@ -174,7 +187,6 @@ export class NgtpEffectComposer {
 		afterNextRender(() => {
 			this.disableToneMapping();
 			this.setComposerSize();
-			this.render();
 			this.updatePasses();
 
 			injectBeforeRender(
@@ -217,19 +229,6 @@ export class NgtpEffectComposer {
 				composer.setSize(width, height);
 			}
 		});
-	}
-
-	private render() {
-		this.autoEffect(
-			(injector) => {
-				return untracked(() => {
-					const ref = this.groupAnchor().createEmbeddedView(this.content(), {}, { injector });
-					ref.detectChanges();
-					return () => ref.destroy();
-				});
-			},
-			{ allowSignalWrites: true },
-		);
 	}
 
 	private updatePasses() {

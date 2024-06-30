@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs, extend } from 'angular-three-core-new';
 import { BrightnessContrastEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective } from '../effect';
 
@@ -11,12 +11,7 @@ export type BrightnessEffectOptions = NonNullable<ConstructorParameters<typeof B
 	selector: 'ngtp-brightness-contrast',
 	standalone: true,
 	template: `
-		<ngt-brightness-contrast-effect
-			*args="[options()]"
-			[camera]="effect.camera()"
-			[ref]="effect.effectRef()"
-			ngtCompound
-		>
+		<ngt-brightness-contrast-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-brightness-contrast-effect>

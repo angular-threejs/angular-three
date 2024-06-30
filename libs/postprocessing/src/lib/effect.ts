@@ -1,13 +1,21 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Directive, inject, input } from '@angular/core';
-import { injectNgtRef, injectNgtStore } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
-import { createNoopInjectionToken } from 'ngxtension/create-injection-token';
-import { BlendFunction, Effect } from 'postprocessing';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	Directive,
+	InjectionToken,
+	inject,
+	input,
+} from '@angular/core';
+import { injectStore } from 'angular-three-core-new';
+import { BlendFunction } from 'postprocessing';
 
-export const [injectDefaultEffectOptions, provideDefaultEffectOptions] = createNoopInjectionToken<{
-	blendFunction?: BlendFunction;
-	opacity?: number;
-}>('Default Effect options');
+export const NGTP_DEFAULT_EFFECT_OPTIONS = new InjectionToken<{ blendFunction?: BlendFunction; opacity?: number }>(
+	'NGTP_DEFAULT_EFFECT_OPTIONS',
+);
+export function provideDefaultEffectOptions(options: { blendFunction?: BlendFunction; opacity?: number }) {
+	return { provide: NGTP_DEFAULT_EFFECT_OPTIONS, useFactory: () => options };
+}
 
 @Component({
 	selector: 'ngtp-effect-blend-mode',
@@ -27,44 +35,14 @@ export class NgtpEffectBlendMode {
 
 @Directive({ standalone: true })
 export class NgtpEffect {
-	defaultEffectOptions = injectDefaultEffectOptions({ optional: true });
+	defaultEffectOptions = inject(NGTP_DEFAULT_EFFECT_OPTIONS, { optional: true });
 
-	effectRef = input(injectNgtRef<Effect>());
 	blendFunction = input(this.defaultEffectOptions?.blendFunction);
 	opacity = input(this.defaultEffectOptions?.opacity);
 
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	camera = this.store.select('camera');
 	invalidate = this.store.select('invalidate');
-
-	// constructor() {
-	// 	afterNextRender(() => {
-	// 		this.setBlendMode();
-	// 	});
-	// }
-	//
-	// private setBlendMode() {
-	// 	this.autoEffect(() => {
-	// 		const [effect, blendFunction, opacity, invalidate] = [
-	// 			this.effectRef().nativeElement,
-	// 			this.blendFunction(),
-	// 			this.opacity(),
-	// 			this.invalidate(),
-	// 		];
-	// 		if (!effect) return;
-	//
-	// 		if (blendFunction !== undefined) {
-	// 			effect.blendMode.blendFunction = blendFunction;
-	// 		}
-	//
-	// 		if (opacity !== undefined) {
-	// 			effect.blendMode.opacity.value = opacity;
-	// 		}
-	//
-	// 		invalidate();
-	// 	});
-	// }
 }
 
-export const NgtpEffectHostDirective = { directive: NgtpEffect, inputs: ['blendFunction', 'opacity', 'effectRef'] };
+export const NgtpEffectHostDirective = { directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] };

@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs, extend } from 'angular-three-core-new';
 import { ChromaticAberrationEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective } from '../effect';
 
@@ -12,12 +12,7 @@ export type ChromaticAberrationEffectOptions = Partial<
 @Component({
 	selector: 'ngtp-chromatic-aberration',
 	template: `
-		<ngt-chromatic-aberration-effect
-			*args="[options()]"
-			[camera]="effect.camera()"
-			[ref]="effect.effectRef()"
-			ngtCompound
-		>
+		<ngt-chromatic-aberration-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-chromatic-aberration-effect>

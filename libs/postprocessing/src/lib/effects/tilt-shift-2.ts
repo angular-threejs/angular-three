@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs, extend } from 'angular-three-core-new';
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import { Uniform } from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
@@ -97,7 +97,7 @@ extend({ TiltShift2Effect });
 	selector: 'ngtp-tilt-shift2',
 	standalone: true,
 	template: `
-		<ngt-tilt-shift2-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-tilt-shift2-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-tilt-shift2-effect>

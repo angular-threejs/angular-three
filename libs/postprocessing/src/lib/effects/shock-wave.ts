@@ -10,7 +10,7 @@ export type ShockWaveEffectOptions = Partial<NonNullable<ConstructorParameters<t
 @Component({
 	selector: 'ngtp-shock-wave',
 	template: `
-		<ngt-shock-wave-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-shock-wave-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-shock-wave-effect>

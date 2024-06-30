@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtRef, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, injectStore, pick } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { BlendFunction, LUT3DEffect } from 'postprocessing';
 import { Texture } from 'three';
@@ -20,7 +20,7 @@ export interface LUTOptions {
 @Component({
 	selector: 'ngtp-lut',
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" ngtCompound />
+		<ngt-primitive *args="[effect()]" [dispose]="null" />
 	`,
 	imports: [NgtArgs],
 	standalone: true,
@@ -28,13 +28,8 @@ export interface LUTOptions {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLUT {
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
-	invalidate = this.store.select('invalidate');
-
-	effectRef = input(injectNgtRef<LUT3DEffect>());
 	options = input({} as LUTOptions);
-	lut = pick(this.options, 'lut');
+	private lut = pick(this.options, 'lut');
 
 	effect = computed(() => {
 		const [lut, { lut: _, ...options }] = [this.lut(), this.options()];
@@ -42,13 +37,13 @@ export class NgtpLUT {
 	});
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const store = injectStore();
+		const _invalidate = store.select('invalidate');
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [effect, { lut, tetrahedralInterpolation }, invalidate] = [
-					this.effect(),
-					this.options(),
-					this.invalidate(),
-				];
+			autoEffect(() => {
+				const [effect, { lut, tetrahedralInterpolation }, invalidate] = [this.effect(), this.options(), _invalidate()];
 
 				if (tetrahedralInterpolation) effect.tetrahedralInterpolation = tetrahedralInterpolation;
 				if (lut) effect.lut = lut;

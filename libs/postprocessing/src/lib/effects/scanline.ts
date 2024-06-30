@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs, extend } from 'angular-three-core-new';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, ScanlineEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
@@ -15,7 +15,7 @@ const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
 @Component({
 	selector: 'ngtp-scanline',
 	template: `
-		<ngt-scanline-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-scanline-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-scanline-effect>

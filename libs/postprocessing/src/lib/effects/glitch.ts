@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector2, injectNgtRef, injectNgtStore, pick, vector2 } from 'angular-three';
+import { NgtArgs, NgtVector2, injectStore, pick, vector2 } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { GlitchEffect, GlitchMode } from 'postprocessing';
@@ -25,27 +25,22 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 	selector: 'ngtp-glitch',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpGlitch {
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
-	invalidate = this.store.select('invalidate');
-
-	effectRef = input(injectNgtRef<GlitchEffect>());
 	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });
 
-	active = pick(this.options, 'active');
-	mode = pick(this.options, 'mode');
+	private active = pick(this.options, 'active');
+	private mode = pick(this.options, 'mode');
 
-	delay = vector2(this.options, 'delay');
-	duration = vector2(this.options, 'duration');
-	chromaticAberrationOffset = vector2(this.options, 'chromaticAberrationOffset');
-	strength = vector2(this.options, 'strength');
+	private delay = vector2(this.options, 'delay');
+	private duration = vector2(this.options, 'duration');
+	private chromaticAberrationOffset = vector2(this.options, 'chromaticAberrationOffset');
+	private strength = vector2(this.options, 'strength');
 
 	effect = computed(() => {
 		const [
@@ -69,16 +64,20 @@ export class NgtpGlitch {
 	});
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const store = injectStore();
+		const invalidate = store.select('invalidate');
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const effect = this.effect();
 				return () => effect.dispose();
 			});
 
-			this.autoEffect(() => {
-				const [effect, invalidate, mode, active] = [this.effect(), this.invalidate(), this.mode(), this.active()];
+			autoEffect(() => {
+				const [effect, _invalidate, mode, active] = [this.effect(), invalidate(), this.mode(), this.active()];
 				effect.mode = active ? mode || GlitchMode.SPORADIC : GlitchMode.DISABLED;
-				invalidate();
+				_invalidate();
 			});
 		});
 	}

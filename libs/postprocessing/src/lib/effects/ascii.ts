@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { NgtArgs, injectNgtRef } from 'angular-three';
+import { NgtArgs } from 'angular-three-core-new';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Effect } from 'postprocessing';
 import { CanvasTexture, Color, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three';
@@ -126,15 +126,13 @@ const defaultOptions: ASCIIEffectOptions = {
 	selector: 'ngtp-ascii',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpASCII {
-	effectRef = input(injectNgtRef<ASCIIEffect>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-
 	effect = computed(() => new ASCIIEffect(this.options()));
 }

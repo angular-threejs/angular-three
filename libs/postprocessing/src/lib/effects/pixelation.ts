@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { NgtArgs, injectNgtRef, pick } from 'angular-three';
+import { NgtArgs, pick } from 'angular-three-core-new';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { PixelationEffect } from 'postprocessing';
 
@@ -9,7 +9,7 @@ export interface PixelationOptions {
 @Component({
 	selector: 'ngtp-pixelation',
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,9 +17,8 @@ export interface PixelationOptions {
 	imports: [NgtArgs],
 })
 export class NgtpPixelation {
-	effectRef = input(injectNgtRef<PixelationEffect>());
 	options = input({ granularity: 5 } as PixelationOptions, { transform: mergeInputs({ granularity: 5 }) });
-	granularity = pick(this.options, 'granularity');
+	private granularity = pick(this.options, 'granularity');
 
 	effect = computed(() => new PixelationEffect(this.granularity()));
 }

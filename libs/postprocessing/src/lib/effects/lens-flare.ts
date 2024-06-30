@@ -9,7 +9,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectBeforeRender, injectNgtRef, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three-core-new';
 import { easing } from 'maath';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -137,26 +137,14 @@ const defaultOptions: LensFlareOptions = {
 	selector: 'ngtp-lens-flare',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" ngtCompound />
+		<ngt-primitive *args="[effect()]" [dispose]="null" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLensFlare {
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
-	viewport = this.store.select('viewport');
-	raycaster = this.store.select('raycaster');
-	pointer = this.store.select('pointer');
-
-	composerApi = injectEffectComposerApi();
-
-	effectRef = input(injectNgtRef<LensFlareEffect>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-
-	projectedPosition = new Vector3();
-	mouse2d = new Vector2();
 
 	effect = computed(() => {
 		const { position: _, followMouse: __, smoothTime: ___, ...options } = this.options();
@@ -164,9 +152,20 @@ export class NgtpLensFlare {
 	});
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const composerApi = injectEffectComposerApi();
+
+		const store = injectStore();
+		const _viewport = store.select('viewport');
+		const _raycaster = store.select('raycaster');
+		const _pointer = store.select('pointer');
+
+		const projectedPosition = new Vector3();
+		const mouse2d = new Vector2();
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [effect, viewport] = [this.effect(), this.viewport()];
+			autoEffect(() => {
+				const [effect, viewport] = [this.effect(), _viewport()];
 				const iResolution = effect.uniforms.get('iResolution');
 				if (iResolution) {
 					iResolution.value.x = viewport.width;
@@ -176,14 +175,14 @@ export class NgtpLensFlare {
 		});
 
 		injectBeforeRender(({ delta }) => {
-			const [effect] = [this.effect()];
+			const effect = this.effect();
 			if (!effect) return;
 
 			const [{ followMouse, position, smoothTime }, pointer, { camera, scene }, raycaster] = [
 				this.options(),
-				this.pointer(),
-				this.composerApi(),
-				this.raycaster(),
+				_pointer(),
+				composerApi.state(),
+				_raycaster(),
 			];
 
 			const uLensPosition = effect.uniforms.get('lensPosition');
@@ -197,14 +196,14 @@ export class NgtpLensFlare {
 				uLensPosition.value.y = pointer.y;
 				target = 0;
 			} else {
-				this.projectedPosition.copy(position).project(camera);
-				if (this.projectedPosition.z > 1) return;
+				projectedPosition.copy(position).project(camera);
+				if (projectedPosition.z > 1) return;
 
-				uLensPosition.value.x = this.projectedPosition.x;
-				uLensPosition.value.y = this.projectedPosition.y;
+				uLensPosition.value.x = projectedPosition.x;
+				uLensPosition.value.y = projectedPosition.y;
 
-				this.mouse2d.set(this.projectedPosition.x, this.projectedPosition.y);
-				raycaster.setFromCamera(this.mouse2d, camera);
+				mouse2d.set(projectedPosition.x, projectedPosition.y);
+				raycaster.setFromCamera(mouse2d, camera);
 				const intersects = raycaster.intersectObjects(scene.children, true);
 				const { object } = intersects[0] ?? {};
 				if (object) {

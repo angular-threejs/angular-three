@@ -11,6 +11,11 @@ export const appRoutes: Route[] = [
 		loadChildren: () => import('./cannon/cannon.routes'),
 	},
 	{
+		path: 'postprocessing',
+		loadComponent: () => import('./postprocessing/postprocessing'),
+		loadChildren: () => import('./postprocessing/postprocessing.routes'),
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',

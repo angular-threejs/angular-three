@@ -7,7 +7,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtRef, is } from 'angular-three';
+import { NgtArgs, is } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GodRaysEffect } from 'postprocessing';
 import { Mesh, Points } from 'three';
@@ -21,27 +21,26 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	selector: 'ngtp-god-rays',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	imports: [NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGodRays {
-	autoEffect = injectAutoEffect();
-	composerApi = injectEffectComposerApi();
+	private composerApi = injectEffectComposerApi();
 
-	effectRef = input(injectNgtRef<GodRaysEffect>());
 	options = input({} as GodRaysOptions);
 
 	effect = computed(() => {
-		const [{ camera }, { sun, ...options }] = [this.composerApi(), this.options()];
+		const [{ camera }, { sun, ...options }] = [this.composerApi.state(), this.options()];
 		return new GodRaysEffect(camera, is.ref(sun) ? sun.nativeElement : sun, options);
 	});
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const [sun, effect] = [this.options().sun, this.effect()];
 				effect.lightSource = is.ref(sun) ? sun.nativeElement : sun;
 			});
