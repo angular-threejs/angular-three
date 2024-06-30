@@ -6,28 +6,35 @@ import {
 	RendererFactory2,
 	RendererType2,
 	effect,
+	getDebugNode,
 	inject,
 	makeEnvironmentProviders,
 } from '@angular/core';
-import { getLocalState } from '../instance';
+import { NgtInstanceNode, NgtLocalState, getLocalState, prepare } from '../instance';
 import { NgtInjectedRef } from '../ref';
 import { NgtState, injectNgtStore, provideNgtStore } from '../store';
 import { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
-import { NgtSignalStore } from '../utils/signal-store';
+import { NgtSignalStore, signalStore } from '../utils/signal-store';
 import { NgtAnyConstructor, injectNgtCatalogue } from './catalogue';
-import { HTML, ROUTED_SCENE, SPECIAL_PROPERTIES } from './constants';
+import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG, SPECIAL_PROPERTIES } from './constants';
 import { NGT_COMPOUND_PREFIXES, NgtRendererNode, NgtRendererState, NgtRendererStore } from './store';
-import { NgtCompoundClassId, NgtRendererClassId, attachThreeChild, processThreeEvent, removeThreeChild } from './utils';
+import {
+	NgtCompoundClassId,
+	NgtRendererClassId,
+	attachThreeChild,
+	kebabToPascal,
+	processThreeEvent,
+	removeThreeChild,
+} from './utils';
 
 @Injectable()
 export class NgtRendererFactory implements RendererFactory2 {
 	private delegateRendererFactory = inject(RendererFactory2, { skipSelf: true });
 	private catalogue = injectNgtCatalogue();
-	private store = injectNgtStore();
 
 	private renderers = new Map<string, Renderer2>();
-	private routedScenes = new Set<string>();
+	private routedSet = new Set<string>();
 
 	// NOTE: all Renderer instances under the same NgtCanvas share the same Store
 	private rendererStore = new NgtRendererStore({
@@ -48,7 +55,7 @@ export class NgtRendererFactory implements RendererFactory2 {
 		}
 
 		if ((type as NgtAnyRecord)['type'][ROUTED_SCENE]) {
-			this.routedScenes.add(type.id);
+			this.routedSet.add(type.id);
 		}
 
 		let renderer = this.renderers.get(type.id);
@@ -59,9 +66,8 @@ export class NgtRendererFactory implements RendererFactory2 {
 					delegateRenderer,
 					this.rendererStore,
 					this.catalogue,
-					this.store,
 					// setting root scene if there's no routed scene OR this component is the routed Scene
-					!hostElement && (this.routedScenes.size === 0 || this.routedScenes.has(type.id)),
+					!hostElement && (this.routedSet.size === 0 || this.routedSet.has(type.id)),
 				)),
 			);
 		}
@@ -74,117 +80,106 @@ export class NgtRenderer implements Renderer2 {
 		private delegate: Renderer2,
 		private store: NgtRendererStore,
 		private catalogue: Record<string, NgtAnyConstructor>,
-		private ngtStore: NgtSignalStore<NgtState>,
 		private isRoot = true,
 	) {}
 
 	createElement(name: string, namespace?: string | null | undefined) {
-		// NOTE: on first pass, we return the root scene as the root node
+		const element = this.delegate.createElement(name, namespace);
+
+		// on first pass, we return the Root Scene as the root node
 		if (this.isRoot) {
-			// no longer a root after this phase for the rest of the renderer life-cycle
 			this.isRoot = false;
-
-			// TODO: let's augment the scene with information related to the renderer
-
-			return this.ngtStore.snapshot.scene;
+			const node = this.store.createNode('three', this.store.rootScene);
+			node.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)?.injector;
+			return node;
 		}
 
-		// const element = this.delegate.createElement(name, namespace);
-		//
-		// // on first pass, we return the Root Scene as the root node
-		// if (this.isRoot) {
-		// 	this.isRoot = false;
-		// 	const node = this.store.createNode('three', this.store.rootScene);
-		// 	node.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)?.injector;
-		// 	return node;
-		// }
-		//
-		// if (this.store.isCompound(name)) {
-		// 	return this.store.createNode('compound', element);
-		// }
-		//
-		// if (name === SPECIAL_DOM_TAG.NGT_PORTAL) {
-		// 	return this.store.createNode('portal', element);
-		// }
-		//
-		// if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
-		// 	const instanceStore = signalStore({
-		// 		nativeProps: {},
-		// 		parent: null,
-		// 		objects: [],
-		// 		nonObjects: [],
-		// 	});
-		// 	return this.store.createNode(
-		// 		'three',
-		// 		Object.assign(
-		// 			{ __ngt_renderer__: { rawValue: undefined } },
-		// 			// NOTE: we assign this manually to a raw value node
-		// 			// because we say it is a 'three' node but we're not using prepare()
-		// 			{
-		// 				__ngt__: {
-		// 					isRaw: true,
-		// 					instanceStore,
-		// 					setNativeProps(key: string, value: any) {
-		// 						instanceStore.update((prev) => ({ nativeProps: { ...prev.nativeProps, [key]: value } }));
-		// 					},
-		// 					setParent(parent: NgtInstanceNode) {
-		// 						instanceStore.update({ parent });
-		// 					},
-		// 				},
-		// 			},
-		// 		),
-		// 	);
-		// }
-		//
-		// const [injectedArgs, injectedParent, store] = this.store.getCreationState();
-		//
-		// let parent = injectedParent as NgtRendererState[NgtRendererClassId.injectedParent];
-		// if (typeof injectedParent === 'string') {
-		// 	parent = store
-		// 		.get('scene')
-		// 		.getObjectByName(injectedParent) as unknown as NgtRendererState[NgtRendererClassId.injectedParent];
-		// }
-		//
-		// if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
-		// 	if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
-		// 	const object = injectedArgs[0];
-		// 	let localState = getLocalState(object);
-		// 	if (!localState) {
-		// 		// NOTE: if an object isn't already "prepared", we prepare it
-		// 		localState = getLocalState(prepare(object, { store, args: injectedArgs, primitive: true })) as NgtLocalState;
-		// 	}
-		// 	if (!localState.store) localState.store = store;
-		// 	const node = this.store.createNode('three', object);
-		// 	if (parent) {
-		// 		node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
-		// 	}
-		// 	return node;
-		// }
-		//
-		// const threeName = kebabToPascal(name.startsWith('ngt') ? name.slice(4) : name);
-		// const threeTarget = this.catalogue[threeName];
-		//
-		// // we have the THREE constructor here, handle it
-		// if (threeTarget) {
-		// 	const instance = prepare(new threeTarget(...injectedArgs), { store, args: injectedArgs });
-		// 	const node = this.store.createNode('three', instance);
-		// 	const localState = getLocalState(instance) as NgtLocalState;
-		//
-		// 	// auto-attach for geometry and material
-		// 	if (is.geometry(instance)) {
-		// 		localState.attach = ['geometry'];
-		// 	} else if (is.material(instance)) {
-		// 		localState.attach = ['material'];
-		// 	}
-		//
-		// 	if (parent) {
-		// 		node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
-		// 	}
-		//
-		// 	return node;
-		// }
-		//
-		// return this.store.createNode('dom', element);
+		if (this.store.isCompound(name)) {
+			return this.store.createNode('compound', element);
+		}
+
+		if (name === SPECIAL_DOM_TAG.NGT_PORTAL) {
+			return this.store.createNode('portal', element);
+		}
+
+		if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
+			const instanceStore = signalStore({
+				nativeProps: {},
+				parent: null,
+				objects: [],
+				nonObjects: [],
+			});
+			return this.store.createNode(
+				'three',
+				Object.assign(
+					{ __ngt_renderer__: { rawValue: undefined } },
+					// NOTE: we assign this manually to a raw value node
+					// because we say it is a 'three' node but we're not using prepare()
+					{
+						__ngt__: {
+							isRaw: true,
+							instanceStore,
+							setNativeProps(key: string, value: any) {
+								instanceStore.update((prev) => ({ nativeProps: { ...prev.nativeProps, [key]: value } }));
+							},
+							setParent(parent: NgtInstanceNode) {
+								instanceStore.update({ parent });
+							},
+						},
+					},
+				),
+			);
+		}
+
+		const [injectedArgs, injectedParent, store] = this.store.getCreationState();
+
+		let parent = injectedParent as NgtRendererState[NgtRendererClassId.injectedParent];
+		if (typeof injectedParent === 'string') {
+			parent = store
+				.get('scene')
+				.getObjectByName(injectedParent) as unknown as NgtRendererState[NgtRendererClassId.injectedParent];
+		}
+
+		if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
+			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
+			const object = injectedArgs[0];
+			let localState = getLocalState(object);
+			if (!localState) {
+				// NOTE: if an object isn't already "prepared", we prepare it
+				localState = getLocalState(prepare(object, { store, args: injectedArgs, primitive: true })) as NgtLocalState;
+			}
+			if (!localState.store) localState.store = store;
+			const node = this.store.createNode('three', object);
+			if (parent) {
+				node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
+			}
+			return node;
+		}
+
+		const threeName = kebabToPascal(name.startsWith('ngt') ? name.slice(4) : name);
+		const threeTarget = this.catalogue[threeName];
+
+		// we have the THREE constructor here, handle it
+		if (threeTarget) {
+			const instance = prepare(new threeTarget(...injectedArgs), { store, args: injectedArgs });
+			const node = this.store.createNode('three', instance);
+			const localState = getLocalState(instance) as NgtLocalState;
+
+			// auto-attach for geometry and material
+			if (is.geometry(instance)) {
+				localState.attach = ['geometry'];
+			} else if (is.material(instance)) {
+				localState.attach = ['material'];
+			}
+
+			if (parent) {
+				node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
+			}
+
+			return node;
+		}
+
+		return this.store.createNode('dom', element);
 	}
 
 	createComment(value: string) {
