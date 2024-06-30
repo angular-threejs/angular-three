@@ -1,4 +1,3 @@
-import { ElementRef } from '@angular/core';
 import {
 	AtomicName,
 	BodyProps,
@@ -21,7 +20,6 @@ import {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { NgtInjectedRef } from 'angular-three';
 import { NgtcCannonEvents, NgtcPhysicsApi } from 'angular-three-cannon';
 import { Euler, Object3D, Quaternion, Vector3 } from 'three';
 import { NgtcWorkerApi } from './types';
@@ -30,10 +28,10 @@ function capitalize<T extends string>(str: T): Capitalize<T> {
 	return (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
 }
 
-function getUUID(ref: ElementRef<Object3D>, index?: number) {
+function getUUID(body: Object3D, index?: number) {
 	const suffix = index === undefined ? '' : `/${index}`;
-	if (typeof ref === 'function') return null;
-	return ref && ref.nativeElement && `${ref.nativeElement.uuid}${suffix}`;
+	if (typeof body === 'function') return null;
+	return body && body && `${body.uuid}${suffix}`;
 }
 
 const e = new Euler();
@@ -45,7 +43,7 @@ function quaternionToRotation(callback: (v: Triplet) => void) {
 
 let incrementingId = 0;
 export function createSubscribe<T extends SubscriptionName>(
-	ref: ElementRef<Object3D>,
+	body: Object3D,
 	worker: CannonWorkerAPI,
 	subscriptions: Subscriptions,
 	type: T,
@@ -55,7 +53,7 @@ export function createSubscribe<T extends SubscriptionName>(
 	return (callback: (value: PropValue<T>) => void) => {
 		const id = incrementingId++;
 		subscriptions[id] = { [type]: callback };
-		const uuid = getUUID(ref, index);
+		const uuid = getUUID(body, index);
 		uuid && worker.subscribe({ props: { id, target, type }, uuid });
 		return () => {
 			delete subscriptions[id];
@@ -88,18 +86,19 @@ export function setupCollision(
 }
 
 export function makeBodyApi(
-	bodyRef: NgtInjectedRef<Object3D>,
-	{ subscriptions, bodies, scaleOverrides, worker }: NgtcPhysicsApi,
+	body: Object3D,
+	worker: CannonWorkerAPI,
+	{ subscriptions, bodies, scaleOverrides }: NgtcPhysicsApi,
 ) {
 	const makeAtomic = <T extends AtomicName>(type: T, index?: number) => {
 		const op: SetOpName<T> = `set${capitalize(type)}`;
 
 		return {
 			set: (value: PropValue<T>) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker()[op]({ props: value, uuid } as never);
+				const uuid = getUUID(body, index);
+				uuid && worker[op]({ props: value, uuid } as never);
 			},
-			subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
+			subscribe: createSubscribe(body, worker, subscriptions, type, index),
 		};
 	};
 
@@ -107,37 +106,37 @@ export function makeBodyApi(
 		const type = 'quaternion';
 		return {
 			copy: ({ w, x, y, z }: Quaternion) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().setQuaternion({ props: [x, y, z, w], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.setQuaternion({ props: [x, y, z, w], uuid });
 			},
 			set: (x: number, y: number, z: number, w: number) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().setQuaternion({ props: [x, y, z, w], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.setQuaternion({ props: [x, y, z, w], uuid });
 			},
-			subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
+			subscribe: createSubscribe(body, worker, subscriptions, type, index),
 		};
 	};
 
 	const makeRotation = (index?: number) => {
 		return {
 			copy: ({ x, y, z }: Vector3 | Euler) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().setRotation({ props: [x, y, z], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.setRotation({ props: [x, y, z], uuid });
 			},
 			set: (x: number, y: number, z: number) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().setRotation({ props: [x, y, z], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.setRotation({ props: [x, y, z], uuid });
 			},
 			subscribe: (callback: (value: Triplet) => void) => {
 				const id = incrementingId++;
 				const target = 'bodies';
 				const type = 'quaternion';
-				const uuid = getUUID(bodyRef, index);
+				const uuid = getUUID(body, index);
 				subscriptions[id] = { [type]: quaternionToRotation(callback) };
-				uuid && worker().subscribe({ props: { id, target, type }, uuid });
+				uuid && worker.subscribe({ props: { id, target, type }, uuid });
 				return () => {
 					delete subscriptions[id];
-					worker().unsubscribe({ props: id });
+					worker.unsubscribe({ props: id });
 				};
 			},
 		};
@@ -146,21 +145,21 @@ export function makeBodyApi(
 		const op: SetOpName<VectorName> = `set${capitalize(type)}`;
 		return {
 			copy: ({ x, y, z }: Vector3 | Euler) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker()[op]({ props: [x, y, z], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker[op]({ props: [x, y, z], uuid });
 			},
 			set: (x: number, y: number, z: number) => {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker()[op]({ props: [x, y, z], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker[op]({ props: [x, y, z], uuid });
 			},
-			subscribe: createSubscribe(bodyRef, worker(), subscriptions, type, index),
+			subscribe: createSubscribe(body, worker, subscriptions, type, index),
 		};
 	};
 
 	const makeRemove = (index?: number) => {
-		const uuid = getUUID(bodyRef, index);
+		const uuid = getUUID(body, index);
 		return () => {
-			if (uuid) worker().removeBodies({ uuid: [uuid] });
+			if (uuid) worker.removeBodies({ uuid: [uuid] });
 		};
 	};
 
@@ -171,24 +170,24 @@ export function makeBodyApi(
 			angularFactor: makeVec('angularFactor', index),
 			angularVelocity: makeVec('angularVelocity', index),
 			applyForce(force: Triplet, worldPoint: Triplet) {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().applyForce({ props: [force, worldPoint], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.applyForce({ props: [force, worldPoint], uuid });
 			},
 			applyImpulse(impulse: Triplet, worldPoint: Triplet) {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().applyImpulse({ props: [impulse, worldPoint], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.applyImpulse({ props: [impulse, worldPoint], uuid });
 			},
 			applyLocalForce(force: Triplet, localPoint: Triplet) {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().applyLocalForce({ props: [force, localPoint], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.applyLocalForce({ props: [force, localPoint], uuid });
 			},
 			applyLocalImpulse(impulse: Triplet, localPoint: Triplet) {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().applyLocalImpulse({ props: [impulse, localPoint], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.applyLocalImpulse({ props: [impulse, localPoint], uuid });
 			},
 			applyTorque(torque: Triplet) {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().applyTorque({ props: [torque], uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.applyTorque({ props: [torque], uuid });
 			},
 			collisionFilterGroup: makeAtomic('collisionFilterGroup', index),
 			collisionFilterMask: makeAtomic('collisionFilterMask', index),
@@ -203,12 +202,12 @@ export function makeBodyApi(
 			quaternion: makeQuaternion(index),
 			rotation: makeRotation(index),
 			scaleOverride(scale) {
-				const uuid = getUUID(bodyRef, index);
+				const uuid = getUUID(body, index);
 				if (uuid) scaleOverrides[uuid] = new Vector3(...scale);
 			},
 			sleep() {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().sleep({ uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.sleep({ uuid });
 			},
 			sleepSpeedLimit: makeAtomic('sleepSpeedLimit', index),
 			sleepTimeLimit: makeAtomic('sleepTimeLimit', index),
@@ -216,8 +215,8 @@ export function makeBodyApi(
 			velocity: makeVec('velocity', index),
 			remove: makeRemove(index),
 			wakeUp() {
-				const uuid = getUUID(bodyRef, index);
-				uuid && worker().wakeUp({ uuid });
+				const uuid = getUUID(body, index);
+				uuid && worker.wakeUp({ uuid });
 			},
 		};
 	}

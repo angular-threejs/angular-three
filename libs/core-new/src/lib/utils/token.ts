@@ -1,5 +1,6 @@
 import { InjectionToken, Type, forwardRef, inject } from '@angular/core';
 import { CreateInjectionTokenReturn } from 'ngxtension/create-injection-token';
+import { NgtSignalStore } from './signal-store';
 
 export function createInjectFn<
 	TToken extends InjectionToken<any>,
@@ -8,17 +9,21 @@ export function createInjectFn<
 	return ((options) => inject(token, options)) as CreateInjectionTokenReturn<TValue>[0];
 }
 
-export function createApiToken<TObject extends { api: any }, TApi = TObject extends { api: infer Api } ? Api : never>(
+export function createApiToken<TObject extends object, TApiFunction extends (obj: TObject) => NgtSignalStore<object>>(
+	tokenDescription: string,
 	forwarded: () => Type<TObject>,
+	apiFactory: TApiFunction,
 ) {
-	const apiToken = new InjectionToken<TApi>('API for ' + forwarded().name);
+	type TApi = ReturnType<TApiFunction>;
+
+	const apiToken = new InjectionToken<TApi>('API for ' + tokenDescription);
 	const injectFn = createInjectFn(apiToken);
 
 	const provideFn = () => ({
 		provide: apiToken,
-		useFactory: (obj: TObject) => obj.api,
+		useFactory: apiFactory,
 		deps: [forwardRef(forwarded)],
 	});
 
-	return [injectFn, provideFn];
+	return [injectFn, provideFn] as const;
 }

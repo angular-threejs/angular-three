@@ -2,17 +2,18 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	DestroyRef,
 	ElementRef,
 	computed,
 	effect,
+	inject,
 	input,
 	output,
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtCanvas, extend, injectBeforeRender, injectStore } from 'angular-three-core-new';
+import { NgtArgs, NgtCanvas, NgtPortal, extend, injectBeforeRender, injectStore } from 'angular-three-core-new';
 import * as THREE from 'three';
-import { Mesh } from 'three';
 
 extend(THREE);
 
@@ -31,6 +32,12 @@ export class Cube {
 	position = input([0, 0, 0]);
 
 	clicked = output();
+
+	constructor() {
+		console.log('created');
+
+		inject(DestroyRef).onDestroy(console.log.bind(console, 'destroyed'));
+	}
 }
 
 @Component({
@@ -61,8 +68,11 @@ export class ArbitraryShape {
 			<ng-content select="[child]" />
 		</ngt-mesh>
 
-		<ng-content />
+		<ng-content>
+			<app-cube [position]="[4, 1.5, -4]" />
+		</ng-content>
 	`,
+	imports: [Cube],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -115,6 +125,12 @@ export class ArbitraryPlane {
 			}
 		</app-arbitrary-shape>
 
+		<ngt-portal [container]="portalScene">
+			<ngt-mesh>
+				<ngt-box-geometry *args="[2, 2, 2]" />
+			</ngt-mesh>
+		</ngt-portal>
+
 		<app-arbitrary-shape [position]="[-2, 2, 0]" color="hotpink">
 			<ngt-torus-geometry *args="[2, 0.4, 12, 48]" (attached)="onAttach($event)" />
 		</app-arbitrary-shape>
@@ -133,7 +149,8 @@ export class ArbitraryPlane {
 			</app-arbitrary-shape>
 		</app-cube-with-content>
 	`,
-	imports: [Cube, ArbitraryShape, CubeWithContent, NgtArgs, ArbitraryPlane],
+
+	imports: [Cube, ArbitraryShape, CubeWithContent, NgtArgs, ArbitraryPlane, NgtPortal],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -143,7 +160,9 @@ export class Scene {
 	active = signal(false);
 	scale = computed(() => (this.active() ? 1.5 : 1));
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	portalScene = new THREE.Scene();
+
+	mesh = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	bigPlane = signal(true);
 	cubeArgs = computed(() => (this.bigPlane() ? [2, 2, 2] : [1, 1, 1]));

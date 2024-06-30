@@ -1,32 +1,43 @@
-import { ElementRef, Injector, afterNextRender } from '@angular/core';
+import {
+	ElementRef,
+	Injector,
+	Signal,
+	WritableSignal,
+	afterNextRender,
+	computed,
+	isSignal,
+	signal,
+	untracked,
+} from '@angular/core';
 import { BodyShapeType } from '@pmndrs/cannon-worker-api';
-import { injectNgtRef } from 'angular-three';
 import { injectPhysicsApi } from 'angular-three-cannon';
-import { injectNgtcDebugApi } from 'angular-three-cannon/debug';
+import { injectDebugApi } from 'angular-three-cannon/debug';
+import { resolveRef } from 'angular-three-core-new';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DynamicDrawUsage, InstancedMesh, Object3D } from 'three';
-import { NgtcArgFn, NgtcBodyPropsMap, NgtcBodyReturn, NgtcGetByIndex } from './types';
+import { NgtcArgFn, NgtcBodyPropsMap, NgtcBodyPublicApi, NgtcGetByIndex } from './types';
 import { defaultTransformArgs, makeBodyApi, prepare, setupCollision } from './utils';
 
 export interface NgtcBodyOptions<TShape extends BodyShapeType> {
 	transformArgs?: NgtcArgFn<NgtcBodyPropsMap[TShape]>;
-	ref?: ElementRef<Object3D>;
 	injector?: Injector;
 }
 
 function createInjectBody<TShape extends BodyShapeType>(type: TShape) {
 	return <TObject extends Object3D>(
 		getPropFn: NgtcGetByIndex<NgtcBodyPropsMap[TShape]>,
+		ref: ElementRef<TObject> | TObject | Signal<ElementRef<TObject> | TObject | undefined>,
 		options?: NgtcBodyOptions<TShape>,
-	) => injectBody<TShape, TObject>(type, getPropFn, options);
+	) => injectBody<TShape, TObject>(type, getPropFn, ref, options);
 }
 
 function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 	type: TShape,
 	getPropFn: NgtcGetByIndex<NgtcBodyPropsMap[TShape]>,
-	{ transformArgs, ref, injector }: NgtcBodyOptions<TShape> = {},
-): NgtcBodyReturn<TObject> {
+	ref: ElementRef<TObject> | TObject | Signal<ElementRef<TObject> | TObject | undefined>,
+	{ transformArgs, injector }: NgtcBodyOptions<TShape> = {},
+): Signal<NgtcBodyPublicApi | null> {
 	return assertInjector(injectBody, injector, () => {
 		const physicsApi = injectPhysicsApi({ optional: true });
 
@@ -35,23 +46,35 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 		}
 
 		const autoEffect = injectAutoEffect();
-		const debugApi = injectNgtcDebugApi({ optional: true });
+		const debugApi = injectDebugApi({ optional: true });
 
-		const { add: addToDebug, remove: removeFromDebug } = debugApi || {};
+		const { add: addToDebug, remove: removeFromDebug } = debugApi?.snapshot || {};
 		const transform = transformArgs ?? defaultTransformArgs[type];
-		const bodyRef = injectNgtRef(ref);
-		const bodyResult = { ref: bodyRef, api: makeBodyApi(bodyRef, physicsApi) };
+		const worker = physicsApi.select('worker');
+		const bodyRef = isSignal(ref) ? ref : signal(ref);
+		const body = computed(() => resolveRef(bodyRef()));
+		const api = computed(() => {
+			const [_body, _worker, snapshot] = [body(), worker(), physicsApi.snapshot];
+			if (!_body || !_worker) return null;
+			return makeBodyApi(_body, _worker, snapshot);
+		});
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const currentWorker = physicsApi.worker();
+				const currentWorker = worker();
 				if (!currentWorker) return;
 
-				if (!bodyResult.ref.nativeElement) {
-					bodyResult.ref.nativeElement = new Object3D();
+				const object = body();
+
+				if (!isSignal(ref) && !object) {
+					untracked(() => {
+						(bodyRef as WritableSignal<TObject | undefined>).set(resolveRef(ref));
+					});
+					return;
 				}
 
-				const object = bodyResult.ref.nativeElement;
+				if (!object) return;
+
 				const [uuid, props] = (() => {
 					let uuids: string[] = [];
 					let temp: Object3D;
@@ -68,14 +91,14 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 							const props = getPropFn(index);
 							if (temp) {
 								prepare(temp, props);
-								(object as InstancedMesh).setMatrixAt(index, temp.matrix);
-								(object as InstancedMesh).instanceMatrix.needsUpdate = true;
+								(object as unknown as InstancedMesh).setMatrixAt(index, temp.matrix);
+								(object as unknown as InstancedMesh).instanceMatrix.needsUpdate = true;
 							} else {
 								prepare(object, props);
 							}
-							physicsApi.refs[id] = object;
+							physicsApi.snapshot.refs[id] = object;
 							addToDebug?.(id, props, type);
-							setupCollision(physicsApi.events, props, id);
+							setupCollision(physicsApi.snapshot.events, props, id);
 							// @ts-expect-error - if args is undefined, there's default
 							return { ...props, args: transform(props.args) };
 						}),
@@ -92,16 +115,16 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 
 				return () => {
 					uuid.forEach((id) => {
-						delete physicsApi.refs[id];
+						delete physicsApi.snapshot.refs[id];
 						removeFromDebug?.(id);
-						delete physicsApi.events[id];
+						delete physicsApi.snapshot.events[id];
 					});
 					currentWorker.removeBodies({ uuid });
 				};
 			});
 		});
 
-		return bodyResult as NgtcBodyReturn<TObject>;
+		return api;
 	});
 }
 

@@ -6,11 +6,16 @@ export const appRoutes: Route[] = [
 		loadComponent: () => import('./core-new-sink/core-new-sink'),
 	},
 	{
+		path: 'cannon',
+		loadComponent: () => import('./cannon/cannon'),
+		loadChildren: () => import('./cannon/cannon.routes'),
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',
 		// redirectTo: 'soba',
-		redirectTo: 'core-new-sink',
+		redirectTo: 'cannon',
 		pathMatch: 'full',
 	},
 ];

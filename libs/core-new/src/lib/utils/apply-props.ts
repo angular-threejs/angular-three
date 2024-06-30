@@ -33,7 +33,7 @@ export function applyProps(obj: NgtAnyRecord, props: NgtAnyRecord) {
 
 	// filter equals, and reserved props
 	const localState = getLocalState(obj);
-	const rootState = localState?.store.snapshot ?? ({} as NgtState);
+	const rootState = localState?.store?.snapshot ?? ({} as NgtState);
 	const changes = diffProps(obj, props);
 
 	for (let i = 0; i < changes.length; i++) {

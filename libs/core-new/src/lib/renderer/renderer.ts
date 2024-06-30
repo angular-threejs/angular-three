@@ -4,7 +4,7 @@ import { Object3D } from 'three';
 import { NgtArgs } from '../args';
 import { removeInteractivity } from '../events';
 import { NgtInstanceNode, getLocalState, getRootStore, invalidateInstance, prepare } from '../instance';
-import { NgtState, injectStore } from '../store';
+import { NGT_STORE, NgtState, injectStore } from '../store';
 import { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { attach, detach } from '../utils/attach';
@@ -30,6 +30,7 @@ const EVENTS = {
 const ELEMENTS = {
 	primitive: 'ngt-primitive',
 	value: 'ngt-value',
+	portal: 'ngt-portal',
 } as const;
 
 interface NgtRendererState {
@@ -46,11 +47,18 @@ type NgtInstanceRendererNode = NgtInstanceNode<NgtAnyRecord> & {
 type NgtCommentRendererNode = Comment & {
 	__ngt_renderer__: NgtRendererState & { type: 'comment' | 'commentForElement'; attributes?: NgtAnyRecord };
 };
-type NgtRendererNode = NgtInstanceRendererNode | NgtCommentRendererNode;
+type NgtPortalRendererNode = Comment & {
+	__ngt_renderer__: NgtRendererState & {
+		type: 'portal';
+		attributes?: NgtAnyRecord;
+		container?: NgtInstanceRendererNode;
+	};
+};
+type NgtRendererNode = NgtInstanceRendererNode | NgtCommentRendererNode | NgtPortalRendererNode;
 
 function createRendererNode(
 	node: NgtInstanceNode | Comment,
-	data: NgtRendererState & { type: 'comment' | 'commentForElement' | 'three' },
+	data: NgtRendererState & { type: 'comment' | 'commentForElement' | 'three' | 'portal' },
 ): NgtRendererNode {
 	if ('__ngt_renderer__' in node) {
 		Object.assign(node.__ngt_renderer__, data);
@@ -79,6 +87,10 @@ function isCommentNode(node: NgtRendererNode): node is NgtCommentRendererNode {
 	);
 }
 
+function isPortalNode(node: NgtRendererNode): node is NgtPortalRendererNode {
+	return isRendererNode(node) && node.__ngt_renderer__.type === 'portal';
+}
+
 function attachThreeChild(parent: NgtInstanceRendererNode, child: NgtInstanceRendererNode) {
 	const parentLocalState = getLocalState(parent);
 	const childLocalState = getLocalState(child);
@@ -92,6 +104,19 @@ function attachThreeChild(parent: NgtInstanceRendererNode, child: NgtInstanceRen
 
 	if (!childLocalState.store) {
 		childLocalState.store = parentLocalState.store;
+
+		// also check the children of child to assign the same store
+		const grandChildren = [...untracked(childLocalState.objects), ...untracked(childLocalState.nonObjects)];
+		for (let i = 0; i < grandChildren.length; i++) {
+			const grandChild = grandChildren[i];
+			const grandChildLocalState = getLocalState(grandChild);
+			if (
+				grandChildLocalState &&
+				(!grandChildLocalState.store || grandChildLocalState.store !== childLocalState.store)
+			) {
+				grandChildLocalState.store = childLocalState.store;
+			}
+		}
 	}
 
 	if (childLocalState.attach) {
@@ -258,7 +283,7 @@ function processThreeEvent(
 		if (localState) {
 			localState.eventCount -= 1;
 			const rootStore = getRootStore(target);
-			const interactions = rootStore?.get('internal', 'interaction') || [];
+			const interactions = rootStore?.snapshot.internal?.interaction || [];
 			const index = interactions.findIndex((obj) => obj.uuid === target['uuid']);
 			if (index >= 0) interactions.splice(index, 1);
 		}
@@ -282,29 +307,38 @@ export class NgtRendererFactory implements RendererFactory2 {
 		if (!renderer) {
 			this.renderers.set(
 				type.id,
-				(renderer = new NgtRenderer(delegateRenderer, this.rootStore, this.catalogue, this.document, !hostElement)),
+				(renderer = new NgtRenderer(delegateRenderer, this.rootStore, this.catalogue, this.document, hostElement)),
 			);
 		}
+
 		return renderer;
 	}
 }
 
 export class NgtRenderer implements Renderer2 {
 	// Each renderer instance keeps track of its own argsComments
-	private argsComments: NgtRendererNode[] = [];
+	private argsComments: NgtCommentRendererNode[] = [];
 
 	constructor(
 		private delegateRenderer: Renderer2,
 		private rootStore: NgtSignalStore<NgtState>,
 		private catalogue: Record<string, NgtAnyConstructor>,
 		private document: Document,
-		private isRoot = false,
+		// NOTE: this closest host element (component) that this renderer is attached to
+		private hostElement: NgtRendererNode,
 	) {}
 
 	createElement(name: string, namespace?: string | null | undefined) {
-		if (this.isRoot) {
-			this.isRoot = false;
-			return createRendererNode(this.rootStore.snapshot.scene, { type: 'three', name: 'Scene' });
+		if (!this.hostElement) {
+			const hostRendererNode = createRendererNode(this.rootStore.snapshot.scene, { type: 'three', name: 'Scene' });
+			this.hostElement = hostRendererNode;
+			return hostRendererNode;
+		}
+
+		// portal: <ngt-portal />
+		if (name === ELEMENTS.portal) {
+			const commentForPortal = this.delegateRenderer.createComment(`comment-${name}`);
+			return createRendererNode(commentForPortal, { type: 'portal', name });
 		}
 
 		// Raw value: <ngt-value />
@@ -312,27 +346,25 @@ export class NgtRenderer implements Renderer2 {
 			// we'll create a comment node
 			const commentForValue = this.delegateRenderer.createComment(`comment-ngt-value`);
 			// then we'll treat it as an NgtInstanceNode with _ngt_ (i.e: prepare)
-			const preparedComment = prepare(commentForValue, { store: this.rootStore, isRaw: true });
+			const preparedComment = prepare(commentForValue, { isRaw: true });
 			// then we'll create a renderer instance node
 			return createRendererNode(preparedComment, { type: 'three', name: 'RawValue' });
 		}
 
-		const injectedArgs = this.getArgs();
+		// the *args
+		const injectedArgs = this.getInjectedArgs();
 
 		// Primitive: <ngt-primitive />
 		if (name === ELEMENTS.primitive) {
 			const args = injectedArgs?.value || [];
-			if (!args[0]) throw new Error(`[NGT] Primitive element requires a args.`);
+			if (!args[0]) throw new Error(`[NGT] Primitive element requires a args. Use control-flow if needed`);
 
 			const primitive = args[0];
-			let localState = getLocalState(primitive);
 
-			if (!localState) {
-				// NOTE: if an object isn't already "prepared", we prepare it
-				localState = getLocalState(prepare(primitive, { store: this.rootStore, isPrimitive: true }));
+			if (!is.instance(primitive)) {
+				prepare(primitive, { isPrimitive: true });
 			}
 
-			if (localState && !localState.store) localState.store = this.rootStore;
 			return createRendererNode(primitive, { type: 'three', name: 'Primitive' });
 		}
 
@@ -342,7 +374,7 @@ export class NgtRenderer implements Renderer2 {
 
 			if (threeClass) {
 				const args = injectedArgs?.value || [];
-				const three = prepare(new threeClass(...args), { store: this.rootStore });
+				const three = prepare(new threeClass(...args));
 				const localState = getLocalState(three);
 
 				if (localState) {
@@ -373,7 +405,7 @@ export class NgtRenderer implements Renderer2 {
 		// we attach a callback so we can specifically call these in the directives
 		Object.assign(rendererNode, {
 			__ngt_renderer_tracking_comment__: () => {
-				this.argsComments.push(rendererNode);
+				this.argsComments.push(rendererNode as NgtCommentRendererNode);
 			},
 		});
 
@@ -395,6 +427,13 @@ export class NgtRenderer implements Renderer2 {
 					// NOTE: skip if child already attached to a parent
 					if (childNode.__ngt_renderer__.parentNode && isInstanceNode(childNode.__ngt_renderer__.parentNode)) return;
 					attachThreeChild(parentNode, childNode);
+
+					const localState = getLocalState(parentNode);
+					// if the parent has a parent renderer node but does not have an instance parent node; rerun append
+					if (localState && !untracked(localState.parent) && parentNode.__ngt_renderer__.parentNode) {
+						return this.appendChild(parentNode.__ngt_renderer__.parentNode, parentNode);
+					}
+
 					return;
 				}
 
@@ -416,6 +455,13 @@ export class NgtRenderer implements Renderer2 {
 					}
 				}
 
+				if (isPortalNode(childNode)) {
+					if (!childNode.__ngt_renderer__.parentNode || childNode.__ngt_renderer__.parentNode !== parentNode) {
+						childNode.__ngt_renderer__.parentNode = parentNode;
+						return;
+					}
+				}
+
 				return;
 			}
 
@@ -431,6 +477,29 @@ export class NgtRenderer implements Renderer2 {
 				}
 
 				childNode.__ngt_renderer__.parentNode = parentNode;
+				return;
+			}
+
+			if (isPortalNode(parentNode)) {
+				if (!parentNode.__ngt_renderer__.container) {
+					const portalContainer = this.getPortalContainer(parentNode);
+					if (portalContainer) {
+						parentNode.__ngt_renderer__.container = portalContainer as NgtInstanceRendererNode;
+					}
+				}
+
+				if (isInstanceNode(childNode)) {
+					if (!parentNode.__ngt_renderer__.container) {
+						childNode.__ngt_renderer__.parentNode = parentNode;
+						return;
+					}
+
+					return this.appendChild(parentNode.__ngt_renderer__.container, childNode);
+				}
+
+				if (isCommentNode(childNode)) {
+					childNode.__ngt_renderer__.parentNode = parentNode;
+				}
 				return;
 			}
 		}
@@ -720,14 +789,14 @@ export class NgtRenderer implements Renderer2 {
 		}
 	}
 
-	private getArgs() {
+	private getInjectedArgs() {
 		let directive: NgtArgs | undefined;
 		const destroyed = [];
 
 		let i = this.argsComments.length - 1;
 		while (i >= 0) {
 			const comment = this.argsComments[i];
-			if (comment.__ngt_renderer__.destroyed) {
+			if (!comment.__ngt_renderer__ || comment.__ngt_renderer__.destroyed) {
 				destroyed.push(i);
 				i--;
 				continue;
@@ -753,39 +822,26 @@ export class NgtRenderer implements Renderer2 {
 		return directive;
 	}
 
-	private getClosestStore() {
-		let store: NgtSignalStore<NgtState> | undefined;
-		const destroyed = [];
-		// we only care about the portal states because NgtStore only differs per Portal
-		// let i = this.portalCommentsNodes.length - 1;
-		// while (i >= 0) {
-		// 	// loop through the portal state backwards to find the closest NgtStore
-		// 	const portal = this.portalCommentsNodes[i];
-		// 	if (portal.__ngt_renderer__[NgtRendererClassId.destroyed]) {
-		// 		destroyed.push(i);
-		// 		i--;
-		// 		continue;
-		// 	}
-		//
-		// 	const injector = portal.__ngt_renderer__[NgtRendererClassId.injectorFactory]();
-		// 	if (!injector) {
-		// 		i--;
-		// 		continue;
-		// 	}
-		// 	const instance = injector.get(NGT_STORE, null);
-		// 	// only the instance with previousRoot should pass
-		// 	if (instance && instance.get('previousRoot')) {
-		// 		store = instance;
-		// 		break;
-		// 	}
-		// 	i--;
-		// }
-		//
-		// destroyed.forEach((index) => {
-		// 	this.portalCommentsNodes.splice(index, 1);
-		// });
-		//
-		// return store || this.rootState.store;
+	private getPortalContainer(portalNode: NgtPortalRendererNode) {
+		const injector = getDebugNode(portalNode)?.injector;
+		if (!injector) return null;
+
+		const store = injector.get(NGT_STORE, null);
+		if (!store) return null;
+
+		let portalContainer = store.snapshot.scene as unknown as NgtRendererNode;
+
+		if (!portalContainer) return null;
+
+		if (!isRendererNode(portalContainer)) {
+			portalContainer = createRendererNode(portalContainer, {
+				type: 'three',
+				name: 'PortalScene',
+				parentNode: portalNode,
+			});
+		}
+
+		return portalContainer;
 	}
 }
 

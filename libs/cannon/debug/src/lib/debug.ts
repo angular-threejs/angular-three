@@ -1,7 +1,7 @@
 import { Directive, afterNextRender, input } from '@angular/core';
 import { BodyProps, BodyShapeType, propsToBody } from '@pmndrs/cannon-worker-api';
-import { createApiToken, injectBeforeRender, injectNgtStore } from 'angular-three';
 import { injectPhysicsApi } from 'angular-three-cannon';
+import { createApiToken, injectBeforeRender, injectStore, signalStore } from 'angular-three-core-new';
 import { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -19,25 +19,41 @@ function getMatrix(o: Object3D) {
 	return o.matrix;
 }
 
-export const [injectNgtcDebugApi, provideNgtcDebugApi] = createApiToken(() => NgtcDebug);
+export const [injectDebugApi, provideDebugApi] = createApiToken(
+	'NGTC_DEBUG',
+	() => NgtcDebug,
+	(debug) =>
+		signalStore({
+			add: (uuid: string, props: BodyProps, type: BodyShapeType) => {
+				const body = propsToBody({ uuid, props, type });
+				debug.bodies.push(body);
+				debug.bodyMap[uuid] = body;
+			},
+			remove: (uuid: string) => {
+				const debugBodyIndex = debug.bodies.indexOf(debug.bodyMap[uuid]);
+				if (debugBodyIndex > -1) debug.bodies.splice(debugBodyIndex, 1);
+				delete debug.bodyMap[uuid];
+			},
+		}),
+);
 
-export interface NgtcDebugInputs {
+export interface NgtcDebugOptions {
 	enabled: boolean;
 	color: string;
 	impl: typeof CannonDebugger;
 	scale: number;
 }
 
-const defaultOptions: NgtcDebugInputs = {
+const defaultOptions: NgtcDebugOptions = {
 	enabled: true,
 	scale: 1,
 	color: 'black',
 	impl: CannonDebugger,
 };
 
-@Directive({ selector: 'ngtc-physics[debug]', standalone: true, providers: [provideNgtcDebugApi()] })
+@Directive({ selector: 'ngtc-physics[debug]', standalone: true, providers: [provideDebugApi()] })
 export class NgtcDebug {
-	private store = injectNgtStore();
+	private store = injectStore();
 	private physicsApi = injectPhysicsApi();
 
 	debug = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
@@ -45,23 +61,10 @@ export class NgtcDebug {
 	private defaultScene = this.store.select('scene');
 
 	private scene = new Scene();
-	private bodies: Body[] = [];
-	private bodyMap: Record<string, Body> = {};
+	bodies: Body[] = [];
+	bodyMap: Record<string, Body> = {};
 
 	private cannonDebugger!: ReturnType<typeof CannonDebugger>;
-
-	api = {
-		add: (uuid: string, props: BodyProps, type: BodyShapeType) => {
-			const body = propsToBody({ uuid, props, type });
-			this.bodies.push(body);
-			this.bodyMap[uuid] = body;
-		},
-		remove: (uuid: string) => {
-			const debugBodyIndex = this.bodies.indexOf(this.bodyMap[uuid]);
-			if (debugBodyIndex > -1) this.bodies.splice(debugBodyIndex, 1);
-			delete this.bodyMap[uuid];
-		},
-	};
 
 	constructor() {
 		afterNextRender(() => {
@@ -74,7 +77,7 @@ export class NgtcDebug {
 
 		injectBeforeRender(() => {
 			if (!this.cannonDebugger) return;
-			const refs = this.physicsApi.refs;
+			const refs = this.physicsApi.snapshot.refs;
 			for (const uuid in this.bodyMap) {
 				const ref = refs[uuid];
 				const body = this.bodyMap[uuid];

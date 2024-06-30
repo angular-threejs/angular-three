@@ -2,21 +2,14 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	DestroyRef,
-	Directive,
 	EmbeddedViewRef,
 	Injector,
 	NgZone,
-	Signal,
-	TemplateRef,
-	ViewContainerRef,
 	afterNextRender,
 	computed,
-	contentChild,
 	inject,
 	input,
-	signal,
 	untracked,
-	viewChild,
 } from '@angular/core';
 import {
 	CannonWorkerAPI,
@@ -33,7 +26,7 @@ import {
 	WorkerFrameMessage,
 	WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { createApiToken, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { createApiToken, injectBeforeRender, injectStore, signalStore } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { InstancedMesh, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
@@ -66,8 +59,6 @@ function unique() {
 	return (value: unknown) => (values.includes(value) ? false : !!values.push(value));
 }
 
-export const [injectPhysicsApi, providePhysicsApi] = createApiToken(() => NgtcPhysics);
-
 type NgtcCannonEvent = CollideBeginEvent | CollideEndEvent | CollideEvent | RayhitEvent;
 type NgtcCallbackByType<T extends { type: string }> = {
 	[K in T['type']]?: T extends { type: K } ? (e: T) => void : never;
@@ -90,15 +81,14 @@ export interface NgtcPhysicsApi {
 	refs: Refs;
 	scaleOverrides: ScaleOverrides;
 	subscriptions: Subscriptions;
-	worker: Signal<CannonWorkerAPI>;
+	worker: CannonWorkerAPI | null;
 }
 
-@Directive({ selector: 'ng-template[physicsContent]', standalone: true })
-export class NgtcPhysicsContent {
-	static ngTemplateContextGuard(_: NgtcPhysicsContent, ctx: unknown): ctx is { $implicit: NgtcPhysicsApi } {
-		return true;
-	}
-}
+export const [injectPhysicsApi, providePhysicsApi] = createApiToken(
+	'NGTC_PHYSICS',
+	() => NgtcPhysics,
+	(physics) => physics.api,
+);
 
 const defaultOptions: NgtcPhysicsInputs = {
 	allowSleep: false,
@@ -123,7 +113,7 @@ const defaultOptions: NgtcPhysicsInputs = {
 	selector: 'ngtc-physics',
 	standalone: true,
 	template: `
-		<ng-container #anchor />
+		<ng-content />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [providePhysicsApi()],
@@ -132,33 +122,29 @@ export class NgtcPhysics {
 	private zone = inject(NgZone);
 	private injector = inject(Injector);
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private content = contentChild.required(NgtcPhysicsContent, { read: TemplateRef });
-	private anchor = viewChild.required('anchor', { read: ViewContainerRef });
-
 	private invalidate = this.store.select('invalidate');
-	private worker = signal<CannonWorkerAPI>(null!);
 
-	api: NgtcPhysicsApi = {
+	api = signalStore<NgtcPhysicsApi>({
 		bodies: {},
 		events: {},
 		refs: {},
 		scaleOverrides: {},
 		subscriptions: {},
-		worker: this.worker.asReadonly(),
-	};
+		worker: null,
+	});
+	private worker = this.api.select('worker');
 
 	private ref?: EmbeddedViewRef<{ $implicit: NgtcPhysicsApi }>;
 
 	constructor() {
 		afterNextRender(() => {
 			this.zone.runOutsideAngular(() => {
-				this.worker.set(new CannonWorkerAPI(this.options()));
+				this.api.update({ worker: new CannonWorkerAPI(this.options()) });
 				this.connectWorker();
-				this.renderContent();
 				this.updateWorkerState('axisIndex');
 				this.updateWorkerState('broadphase');
 				this.updateWorkerState('gravity');
@@ -174,7 +160,7 @@ export class NgtcPhysics {
 	}
 
 	private connectWorker() {
-		this.autoEffect((injector) => {
+		this.autoEffect(() => {
 			const worker = this.worker() as CannonWorkerAPI & {
 				on: (event: string, cb: (...args: any[]) => void) => void;
 				removeAllListeners: () => void;
@@ -195,14 +181,6 @@ export class NgtcPhysics {
 				worker.terminate();
 				worker.removeAllListeners();
 			};
-		});
-	}
-
-	private renderContent() {
-		if (this.ref) this.ref.destroy();
-		untracked(() => {
-			this.ref = this.anchor().createEmbeddedView(this.content(), { $implicit: this.api }, { injector: this.injector });
-			this.ref.detectChanges();
 		});
 	}
 
@@ -231,7 +209,7 @@ export class NgtcPhysics {
 	}
 
 	private collideHandler({ body, contact: { bi, bj, ...contactRest }, target, ...rest }: WorkerCollideEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this.api.snapshot;
 		const cb = events[target]?.collide;
 		if (cb) {
 			cb({ body: refs[body], contact: { bi: refs[bi], bj: refs[bj], ...contactRest }, target: refs[target], ...rest });
@@ -239,7 +217,7 @@ export class NgtcPhysics {
 	}
 
 	private collideBeginHandler({ bodyA, bodyB }: WorkerCollideBeginEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this.api.snapshot;
 		const cbA = events[bodyA]?.collideBegin;
 		if (cbA) cbA({ body: refs[bodyB], op: 'event', target: refs[bodyA], type: 'collideBegin' });
 		const cbB = events[bodyB]?.collideBegin;
@@ -247,7 +225,7 @@ export class NgtcPhysics {
 	}
 
 	private collideEndHandler({ bodyA, bodyB }: WorkerCollideEndEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this.api.snapshot;
 		const cbA = events[bodyA]?.collideEnd;
 		if (cbA) cbA({ body: refs[bodyB], op: 'event', target: refs[bodyA], type: 'collideEnd' });
 		const cbB = events[bodyB]?.collideEnd;
@@ -263,7 +241,7 @@ export class NgtcPhysics {
 	}: WorkerFrameMessage['data']) {
 		const [{ shouldInvalidate }, { bodies, subscriptions, refs, scaleOverrides }, invalidate] = [
 			untracked(this.options),
-			this.api,
+			this.api.snapshot,
 			this.invalidate(),
 		];
 		for (let i = 0; i < uuids.length; i++) {
@@ -295,7 +273,7 @@ export class NgtcPhysics {
 	}
 
 	private rayhitHandler({ body, ray: { uuid, ...rayRest }, ...rest }: WorkerRayhitEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this.api.snapshot;
 		const cb = events[uuid]?.rayhit;
 		if (cb) cb({ body: body ? refs[body] : null, ray: { uuid, ...rayRest }, ...rest });
 	}
