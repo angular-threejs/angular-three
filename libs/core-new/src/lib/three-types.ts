@@ -1,6 +1,6 @@
 import { Color, ColorRepresentation, Euler, Layers, Matrix4, Quaternion, Vector2, Vector3, Vector4 } from 'three';
 import { NgtEventHandlers } from './events';
-import { NgtBeforeRenderEvent } from './store';
+import { NgtAttachFunction } from './instance';
 
 type NoEvent<T> = Omit<T, 'addEventListener' | 'removeEventListener'>;
 
@@ -35,17 +35,12 @@ export type NgtEuler = Euler | Parameters<Euler['set']>;
 export type NgtMatrix4 = Matrix4 | Parameters<Matrix4['set']> | Readonly<Matrix4['set']>;
 
 export interface NgtNodeEventMap<TOriginal> {
-	// beforeAttach: NgtBeforeAttach<TOriginal>;
-	beforeAttach: any;
-	// afterAttach: NgtAfterAttach<NgtInstanceNode, TOriginal>;
-	afterAttach: any;
-	beforeRender: NgtBeforeRenderEvent<TOriginal>;
+	attached: any;
+	updated: any;
 }
 
 export type NgtNodeElement<TOriginal, TConstructor> = {
-	// attach: string | string[] | NgtAttachFunction;
-	attach: string | string[] | any;
-	// ref: NgtInjectedRef<TOriginal>;
+	attach: string | string[] | NgtAttachFunction;
 	addEventListener<TEventKey extends keyof NgtNodeEventMap<TOriginal>>(
 		type: TEventKey,
 		listener: (this: NgtNodeElement<TOriginal, TConstructor>, ev: NgtNodeEventMap<TOriginal>[TEventKey]) => any,

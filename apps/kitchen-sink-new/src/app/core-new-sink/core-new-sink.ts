@@ -111,6 +111,7 @@ export class ArbitraryPlane {
 			<ngt-mesh-basic-material color="green" />
 		</ngt-mesh>
 
+		<!--
 		<app-cube [position]="[-2, -2, 0]" (clicked)="onCubeClicked()" />
 
 		<app-arbitrary-shape [position]="[0, 0, -8]">
@@ -124,6 +125,7 @@ export class ArbitraryPlane {
 				</app-arbitrary-plane>
 			}
 		</app-arbitrary-shape>
+-->
 
 		<ngt-portal [container]="portalScene">
 			<ngt-mesh>
@@ -131,8 +133,9 @@ export class ArbitraryPlane {
 			</ngt-mesh>
 		</ngt-portal>
 
+		<!--
 		<app-arbitrary-shape [position]="[-2, 2, 0]" color="hotpink">
-			<ngt-torus-geometry *args="[2, 0.4, 12, 48]" (attached)="onAttach($event)" />
+			<ngt-torus-geometry *args="[2, 0.4, 12, 48]" />
 		</app-arbitrary-shape>
 
 		<app-cube-with-content [position]="[2, -2, 0]">
@@ -148,6 +151,7 @@ export class ArbitraryPlane {
 				<ngt-cone-geometry />
 			</app-arbitrary-shape>
 		</app-cube-with-content>
+    -->
 	`,
 
 	imports: [Cube, ArbitraryShape, CubeWithContent, NgtArgs, ArbitraryPlane, NgtPortal],

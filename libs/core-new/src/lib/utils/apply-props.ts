@@ -104,8 +104,8 @@ export function applyProps(obj: NgtAnyRecord, props: NgtAnyRecord) {
 			}
 		}
 
-		checkUpdate(current[key]);
-		checkUpdate(targetProp);
+		if (current[key] != null) checkUpdate(current[key]);
+		if (targetProp != null) checkUpdate(targetProp);
 	}
 
 	invalidateInstance(obj);

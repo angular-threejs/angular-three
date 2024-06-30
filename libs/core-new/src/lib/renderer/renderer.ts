@@ -190,40 +190,38 @@ function detachThreeChild(parent: NgtInstanceRendererNode, child: NgtInstanceRen
 	const parentLocalState = getLocalState(parent);
 	const childLocalState = getLocalState(child);
 
-	if (!parentLocalState || !childLocalState) {
-		throw new Error(`[NGT] THREE instances need to be prepared with local state.`);
-	}
-
 	// clear parent
-	childLocalState.setParent(null);
+	childLocalState?.setParent(null);
 
 	// remove child
-	parentLocalState.remove(child, 'objects');
-	parentLocalState.remove(child, 'nonObjects');
+	parentLocalState?.remove(child, 'objects');
+	parentLocalState?.remove(child, 'nonObjects');
 
-	if (childLocalState.attach) {
+	if (childLocalState?.attach) {
 		detach(parent, child, childLocalState.attach);
 	} else if (is.object3D(parent) && is.object3D(child) && child.parent === parent) {
 		parent.remove(child);
-		const store = childLocalState.store;
+		const store = childLocalState?.store;
 		if (store) removeInteractivity(store, child);
 	}
 
-	if (!childLocalState.isPrimitive) {
+	if (!childLocalState?.isPrimitive) {
 		if (is.object3D(child)) {
 			detachThreeChildRecursive(child.children as unknown as NgtInstanceRendererNode[], parent);
 		}
 
-		detachThreeChildRecursive(untracked(childLocalState.objects) as unknown as NgtInstanceRendererNode[], parent);
+		if (childLocalState) {
+			detachThreeChildRecursive(untracked(childLocalState.objects) as unknown as NgtInstanceRendererNode[], parent);
+		}
 	}
 
 	// dispose
-	if (!childLocalState.isPrimitive && child['dispose'] && !is.scene(child)) {
+	if (!childLocalState?.isPrimitive && child['dispose'] && !is.scene(child)) {
 		queueMicrotask(() => child['dispose']());
 	}
 
 	// destroy localState
-	childLocalState.destroy?.();
+	childLocalState?.destroy?.();
 
 	invalidateInstance(parent);
 }
@@ -674,6 +672,10 @@ export class NgtRenderer implements Renderer2 {
 			if (target.__ngt_renderer__.destroyed) return () => {};
 
 			if (isInstanceNode(target)) {
+				const localState = getLocalState(target);
+				if (localState && !localState.store) {
+					localState.store = this.rootStore;
+				}
 				return processThreeEvent(target, event, callback);
 			}
 		}
@@ -741,6 +743,18 @@ export class NgtRenderer implements Renderer2 {
 		delete node.__ngt_renderer__;
 	};
 
+	removeAttribute(el: any, name: string, namespace?: string | null | undefined): void {
+		if (isRendererNode(el)) {
+			if (!el.__ngt_renderer__ || el.__ngt_renderer__.destroyed) return;
+			if (isCommentNode(el) && el.__ngt_renderer__.attributes) {
+				delete el.__ngt_renderer__.attributes[name];
+			}
+			return;
+		}
+
+		return this.delegateRenderer.removeAttribute(el, name, namespace);
+	}
+
 	// TODO: we might want/need to implement this for [ngComponentOutlet] support?
 	nextSibling(node: any) {
 		throw new Error('Method not implemented.');
@@ -755,7 +769,6 @@ export class NgtRenderer implements Renderer2 {
 	setStyle = this.delegateRenderer.setStyle.bind(this.delegateRenderer);
 	removeStyle = this.delegateRenderer.removeStyle.bind(this.delegateRenderer);
 	setValue = this.delegateRenderer.setValue.bind(this.delegateRenderer);
-	removeAttribute = this.delegateRenderer.removeAttribute.bind(this.delegateRenderer);
 
 	get data(): { [key: string]: any } {
 		return this.delegateRenderer.data;

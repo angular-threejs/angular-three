@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas } from 'angular-three';
+import { NgtCanvas } from 'angular-three-core-new';
 import { Experience } from './experience';
 
 @Component({
@@ -7,9 +7,11 @@ import { Experience } from './experience';
 	template: `
 		<ngt-canvas
 			[sceneGraph]="scene"
-			[camera]="{ far: 100, near: 1, position: [-25, 20, 25], zoom: 25 }"
-			[orthographic]="true"
-			[shadows]="true"
+			[options]="{
+				shadows: true,
+				camera: { far: 100, near: 1, zoom: 25, position: [-25, 20, 25] },
+				orthographic: true
+			}"
 		/>
 	`,
 	imports: [NgtCanvas],
