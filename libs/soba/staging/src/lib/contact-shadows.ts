@@ -3,20 +3,13 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	Injector,
 	computed,
+	inject,
 	input,
 	viewChild,
 } from '@angular/core';
-import {
-	NgtArgs,
-	NgtGroup,
-	exclude,
-	extend,
-	injectNextBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	pick,
-} from 'angular-three';
+import { NgtArgs, NgtGroup, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three-core-new';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	Color,
@@ -84,7 +77,7 @@ extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
 					[map]="texture()"
 				/>
 			</ngt-mesh>
-			<ngt-orthographic-camera *args="cameraArgs()" [ref]="shadowsCameraRef" />
+			<ngt-orthographic-camera *args="cameraArgs()" #shadowCamera />
 		</ngt-group>
 	`,
 	imports: [NgtArgs],
@@ -95,7 +88,7 @@ export class NgtsContactShadows {
 	Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'scale',
 		'frames',
 		'opacity',
@@ -112,11 +105,9 @@ export class NgtsContactShadows {
 	]);
 
 	contactShadowsRef = viewChild.required<ElementRef<Group>>('contactShadows');
-	shadowsCameraRef = injectNgtRef<OrthographicCamera>();
-	// TODO (chau): try to use viewChild instead of injectNgtRef later
-	// shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowsCamera');
+	shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowCamera');
 
-	private store = injectNgtStore();
+	private store = injectStore();
 	private scene = this.store.select('scene');
 	private gl = this.store.select('gl');
 
@@ -191,7 +182,7 @@ export class NgtsContactShadows {
 	private blurShadows(blur: number) {
 		const { renderTarget, renderTargetBlur, blurPlane, horizontalBlurMaterial, verticalBlurMaterial } =
 			this.shadowsOptions();
-		const shadowsCamera = this.shadowsCameraRef.nativeElement;
+		const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
 		if (!shadowsCamera) return;
 
 		blurPlane.visible = true;
@@ -210,35 +201,41 @@ export class NgtsContactShadows {
 	}
 
 	constructor() {
+		const injector = inject(Injector);
+
 		let count = 0;
 		let initialBackground: Color | Texture | null;
 		let initialOverrideMaterial: Material | null;
 
-		injectNextBeforeRender(() => {
-			const shadowsCamera = this.shadowsCameraRef.nativeElement;
-			const [{ frames, blur, smooth }, gl, scene, contactShadows, { depthMaterial, renderTarget }] = [
-				this.options(),
-				this.gl(),
-				this.scene(),
-				this.contactShadowsRef(),
-				this.shadowsOptions(),
-			];
-			if (shadowsCamera && (frames === Infinity || count < frames)) {
-				count++;
-				initialBackground = scene.background;
-				initialOverrideMaterial = scene.overrideMaterial;
-				contactShadows.nativeElement.visible = false;
-				scene.background = null;
-				scene.overrideMaterial = depthMaterial;
-				gl.setRenderTarget(renderTarget);
-				gl.render(scene, shadowsCamera);
-				this.blurShadows(blur);
-				if (smooth) this.blurShadows(blur * 0.4);
-				gl.setRenderTarget(null);
-				contactShadows.nativeElement.visible = true;
-				scene.overrideMaterial = initialOverrideMaterial;
-				scene.background = initialBackground;
-			}
-		});
+		injectBeforeRender(
+			() => {
+				const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
+				const [{ frames, blur, smooth }, gl, scene, contactShadows, { depthMaterial, renderTarget }] = [
+					this.options(),
+					this.gl(),
+					this.scene(),
+					this.contactShadowsRef(),
+					this.shadowsOptions(),
+				];
+
+				if (shadowsCamera && (frames === Infinity || count < frames)) {
+					count++;
+					initialBackground = scene.background;
+					initialOverrideMaterial = scene.overrideMaterial;
+					contactShadows.nativeElement.visible = false;
+					scene.background = null;
+					scene.overrideMaterial = depthMaterial;
+					gl.setRenderTarget(renderTarget);
+					gl.render(scene, shadowsCamera);
+					this.blurShadows(blur);
+					if (smooth) this.blurShadows(blur * 0.4);
+					gl.setRenderTarget(null);
+					contactShadows.nativeElement.visible = true;
+					scene.overrideMaterial = initialOverrideMaterial;
+					scene.background = initialBackground;
+				}
+			},
+			{ injector },
+		);
 	}
 }

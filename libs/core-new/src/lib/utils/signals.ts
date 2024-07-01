@@ -19,8 +19,8 @@ export function omit(objFn: () => NgtAnyRecord, keysToOmit: string[]) {
 		const obj = objFn();
 		const result = {} as NgtAnyRecord;
 
-		for (const key of keysToOmit) {
-			if (key in obj) continue;
+		for (const key of Object.keys(obj)) {
+			if (keysToOmit.includes(key)) continue;
 			Object.assign(result, { [key]: obj[key] });
 		}
 

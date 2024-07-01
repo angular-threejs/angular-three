@@ -8,7 +8,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtGroup, exclude, extend, pick } from 'angular-three';
+import { NgtArgs, NgtGroup, extend, omit, pick } from 'angular-three-core-new';
 import { getVersion } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -67,9 +67,9 @@ extend({ Group, DirectionalLight, OrthographicCamera });
 		<ngt-group #lights [parameters]="parameters()">
 			@for (i of count(); track $index) {
 				<ngt-directional-light [castShadow]="castShadow()" [intensity]="intensity() / amount()">
-					<ngt-value [rawValue]="bias()" attach="shadow.bias"></ngt-value>
-					<ngt-vector2 *args="[mapSize(), mapSize()]" attach="shadow.mapSize"></ngt-vector2>
-					<ngt-orthographic-camera *args="cameraArgs()" attach="shadow.camera"></ngt-orthographic-camera>
+					<ngt-value [rawValue]="bias()" attach="shadow.bias" />
+					<ngt-vector2 *args="[mapSize(), mapSize()]" attach="shadow.mapSize" />
+					<ngt-orthographic-camera *args="cameraArgs()" attach="shadow.camera" />
 				</ngt-directional-light>
 			}
 		</ngt-group>
@@ -80,12 +80,9 @@ extend({ Group, DirectionalLight, OrthographicCamera });
 })
 export class NgtsRandomizedLights {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightOptions>);
+	parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightOptions>);
 
 	lights = viewChild.required<ElementRef<Group>>('lights');
-
-	private autoEffect = injectAutoEffect();
-	private shadowsApi = injectAccumulativeShadowsApi();
 
 	castShadow = pick(this.options, 'castShadow');
 	bias = pick(this.options, 'bias');
@@ -106,11 +103,14 @@ export class NgtsRandomizedLights {
 	private updateOptions = pick(this.options, ['ambient', 'radius', 'position']);
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const _shadowsApi = injectAccumulativeShadowsApi();
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const lights = this.lights().nativeElement;
 				if (!lights) return;
-				const [shadowsApi] = [this.shadowsApi(), this.updateOptions(), this.length()];
+				const [shadowsApi] = [_shadowsApi.state(), this.updateOptions(), this.length()];
 				if (!shadowsApi) return;
 				shadowsApi.lights.set(lights.uuid, this.update.bind(this));
 				return () => shadowsApi.lights.delete(lights.uuid);

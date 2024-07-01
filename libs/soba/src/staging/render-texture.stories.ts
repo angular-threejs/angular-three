@@ -9,11 +9,10 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three-core-new';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { NgtsContactShadows, NgtsRenderTexture } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
@@ -66,19 +65,17 @@ class Dodecahedron {
 			<ngt-box-geometry />
 			<ngt-mesh-standard-material>
 				<ngts-render-texture [options]="{ anisotropy: 16 }">
-					<ng-template ngtsContent>
-						<ngts-perspective-camera [options]="cameraOptions" />
-						<ngt-color attach="background" *args="['orange']" />
-						<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-						<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" />
-						<ngts-text text="hello" [options]="textOptions" />
-						<render-texture-dodecahedron />
-					</ng-template>
+					<ngts-perspective-camera [options]="cameraOptions" />
+					<ngt-color attach="background" *args="['orange']" />
+					<ngt-ambient-light [intensity]="0.5 * Math.PI" />
+					<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" />
+					<ngts-text text="hello" [options]="textOptions" />
+					<render-texture-dodecahedron />
 				</ngts-render-texture>
 			</ngt-mesh-standard-material>
 		</ngt-mesh>
 	`,
-	imports: [Dodecahedron, NgtsRenderTexture, NgtArgs, NgtsPerspectiveCamera, NgtsText, NgtsContent],
+	imports: [Dodecahedron, NgtsRenderTexture, NgtArgs, NgtsPerspectiveCamera, NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -125,7 +122,7 @@ class Cube {
 class DefaultRenderTextureStory {
 	Math = Math;
 
-	store = injectNgtStore();
+	store = injectStore();
 
 	constructor() {}
 }

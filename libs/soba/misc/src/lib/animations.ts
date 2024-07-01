@@ -1,5 +1,5 @@
 import { ElementRef, Injector, afterNextRender, computed, isSignal, signal, untracked } from '@angular/core';
-import { injectBeforeRender, is } from 'angular-three';
+import { injectBeforeRender, is } from 'angular-three-core-new';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';

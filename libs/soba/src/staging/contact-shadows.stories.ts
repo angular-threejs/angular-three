@@ -8,7 +8,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, injectBeforeRender } from 'angular-three-core-new';
 import { NgtsContactShadows, NgtsContactShadowsOptions } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { color, makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';

@@ -1,5 +1,5 @@
-import { Directive, Signal, afterNextRender, input, untracked } from '@angular/core';
-import { injectNextBeforeRender, injectNgtStore } from 'angular-three';
+import { Directive, Injector, Signal, afterNextRender, inject, input, untracked } from '@angular/core';
+import { injectBeforeRender, injectStore } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Vector3 } from 'three';
@@ -39,8 +39,7 @@ const defaultOptions: NgtsCameraShakeOptions = {
 export class NgtsCameraShake {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 	private camera = this.store.select('camera');
 	private defaultControls = this.store.select('controls') as unknown as Signal<ControlsProto>;
 
@@ -55,13 +54,16 @@ export class NgtsCameraShake {
 		this.intensityOption = Math.min(1, Math.max(0, val));
 	}
 
-	private yawNoise = new SimplexNoise();
-	private pitchNoise = new SimplexNoise();
-	private rollNoise = new SimplexNoise();
-
 	constructor() {
+		const injector = inject(Injector);
+		const autoEffect = injectAutoEffect();
+
+		const yawNoise = new SimplexNoise();
+		const pitchNoise = new SimplexNoise();
+		const rollNoise = new SimplexNoise();
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const defaultControls = this.defaultControls();
 				if (!defaultControls) return;
 				const camera = this.camera();
@@ -71,23 +73,28 @@ export class NgtsCameraShake {
 				callback();
 				return () => void defaultControls.removeEventListener('change', callback);
 			});
-		});
 
-		injectNextBeforeRender(({ delta, clock }) => {
-			const [{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate }, camera] = [
-				this.options(),
-				this.camera(),
-			];
-			const shake = Math.pow(this.intensity, 2);
-			const yaw = maxYaw * shake * this.yawNoise.noise(clock.elapsedTime * yawFrequency, 1);
-			const pitch = maxPitch * shake * this.pitchNoise.noise(clock.elapsedTime * pitchFrequency, 1);
-			const roll = maxRoll * shake * this.rollNoise.noise(clock.elapsedTime * rollFrequency, 1);
+			injectBeforeRender(
+				({ delta, clock }) => {
+					const [{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate }, camera] =
+						[this.options(), this.camera()];
+					const shake = Math.pow(this.intensity, 2);
+					const yaw = maxYaw * shake * yawNoise.noise(clock.elapsedTime * yawFrequency, 1);
+					const pitch = maxPitch * shake * pitchNoise.noise(clock.elapsedTime * pitchFrequency, 1);
+					const roll = maxRoll * shake * rollNoise.noise(clock.elapsedTime * rollFrequency, 1);
 
-			camera.rotation.set(this.initialRotation.x + pitch, this.initialRotation.y + yaw, this.initialRotation.z + roll);
+					camera.rotation.set(
+						this.initialRotation.x + pitch,
+						this.initialRotation.y + yaw,
+						this.initialRotation.z + roll,
+					);
 
-			if (decay && this.intensity > 0) {
-				this.intensity -= decayRate * delta;
-			}
+					if (decay && this.intensity > 0) {
+						this.intensity -= decayRate * delta;
+					}
+				},
+				{ injector },
+			);
 		});
 	}
 }

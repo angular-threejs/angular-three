@@ -3,22 +3,16 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	TemplateRef,
 	afterNextRender,
 	contentChild,
 	input,
 	untracked,
+	viewChild,
 } from '@angular/core';
-import {
-	NgtPerspectiveCamera,
-	exclude,
-	extend,
-	injectBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	pick,
-} from 'angular-three';
-import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
+import { NgtPerspectiveCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three-core-new';
+import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, PerspectiveCamera, Texture } from 'three';
@@ -50,11 +44,11 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	selector: 'ngts-perspective-camera',
 	standalone: true,
 	template: `
-		<ngt-perspective-camera [ref]="cameraRef()" [parameters]="parameters()">
-			<ng-container [ngTemplateOutlet]="content() ?? null" />
+		<ngt-perspective-camera #camera [parameters]="parameters()">
+			<ng-content select="[camera-content]" />
 		</ngt-perspective-camera>
 
-		<ngt-group [ref]="groupRef">
+		<ngt-group #group>
 			<ng-container
 				[ngTemplateOutlet]="withTextureContent() ?? null"
 				[ngTemplateOutletContext]="{ $implicit: texture }"
@@ -66,45 +60,44 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsPerspectiveCamera {
-	cameraRef = input(injectNgtRef<PerspectiveCamera>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
-	content = contentChild(NgtsContent, { read: TemplateRef });
+	cameraRef = viewChild.required<ElementRef<PerspectiveCamera>>('camera');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
+
 	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
 
-	groupRef = injectNgtRef<Group>();
-
-	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
-
-	private camera = this.store.select('camera');
-	private size = this.store.select('size');
-
-	private manual = pick(this.options, 'manual');
-	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
 	private fbo = injectFBO(() => ({ width: this.resolution() }));
 	texture = pick(this.fbo, 'texture');
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const store = injectStore();
+
+		const _camera = store.select('camera');
+		const _size = store.select('size');
+		const manual = pick(this.options, 'manual');
+		const makeDefault = pick(this.options, 'makeDefault');
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				if (!this.manual()) {
-					this.cameraRef().nativeElement.aspect = this.size().width / this.size().height;
+			autoEffect(() => {
+				if (!manual()) {
+					this.cameraRef().nativeElement.aspect = _size().width / _size().height;
 				}
 			});
 
-			this.autoEffect(() => {
-				if (this.makeDefault()) {
-					const oldCam = untracked(this.camera);
-					this.store.update({ camera: this.cameraRef().nativeElement });
-					return () => this.store.update(() => ({ camera: oldCam }));
+			autoEffect(() => {
+				if (makeDefault()) {
+					const oldCam = untracked(_camera);
+					store.update({ camera: this.cameraRef().nativeElement });
+					return () => store.update(() => ({ camera: oldCam }));
 				}
 				return;
 			});
 
-			this.cameraRef().nativeElement.aspect = this.size().width / this.size().height;
+			this.cameraRef().nativeElement.aspect = _size().width / _size().height;
 		});
 
 		let count = 0;
@@ -112,7 +105,7 @@ export class NgtsPerspectiveCamera {
 		injectBeforeRender(({ gl, scene }) => {
 			const [{ frames, envMap }, group, camera, fbo] = [
 				this.options(),
-				this.groupRef.nativeElement,
+				this.groupRef().nativeElement,
 				this.cameraRef().nativeElement,
 				this.fbo(),
 			];

@@ -4,24 +4,25 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	TemplateRef,
+	Injector,
 	afterNextRender,
 	computed,
-	contentChild,
+	effect,
+	inject,
 	input,
 	viewChild,
 } from '@angular/core';
 import {
 	NgtGroup,
 	createApiToken,
-	exclude,
 	extend,
 	getLocalState,
-	injectNextBeforeRender,
-	injectNgtStore,
+	injectBeforeRender,
+	injectStore,
+	omit,
 	pick,
-} from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
+	signalStore,
+} from 'angular-three-core-new';
 import { DiscardMaterial, SoftShadowMaterial } from 'angular-three-soba/shaders';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -71,7 +72,9 @@ export interface NgtsAccumulativeShadowsOptions extends Partial<NgtGroup> {
 extend({ Group, SoftShadowMaterial, Mesh, PlaneGeometry });
 
 export const [injectAccumulativeShadowsApi, provideAccumulativeShadowsApi] = createApiToken(
+	'NGTS_ACCUMULATIVE_SHADOWS_API',
 	() => NgtsAccumulativeShadows,
+	(shadows) => shadows.api,
 );
 
 const defaultOptions: NgtsAccumulativeShadowsOptions = {
@@ -93,7 +96,7 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-group #lights [traverse]="nullTraversal">
-				<ng-container [ngTemplateOutlet]="lightsContent() ?? null" />
+				<ng-content />
 			</ngt-group>
 
 			<ngt-mesh #plane [scale]="scale()" [rotation]="[-Math.PI / 2, 0, 0]" [receiveShadow]="true">
@@ -119,7 +122,7 @@ export class NgtsAccumulativeShadows {
 	Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'temporal',
 		'frames',
 		'limit',
@@ -136,10 +139,7 @@ export class NgtsAccumulativeShadows {
 	lights = viewChild.required<ElementRef<Group>>('lights');
 	plane = viewChild.required<ElementRef<Mesh>>('plane');
 
-	lightsContent = contentChild(NgtsContent, { read: TemplateRef });
-
-	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 	private gl = this.store.select('gl');
 	private camera = this.store.select('camera');
 	private scene = this.store.select('scene');
@@ -161,93 +161,99 @@ export class NgtsAccumulativeShadows {
 	colorBlend = pick(this.options, 'colorBlend');
 	map = computed(() => this.pLM().progressiveLightMap2.texture);
 
-	api = computed(() => {
-		const [pLM, camera, , temporal, frames, blend, opacity, alphaTest, lights, plane] = [
-			this.pLM(),
-			this.camera(),
-			this.scene(),
-			this.temporal(),
-			this.frames(),
-			this.blend(),
-			this.opacity(),
-			this.alphaTest(),
-			this.lights(),
-			this.plane(),
-		];
+	api = signalStore<{
+		lights: Map<string, () => void>;
+		count: number;
+		temporal: boolean;
+		frames: number;
+		blend: number;
+		getMesh: () => Mesh;
+		reset: () => void;
+		update: (frames?: number) => void;
+	}>(({ update, get }) => ({
+		lights: new Map<string, () => void>(),
+		count: 0,
+		temporal: !!this.temporal(),
+		frames: Math.max(2, this.frames()),
+		blend: Math.max(2, this.frames() === Infinity ? this.blend() : this.frames()),
+		getMesh: () => this.plane().nativeElement,
+		reset: () => {
+			if (!this.plane().nativeElement) return;
+			// Clear buffers, reset opacities, set frame count to 0
+			this.pLM().clear();
+			const material = this.plane().nativeElement.material as Material;
+			material.opacity = 0;
+			material.alphaTest = 0;
+			update({ count: 0 });
+		},
+		update: (frames = 1) => {
+			// Adapt the opacity-blend ratio to the number of frames
+			const material = this.plane().nativeElement.material as Material;
+			if (!get('temporal')) {
+				material.opacity = this.opacity();
+				material.alphaTest = this.alphaTest();
+			} else {
+				material.opacity = Math.min(this.opacity(), material.opacity + this.opacity() / get('blend'));
+				material.alphaTest = Math.min(this.alphaTest(), material.alphaTest + this.alphaTest() / get('blend'));
+			}
 
-		const api = {
-			lights: new Map<string, () => void>(),
-			temporal: !!temporal,
-			frames: Math.max(2, frames),
-			blend: Math.max(2, frames === Infinity ? blend : frames),
-			count: 0,
-			getMesh: () => plane.nativeElement,
-			reset: () => {
-				if (!plane.nativeElement) return;
-				// Clear buffers, reset opacities, set frame count to 0
-				pLM.clear();
-				const material = plane.nativeElement.material as Material;
-				material.opacity = 0;
-				material.alphaTest = 0;
-				api.count = 0;
-			},
-			update: (frames = 1) => {
-				// Adapt the opacity-blend ratio to the number of frames
-				const material = plane.nativeElement.material as Material;
-				if (!api.temporal) {
-					material.opacity = opacity;
-					material.alphaTest = alphaTest;
-				} else {
-					material.opacity = Math.min(opacity, material.opacity + opacity / api.blend);
-					material.alphaTest = Math.min(alphaTest, material.alphaTest + alphaTest / api.blend);
-				}
+			// Switch accumulative lights on
+			this.lights().nativeElement.visible = true;
+			// Collect scene lights and meshes
+			this.pLM().prepare();
 
-				// Switch accumulative lights on
-				lights.nativeElement.visible = true;
-				// Collect scene lights and meshes
-				pLM.prepare();
-
-				// Update the lightmap and the accumulative lights
-				for (let i = 0; i < frames; i++) {
-					api.lights.forEach((lightUpdate) => lightUpdate());
-					pLM.update(camera, api.blend);
-				}
-				// Switch lights off
-				lights.nativeElement.visible = false;
-				// Restore lights and meshes
-				pLM.finish();
-			},
-		};
-
-		return api;
-	});
+			// Update the lightmap and the accumulative lights
+			for (let i = 0; i < frames; i++) {
+				get('lights').forEach((lightUpdate) => lightUpdate());
+				this.pLM().update(this.camera(), get('blend'));
+			}
+			// Switch lights off
+			this.lights().nativeElement.visible = false;
+			// Restore lights and meshes
+			this.pLM().finish();
+		},
+	}));
 
 	constructor() {
+		const injector = inject(Injector);
+		const autoEffect = injectAutoEffect();
+
+		effect(() => {
+			this.api.update({
+				temporal: !!this.temporal(),
+				frames: Math.max(2, this.frames()),
+				blend: Math.max(2, this.frames() === Infinity ? this.blend() : this.frames()),
+			});
+		});
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const [pLM, plane] = [this.pLM(), this.plane()];
 				if (!plane) return;
 				pLM.configure(plane.nativeElement);
 			});
 
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const sceneLS = getLocalState(this.scene());
-				const [api, plane] = [this.api(), this.plane(), this.options(), sceneLS?.objects()];
+				const [api, plane] = [this.api.state(), this.plane(), this.options(), sceneLS?.objects()];
 				if (!plane.nativeElement) return;
 				// Reset internals, buffers, ...
 				api.reset();
 				// Update lightmap
 				if (!api.temporal && api.frames !== Infinity) api.update(api.blend);
 			});
-		});
 
-		injectNextBeforeRender(() => {
-			const [api, invalidate, limit] = [this.api(), this.invalidate(), this.limit()];
-			if ((api.temporal || api.frames === Infinity) && api.count < api.frames && api.count < limit) {
-				invalidate();
-				api.update();
-				api.count++;
-			}
+			injectBeforeRender(
+				() => {
+					const [api, invalidate, limit] = [this.api.state(), this.invalidate(), this.limit()];
+					if ((api.temporal || api.frames === Infinity) && api.count < api.frames && api.count < limit) {
+						invalidate();
+						api.update();
+						api.count++;
+					}
+				},
+				{ injector },
+			);
 		});
 	}
 }

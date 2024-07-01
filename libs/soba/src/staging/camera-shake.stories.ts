@@ -7,7 +7,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, injectBeforeRender } from 'angular-three-core-new';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsCameraShakeOptions } from 'angular-three-soba/staging';
 import { DoubleSide, Mesh } from 'three';

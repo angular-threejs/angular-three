@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from 'angular-three-core-new';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContent } from 'angular-three-soba/misc';
 import { NgtsBBAnchor, NgtsBBAnchorOptions } from 'angular-three-soba/staging';
@@ -30,7 +30,7 @@ class MeshObject {}
 			<ngt-icosahedron-geometry />
 			<ngt-mesh-basic-material color="hotpink" [wireframe]="true" />
 			<ngts-bb-anchor [options]="options()">
-				<ng-content *ngtsContent />
+				<ng-content />
 			</ngts-bb-anchor>
 		</ngt-mesh>
 

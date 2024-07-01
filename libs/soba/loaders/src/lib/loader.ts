@@ -9,7 +9,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { pick } from 'angular-three';
+import { pick } from 'angular-three-core-new';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { injectProgress } from './progress';
 

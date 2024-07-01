@@ -3,22 +3,16 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	TemplateRef,
 	afterNextRender,
 	contentChild,
 	input,
 	untracked,
+	viewChild,
 } from '@angular/core';
-import {
-	NgtOrthographicCamera,
-	exclude,
-	extend,
-	injectBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	pick,
-} from 'angular-three';
-import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
+import { NgtOrthographicCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three-core-new';
+import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, OrthographicCamera, Texture } from 'three';
@@ -51,17 +45,17 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 	standalone: true,
 	template: `
 		<ngt-orthographic-camera
-			[ref]="cameraRef()"
+			#camera
 			[left]="size().width / -2"
 			[right]="size().width / 2"
 			[top]="size().height / 2"
 			[bottom]="size().height / -2"
 			[parameters]="parameters()"
 		>
-			<ng-container [ngTemplateOutlet]="content() ?? null" />
+			<ng-content select="[camera-content]" />
 		</ngt-orthographic-camera>
 
-		<ngt-group [ref]="groupRef">
+		<ngt-group #group>
 			<ng-container
 				[ngTemplateOutlet]="withTextureContent() ?? null"
 				[ngTemplateOutletContext]="{ $implicit: texture }"
@@ -73,38 +67,38 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsOrthographicCamera {
-	cameraRef = input(injectNgtRef<OrthographicCamera>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
-	content = contentChild(NgtsContent, { read: TemplateRef });
+	cameraRef = viewChild.required<ElementRef<OrthographicCamera>>('camera');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
+
 	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
 
-	groupRef = injectNgtRef<Group>();
-
-	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
-
-	private camera = this.store.select('camera');
+	private store = injectStore();
 	size = this.store.select('size');
 
-	private manual = pick(this.options, 'manual');
-	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
 	private fbo = injectFBO(() => ({ width: this.resolution() }));
 	texture = pick(this.fbo, 'texture');
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const _camera = this.store.select('camera');
+
+		const _manual = pick(this.options, 'manual');
+		const _makeDefault = pick(this.options, 'makeDefault');
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				if (!this.manual()) {
+			autoEffect(() => {
+				if (!_manual()) {
 					this.cameraRef().nativeElement.updateProjectionMatrix();
 				}
 			});
 
-			this.autoEffect(() => {
-				if (this.makeDefault()) {
-					const oldCam = untracked(this.camera);
+			autoEffect(() => {
+				if (_makeDefault()) {
+					const oldCam = untracked(_camera);
 					this.store.update({ camera: this.cameraRef().nativeElement });
 					return () => this.store.update(() => ({ camera: oldCam }));
 				}
@@ -119,7 +113,7 @@ export class NgtsOrthographicCamera {
 		injectBeforeRender(({ gl, scene }) => {
 			const [{ frames, envMap }, group, camera, fbo] = [
 				this.options(),
-				this.groupRef.nativeElement,
+				this.groupRef().nativeElement,
 				this.cameraRef().nativeElement,
 				this.fbo(),
 			];

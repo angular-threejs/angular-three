@@ -14,7 +14,7 @@ import {
 	signal,
 	untracked,
 } from '@angular/core';
-import { injectTextureLoader } from 'angular-three-soba/loaders';
+import { injectTexture } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Texture } from 'three';
 
@@ -72,7 +72,7 @@ export function injectMatcapTexture(
 		const fileName = computed(() => `${fileHash() || DEFAULT_MATCAP()}${getFormatString(format())}.png`);
 		const url = computed(() => `${MATCAP_ROOT}/${format()}/${fileName()}`);
 
-		const matcapTexture = injectTextureLoader(url, { onLoad });
+		const matcapTexture = injectTexture(url, { onLoad });
 
 		return { url, texture: matcapTexture, numTot };
 	});

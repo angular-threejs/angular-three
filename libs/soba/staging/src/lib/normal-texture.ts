@@ -14,7 +14,7 @@ import {
 	signal,
 	untracked,
 } from '@angular/core';
-import { injectTextureLoader } from 'angular-three-soba/loaders';
+import { injectTexture } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { RepeatWrapping, Texture, Vector2 } from 'three';
@@ -66,7 +66,7 @@ export function injectNormalTexture(
 		const imageName = computed(() => fileHash() || DEFAULT_NORMAL());
 		const url = computed(() => `${NORMAL_ROOT}/normals/${imageName()}`);
 
-		const normalTexture = injectTextureLoader(url, { onLoad });
+		const normalTexture = injectTexture(url, { onLoad });
 
 		afterNextRender(() => {
 			autoEffect(() => {

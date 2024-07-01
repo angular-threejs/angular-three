@@ -61,10 +61,6 @@ const skipLastNumber = (str) => str.endsWith('0');
 
 export const commonAttributes = [
 	{
-		name: 'ngtCompound',
-		description: 'Annotation that this is a compounded element',
-	},
-	{
 		name: 'attach',
 		description: 'Property to attach to parent. Can be dotted path',
 	},
@@ -73,19 +69,11 @@ export const commonAttributes = [
 		description: 'An array of paths to attach to parent. Can also be an NgtAttachFunction',
 	},
 	{
-		name: '[ref]',
-		description: 'Assign an NgtInjectedRef',
-	},
-	{
-		name: '(beforeRender)',
-		description: 'Register an event to be run in animation loop',
-	},
-	{
-		name: '(afterAttach)',
+		name: '(attached)',
 		description: 'Register an event to be invoked after this node is attached to the parent',
 	},
 	{
-		name: '(afterUpdate)',
+		name: '(updated)',
 		description: "Register an event to be invoked after this node's properties are updated",
 	},
 ];

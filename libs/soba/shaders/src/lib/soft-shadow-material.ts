@@ -1,4 +1,4 @@
-import { NgtShaderMaterial } from 'angular-three';
+import { NgtShaderMaterial } from 'angular-three-core-new';
 import { getVersion } from 'angular-three-soba/misc';
 import { Color, ColorRepresentation, Texture } from 'three';
 import { shaderMaterial } from './shader-material';

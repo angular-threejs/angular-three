@@ -1,8 +1,16 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	Injector,
+	afterNextRender,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectNextBeforeRender } from 'angular-three';
+import { injectBeforeRender } from 'angular-three-core-new';
 import { NgtsText, NgtsTextOptions } from 'angular-three-soba/abstractions';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { DoubleSide } from 'three';
 import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
@@ -26,9 +34,15 @@ class TextContainer {
 	textRef = viewChild.required(NgtsText);
 
 	constructor() {
-		injectNextBeforeRender(() => {
-			const text = this.textRef().troikaMesh;
-			text.rotation.y += 0.01;
+		const injector = inject(Injector);
+		afterNextRender(() => {
+			injectBeforeRender(
+				() => {
+					const text = this.textRef().troikaMesh;
+					text.rotation.y += 0.01;
+				},
+				{ injector },
+			);
 		});
 	}
 }
@@ -38,16 +52,10 @@ class TextContainer {
 	standalone: true,
 	template: `
 		<ngts-text [text]="text" [options]="options">
-			<ngt-mesh-basic-material
-				*ngtsContent
-				[side]="DoubleSide"
-				[color]="color()"
-				[transparent]="true"
-				[opacity]="opacity()"
-			/>
+			<ngt-mesh-basic-material [side]="DoubleSide" [color]="color()" [transparent]="true" [opacity]="opacity()" />
 		</ngts-text>
 	`,
-	imports: [NgtsText, NgtsContent],
+	imports: [NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -73,9 +81,15 @@ class TextCustomMaterialContainer {
 	textRef = viewChild.required(NgtsText);
 
 	constructor() {
-		injectNextBeforeRender(() => {
-			const text = this.textRef().troikaMesh;
-			text.rotation.y += 0.01;
+		const injector = inject(Injector);
+		afterNextRender(() => {
+			injectBeforeRender(
+				() => {
+					const text = this.textRef().troikaMesh;
+					text.rotation.y += 0.01;
+				},
+				{ injector },
+			);
 		});
 	}
 }

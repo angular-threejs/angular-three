@@ -1,19 +1,15 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
 	DestroyRef,
-	TemplateRef,
 	afterNextRender,
 	computed,
-	contentChild,
 	inject,
 	input,
 	output,
 } from '@angular/core';
-import { NgtArgs, NgtMesh, exclude, injectNgtStore, pick } from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
+import { NgtArgs, NgtMesh, injectStore, omit, pick } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ColorRepresentation } from 'three';
@@ -74,27 +70,19 @@ const defaultOptions: NgtsTextOptions = {
 			[fontSize]="fontSize()"
 			[parameters]="parameters()"
 		>
-			<ng-container [ngTemplateOutlet]="content() ?? null" />
+			<ng-content />
 		</ngt-primitive>
 	`,
-	imports: [NgtArgs, NgTemplateOutlet],
+	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsText {
 	text = input.required<string>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['font', 'fontSize', 'sdfGlyphSize', 'anchorX', 'anchorY', 'characters']);
+	parameters = omit(this.options, ['font', 'fontSize', 'sdfGlyphSize', 'anchorX', 'anchorY', 'characters']);
 
 	synced = output<Text>();
-
-	content = contentChild(NgtsContent, { read: TemplateRef });
-
-	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
-	private invalidate = this.store.select('invalidate');
-
-	private characters = pick(this.options, 'characters');
 
 	font = pick(this.options, 'font');
 	anchorX = pick(this.options, 'anchorX');
@@ -103,26 +91,30 @@ export class NgtsText {
 	fontSize = pick(this.options, 'fontSize');
 
 	troikaMesh = new Text();
-	args = computed(() => [this.troikaMesh], {
-		equal: (a, b) => Object.is(a[0], b[0]),
-	});
+	args = computed(() => [this.troikaMesh], { equal: (a, b) => Object.is(a[0], b[0]) });
 
 	constructor() {
 		inject(DestroyRef).onDestroy(() => {
 			this.troikaMesh.dispose();
 		});
 
+		const store = injectStore();
+		const _invalidate = store.select('invalidate');
+		const autoEffect = injectAutoEffect();
+
+		const _characters = pick(this.options, 'characters');
+
 		// NOTE: this could be just effect but autoEffect is used for consistency
-		this.autoEffect(() => {
-			const [font, characters, invalidate] = [this.font(), this.characters(), this.invalidate()];
+		autoEffect(() => {
+			const [font, characters, invalidate] = [this.font(), _characters(), _invalidate()];
 			if (font) {
 				preloadFont({ font, characters }, () => invalidate());
 			}
 		});
 
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [invalidate] = [this.invalidate(), this.text(), this.options()];
+			autoEffect(() => {
+				const [invalidate] = [_invalidate(), this.text(), this.options()];
 				this.troikaMesh.sync(() => {
 					invalidate();
 					this.synced.emit(this.troikaMesh);

@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from 'angular-three-core-new';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import {

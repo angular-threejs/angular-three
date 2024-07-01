@@ -13,19 +13,18 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
+	NgtComputeFunction,
 	NgtPortal,
-	NgtPortalContent,
 	NgtTexture,
-	exclude,
 	extend,
 	getLocalState,
 	injectBeforeRender,
-	injectNgtStore,
+	injectStore,
+	omit,
 	pick,
 	prepare,
-} from 'angular-three';
+} from 'angular-three-core-new';
 import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
-import { NgtComputeFunction } from 'libs/core/src/lib/events';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
 
@@ -111,22 +110,20 @@ const defaultOptions: NgtsRenderTextureOptions = {
 	standalone: true,
 	template: `
 		<ngt-portal [container]="virtualScene" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
-			<ng-template portalContent let-injector="injector">
-				<ngts-render-texture-container [fbo]="fbo()" [renderPriority]="renderPriority()" [frames]="frames()">
-					<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
-				</ngts-render-texture-container>
-			</ng-template>
+			<ngts-render-texture-container [fbo]="fbo()" [renderPriority]="renderPriority()" [frames]="frames()">
+				<ng-content />
+			</ngts-render-texture-container>
 		</ngt-portal>
 		<ngt-primitive *args="[fbo().texture]" [attach]="attach()" [parameters]="parameters()" />
 	`,
-	imports: [NgtPortal, NgtsRenderTextureContainer, NgtPortalContent, NgtArgs, NgTemplateOutlet],
+	imports: [NgtPortal, NgtsRenderTextureContainer, NgtArgs, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsRenderTexture {
 	attach = input<string | string[]>('map');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'samples',
 		'renderPriority',
 		'eventPriority',
@@ -141,7 +138,7 @@ export class NgtsRenderTexture {
 
 	content = contentChild.required(NgtsContent, { read: TemplateRef });
 
-	private store = injectNgtStore();
+	private store = injectStore();
 	private size = this.store.select('size');
 	private viewport = this.store.select('viewport');
 

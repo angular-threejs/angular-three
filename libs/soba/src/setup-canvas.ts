@@ -20,7 +20,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Args, Decorator, moduleMetadata } from '@storybook/angular';
-import { NgtAnyRecord, NgtArgs, NgtCanvas, NgtPerformance, extend } from 'angular-three';
+import { NgtAnyRecord, NgtArgs, NgtCanvas, NgtPerformance, extend } from 'angular-three-core-new';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -104,7 +104,6 @@ export class StorybookScene {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			console.log('storybook-scene destroy');
 			ref?.destroy();
 		});
 	}
@@ -148,10 +147,14 @@ export class StorybookSetup {
 				);
 
 				ref = this.anchor().createComponent(NgtCanvas, { environmentInjector: refEnvInjector });
-				ref.setInput('shadows', true);
-				ref.setInput('performance', this.canvasOptions().performance);
-				ref.setInput('camera', this.canvasOptions().camera);
-				ref.setInput('compoundPrefixes', this.canvasOptions().compoundPrefixes);
+
+				const options = {
+					camera: this.canvasOptions().camera,
+					performance: this.canvasOptions().performance,
+					shadows: true,
+				};
+
+				ref.setInput('options', options);
 				ref.setInput('sceneGraph', StorybookScene);
 				ref.changeDetectorRef.detectChanges();
 			});

@@ -1,8 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, merge } from 'angular-three';
+import { NgtArgs, merge } from 'angular-three-core-new';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsContent } from 'angular-three-soba/misc';
 import {
 	NgtsAccumulativeShadows,
@@ -25,7 +25,7 @@ import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Suzi {
-	gltf = injectGLTFLoader(() => './suzanne-high-poly.gltf');
+	gltf = injectGLTF(() => './suzanne-high-poly.gltf');
 
 	scene = computed(() => {
 		const gltf = this.gltf();
@@ -53,16 +53,7 @@ class Suzi {
 		<accumulative-shadows-suzi />
 
 		<ngts-accumulative-shadows [options]="accumulativeShadowsOptions()">
-			<ngts-randomized-lights
-				*ngtsContent
-				[options]="{
-					amount: 8,
-					radius: 4,
-					ambient: 0.5,
-					bias: 0.001,
-					position: [5, 5, -10]
-				}"
-			/>
+			<ngts-randomized-lights [options]="{ amount: 8, radius: 4, ambient: 0.5, bias: 0.001, position: [5, 5, -10] }" />
 		</ngts-accumulative-shadows>
 
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />

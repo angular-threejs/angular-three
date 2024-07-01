@@ -3,11 +3,14 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	Injector,
+	afterNextRender,
 	computed,
+	inject,
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender, injectNextBeforeRender } from 'angular-three';
+import { NgtArgs, NgtPortal, injectBeforeRender } from 'angular-three-core-new';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsFBO } from 'angular-three-soba/misc';
 import { Color, Mesh, Scene, WebGLRenderTarget } from 'three';
@@ -43,7 +46,7 @@ class SpinningThing {
 		<ngts-perspective-camera #camera [options]="{ position: [0, 0, 3] }" />
 
 		<ngt-portal [container]="scene()">
-			<fbo-spinning-thing *portalContent />
+			<fbo-spinning-thing />
 		</ngt-portal>
 
 		<ngt-mesh>
@@ -52,7 +55,7 @@ class SpinningThing {
 		</ngt-mesh>
 	`,
 	standalone: true,
-	imports: [NgtsPerspectiveCamera, SpinningThing, NgtPortal, NgtPortalContent, NgtArgs],
+	imports: [NgtsPerspectiveCamera, SpinningThing, NgtPortal, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -67,12 +70,19 @@ class TargetWrapper {
 	});
 
 	constructor() {
-		injectNextBeforeRender(({ gl }) => {
-			const [camera, scene, target] = [this.camera().cameraRef().nativeElement, this.scene(), this.target()];
-			camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;
-			gl.setRenderTarget(target);
-			gl.render(scene, camera);
-			gl.setRenderTarget(null);
+		const injector = inject(Injector);
+
+		afterNextRender(() => {
+			injectBeforeRender(
+				({ gl }) => {
+					const [camera, scene, target] = [this.camera().cameraRef().nativeElement, this.scene(), this.target()];
+					camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;
+					gl.setRenderTarget(target);
+					gl.render(scene, camera);
+					gl.setRenderTarget(null);
+				},
+				{ injector },
+			);
 		});
 	}
 }

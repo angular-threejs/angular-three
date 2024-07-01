@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
@@ -20,16 +19,15 @@ import { GainMapLoader, HDRJPGLoader } from '@monogrid/gainmap-js';
 import {
 	NgtArgs,
 	NgtPortal,
-	NgtPortalContent,
 	applyProps,
 	extend,
+	injectBeforeRender,
 	injectLoader,
-	injectNextBeforeRender,
-	injectNgtStore,
+	injectStore,
 	is,
 	pick,
 	prepare,
-} from 'angular-three';
+} from 'angular-three-core-new';
 import { LinearEncoding, NgtsContent, TextureEncoding, sRGBEncoding } from 'angular-three-soba/misc';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
@@ -187,7 +185,7 @@ export function injectEnvironment(
 
 		const assertedInjector = inject(Injector);
 		const autoEffect = injectAutoEffect();
-		const store = injectNgtStore();
+		const store = injectStore();
 		const gl = store.select('gl');
 
 		const texture = signal<Texture | CubeTexture | null>(null);
@@ -271,7 +269,7 @@ export class NgtsEnvironmentOptionsProvider {
 	options = input({} as NgtsEnvironmentOptions);
 
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	defaultScene = this.store.select('scene');
 
 	envConfig = computed(() => {
@@ -307,43 +305,42 @@ const defaultBackground: NgtsEnvironmentOptions = {
 export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
-	defaultScene = this.store.select('scene');
-
-	envConfig = computed(() => {
-		const {
-			background = false,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		} = this.options();
-
-		return {
-			background,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		};
-	});
-
-	map = pick(this.options, 'map');
-
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const store = injectStore();
+
+		const defaultScene = store.select('scene');
+		const _map = pick(this.options, 'map');
+		const envConfig = computed(() => {
+			const {
+				background = false,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			} = this.options();
+
+			return {
+				background,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			};
+		});
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				const map = this.map();
+			autoEffect(() => {
+				const map = _map();
 				if (!map) return;
-				const { background = false, scene, ...config } = this.envConfig();
-				return setEnvProps(background, scene, this.defaultScene(), map, config);
+				const { background = false, scene, ...config } = envConfig();
+				return setEnvProps(background, scene, defaultScene(), map, config);
 			});
 		});
 	}
@@ -353,47 +350,47 @@ export class NgtsEnvironmentMap {
 export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
-	defaultScene = this.store.select('scene');
-
-	envConfig = computed(() => {
-		const {
-			background = false,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		} = this.options();
-
-		return {
-			background,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		};
-	});
-
-	environmentOptions = computed(() => {
-		const { encoding, preset, files, path, extensions } = this.options();
-		return { encoding, preset, files, path, extensions };
-	});
-	texture = injectEnvironment(this.environmentOptions);
-
 	constructor() {
+		const autoEffect = injectAutoEffect();
+		const store = injectStore();
+
+		const defaultScene = store.select('scene');
+		const envConfig = computed(() => {
+			const {
+				background = false,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			} = this.options();
+
+			return {
+				background,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			};
+		});
+
+		const environmentOptions = computed(() => {
+			const { encoding, preset, files, path, extensions } = this.options();
+			return { encoding, preset, files, path, extensions };
+		});
+		const _texture = injectEnvironment(environmentOptions);
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				const texture = this.texture();
+			autoEffect(() => {
+				const texture = _texture();
 				if (!texture) return;
-				const { background = false, scene, ...config } = this.envConfig();
-				return setEnvProps(background, scene, this.defaultScene(), texture, config);
+				const { background = false, scene, ...config } = envConfig();
+				return setEnvProps(background, scene, defaultScene(), texture, config);
 			});
 		});
 	}
@@ -404,7 +401,7 @@ export class NgtsEnvironmentCube {
 	standalone: true,
 	template: `
 		<ngt-portal [container]="virtualScene">
-			<ng-container [ngTemplateOutlet]="content()" />
+			<ng-content />
 
 			<ngt-cube-camera #cubeCamera *args="cameraArgs()" />
 
@@ -415,7 +412,7 @@ export class NgtsEnvironmentCube {
 			}
 		</ngt-portal>
 	`,
-	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal, NgtPortalContent, NgTemplateOutlet],
+	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -430,8 +427,7 @@ export class NgtsEnvironmentPortal {
 	options = input(this.defaultOptions, { transform: mergeInputs(this.defaultOptions) });
 	content = input.required<TemplateRef<unknown>>();
 
-	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	defaultScene = this.store.select('scene');
 	gl = this.store.select('gl');
 
@@ -466,8 +462,12 @@ export class NgtsEnvironmentPortal {
 
 	constructor() {
 		extend({ CubeCamera });
+
+		const injector = inject(Injector);
+		const autoEffect = injectAutoEffect();
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const camera = this.camera();
 				if (!camera.nativeElement) return;
 
@@ -499,18 +499,21 @@ export class NgtsEnvironmentPortal {
 					environmentRotation,
 				});
 			});
-		});
 
-		let count = 1;
-		injectNextBeforeRender(() => {
-			const frames = this.options().frames;
-			if (frames === Infinity || (frames != null && count < frames)) {
-				const camera = this.camera().nativeElement;
-				if (camera) {
-					camera.update(this.gl(), this.virtualScene);
-					count++;
-				}
-			}
+			let count = 1;
+			injectBeforeRender(
+				() => {
+					const frames = this.options().frames;
+					if (frames === Infinity || (frames != null && count < frames)) {
+						const camera = this.camera().nativeElement;
+						if (camera) {
+							camera.update(this.gl(), this.virtualScene);
+							count++;
+						}
+					}
+				},
+				{ injector },
+			);
 		});
 	}
 }

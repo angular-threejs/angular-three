@@ -13,9 +13,13 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtArgs, NgtCanvas, NgtPortal, extend, injectBeforeRender, injectStore } from 'angular-three-core-new';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
+import { OrbitControls } from 'three-stdlib';
 
 extend(THREE);
+extend({ OrbitControls });
 
 @Component({
 	selector: 'app-cube',
@@ -134,6 +138,11 @@ export class ArbitraryPlane {
 		</ngt-portal>
 
 		<!--
+		<ngt-orbit-controls *args="[camera(), domElement()]" />
+-->
+		<ngts-orbit-controls />
+
+		<!--
 		<app-arbitrary-shape [position]="[-2, 2, 0]" color="hotpink">
 			<ngt-torus-geometry *args="[2, 0.4, 12, 48]" />
 		</app-arbitrary-shape>
@@ -154,12 +163,20 @@ export class ArbitraryPlane {
     -->
 	`,
 
-	imports: [Cube, ArbitraryShape, CubeWithContent, NgtArgs, ArbitraryPlane, NgtPortal],
+	imports: [Cube, ArbitraryShape, CubeWithContent, NgtArgs, ArbitraryPlane, NgtPortal, NgtsOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Scene {
 	private store = injectStore();
+
+	gltf = injectGLTF(() => './ybot.glb');
+
+	camera = this.store.select('camera');
+	domElement = this.store.select('gl', 'domElement');
+	connected = this.store.select('events', 'connected');
+
+	// controls = computed(() => new OrbitControls(this.camera()));
 
 	active = signal(false);
 	scale = computed(() => (this.active() ? 1.5 : 1));
@@ -178,6 +195,12 @@ export class Scene {
 			mesh.rotation.x += 0.01;
 			mesh.rotation.y += 0.01;
 		});
+
+		// effect(() => {
+		// 	const [controls, domElement, connected] = [this.controls(), this.domElement(), this.connected()];
+		// 	console.log(connected);
+		// 	controls.connect(connected);
+		// });
 
 		effect((onCleanup) => {
 			const id = setTimeout(() => {

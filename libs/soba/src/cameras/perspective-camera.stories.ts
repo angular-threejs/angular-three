@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from 'angular-three-core-new';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 import { positions } from './positions';

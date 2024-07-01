@@ -1,7 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs } from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
+import { NgtArgs } from 'angular-three-core-new';
 import { NgtsFloat } from 'angular-three-soba/staging';
 import { DoubleSide } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
@@ -10,7 +9,7 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 	standalone: true,
 	template: `
 		<ngts-float [options]="options()">
-			<ngt-mesh *ngtsContent>
+			<ngt-mesh>
 				<ngt-box-geometry *args="[2, 2, 2]" />
 				<ngt-mesh-standard-material [wireframe]="true" color="white" />
 			</ngt-mesh>
@@ -23,7 +22,7 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 		</ngt-mesh>
 	`,
 
-	imports: [NgtsFloat, NgtArgs, NgtsContent],
+	imports: [NgtsFloat, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
