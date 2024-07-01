@@ -106,15 +106,17 @@ function attachThreeChild(parent: NgtInstanceRendererNode, child: NgtInstanceRen
 		childLocalState.store = parentLocalState.store;
 
 		// also check the children of child to assign the same store
-		const grandChildren = [...untracked(childLocalState.objects), ...untracked(childLocalState.nonObjects)];
-		for (let i = 0; i < grandChildren.length; i++) {
-			const grandChild = grandChildren[i];
-			const grandChildLocalState = getLocalState(grandChild);
-			if (
-				grandChildLocalState &&
-				(!grandChildLocalState.store || grandChildLocalState.store !== childLocalState.store)
-			) {
-				grandChildLocalState.store = childLocalState.store;
+		if (childLocalState.objects && childLocalState.nonObjects) {
+			const grandChildren = [...untracked(childLocalState.objects), ...untracked(childLocalState.nonObjects)];
+			for (let i = 0; i < grandChildren.length; i++) {
+				const grandChild = grandChildren[i];
+				const grandChildLocalState = getLocalState(grandChild);
+				if (
+					grandChildLocalState &&
+					(!grandChildLocalState.store || grandChildLocalState.store !== childLocalState.store)
+				) {
+					grandChildLocalState.store = childLocalState.store;
+				}
 			}
 		}
 	}
@@ -169,7 +171,7 @@ function attachThreeChild(parent: NgtInstanceRendererNode, child: NgtInstanceRen
 	parentLocalState.add(child, added ? 'objects' : 'nonObjects');
 
 	// for local state
-	if (untracked(childLocalState.parent) !== parent) {
+	if (childLocalState.parent && untracked(childLocalState.parent) !== parent) {
 		childLocalState.setParent(parent);
 	}
 
@@ -191,11 +193,11 @@ function detachThreeChild(parent: NgtInstanceRendererNode, child: NgtInstanceRen
 	const childLocalState = getLocalState(child);
 
 	// clear parent
-	childLocalState?.setParent(null);
+	childLocalState?.setParent?.(null);
 
 	// remove child
-	parentLocalState?.remove(child, 'objects');
-	parentLocalState?.remove(child, 'nonObjects');
+	parentLocalState?.remove?.(child, 'objects');
+	parentLocalState?.remove?.(child, 'nonObjects');
 
 	if (childLocalState?.attach) {
 		detach(parent, child, childLocalState.attach);

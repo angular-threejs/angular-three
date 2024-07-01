@@ -97,10 +97,12 @@ export function applyProps(obj: NgtAnyRecord, props: NgtAnyRecord) {
 				rootState
 			) {
 				const texture = current[key] as Texture;
-				if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
-					texture.colorSpace = rootState.gl.outputColorSpace;
-				// @ts-expect-error - old version of threejs
-				else texture.encoding = rootState.gl.outputEncoding;
+				if (rootState.gl) {
+					if (is.colorSpaceExist(texture) && is.colorSpaceExist(rootState.gl))
+						texture.colorSpace = rootState.gl.outputColorSpace;
+					// @ts-expect-error - old version of threejs
+					else texture.encoding = rootState.gl.outputEncoding;
+				}
 			}
 		}
 

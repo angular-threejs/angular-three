@@ -55,7 +55,6 @@ export type NgtPortalInjectableState = Partial<
 	standalone: true,
 	template: `
 		<ng-container #anchor />
-		<ng-content />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,8 +79,6 @@ export class NgtPortal {
 		const pointer = new Vector2();
 
 		let portalView: EmbeddedViewRef<unknown>;
-
-		console.log(portalStore);
 
 		afterNextRender(() => {
 			const previousState = parentStore.snapshot;
@@ -115,14 +112,14 @@ export class NgtPortal {
 				portalStore.update((prev) => this.inject(parentState(), prev, state, untracked(this.container)));
 			});
 
-			// untracked(() => {
-			// 	portalView = this.portalAnchor().createEmbeddedView(
-			// 		this.portalContent(),
-			// 		{ container: this.container() },
-			// 		{ injector },
-			// 	);
-			// 	portalView.detectChanges();
-			// });
+			untracked(() => {
+				portalView = this.portalAnchor().createEmbeddedView(
+					this.portalContent(),
+					{ container: this.container() },
+					{ injector },
+				);
+				portalView.detectChanges();
+			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {

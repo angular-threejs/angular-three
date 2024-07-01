@@ -4,13 +4,12 @@ import {
 	Component,
 	ElementRef,
 	Injector,
-	afterNextRender,
 	computed,
 	inject,
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, injectBeforeRender } from 'angular-three-core-new';
+import { NgtArgs, NgtPortal, injectBeforeRender, injectStore } from 'angular-three-core-new';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsFBO } from 'angular-three-soba/misc';
 import { Color, Mesh, Scene, WebGLRenderTarget } from 'three';
@@ -33,10 +32,14 @@ class SpinningThing {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(() => {
-			const { nativeElement } = this.mesh();
-			nativeElement.rotation.x = nativeElement.rotation.y = nativeElement.rotation.z += 0.01;
-		});
+		const injector = inject(Injector);
+		injectBeforeRender(
+			() => {
+				const { nativeElement } = this.mesh();
+				nativeElement.rotation.x = nativeElement.rotation.y = nativeElement.rotation.z += 0.01;
+			},
+			{ injector },
+		);
 	}
 }
 
@@ -46,7 +49,7 @@ class SpinningThing {
 		<ngts-perspective-camera #camera [options]="{ position: [0, 0, 3] }" />
 
 		<ngt-portal [container]="scene()">
-			<fbo-spinning-thing />
+			<fbo-spinning-thing * />
 		</ngt-portal>
 
 		<ngt-mesh>
@@ -62,7 +65,7 @@ class SpinningThing {
 class TargetWrapper {
 	target = input.required<WebGLRenderTarget>();
 
-	camera = viewChild.required('camera', { read: NgtsPerspectiveCamera });
+	camera = viewChild(NgtsPerspectiveCamera);
 	scene = computed(() => {
 		const scene = new Scene();
 		scene.background = new Color('orange');
@@ -72,18 +75,19 @@ class TargetWrapper {
 	constructor() {
 		const injector = inject(Injector);
 
-		afterNextRender(() => {
-			injectBeforeRender(
-				({ gl }) => {
-					const [camera, scene, target] = [this.camera().cameraRef().nativeElement, this.scene(), this.target()];
-					camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;
-					gl.setRenderTarget(target);
-					gl.render(scene, camera);
-					gl.setRenderTarget(null);
-				},
-				{ injector },
-			);
-		});
+		injectBeforeRender(
+			({ gl }) => {
+				const perspectiveCamera = this.camera();
+				if (!perspectiveCamera) return;
+
+				const [camera, scene, target] = [perspectiveCamera.cameraRef().nativeElement, this.scene(), this.target()];
+				camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;
+				gl.setRenderTarget(target);
+				gl.render(scene, camera);
+				gl.setRenderTarget(null);
+			},
+			{ injector },
+		);
 	}
 }
 
@@ -108,6 +112,10 @@ class DefaultFBOStory {
 		samples: this.samples(),
 		stencilBuffer: this.stencilBuffer(),
 	}));
+
+	constructor() {
+		console.log(injectStore().snapshot);
+	}
 }
 
 export default {

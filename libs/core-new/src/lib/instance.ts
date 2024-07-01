@@ -118,12 +118,14 @@ export function prepare<TInstance extends object = NgtAnyRecord>(obj: TInstance,
 			...(state || {}),
 			destroy: () => {
 				const localState = instance.__ngt__;
-				untracked(localState.objects).forEach((obj) => {
-					getLocalState(obj)?.destroy?.();
-				});
-				untracked(localState.nonObjects).forEach((obj) => {
-					getLocalState(obj)?.destroy?.();
-				});
+				localState.objects &&
+					untracked(localState.objects).forEach((obj) => {
+						getLocalState(obj)?.destroy?.();
+					});
+				localState.nonObjects &&
+					untracked(localState.nonObjects).forEach((obj) => {
+						getLocalState(obj)?.destroy?.();
+					});
 
 				delete localState.onAttach;
 				delete localState.onUpdate;
