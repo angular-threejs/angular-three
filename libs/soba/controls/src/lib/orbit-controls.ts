@@ -1,15 +1,5 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
-import {
-	exclude,
-	injectBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	NgtArgs,
-	NgtCamera,
-	NgtInjectedRef,
-	NgtVector3,
-	pick,
-} from 'angular-three';
+import { exclude, injectBeforeRender, injectNgtStore, NgtArgs, NgtCamera, NgtVector3, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Camera, Event } from 'three';
 import { OrbitControls } from 'three-stdlib';
@@ -44,7 +34,7 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 	selector: 'ngts-orbit-controls',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="args()" [parameters]="parameters()" [enableDamping]="enableDamping()">
+		<ngt-primitive *args="[controls()]" [parameters]="parameters()" [enableDamping]="enableDamping()">
 			<ng-content />
 		</ngt-primitive>
 	`,
@@ -54,7 +44,6 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 export class NgtsOrbitControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = exclude(this.options, ['makeDefault', 'camera', 'regress', 'domElement', 'keyEvents', 'enableDamping']);
-	controlsRef = input<NgtInjectedRef<OrbitControls>>(injectNgtRef());
 
 	changed = output<Event>();
 	started = output<Event>();
@@ -72,34 +61,27 @@ export class NgtsOrbitControls {
 	private domElement = pick(this.options, 'domElement');
 	private makeDefault = pick(this.options, 'makeDefault');
 
-	protected args = computed(() => [this.controlsRef().nativeElement]);
+	controls = computed(() => {
+		const [camera, defaultCamera] = [this.camera(), this.defaultCamera()];
+		const controlsCamera = camera || defaultCamera;
+		return new OrbitControls(controlsCamera as NgtCamera);
+	});
+
 	protected enableDamping = pick(this.options, 'enableDamping');
 
 	constructor() {
 		injectBeforeRender(
 			() => {
-				const controls = this.controlsRef().nativeElement;
+				const controls = this.controls();
 				if (controls?.enabled) {
 					controls.update();
 				}
 			},
 			{ priority: -1 },
 		);
-
-		this.setControls();
 		this.connectElement();
 		this.makeControlsDefault();
 		this.setEvents();
-	}
-
-	private setControls() {
-		effect(() => {
-			const [camera, defaultCamera, controlsRef] = [this.camera(), this.defaultCamera(), this.controlsRef()];
-			const controlsCamera = camera || defaultCamera;
-			if (!controlsRef.nativeElement || controlsRef.nativeElement.object !== controlsCamera) {
-				controlsRef.nativeElement = new OrbitControls(controlsCamera as NgtCamera);
-			}
-		});
 	}
 
 	private connectElement() {
@@ -107,7 +89,7 @@ export class NgtsOrbitControls {
 			const [keyEvents, domElement, controls] = [
 				this.keyEvents(),
 				this.domElement() || this.store.get('events', 'connected') || this.glDomElement(),
-				this.controlsRef().nativeElement,
+				this.controls(),
 				this.invalidate(),
 				this.regress(),
 			];
@@ -123,7 +105,7 @@ export class NgtsOrbitControls {
 
 	private makeControlsDefault() {
 		effect((onCleanup) => {
-			const [controls, makeDefault] = [this.controlsRef().nativeElement, this.makeDefault()];
+			const [controls, makeDefault] = [this.controls(), this.makeDefault()];
 			if (!controls) return;
 			if (makeDefault) {
 				const oldControls = this.store.get('controls');
@@ -136,7 +118,7 @@ export class NgtsOrbitControls {
 	private setEvents() {
 		effect((onCleanup) => {
 			const [controls, invalidate, performanceRegress, regress] = [
-				this.controlsRef().nativeElement,
+				this.controls(),
 				this.invalidate(),
 				this.performanceRegress(),
 				this.regress(),
