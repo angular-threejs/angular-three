@@ -38,7 +38,7 @@ export class Sun {
 	template: `
 		<ngt-color *args="['#171717']" attach="background" />
 
-		<app-sun color="yellow" />
+		<app-sun #sun color="yellow" />
 
 		<ngt-group #group>
 			<ngt-mesh>
@@ -59,7 +59,7 @@ export class Sun {
 
 		<ngtp-effect-composer>
 			<ng-template effects>
-				@if (sun().sunRef().nativeElement; as sun) {
+				@if (sun.sunRef().nativeElement; as sun) {
 					<ngtp-god-rays [options]="{ sun }" />
 				}
 			</ng-template>
@@ -72,7 +72,6 @@ export class Sun {
 })
 export class Experience {
 	group = viewChild.required<ElementRef<Group>>('group');
-	sun = viewChild.required(Sun);
 
 	constructor() {
 		injectBeforeRender(() => {

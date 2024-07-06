@@ -78,7 +78,9 @@ export class NgtpEffects {}
 	selector: 'ngtp-effect-composer',
 	standalone: true,
 	template: `
-		<ngt-group #group />
+		<ngt-group #group>
+			<ng-container #anchor />
+		</ngt-group>
 	`,
 	providers: [provideEffectComposerApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -105,7 +107,7 @@ export class NgtpEffectComposer {
 	resolutionScale = pick(this.options, 'resolutionScale');
 
 	group = viewChild.required<ElementRef<Group>>('group');
-	groupAnchor = viewChild.required('group', { read: ViewContainerRef });
+	groupAnchor = viewChild.required('anchor', { read: ViewContainerRef });
 	content = contentChild.required(NgtpEffects, { read: TemplateRef });
 
 	composerData = computed(() => {
