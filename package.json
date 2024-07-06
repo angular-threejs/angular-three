@@ -70,7 +70,7 @@
 		"jest-preset-angular": "14.1.1",
 		"jsdom": "^24.1.0",
 		"jsonc-eslint-parser": "^2.4.0",
-		"ng-packagr": "18.0.0",
+		"ng-packagr": "^18.0.0",
 		"ngx-resize": "^2.0.0",
 		"nx": "19.4.1",
 		"postcss": "^8.4.39",

@@ -60,7 +60,7 @@ class Suzi {
 					radius: 4,
 					ambient: 0.5,
 					bias: 0.001,
-					position: [5, 5, -10]
+					position: [5, 5, -10],
 				}"
 			/>
 		</ngts-accumulative-shadows>

@@ -1,5 +1,6 @@
 export * from './lib/canvas';
 export * from './lib/directives/args';
+export { NgtCamera, NgtThreeEvent } from './lib/events';
 export * from './lib/instance';
 export * from './lib/loader';
 export { addAfterEffect, addEffect, addTail } from './lib/loop';
@@ -18,6 +19,5 @@ export * from './lib/utils/resolve-ref';
 export * from './lib/utils/signal-store';
 export * from './lib/utils/update';
 
-export type { NgtCamera, NgtThreeEvent } from './lib/events';
 export type * from './lib/three-types';
 export type * from './lib/types';

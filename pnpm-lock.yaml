@@ -289,7 +289,7 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0
       ng-packagr:
-        specifier: 18.0.0
+        specifier: ^18.0.0
         version: 18.0.0(@angular/compiler-cli@18.0.6(@angular/compiler@18.0.6(@angular/core@18.0.6(rxjs@7.8.1)(zone.js@0.14.4)))(typescript@5.4.5))(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.6.7(@swc/helpers@0.5.11))(@types/node@20.14.10)(typescript@5.4.5)))(tslib@2.6.3)(typescript@5.4.5)
       ngx-resize:
         specifier: ^2.0.0
@@ -4537,9 +4537,6 @@ packages:
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
-  ajv@8.12.0:
-    resolution: {integrity: sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==}
-
   ajv@8.13.0:
     resolution: {integrity: sha512-PRA911Blj99jR5RMeTunVbNXMF6Lp4vZXnk5GQjcnUWUTsrXtekg/pnmFFI2u/I36Y/2bITGS30GZCXei6uNkA==}
 
@@ -5055,10 +5052,6 @@ packages:
 
   check-error@1.0.3:
     resolution: {integrity: sha512-iKEoDYaRmd1mxM90a2OEfWhjsjPpYPuQ+lMYsoxB126+t8fw7ySEO48nmDg5COTjxDI65/Y2OWpeEHk3ZOe8zg==}
-
-  chokidar@3.5.3:
-    resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
-    engines: {node: '>= 8.10.0'}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -10274,11 +10267,6 @@ packages:
       webpack:
         optional: true
 
-  sass@1.70.0:
-    resolution: {integrity: sha512-uUxNQ3zAHeAx5nRFskBnrWzDUJrrvpCPD5FNAoRvTi0WwremlheES3tg+56PaVtCs5QDRX5CBLxxKMDJMEa1WQ==}
-    engines: {node: '>=14.0.0'}
-    hasBin: true
-
   sass@1.77.2:
     resolution: {integrity: sha512-eb4GZt1C3avsX3heBNlrc7I09nyT00IUuo4eFhAbeXWU2fvA7oXI53SxODVAA+zgZCk9aunAZgO+losjR3fAwA==}
     engines: {node: '>=14.0.0'}
@@ -10463,10 +10451,6 @@ packages:
 
   sort-keys@1.1.2:
     resolution: {integrity: sha512-vzn8aSqKgytVik0iwdBEi+zevbTYZogewTUM6dtpmGwEcdzbub/TX4bCzRhebDCRC3QzXgJsLRKB2V/Oof7HXg==}
-    engines: {node: '>=0.10.0'}
-
-  source-map-js@1.0.2:
-    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
 
   source-map-js@1.2.0:
@@ -16777,7 +16761,7 @@ snapshots:
       fs-extra: 11.2.0
       get-npm-tarball-url: 2.1.0
       giget: 1.2.3
-      globby: 14.0.1
+      globby: 14.0.2
       jscodeshift: 0.15.2(@babel/preset-env@7.24.5(@babel/core@7.24.7))
       leven: 3.1.0
       ora: 5.4.1
@@ -16817,7 +16801,7 @@ snapshots:
       '@storybook/types': 8.1.10
       '@types/cross-spawn': 6.0.6
       cross-spawn: 7.0.3
-      globby: 14.0.1
+      globby: 14.0.2
       jscodeshift: 0.15.2(@babel/preset-env@7.24.5(@babel/core@7.24.7))
       lodash: 4.17.21
       prettier: 3.3.2
@@ -16961,7 +16945,7 @@ snapshots:
       diff: 5.2.0
       express: 4.18.2
       fs-extra: 11.2.0
-      globby: 14.0.1
+      globby: 14.0.2
       lodash: 4.17.21
       open: 8.4.2
       pretty-hrtime: 1.0.3
@@ -18314,13 +18298,6 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  ajv@8.12.0:
-    dependencies:
-      fast-deep-equal: 3.1.3
-      json-schema-traverse: 1.0.0
-      require-from-string: 2.0.2
-      uri-js: 4.4.1
-
   ajv@8.13.0:
     dependencies:
       fast-deep-equal: 3.1.3
@@ -19013,18 +18990,6 @@ snapshots:
   check-error@1.0.3:
     dependencies:
       get-func-name: 2.0.2
-
-  chokidar@3.5.3:
-    dependencies:
-      anymatch: 3.1.3
-      braces: 3.0.2
-      glob-parent: 5.1.2
-      is-binary-path: 2.1.0
-      is-glob: 4.0.3
-      normalize-path: 3.0.0
-      readdirp: 3.6.0
-    optionalDependencies:
-      fsevents: 2.3.3
 
   chokidar@3.6.0:
     dependencies:
@@ -23311,11 +23276,11 @@ snapshots:
       '@rollup/plugin-json': 6.1.0(rollup@4.18.0)
       '@rollup/plugin-node-resolve': 15.2.3(rollup@4.18.0)
       '@rollup/wasm-node': 4.18.0
-      ajv: 8.12.0
+      ajv: 8.13.0
       ansi-colors: 4.1.3
-      browserslist: 4.22.3
+      browserslist: 4.23.1
       cacache: 18.0.0
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       commander: 12.0.0
       convert-source-map: 2.0.0
       dependency-graph: 1.0.0
@@ -23329,7 +23294,7 @@ snapshots:
       piscina: 4.5.1
       postcss: 8.4.39
       rxjs: 7.8.1
-      sass: 1.70.0
+      sass: 1.77.2
       tslib: 2.6.3
       typescript: 5.4.5
     optionalDependencies:
@@ -25271,12 +25236,6 @@ snapshots:
       sass: 1.77.2
       webpack: 5.91.0(@swc/core@1.6.7(@swc/helpers@0.5.11))(esbuild@0.21.3)
 
-  sass@1.70.0:
-    dependencies:
-      chokidar: 3.6.0
-      immutable: 4.3.1
-      source-map-js: 1.0.2
-
   sass@1.77.2:
     dependencies:
       chokidar: 3.6.0
@@ -25486,8 +25445,6 @@ snapshots:
   sort-keys@1.1.2:
     dependencies:
       is-plain-obj: 1.1.0
-
-  source-map-js@1.0.2: {}
 
   source-map-js@1.2.0: {}
 

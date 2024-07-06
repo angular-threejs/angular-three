@@ -81,7 +81,7 @@ export class Dodecahedron {
 						[options]="{
 							font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
 							fontSize: 4,
-							color: '#555'
+							color: '#555',
 						}"
 					/>
 					<app-dodecahedron />

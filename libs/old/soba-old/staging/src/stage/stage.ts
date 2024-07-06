@@ -108,7 +108,7 @@ export class NgtsStageRefit implements OnChanges {
 			[position]="[
 				config().main[0] * boundingState.get('radius'),
 				config().main[1] * boundingState.get('radius'),
-				config().main[2] * boundingState.get('radius')
+				config().main[2] * boundingState.get('radius'),
 			]"
 			[intensity]="intensity() * 2"
 			[castShadow]="!!shadows()"
@@ -121,7 +121,7 @@ export class NgtsStageRefit implements OnChanges {
 			[position]="[
 				config().fill[0] * boundingState.get('radius'),
 				config().fill[1] * boundingState.get('radius'),
-				config().fill[2] * boundingState.get('radius')
+				config().fill[2] * boundingState.get('radius'),
 			]"
 			[intensity]="intensity()"
 		/>
@@ -184,7 +184,7 @@ export class NgtsStageRefit implements OnChanges {
 					[position]="[
 						config().main[0] * boundingState.get('radius'),
 						config().main[1] * boundingState.get('radius'),
-						config().main[2] * boundingState.get('radius')
+						config().main[2] * boundingState.get('radius'),
 					]"
 					[size]="boundingState.get('radius') * 4"
 					[bias]="-shadowsState().shadowBias"
