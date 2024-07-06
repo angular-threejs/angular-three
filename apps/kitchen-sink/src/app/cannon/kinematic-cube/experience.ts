@@ -1,11 +1,19 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	computed,
+	input,
+	viewChild,
+} from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
 import { injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import * as THREE from 'three';
-import { Color } from 'three';
+import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../colors';
 
 extend(THREE);
@@ -14,7 +22,7 @@ extend(THREE);
 	selector: 'app-plane',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="plane.ref" [receiveShadow]="true">
+		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[1000, 1000]" />
 			<ngt-mesh-phong-material [color]="color()" />
 		</ngt-mesh>
@@ -28,17 +36,21 @@ export class Plane {
 	position = input<Triplet>([0, 0, 0]);
 	rotation = input<Triplet>([0, 0, 0]);
 
-	plane = injectPlane(() => ({
-		position: this.position(),
-		rotation: this.rotation(),
-	}));
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	plane = injectPlane(
+		() => ({
+			position: this.position(),
+			rotation: this.rotation(),
+		}),
+		this.mesh,
+	);
 }
 
 @Component({
 	selector: 'app-box',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="box.ref" [castShadow]="true" [receiveShadow]="true">
+		<ngt-mesh #mesh [castShadow]="true" [receiveShadow]="true">
 			<ngt-box-geometry *args="args" />
 			<ngt-mesh-lambert-material color="white" />
 		</ngt-mesh>
@@ -49,13 +61,16 @@ export class Plane {
 })
 export class Box {
 	args: Triplet = [4, 4, 4];
-	box = injectBox(() => ({ args: this.args, mass: 1, type: 'Kinematic' }));
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	boxApi = injectBox(() => ({ args: this.args, mass: 1, type: 'Kinematic' }), this.mesh);
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
+			const api = this.boxApi();
+			if (!api) return;
 			const t = clock.getElapsedTime();
-			this.box.api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
-			this.box.api.rotation.set(Math.sin(t * 6), Math.cos(t * 6), 0);
+			api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
+			api.rotation.set(Math.sin(t * 6), Math.cos(t * 6), 0);
 		});
 	}
 }
@@ -65,7 +80,7 @@ export class Box {
 	standalone: true,
 	template: `
 		<ngt-instanced-mesh
-			[ref]="sphere.ref"
+			#instancedMesh
 			[castShadow]="true"
 			[receiveShadow]="true"
 			*args="[undefined, undefined, count()]"
@@ -83,11 +98,15 @@ export class Box {
 export class InstancedSpheres {
 	count = input(100);
 
-	sphere = injectSphere((index) => ({
-		args: [1],
-		mass: 1,
-		position: [Math.random() - 0.5, Math.random() - 0.5, index * 2],
-	}));
+	instancedMesh = viewChild<ElementRef<InstancedMesh>>('instancedMesh');
+	sphere = injectSphere(
+		(index) => ({
+			args: [1],
+			mass: 1,
+			position: [Math.random() - 0.5, Math.random() - 0.5, index * 2],
+		}),
+		this.instancedMesh,
+	);
 
 	colors = computed(() => {
 		const array = new Float32Array(this.count() * 3);

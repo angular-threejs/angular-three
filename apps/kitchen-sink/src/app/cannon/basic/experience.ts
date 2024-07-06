@@ -2,10 +2,12 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	afterNextRender,
 	inject,
 	input,
 	signal,
+	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend } from 'angular-three';
@@ -13,6 +15,7 @@ import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
 import { injectBox, injectPlane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import * as THREE from 'three';
+import { Mesh } from 'three';
 import { State } from './state';
 
 extend(THREE);
@@ -21,7 +24,7 @@ extend(THREE);
 	selector: 'app-plane',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="plane.ref" [receiveShadow]="true">
+		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="args" />
 			<ngt-mesh-standard-material color="#171717" />
 		</ngt-mesh>
@@ -33,14 +36,15 @@ extend(THREE);
 export class Plane {
 	position = input<Triplet>([0, 0, 0]);
 	args = [1000, 1000];
-	plane = injectPlane(() => ({ mass: 0, position: this.position(), args: this.args }));
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	plane = injectPlane(() => ({ mass: 0, position: this.position(), args: this.args }), this.mesh);
 }
 
 @Component({
 	selector: 'app-box',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="box.ref" [receiveShadow]="true" [castShadow]="true">
+		<ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
 			<ngt-box-geometry *args="args" />
 			<ngt-mesh-standard-material [roughness]="0.5" color="#575757" />
 		</ngt-mesh>
@@ -52,7 +56,8 @@ export class Plane {
 export class Box {
 	position = input<Triplet>([0, 0, 0]);
 	args: Triplet = [2, 2, 2];
-	box = injectBox(() => ({ mass: 10000, position: this.position(), args: this.args }));
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	box = injectBox(() => ({ mass: 10000, position: this.position(), args: this.args }), this.mesh);
 }
 
 @Component({

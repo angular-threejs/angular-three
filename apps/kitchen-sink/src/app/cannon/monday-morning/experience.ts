@@ -8,22 +8,19 @@ import {
 	Signal,
 	afterNextRender,
 	computed,
-	forwardRef,
 	inject,
 	input,
 	output,
 	signal,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { ConeTwistConstraintOpts, Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, NgtThreeEvent, extend, injectBeforeRender, injectNgtRef } from 'angular-three';
+import { NgtArgs, NgtThreeEvent, extend, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
 import { injectBox, injectCompound, injectCylinder, injectSphere } from 'angular-three-cannon/body';
-import { NgtcConstraintReturn, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
+import { NgtcConstraintApi, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectGLTFLoader } from 'angular-three-soba/loaders';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { createInjectionToken, createNoopInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group, Material, Mesh, Object3D } from 'three';
@@ -35,25 +32,16 @@ extend(THREE);
 
 const [injectCursorRef, provideCursorRef] = createInjectionToken(() => signal<ElementRef<Mesh> | null>(null));
 
-function injectDragConstraint(ref: ElementRef<Object3D>) {
-	const cursorRef = injectCursorRef();
-	const autoEffect = injectAutoEffect();
+function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
+	const cursorRef = inject(Cursor);
 	const injector = inject(Injector);
 
-	const api = signal<NgtcConstraintReturn<'PointToPoint'>['api']>(null!);
-
-	autoEffect(() => {
-		const cursor = cursorRef();
-		if (!cursor) return;
-
-		const pointToPoint = injectPointToPoint(cursor, ref, {
-			options: { pivotA: [0, 0, 0], pivotB: [0, 0, 0] },
+	let pointToPoint: Signal<NgtcConstraintApi | null>;
+	afterNextRender(() => {
+		pointToPoint = injectPointToPoint(cursorRef.mesh, ref, {
 			injector,
+			options: { pivotA: [0, 0, 0], pivotB: [0, 0, 0] },
 			disableOnStart: true,
-		});
-
-		untracked(() => {
-			api.set(pointToPoint.api);
 		});
 	});
 
@@ -61,11 +49,11 @@ function injectDragConstraint(ref: ElementRef<Object3D>) {
 		event.stopPropagation();
 		//@ts-expect-error Investigate proper types here.
 		event.target.setPointerCapture(event.pointerId);
-		api().enable();
+		pointToPoint()?.enable();
 	}
 
 	function onPointerUp() {
-		api().disable();
+		pointToPoint()?.disable();
 	}
 
 	return { onPointerUp, onPointerDown };
@@ -76,9 +64,9 @@ function injectDragConstraint(ref: ElementRef<Object3D>) {
 	standalone: true,
 	template: `
 		<ngt-mesh
+			#mesh
 			[castShadow]="true"
 			[receiveShadow]="true"
-			[ref]="boxRef()"
 			[position]="position()"
 			[scale]="scale()"
 			(pointerdown)="pointerdown.emit($any($event))"
@@ -94,7 +82,6 @@ function injectDragConstraint(ref: ElementRef<Object3D>) {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
-	boxRef = input(injectNgtRef<Object3D>());
 	color = input('white');
 	opacity = input(1);
 	transparent = input(false);
@@ -104,6 +91,8 @@ export class Box {
 
 	pointerdown = output<NgtThreeEvent<PointerEvent>>();
 	pointerup = output<void>();
+
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 }
 
 const { joints, shapes } = createRagdoll(4.8, Math.PI / 16, Math.PI / 16, 0);
@@ -124,7 +113,6 @@ const [injectParentRef, , ParentRef] = createNoopInjectionToken<ElementRef<Objec
 			[scale]="shapeConfig().scale"
 			[name]="name()"
 			[color]="shapeConfig().color"
-			[boxRef]="body.ref"
 			[position]="[0, 0, 0]"
 			(pointerdown)="dragConstraint.onPointerDown($event)"
 			(pointerup)="dragConstraint.onPointerUp()"
@@ -134,20 +122,11 @@ const [injectParentRef, , ParentRef] = createNoopInjectionToken<ElementRef<Objec
 
 		<ng-content />
 	`,
-	providers: [
-		{
-			provide: ParentRef,
-			useFactory: (bodyPart: BodyPart) => bodyPart.body.ref,
-			deps: [forwardRef(() => BodyPart)],
-		},
-	],
 	imports: [Box, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BodyPart {
-	parentRef = injectParentRef({ skipSelf: true, optional: true });
-
 	name = input.required<keyof typeof shapes>();
 	constraintOpts = input<ConeTwistConstraintOpts>();
 
@@ -156,20 +135,27 @@ export class BodyPart {
 		return { color, position, args, mass, scale: double(args) };
 	});
 
-	body = injectBox(() => ({
-		args: [...this.shapeConfig().args],
-		linearDamping: 0.99,
-		mass: this.shapeConfig().mass,
-		position: [...this.shapeConfig().position],
-	}));
+	private box = viewChild.required(Box);
 
-	dragConstraint = injectDragConstraint(this.body.ref);
+	body = computed(() => this.box().meshRef());
+	dragConstraint = injectDragConstraint(this.body);
 
 	constructor() {
 		const injector = inject(Injector);
+		const parent = inject(BodyPart, { skipSelf: true, optional: true });
+		injectBox(
+			() => ({
+				args: [...this.shapeConfig().args],
+				linearDamping: 0.99,
+				mass: this.shapeConfig().mass,
+				position: [...this.shapeConfig().position],
+			}),
+			this.body,
+		);
+
 		afterNextRender(() => {
-			if (this.parentRef && this.constraintOpts()) {
-				injectConeTwist(this.body.ref, this.parentRef, {
+			if (parent && this.constraintOpts()) {
+				injectConeTwist(this.body, parent.body, {
 					injector,
 					options: this.constraintOpts(),
 				});
@@ -235,15 +221,15 @@ export class BodyPart {
 export class RagDoll {
 	joints = joints;
 
-	eyes = viewChild<ElementRef<Group>>('eyes');
-	mouth = viewChild('mouth', { read: Box });
+	private eyes = viewChild<ElementRef<Group>>('eyes');
+	private mouth = viewChild('mouth', { read: Box });
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
 			const [eyes, mouth] = [this.eyes(), this.mouth()];
 			if (eyes && mouth) {
 				eyes.nativeElement.position.y = Math.sin(clock.getElapsedTime() * 1) * 0.06;
-				mouth.boxRef().nativeElement.scale.y = (1 + Math.sin(clock.getElapsedTime())) * 1.5;
+				mouth.meshRef().nativeElement.scale.y = (1 + Math.sin(clock.getElapsedTime())) * 1.5;
 			}
 		});
 	}
@@ -254,7 +240,7 @@ export class RagDoll {
 	standalone: true,
 	template: `
 		<ngt-group
-			[ref]="compound.ref"
+			#group
 			(pointerdown)="dragConstraint.onPointerDown($any($event))"
 			(pointerup)="dragConstraint.onPointerUp()"
 		>
@@ -271,20 +257,27 @@ export class RagDoll {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Chair {
-	compound = injectCompound(() => ({
-		mass: 1,
-		position: [-6, 0, 0],
-		shapes: [
-			{ args: [1.5, 1.5, 0.25], mass: 1, position: [0, 0, 0], type: 'Box' },
-			{ args: [1.5, 0.25, 1.5], mass: 1, position: [0, -1.75, 1.25], type: 'Box' },
-			{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -6.25, -3.5, 0], type: 'Box' },
-			{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -3.75, -3.5, 0], type: 'Box' },
-			{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -6.25, -3.5, 2.5], type: 'Box' },
-			{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -3.75, -3.5, 2.5], type: 'Box' },
-		],
-		type: 'Dynamic',
-	}));
-	dragConstraint = injectDragConstraint(this.compound.ref);
+	private group = viewChild.required<ElementRef<Group>>('group');
+	dragConstraint = injectDragConstraint(this.group);
+
+	constructor() {
+		injectCompound(
+			() => ({
+				mass: 1,
+				position: [-6, 0, 0],
+				shapes: [
+					{ args: [1.5, 1.5, 0.25], mass: 1, position: [0, 0, 0], type: 'Box' },
+					{ args: [1.5, 0.25, 1.5], mass: 1, position: [0, -1.75, 1.25], type: 'Box' },
+					{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -6.25, -3.5, 0], type: 'Box' },
+					{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -3.75, -3.5, 0], type: 'Box' },
+					{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -6.25, -3.5, 2.5], type: 'Box' },
+					{ args: [0.25, 1.5, 0.25], mass: 10, position: [5 + -3.75, -3.5, 2.5], type: 'Box' },
+				],
+				type: 'Dynamic',
+			}),
+			this.group,
+		);
+	}
 }
 
 interface CupGLTF extends GLTF {
@@ -297,7 +290,7 @@ interface CupGLTF extends GLTF {
 	standalone: true,
 	template: `
 		<ngt-group
-			[ref]="cylinder.ref"
+			#group
 			(pointerdown)="dragConstraint.onPointerDown($any($event))"
 			(pointerup)="dragConstraint.onPointerUp()"
 			[dispose]="null"
@@ -326,24 +319,32 @@ interface CupGLTF extends GLTF {
 })
 export class Mug {
 	gltf = injectGLTFLoader(() => './cup.glb') as Signal<CupGLTF | null>;
-	cylinder = injectCylinder(() => ({
-		args: [0.6, 0.6, 1, 16],
-		mass: 1,
-		position: [9, 0, 0],
-		rotation: [Math.PI / 2, 0, 0],
-	}));
-	dragConstraint = injectDragConstraint(this.cylinder.ref);
+	private group = viewChild.required<ElementRef<Group>>('group');
+
+	dragConstraint = injectDragConstraint(this.group);
+
+	constructor() {
+		injectCylinder(
+			() => ({
+				args: [0.6, 0.6, 1, 16],
+				mass: 1,
+				position: [9, 0, 0],
+				rotation: [Math.PI / 2, 0, 0],
+			}),
+			this.group,
+		);
+	}
 }
 
 @Component({
 	selector: 'app-table',
 	standalone: true,
 	template: `
-		<app-box [scale]="[5, 0.5, 5]" [boxRef]="seat.ref" />
-		<app-box [scale]="[0.5, 4, 0.5]" [boxRef]="leg1.ref" />
-		<app-box [scale]="[0.5, 4, 0.5]" [boxRef]="leg2.ref" />
-		<app-box [scale]="[0.5, 4, 0.5]" [boxRef]="leg3.ref" />
-		<app-box [scale]="[0.5, 4, 0.5]" [boxRef]="leg4.ref" />
+		<app-box #seat [scale]="[5, 0.5, 5]" />
+		<app-box #leg1 [scale]="[0.5, 4, 0.5]" />
+		<app-box #leg2 [scale]="[0.5, 4, 0.5]" />
+		<app-box #leg3 [scale]="[0.5, 4, 0.5]" />
+		<app-box #leg4 [scale]="[0.5, 4, 0.5]" />
 		<app-mug />
 	`,
 	imports: [NgtArgs, Mug, Box],
@@ -351,40 +352,66 @@ export class Mug {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Table {
-	seat = injectBox(() => ({ args: [2.5, 0.25, 2.5], position: [9, -0.8, 0], type: 'Static' }));
-	leg1 = injectBox(() => ({ args: [0.25, 2, 0.25], position: [7.2, -3, 1.8], type: 'Static' }));
-	leg2 = injectBox(() => ({ args: [0.25, 2, 0.25], position: [10.8, -3, 1.8], type: 'Static' }));
-	leg3 = injectBox(() => ({ args: [0.25, 2, 0.25], position: [7.2, -3, -1.8], type: 'Static' }));
-	leg4 = injectBox(() => ({ args: [0.25, 2, 0.25], position: [10.8, -3, -1.8], type: 'Static' }));
+	private seatRef = viewChild('seat', { read: Box });
+	private leg1Ref = viewChild('leg1', { read: Box });
+	private leg2Ref = viewChild('leg2', { read: Box });
+	private leg3Ref = viewChild('leg3', { read: Box });
+	private leg4Ref = viewChild('leg4', { read: Box });
+
+	constructor() {
+		injectBox(
+			() => ({ args: [2.5, 0.25, 2.5], position: [9, -0.8, 0], type: 'Static' }),
+			computed(() => this.seatRef()?.meshRef()),
+		);
+		injectBox(
+			() => ({ args: [0.25, 2, 0.25], position: [7.2, -3, 1.8], type: 'Static' }),
+			computed(() => this.leg1Ref()?.meshRef()),
+		);
+		injectBox(
+			() => ({ args: [0.25, 2, 0.25], position: [10.8, -3, 1.8], type: 'Static' }),
+			computed(() => this.leg2Ref()?.meshRef()),
+		);
+		injectBox(
+			() => ({ args: [0.25, 2, 0.25], position: [7.2, -3, -1.8], type: 'Static' }),
+			computed(() => this.leg3Ref()?.meshRef()),
+		);
+		injectBox(
+			() => ({ args: [0.25, 2, 0.25], position: [10.8, -3, -1.8], type: 'Static' }),
+			computed(() => this.leg4Ref()?.meshRef()),
+		);
+	}
 }
 
 @Component({
 	selector: 'app-cursor',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="sphere.ref">
+		<ngt-mesh #mesh>
 			<ngt-sphere-geometry *args="[0.5, 32, 32]" />
 			<ngt-mesh-basic-material [fog]="false" [depthTest]="false" [transparent]="true" [opacity]="0.5" />
 		</ngt-mesh>
+		<ng-content />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cursor {
-	cursorRef = injectCursorRef();
-	sphere = injectSphere<Mesh>(() => ({
-		args: [0.5],
-		position: [0, 0, 10000],
-		type: 'Static',
-	}));
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		this.cursorRef.set(this.sphere.ref);
+		const sphereApi = injectSphere<Mesh>(
+			() => ({
+				args: [0.5],
+				position: [0, 0, 10000],
+				type: 'Static',
+			}),
+			this.mesh,
+		);
 		injectBeforeRender(({ pointer, viewport: { width, height } }) => {
 			const x = pointer.x * width;
 			const y = (pointer.y * height) / 1.9 + -x / 3.5;
-			this.sphere.api.position.set(x / 1.4, y, 0);
+			sphereApi()?.position.set(x / 1.4, y, 0);
 		});
 	}
 }
@@ -394,7 +421,7 @@ export class Cursor {
 	standalone: true,
 	template: `
 		<ngt-mesh
-			[ref]="box.ref"
+			#mesh
 			(pointerdown)="dragConstraint.onPointerDown($any($event))"
 			(pointerup)="dragConstraint.onPointerUp()"
 		>
@@ -418,19 +445,26 @@ export class Cursor {
 })
 export class Lamp {
 	Math = Math;
-	sphere = injectSphere(() => ({ args: [1], position: [0, 16, 0], type: 'Static' }));
-	box = injectBox(() => ({
-		angulardamping: 1.99,
-		args: [1, 0, 5],
-		linearDamping: 0.9,
-		mass: 1,
-		position: [0, 16, 0],
-	}));
 
-	dragConstraint = injectDragConstraint(this.box.ref);
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	dragConstraint = injectDragConstraint(this.mesh);
 
 	constructor() {
-		injectPointToPoint(this.sphere.ref, this.box.ref, { options: { pivotA: [0, 0, 0], pivotB: [0, 2, 0] } });
+		const obj = new Object3D();
+		injectSphere(() => ({ args: [1], position: [0, 16, 0], type: 'Static' }), obj);
+		injectBox(
+			() => ({
+				angulardamping: 1.99,
+				args: [1, 0, 5],
+				linearDamping: 0.9,
+				mass: 1,
+				position: [0, 16, 0],
+			}),
+			this.mesh,
+		);
+
+		injectPointToPoint(obj, this.mesh, { options: { pivotA: [0, 0, 0], pivotB: [0, 2, 0] } });
 	}
 }
 
@@ -447,17 +481,18 @@ export class Lamp {
 			[debug]="{ enabled: false, scale: 1.1, color: 'white' }"
 		>
 			<ng-template physicsContent>
-				<app-cursor />
-				<app-ui-plane
-					[position]="[0, -5, 0]"
-					[rotation]="[-Math.PI / 2, 0, 0]"
-					[size]="1000"
-					[useShadowMaterial]="false"
-				/>
-				<app-rag-doll />
-				<app-chair />
-				<app-table />
-				<app-lamp />
+				<app-cursor>
+					<app-ui-plane
+						[position]="[0, -5, 0]"
+						[rotation]="[-Math.PI / 2, 0, 0]"
+						[size]="1000"
+						[useShadowMaterial]="false"
+					/>
+					<app-rag-doll />
+					<app-chair />
+					<app-table />
+					<app-lamp />
+				</app-cursor>
 			</ng-template>
 		</ngtc-physics>
 	`,

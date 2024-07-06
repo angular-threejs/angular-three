@@ -2,11 +2,13 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	Signal,
 	computed,
 	inject,
 	input,
 	signal,
+	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend } from 'angular-three';
@@ -36,9 +38,9 @@ function toConvexProps(bufferGeometry: BufferGeometry): [vertices: Triplet[], fa
 	standalone: true,
 	template: `
 		<ngt-mesh
+			#mesh
 			[castShadow]="true"
 			[geometry]="geometry()"
-			[ref]="convex.ref"
 			[rotation]="positionRotationInputs.rotation()"
 			[position]="positionRotationInputs.position()"
 		>
@@ -54,12 +56,20 @@ export class Cone {
 	sides = input.required<number>();
 	geometry = computed(() => new ConeGeometry(0.7, 0.7, this.sides(), 1));
 	args = computed(() => toConvexProps(this.geometry()));
-	convex = injectConvexPolyhedron(() => ({
-		args: this.args(),
-		mass: 100,
-		position: this.positionRotationInputs.position(),
-		rotation: this.positionRotationInputs.rotation(),
-	}));
+
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectConvexPolyhedron(
+			() => ({
+				args: this.args(),
+				mass: 100,
+				position: this.positionRotationInputs.position(),
+				rotation: this.positionRotationInputs.rotation(),
+			}),
+			this.mesh,
+		);
+	}
 }
 
 // ...And so is a cube!
@@ -68,10 +78,10 @@ export class Cone {
 	standalone: true,
 	template: `
 		<ngt-mesh
+			#mesh
 			[receiveShadow]="true"
 			[castShadow]="true"
 			[geometry]="geometry()"
-			[ref]="convex.ref"
 			[rotation]="positionRotationInputs.rotation()"
 			[position]="positionRotationInputs.position()"
 		>
@@ -88,12 +98,20 @@ export class Cube {
 	// NOTE: this is wildly inefficient vs useBox
 	geometry = computed(() => new BoxGeometry(this.size(), this.size(), this.size()));
 	args = computed(() => toConvexProps(this.geometry()));
-	convex = injectConvexPolyhedron(() => ({
-		args: this.args(),
-		mass: 100,
-		position: this.positionRotationInputs.position(),
-		rotation: this.positionRotationInputs.rotation(),
-	}));
+
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectConvexPolyhedron(
+			() => ({
+				args: this.args(),
+				mass: 100,
+				position: this.positionRotationInputs.position(),
+				rotation: this.positionRotationInputs.rotation(),
+			}),
+			this.mesh,
+		);
+	}
 }
 
 type DiamondGLTF = GLTF & {
@@ -107,10 +125,10 @@ type DiamondGLTF = GLTF & {
 	template: `
 		@if (geometry(); as geometry) {
 			<ngt-mesh
+				#mesh
 				[castShadow]="true"
 				[receiveShadow]="true"
 				[geometry]="geometry"
-				[ref]="convex.ref"
 				[rotation]="positionRotationInputs.rotation()"
 			>
 				<ngt-mesh-standard-material [wireframe]="true" color="white" />
@@ -135,12 +153,20 @@ export class Diamond {
 		if (!geometry) return undefined;
 		return toConvexProps(geometry);
 	});
-	convex = injectConvexPolyhedron(() => ({
-		args: this.args(),
-		mass: 100,
-		position: this.positionRotationInputs.position(),
-		rotation: this.positionRotationInputs.rotation(),
-	}));
+
+	mesh = viewChild<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectConvexPolyhedron(
+			() => ({
+				args: this.args(),
+				mass: 100,
+				position: this.positionRotationInputs.position(),
+				rotation: this.positionRotationInputs.rotation(),
+			}),
+			this.mesh,
+		);
+	}
 }
 
 @Component({

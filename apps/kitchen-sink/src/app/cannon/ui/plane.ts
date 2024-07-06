@@ -1,13 +1,22 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { injectPlane } from 'angular-three-cannon/body';
+import { Mesh } from 'three';
 import { PositionRotationInput } from './position-rotation-input';
 
 @Component({
 	selector: 'app-ui-plane',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="plane.ref" [receiveShadow]="true">
+		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[size(), size()]" />
 			@if (useShadowMaterial()) {
 				<ngt-shadow-material [color]="color()" />
@@ -26,15 +35,13 @@ export class UiPlane {
 	color = input('#171717');
 	size = input(10);
 	useShadowMaterial = input(true);
-	plane = injectPlane(() => ({
-		type: 'Static',
-		rotation: this.positionRotationInput.rotation(),
-		position: this.positionRotationInput.position(),
-	}));
-
-	constructor() {
-		// afterNextRender(() => {
-		//   console.log(this.)
-		// })
-	}
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	plane = injectPlane(
+		() => ({
+			type: 'Static',
+			rotation: this.positionRotationInput.rotation(),
+			position: this.positionRotationInput.position(),
+		}),
+		this.mesh,
+	);
 }

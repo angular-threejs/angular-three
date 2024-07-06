@@ -2,10 +2,12 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	afterNextRender,
 	input,
 	output,
 	signal,
+	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend } from 'angular-three';
@@ -14,6 +16,7 @@ import { injectCompound, injectPlane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import * as THREE from 'three';
+import { Group } from 'three';
 
 extend(THREE);
 
@@ -21,7 +24,7 @@ extend(THREE);
 	selector: 'app-plane',
 	standalone: true,
 	template: `
-		<ngt-group [ref]="plane.ref">
+		<ngt-group #group>
 			<ngt-mesh>
 				<ngt-plane-geometry *args="[8, 8]" />
 				<ngt-mesh-basic-material color="#ffb385" />
@@ -38,14 +41,15 @@ extend(THREE);
 })
 export class Plane {
 	rotation = input<Triplet>([0, 0, 0]);
-	plane = injectPlane(() => ({ type: 'Static', rotation: this.rotation() }));
+	group = viewChild.required<ElementRef<Group>>('group');
+	plane = injectPlane(() => ({ type: 'Static', rotation: this.rotation() }), this.group);
 }
 
 @Component({
 	selector: 'app-compound-body',
 	standalone: true,
 	template: `
-		<ngt-group [ref]="compound.ref">
+		<ngt-group #group>
 			<ngt-mesh [castShadow]="true">
 				<ngt-box-geometry *args="boxSize" />
 				<ngt-mesh-normal-material />
@@ -72,27 +76,31 @@ export class CompoundBody {
 	positionChanged = output<Triplet>();
 	rotationChanged = output<Triplet>();
 
-	compound = injectCompound(() => ({
-		isTrigger: this.isTrigger(),
-		mass: this.mass(),
-		position: this.position(),
-		rotation: this.rotation(),
-		shapes: [
-			{ args: this.boxSize, position: [0, 0, 0], rotation: [0, 0, 0], type: 'Box' },
-			{ args: [this.sphereRadius], position: [1, 0, 0], rotation: [0, 0, 0], type: 'Sphere' },
-		],
-	}));
+	group = viewChild.required<ElementRef<Group>>('group');
+
+	compoundApi = injectCompound(
+		() => ({
+			isTrigger: this.isTrigger(),
+			mass: this.mass(),
+			position: this.position(),
+			rotation: this.rotation(),
+			shapes: [
+				{ args: this.boxSize, position: [0, 0, 0], rotation: [0, 0, 0], type: 'Box' },
+				{ args: [this.sphereRadius], position: [1, 0, 0], rotation: [0, 0, 0], type: 'Sphere' },
+			],
+		}),
+		this.group,
+	);
 
 	constructor() {
 		const autoEffect = injectAutoEffect();
 		afterNextRender(() => {
 			autoEffect(() => {
-				const positionCleanup = this.compound.api.position.subscribe(
-					this.positionChanged.emit.bind(this.positionChanged),
-				);
-				const rotationCleanup = this.compound.api.rotation.subscribe(
-					this.rotationChanged.emit.bind(this.rotationChanged),
-				);
+				const api = this.compoundApi();
+				if (!api) return;
+
+				const positionCleanup = api.position.subscribe(this.positionChanged.emit.bind(this.positionChanged));
+				const rotationCleanup = api.rotation.subscribe(this.rotationChanged.emit.bind(this.rotationChanged));
 
 				return () => {
 					positionCleanup();

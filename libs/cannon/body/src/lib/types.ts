@@ -15,8 +15,7 @@ import {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { NgtInjectedRef } from 'angular-three';
-import { Euler, Object3D, Quaternion, Vector3 } from 'three';
+import { Euler, Quaternion, Vector3 } from 'three';
 
 export interface NgtcAtomicApi<K extends AtomicName> {
 	set: (value: AtomicProps[K]) => void;
@@ -57,12 +56,7 @@ export interface NgtcBodyPublicApi extends NgtcWorkerApi {
 	at: (index: number) => NgtcWorkerApi;
 }
 
-export interface NgtcBodyReturn<TObject extends Object3D> {
-	ref: NgtInjectedRef<TObject>;
-	api: NgtcBodyPublicApi;
-}
-
-export type NgtcBodyPropsMap = {
+export interface NgtcBodyPropsMap {
 	Plane: PlaneProps;
 	Box: BoxProps;
 	Particle: ParticleProps;
@@ -72,7 +66,7 @@ export type NgtcBodyPropsMap = {
 	Heightfield: HeightfieldProps;
 	ConvexPolyhedron: ConvexPolyhedronProps;
 	Compound: CompoundBodyProps;
-};
+}
 
 export type NgtcGetByIndex<T extends BodyProps> = (index: number) => T;
 export type NgtcArgFn<T extends BodyProps> = (args: NonNullable<T['args']>) => typeof args;

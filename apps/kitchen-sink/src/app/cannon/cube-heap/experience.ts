@@ -3,16 +3,19 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	Directive,
+	ElementRef,
+	Signal,
 	computed,
 	input,
 	signal,
+	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
-import { NgtcBodyReturn, injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
+import { NgtcBodyPublicApi, injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import * as THREE from 'three';
-import { Color, Object3D } from 'three';
+import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../colors';
 import { shape } from './state';
 
@@ -22,7 +25,7 @@ extend(THREE);
 	selector: 'app-plane',
 	standalone: true,
 	template: `
-		<ngt-mesh [ref]="plane.ref" [receiveShadow]="true">
+		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[10, 10]" />
 			<ngt-shadow-material color="#171717" />
 		</ngt-mesh>
@@ -33,7 +36,8 @@ extend(THREE);
 })
 export class Plane {
 	rotation = input<Triplet>([0, 0, 0]);
-	plane = injectPlane(() => ({ rotation: this.rotation() }));
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	plane = injectPlane(() => ({ rotation: this.rotation() }), this.mesh);
 }
 
 @Directive()
@@ -42,11 +46,13 @@ export abstract class InstancesInput {
 	size = input(0.1);
 	colors = input.required<Float32Array>();
 
-	abstract body: NgtcBodyReturn<Object3D>;
+	abstract bodyApi: Signal<NgtcBodyPublicApi | null>;
 
 	constructor() {
 		injectBeforeRender(() => {
-			this.body.api?.at(Math.floor(Math.random() * this.count())).position.set(0, Math.random() * 2, 0);
+			this.bodyApi()
+				?.at(Math.floor(Math.random() * this.count()))
+				.position.set(0, Math.random() * 2, 0);
 		});
 	}
 }
@@ -55,12 +61,7 @@ export abstract class InstancesInput {
 	selector: 'app-boxes',
 	standalone: true,
 	template: `
-		<ngt-instanced-mesh
-			*args="[undefined, undefined, count()]"
-			[receiveShadow]="true"
-			[castShadow]="true"
-			[ref]="body.ref"
-		>
+		<ngt-instanced-mesh *args="[undefined, undefined, count()]" [receiveShadow]="true" [castShadow]="true" #mesh>
 			<ngt-box-geometry *args="args()">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
 			</ngt-box-geometry>
@@ -73,24 +74,19 @@ export abstract class InstancesInput {
 })
 export class Boxes extends InstancesInput {
 	args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
+	mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
-	body = injectBox(() => ({
-		args: this.args(),
-		mass: 1,
-		position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5],
-	}));
+	bodyApi = injectBox(
+		() => ({ args: this.args(), mass: 1, position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5] }),
+		this.mesh,
+	);
 }
 
 @Component({
 	selector: 'app-spheres',
 	standalone: true,
 	template: `
-		<ngt-instanced-mesh
-			*args="[undefined, undefined, count()]"
-			[receiveShadow]="true"
-			[castShadow]="true"
-			[ref]="body.ref"
-		>
+		<ngt-instanced-mesh *args="[undefined, undefined, count()]" [receiveShadow]="true" [castShadow]="true" #mesh>
 			<ngt-sphere-geometry *args="[size(), 48, 48]">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
 			</ngt-sphere-geometry>
@@ -103,12 +99,12 @@ export class Boxes extends InstancesInput {
 })
 export class Spheres extends InstancesInput {
 	args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
+	mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
-	body = injectSphere(() => ({
-		args: [this.size()],
-		mass: 1,
-		position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5],
-	}));
+	bodyApi = injectSphere(
+		() => ({ args: [this.size()], mass: 1, position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5] }),
+		this.mesh,
+	);
 }
 
 @Component({

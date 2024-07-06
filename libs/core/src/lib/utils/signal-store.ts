@@ -62,10 +62,6 @@ export type NgtSignalStore<State extends object> = {
 	 * New state takes precedence
 	 */
 	update(state: Partial<State> | ((previous: State) => Partial<State>)): void;
-	/**
-	 * Non-undefined old state takes precedence
-	 */
-	patch(state: Partial<State> | ((previous: State) => Partial<State>)): void;
 
 	/**
 	 * Equivalence to select()
@@ -95,15 +91,6 @@ function updater<State extends object>(_source: WritableSignal<State>) {
 		const updater = reducer(state);
 		untracked(() => {
 			_source.update((previous) => ({ ...previous, ...updater(previous) }));
-		});
-	};
-}
-
-function patcher<State extends object>(_source: WritableSignal<State>) {
-	return (state: State | ((previous: State) => State)) => {
-		const updater = reducer(state);
-		untracked(() => {
-			_source.update((previous) => ({ ...updater(previous), ...previous }));
 		});
 	};
 }
@@ -151,13 +138,12 @@ function parseStoreOptions(keysAndOptions: any[]): [string[], CreateComputedOpti
 export function signalStore<State extends object>(
 	initialState:
 		| Partial<State>
-		| ((storeApi: Pick<NgtSignalStore<State>, 'get' | 'update' | 'patch' | 'select'>) => Partial<State>) = {},
+		| ((storeApi: Pick<NgtSignalStore<State>, 'get' | 'update' | 'select'>) => Partial<State>) = {},
 	options?: CreateSignalOptions<State>,
 ): NgtSignalStore<State> {
 	let source: WritableSignal<State>;
 	let update: NgtSignalStore<State>['update'];
 	let get: NgtSignalStore<State>['get'];
-	let patch: NgtSignalStore<State>['patch'];
 	let select: NgtSignalStore<State>['select'];
 	let state: Signal<State>;
 
@@ -172,19 +158,17 @@ export function signalStore<State extends object>(
 		state = source.asReadonly();
 		get = getter(source);
 		update = updater(source);
-		patch = patcher(source);
 		select = selector(state, computedCache);
-		source.set(initialState({ update, get, patch, select }) as State);
+		source.set(initialState({ update, get, select }) as State);
 	} else {
 		source = signal(initialState as State, options);
 		state = source.asReadonly();
 		get = getter(source);
 		update = updater(source);
-		patch = patcher(source);
 		select = selector(state, computedCache);
 	}
 
-	const store = { select, get, update, patch, state };
+	const store = { select, get, update, state };
 
 	Object.defineProperty(store, 'snapshot', {
 		get: untracked.bind({}, state),
