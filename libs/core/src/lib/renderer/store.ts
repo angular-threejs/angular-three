@@ -232,17 +232,14 @@ export class NgtRendererStore {
 				localState.instanceStore.get('nonObjects').forEach((obj) => this.destroy(obj, parent));
 			}
 
-			if (localState?.afterUpdate) localState.afterUpdate.complete();
-			if (localState?.afterAttach) localState.afterAttach.complete();
+			if (localState?.onUpdate) delete localState.onUpdate;
+			if (localState?.onAttach) delete localState.onAttach;
 
 			delete (localState as NgtAnyRecord)['objects'];
 			delete (localState as NgtAnyRecord)['nonObjects'];
 			delete (localState as NgtAnyRecord)['parent'];
-			delete (localState as NgtAnyRecord)['nativeProps'];
 			delete (localState as NgtAnyRecord)['add'];
 			delete (localState as NgtAnyRecord)['remove'];
-			delete (localState as NgtAnyRecord)['afterUpdate'];
-			delete (localState as NgtAnyRecord)['afterAttach'];
 			delete (localState as NgtAnyRecord)['store'];
 			delete (localState as NgtAnyRecord)['handlers'];
 

@@ -18,6 +18,6 @@ export const SPECIAL_PROPERTIES = {
 
 export const SPECIAL_EVENTS = {
 	BEFORE_RENDER: 'beforeRender',
-	AFTER_UPDATE: 'afterUpdate',
-	AFTER_ATTACH: 'afterAttach',
+	UPDATED: 'updated',
+	ATTACHED: 'attached',
 } as const;

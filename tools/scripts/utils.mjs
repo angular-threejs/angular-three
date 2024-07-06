@@ -81,11 +81,11 @@ export const commonAttributes = [
 		description: 'Register an event to be run in animation loop',
 	},
 	{
-		name: '(afterAttach)',
+		name: '(attached)',
 		description: 'Register an event to be invoked after this node is attached to the parent',
 	},
 	{
-		name: '(afterUpdate)',
+		name: '(updated)',
 		description: "Register an event to be invoked after this node's properties are updated",
 	},
 ];

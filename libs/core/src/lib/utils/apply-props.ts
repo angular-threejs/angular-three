@@ -122,8 +122,8 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 		if (localState?.eventCount) rootState.internal.interaction.push(instance);
 	}
 
-	if (parent && localState?.afterUpdate && localState.afterUpdate.observed && changes.length) {
-		localState.afterUpdate.next(instance);
+	if (parent && localState?.onUpdate && changes.length) {
+		localState.onUpdate(instance);
 	}
 
 	return instance;

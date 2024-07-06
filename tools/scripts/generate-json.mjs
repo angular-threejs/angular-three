@@ -6,7 +6,7 @@ const logger = createLog();
 const { metadataJson, webTypesJson, write } = createBareJsons();
 
 const { typeChecker, sourceFile, typeToTypeNode, typeToString, processIntersectionTypeNode, processTypeMembers } =
-	createProgram(['libs/core/src/lib/three-types.d.ts']);
+	createProgram(['libs/core/src/lib/three-types.ts']);
 
 /** @type {Map<string, { typeDeclaration: ts.TypeAliasDeclaration, type: ts.Type, typeNode: ts.TypeNode, typeString: string}>} */
 const typeDeclarationMap = new Map();

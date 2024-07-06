@@ -1,5 +1,4 @@
 import { untracked } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
 import { removeInteractivity } from '../events';
 import { getLocalState, invalidateInstance, NgtInstanceNode } from '../instance';
 import { attach, detach } from '../utils/attach';
@@ -95,7 +94,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 		cLS.setParent(parent);
 	}
 
-	if (cLS.afterAttach) cLS.afterAttach.next({ parent, node: child });
+	if (cLS.onAttach) cLS.onAttach({ parent, node: child });
 
 	invalidateInstance(child);
 	invalidateInstance(parent);
@@ -156,21 +155,21 @@ export function processThreeEvent(
 			.subscribe((state) => callback({ state, object: instance }), priority || lS.priority || 0);
 	}
 
-	if (eventName === SPECIAL_EVENTS.AFTER_UPDATE || eventName === SPECIAL_EVENTS.AFTER_ATTACH) {
-		let emitter = lS[eventName];
-		if (!emitter) emitter = lS[eventName] = new ReplaySubject(1);
-		const sub = emitter.subscribe(callback);
-		// NOTE: for afterAttach event, if the instance already has a parent,
-		//  then we'll emit the event immediately
-		if (eventName === SPECIAL_EVENTS.AFTER_ATTACH && untracked(lS.parent)) {
-			emitter.next({ parent: untracked(lS.parent), node: instance });
+	if (eventName === SPECIAL_EVENTS.ATTACHED) {
+		lS.onAttach = callback;
+		if (untracked(lS.parent)) {
+			lS.onAttach({ parent: untracked(lS.parent), node: instance });
 		}
+
 		return () => {
-			sub.unsubscribe();
-			const emitter = lS[eventName];
-			if (emitter && !emitter.observed) {
-				emitter.complete();
-			}
+			lS.onAttach = undefined;
+		};
+	}
+
+	if (eventName === SPECIAL_EVENTS.UPDATED) {
+		lS.onUpdate = callback;
+		return () => {
+			lS.onUpdate = undefined;
 		};
 	}
 

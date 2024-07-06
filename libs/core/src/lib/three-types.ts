@@ -170,8 +170,8 @@ export type NgtLayers = Layers | Parameters<Layers['set']>[0];
 export type NgtQuaternion = Quaternion | Parameters<Quaternion['set']>;
 
 export interface NgtNodeEventMap<TOriginal> {
-	afterAttach: NgtAfterAttach<NgtInstanceNode, TOriginal>;
-	afterUpdate: TOriginal;
+	attached: NgtAfterAttach<NgtInstanceNode, TOriginal>;
+	updated: TOriginal;
 	beforeRender: NgtBeforeRenderEvent<TOriginal>;
 }
 

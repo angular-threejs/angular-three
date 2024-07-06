@@ -1,5 +1,4 @@
 import { Signal } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
 import { NgtEventHandlers } from './events';
 import { NgtState } from './store';
 import { NgtAnyRecord } from './types';
@@ -12,16 +11,19 @@ export type NgtAttachFunction<TChild = any, TParent = any> = (
 	store: NgtSignalStore<NgtState>,
 ) => void | (() => void);
 
-export type NgtAfterAttach<
+export interface NgtAfterAttach<
 	TChild extends NgtInstanceNode = NgtInstanceNode,
 	TParent extends NgtInstanceNode = NgtInstanceNode,
-> = { parent: TParent; node: TChild };
+> {
+	parent: TParent;
+	node: TChild;
+}
 
-export type NgtLocalInstanceState = {
+export interface NgtLocalInstanceState {
 	objects: NgtInstanceNode[];
 	nonObjects: NgtInstanceNode[];
 	parent: NgtInstanceNode | null;
-};
+}
 
 export type NgtLocalState = {
 	/** the store of the canvas that the instance is being rendered to */
@@ -52,10 +54,8 @@ export type NgtLocalState = {
 	isRaw?: boolean;
 	// priority for before render
 	priority?: number;
-	// emitter after props update
-	afterUpdate?: ReplaySubject<NgtInstanceNode>;
-	// emitter after attaching to parent
-	afterAttach?: ReplaySubject<NgtAfterAttach>;
+	onUpdate?: (node: NgtInstanceNode) => void;
+	onAttach?: (afterAttach: NgtAfterAttach) => void;
 };
 
 export type NgtInstanceNode<TNode = any> = { __ngt__: NgtLocalState } & NgtAnyRecord & TNode;
