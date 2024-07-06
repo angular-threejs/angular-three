@@ -95,7 +95,7 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (this.store.isCompound(name)) {
-			return this.store.createNode('compound', element);
+			return this.store.createNode('dom', element);
 		}
 
 		if (name === SPECIAL_DOM_TAG.NGT_PORTAL) {
@@ -131,14 +131,7 @@ export class NgtRenderer implements Renderer2 {
 			);
 		}
 
-		const [injectedArgs, injectedParent, store] = this.store.getCreationState();
-
-		let parent = injectedParent as NgtRendererState[NgtRendererClassId.injectedParent];
-		if (typeof injectedParent === 'string') {
-			parent = store
-				.get('scene')
-				.getObjectByName(injectedParent) as unknown as NgtRendererState[NgtRendererClassId.injectedParent];
-		}
+		const [injectedArgs, store] = this.store.getCreationState();
 
 		if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
 			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
@@ -149,11 +142,7 @@ export class NgtRenderer implements Renderer2 {
 				localState = getLocalState(prepare(object, { store, args: injectedArgs, primitive: true })) as NgtLocalState;
 			}
 			if (!localState.store) localState.store = store;
-			const node = this.store.createNode('three', object);
-			if (parent) {
-				node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
-			}
-			return node;
+			return this.store.createNode('three', object);
 		}
 
 		const threeName = kebabToPascal(name.startsWith('ngt') ? name.slice(4) : name);
@@ -170,10 +159,6 @@ export class NgtRenderer implements Renderer2 {
 				localState.attach = ['geometry'];
 			} else if (is.material(instance)) {
 				localState.attach = ['material'];
-			}
-
-			if (parent) {
-				node.__ngt_renderer__[NgtRendererClassId.injectedParent] = parent;
 			}
 
 			return node;

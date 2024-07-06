@@ -1,7 +1,6 @@
 import { InjectionToken, Injector, Type, getDebugNode } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import { NgtCommonDirective } from '../directives/common';
-import { NgtParent } from '../directives/parent';
 import { NgtInstanceNode, getLocalState } from '../instance';
 import { NgtRef } from '../ref';
 import { NGT_STORE, NgtState } from '../store';
@@ -46,7 +45,6 @@ type NgtRendererRootState = {
 
 export class NgtRendererStore {
 	private argsCommentNodes: Array<NgtRendererNode> = [];
-	private parentCommentNodes: Array<NgtRendererNode> = [];
 	private portalCommentsNodes: Array<NgtRendererNode> = [];
 
 	constructor(private rootState: NgtRendererRootState) {}
@@ -203,7 +201,6 @@ export class NgtRendererStore {
 	getCreationState() {
 		return [
 			this.firstNonInjectedDirective('argsCommentNodes', NgtArgs)?.value || [],
-			this.firstNonInjectedDirective('parentCommentNodes', NgtParent)?.value || null,
 			this.tryGetPortalStore(),
 		] as const;
 	}
