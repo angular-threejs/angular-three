@@ -88,11 +88,7 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
-			const instanceStore = signalStore({
-				parent: null,
-				objects: [],
-				nonObjects: [],
-			});
+			const instanceStore = signalStore({ parent: null, objects: [], nonObjects: [] });
 			return this.store.createNode(
 				'three',
 				Object.assign(
@@ -120,7 +116,7 @@ export class NgtRenderer implements Renderer2 {
 			let localState = getLocalState(object);
 			if (!localState) {
 				// NOTE: if an object isn't already "prepared", we prepare it
-				localState = getLocalState(prepare(object, { store, args: injectedArgs, primitive: true })) as NgtLocalState;
+				localState = getLocalState(prepare(object, { store, primitive: true })) as NgtLocalState;
 			}
 			if (!localState.store) localState.store = store;
 			return this.store.createNode('three', object);
@@ -131,7 +127,7 @@ export class NgtRenderer implements Renderer2 {
 
 		// we have the THREE constructor here, handle it
 		if (threeTarget) {
-			const instance = prepare(new threeTarget(...injectedArgs), { store, args: injectedArgs });
+			const instance = prepare(new threeTarget(...injectedArgs), { store });
 			const node = this.store.createNode('three', instance);
 			const localState = getLocalState(instance) as NgtLocalState;
 

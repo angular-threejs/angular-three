@@ -53,7 +53,7 @@ export class NgtRendererStore {
 			// NOTE: we attach an arrow function to the Comment node
 			// In our directives, we can call this function to then start tracking the RendererNode
 			// this is done to limit the amount of Nodes we need to process for getCreationState
-			rendererNode[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args' | 'parent') => {
+			rendererNode[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args') => {
 				if (node === 'args') {
 					this.argsCommentNodes.push(rendererNode);
 				} else if (typeof node === 'object') {

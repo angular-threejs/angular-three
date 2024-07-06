@@ -44,8 +44,6 @@ export type NgtLocalState = {
 	eventCount: number;
 	// list of handlers to handle the events
 	handlers: Partial<NgtEventHandlers>;
-	// previous args
-	args?: unknown[];
 	// attach information so that we can detach as well as reset
 	attach?: string[] | NgtAttachFunction;
 	// previously attach information so we can reset as well as clean up
