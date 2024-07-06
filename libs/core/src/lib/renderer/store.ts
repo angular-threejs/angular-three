@@ -22,10 +22,10 @@ export interface NgtRendererNode {
 	__ngt_renderer__: NgtRendererState;
 }
 
-type NgtRendererRootState = {
+interface NgtRendererRootState {
 	store: NgtSignalStore<NgtState>;
 	document: Document;
-};
+}
 
 export class NgtRendererStore {
 	private argsCommentNodes: Array<NgtRendererNode> = [];
