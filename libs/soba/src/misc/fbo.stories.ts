@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	computed,
+	effect,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -30,6 +31,10 @@ class SpinningThing {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
+		effect(() => {
+			console.log(this.mesh());
+		});
+
 		injectBeforeRender(() => {
 			const { nativeElement } = this.mesh();
 			nativeElement.rotation.x = nativeElement.rotation.y = nativeElement.rotation.z += 0.01;
@@ -40,7 +45,7 @@ class SpinningThing {
 @Component({
 	selector: 'fbo-target-wrapper',
 	template: `
-		<ngts-perspective-camera #camera [options]="{ position: [0, 0, 3] }" />
+		<ngts-perspective-camera [options]="{ position: [0, 0, 3] }" />
 
 		<ngt-portal [container]="scene()">
 			<fbo-spinning-thing *portalContent />
@@ -59,7 +64,7 @@ class SpinningThing {
 class TargetWrapper {
 	target = input.required<WebGLRenderTarget>();
 
-	camera = viewChild.required('camera', { read: NgtsPerspectiveCamera });
+	camera = viewChild.required(NgtsPerspectiveCamera);
 	scene = computed(() => {
 		const scene = new Scene();
 		scene.background = new Color('orange');
@@ -69,6 +74,7 @@ class TargetWrapper {
 	constructor() {
 		injectNextBeforeRender(({ gl }) => {
 			const [camera, scene, target] = [this.camera().cameraRef().nativeElement, this.scene(), this.target()];
+			if (!target) return;
 			camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;
 			gl.setRenderTarget(target);
 			gl.render(scene, camera);

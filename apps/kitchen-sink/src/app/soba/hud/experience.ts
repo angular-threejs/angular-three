@@ -16,7 +16,7 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContent } from 'angular-three-soba/misc';
 import { NgtsEnvironment, NgtsRenderTexture } from 'angular-three-soba/staging';
 import * as THREE from 'three';
-import { Matrix4, Mesh } from 'three';
+import { Matrix4, Mesh, Scene } from 'three';
 
 extend(THREE);
 
@@ -44,18 +44,18 @@ export class Torus {
 	standalone: true,
 	template: `
 		<ngt-mesh-standard-material [attach]="['material', index()]" [color]="color()">
-			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">
-				<ng-template ngtsContent>
-					<ngt-color *args="['white']" attach="background" />
-					<ngts-orthographic-camera
-						[options]="{ makeDefault: true, left: -1, right: 1, top: 1, bottom: -1, position: [0, 0, 10], zoom: 0.5 }"
-					/>
-					<ngts-text
-						[text]="text()"
-						[options]="{ color: 'black', font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff' }"
-					/>
-				</ng-template>
-			</ngts-render-texture>
+			<!--			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">-->
+			<!--				<ng-template ngtsContent>-->
+			<!--					<ngt-color *args="['white']" attach="background" />-->
+			<!--					<ngts-orthographic-camera-->
+			<!--						[options]="{ makeDefault: true, left: -1, right: 1, top: 1, bottom: -1, position: [0, 0, 10], zoom: 0.5 }"-->
+			<!--					/>-->
+			<!--					<ngts-text-->
+			<!--						[text]="text()"-->
+			<!--						[options]="{ color: 'black', font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff' }"-->
+			<!--					/>-->
+			<!--				</ng-template>-->
+			<!--			</ngts-render-texture>-->
 		</ngt-mesh-standard-material>
 	`,
 	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsContent],
@@ -116,7 +116,7 @@ export class Box {
 	selector: 'app-view-cube',
 	standalone: true,
 	template: `
-		<ngt-portal [autoRender]="true">
+		<ngt-portal [container]="scene" [autoRender]="true">
 			<ng-template portalContent>
 				<ngt-ambient-light [intensity]="Math.PI / 2" />
 				<ngt-point-light [position]="[-10, -10, -10]" [decay]="0" [intensity]="Math.PI" />
@@ -144,8 +144,9 @@ export class ViewCube {
 
 	boxPosition = computed(() => [this.viewport().width / 2 - 1, this.viewport().height / 2 - 1, 0]);
 
+	scene = new Scene();
+
 	constructor() {
-		console.log('in viewcube', injectNgtStore());
 		injectBeforeRender(() => {
 			const box = this.box()?.mesh().nativeElement;
 			if (box) {

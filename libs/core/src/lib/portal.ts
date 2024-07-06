@@ -13,7 +13,6 @@ import {
 	Injector,
 	input,
 	signal,
-	SkipSelf,
 	TemplateRef,
 	untracked,
 	viewChild,
@@ -24,10 +23,10 @@ import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { NgtEventManager } from './events';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { injectNgtStore, NGT_STORE, NgtSize, NgtState } from './store';
+import { injectNgtStore, NGT_STORE, NgtSize, NgtState, provideNgtStore } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
-import { NgtSignalStore, signalStore } from './utils/signal-store';
+import { signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
 const privateKeys = [
@@ -130,21 +129,11 @@ export class NgtPortalContent {
 		}
 	`,
 	imports: [NgtPortalBeforeRender],
-	providers: [
-		{
-			provide: NGT_STORE,
-			useFactory: (parent: NgtSignalStore<NgtState>) => {
-				const store = signalStore<NgtState>({});
-				store.update({ ...store.snapshot, previousRoot: parent });
-				return store;
-			},
-			deps: [[new SkipSelf(), NGT_STORE]],
-		},
-	],
+	providers: [provideNgtStore(signalStore({}))],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtPortal {
-	container = input<Object3D>(prepare(new Scene()));
+	container = input.required<Object3D>();
 	camera = input<ElementRef<Camera> | Camera>();
 	state = input<
 		Partial<
@@ -215,6 +204,7 @@ export class NgtPortal {
 				pointer: this.pointer,
 				events: { ...parentState.events, ...events },
 				size: { ...parentState.size, ...size },
+				previousRoot: this.parentStore,
 				...rest,
 				setEvents: (events) =>
 					this.portalStore.update((state) => ({ ...state, events: { ...state.events, ...events } })),
@@ -248,6 +238,7 @@ export class NgtPortal {
 			setTimeout(() => {
 				const state = this.portalStore.snapshot;
 				state.events?.disconnect?.();
+				this.portalStore.update({});
 				// dispose(state);
 			}, 500);
 		});

@@ -110,7 +110,7 @@ export class Material {
 	selector: 'app-cube',
 	standalone: true,
 	template: `
-		<ngt-mesh>
+		<ngt-mesh name="the-cube">
 			<ngt-box-geometry />
 			<app-material />
 		</ngt-mesh>
