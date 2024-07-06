@@ -1,17 +1,74 @@
-import { Directive, input } from '@angular/core';
-import { NgtCommonDirective, provideNodeType } from './common';
+import {
+	afterNextRender,
+	DestroyRef,
+	Directive,
+	EmbeddedViewRef,
+	inject,
+	input,
+	NgZone,
+	TemplateRef,
+	untracked,
+	ViewContainerRef,
+} from '@angular/core';
+import { injectAutoEffect } from 'ngxtension/auto-effect';
+import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
 
-@Directive({ selector: 'ng-template[args]', standalone: true, providers: [provideNodeType('args')] })
-export class NgtArgs<TArgs extends any[] = any[]> extends NgtCommonDirective<TArgs> {
+@Directive({ selector: 'ng-template[args]', standalone: true })
+export class NgtArgs<TArgs extends any[] = any[]> {
 	args = input.required<TArgs | null>();
 
-	protected override inputValue = this.args;
+	private vcr = inject(ViewContainerRef);
+	private zone = inject(NgZone);
+	private template = inject(TemplateRef);
+	private autoEffect = injectAutoEffect();
 
-	protected override shouldSkipCreateView(value: TArgs | null): boolean {
-		return value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null);
+	protected injected = false;
+	protected injectedArgs: TArgs | null = null;
+	private view?: EmbeddedViewRef<unknown>;
+
+	constructor() {
+		const commentNode = this.vcr.element.nativeElement;
+		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT]) {
+			commentNode[SPECIAL_INTERNAL_ADD_COMMENT]('args');
+			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
+		}
+
+		afterNextRender(() => {
+			this.autoEffect(() => {
+				const value = this.args();
+				if (value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null)) return;
+				this.injected = false;
+				this.injectedArgs = value;
+				untracked(() => {
+					this.createView();
+				});
+			});
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			this.view?.destroy();
+		});
+	}
+
+	get value() {
+		if (this.validate()) {
+			this.injected = true;
+			return this.injectedArgs;
+		}
+		return null;
 	}
 
 	validate() {
-		return !this.injected && !!this.injectedValue?.length;
+		return !this.injected && !!this.injectedArgs?.length;
+	}
+
+	private createView() {
+		this.zone.runOutsideAngular(() => {
+			if (this.view && !this.view.destroyed) {
+				this.view.destroy();
+			}
+			this.view = this.vcr.createEmbeddedView(this.template);
+			this.view.detectChanges();
+		});
 	}
 }
