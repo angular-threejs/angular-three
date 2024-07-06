@@ -10,7 +10,7 @@ export type HueSaturationEffectOptions = Partial<NonNullable<ConstructorParamete
 @Component({
 	selector: 'ngtp-hue-saturation',
 	template: `
-		<ngt-hue-saturation-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-hue-saturation-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-hue-saturation-effect>

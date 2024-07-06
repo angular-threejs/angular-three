@@ -9,7 +9,7 @@ extend({ ColorAverageEffect });
 	selector: 'ngtp-color-average',
 	standalone: true,
 	template: `
-		<ngt-color-average-effect *args="[options().blendFunction]" [ref]="effectRef()" ngtCompound>
+		<ngt-color-average-effect *args="[options().blendFunction]" [ref]="effectRef()">
 			<ng-content />
 		</ngt-color-average-effect>
 	`,

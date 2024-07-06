@@ -38,7 +38,7 @@ extend({ WaterEffect });
 	selector: 'ngtp-water',
 	standalone: true,
 	template: `
-		<ngt-water-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-water-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-water-effect>

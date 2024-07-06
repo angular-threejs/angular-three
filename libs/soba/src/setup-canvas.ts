@@ -35,7 +35,6 @@ export interface SetupCanvasOptions {
 	background: 'white' | 'black';
 	controls: boolean | { makeDefault?: boolean };
 	lights: boolean;
-	compoundPrefixes: string[];
 }
 
 const defaultCanvasOptions: SetupCanvasOptions = {
@@ -44,7 +43,6 @@ const defaultCanvasOptions: SetupCanvasOptions = {
 	background: 'black',
 	controls: true,
 	lights: true,
-	compoundPrefixes: [],
 };
 
 const CANVAS_OPTIONS = new InjectionToken<SetupCanvasOptions>('canvas options');
@@ -151,7 +149,6 @@ export class StorybookSetup {
 				ref.setInput('shadows', true);
 				ref.setInput('performance', this.canvasOptions().performance);
 				ref.setInput('camera', this.canvasOptions().camera);
-				ref.setInput('compoundPrefixes', this.canvasOptions().compoundPrefixes);
 				ref.setInput('sceneGraph', StorybookScene);
 				ref.changeDetectorRef.detectChanges();
 			});
@@ -187,7 +184,6 @@ export function makeCanvasOptions(options: DeepPartial<SetupCanvasOptions> = {})
 		background: options.background ?? defaultCanvasOptions.background,
 		controls: options.controls ?? defaultCanvasOptions.controls,
 		lights: options.lights ?? defaultCanvasOptions.lights,
-		compoundPrefixes: options.compoundPrefixes ?? defaultCanvasOptions.compoundPrefixes,
 	} as Required<SetupCanvasOptions>;
 }
 

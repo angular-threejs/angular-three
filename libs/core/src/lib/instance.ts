@@ -21,7 +21,6 @@ export type NgtLocalInstanceState = {
 	objects: NgtInstanceNode[];
 	nonObjects: NgtInstanceNode[];
 	parent: NgtInstanceNode | null;
-	nativeProps: NgtAnyRecord;
 };
 
 export type NgtLocalState = {
@@ -33,11 +32,9 @@ export type NgtLocalState = {
 	parent: Signal<NgtLocalInstanceState['parent']>;
 	objects: Signal<NgtLocalInstanceState['objects']>;
 	nonObjects: Signal<NgtLocalInstanceState['nonObjects']>;
-	nativeProps: Signal<NgtLocalInstanceState['nativeProps']>;
 	// shortcut to add/remove object to list
 	add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
 	remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
-	setNativeProps: (key: string, value: any) => void;
 	setParent: (parent: NgtInstanceNode | null) => void;
 	// if this THREE instance is a ngt-primitive
 	primitive?: boolean;
@@ -92,7 +89,6 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 	if (localState?.primitive || !instance.__ngt__) {
 		const {
 			instanceStore = signalStore<NgtLocalInstanceState>({
-				nativeProps: {},
 				parent: null,
 				objects: [],
 				nonObjects: [],
@@ -110,7 +106,6 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			parent: instanceStore.select('parent'),
 			objects: instanceStore.select('objects'),
 			nonObjects: instanceStore.select('nonObjects'),
-			nativeProps: instanceStore.select('nativeProps'),
 			add(object, type) {
 				const current = instance.__ngt__.instanceStore.get(type);
 				const foundIndex = current.indexOf((node: NgtInstanceNode) => object === node);
@@ -125,9 +120,6 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			remove(object, type) {
 				instance.__ngt__.instanceStore.update((prev) => ({ [type]: prev[type].filter((node) => node !== object) }));
 				notifyAncestors(instance.__ngt__.instanceStore.get('parent'));
-			},
-			setNativeProps(key, value) {
-				instance.__ngt__.instanceStore.update((prev) => ({ nativeProps: { ...prev.nativeProps, [key]: value } }));
 			},
 			setParent(parent) {
 				instance.__ngt__.instanceStore.update({ parent });

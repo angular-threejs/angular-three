@@ -17,7 +17,7 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 	selector: 'ngtp-grid',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
 	`,
 	imports: [NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,

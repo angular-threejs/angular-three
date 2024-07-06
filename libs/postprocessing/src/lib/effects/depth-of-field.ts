@@ -26,7 +26,7 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	selector: 'ngtp-depth-of-field',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

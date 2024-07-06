@@ -10,7 +10,7 @@ export type FXAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof
 @Component({
 	selector: 'ngtp-fxaa',
 	template: `
-		<ngt-fXAA-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-fXAA-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-fXAA-effect>

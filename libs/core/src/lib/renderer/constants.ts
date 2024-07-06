@@ -9,7 +9,6 @@ export const SPECIAL_DOM_TAG = {
 } as const;
 
 export const SPECIAL_PROPERTIES = {
-	COMPOUND: 'ngtCompound',
 	RENDER_PRIORITY: 'priority',
 	ATTACH: 'attach',
 	RAW_VALUE: 'rawValue',

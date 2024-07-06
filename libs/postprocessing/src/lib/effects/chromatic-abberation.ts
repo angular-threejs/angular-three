@@ -12,12 +12,7 @@ export type ChromaticAberrationEffectOptions = Partial<
 @Component({
 	selector: 'ngtp-chromatic-aberration',
 	template: `
-		<ngt-chromatic-aberration-effect
-			*args="[options()]"
-			[camera]="effect.camera()"
-			[ref]="effect.effectRef()"
-			ngtCompound
-		>
+		<ngt-chromatic-aberration-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-chromatic-aberration-effect>

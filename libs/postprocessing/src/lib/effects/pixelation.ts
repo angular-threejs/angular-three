@@ -9,7 +9,7 @@ export interface PixelationOptions {
 @Component({
 	selector: 'ngtp-pixelation',
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
 	`,
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,

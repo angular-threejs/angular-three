@@ -1,45 +1,31 @@
-import { InjectionToken, Injector, Type, getDebugNode } from '@angular/core';
+import { Injector, getDebugNode } from '@angular/core';
 import { NgtArgs } from '../directives/args';
-import { NgtCommonDirective } from '../directives/common';
-import { NgtInstanceNode, getLocalState } from '../instance';
-import { NgtRef } from '../ref';
+import { getLocalState } from '../instance';
 import { NGT_STORE, NgtState } from '../store';
 import { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { NgtSignalStore } from '../utils/signal-store';
 import { SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_PROPERTIES } from './constants';
-import { NgtCompoundClassId, NgtQueueOpClassId, NgtRendererClassId, attachThreeChild, removeThreeChild } from './utils';
-
-export const NGT_COMPOUND_PREFIXES = new InjectionToken<string[]>('NgtCompoundPrefixes');
-
-type NgtQueueOp = [type: 'op' | 'cleanUp', op: () => void, done?: true];
+import { NgtRendererClassId, attachThreeChild, removeThreeChild } from './utils';
 
 export type NgtRendererState = [
-	type: 'three' | 'compound' | 'portal' | 'comment' | 'dom',
+	type: 'three' | 'portal' | 'comment' | 'dom',
 	parent: NgtRendererNode | null,
-	injectedParent: NgtRef<NgtRendererNode> | null,
 	children: NgtRendererNode[],
 	destroyed: boolean,
-	compound: [applyFirst: boolean, props: NgtAnyRecord],
-	compoundParent: NgtRendererNode,
-	compounded: NgtRendererNode,
-	queueOps: Set<NgtQueueOp>,
-	attributes: NgtAnyRecord,
-	properties: NgtAnyRecord,
 	rawValue: any,
 	ref: any,
 	portalContainer: NgtRendererNode,
 	injectorFactory: () => Injector | undefined,
 ];
 
-export type NgtRendererNode = {
+export interface NgtRendererNode {
 	__ngt_renderer__: NgtRendererState;
-};
+}
 
 type NgtRendererRootState = {
 	store: NgtSignalStore<NgtState>;
-	compoundPrefixes: string[];
 	document: Document;
 };
 
@@ -50,23 +36,7 @@ export class NgtRendererStore {
 	constructor(private rootState: NgtRendererRootState) {}
 
 	createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord) {
-		const state = [
-			type,
-			null,
-			null,
-			[],
-			false,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-			undefined!,
-		] as NgtRendererState;
+		const state = [type, null, [], false, undefined!, undefined!, undefined!, undefined!] as NgtRendererState;
 
 		const rendererNode = Object.assign(node, { __ngt_renderer__: state });
 
@@ -86,8 +56,6 @@ export class NgtRendererStore {
 			rendererNode[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args' | 'parent') => {
 				if (node === 'args') {
 					this.argsCommentNodes.push(rendererNode);
-				} else if (node === 'parent') {
-					this.parentCommentNodes.push(rendererNode);
 				} else if (typeof node === 'object') {
 					this.portalCommentsNodes.push(node);
 				}
@@ -95,17 +63,7 @@ export class NgtRendererStore {
 			return rendererNode;
 		}
 
-		if (state[NgtRendererClassId.type] === 'compound') {
-			state[NgtRendererClassId.queueOps] = new Set();
-			state[NgtRendererClassId.attributes] = state[NgtRendererClassId.properties] = {};
-			return rendererNode;
-		}
-
 		return rendererNode;
-	}
-
-	isCompound(name: string) {
-		return this.rootState.compoundPrefixes.some((prefix) => name.startsWith(prefix));
 	}
 
 	isDOM(node: NgtAnyRecord) {
@@ -119,15 +77,6 @@ export class NgtRendererStore {
 
 	getClosestParentWithInstance(node: NgtRendererNode): NgtRendererNode | null {
 		let parent = node.__ngt_renderer__[NgtRendererClassId.parent];
-
-		if (
-			parent &&
-			parent.__ngt_renderer__[NgtRendererClassId.type] === 'compound' &&
-			parent.__ngt_renderer__[NgtRendererClassId.compounded] &&
-			parent.__ngt_renderer__[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.type] === 'three'
-		) {
-			return parent.__ngt_renderer__[NgtRendererClassId.compounded];
-		}
 
 		if (
 			parent &&
@@ -146,45 +95,6 @@ export class NgtRendererStore {
 		return parent;
 	}
 
-	getClosestParentWithCompound(node: NgtRendererNode) {
-		if (node.__ngt_renderer__[NgtRendererClassId.compoundParent]) {
-			return node.__ngt_renderer__[NgtRendererClassId.compoundParent];
-		}
-
-		let parent = node.__ngt_renderer__[NgtRendererClassId.parent];
-		if (
-			parent &&
-			parent.__ngt_renderer__[NgtRendererClassId.type] === 'compound' &&
-			!parent.__ngt_renderer__[NgtRendererClassId.compounded]
-		) {
-			return parent;
-		}
-
-		while (
-			parent &&
-			(parent.__ngt_renderer__[NgtRendererClassId.type] === 'three' ||
-				!parent.__ngt_renderer__[NgtRendererClassId.compoundParent] ||
-				parent.__ngt_renderer__[NgtRendererClassId.type] !== 'compound')
-		) {
-			parent = parent.__ngt_renderer__[NgtRendererClassId.parent];
-		}
-
-		if (!parent) return null;
-
-		if (
-			parent.__ngt_renderer__[NgtRendererClassId.type] === 'three' &&
-			parent.__ngt_renderer__[NgtRendererClassId.compoundParent]
-		) {
-			return parent.__ngt_renderer__[NgtRendererClassId.compoundParent];
-		}
-
-		if (!parent.__ngt_renderer__[NgtRendererClassId.compounded]) {
-			return parent;
-		}
-
-		return null;
-	}
-
 	processPortalContainer(portal: NgtRendererNode) {
 		const injector = portal.__ngt_renderer__[NgtRendererClassId.injectorFactory]?.();
 		if (!injector) return;
@@ -199,10 +109,7 @@ export class NgtRendererStore {
 	}
 
 	getCreationState() {
-		return [
-			this.firstNonInjectedDirective('argsCommentNodes', NgtArgs)?.value || [],
-			this.tryGetPortalStore(),
-		] as const;
+		return [this.getNgtArgs()?.value || [], this.tryGetPortalStore()] as const;
 	}
 
 	setParent(node: NgtRendererNode, parent: NgtRendererNode) {
@@ -224,48 +131,6 @@ export class NgtRendererStore {
 		}
 	}
 
-	setCompound(compound: NgtRendererNode, instance: NgtRendererNode) {
-		const instanceRS = instance.__ngt_renderer__;
-
-		if (instanceRS && instanceRS[NgtRendererClassId.parent]) {
-			const parentRS = instanceRS[NgtRendererClassId.parent].__ngt_renderer__;
-			// NOTE: if instance is already compounded by its parent. skip
-			if (parentRS[NgtRendererClassId.type] === 'compound' && parentRS[NgtRendererClassId.compounded] === instance) {
-				return;
-			}
-		}
-
-		const rS = compound.__ngt_renderer__;
-		rS[NgtRendererClassId.compounded] = instance;
-
-		for (const key of Object.keys(rS[NgtRendererClassId.attributes])) {
-			this.applyAttribute(instance, key, rS[NgtRendererClassId.attributes][key]);
-		}
-
-		for (const key of Object.keys(rS[NgtRendererClassId.properties])) {
-			this.applyProperty(instance, key, rS[NgtRendererClassId.properties][key]);
-		}
-
-		this.executeOperation(compound);
-	}
-
-	queueOperation(node: NgtRendererNode, op: NgtQueueOp) {
-		node.__ngt_renderer__[NgtRendererClassId.queueOps].add(op);
-	}
-
-	private executeOperation(node: NgtRendererNode, type: NgtQueueOp[NgtQueueOpClassId.type] = 'op') {
-		const rS = node.__ngt_renderer__;
-		// TODO: maybe an array with pop() would work better
-		if (rS[NgtRendererClassId.queueOps]?.size) {
-			rS[NgtRendererClassId.queueOps].forEach((op) => {
-				if (op[NgtQueueOpClassId.type] === type) {
-					op[NgtQueueOpClassId.op]();
-					rS[NgtRendererClassId.queueOps].delete(op);
-				}
-			});
-		}
-	}
-
 	applyAttribute(node: NgtRendererNode, name: string, value: string) {
 		const rS = node.__ngt_renderer__;
 		if (rS[NgtRendererClassId.destroyed]) return;
@@ -283,14 +148,8 @@ export class NgtRendererStore {
 			}
 		}
 
-		if (name === SPECIAL_PROPERTIES.COMPOUND) {
-			// NOTE: we set the compound property on instance node now so we know that this instance is being compounded
-			rS[NgtRendererClassId.compound] = [value === '' || value === 'first', {}];
-			return;
-		}
-
 		if (name === SPECIAL_PROPERTIES.ATTACH) {
-			// NOTE: handle attach as tring
+			// NOTE: handle attach as string
 			const paths = value.split('.');
 			if (paths.length) {
 				const localState = getLocalState(node);
@@ -314,7 +173,6 @@ export class NgtRendererStore {
 		}
 
 		applyProps(node, { [name]: value });
-		this.updateNativeProps(node, name, value);
 	}
 
 	applyProperty(node: NgtRendererNode, name: string, value: any) {
@@ -350,17 +208,7 @@ export class NgtRendererStore {
 			return;
 		}
 
-		const compound = rS[NgtRendererClassId.compound];
-		if (
-			compound?.[NgtCompoundClassId.props] &&
-			name in compound[NgtCompoundClassId.props] &&
-			!compound[NgtCompoundClassId.applyFirst]
-		) {
-			value = compound[NgtCompoundClassId.props][name];
-		}
-
 		applyProps(node, { [name]: value });
-		this.updateNativeProps(node, name, value);
 	}
 
 	applyParameters(node: NgtRendererNode, parameters: NgtAnyRecord) {
@@ -368,7 +216,6 @@ export class NgtRendererStore {
 		if (rS[NgtRendererClassId.destroyed]) return;
 
 		applyProps(node, parameters);
-		this.updateNativeProps(node, 'parameters', parameters);
 	}
 
 	get rootScene() {
@@ -379,9 +226,6 @@ export class NgtRendererStore {
 		const rS = node.__ngt_renderer__;
 		if (!rS || rS[NgtRendererClassId.destroyed]) return;
 		if (rS[NgtRendererClassId.type] === 'three') {
-			rS[NgtRendererClassId.compound] = undefined!;
-			rS[NgtRendererClassId.compoundParent] = undefined!;
-
 			const localState = getLocalState(node);
 			if (localState?.instanceStore) {
 				localState.instanceStore.get('objects').forEach((obj) => this.destroy(obj, parent));
@@ -410,23 +254,12 @@ export class NgtRendererStore {
 		if (rS[NgtRendererClassId.type] === 'comment') {
 			rS[NgtRendererClassId.injectorFactory] = null!;
 			delete (node as NgtAnyRecord)[SPECIAL_INTERNAL_ADD_COMMENT];
-			if (!this.removeCommentNode(node, this.argsCommentNodes)) {
-				this.removeCommentNode(node, this.parentCommentNodes);
-			}
+			this.removeCommentNode(node, this.argsCommentNodes);
 		}
 
 		if (rS[NgtRendererClassId.type] === 'portal') {
 			rS[NgtRendererClassId.injectorFactory] = null!;
 			this.removeCommentNode(node, this.portalCommentsNodes);
-		}
-
-		if (rS[NgtRendererClassId.type] === 'compound') {
-			rS[NgtRendererClassId.compounded] = undefined!;
-			rS[NgtRendererClassId.attributes] = null!;
-			rS[NgtRendererClassId.properties] = null!;
-			this.executeOperation(node, 'cleanUp');
-			rS[NgtRendererClassId.queueOps].clear();
-			rS[NgtRendererClassId.queueOps] = null!;
 		}
 
 		if (rS[NgtRendererClassId.ref]) {
@@ -472,22 +305,14 @@ export class NgtRendererStore {
 		return false;
 	}
 
-	private updateNativeProps(node: NgtInstanceNode, key: string, value: any) {
-		const localState = getLocalState(node);
-		localState?.setNativeProps(key, value);
-	}
-
-	private firstNonInjectedDirective<T extends NgtCommonDirective<any>>(
-		listProperty: 'argsCommentNodes' | 'parentCommentNodes',
-		dir: Type<T>,
-	) {
-		let directive: T | undefined;
+	private getNgtArgs() {
+		let directive: NgtArgs | undefined;
 
 		const destroyed = [];
 
-		let i = this[listProperty].length - 1;
+		let i = this.argsCommentNodes.length - 1;
 		while (i >= 0) {
-			const comment = this[listProperty][i];
+			const comment = this.argsCommentNodes[i];
 			if (comment.__ngt_renderer__[NgtRendererClassId.destroyed]) {
 				destroyed.push(i);
 				i--;
@@ -498,7 +323,7 @@ export class NgtRendererStore {
 				i--;
 				continue;
 			}
-			const instance = injector.get(dir, null);
+			const instance = injector.get(NgtArgs, null);
 			if (instance && instance.validate()) {
 				directive = instance;
 				break;
@@ -508,7 +333,7 @@ export class NgtRendererStore {
 		}
 
 		destroyed.forEach((index) => {
-			this[listProperty].splice(index, 1);
+			this.argsCommentNodes.splice(index, 1);
 		});
 
 		return directive;

@@ -10,32 +10,12 @@ import { SPECIAL_EVENTS } from './constants';
 export const enum NgtRendererClassId {
 	type,
 	parent,
-	injectedParent,
 	children,
 	destroyed,
-	compound,
-	compoundParent,
-	compounded,
-	queueOps,
-	attributes,
-	properties,
 	rawValue,
 	ref,
 	portalContainer,
 	injectorFactory,
-}
-
-// @internal
-export const enum NgtCompoundClassId {
-	applyFirst,
-	props,
-}
-
-// @internal
-export const enum NgtQueueOpClassId {
-	type,
-	op,
-	done,
 }
 
 export function kebabToPascal(str: string): string {

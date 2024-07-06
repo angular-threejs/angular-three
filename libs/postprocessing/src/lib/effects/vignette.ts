@@ -10,7 +10,7 @@ export type VignetteEffectOptions = Partial<NonNullable<ConstructorParameters<ty
 @Component({
 	selector: 'ngtp-vignette',
 	template: `
-		<ngt-vignette-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()" ngtCompound>
+		<ngt-vignette-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-vignette-effect>

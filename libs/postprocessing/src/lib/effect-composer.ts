@@ -78,7 +78,7 @@ export class NgtpEffects {}
 	selector: 'ngtp-effect-composer',
 	standalone: true,
 	template: `
-		<ngt-group #group ngtCompound />
+		<ngt-group #group />
 	`,
 	providers: [provideEffectComposerApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

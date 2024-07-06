@@ -44,7 +44,7 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 	selector: 'ngts-orbit-controls',
 	standalone: true,
 	template: `
-		<ngt-primitive ngtCompound *args="args()" [parameters]="parameters()" [enableDamping]="enableDamping()">
+		<ngt-primitive *args="args()" [parameters]="parameters()" [enableDamping]="enableDamping()">
 			<ng-content />
 		</ngt-primitive>
 	`,

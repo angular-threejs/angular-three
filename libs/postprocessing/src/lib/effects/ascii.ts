@@ -126,7 +126,7 @@ const defaultOptions: ASCIIEffectOptions = {
 	selector: 'ngtp-ascii',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -141,7 +141,6 @@ export class NgtCanvas {
 	private injector = inject(Injector);
 
 	sceneGraph = input.required<Type<any>>();
-	compoundPrefixes = input<string[]>([]);
 	sceneGraphInputs = input<NgtAnyRecord>({});
 	gl = input<NgtGLOptions>();
 	size = input<NgtSize>();
@@ -272,7 +271,7 @@ export class NgtCanvas {
 
 		untracked(() => {
 			this.glEnvironmentInjector = createEnvironmentInjector(
-				[provideNgtRenderer(this.store, untracked(this.compoundPrefixes))],
+				[provideNgtRenderer(this.store)],
 				this.environmentInjector,
 			);
 			this.glRef = this.viewContainerRef.createComponent(untracked(this.sceneGraph), {

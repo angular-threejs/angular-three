@@ -20,7 +20,7 @@ export interface LUTOptions {
 @Component({
 	selector: 'ngtp-lut',
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" />
 	`,
 	imports: [NgtArgs],
 	standalone: true,

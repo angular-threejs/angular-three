@@ -21,7 +21,7 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	selector: 'ngtp-god-rays',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
 	`,
 	imports: [NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,

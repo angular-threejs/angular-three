@@ -1,32 +1,22 @@
 import { DOCUMENT } from '@angular/common';
 import {
 	Injectable,
-	Injector,
 	Renderer2,
 	RendererFactory2,
 	RendererType2,
-	effect,
 	getDebugNode,
 	inject,
 	makeEnvironmentProviders,
 } from '@angular/core';
 import { NgtInstanceNode, NgtLocalState, getLocalState, prepare } from '../instance';
-import { NgtInjectedRef } from '../ref';
 import { NgtState, injectNgtStore, provideNgtStore } from '../store';
 import { NgtAnyRecord } from '../types';
 import { is } from '../utils/is';
 import { NgtSignalStore, signalStore } from '../utils/signal-store';
 import { NgtAnyConstructor, injectNgtCatalogue } from './catalogue';
 import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG, SPECIAL_PROPERTIES } from './constants';
-import { NGT_COMPOUND_PREFIXES, NgtRendererNode, NgtRendererState, NgtRendererStore } from './store';
-import {
-	NgtCompoundClassId,
-	NgtRendererClassId,
-	attachThreeChild,
-	kebabToPascal,
-	processThreeEvent,
-	removeThreeChild,
-} from './utils';
+import { NgtRendererNode, NgtRendererState, NgtRendererStore } from './store';
+import { NgtRendererClassId, attachThreeChild, kebabToPascal, processThreeEvent, removeThreeChild } from './utils';
 
 @Injectable()
 export class NgtRendererFactory implements RendererFactory2 {
@@ -39,7 +29,6 @@ export class NgtRendererFactory implements RendererFactory2 {
 	// NOTE: all Renderer instances under the same NgtCanvas share the same Store
 	private rendererStore = new NgtRendererStore({
 		store: injectNgtStore(),
-		compoundPrefixes: inject(NGT_COMPOUND_PREFIXES),
 		document: inject(DOCUMENT),
 	});
 
@@ -94,17 +83,12 @@ export class NgtRenderer implements Renderer2 {
 			return node;
 		}
 
-		if (this.store.isCompound(name)) {
-			return this.store.createNode('dom', element);
-		}
-
 		if (name === SPECIAL_DOM_TAG.NGT_PORTAL) {
 			return this.store.createNode('portal', element);
 		}
 
 		if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
 			const instanceStore = signalStore({
-				nativeProps: {},
 				parent: null,
 				objects: [],
 				nonObjects: [],
@@ -119,9 +103,6 @@ export class NgtRenderer implements Renderer2 {
 						__ngt__: {
 							isRaw: true,
 							instanceStore,
-							setNativeProps(key: string, value: any) {
-								instanceStore.update((prev) => ({ nativeProps: { ...prev.nativeProps, [key]: value } }));
-							},
 							setParent(parent: NgtInstanceNode) {
 								instanceStore.update({ parent });
 							},
@@ -198,35 +179,6 @@ export class NgtRenderer implements Renderer2 {
 			return;
 		}
 
-		if (cRS?.[NgtRendererClassId.injectedParent]) {
-			if (is.ref(cRS[NgtRendererClassId.injectedParent])) {
-				const injector = cRS[NgtRendererClassId.injectorFactory]()?.get(Injector, null);
-				if (!injector) {
-					console.warn(
-						`[NGT] NgtRenderer is attempting to start an effect for injectedParent but no Injector is found.`,
-					);
-					return;
-				}
-				const watcher = effect(
-					() => {
-						const injectedParent = (cRS[NgtRendererClassId.injectedParent] as NgtInjectedRef<NgtRendererNode>)
-							.nativeElement;
-						if (injectedParent && injectedParent !== parent) {
-							this.appendChild(injectedParent, newChild);
-							// only run this effect once
-							// as soon as we re-run appendChild with the injectedParent, we stop the effect
-							watcher.destroy();
-						}
-					},
-					{ injector, manualCleanup: true },
-				);
-				return;
-			} else if (parent !== cRS[NgtRendererClassId.injectedParent]) {
-				this.appendChild(cRS[NgtRendererClassId.injectedParent], newChild);
-				return;
-			}
-		}
-
 		this.store.setParent(newChild, parent);
 		this.store.addChild(parent, newChild);
 
@@ -260,11 +212,6 @@ export class NgtRenderer implements Renderer2 {
 			if (parent === newChild) return;
 			// attach THREE child
 			attachThreeChild(parent, newChild);
-			// here, we handle the special case of if the parent has a compoundParent, which means this child is part of a compound parent template
-			if (!cRS[NgtRendererClassId.compound]) return;
-			const closestGrandparentWithCompound = this.store.getClosestParentWithCompound(parent);
-			if (!closestGrandparentWithCompound) return;
-			this.appendChild(closestGrandparentWithCompound, newChild);
 			return;
 		}
 
@@ -272,27 +219,6 @@ export class NgtRenderer implements Renderer2 {
 		if (pRS[NgtRendererClassId.type] === 'three') {
 			for (const renderChild of cRS?.[NgtRendererClassId.children] || []) {
 				this.appendChild(parent, renderChild);
-			}
-		}
-
-		// if parent is a compound
-		if (pRS[NgtRendererClassId.type] === 'compound') {
-			// if compound doesn't have a THREE instance set yet
-			if (!pRS[NgtRendererClassId.compounded] && cRS[NgtRendererClassId.type] === 'three') {
-				// if child is indeed an ngtCompound
-				if (cRS[NgtRendererClassId.compound]) this.store.setCompound(parent, newChild);
-				// if not, we track the parent (that is supposedly the compound component) on this three instance
-				else if (!cRS[NgtRendererClassId.compoundParent]) cRS[NgtRendererClassId.compoundParent] = parent;
-			}
-
-			// reset the compound if it's changed
-			if (
-				pRS[NgtRendererClassId.compounded] &&
-				cRS[NgtRendererClassId.type] === 'three' &&
-				cRS[NgtRendererClassId.compound] &&
-				pRS[NgtRendererClassId.compounded] !== newChild
-			) {
-				this.store.setCompound(parent, newChild);
 			}
 		}
 
@@ -341,18 +267,6 @@ export class NgtRenderer implements Renderer2 {
 			return;
 		}
 
-		if (pRS[NgtRendererClassId.type] === 'compound') {
-			if (pRS[NgtRendererClassId.compounded]) {
-				this.removeChild(pRS[NgtRendererClassId.compounded], oldChild, isHostElement);
-				return;
-			}
-
-			if (pRS[NgtRendererClassId.parent]) {
-				this.removeChild(pRS[NgtRendererClassId.parent], oldChild, isHostElement);
-				return;
-			}
-		}
-
 		if (
 			pRS[NgtRendererClassId.type] === 'portal' &&
 			pRS[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
@@ -384,16 +298,6 @@ export class NgtRenderer implements Renderer2 {
 		namespace?: string | null | undefined,
 	): boolean {
 		const rS = el.__ngt_renderer__;
-		if (rS[NgtRendererClassId.type] === 'compound') {
-			// we don't have the compound instance yet
-			rS[NgtRendererClassId.attributes][name] = value;
-			if (!rS[NgtRendererClassId.compounded]) {
-				this.store.queueOperation(el, ['op', () => this.setAttribute(el, name, value, namespace)]);
-				return false;
-			}
-
-			return this.setAttributeInternal(rS[NgtRendererClassId.compounded], name, value, namespace);
-		}
 
 		if (rS[NgtRendererClassId.type] === 'three') {
 			this.store.applyAttribute(el, name, value);
@@ -420,25 +324,7 @@ export class NgtRenderer implements Renderer2 {
 	}
 
 	setProperty(el: NgtRendererNode, name: string, value: any): void {
-		// TODO: should we support ref value
 		const rS = el.__ngt_renderer__;
-		if (rS[NgtRendererClassId.type] === 'compound') {
-			// we don't have the compound instance yet
-			rS[NgtRendererClassId.properties][name] = value;
-			if (!rS[NgtRendererClassId.compounded]) {
-				this.store.queueOperation(el, ['op', () => this.setProperty(el, name, value)]);
-				return;
-			}
-
-			if (rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound]) {
-				Object.assign(
-					rS[NgtRendererClassId.compounded].__ngt_renderer__[NgtRendererClassId.compound][NgtCompoundClassId.props],
-					{ [name]: value },
-				);
-			}
-			this.setProperty(rS[NgtRendererClassId.compounded], name, value);
-			return;
-		}
 
 		if (rS[NgtRendererClassId.type] === 'three') {
 			if (name === SPECIAL_PROPERTIES.PARAMETERS) {
@@ -461,22 +347,11 @@ export class NgtRenderer implements Renderer2 {
 			return this.delegate.listen(target, eventName, callback);
 		}
 
-		if (
-			rS[NgtRendererClassId.type] === 'three' ||
-			(rS[NgtRendererClassId.type] === 'compound' && rS[NgtRendererClassId.compounded])
-		) {
-			const instance = rS[NgtRendererClassId.compounded] || target;
+		if (rS[NgtRendererClassId.type] === 'three') {
+			const instance = target;
 			const localState = getLocalState(instance);
 			const priority = localState?.priority ?? 0;
 			return processThreeEvent(instance, priority, eventName, callback);
-		}
-
-		if (rS[NgtRendererClassId.type] === 'compound' && !rS[NgtRendererClassId.compounded]) {
-			this.store.queueOperation(target, [
-				'op',
-				() => this.store.queueOperation(target, ['cleanUp', this.listen(target, eventName, callback)]),
-			]);
-			return () => {};
 		}
 
 		// @ts-expect-error - we know that target is not DOM node
@@ -499,22 +374,16 @@ export class NgtRenderer implements Renderer2 {
 	private shouldFindGrandparentInstance(pRS: NgtRendererState, cRS: NgtRendererState, child: NgtRendererNode) {
 		const pType = pRS[NgtRendererClassId.type];
 		const cType = cRS[NgtRendererClassId.type];
-		const isParentCompounded = pRS[NgtRendererClassId.compounded];
-		const isChildCompounded = cRS[NgtRendererClassId.compounded];
 
 		const cLS = getLocalState(child);
 		// if child is three but haven't been attached to a parent yet
 		const isDanglingThreeChild = cType === 'three' && !cLS?.instanceStore?.get('parent');
 		// or both parent and child are DOM elements
 		// or they are compound AND haven't had a THREE instance yet
-		const isParentStillDOM = pType === 'dom' || (pType === 'compound' && !isParentCompounded);
-		const isChildStillDOM = cType === 'dom' || (cType === 'compound' && !isChildCompounded);
-		// and the child is a compounded compound
-		const isCompoundChildCompounded = cType === 'compound' && !!isChildCompounded;
+		const isParentStillDOM = pType === 'dom';
+		const isChildStillDOM = cType === 'dom';
 
-		return (
-			isDanglingThreeChild || (isParentStillDOM && isChildStillDOM) || (isParentStillDOM && isCompoundChildCompounded)
-		);
+		return isDanglingThreeChild || (isParentStillDOM && isChildStillDOM) || isParentStillDOM;
 	}
 
 	createText = this.delegate.createText.bind(this.delegate);
@@ -532,14 +401,10 @@ export class NgtRenderer implements Renderer2 {
 	}
 }
 
-export function provideNgtRenderer(store: NgtSignalStore<NgtState>, compoundPrefixes: string[]) {
-	if (!compoundPrefixes.includes('ngts')) compoundPrefixes.push('ngts');
-	if (!compoundPrefixes.includes('ngtp')) compoundPrefixes.push('ngtp');
-
+export function provideNgtRenderer(store: NgtSignalStore<NgtState>) {
 	const providers = [
 		NgtRendererFactory,
 		{ provide: RendererFactory2, useExisting: NgtRendererFactory },
-		{ provide: NGT_COMPOUND_PREFIXES, useValue: compoundPrefixes },
 		provideNgtStore(store),
 	];
 

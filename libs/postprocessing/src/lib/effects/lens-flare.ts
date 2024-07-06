@@ -137,7 +137,7 @@ const defaultOptions: LensFlareOptions = {
 	selector: 'ngtp-lens-flare',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" ngtCompound />
+		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
