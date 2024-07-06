@@ -348,7 +348,7 @@ export const NGT_STORE_SIGNAL = new InjectionToken<WritableSignal<{ scene: Scene
 
 export function provideNgtStore(store?: NgtSignalStore<NgtState>) {
 	if (store) {
-		return { provide: NGT_STORE, useValue: store };
+		return { provide: NGT_STORE, useFactory: () => store };
 	}
 	return { provide: NGT_STORE, useFactory: storeFactory };
 }
