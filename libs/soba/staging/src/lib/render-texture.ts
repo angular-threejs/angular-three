@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
+	NgtComputeFunction,
 	NgtPortal,
 	NgtPortalContent,
 	NgtTexture,
@@ -25,7 +26,6 @@ import {
 	prepare,
 } from 'angular-three';
 import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
-import { NgtComputeFunction } from 'libs/core/src/lib/events';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
 

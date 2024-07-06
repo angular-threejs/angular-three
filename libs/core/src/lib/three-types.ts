@@ -137,6 +137,7 @@ import { NgtEventHandlers } from './events';
 import { NgtAfterAttach, NgtAttachFunction, NgtInstanceNode } from './instance';
 import { NgtBeforeRenderEvent } from './store';
 
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
 type NoEvent<T> = Omit<T, 'addEventListener' | 'removeEventListener'>;
 
 export type NgtNonFunctionKeys<T> = { [K in keyof T]-?: T[K] extends Function ? never : K }[keyof T];
@@ -189,34 +190,36 @@ export type NgtNodeElement<TOriginal, TConstructor> = {
 	__ngt_args__: NgtArguments<TConstructor>;
 };
 
-export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = NgtExtendedColors<
-	NgtOverwrite<Partial<TNoEvent>, NgtNodeElement<TOriginal, TConstructor>>
+export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Expand<
+	NgtExtendedColors<NgtOverwrite<Partial<TNoEvent>, NgtNodeElement<TOriginal, TConstructor>>>
 >;
 
 export type NgtObject3DEventsMap = {
 	[TEvent in keyof NgtEventHandlers]-?: Parameters<NonNullable<NgtEventHandlers[TEvent]>>[0];
 };
 
-export type NgtObject3DNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = NgtOverwrite<
-	NgtNode<TOriginal, TConstructor, TNoEvent>,
-	{
-		position: NgtVector3;
-		up: NgtVector3;
-		scale: NgtVector3;
-		rotation: NgtEuler;
-		matrix: NgtMatrix4;
-		quaternion: NgtQuaternion;
-		layers: NgtLayers;
-		dispose: (() => void) | null;
-		addEventListener<TEventKey extends keyof NgtObject3DEventsMap>(
-			type: TEventKey,
-			listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtObject3DEventsMap[TEventKey]) => any,
-		): void;
-		removeEventListener<TEventKey extends keyof NgtObject3DEventsMap>(
-			type: TEventKey,
-			listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtObject3DEventsMap[TEventKey]) => any,
-		): void;
-	}
+export type NgtObject3DNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Expand<
+	NgtOverwrite<
+		NgtNode<TOriginal, TConstructor, TNoEvent>,
+		{
+			position: NgtVector3;
+			up: NgtVector3;
+			scale: NgtVector3;
+			rotation: NgtEuler;
+			matrix: NgtMatrix4;
+			quaternion: NgtQuaternion;
+			layers: NgtLayers;
+			dispose: (() => void) | null;
+			addEventListener<TEventKey extends keyof NgtObject3DEventsMap>(
+				type: TEventKey,
+				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtObject3DEventsMap[TEventKey]) => any,
+			): void;
+			removeEventListener<TEventKey extends keyof NgtObject3DEventsMap>(
+				type: TEventKey,
+				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtObject3DEventsMap[TEventKey]) => any,
+			): void;
+		}
+	>
 >;
 
 export type NgtGeometry<TGeometry extends BufferGeometry, TConstructor> = NgtNode<TGeometry, TConstructor>;
