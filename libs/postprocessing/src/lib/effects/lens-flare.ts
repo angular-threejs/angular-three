@@ -9,7 +9,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectBeforeRender, injectNgtRef, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three';
 import { easing } from 'maath';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -137,7 +137,7 @@ const defaultOptions: LensFlareOptions = {
 	selector: 'ngtp-lens-flare',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" [dispose]="null" />
+		<ngt-primitive *args="[effect()]" [dispose]="null" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -152,7 +152,6 @@ export class NgtpLensFlare {
 
 	composerApi = injectEffectComposerApi();
 
-	effectRef = input(injectNgtRef<LensFlareEffect>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	projectedPosition = new Vector3();

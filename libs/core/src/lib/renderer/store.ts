@@ -4,7 +4,6 @@ import { getLocalState } from '../instance';
 import { NGT_STORE, NgtState } from '../store';
 import { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
-import { is } from '../utils/is';
 import { NgtSignalStore } from '../utils/signal-store';
 import { SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_PROPERTIES } from './constants';
 import { NgtRendererClassId, attachThreeChild, removeThreeChild } from './utils';
@@ -15,7 +14,6 @@ export type NgtRendererState = [
 	children: NgtRendererNode[],
 	destroyed: boolean,
 	rawValue: any,
-	ref: any,
 	portalContainer: NgtRendererNode,
 	injectorFactory: () => Injector | undefined,
 ];
@@ -36,7 +34,7 @@ export class NgtRendererStore {
 	constructor(private rootState: NgtRendererRootState) {}
 
 	createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord) {
-		const state = [type, null, [], false, undefined!, undefined!, undefined!, undefined!] as NgtRendererState;
+		const state = [type, null, [], false, undefined!, undefined!, undefined!] as NgtRendererState;
 
 		const rendererNode = Object.assign(node, { __ngt_renderer__: state });
 
@@ -179,13 +177,6 @@ export class NgtRendererStore {
 		const rS = node.__ngt_renderer__;
 		if (rS[NgtRendererClassId.destroyed]) return;
 
-		// [ref]
-		if (name === SPECIAL_PROPERTIES.REF && is.ref(value)) {
-			rS[NgtRendererClassId.ref] = value;
-			value.nativeElement = node;
-			return;
-		}
-
 		const localState = getLocalState(node);
 		const parent = localState?.instanceStore.get('parent') || rS[NgtRendererClassId.parent];
 
@@ -257,16 +248,6 @@ export class NgtRendererStore {
 		if (rS[NgtRendererClassId.type] === 'portal') {
 			rS[NgtRendererClassId.injectorFactory] = null!;
 			this.removeCommentNode(node, this.portalCommentsNodes);
-		}
-
-		if (rS[NgtRendererClassId.ref]) {
-			// nullify ref
-			// but we do it later so that it doesn't hinder render
-			// TODO: will this cause memory leak?
-			requestAnimationFrame(() => {
-				rS[NgtRendererClassId.ref].nativeElement = null;
-				rS[NgtRendererClassId.ref] = undefined!;
-			});
 		}
 
 		// nullify parent

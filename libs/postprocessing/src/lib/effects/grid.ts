@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtRef, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, injectNgtStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GridEffect } from 'postprocessing';
 
@@ -17,7 +17,7 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 	selector: 'ngtp-grid',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	imports: [NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +28,6 @@ export class NgtpGrid {
 	store = injectNgtStore();
 	invalidate = this.store.select('invalidate');
 
-	effectRef = input(injectNgtRef<GridEffect>());
 	options = input({} as GridOptions);
 	size = pick(this.options, 'size');
 

@@ -13,7 +13,6 @@ export const SPECIAL_PROPERTIES = {
 	ATTACH: 'attach',
 	RAW_VALUE: 'rawValue',
 	PARAMETERS: 'parameters',
-	REF: 'ref',
 } as const;
 
 export const SPECIAL_EVENTS = {

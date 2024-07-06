@@ -10,7 +10,7 @@ export type SMAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof
 @Component({
 	selector: 'ngtp-smaa',
 	template: `
-		<ngt-sMAA-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-sMAA-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-sMAA-effect>

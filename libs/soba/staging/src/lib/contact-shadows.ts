@@ -7,16 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import {
-	NgtArgs,
-	NgtGroup,
-	exclude,
-	extend,
-	injectNextBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	pick,
-} from 'angular-three';
+import { NgtArgs, NgtGroup, exclude, extend, injectNextBeforeRender, injectNgtStore, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	Color,
@@ -84,7 +75,7 @@ extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
 					[map]="texture()"
 				/>
 			</ngt-mesh>
-			<ngt-orthographic-camera *args="cameraArgs()" [ref]="shadowsCameraRef" />
+			<ngt-orthographic-camera *args="cameraArgs()" #shadowsCamera />
 		</ngt-group>
 	`,
 	imports: [NgtArgs],
@@ -112,9 +103,7 @@ export class NgtsContactShadows {
 	]);
 
 	contactShadowsRef = viewChild.required<ElementRef<Group>>('contactShadows');
-	shadowsCameraRef = injectNgtRef<OrthographicCamera>();
-	// TODO (chau): try to use viewChild instead of injectNgtRef later
-	// shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowsCamera');
+	shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowsCamera');
 
 	private store = injectNgtStore();
 	private scene = this.store.select('scene');
@@ -191,7 +180,7 @@ export class NgtsContactShadows {
 	private blurShadows(blur: number) {
 		const { renderTarget, renderTargetBlur, blurPlane, horizontalBlurMaterial, verticalBlurMaterial } =
 			this.shadowsOptions();
-		const shadowsCamera = this.shadowsCameraRef.nativeElement;
+		const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
 		if (!shadowsCamera) return;
 
 		blurPlane.visible = true;
@@ -215,7 +204,7 @@ export class NgtsContactShadows {
 		let initialOverrideMaterial: Material | null;
 
 		injectNextBeforeRender(() => {
-			const shadowsCamera = this.shadowsCameraRef.nativeElement;
+			const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
 			const [{ frames, blur, smooth }, gl, scene, contactShadows, { depthMaterial, renderTarget }] = [
 				this.options(),
 				this.gl(),

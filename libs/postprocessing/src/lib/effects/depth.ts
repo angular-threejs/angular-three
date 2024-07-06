@@ -10,7 +10,7 @@ export type DepthEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 @Component({
 	selector: 'ngtp-depth',
 	template: `
-		<ngt-depth-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-depth-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-depth-effect>

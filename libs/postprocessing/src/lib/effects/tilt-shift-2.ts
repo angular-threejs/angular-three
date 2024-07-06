@@ -97,7 +97,7 @@ extend({ TiltShift2Effect });
 	selector: 'ngtp-tilt-shift2',
 	standalone: true,
 	template: `
-		<ngt-tilt-shift2-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-tilt-shift2-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-tilt-shift2-effect>

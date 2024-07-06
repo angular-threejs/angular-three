@@ -12,7 +12,6 @@ export const enum NgtRendererClassId {
 	children,
 	destroyed,
 	rawValue,
-	ref,
 	portalContainer,
 	injectorFactory,
 }

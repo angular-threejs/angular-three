@@ -9,7 +9,7 @@ extend({ BloomEffect });
 	selector: 'ngtp-bloom',
 	standalone: true,
 	template: `
-		<ngt-bloom-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-bloom-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-bloom-effect>

@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector3, injectNgtRef } from 'angular-three';
+import { NgtArgs, NgtVector3 } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
 import { DepthPackingStrategies, Texture, Vector3 } from 'three';
@@ -26,7 +26,7 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	selector: 'ngtp-depth-of-field',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -36,7 +36,6 @@ export class NgtpDepthOfField {
 	autoEffect = injectAutoEffect();
 	composerApi = injectEffectComposerApi();
 
-	effectRef = input(injectNgtRef<DepthOfFieldEffect>());
 	options = input({} as DOFOptions);
 
 	autoFocus = computed(() => this.options().target != null);

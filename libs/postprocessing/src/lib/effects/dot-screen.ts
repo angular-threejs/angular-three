@@ -10,7 +10,7 @@ export type DotScreenEffectOptions = Partial<NonNullable<ConstructorParameters<t
 @Component({
 	selector: 'ngtp-dot-screen',
 	template: `
-		<ngt-dot-screen-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-dot-screen-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-dot-screen-effect>

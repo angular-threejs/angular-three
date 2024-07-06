@@ -15,7 +15,7 @@ const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
 @Component({
 	selector: 'ngtp-scanline',
 	template: `
-		<ngt-scanline-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-scanline-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-scanline-effect>

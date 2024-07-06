@@ -3,21 +3,15 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	ElementRef,
 	TemplateRef,
 	afterNextRender,
 	contentChild,
 	input,
 	untracked,
+	viewChild,
 } from '@angular/core';
-import {
-	NgtPerspectiveCamera,
-	exclude,
-	extend,
-	injectBeforeRender,
-	injectNgtRef,
-	injectNgtStore,
-	pick,
-} from 'angular-three';
+import { NgtPerspectiveCamera, exclude, extend, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
 import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -50,11 +44,11 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	selector: 'ngts-perspective-camera',
 	standalone: true,
 	template: `
-		<ngt-perspective-camera [ref]="cameraRef()" [parameters]="parameters()">
+		<ngt-perspective-camera #camera [parameters]="parameters()">
 			<ng-container [ngTemplateOutlet]="content() ?? null" />
 		</ngt-perspective-camera>
 
-		<ngt-group [ref]="groupRef">
+		<ngt-group #group>
 			<ng-container
 				[ngTemplateOutlet]="withTextureContent() ?? null"
 				[ngTemplateOutletContext]="{ $implicit: texture }"
@@ -66,14 +60,14 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsPerspectiveCamera {
-	cameraRef = input(injectNgtRef<PerspectiveCamera>());
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
 	content = contentChild(NgtsContent, { read: TemplateRef });
 	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
 
-	groupRef = injectNgtRef<Group>();
+	cameraRef = viewChild.required<ElementRef<PerspectiveCamera>>('camera');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	private autoEffect = injectAutoEffect();
 	private store = injectNgtStore();
@@ -112,7 +106,7 @@ export class NgtsPerspectiveCamera {
 		injectBeforeRender(({ gl, scene }) => {
 			const [{ frames, envMap }, group, camera, fbo] = [
 				this.options(),
-				this.groupRef.nativeElement,
+				this.groupRef().nativeElement,
 				this.cameraRef().nativeElement,
 				this.fbo(),
 			];

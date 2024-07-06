@@ -37,7 +37,7 @@ const defaultOptions: NgtsFloatOptions = {
 	standalone: true,
 	template: `
 		<ngt-group [parameters]="parameters()">
-			<ngt-group #float [ref]="floatRef()" [matrixAutoUpdate]="false">
+			<ngt-group #float [matrixAutoUpdate]="false">
 				<ng-container [ngTemplateOutlet]="content()" />
 			</ngt-group>
 		</ngt-group>

@@ -7,7 +7,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtRef, is } from 'angular-three';
+import { NgtArgs, is } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GodRaysEffect } from 'postprocessing';
 import { Mesh, Points } from 'three';
@@ -21,7 +21,7 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	selector: 'ngtp-god-rays',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [ref]="effectRef()" />
+		<ngt-primitive *args="[effect()]" />
 	`,
 	imports: [NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +31,6 @@ export class NgtpGodRays {
 	autoEffect = injectAutoEffect();
 	composerApi = injectEffectComposerApi();
 
-	effectRef = input(injectNgtRef<GodRaysEffect>());
 	options = input({} as GodRaysOptions);
 
 	effect = computed(() => {

@@ -11,7 +11,7 @@ export type BrightnessEffectOptions = NonNullable<ConstructorParameters<typeof B
 	selector: 'ngtp-brightness-contrast',
 	standalone: true,
 	template: `
-		<ngt-brightness-contrast-effect *args="[options()]" [camera]="effect.camera()" [ref]="effect.effectRef()">
+		<ngt-brightness-contrast-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-brightness-contrast-effect>
