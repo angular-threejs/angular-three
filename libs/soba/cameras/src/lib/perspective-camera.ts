@@ -86,6 +86,7 @@ export class NgtsPerspectiveCamera {
 			this.autoEffect(() => {
 				if (!this.manual()) {
 					this.cameraRef().nativeElement.aspect = this.size().width / this.size().height;
+					this.cameraRef().nativeElement.updateProjectionMatrix();
 				}
 			});
 
@@ -98,7 +99,7 @@ export class NgtsPerspectiveCamera {
 				return;
 			});
 
-			this.cameraRef().nativeElement.aspect = this.size().width / this.size().height;
+			this.cameraRef().nativeElement.updateProjectionMatrix();
 		});
 
 		let count = 0;

@@ -314,10 +314,13 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 		camera: oldCamera,
 	} = store.snapshot;
 
-	const [camera, size, viewportDpr] = [store.select('camera'), store.select('size'), store.select('viewport', 'dpr')];
-
 	effect(() => {
-		const [newCamera, newSize, newDpr, gl] = [camera(), size(), viewportDpr(), store.snapshot.gl];
+		const {
+			camera: newCamera,
+			size: newSize,
+			viewport: { dpr: newDpr },
+			gl,
+		} = store.state();
 
 		// Resize camera and renderer on changes to size and pixel-ratio
 		if (newSize !== oldSize || newDpr !== oldDpr) {
@@ -346,9 +349,9 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 export const NGT_STORE = new InjectionToken<NgtSignalStore<NgtState>>('NgtStore Token');
 export const NGT_STORE_SIGNAL = new InjectionToken<WritableSignal<{ scene: Scene }>>('NgtStore Signal Token');
 
-export function provideNgtStore(store?: NgtSignalStore<NgtState>) {
+export function provideNgtStore(store?: () => NgtSignalStore<NgtState>) {
 	if (store) {
-		return { provide: NGT_STORE, useFactory: () => store };
+		return { provide: NGT_STORE, useFactory: store };
 	}
 	return { provide: NGT_STORE, useFactory: storeFactory };
 }

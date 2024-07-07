@@ -5,10 +5,8 @@ import {
 	Component,
 	Injector,
 	TemplateRef,
-	afterNextRender,
 	computed,
 	contentChild,
-	inject,
 	input,
 } from '@angular/core';
 import {
@@ -26,6 +24,7 @@ import {
 	prepare,
 } from 'angular-three';
 import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
+import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
 
@@ -66,32 +65,46 @@ export class NgtsRenderTextureContainer {
 	fbo = input.required<WebGLRenderTarget>();
 	renderPriority = input.required<number>();
 	frames = input.required<number>();
+	injector = input.required<Injector>();
+
+	private store = injectNgtStore();
 
 	constructor() {
-		const injector = inject(Injector);
-		afterNextRender(() => {
+		injectAutoEffect()(() => {
+			// track
+			this.store.state();
 			const renderPriority = this.renderPriority();
+
 			let count = 0;
 			let oldAutoClear: boolean;
 			let oldXrEnabled: boolean;
-			injectBeforeRender(
+			let oldRenderTarget: WebGLRenderTarget | null;
+			let oldIsPresenting: boolean;
+			const sub = injectBeforeRender(
 				({ gl, scene, camera }) => {
 					const [fbo, frames] = [this.fbo(), this.frames()];
-					if (frames === Infinity || count < frames) {
+					// NOTE: render  the frames ^ 2
+					if (frames === Infinity || count < frames * frames) {
 						oldAutoClear = gl.autoClear;
 						oldXrEnabled = gl.xr.enabled;
+						oldRenderTarget = gl.getRenderTarget();
+						oldIsPresenting = gl.xr.isPresenting;
 						gl.autoClear = true;
 						gl.xr.enabled = false;
+						gl.xr.isPresenting = false;
 						gl.setRenderTarget(fbo);
 						gl.render(scene, camera);
-						gl.setRenderTarget(null);
+						gl.setRenderTarget(oldRenderTarget);
 						gl.autoClear = oldAutoClear;
 						gl.xr.enabled = oldXrEnabled;
+						gl.xr.isPresenting = oldIsPresenting;
 						count++;
 					}
 				},
-				{ priority: renderPriority, injector },
+				{ priority: renderPriority, injector: this.injector() },
 			);
+
+			return () => sub();
 		});
 	}
 }
@@ -106,17 +119,26 @@ const defaultOptions: NgtsRenderTextureOptions = {
 	generateMipmaps: false,
 };
 
+let incrementId = 0;
+
 @Component({
 	selector: 'ngts-render-texture',
 	standalone: true,
 	template: `
-		<ngt-portal [container]="virtualScene" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
+		<ngt-portal [container]="virtualScene()" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
 			<ng-template portalContent let-injector="injector">
-				<ngts-render-texture-container [fbo]="fbo()" [renderPriority]="renderPriority()" [frames]="frames()">
+				<ngts-render-texture-container
+					[fbo]="fbo()"
+					[renderPriority]="renderPriority()"
+					[frames]="frames()"
+					[injector]="injector"
+				>
 					<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
+					<ngt-group (pointerover)="onPointerOver()" />
 				</ngts-render-texture-container>
 			</ng-template>
 		</ngt-portal>
+
 		<ngt-primitive *args="[fbo().texture]" [attach]="attach()" [parameters]="parameters()" />
 	`,
 	imports: [NgtPortal, NgtsRenderTextureContainer, NgtPortalContent, NgtArgs, NgTemplateOutlet],
@@ -156,16 +178,16 @@ export class NgtsRenderTexture {
 		},
 	}));
 
-	constructor() {
-		console.log('in render texture', this.store);
-	}
-
 	renderPriority = pick(this.options, 'renderPriority');
 	frames = pick(this.options, 'frames');
 	fbo = injectFBO(this.fboParams);
-	virtualScene = prepare(new Scene());
+	virtualScene = computed(() => {
+		const scene = prepare(new Scene());
+		scene.name = `ngts-render-texture-virtual-scene-${incrementId++}`;
+		return scene;
+	});
 	eventPriority = pick(this.options, 'eventPriority');
-	compute = computed(() => this.options().compute || this.uvCompute.bind(this));
+	compute = computed(() => this.options().compute || this.uvCompute);
 
 	uvCompute: NgtComputeFunction = (event, root, previous) => {
 		const fbo = this.fbo();
@@ -194,4 +216,8 @@ export class NgtsRenderTexture {
 		if (!uv) return;
 		state.raycaster.setFromCamera(state.pointer.set(uv.x * 2 - 1, uv.y * 2 - 1), state.camera);
 	};
+
+	onPointerOver() {
+		/* noop */
+	}
 }

@@ -6,6 +6,7 @@ import {
 	ElementRef,
 	TemplateRef,
 	afterNextRender,
+	computed,
 	contentChild,
 	input,
 	untracked,
@@ -46,10 +47,10 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 	template: `
 		<ngt-orthographic-camera
 			#camera
-			[left]="size().width / -2"
-			[right]="size().width / 2"
-			[top]="size().height / 2"
-			[bottom]="size().height / -2"
+			[left]="left()"
+			[right]="right()"
+			[top]="top()"
+			[bottom]="bottom()"
 			[parameters]="parameters()"
 		>
 			<ng-container [ngTemplateOutlet]="content() ?? null" />
@@ -68,7 +69,17 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 })
 export class NgtsOrthographicCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	parameters = exclude(this.options, [
+		'envMap',
+		'makeDefault',
+		'manual',
+		'frames',
+		'resolution',
+		'left',
+		'top',
+		'bottom',
+		'right',
+	]);
 
 	content = contentChild(NgtsContent, { read: TemplateRef });
 	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
@@ -81,6 +92,11 @@ export class NgtsOrthographicCamera {
 
 	private camera = this.store.select('camera');
 	size = this.store.select('size');
+
+	left = computed(() => this.options().left ?? this.size().width / -2);
+	right = computed(() => this.options().right ?? this.size().width / 2);
+	top = computed(() => this.options().top ?? this.size().height / 2);
+	bottom = computed(() => this.options().bottom ?? this.size().height / -2);
 
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');

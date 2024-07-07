@@ -27,7 +27,7 @@ class TextContainer {
 
 	constructor() {
 		injectNextBeforeRender(() => {
-			const text = this.textRef().troikaMesh;
+			const text = this.textRef().troikaMesh();
 			text.rotation.y += 0.01;
 		});
 	}
@@ -38,13 +38,7 @@ class TextContainer {
 	standalone: true,
 	template: `
 		<ngts-text [text]="text" [options]="options">
-			<ngt-mesh-basic-material
-				*ngtsContent
-				[side]="DoubleSide"
-				[color]="color()"
-				[transparent]="true"
-				[opacity]="opacity()"
-			/>
+			<ngt-mesh-basic-material [side]="DoubleSide" [color]="color()" [transparent]="true" [opacity]="opacity()" />
 		</ngts-text>
 	`,
 	imports: [NgtsText, NgtsContent],
@@ -74,7 +68,7 @@ class TextCustomMaterialContainer {
 
 	constructor() {
 		injectNextBeforeRender(() => {
-			const text = this.textRef().troikaMesh;
+			const text = this.textRef().troikaMesh();
 			text.rotation.y += 0.01;
 		});
 	}

@@ -40,7 +40,7 @@ import { provideNgtRenderer } from './renderer';
 import { NgtCanvasConfigurator, NgtCanvasElement, injectCanvasRootInitializer } from './roots';
 import { NgtDpr, NgtPerformance, NgtRendererLike, NgtSize, NgtState, injectNgtStore, provideNgtStore } from './store';
 import { NgtObject3DNode } from './three-types';
-import { NgtAnyRecord, NgtProperties } from './types';
+import { NgtProperties } from './types';
 import { is } from './utils/is';
 import { NgtSignalStore } from './utils/signal-store';
 
@@ -120,7 +120,11 @@ export interface NgtCanvasInputs {
 	`,
 	imports: [NgxResize],
 	providers: [
-		provideResizeOptions({ emitInZone: false, emitInitialResult: true, debounce: 250 } as ResizeOptions),
+		provideResizeOptions({
+			emitInZone: false,
+			emitInitialResult: true,
+			debounce: { scroll: 50, resize: 0 },
+		} as ResizeOptions),
 		provideNgtStore(),
 	],
 	host: {
@@ -141,7 +145,6 @@ export class NgtCanvas {
 	private injector = inject(Injector);
 
 	sceneGraph = input.required<Type<any>>();
-	sceneGraphInputs = input<NgtAnyRecord>({});
 	gl = input<NgtGLOptions>();
 	size = input<NgtSize>();
 	shadows = input(false, {
@@ -183,7 +186,6 @@ export class NgtCanvas {
 			this.zone.runOutsideAngular(() => {
 				this.configurator = this.initRoot(this.glCanvas().nativeElement);
 				this.noZoneResizeEffect();
-				this.noZoneSceneGraphInputsEffect();
 			});
 		});
 
@@ -280,21 +282,6 @@ export class NgtCanvas {
 			});
 
 			this.glRef.changeDetectorRef.detectChanges();
-			this.setSceneGraphInputs(this.sceneGraphInputs());
 		});
-	}
-
-	private noZoneSceneGraphInputsEffect() {
-		this.autoEffect(() => {
-			this.setSceneGraphInputs(this.sceneGraphInputs());
-		});
-	}
-
-	private setSceneGraphInputs(sceneGraphInputs: NgtAnyRecord) {
-		if (this.glRef) {
-			for (const [key, value] of Object.entries(sceneGraphInputs)) {
-				this.glRef.setInput(key, value);
-			}
-		}
 	}
 }

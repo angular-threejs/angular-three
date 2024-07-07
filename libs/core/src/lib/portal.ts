@@ -7,7 +7,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
 	Directive,
-	ElementRef,
 	EmbeddedViewRef,
 	inject,
 	Injector,
@@ -20,40 +19,14 @@ import {
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
-import { NgtEventManager } from './events';
+import { NgtComputeFunction } from './events';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { injectNgtStore, NGT_STORE, NgtSize, NgtState, provideNgtStore } from './store';
+import { injectNgtStore, NgtSize, NgtState, provideNgtStore } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
 import { signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
-
-const privateKeys = [
-	'get',
-	'set',
-	'select',
-	'setSize',
-	'setDpr',
-	'setFrameloop',
-	'events',
-	'invalidate',
-	'advance',
-	'size',
-	'viewport',
-] as const;
-type PrivateKeys = (typeof privateKeys)[number];
-
-export interface NgtPortalInputs {
-	container: ElementRef<Object3D> | Object3D;
-	camera: ElementRef<Camera> | Camera;
-	state: Partial<
-		Omit<NgtState, PrivateKeys> & {
-			events: Partial<Pick<NgtEventManager<any>, 'enabled' | 'priority' | 'compute' | 'connected'>>;
-			size: NgtSize;
-		}
-	>;
-}
 
 @Component({
 	selector: 'ngt-portal-before-render',
@@ -66,18 +39,22 @@ export interface NgtPortalInputs {
 })
 export class NgtPortalBeforeRender {
 	private injector = inject(Injector);
-
 	private portalStore = injectNgtStore();
+
 	renderPriority = input(1);
 	parentScene = input.required<Scene>();
 	parentCamera = input.required<Camera>();
 
 	constructor() {
-		afterNextRender(() => {
+		injectAutoEffect()(() => {
+			// track state
+			this.portalStore.state();
+			const renderPriority = this.renderPriority();
+
 			let oldClear: boolean;
-			injectBeforeRender(
+			return injectBeforeRender(
 				() => {
-					const { gl, scene, camera } = this.portalStore.get();
+					const { gl, scene, camera } = this.portalStore.snapshot;
 					oldClear = gl.autoClear;
 					if (this.renderPriority() === 1) {
 						// clear scene and render with default
@@ -91,7 +68,7 @@ export class NgtPortalBeforeRender {
 					// restore
 					gl.autoClear = oldClear;
 				},
-				{ priority: this.renderPriority(), injector: this.injector },
+				{ priority: renderPriority, injector: this.injector },
 			);
 		});
 	}
@@ -114,35 +91,55 @@ export class NgtPortalContent {
 		}
 	}
 }
+// Keys that shouldn't be copied between stores
+export const privateKeys = [
+	'setSize',
+	'setFrameloop',
+	'setDpr',
+	'events',
+	'setEvents',
+	'invalidate',
+	'advance',
+	'size',
+	'viewport',
+] as const;
+
+export type NgtPortalPrivateKeys = (typeof privateKeys)[number];
+
+export type NgtPortalInjectableState = Partial<
+	Omit<NgtState, NgtPortalPrivateKeys> & {
+		events?: {
+			enabled?: boolean;
+			priority?: number;
+			compute?: NgtComputeFunction;
+			connected?: any;
+		};
+		size?: NgtSize;
+	}
+>;
 
 @Component({
 	selector: 'ngt-portal',
 	standalone: true,
 	template: `
-		<ng-container #portalContentAnchor />
+		<ng-container #anchor />
+
 		@if (renderAutoBeforeRender()) {
 			<ngt-portal-before-render
 				[renderPriority]="autoRenderPriority()"
-				[parentScene]="parentScene"
-				[parentCamera]="parentCamera"
+				[parentScene]="parentScene()"
+				[parentCamera]="parentCamera()"
 			/>
 		}
 	`,
 	imports: [NgtPortalBeforeRender],
-	providers: [provideNgtStore(signalStore({}))],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [provideNgtStore(() => signalStore({}))],
 })
 export class NgtPortal {
 	container = input.required<Object3D>();
-	camera = input<ElementRef<Camera> | Camera>();
-	state = input<
-		Partial<
-			Omit<NgtState, PrivateKeys> & {
-				events: Partial<Pick<NgtEventManager<any>, 'enabled' | 'priority' | 'compute' | 'connected'>>;
-				size: NgtSize;
-			}
-		>
-	>();
+	state = input<NgtPortalInjectableState>({});
 
 	/**
 	 * @decsription turn this on to enable "HUD" like rendering
@@ -150,46 +147,36 @@ export class NgtPortal {
 	autoRender = input(false);
 	autoRenderPriority = input(1);
 
-	portalContentTemplate = contentChild.required(NgtPortalContent, { read: TemplateRef });
-	portalContentAnchor = viewChild.required('portalContentAnchor', { read: ViewContainerRef });
+	portalContent = contentChild.required(NgtPortalContent, { read: TemplateRef });
+	portalAnchor = viewChild.required('anchor', { read: ViewContainerRef });
 
 	private injector = inject(Injector);
-	private destroyRef = inject(DestroyRef);
-	private autoEffect = injectAutoEffect();
-	private parentStore = inject(NGT_STORE, { skipSelf: true });
-	portalStore = inject(NGT_STORE, { self: true });
-
-	private portalRendered = signal(false);
-
-	protected renderAutoBeforeRender = computed(() => this.portalRendered() && this.autoRender());
-	protected parentScene = this.parentStore.get('scene');
-	protected parentCamera = this.parentStore.get('camera');
+	private portalStore = injectNgtStore({ self: true });
+	private parentStore = injectNgtStore({ skipSelf: true });
+	parentScene = this.parentStore.select('scene');
+	parentCamera = this.parentStore.select('camera');
 
 	private raycaster = new Raycaster();
 	private pointer = new Vector2();
+	private portalRendered = signal(false);
+
+	renderAutoBeforeRender = computed(() => this.portalRendered() && this.autoRender());
 
 	private portalView?: EmbeddedViewRef<unknown>;
 
 	constructor() {
+		const autoEffect = injectAutoEffect();
+
+		const parentState = this.parentStore.select();
+
 		afterNextRender(() => {
-			const parentState = this.parentStore.snapshot;
-			let [container, state, autoRender, autoRenderPriority] = [
-				this.container(),
-				this.state(),
-				this.autoRender(),
-				this.autoRenderPriority(),
-			];
+			const previousState = this.parentStore.snapshot;
 
-			let stateFromInput = state;
-
-			if (!stateFromInput && autoRender) {
-				stateFromInput = { events: { priority: autoRenderPriority + 1 } };
-			}
-
-			const { events = {}, size = {}, ...rest } = stateFromInput || {};
+			const { events = {}, size = {}, ...rest } = this.state();
+			let container = this.container();
 
 			if (!is.instance(container)) {
-				container = prepare(container);
+				container = prepare(container, { store: this.portalStore });
 			}
 
 			const localState = getLocalState(container);
@@ -198,81 +185,83 @@ export class NgtPortal {
 			}
 
 			this.portalStore.update({
-				...parentState,
+				...previousState,
 				scene: container as Scene,
 				raycaster: this.raycaster,
 				pointer: this.pointer,
-				events: { ...parentState.events, ...events },
-				size: { ...parentState.size, ...size },
+				events: { ...previousState.events, ...events },
+				size: { ...previousState.size, ...size },
 				previousRoot: this.parentStore,
 				...rest,
 				setEvents: (events) =>
 					this.portalStore.update((state) => ({ ...state, events: { ...state.events, ...events } })),
 			});
 
-			console.log('in portal', {
-				container,
-				parent: this.parentStore.snapshot,
-				portal: this.portalStore.snapshot,
-				snapshotAtBeginning: { ...this.portalStore.snapshot },
-			});
+			autoEffect(() => {
+				const state = this.state();
+				const _parentState = parentState();
+				this.portalStore.update((prev) => this.inject(_parentState, prev, state, untracked(this.container)));
+				untracked(() => {
+					if (this.portalView) {
+						this.portalView.detectChanges();
+						return;
+					}
 
-			this.autoEffect(() => {
-				const previous = this.parentStore.state();
-				this.portalStore.update((state) => this.inject(previous, state));
-			});
-
-			untracked(() => {
-				this.portalView = this.portalContentAnchor().createEmbeddedView(this.portalContentTemplate(), {
-					injector: this.injector,
-					store: this.portalStore,
+					this.portalView = this.portalAnchor().createEmbeddedView(
+						this.portalContent(),
+						{ container: this.container(), injector: this.injector },
+						{ injector: this.injector },
+					);
+					this.portalView.detectChanges();
+					this.portalRendered.set(true);
 				});
-				this.portalView.detectChanges();
 			});
-
-			this.portalRendered.set(true);
 		});
 
-		this.destroyRef.onDestroy(() => {
+		inject(DestroyRef).onDestroy(() => {
 			this.portalView?.destroy();
-			setTimeout(() => {
-				const state = this.portalStore.snapshot;
-				state.events?.disconnect?.();
-				this.portalStore.update({});
-				// dispose(state);
-			}, 500);
 		});
 	}
 
-	private inject(rootState: NgtState, injectState: NgtState) {
-		const intersect: Partial<NgtState> = { ...rootState };
+	private inject(
+		parentState: NgtState,
+		portalState: NgtState,
+		injectedState: NgtPortalInjectableState,
+		container: Object3D,
+	) {
+		const { events = {}, size, ...rest } = injectedState;
+		const intersect: Partial<NgtState> = { ...parentState }; // all prev state props
 
-		Object.keys(intersect).forEach((key) => {
+		Object.keys(parentState).forEach((key) => {
 			if (
-				privateKeys.includes(key as PrivateKeys) ||
-				rootState[key as keyof NgtState] !== injectState[key as keyof NgtState]
+				privateKeys.includes(key as NgtPortalPrivateKeys) ||
+				(parentState[key as keyof NgtState] !== portalState[key as keyof NgtState] &&
+					portalState[key as keyof NgtState])
 			) {
 				delete intersect[key as keyof NgtState];
 			}
 		});
 
-		const container = untracked(this.container);
-		const { size, events, ...restInputsState } = untracked(this.state) || {};
-
 		let viewport = undefined;
-		if (injectState && size) {
-			const camera = injectState.camera;
-			viewport = rootState.viewport.getCurrentViewport(camera, new Vector3(), size);
-			if (camera !== rootState.camera) updateCamera(camera, size);
+		if (portalState && size) {
+			const camera = portalState.camera;
+			// Calculate the override viewport, if present
+			viewport = parentState.viewport.getCurrentViewport(camera, new Vector3(), size);
+			// Update the portal camera, if it differs from the previous layer
+			if (camera !== parentState.camera) {
+				updateCamera(camera, size);
+			}
 		}
 
 		return {
 			...intersect,
-			scene: container,
-			events: { ...rootState.events, ...(injectState?.events || {}), ...events },
-			size: { ...rootState.size, ...size },
-			viewport: { ...rootState.viewport, ...(viewport || {}) },
-			...restInputsState,
-		} as NgtState;
+			scene: container as Scene,
+			raycaster: this.raycaster,
+			pointer: this.pointer,
+			events: { ...parentState.events, ...(portalState.events || {}), ...(events || {}) },
+			size: { ...parentState.size, ...(size || {}) },
+			viewport: { ...parentState.viewport, ...(viewport || {}) },
+			...rest,
+		};
 	}
 }

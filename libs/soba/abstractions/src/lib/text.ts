@@ -4,16 +4,13 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	DestroyRef,
-	TemplateRef,
 	afterNextRender,
 	computed,
-	contentChild,
 	inject,
 	input,
 	output,
 } from '@angular/core';
 import { NgtArgs, NgtMesh, exclude, injectNgtStore, pick } from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ColorRepresentation } from 'three';
@@ -74,7 +71,7 @@ const defaultOptions: NgtsTextOptions = {
 			[fontSize]="fontSize()"
 			[parameters]="parameters()"
 		>
-			<ng-container [ngTemplateOutlet]="content() ?? null" />
+			<ng-content />
 		</ngt-primitive>
 	`,
 	imports: [NgtArgs, NgTemplateOutlet],
@@ -88,8 +85,6 @@ export class NgtsText {
 
 	synced = output<Text>();
 
-	content = contentChild(NgtsContent, { read: TemplateRef });
-
 	private autoEffect = injectAutoEffect();
 	private store = injectNgtStore();
 	private invalidate = this.store.select('invalidate');
@@ -102,14 +97,12 @@ export class NgtsText {
 	sdfGlyphSize = pick(this.options, 'sdfGlyphSize');
 	fontSize = pick(this.options, 'fontSize');
 
-	troikaMesh = new Text();
-	args = computed(() => [this.troikaMesh], {
-		equal: (a, b) => Object.is(a[0], b[0]),
-	});
+	troikaMesh = computed(() => new Text(), { equal: Object.is });
+	args = computed(() => [this.troikaMesh()]);
 
 	constructor() {
 		inject(DestroyRef).onDestroy(() => {
-			this.troikaMesh.dispose();
+			this.troikaMesh().dispose();
 		});
 
 		// NOTE: this could be just effect but autoEffect is used for consistency
@@ -122,10 +115,10 @@ export class NgtsText {
 
 		afterNextRender(() => {
 			this.autoEffect(() => {
-				const [invalidate] = [this.invalidate(), this.text(), this.options()];
-				this.troikaMesh.sync(() => {
+				const [invalidate, text] = [this.invalidate(), this.text(), this.options()];
+				this.troikaMesh().sync(() => {
 					invalidate();
-					this.synced.emit(this.troikaMesh);
+					this.synced.emit(this.troikaMesh());
 				});
 			});
 		});

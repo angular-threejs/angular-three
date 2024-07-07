@@ -61,19 +61,17 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					const root = roots.get(canvas);
 					if (root) {
 						root.update((state) => ({ internal: { ...state.internal, active: false } }));
-						setTimeout(() => {
-							try {
-								const state = root.get();
-								state.events.disconnect?.();
-								state.gl?.renderLists?.dispose?.();
-								state.gl?.forceContextLoss?.();
-								if (state.gl?.xr) state.xr.disconnect();
-								dispose(state);
-								roots.delete(canvas);
-							} catch (e) {
-								console.error('[NGT] Unexpected error while destroying Canvas Root', e);
-							}
-						}, timeout);
+						try {
+							const state = root.get();
+							state.events.disconnect?.();
+							state.gl?.renderLists?.dispose?.();
+							state.gl?.forceContextLoss?.();
+							if (state.gl?.xr) state.xr.disconnect();
+							dispose(state);
+							roots.delete(canvas);
+						} catch (e) {
+							console.error('[NGT] Unexpected error while destroying Canvas Root', e);
+						}
 					}
 				},
 				configure: (inputs: NgtCanvasInputs) => {
@@ -250,9 +248,9 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (state.flat !== flat) stateToUpdate.flat = flat;
 
 					// Set gl props
-					gl.setClearAlpha(0);
-					gl.setPixelRatio(makeDpr(state.viewport.dpr));
-					gl.setSize(state.size.width, state.size.height);
+					// gl.setClearAlpha(0);
+					// gl.setPixelRatio(makeDpr(state.viewport.dpr));
+					// gl.setSize(state.size.width, state.size.height);
 
 					if (
 						is.obj(glOptions) &&
@@ -271,7 +269,9 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						stateToUpdate.performance = { ...state.performance, ...performance };
 					}
 
-					store.update(stateToUpdate);
+					if (Object.keys(stateToUpdate).length) {
+						store.update(stateToUpdate);
+					}
 
 					// Check size, allow it to take on container bounds initially
 					const size = computeInitialSize(canvas, sizeOptions);

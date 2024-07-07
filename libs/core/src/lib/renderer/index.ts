@@ -123,7 +123,7 @@ export class NgtRenderer implements Renderer2 {
 			);
 		}
 
-		const [injectedArgs, store] = [this.getNgtArgs()?.value || [], this.tryGetPortalStore()];
+		const [injectedArgs] = [this.getNgtArgs()?.value || []];
 
 		if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
 			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
@@ -131,18 +131,17 @@ export class NgtRenderer implements Renderer2 {
 			let localState = getLocalState(object);
 			if (!localState) {
 				// NOTE: if an object isn't already "prepared", we prepare it
-				localState = getLocalState(prepare(object, { store, primitive: true })) as NgtLocalState;
+				prepare(object, { store: this.rootStore, primitive: true });
 			}
-			if (!localState.store) localState.store = store;
 			return createNode('three', object, this.document);
 		}
 
-		const threeName = kebabToPascal(name.startsWith('ngt') ? name.slice(4) : name);
+		const threeName = kebabToPascal(name.startsWith('ngt-') ? name.slice(4) : name);
 		const threeTarget = this.catalogue[threeName];
 
 		// we have the THREE constructor here, handle it
 		if (threeTarget) {
-			const instance = prepare(new threeTarget(...injectedArgs), { store });
+			const instance = prepare(new threeTarget(...injectedArgs), { store: this.rootStore });
 			const node = createNode('three', instance, this.document);
 			const localState = getLocalState(instance) as NgtLocalState;
 
@@ -228,9 +227,11 @@ export class NgtRenderer implements Renderer2 {
 		// if both are three instances, straightforward case
 		if (pRS[NgtRendererClassId.type] === 'three' && cRS?.[NgtRendererClassId.type] === 'three') {
 			const cLS = getLocalState(newChild);
+
 			// if child already attached to a parent, skip
 			if (cLS?.instanceStore?.get('parent')) return;
 			if (parent === newChild) return;
+
 			// attach THREE child
 			attachThreeChild(parent, newChild);
 			return;
@@ -523,6 +524,11 @@ export class NgtRenderer implements Renderer2 {
 		const portalContainer = portalStore.get('scene');
 		if (!portalContainer) return;
 
+		const localState = getLocalState(portalContainer);
+		if (localState) {
+			localState.store = portalStore;
+		}
+
 		portal.__ngt_renderer__[NgtRendererClassId.portalContainer] = createNode('three', portalContainer, this.document);
 	}
 
@@ -629,7 +635,7 @@ export function provideNgtRenderer(store: NgtSignalStore<NgtState>) {
 	const providers = [
 		NgtRendererFactory,
 		{ provide: RendererFactory2, useExisting: NgtRendererFactory },
-		provideNgtStore(store),
+		provideNgtStore(() => store),
 	];
 
 	return makeEnvironmentProviders(providers);

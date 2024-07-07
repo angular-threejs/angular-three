@@ -44,18 +44,18 @@ export class Torus {
 	standalone: true,
 	template: `
 		<ngt-mesh-standard-material [attach]="['material', index()]" [color]="color()">
-			<!--			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">-->
-			<!--				<ng-template ngtsContent>-->
-			<!--					<ngt-color *args="['white']" attach="background" />-->
-			<!--					<ngts-orthographic-camera-->
-			<!--						[options]="{ makeDefault: true, left: -1, right: 1, top: 1, bottom: -1, position: [0, 0, 10], zoom: 0.5 }"-->
-			<!--					/>-->
-			<!--					<ngts-text-->
-			<!--						[text]="text()"-->
-			<!--						[options]="{ color: 'black', font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff' }"-->
-			<!--					/>-->
-			<!--				</ng-template>-->
-			<!--			</ngts-render-texture>-->
+			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">
+				<ng-template ngtsContent>
+					<ngt-color *args="['white']" attach="background" />
+					<ngts-orthographic-camera
+						[options]="{ makeDefault: true, left: -1, right: 1, top: 1, bottom: -1, position: [0, 0, 10], zoom: 0.5 }"
+					/>
+					<ngts-text
+						[text]="text()"
+						[options]="{ color: 'black', font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff' }"
+					/>
+				</ng-template>
+			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
 	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsContent],
@@ -116,12 +116,12 @@ export class Box {
 	selector: 'app-view-cube',
 	standalone: true,
 	template: `
-		<ngt-portal [container]="scene" [autoRender]="true">
+		<ngt-portal [container]="scene()" [autoRender]="true">
 			<ng-template portalContent>
 				<ngt-ambient-light [intensity]="Math.PI / 2" />
+				<ngt-spot-light [position]="[10, 10, 10]" [angle]="0.15" [penumbra]="0" [decay]="0" [intensity]="Math.PI" />
 				<ngt-point-light [position]="[-10, -10, -10]" [decay]="0" [intensity]="Math.PI" />
 				<ngts-perspective-camera [options]="{ makeDefault: true, position: [0, 0, 10] }" />
-				<ngt-spot-light [position]="[10, 10, 10]" [angle]="0.15" [penumbra]="0" [decay]="0" [intensity]="Math.PI" />
 				<app-box [position]="boxPosition()" />
 				<ngt-ambient-light [intensity]="1" />
 				<ngt-point-light [position]="[200, 200, 100]" [intensity]="0.5" />
@@ -144,7 +144,11 @@ export class ViewCube {
 
 	boxPosition = computed(() => [this.viewport().width / 2 - 1, this.viewport().height / 2 - 1, 0]);
 
-	scene = new Scene();
+	scene = computed(() => {
+		const scene = new Scene();
+		scene.name = 'hud-view-cube-virtual-scene';
+		return scene;
+	});
 
 	constructor() {
 		injectBeforeRender(() => {

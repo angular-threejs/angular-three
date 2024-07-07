@@ -37,12 +37,19 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 	// whether the child is added to the parent with parent.add()
 	let added = false;
+	let attached = false;
 
 	// assign store on child if not already exist
 	// or child store is not the same as parent store
 	// or child store is the parent of parent store
 	if (!cLS.store || cLS.store !== pLS.store || cLS.store === pLS.store.get('previousRoot')) {
 		cLS.store = pLS.store;
+		const grandchildren = [...untracked(cLS.objects), ...untracked(cLS.nonObjects)];
+		for (const grandchild of grandchildren) {
+			const grandChildLS = getLocalState(grandchild);
+			if (!grandChildLS) continue;
+			grandChildLS.store = cLS.store;
+		}
 	}
 
 	if (cLS.attach) {
@@ -82,19 +89,26 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 			}
 			// save value
 			cLS.previousAttach = attachProp.reduce((value, property) => value[property], parent);
+			attached = true;
 		}
 	} else if (is.object3D(parent) && is.object3D(child)) {
 		parent.add(child);
 		added = true;
 	}
 
-	pLS.add(child, added ? 'objects' : 'nonObjects');
+	if (added) {
+		pLS.add(child, 'objects');
+	}
 
-	if (cLS.instanceStore.get('parent') !== parent) {
+	if (attached) {
+		pLS.add(child, 'nonObjects');
+	}
+
+	if (untracked(cLS.parent) !== parent) {
 		cLS.setParent(parent);
 	}
 
-	if (cLS.onAttach) cLS.onAttach({ parent, node: child });
+	if ((added || attached) && cLS.onAttach) cLS.onAttach({ parent, node: child });
 
 	invalidateInstance(child);
 	invalidateInstance(parent);
