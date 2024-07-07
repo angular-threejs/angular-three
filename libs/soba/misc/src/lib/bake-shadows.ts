@@ -1,12 +1,12 @@
 import { Directive } from '@angular/core';
-import { injectNgtStore } from 'angular-three';
+import { injectStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 
 @Directive({ standalone: true, selector: 'ngts-bake-shadows' })
 export class NgtsBakeShadows {
 	constructor() {
 		const autoEffect = injectAutoEffect();
-		const store = injectNgtStore();
+		const store = injectStore();
 		const gl = store.select('gl');
 		autoEffect(() => {
 			const _gl = gl();

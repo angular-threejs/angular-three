@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector2, injectNgtStore, pick, vector2 } from 'angular-three';
+import { NgtArgs, NgtVector2, injectStore, pick, vector2 } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { GlitchEffect, GlitchMode } from 'postprocessing';
@@ -33,7 +33,7 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 })
 export class NgtpGlitch {
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	invalidate = this.store.select('invalidate');
 
 	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });

@@ -160,4 +160,4 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 	return { loop, invalidate, advance };
 }
 
-export const [injectNgtLoop] = createInjectionToken(() => createLoop(roots));
+export const [injectLoop] = createInjectionToken(() => createLoop(roots));

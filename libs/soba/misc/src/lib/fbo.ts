@@ -11,7 +11,7 @@ import {
 	input,
 	untracked,
 } from '@angular/core';
-import { injectNgtStore } from 'angular-three';
+import { injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import {
@@ -59,7 +59,7 @@ export interface NgtsFBOParams {
 export function injectFBO(params: () => NgtsFBOParams, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectFBO, injector, () => {
 		const autoEffect = injectAutoEffect();
-		const store = injectNgtStore();
+		const store = injectStore();
 		const size = store.select('size');
 		const viewport = store.select('viewport');
 

@@ -15,7 +15,7 @@ import { NgtArgs, extend } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectConvexPolyhedron } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import { injectGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 import { BoxGeometry, BufferGeometry, ConeGeometry, Mesh } from 'three';
 import { GLTF, Geometry } from 'three-stdlib';
@@ -142,7 +142,7 @@ type DiamondGLTF = GLTF & {
 export class Diamond {
 	positionRotationInputs = inject(PositionRotationInput, { host: true });
 
-	gltf = injectGLTFLoader(() => './diamond.glb') as Signal<DiamondGLTF | null>;
+	gltf = injectGLTF(() => './diamond.glb') as Signal<DiamondGLTF | null>;
 	geometry = computed(() => {
 		const gltf = this.gltf();
 		if (!gltf) return null;

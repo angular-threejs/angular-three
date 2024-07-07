@@ -8,4 +8,4 @@ export function extend(objects: object): void {
 	Object.assign(catalogue, objects);
 }
 
-export const [injectNgtCatalogue] = createInjectionToken(() => catalogue);
+export const [injectCatalogue] = createInjectionToken(() => catalogue);

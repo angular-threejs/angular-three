@@ -12,7 +12,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { NgtOrthographicCamera, exclude, extend, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
+import { NgtOrthographicCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -66,7 +66,7 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 })
 export class NgtsOrthographicCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'envMap',
 		'makeDefault',
 		'manual',
@@ -85,7 +85,7 @@ export class NgtsOrthographicCamera {
 	groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 
 	private camera = this.store.select('camera');
 	size = this.store.select('size');

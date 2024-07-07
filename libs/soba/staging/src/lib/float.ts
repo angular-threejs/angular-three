@@ -6,7 +6,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtGroup, exclude, extend, injectNextBeforeRender } from 'angular-three';
+import { NgtGroup, extend, injectNextBeforeRender, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, MathUtils } from 'three';
 
@@ -43,7 +43,7 @@ const defaultOptions: NgtsFloatOptions = {
 })
 export class NgtsFloat {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['enabled', 'speed', 'rotationIntensity', 'floatIntensity', 'floatingRange']);
+	parameters = omit(this.options, ['enabled', 'speed', 'rotationIntensity', 'floatIntensity', 'floatingRange']);
 
 	floatRef = viewChild.required<ElementRef<Group>>('float');
 

@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CylinderArgs, Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, extend, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { NgtArgs, extend, injectBeforeRender, injectStore } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { injectConeTwist } from 'angular-three-cannon/constraint';
@@ -226,7 +226,7 @@ export class StaticHandle {
 export class Experience {
 	Math = Math;
 
-	private store = injectNgtStore();
+	private store = injectStore();
 
 	resetCount = signal(0);
 	maxMultiplierExamples = computed(() =>

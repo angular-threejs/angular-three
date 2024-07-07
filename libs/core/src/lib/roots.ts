@@ -14,8 +14,8 @@ import {
 } from 'three';
 import { NgtCanvasInputs } from './canvas';
 import { prepare } from './instance';
-import { injectNgtLoop } from './loop';
-import { NgtSize, NgtState, injectNgtStore } from './store';
+import { injectLoop } from './loop';
+import { NgtSize, NgtState, injectStore } from './store';
 import { NgtAnyRecord, NgtEquConfig } from './types';
 import { applyProps } from './utils/apply-props';
 import { is } from './utils/is';
@@ -31,8 +31,8 @@ export const roots = new Map<NgtCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
 	return assertInjector(injectCanvasRootInitializer, injector, () => {
-		const injectedStore = injectNgtStore();
-		const loop = injectNgtLoop();
+		const injectedStore = injectStore();
+		const loop = injectLoop();
 
 		return (canvas: NgtCanvasElement) => {
 			const exist = roots.has(canvas);

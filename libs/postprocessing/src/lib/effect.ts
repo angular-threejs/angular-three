@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Directive, inject, input } from '@angular/core';
-import { injectNgtStore } from 'angular-three';
+import { injectStore } from 'angular-three';
 import { createNoopInjectionToken } from 'ngxtension/create-injection-token';
 import { BlendFunction } from 'postprocessing';
 
@@ -31,7 +31,7 @@ export class NgtpEffect {
 	blendFunction = input(this.defaultEffectOptions?.blendFunction);
 	opacity = input(this.defaultEffectOptions?.opacity);
 
-	store = injectNgtStore();
+	store = injectStore();
 	camera = this.store.select('camera');
 	invalidate = this.store.select('invalidate');
 }

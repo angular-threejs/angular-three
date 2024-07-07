@@ -16,11 +16,11 @@ import {
 	NgtPortal,
 	NgtPortalContent,
 	NgtTexture,
-	exclude,
 	extend,
 	getLocalState,
 	injectBeforeRender,
-	injectNgtStore,
+	injectStore,
+	omit,
 	pick,
 	prepare,
 } from 'angular-three';
@@ -68,7 +68,7 @@ export class NgtsRenderTextureContainer {
 	frames = input.required<number>();
 	injector = input.required<Injector>();
 
-	private store = injectNgtStore();
+	private store = injectStore();
 
 	constructor() {
 		injectAutoEffect()(() => {
@@ -163,7 +163,7 @@ let incrementId = 0;
 export class NgtsRenderTexture {
 	attach = input<string | string[]>('map');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'samples',
 		'renderPriority',
 		'eventPriority',
@@ -178,7 +178,7 @@ export class NgtsRenderTexture {
 
 	content = contentChild.required(NgtsRenderTextureContent, { read: TemplateRef });
 
-	private store = injectNgtStore();
+	private store = injectStore();
 	private size = this.store.select('size');
 	private viewport = this.store.select('viewport');
 

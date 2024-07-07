@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, injectStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { BlendFunction, LUT3DEffect } from 'postprocessing';
 import { Texture } from 'three';
@@ -29,7 +29,7 @@ export interface LUTOptions {
 })
 export class NgtpLUT {
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	invalidate = this.store.select('invalidate');
 
 	options = input({} as LUTOptions);

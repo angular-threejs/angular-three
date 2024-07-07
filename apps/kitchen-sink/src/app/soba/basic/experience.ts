@@ -13,7 +13,7 @@ import {
 import { NgtArgs, extend } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer, NgtpGlitch } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
 import * as THREE from 'three';
@@ -78,7 +78,7 @@ export class BotAnimations {
 export class Bot {
 	Math = Math;
 
-	gltf = injectGLTFLoader(() => './ybot.glb') as Signal<BotGLTF | null>;
+	gltf = injectGLTF(() => './ybot.glb') as Signal<BotGLTF | null>;
 	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
 	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
 }

@@ -20,7 +20,7 @@ import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCompound, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { NgtcConstraintApi, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import { injectGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import { createInjectionToken, createNoopInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group, Material, Mesh, Object3D } from 'three';
@@ -318,7 +318,7 @@ interface CupGLTF extends GLTF {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Mug {
-	gltf = injectGLTFLoader(() => './cup.glb') as Signal<CupGLTF | null>;
+	gltf = injectGLTF(() => './cup.glb') as Signal<CupGLTF | null>;
 	private group = viewChild.required<ElementRef<Group>>('group');
 
 	dragConstraint = injectDragConstraint(this.group);

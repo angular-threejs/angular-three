@@ -6,7 +6,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, injectStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GridEffect } from 'postprocessing';
 
@@ -25,7 +25,7 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 })
 export class NgtpGrid {
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	invalidate = this.store.select('invalidate');
 
 	options = input({} as GridOptions);

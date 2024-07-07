@@ -11,11 +11,11 @@ import {
 import {
 	NgtGroup,
 	createApiToken,
-	exclude,
 	extend,
 	getLocalState,
 	injectNextBeforeRender,
-	injectNgtStore,
+	injectStore,
+	omit,
 	pick,
 } from 'angular-three';
 import { DiscardMaterial, SoftShadowMaterial } from 'angular-three-soba/shaders';
@@ -114,7 +114,7 @@ export class NgtsAccumulativeShadows {
 	Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'temporal',
 		'frames',
 		'limit',
@@ -132,7 +132,7 @@ export class NgtsAccumulativeShadows {
 	plane = viewChild.required<ElementRef<Mesh>>('plane');
 
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 	private gl = this.store.select('gl');
 	private camera = this.store.select('camera');
 	private scene = this.store.select('scene');

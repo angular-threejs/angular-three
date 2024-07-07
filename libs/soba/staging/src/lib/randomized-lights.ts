@@ -8,7 +8,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtGroup, exclude, extend, pick } from 'angular-three';
+import { NgtArgs, NgtGroup, extend, omit, pick } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -80,7 +80,7 @@ extend({ Group, DirectionalLight, OrthographicCamera });
 })
 export class NgtsRandomizedLights {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightOptions>);
+	parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightOptions>);
 
 	lights = viewChild.required<ElementRef<Group>>('lights');
 

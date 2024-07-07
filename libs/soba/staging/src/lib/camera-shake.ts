@@ -1,5 +1,5 @@
 import { Directive, Signal, afterNextRender, input, untracked } from '@angular/core';
-import { injectNextBeforeRender, injectNgtStore } from 'angular-three';
+import { injectNextBeforeRender, injectStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Vector3 } from 'three';
@@ -40,7 +40,7 @@ export class NgtsCameraShake {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 	private camera = this.store.select('camera');
 	private defaultControls = this.store.select('controls') as unknown as Signal<ControlsProto>;
 

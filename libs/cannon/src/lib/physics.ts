@@ -28,7 +28,7 @@ import {
 	WorkerFrameMessage,
 	WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { createApiToken, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { createApiToken, injectBeforeRender, injectStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { InstancedMesh, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
@@ -120,7 +120,7 @@ export class NgtcPhysics {
 	private zone = inject(NgZone);
 	private injector = inject(Injector);
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 

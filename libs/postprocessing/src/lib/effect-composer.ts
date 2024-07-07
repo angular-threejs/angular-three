@@ -10,7 +10,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
+import { createApiToken, extend, getLocalState, injectBeforeRender, injectStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -83,7 +83,7 @@ export class NgtpEffectComposer {
 
 	injector = inject(Injector);
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	size = this.store.select('size');
 	gl = this.store.select('gl');
 	defaultScene = this.store.select('scene');

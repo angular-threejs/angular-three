@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtGroup, exclude, extend, injectNextBeforeRender, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, NgtGroup, extend, injectNextBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	Color,
@@ -86,7 +86,7 @@ export class NgtsContactShadows {
 	Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, [
+	parameters = omit(this.options, [
 		'scale',
 		'frames',
 		'opacity',
@@ -105,7 +105,7 @@ export class NgtsContactShadows {
 	contactShadowsRef = viewChild.required<ElementRef<Group>>('contactShadows');
 	shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowsCamera');
 
-	private store = injectNgtStore();
+	private store = injectStore();
 	private scene = this.store.select('scene');
 	private gl = this.store.select('gl');
 

@@ -11,7 +11,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { NgtPerspectiveCamera, exclude, extend, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
+import { NgtPerspectiveCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -58,7 +58,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 })
 export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
 	content = contentChild(TemplateRef);
 	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
@@ -67,7 +67,7 @@ export class NgtsPerspectiveCamera {
 	groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 
 	private camera = this.store.select('camera');
 	private size = this.store.select('size');

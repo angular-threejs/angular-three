@@ -9,7 +9,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -124,7 +124,7 @@ class Cube {
 class DefaultRenderTextureStory {
 	Math = Math;
 
-	store = injectNgtStore();
+	store = injectStore();
 
 	constructor() {}
 }

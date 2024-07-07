@@ -9,7 +9,7 @@ import {
 	computed,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
 import { easing } from 'maath';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -145,7 +145,7 @@ const defaultOptions: LensFlareOptions = {
 })
 export class NgtpLensFlare {
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	viewport = this.store.select('viewport');
 	raycaster = this.store.select('raycaster');
 	pointer = this.store.select('pointer');

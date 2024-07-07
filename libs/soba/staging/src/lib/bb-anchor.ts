@@ -8,7 +8,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtGroup, NgtVector3, exclude, extend, getLocalState, injectNextBeforeRender, vector3 } from 'angular-three';
+import { NgtGroup, NgtVector3, extend, getLocalState, injectNextBeforeRender, omit, vector3 } from 'angular-three';
 import { Box3, Group, Object3D, Vector3 } from 'three';
 
 extend({ Group });
@@ -33,7 +33,7 @@ export interface NgtsBBAnchorOptions extends Partial<NgtGroup> {
 })
 export class NgtsBBAnchor {
 	options = input.required<NgtsBBAnchorOptions>();
-	parameters = exclude(this.options, ['anchor']);
+	parameters = omit(this.options, ['anchor']);
 
 	bbAnchorRef = viewChild.required<ElementRef<Group>>('bbAnchor');
 

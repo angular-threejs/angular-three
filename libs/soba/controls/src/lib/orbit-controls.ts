@@ -1,5 +1,5 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
-import { exclude, injectBeforeRender, injectNgtStore, NgtArgs, NgtCamera, NgtVector3, pick } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtArgs, NgtCamera, NgtVector3, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Camera, Event } from 'three';
 import { OrbitControls } from 'three-stdlib';
@@ -43,13 +43,13 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 })
 export class NgtsOrbitControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['makeDefault', 'camera', 'regress', 'domElement', 'keyEvents', 'enableDamping']);
+	parameters = omit(this.options, ['makeDefault', 'camera', 'regress', 'domElement', 'keyEvents', 'enableDamping']);
 
 	changed = output<Event>();
 	started = output<Event>();
 	ended = output<Event>();
 
-	private store = injectNgtStore();
+	private store = injectStore();
 	private invalidate = this.store.select('invalidate');
 	private performanceRegress = this.store.select('performance', 'regress');
 	private defaultCamera = this.store.select('camera');

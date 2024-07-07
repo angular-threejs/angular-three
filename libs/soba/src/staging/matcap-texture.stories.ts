@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Signal, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
-import { injectGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMatcapTexture, NgtsMatcapTextureOptions } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -28,7 +28,7 @@ interface SuzyGLTF extends GLTF {
 })
 class DefaultMatcapTextureStory {
 	options = input<NgtsMatcapTextureOptions>();
-	gltf = injectGLTFLoader(() => './suzanne.glb', { useDraco: true }) as Signal<SuzyGLTF | null>;
+	gltf = injectGLTF(() => './suzanne.glb', { useDraco: true }) as Signal<SuzyGLTF | null>;
 }
 
 export default {

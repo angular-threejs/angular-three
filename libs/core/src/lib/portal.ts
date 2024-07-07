@@ -22,7 +22,7 @@ import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { NgtComputeFunction } from './events';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { injectNgtStore, NgtSize, NgtState, provideNgtStore } from './store';
+import { injectStore, NgtSize, NgtState, provideStore } from './store';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
 import { signalStore } from './utils/signal-store';
@@ -38,7 +38,7 @@ import { updateCamera } from './utils/update';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtPortalBeforeRender {
-	private portalStore = injectNgtStore();
+	private portalStore = injectStore();
 
 	renderPriority = input(1);
 	parentScene = input.required<Scene>();
@@ -138,7 +138,7 @@ export type NgtPortalInjectableState = Partial<
 	imports: [NgtPortalBeforeRender],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideNgtStore(() => signalStore({}))],
+	providers: [provideStore(() => signalStore({}))],
 })
 export class NgtPortal {
 	container = input.required<Object3D>();
@@ -154,8 +154,8 @@ export class NgtPortal {
 	portalAnchor = viewChild.required('anchor', { read: ViewContainerRef });
 
 	private injector = inject(Injector);
-	private portalStore = injectNgtStore({ self: true });
-	private parentStore = injectNgtStore({ skipSelf: true });
+	private portalStore = injectStore({ self: true });
+	private parentStore = injectStore({ skipSelf: true });
 	parentScene = this.parentStore.select('scene');
 	parentCamera = this.parentStore.select('camera');
 

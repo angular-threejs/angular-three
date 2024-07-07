@@ -25,7 +25,7 @@ export interface NgtLocalInstanceState {
 	parent: NgtInstanceNode | null;
 }
 
-export type NgtLocalState = {
+export interface NgtLocalState {
 	/** the store of the canvas that the instance is being rendered to */
 	store: NgtSignalStore<NgtState>;
 	// objects related to this instance
@@ -54,7 +54,7 @@ export type NgtLocalState = {
 	priority?: number;
 	onUpdate?: (node: NgtInstanceNode) => void;
 	onAttach?: (afterAttach: NgtAfterAttach) => void;
-};
+}
 
 export type NgtInstanceNode<TNode = any> = { __ngt__: NgtLocalState } & NgtAnyRecord & TNode;
 

@@ -10,7 +10,7 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { NgtArgs, NgtMesh, exclude, injectNgtStore, pick } from 'angular-three';
+import { NgtArgs, NgtMesh, injectStore, omit, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ColorRepresentation } from 'three';
@@ -81,12 +81,12 @@ const defaultOptions: NgtsTextOptions = {
 export class NgtsText {
 	text = input.required<string>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = exclude(this.options, ['font', 'fontSize', 'sdfGlyphSize', 'anchorX', 'anchorY', 'characters']);
+	parameters = omit(this.options, ['font', 'fontSize', 'sdfGlyphSize', 'anchorX', 'anchorY', 'characters']);
 
 	synced = output<Text>();
 
 	private autoEffect = injectAutoEffect();
-	private store = injectNgtStore();
+	private store = injectStore();
 	private invalidate = this.store.select('invalidate');
 
 	private characters = pick(this.options, 'characters');

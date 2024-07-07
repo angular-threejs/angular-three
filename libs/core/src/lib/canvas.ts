@@ -38,7 +38,7 @@ import { createPointerEvents } from './dom/events';
 import { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
 import { provideNgtRenderer } from './renderer';
 import { NgtCanvasConfigurator, NgtCanvasElement, injectCanvasRootInitializer } from './roots';
-import { NgtDpr, NgtPerformance, NgtRendererLike, NgtSize, NgtState, injectNgtStore, provideNgtStore } from './store';
+import { NgtDpr, NgtPerformance, NgtRendererLike, NgtSize, NgtState, injectStore, provideStore } from './store';
 import { NgtObject3DNode } from './three-types';
 import { NgtProperties } from './types';
 import { is } from './utils/is';
@@ -125,7 +125,7 @@ export interface NgtCanvasInputs {
 			emitInitialResult: true,
 			debounce: { scroll: 50, resize: 0 },
 		} as ResizeOptions),
-		provideNgtStore(),
+		provideStore(),
 	],
 	host: {
 		style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
@@ -134,7 +134,7 @@ export interface NgtCanvasInputs {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtCanvas {
-	private store = injectNgtStore();
+	private store = injectStore();
 	private initRoot = injectCanvasRootInitializer();
 	private autoEffect = injectAutoEffect();
 

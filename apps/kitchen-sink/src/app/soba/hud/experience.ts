@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, NgtPortalContent, extend, injectBeforeRender, injectNgtStore } from 'angular-three';
+import { NgtArgs, NgtPortal, NgtPortalContent, extend, injectBeforeRender, injectStore } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -135,7 +135,7 @@ export class ViewCube {
 	Math = Math;
 	matrix = new Matrix4();
 
-	private store = injectNgtStore();
+	private store = injectStore();
 	private camera = this.store.select('camera');
 	private viewport = this.store.select('viewport');
 

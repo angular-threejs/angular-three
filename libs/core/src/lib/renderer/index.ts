@@ -10,12 +10,12 @@ import {
 } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import { NgtInstanceNode, NgtLocalState, getLocalState, prepare } from '../instance';
-import { NGT_STORE, NgtState, injectNgtStore, provideNgtStore } from '../store';
+import { NGT_STORE, NgtState, injectStore, provideStore } from '../store';
 import { NgtAnyRecord } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { NgtSignalStore, signalStore } from '../utils/signal-store';
-import { NgtAnyConstructor, injectNgtCatalogue } from './catalogue';
+import { NgtAnyConstructor, injectCatalogue } from './catalogue';
 import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG, SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_PROPERTIES } from './constants';
 import {
 	NgtRendererNode,
@@ -33,8 +33,8 @@ import { NgtRendererClassId, attachThreeChild, kebabToPascal, processThreeEvent,
 export class NgtRendererFactory implements RendererFactory2 {
 	private delegateRendererFactory = inject(RendererFactory2, { skipSelf: true });
 	private document = inject(DOCUMENT);
-	private catalogue = injectNgtCatalogue();
-	private rootStore = injectNgtStore();
+	private catalogue = injectCatalogue();
+	private rootStore = injectStore();
 
 	private portalCommentsNodes: Array<NgtRendererNode> = [];
 	private rendererMap = new Map<string, Renderer2>();
@@ -635,7 +635,7 @@ export function provideNgtRenderer(store: NgtSignalStore<NgtState>) {
 	const providers = [
 		NgtRendererFactory,
 		{ provide: RendererFactory2, useExisting: NgtRendererFactory },
-		provideNgtStore(() => store),
+		provideStore(() => store),
 	];
 
 	return makeEnvironmentProviders(providers);

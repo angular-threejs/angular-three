@@ -25,7 +25,7 @@ import {
 	extend,
 	injectLoader,
 	injectNextBeforeRender,
-	injectNgtStore,
+	injectStore,
 	is,
 	pick,
 	prepare,
@@ -187,7 +187,7 @@ export function injectEnvironment(
 
 		const assertedInjector = inject(Injector);
 		const autoEffect = injectAutoEffect();
-		const store = injectNgtStore();
+		const store = injectStore();
 		const gl = store.select('gl');
 
 		const texture = signal<Texture | CubeTexture | null>(null);
@@ -271,7 +271,7 @@ export class NgtsEnvironmentOptionsProvider {
 	options = input({} as NgtsEnvironmentOptions);
 
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	defaultScene = this.store.select('scene');
 
 	envConfig = computed(() => {
@@ -308,7 +308,7 @@ export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	defaultScene = this.store.select('scene');
 
 	envConfig = computed(() => {
@@ -354,7 +354,7 @@ export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	defaultScene = this.store.select('scene');
 
 	envConfig = computed(() => {
@@ -432,7 +432,7 @@ export class NgtsEnvironmentPortal {
 	content = input.required<TemplateRef<unknown>>();
 
 	autoEffect = injectAutoEffect();
-	store = injectNgtStore();
+	store = injectStore();
 	defaultScene = this.store.select('scene');
 	gl = this.store.select('gl');
 

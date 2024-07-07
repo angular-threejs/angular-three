@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { ElementRef, InjectOptions, InjectionToken, WritableSignal, effect, inject } from '@angular/core';
+import { ElementRef, InjectOptions, InjectionToken, effect, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Camera, Clock, EventDispatcher, Object3D, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
 import { NgtCamera, NgtDomEvent, NgtEventManager, NgtPointerCaptureTarget, NgtThreeEvent } from './events';
 import { NgtInstanceNode } from './instance';
-import { injectNgtLoop } from './loop';
+import { injectLoop } from './loop';
 import { is } from './utils/is';
 import { makeDpr } from './utils/make';
 import { NgtSignalStore, signalStore } from './utils/signal-store';
@@ -143,7 +143,7 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 		throw new Error(`[NGT] Window is not available.`);
 	}
 
-	const loop = injectNgtLoop();
+	const loop = injectLoop();
 
 	// NOTE: using Subject because we do not care about late-subscribers
 	const pointerMissed$ = new Subject<MouseEvent>();
@@ -347,18 +347,17 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 }
 
 export const NGT_STORE = new InjectionToken<NgtSignalStore<NgtState>>('NgtStore Token');
-export const NGT_STORE_SIGNAL = new InjectionToken<WritableSignal<{ scene: Scene }>>('NgtStore Signal Token');
 
-export function provideNgtStore(store?: () => NgtSignalStore<NgtState>) {
+export function provideStore(store?: () => NgtSignalStore<NgtState>) {
 	if (store) {
 		return { provide: NGT_STORE, useFactory: store };
 	}
 	return { provide: NGT_STORE, useFactory: storeFactory };
 }
 
-export function injectNgtStore(options: InjectOptions & { optional?: false }): NgtSignalStore<NgtState>;
-export function injectNgtStore(options: InjectOptions): NgtSignalStore<NgtState> | null;
-export function injectNgtStore(): NgtSignalStore<NgtState>;
-export function injectNgtStore(options?: InjectOptions) {
+export function injectStore(options: InjectOptions & { optional?: false }): NgtSignalStore<NgtState>;
+export function injectStore(options: InjectOptions): NgtSignalStore<NgtState> | null;
+export function injectStore(): NgtSignalStore<NgtState>;
+export function injectStore(options?: InjectOptions) {
 	return inject(NGT_STORE, options as InjectOptions);
 }

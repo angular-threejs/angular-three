@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, Signal, computed, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectGLTFLoader } from 'angular-three-soba/loaders';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsNormalTexture, NgtsNormalTextureOptions } from 'angular-three-soba/staging';
 import { Mesh, Vector2 } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -32,7 +32,7 @@ interface SuzyGLTF extends GLTF {
 })
 class DefaultNormalTextureStory {
 	options = input<NgtsNormalTextureOptions>();
-	gltf = injectGLTFLoader(() => './suzanne.glb', { useDraco: true }) as Signal<SuzyGLTF | null>;
+	gltf = injectGLTF(() => './suzanne.glb', { useDraco: true }) as Signal<SuzyGLTF | null>;
 
 	normalScale = computed(() => {
 		const repeat = this.options()?.repeat;

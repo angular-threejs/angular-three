@@ -31,7 +31,7 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 
 export type NgtsGLTF<T extends Partial<NgtObjectMap>> = GLTF & NgtObjectMap & T;
 
-function _injectGLTFLoader<TUrl extends string | string[] | Record<string, string>>(
+function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -45,12 +45,12 @@ function _injectGLTFLoader<TUrl extends string | string[] | Record<string, strin
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
-	return assertInjector(_injectGLTFLoader, injector, () =>
+	return assertInjector(_injectGLTF, injector, () =>
 		injectLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) }),
 	) as Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null>;
 }
 
-_injectGLTFLoader.preload = <TUrl extends string | string[] | Record<string, string>>(
+_injectGLTF.preload = <TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -61,9 +61,9 @@ _injectGLTFLoader.preload = <TUrl extends string | string[] | Record<string, str
 	injectLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions) as any);
 };
 
-_injectGLTFLoader.setDecoderPath = (path: string) => {
+_injectGLTF.setDecoderPath = (path: string) => {
 	decoderPath = path;
 };
 
-export type NgtsGLTFLoader = typeof _injectGLTFLoader;
-export const injectGLTFLoader: NgtsGLTFLoader = _injectGLTFLoader;
+export type NgtsGLTFLoader = typeof _injectGLTF;
+export const injectGLTF: NgtsGLTFLoader = _injectGLTF;
