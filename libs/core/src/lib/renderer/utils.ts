@@ -44,7 +44,10 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 	// or child store is the parent of parent store
 	if (!cLS.store || cLS.store !== pLS.store || cLS.store === pLS.store.get('previousRoot')) {
 		cLS.store = pLS.store;
-		const grandchildren = [...untracked(cLS.objects), ...untracked(cLS.nonObjects)];
+		const grandchildren = [
+			...(cLS.objects ? untracked(cLS.objects) : []),
+			...(cLS.nonObjects ? untracked(cLS.nonObjects) : []),
+		];
 		for (const grandchild of grandchildren) {
 			const grandChildLS = getLocalState(grandchild);
 			if (!grandChildLS) continue;
@@ -104,7 +107,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 		pLS.add(child, 'nonObjects');
 	}
 
-	if (untracked(cLS.parent) !== parent) {
+	if (cLS.parent && untracked(cLS.parent) !== parent) {
 		cLS.setParent(parent);
 	}
 
