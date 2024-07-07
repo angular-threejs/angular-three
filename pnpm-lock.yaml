@@ -65,6 +65,9 @@ importers:
       front-matter:
         specifier: ^4.0.2
         version: 4.0.2
+      gl-noise:
+        specifier: ^1.6.1
+        version: 1.6.1
       gsap:
         specifier: ^3.12.5
         version: 3.12.5
@@ -107,6 +110,9 @@ importers:
       stats-gl:
         specifier: ^2.2.8
         version: 2.2.8
+      three-custom-shader-material:
+        specifier: ^5.4.0
+        version: 5.4.0(react@18.3.1)(three@0.166.1)
       three-mesh-bvh:
         specifier: ^0.7.6
         version: 0.7.6(three@0.166.1)
@@ -6534,6 +6540,9 @@ packages:
   github-slugger@2.0.0:
     resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
 
+  gl-noise@1.6.1:
+    resolution: {integrity: sha512-2rkGehq5bqHCONQ4b8ssvQmbu8VVhzkHa+hR229xz3rdMIzZ1TmR87Gzgrf6bQex3Su8ZLAotp/97JW0hZi1bA==}
+
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
@@ -6618,6 +6627,9 @@ packages:
 
   glsl-token-descope@1.0.2:
     resolution: {integrity: sha512-kS2PTWkvi/YOeicVjXGgX5j7+8N7e56srNDEHDTVZ1dcESmbmpmgrnpjPcjxJjMxh56mSXYoFdZqb90gXkGjQw==}
+
+  glsl-token-functions@1.0.1:
+    resolution: {integrity: sha512-EigGhp1g+aUVeUNY7H1o5tL/bnwIB3/FcRREPr2E7Du+/UDXN24hDkaZ3e4aWHDjHr9lJ6YHXMISkwhUYg9UOg==}
 
   glsl-token-inject-block@1.1.0:
     resolution: {integrity: sha512-q/m+ukdUBuHCOtLhSr0uFb/qYQr4/oKrPSdIK2C4TD+qLaJvqM9wfXIF/OOBjuSA3pUoYHurVRNao6LTVVUPWA==}
@@ -10506,6 +10518,18 @@ packages:
     engines: {node: '>=10.18'}
     peerDependencies:
       tslib: ^2
+
+  three-custom-shader-material@5.4.0:
+    resolution: {integrity: sha512-Yn1lFlKOk3Vul3npEGAmbbFUZ5S2+yjPgM2XqJEZEYRSUUH2vk+WVYrtTB6Bcq15wa7hLUXAKoctAvbRmBmbYA==}
+    peerDependencies:
+      '@react-three/fiber': '>=8.0'
+      react: '>=18.0'
+      three: '>=0.154'
+    peerDependenciesMeta:
+      '@react-three/fiber':
+        optional: true
+      react:
+        optional: true
 
   three-mesh-bvh@0.7.6:
     resolution: {integrity: sha512-rCjsnxEqR9r1/C/lCqzGLS67NDty/S/eT6rAJfDvsanrIctTWdNoR4ZOGWewCB13h1QkVo2BpmC0wakj1+0m8A==}
@@ -19861,6 +19885,8 @@ snapshots:
 
   github-slugger@2.0.0: {}
 
+  gl-noise@1.6.1: {}
+
   glob-parent@5.1.2:
     dependencies:
       is-glob: 4.0.3
@@ -19981,6 +20007,8 @@ snapshots:
       glsl-token-depth: 1.1.2
       glsl-token-properties: 1.0.1
       glsl-token-scope: 1.1.2
+
+  glsl-token-functions@1.0.1: {}
 
   glsl-token-inject-block@1.1.0: {}
 
@@ -24763,6 +24791,16 @@ snapshots:
   thingies@1.21.0(tslib@2.6.3):
     dependencies:
       tslib: 2.6.3
+
+  three-custom-shader-material@5.4.0(react@18.3.1)(three@0.166.1):
+    dependencies:
+      glsl-token-functions: 1.0.1
+      glsl-token-string: 1.0.1
+      glsl-tokenizer: 2.1.5
+      object-hash: 3.0.0
+      three: 0.166.1
+    optionalDependencies:
+      react: 18.3.1
 
   three-mesh-bvh@0.7.6(three@0.166.1):
     dependencies:
