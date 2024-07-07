@@ -53,6 +53,9 @@ importers:
       '@swc/helpers':
         specifier: 0.5.11
         version: 0.5.11
+      camera-controls:
+        specifier: ^2.8.5
+        version: 2.8.5(three@0.166.1)
       cannon-es:
         specifier: ^0.20.0
         version: 0.20.0
@@ -4748,6 +4751,11 @@ packages:
   camelcase@7.0.1:
     resolution: {integrity: sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==}
     engines: {node: '>=14.16'}
+
+  camera-controls@2.8.5:
+    resolution: {integrity: sha512-7VTwRk7Nu1nRKsY7bEt9HVBfKt8DETvzyYhLN4OW26OByBayMDB5fUaNcPI+z++vG23RH5yqn6ZRhZcgLQy2rA==}
+    peerDependencies:
+      three: '>=0.126.1'
 
   caniuse-api@3.0.0:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
@@ -17883,6 +17891,10 @@ snapshots:
   camelcase@6.3.0: {}
 
   camelcase@7.0.1: {}
+
+  camera-controls@2.8.5(three@0.166.1):
+    dependencies:
+      three: 0.166.1
 
   caniuse-api@3.0.0:
     dependencies:

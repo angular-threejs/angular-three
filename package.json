@@ -109,6 +109,7 @@
 		"@monogrid/gainmap-js": "^3.0.5",
 		"@pmndrs/cannon-worker-api": "^2.4.0",
 		"@swc/helpers": "0.5.11",
+		"camera-controls": "^2.8.5",
 		"cannon-es": "^0.20.0",
 		"cannon-es-debugger": "^1.0.0",
 		"front-matter": "^4.0.2",
