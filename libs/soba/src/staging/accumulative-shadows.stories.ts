@@ -3,7 +3,6 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs, merge } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTFLoader } from 'angular-three-soba/loaders';
-import { NgtsContent } from 'angular-three-soba/misc';
 import {
 	NgtsAccumulativeShadows,
 	NgtsAccumulativeShadowsOptions,
@@ -53,30 +52,13 @@ class Suzi {
 		<accumulative-shadows-suzi />
 
 		<ngts-accumulative-shadows [options]="accumulativeShadowsOptions()">
-			<ngts-randomized-lights
-				*ngtsContent
-				[options]="{
-					amount: 8,
-					radius: 4,
-					ambient: 0.5,
-					bias: 0.001,
-					position: [5, 5, -10],
-				}"
-			/>
+			<ngts-randomized-lights [options]="{ amount: 8, radius: 4, ambient: 0.5, bias: 0.001, position: [5, 5, -10] }" />
 		</ngts-accumulative-shadows>
 
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 		<ngts-environment [options]="{ preset: 'city' }" />
 	`,
-	imports: [
-		Suzi,
-		NgtsAccumulativeShadows,
-		NgtsRandomizedLights,
-		NgtsContent,
-		NgtArgs,
-		NgtsOrbitControls,
-		NgtsEnvironment,
-	],
+	imports: [Suzi, NgtsAccumulativeShadows, NgtsRandomizedLights, NgtArgs, NgtsOrbitControls, NgtsEnvironment],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

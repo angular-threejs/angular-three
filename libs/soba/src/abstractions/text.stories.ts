@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input, view
 import { Meta } from '@storybook/angular';
 import { injectNextBeforeRender } from 'angular-three';
 import { NgtsText, NgtsTextOptions } from 'angular-three-soba/abstractions';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { DoubleSide } from 'three';
 import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
@@ -41,7 +40,7 @@ class TextContainer {
 			<ngt-mesh-basic-material [side]="DoubleSide" [color]="color()" [transparent]="true" [opacity]="opacity()" />
 		</ngts-text>
 	`,
-	imports: [NgtsText, NgtsContent],
+	imports: [NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

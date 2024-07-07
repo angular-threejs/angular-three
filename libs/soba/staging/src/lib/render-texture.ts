@@ -3,6 +3,7 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	Directive,
 	Injector,
 	TemplateRef,
 	computed,
@@ -23,7 +24,7 @@ import {
 	pick,
 	prepare,
 } from 'angular-three';
-import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
+import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
@@ -119,6 +120,16 @@ const defaultOptions: NgtsRenderTextureOptions = {
 	generateMipmaps: false,
 };
 
+@Directive({ selector: 'ng-template[renderTextureContent]', standalone: true })
+export class NgtsRenderTextureContent {
+	static ngTemplateContextGuard(
+		_: NgtsRenderTextureContent,
+		ctx: unknown,
+	): ctx is { container: Object3D; injector: Injector } {
+		return true;
+	}
+}
+
 let incrementId = 0;
 
 @Component({
@@ -126,14 +137,18 @@ let incrementId = 0;
 	standalone: true,
 	template: `
 		<ngt-portal [container]="virtualScene()" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
-			<ng-template portalContent let-injector="injector">
+			<ng-template portalContent let-injector="injector" let-container="container">
 				<ngts-render-texture-container
 					[fbo]="fbo()"
 					[renderPriority]="renderPriority()"
 					[frames]="frames()"
 					[injector]="injector"
 				>
-					<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
+					<ng-container
+						[ngTemplateOutlet]="content()"
+						[ngTemplateOutletInjector]="injector"
+						[ngTemplateOutletContext]="{ container, injector }"
+					/>
 					<ngt-group (pointerover)="onPointerOver()" />
 				</ngts-render-texture-container>
 			</ng-template>
@@ -161,7 +176,7 @@ export class NgtsRenderTexture {
 		'height',
 	]);
 
-	content = contentChild.required(NgtsContent, { read: TemplateRef });
+	content = contentChild.required(NgtsRenderTextureContent, { read: TemplateRef });
 
 	private store = injectNgtStore();
 	private size = this.store.select('size');

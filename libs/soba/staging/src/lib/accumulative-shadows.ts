@@ -1,13 +1,10 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	TemplateRef,
 	afterNextRender,
 	computed,
-	contentChild,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -21,7 +18,6 @@ import {
 	injectNgtStore,
 	pick,
 } from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { DiscardMaterial, SoftShadowMaterial } from 'angular-three-soba/shaders';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -93,7 +89,7 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-group #lights [traverse]="nullTraversal">
-				<ng-container [ngTemplateOutlet]="lightsContent() ?? null" />
+				<ng-content />
 			</ngt-group>
 
 			<ngt-mesh #plane [scale]="scale()" [rotation]="[-Math.PI / 2, 0, 0]" [receiveShadow]="true">
@@ -110,7 +106,6 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 		</ngt-group>
 	`,
 	providers: [provideAccumulativeShadowsApi()],
-	imports: [NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -135,8 +130,6 @@ export class NgtsAccumulativeShadows {
 
 	lights = viewChild.required<ElementRef<Group>>('lights');
 	plane = viewChild.required<ElementRef<Mesh>>('plane');
-
-	lightsContent = contentChild(NgtsContent, { read: TemplateRef });
 
 	private autoEffect = injectAutoEffect();
 	private store = injectNgtStore();

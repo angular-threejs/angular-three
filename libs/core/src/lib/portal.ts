@@ -38,7 +38,6 @@ import { updateCamera } from './utils/update';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtPortalBeforeRender {
-	private injector = inject(Injector);
 	private portalStore = injectNgtStore();
 
 	renderPriority = input(1);
@@ -46,10 +45,10 @@ export class NgtPortalBeforeRender {
 	parentCamera = input.required<Camera>();
 
 	constructor() {
-		injectAutoEffect()(() => {
+		injectAutoEffect()((injector) => {
 			// track state
 			this.portalStore.state();
-			const renderPriority = this.renderPriority();
+			const priority = this.renderPriority();
 
 			let oldClear: boolean;
 			return injectBeforeRender(
@@ -68,7 +67,7 @@ export class NgtPortalBeforeRender {
 					// restore
 					gl.autoClear = oldClear;
 				},
-				{ priority: renderPriority, injector: this.injector },
+				{ priority, injector },
 			);
 		});
 	}
@@ -89,6 +88,10 @@ export class NgtPortalContent {
 			commentNode[SPECIAL_INTERNAL_ADD_COMMENT](parentComment.nativeElement);
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
 		}
+	}
+
+	static ngTemplateContextGuard(_: NgtPortalContent, ctx: unknown): ctx is { container: Object3D; injector: Injector } {
+		return true;
 	}
 }
 // Keys that shouldn't be copied between stores

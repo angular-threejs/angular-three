@@ -13,11 +13,11 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtOrthographicCamera, exclude, extend, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
-import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
+import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, OrthographicCamera, Texture } from 'three';
-import { NgtsCameraContentWithFboTexture } from './camera-content';
+import { NgtsCameraContent } from './camera-content';
 
 extend({ OrthographicCamera, Group });
 
@@ -57,10 +57,7 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 		</ngt-orthographic-camera>
 
 		<ngt-group #group>
-			<ng-container
-				[ngTemplateOutlet]="withTextureContent() ?? null"
-				[ngTemplateOutletContext]="{ $implicit: texture }"
-			/>
+			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: texture }" />
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],
@@ -81,8 +78,8 @@ export class NgtsOrthographicCamera {
 		'right',
 	]);
 
-	content = contentChild(NgtsContent, { read: TemplateRef });
-	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
+	content = contentChild(TemplateRef);
+	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
 	cameraRef = viewChild.required<ElementRef<OrthographicCamera>>('camera');
 	groupRef = viewChild.required<ElementRef<Group>>('group');
@@ -133,7 +130,7 @@ export class NgtsOrthographicCamera {
 				this.cameraRef().nativeElement,
 				this.fbo(),
 			];
-			if (this.withTextureContent() && group && camera && fbo && (frames === Infinity || count < frames)) {
+			if (this.cameraContent() && group && camera && fbo && (frames === Infinity || count < frames)) {
 				group.visible = false;
 				gl.setRenderTarget(fbo);
 				oldEnvMap = scene.background;

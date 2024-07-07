@@ -10,10 +10,6 @@ const routes: Routes = [
 		loadComponent: () => import('./hud/hud'),
 	},
 	{
-		path: 'test',
-		loadComponent: () => import('./test/test'),
-	},
-	{
 		path: 'render-texture',
 		loadComponent: () => import('./render-texture/render-texture'),
 	},

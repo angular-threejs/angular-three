@@ -30,7 +30,7 @@ import {
 	pick,
 	prepare,
 } from 'angular-three';
-import { LinearEncoding, NgtsContent, TextureEncoding, sRGBEncoding } from 'angular-three-soba/misc';
+import { LinearEncoding, TextureEncoding, sRGBEncoding } from 'angular-three-soba/misc';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -404,15 +404,16 @@ export class NgtsEnvironmentCube {
 	standalone: true,
 	template: `
 		<ngt-portal [container]="virtualScene">
-			<ng-container [ngTemplateOutlet]="content()" />
+			<ng-template portalContent let-injector="injector">
+				<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
 
-			<ngt-cube-camera #cubeCamera *args="cameraArgs()" />
-
-			@if (files() || preset()) {
-				<ngts-environment-cube [options]="envCubeOptions()" />
-			} @else if (map()) {
-				<ngts-environment-map [options]="envMapOptions()" />
-			}
+				<ngt-cube-camera #cubeCamera *args="cameraArgs()" />
+				@if (files() || preset()) {
+					<ngts-environment-cube [options]="envCubeOptions()" />
+				} @else if (map()) {
+					<ngts-environment-map [options]="envMapOptions()" />
+				}
+			</ng-template>
 		</ngt-portal>
 	`,
 	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal, NgtPortalContent, NgTemplateOutlet],
@@ -568,5 +569,5 @@ export class NgtsEnvironmentGround {
 })
 export class NgtsEnvironment {
 	optionsProvider = inject(NgtsEnvironmentOptionsProvider);
-	content = contentChild(NgtsContent, { read: TemplateRef });
+	content = contentChild(TemplateRef);
 }

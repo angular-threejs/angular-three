@@ -12,8 +12,7 @@ import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsContent } from 'angular-three-soba/misc';
-import { NgtsContactShadows, NgtsRenderTexture } from 'angular-three-soba/staging';
+import { NgtsContactShadows, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { Mesh } from 'three';
 
@@ -71,7 +70,7 @@ export class Dodecahedron {
 	template: `
 		<ngt-mesh-standard-material>
 			<ngts-render-texture [options]="{ anisotropy: 16 }">
-				<ng-template ngtsContent>
+				<ng-template renderTextureContent>
 					<ngts-perspective-camera [options]="{ manual: true, makeDefault: true, aspect: 1, position: [0, 0, 5] }" />
 					<ngt-color attach="background" *args="['orange']" />
 					<ngt-ambient-light [intensity]="0.5" />
@@ -89,7 +88,7 @@ export class Dodecahedron {
 			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
-	imports: [Dodecahedron, NgtsRenderTexture, NgtsContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
+	imports: [Dodecahedron, NgtsRenderTexture, NgtsRenderTextureContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

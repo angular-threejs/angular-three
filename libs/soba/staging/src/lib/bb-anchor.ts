@@ -1,18 +1,14 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	TemplateRef,
 	afterNextRender,
-	contentChild,
 	input,
 	signal,
 	viewChild,
 } from '@angular/core';
 import { NgtGroup, NgtVector3, exclude, extend, getLocalState, injectNextBeforeRender, vector3 } from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { Box3, Group, Object3D, Vector3 } from 'three';
 
 extend({ Group });
@@ -29,10 +25,9 @@ export interface NgtsBBAnchorOptions extends Partial<NgtGroup> {
 	standalone: true,
 	template: `
 		<ngt-group #bbAnchor [parameters]="parameters()">
-			<ng-container [ngTemplateOutlet]="content()" />
+			<ng-content />
 		</ngt-group>
 	`,
-	imports: [NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -41,7 +36,6 @@ export class NgtsBBAnchor {
 	parameters = exclude(this.options, ['anchor']);
 
 	bbAnchorRef = viewChild.required<ElementRef<Group>>('bbAnchor');
-	content = contentChild.required(NgtsContent, { read: TemplateRef });
 
 	parent = signal<Object3D | null>(null);
 	private anchor = vector3(this.options, 'anchor');

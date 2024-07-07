@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } fro
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { NgtsBBAnchor, NgtsBBAnchorOptions } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
@@ -30,7 +29,7 @@ class MeshObject {}
 			<ngt-icosahedron-geometry />
 			<ngt-mesh-basic-material color="hotpink" [wireframe]="true" />
 			<ngts-bb-anchor [options]="options()">
-				<ng-content *ngtsContent />
+				<ng-content />
 			</ngts-bb-anchor>
 		</ngt-mesh>
 
@@ -38,7 +37,7 @@ class MeshObject {}
 			<ngt-box-helper *args="[mesh, 'cyan']" />
 		}
 	`,
-	imports: [NgtsBBAnchor, NgtsOrbitControls, NgtsContent, NgtArgs],
+	imports: [NgtsBBAnchor, NgtsOrbitControls, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

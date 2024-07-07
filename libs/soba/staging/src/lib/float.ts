@@ -1,16 +1,12 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	TemplateRef,
-	contentChild,
 	input,
 	viewChild,
 } from '@angular/core';
 import { NgtGroup, exclude, extend, injectNextBeforeRender } from 'angular-three';
-import { NgtsContent } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, MathUtils } from 'three';
 
@@ -38,11 +34,10 @@ const defaultOptions: NgtsFloatOptions = {
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-group #float [matrixAutoUpdate]="false">
-				<ng-container [ngTemplateOutlet]="content()" />
+				<ng-content />
 			</ngt-group>
 		</ngt-group>
 	`,
-	imports: [NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -51,7 +46,6 @@ export class NgtsFloat {
 	parameters = exclude(this.options, ['enabled', 'speed', 'rotationIntensity', 'floatIntensity', 'floatingRange']);
 
 	floatRef = viewChild.required<ElementRef<Group>>('float');
-	content = contentChild.required(NgtsContent, { read: TemplateRef });
 
 	constructor() {
 		const offset = Math.random() * 10000;

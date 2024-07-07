@@ -12,11 +12,11 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtPerspectiveCamera, exclude, extend, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
-import { NgtsContent, injectFBO } from 'angular-three-soba/misc';
+import { injectFBO } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, PerspectiveCamera, Texture } from 'three';
-import { NgtsCameraContentWithFboTexture } from './camera-content';
+import { NgtsCameraContent } from './camera-content';
 
 extend({ PerspectiveCamera, Group });
 
@@ -49,10 +49,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 		</ngt-perspective-camera>
 
 		<ngt-group #group>
-			<ng-container
-				[ngTemplateOutlet]="withTextureContent() ?? null"
-				[ngTemplateOutletContext]="{ $implicit: texture }"
-			/>
+			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: texture }" />
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],
@@ -63,8 +60,8 @@ export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = exclude(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
-	content = contentChild(NgtsContent, { read: TemplateRef });
-	withTextureContent = contentChild(NgtsCameraContentWithFboTexture, { read: TemplateRef });
+	content = contentChild(TemplateRef);
+	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
 	cameraRef = viewChild.required<ElementRef<PerspectiveCamera>>('camera');
 	groupRef = viewChild.required<ElementRef<Group>>('group');
@@ -111,7 +108,7 @@ export class NgtsPerspectiveCamera {
 				this.cameraRef().nativeElement,
 				this.fbo(),
 			];
-			if (this.withTextureContent() && group && camera && fbo && (frames === Infinity || count < frames)) {
+			if (this.cameraContent() && group && camera && fbo && (frames === Infinity || count < frames)) {
 				group.visible = false;
 				gl.setRenderTarget(fbo);
 				oldEnvMap = scene.background;

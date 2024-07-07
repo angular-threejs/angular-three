@@ -13,8 +13,7 @@ import { NgtArgs, NgtPortal, NgtPortalContent, extend, injectBeforeRender, injec
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsContent } from 'angular-three-soba/misc';
-import { NgtsEnvironment, NgtsRenderTexture } from 'angular-three-soba/staging';
+import { NgtsEnvironment, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { Matrix4, Mesh, Scene } from 'three';
 
@@ -45,7 +44,7 @@ export class Torus {
 	template: `
 		<ngt-mesh-standard-material [attach]="['material', index()]" [color]="color()">
 			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">
-				<ng-template ngtsContent>
+				<ng-template renderTextureContent>
 					<ngt-color *args="['white']" attach="background" />
 					<ngts-orthographic-camera
 						[options]="{ makeDefault: true, left: -1, right: 1, top: 1, bottom: -1, position: [0, 0, 10], zoom: 0.5 }"
@@ -58,7 +57,7 @@ export class Torus {
 			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
-	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsContent],
+	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsRenderTextureContent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
