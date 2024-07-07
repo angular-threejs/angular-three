@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { ConeTwistConstraintOpts, Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, NgtThreeEvent, extend, injectBeforeRender } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCompound, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { NgtcConstraintApi, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
 import { NgtcDebug } from 'angular-three-cannon/debug';
@@ -480,23 +480,21 @@ export class Lamp {
 			[options]="{ iterations: 15, gravity: [0, -200, 0], allowSleep: false }"
 			[debug]="{ enabled: false, scale: 1.1, color: 'white' }"
 		>
-			<ng-template physicsContent>
-				<app-cursor>
-					<app-ui-plane
-						[position]="[0, -5, 0]"
-						[rotation]="[-Math.PI / 2, 0, 0]"
-						[size]="1000"
-						[useShadowMaterial]="false"
-					/>
-					<app-rag-doll />
-					<app-chair />
-					<app-table />
-					<app-lamp />
-				</app-cursor>
-			</ng-template>
+			<app-cursor>
+				<app-ui-plane
+					[position]="[0, -5, 0]"
+					[rotation]="[-Math.PI / 2, 0, 0]"
+					[size]="1000"
+					[useShadowMaterial]="false"
+				/>
+				<app-rag-doll />
+				<app-chair />
+				<app-table />
+				<app-lamp />
+			</app-cursor>
 		</ngtc-physics>
 	`,
-	imports: [NgtArgs, NgtcPhysics, NgtcPhysicsContent, NgtcDebug, Cursor, Lamp, UiPlane, Chair, Table, RagDoll],
+	imports: [NgtArgs, NgtcPhysics, NgtcDebug, Cursor, Lamp, UiPlane, Chair, Table, RagDoll],
 	providers: [provideCursorRef()],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

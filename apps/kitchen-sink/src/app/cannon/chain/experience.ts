@@ -16,7 +16,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CylinderArgs, Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend, injectBeforeRender, injectNgtStore } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { injectConeTwist } from 'angular-three-cannon/constraint';
 import { NgtcDebug } from 'angular-three-cannon/debug';
@@ -208,19 +208,17 @@ export class StaticHandle {
 		/>
 
 		<ngtc-physics [options]="{ gravity: [0, -40, 0], allowSleep: false }">
-			<ng-template physicsContent>
-				<app-pointer-handle [size]="1.5">
-					<app-chain [length]="7" />
-				</app-pointer-handle>
-				@for (maxMultiplier of maxMultiplierExamples(); track maxMultiplier.key) {
-					<app-static-handle [radius]="1.5" [position]="maxMultiplier.position">
-						<app-chain [maxMultiplier]="maxMultiplier.value" [length]="8" />
-					</app-static-handle>
-				}
-			</ng-template>
+			<app-pointer-handle [size]="1.5">
+				<app-chain [length]="7" />
+			</app-pointer-handle>
+			@for (maxMultiplier of maxMultiplierExamples(); track maxMultiplier.key) {
+				<app-static-handle [radius]="1.5" [position]="maxMultiplier.position">
+					<app-chain [maxMultiplier]="maxMultiplier.value" [length]="8" />
+				</app-static-handle>
+			}
 		</ngtc-physics>
 	`,
-	imports: [NgtcPhysics, NgtcPhysicsContent, NgtcDebug, NgtArgs, PointerHandle, Chain, StaticHandle],
+	imports: [NgtcPhysics, NgtcDebug, NgtArgs, PointerHandle, Chain, StaticHandle],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: { class: 'chain-experience' },

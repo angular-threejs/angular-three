@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { injectCompound, injectPlane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
@@ -121,27 +121,25 @@ export class CompoundBody {
 		</ngt-spot-light>
 
 		<ngtc-physics [options]="{ iterations: 6 }" [debug]="{ scale: 1.1 }">
-			<ng-template physicsContent>
-				<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />
-				<app-compound-body [position]="[1.5, 5, 0.5]" [rotation]="[1.25, 0, 0]" />
-				<app-compound-body
-					[position]="[2.5, 3, 0.25]"
-					[rotation]="[1.25, -1.25, 0]"
-					(positionChanged)="!copy() && (position = $event)"
-					(rotationChanged)="!copy() && (rotation = $event)"
-				/>
+			<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />
+			<app-compound-body [position]="[1.5, 5, 0.5]" [rotation]="[1.25, 0, 0]" />
+			<app-compound-body
+				[position]="[2.5, 3, 0.25]"
+				[rotation]="[1.25, -1.25, 0]"
+				(positionChanged)="!copy() && (position = $event)"
+				(rotationChanged)="!copy() && (rotation = $event)"
+			/>
 
-				@if (ready()) {
-					<app-compound-body [position]="[2.5, 4, 0.25]" [rotation]="[1.25, -1.25, 0]" />
-				}
+			@if (ready()) {
+				<app-compound-body [position]="[2.5, 4, 0.25]" [rotation]="[1.25, -1.25, 0]" />
+			}
 
-				@if (copy()) {
-					<app-compound-body [isTrigger]="true" [mass]="0" [position]="position" [rotation]="rotation" />
-				}
-			</ng-template>
+			@if (copy()) {
+				<app-compound-body [isTrigger]="true" [mass]="0" [position]="position" [rotation]="rotation" />
+			}
 		</ngtc-physics>
 	`,
-	imports: [NgtArgs, NgtcPhysics, NgtcPhysicsContent, NgtcDebug, Plane, CompoundBody],
+	imports: [NgtArgs, NgtcPhysics, NgtcDebug, Plane, CompoundBody],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'compound-experience' },

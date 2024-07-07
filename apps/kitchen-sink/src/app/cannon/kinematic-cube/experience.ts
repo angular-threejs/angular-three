@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import * as THREE from 'three';
@@ -137,18 +137,16 @@ export class InstancedSpheres {
 		</ngt-spot-light>
 		<ngt-point-light [decay]="0" [intensity]="0.5 * Math.PI" [position]="[-30, 0, -30]" />
 		<ngtc-physics [options]="{ gravity: [0, 0, -30] }">
-			<ng-template physicsContent>
-				<app-plane [color]="niceColors[4]" />
-				<app-plane [color]="niceColors[1]" [position]="[-6, 0, 0]" [rotation]="[0, 0.9, 0]" />
-				<app-plane [color]="niceColors[2]" [position]="[6, 0, 0]" [rotation]="[0, -0.9, 0]" />
-				<app-plane [color]="niceColors[3]" [position]="[0, 6, 0]" [rotation]="[0.9, 0, 0]" />
-				<app-plane [color]="niceColors[0]" [position]="[0, -6, 0]" [rotation]="[-0.9, 0, 0]" />
-				<app-box />
-				<app-instanced-spheres />
-			</ng-template>
+			<app-plane [color]="niceColors[4]" />
+			<app-plane [color]="niceColors[1]" [position]="[-6, 0, 0]" [rotation]="[0, 0.9, 0]" />
+			<app-plane [color]="niceColors[2]" [position]="[6, 0, 0]" [rotation]="[0, -0.9, 0]" />
+			<app-plane [color]="niceColors[3]" [position]="[0, 6, 0]" [rotation]="[0.9, 0, 0]" />
+			<app-plane [color]="niceColors[0]" [position]="[0, -6, 0]" [rotation]="[-0.9, 0, 0]" />
+			<app-box />
+			<app-instanced-spheres />
 		</ngtc-physics>
 	`,
-	imports: [InstancedSpheres, Box, Plane, NgtcPhysics, NgtcPhysicsContent, NgtArgs, NgtcDebug],
+	imports: [InstancedSpheres, Box, Plane, NgtcPhysics, NgtArgs, NgtcDebug],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'kimenatic-experience' },

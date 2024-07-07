@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectPlane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import * as THREE from 'three';
@@ -77,26 +77,24 @@ export class Box {
 			[options]="{ gravity: [0, 0, state.gravity()], iterations: 10 }"
 			[debug]="{ enabled: state.isDebugging(), color: 'white' }"
 		>
-			<ng-template physicsContent>
-				<app-plane [position]="[0, 0, -10]" />
-				@if (showPlane()) {
-					<app-plane />
-				}
+			<app-plane [position]="[0, 0, -10]" />
+			@if (showPlane()) {
+				<app-plane />
+			}
 
-				<app-box [position]="[1, 0, 1]" />
-				<app-box [position]="[2, 1, 5]" />
-				<app-box [position]="[0, 0, 6]" />
-				<app-box [position]="[-1, 1, 8]" />
-				<app-box [position]="[-2, 2, 13]" />
-				<app-box [position]="[2, -1, 13]" />
+			<app-box [position]="[1, 0, 1]" />
+			<app-box [position]="[2, 1, 5]" />
+			<app-box [position]="[0, 0, 6]" />
+			<app-box [position]="[-1, 1, 8]" />
+			<app-box [position]="[-2, 2, 13]" />
+			<app-box [position]="[2, -1, 13]" />
 
-				@if (!showPlane()) {
-					<app-box [position]="[0.5, 1.0, 20]" />
-				}
-			</ng-template>
+			@if (!showPlane()) {
+				<app-box [position]="[0.5, 1.0, 20]" />
+			}
 		</ngtc-physics>
 	`,
-	imports: [Box, Plane, NgtcPhysics, NgtcPhysicsContent, NgtcDebug],
+	imports: [Box, Plane, NgtcPhysics, NgtcDebug],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: { class: 'basic-experience' },

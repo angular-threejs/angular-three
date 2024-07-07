@@ -2,21 +2,16 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	DestroyRef,
-	Directive,
 	EmbeddedViewRef,
 	Injector,
 	NgZone,
 	Signal,
-	TemplateRef,
-	ViewContainerRef,
 	afterNextRender,
 	computed,
-	contentChild,
 	inject,
 	input,
 	signal,
 	untracked,
-	viewChild,
 } from '@angular/core';
 import {
 	CannonWorkerAPI,
@@ -93,13 +88,6 @@ export interface NgtcPhysicsApi {
 	worker: Signal<CannonWorkerAPI>;
 }
 
-@Directive({ selector: 'ng-template[physicsContent]', standalone: true })
-export class NgtcPhysicsContent {
-	static ngTemplateContextGuard(_: NgtcPhysicsContent, ctx: unknown): ctx is { $implicit: NgtcPhysicsApi } {
-		return true;
-	}
-}
-
 const defaultOptions: NgtcPhysicsInputs = {
 	allowSleep: false,
 	axisIndex: 0,
@@ -123,7 +111,7 @@ const defaultOptions: NgtcPhysicsInputs = {
 	selector: 'ngtc-physics',
 	standalone: true,
 	template: `
-		<ng-container #anchor />
+		<ng-content />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [providePhysicsApi()],
@@ -135,9 +123,6 @@ export class NgtcPhysics {
 	private store = injectNgtStore();
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-
-	private content = contentChild.required(NgtcPhysicsContent, { read: TemplateRef });
-	private anchor = viewChild.required('anchor', { read: ViewContainerRef });
 
 	private invalidate = this.store.select('invalidate');
 	private worker = signal<CannonWorkerAPI>(null!);
@@ -158,7 +143,6 @@ export class NgtcPhysics {
 			this.zone.runOutsideAngular(() => {
 				this.worker.set(new CannonWorkerAPI(this.options()));
 				this.connectWorker();
-				this.renderContent();
 				this.updateWorkerState('axisIndex');
 				this.updateWorkerState('broadphase');
 				this.updateWorkerState('gravity');
@@ -191,18 +175,9 @@ export class NgtcPhysics {
 			worker.on('rayhit', this.rayhitHandler.bind(this));
 
 			return () => {
-				this.ref?.destroy();
 				worker.terminate();
 				worker.removeAllListeners();
 			};
-		});
-	}
-
-	private renderContent() {
-		if (this.ref) this.ref.destroy();
-		untracked(() => {
-			this.ref = this.anchor().createEmbeddedView(this.content(), { $implicit: this.api }, { injector: this.injector });
-			this.ref.detectChanges();
 		});
 	}
 

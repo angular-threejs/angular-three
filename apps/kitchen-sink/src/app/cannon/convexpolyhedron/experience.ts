@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { injectConvexPolyhedron } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectGLTFLoader } from 'angular-three-soba/loaders';
@@ -185,19 +185,17 @@ export class Diamond {
 		</ngt-spot-light>
 
 		<ngtc-physics [options]="{ gravity: gravity() }" [debug]="{ enabled: false, scale: 1.1 }">
-			<ng-template physicsContent>
-				<ngt-group (pointerdown)="toggleInvertGravity()">
-					<app-ui-plane [rotation]="[-Math.PI / 2, 0, 0]" />
-					<app-diamond [position]="[1, 5, 0]" [rotation]="[0.4, 0.1, 0.1]" />
-					<app-cone [position]="[-1, 5, 0.5]" [rotation]="[0.1, 0.2, 0.1]" [sides]="6" />
-					<app-cone [position]="[-1, 6, 0]" [rotation]="[0.5, 0.1, 0.1]" [sides]="8" />
-					<app-cube [position]="[2, 3, -0.3]" [rotation]="[0.5, 0.4, -1]" [size]="0.4" />
-					<app-cone [position]="[-0.3, 7, 1]" [rotation]="[1, 0.4, 0.1]" [sides]="7" />
-				</ngt-group>
-			</ng-template>
+			<ngt-group (pointerdown)="toggleInvertGravity()">
+				<app-ui-plane [rotation]="[-Math.PI / 2, 0, 0]" />
+				<app-diamond [position]="[1, 5, 0]" [rotation]="[0.4, 0.1, 0.1]" />
+				<app-cone [position]="[-1, 5, 0.5]" [rotation]="[0.1, 0.2, 0.1]" [sides]="6" />
+				<app-cone [position]="[-1, 6, 0]" [rotation]="[0.5, 0.1, 0.1]" [sides]="8" />
+				<app-cube [position]="[2, 3, -0.3]" [rotation]="[0.5, 0.4, -1]" [size]="0.4" />
+				<app-cone [position]="[-0.3, 7, 1]" [rotation]="[1, 0.4, 0.1]" [sides]="7" />
+			</ngt-group>
 		</ngtc-physics>
 	`,
-	imports: [NgtArgs, NgtcPhysics, NgtcPhysicsContent, NgtcDebug, UiPlane, Diamond, Cone, Cube],
+	imports: [NgtArgs, NgtcPhysics, NgtcDebug, UiPlane, Diamond, Cone, Cube],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'convex-experience' },

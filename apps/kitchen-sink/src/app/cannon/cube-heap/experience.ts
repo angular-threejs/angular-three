@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
-import { NgtcPhysics, NgtcPhysicsContent } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcBodyPublicApi, injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import * as THREE from 'three';
 import { Color, InstancedMesh, Mesh } from 'three';
@@ -122,17 +122,15 @@ export class Spheres extends InstancesInput {
 		/>
 
 		<ngtc-physics [options]="{ broadphase: 'SAP' }">
-			<ng-template physicsContent>
-				<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />
-				@if (shape() === 'box') {
-					<app-boxes [count]="count()" [size]="size()" [colors]="colors()" />
-				} @else {
-					<app-spheres [count]="count()" [size]="size()" [colors]="colors()" />
-				}
-			</ng-template>
+			<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />
+			@if (shape() === 'box') {
+				<app-boxes [count]="count()" [size]="size()" [colors]="colors()" />
+			} @else {
+				<app-spheres [count]="count()" [size]="size()" [colors]="colors()" />
+			}
 		</ngtc-physics>
 	`,
-	imports: [NgtArgs, NgtcPhysics, NgtcPhysicsContent, Plane, Boxes, Spheres],
+	imports: [NgtArgs, NgtcPhysics, Plane, Boxes, Spheres],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'cube-heap-experience' },
