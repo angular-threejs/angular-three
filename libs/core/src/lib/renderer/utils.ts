@@ -92,26 +92,21 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 			}
 			// save value
 			cLS.previousAttach = attachProp.reduce((value, property) => value[property], parent);
-			attached = true;
 		}
 	} else if (is.object3D(parent) && is.object3D(child)) {
 		parent.add(child);
 		added = true;
 	}
 
-	if (added) {
-		pLS.add(child, 'objects');
-	}
-
-	if (attached) {
-		pLS.add(child, 'nonObjects');
-	}
+	pLS.add(child, added ? 'objects' : 'nonObjects');
 
 	if (cLS.parent && untracked(cLS.parent) !== parent) {
 		cLS.setParent(parent);
 	}
 
-	if ((added || attached) && cLS.onAttach) cLS.onAttach({ parent, node: child });
+	// NOTE: this does not mean that the child is actually attached to the parent on the scenegraph.
+	//  a child on the Angular template can also emit onAttach
+	if (cLS.onAttach) cLS.onAttach({ parent, node: child });
 
 	invalidateInstance(child);
 	invalidateInstance(parent);

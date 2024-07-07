@@ -2,17 +2,12 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
-	Directive,
 	ElementRef,
 	Injector,
-	TemplateRef,
-	ViewContainerRef,
 	afterNextRender,
 	computed,
-	contentChild,
 	inject,
 	input,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { createApiToken, extend, getLocalState, injectBeforeRender, injectNgtStore, pick } from 'angular-three';
@@ -71,15 +66,12 @@ function isConvolution(effect: Effect) {
 	return (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION;
 }
 
-@Directive({ selector: 'ng-template[effects]', standalone: true })
-export class NgtpEffects {}
-
 @Component({
 	selector: 'ngtp-effect-composer',
 	standalone: true,
 	template: `
 		<ngt-group #group>
-			<ng-container #anchor />
+			<ng-content />
 		</ngt-group>
 	`,
 	providers: [provideEffectComposerApi()],
@@ -107,8 +99,6 @@ export class NgtpEffectComposer {
 	resolutionScale = pick(this.options, 'resolutionScale');
 
 	group = viewChild.required<ElementRef<Group>>('group');
-	groupAnchor = viewChild.required('anchor', { read: ViewContainerRef });
-	content = contentChild.required(NgtpEffects, { read: TemplateRef });
 
 	composerData = computed(() => {
 		const webGL2Available = isWebGL2Available();
@@ -176,7 +166,6 @@ export class NgtpEffectComposer {
 		afterNextRender(() => {
 			this.disableToneMapping();
 			this.setComposerSize();
-			this.render();
 			this.updatePasses();
 
 			injectBeforeRender(
@@ -219,19 +208,6 @@ export class NgtpEffectComposer {
 				composer.setSize(width, height);
 			}
 		});
-	}
-
-	private render() {
-		this.autoEffect(
-			(injector) => {
-				return untracked(() => {
-					const ref = this.groupAnchor().createEmbeddedView(this.content(), {}, { injector });
-					ref.detectChanges();
-					return () => ref.destroy();
-				});
-			},
-			{ allowSignalWrites: true },
-		);
 	}
 
 	private updatePasses() {

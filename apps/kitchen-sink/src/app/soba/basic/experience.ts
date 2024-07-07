@@ -11,7 +11,7 @@ import {
 	signal,
 } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
-import { NgtpBloom, NgtpEffectComposer, NgtpEffects, NgtpGlitch } from 'angular-three-postprocessing';
+import { NgtpBloom, NgtpEffectComposer, NgtpGlitch } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTFLoader } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
@@ -93,20 +93,18 @@ export class Bot {
 		<app-bot />
 
 		<ngtp-effect-composer>
-			<ng-template effects>
-				@if (bloom()) {
-					<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
-				}
+			@if (bloom()) {
+				<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
+			}
 
-				@if (glitch()) {
-					<ngtp-glitch />
-				}
-			</ng-template>
+			@if (glitch()) {
+				<ngtp-glitch />
+			}
 		</ngtp-effect-composer>
 
 		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
 	`,
-	imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpEffects, NgtpBloom, NgtpGlitch],
+	imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpBloom, NgtpGlitch],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: { class: 'soba-experience' },

@@ -7,7 +7,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
-import { NgtpEffectComposer, NgtpEffects, NgtpGodRays } from 'angular-three-postprocessing';
+import { NgtpEffectComposer, NgtpGodRays } from 'angular-three-postprocessing';
 import * as THREE from 'three';
 import { Group, Mesh } from 'three';
 
@@ -58,15 +58,13 @@ export class Sun {
 		</ngt-group>
 
 		<ngtp-effect-composer>
-			<ng-template effects>
-				@if (sun.sunRef().nativeElement; as sun) {
-					<ngtp-god-rays [options]="{ sun }" />
-				}
-			</ng-template>
+			@if (sun.sunRef().nativeElement; as sun) {
+				<ngtp-god-rays [options]="{ sun }" />
+			}
 		</ngtp-effect-composer>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtpEffectComposer, NgtpEffects, NgtArgs, NgtpGodRays, Sun],
+	imports: [NgtpEffectComposer, NgtArgs, NgtpGodRays, Sun],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-postprocessing' },
 })
