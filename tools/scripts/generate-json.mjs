@@ -11,7 +11,7 @@ const { typeChecker, sourceFile, typeToTypeNode, typeToString, processIntersecti
 /** @type {Map<string, { typeDeclaration: ts.TypeAliasDeclaration, type: ts.Type, typeNode: ts.TypeNode, typeString: string}>} */
 const typeDeclarationMap = new Map();
 
-const THREE_MEMBERS_TO_SKIP = ['ngt-primitive', 'ngt-value'];
+const THREE_MEMBERS_TO_SKIP = ['ngt-primitive'];
 const THREE_ELEMENTS_NAME = 'ThreeElements';
 const THREE_OBJECT_EVENTS_MAP_NAME = 'NgtObject3DEventsMap';
 

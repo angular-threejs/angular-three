@@ -73,8 +73,8 @@ export const commonAttributes = [
 		description: 'An array of paths to attach to parent. Can also be an NgtAttachFunction',
 	},
 	{
-		name: '[ref]',
-		description: 'Assign an NgtInjectedRef',
+		name: '[parameters]',
+		description: 'An object of options to pass to the instance',
 	},
 	{
 		name: '(beforeRender)',
@@ -176,7 +176,12 @@ export function createProgram(filePaths, sourceFilePath) {
 		if (!members?.length) return;
 		for (const member of members) {
 			/** @type {string} */
-			const memberName = member.name?.text || member.name?.escapedText || member.name?.expression?.name?.text || member.name?.expression?.name?.escapedText || member.name;
+			const memberName =
+				member.name?.text ||
+				member.name?.escapedText ||
+				member.name?.expression?.name?.text ||
+				member.name?.expression?.name?.escapedText ||
+				member.name;
 
 			const exist =
 				memberName && metadata.attributes.find(({ name }) => [memberName, `[${memberName}]`].includes(name));

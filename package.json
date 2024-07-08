@@ -7,6 +7,7 @@
 		"storybook": "nx storybook soba",
 		"sandbox": "nx serve sandbox",
 		"example": "nx serve examples",
+		"generate-json": "node tools/scripts/generate-json.mjs",
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
 		"publish": "nx run-many --target=publish --projects=core,soba,postprocessing,cannon --parallel=false",
 		"publish:beta": "nx run-many --target=publish --projects=core,soba,postprocessing,cannon --parallel=false --tag=beta",
