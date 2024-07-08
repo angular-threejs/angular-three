@@ -12,7 +12,7 @@ import { NgtArgs, NgtGroup, extend, omit, pick } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { DirectionalLight, Group, MathUtils, Object3D, OrthographicCamera, Vector3 } from 'three';
+import { DirectionalLight, Group, MathUtils, Object3D, OrthographicCamera, Vector2, Vector3 } from 'three';
 import { injectAccumulativeShadowsApi } from './accumulative-shadows';
 
 export interface NgtsRandomizedLightOptions extends Partial<NgtGroup> {
@@ -57,8 +57,6 @@ const defaultOptions: NgtsRandomizedLightOptions = {
 	intensity: getVersion() >= 155 ? Math.PI : 1,
 	ambient: 0.5,
 };
-
-extend({ Group, DirectionalLight, OrthographicCamera });
 
 @Component({
 	selector: 'ngts-randomized-lights',
@@ -106,6 +104,8 @@ export class NgtsRandomizedLights {
 	private updateOptions = pick(this.options, ['ambient', 'radius', 'position']);
 
 	constructor() {
+		extend({ Group, DirectionalLight, OrthographicCamera, Vector2 });
+
 		afterNextRender(() => {
 			this.autoEffect(() => {
 				const lights = this.lights().nativeElement;

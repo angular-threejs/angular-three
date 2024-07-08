@@ -64,8 +64,6 @@ export interface NgtsAccumulativeShadowsOptions extends Partial<NgtGroup> {
 	toneMapped: boolean;
 }
 
-extend({ Group, SoftShadowMaterial, Mesh, PlaneGeometry });
-
 export const [injectAccumulativeShadowsApi, provideAccumulativeShadowsApi] = createApiToken(
 	() => NgtsAccumulativeShadows,
 );
@@ -216,6 +214,8 @@ export class NgtsAccumulativeShadows {
 	});
 
 	constructor() {
+		extend({ Group, SoftShadowMaterial, Mesh, PlaneGeometry });
+
 		afterNextRender(() => {
 			this.autoEffect(() => {
 				const [pLM, plane] = [this.pLM(), this.plane()];

@@ -452,6 +452,15 @@ export class NgtsEnvironmentPortal {
 	constructor() {
 		extend({ CubeCamera });
 
+		afterNextRender(() => {
+			this.autoEffect(() => {
+				const [files, preset, map] = [this.files(), this.preset(), this.map()];
+				// NOTE: when there's none of this, we don't render cube or map so we need to setEnv here
+				if (!!files || !!preset || !!map) return;
+				this.onEnvSet();
+			});
+		});
+
 		let count = 1;
 		injectNextBeforeRender(() => {
 			const frames = this.options().frames;
