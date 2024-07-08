@@ -61,26 +61,45 @@ export function merge<TObject extends object>(
 	return computed(() => ({ ...toMerge, ...objFn() }));
 }
 
-export function vector2<TObject extends object>(options: Signal<TObject>, key: KeysOfType<TObject, NgtVector2>) {
+export function vector2<TObject extends object>(
+	options: Signal<TObject>,
+	key: KeysOfType<TObject, NgtVector2>,
+): Signal<Vector2>;
+export function vector2<TObject extends object>(
+	options: Signal<TObject>,
+	key: KeysOfType<TObject, NgtVector2>,
+	keepUndefined: true,
+): Signal<Vector2 | undefined>;
+export function vector2(options: Signal<NgtAnyRecord>, key: string, keepUndefined = false) {
 	return computed(
 		() => {
 			const value = options()[key];
+			if (keepUndefined && value == undefined) return undefined;
 			if (typeof value === 'number') return new Vector2(value, value);
 			else if (value) return new Vector2(...(value as Vector2Tuple));
 			else return new Vector2();
 		},
-		{ equal: (a, b) => a.equals(b) },
+		{ equal: (a, b) => !!a && !!b && a.equals(b) },
 	);
 }
-
-export function vector3<TObject extends object>(options: Signal<TObject>, key: KeysOfType<TObject, NgtVector3>) {
+export function vector3<TObject extends object>(
+	options: Signal<TObject>,
+	key: KeysOfType<TObject, NgtVector3>,
+): Signal<Vector3>;
+export function vector3<TObject extends object>(
+	options: Signal<TObject>,
+	key: KeysOfType<TObject, NgtVector3>,
+	keepUndefined: true,
+): Signal<Vector3 | undefined>;
+export function vector3(options: Signal<NgtAnyRecord>, key: string, keepUndefined = false) {
 	return computed(
 		() => {
 			const value = options()[key];
+			if (keepUndefined && value == undefined) return undefined;
 			if (typeof value === 'number') return new Vector3(value, value, value);
 			else if (value) return new Vector3(...(value as Vector3Tuple));
 			else return new Vector3();
 		},
-		{ equal: (a, b) => a.equals(b) },
+		{ equal: (a, b) => !!a && !!b && a.equals(b) },
 	);
 }

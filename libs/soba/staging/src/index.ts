@@ -4,6 +4,7 @@ export * from './lib/camera-shake';
 export * from './lib/contact-shadows';
 export * from './lib/environment';
 export * from './lib/float';
+export * from './lib/lightformer';
 export * from './lib/matcap-texture';
 export * from './lib/normal-texture';
 export * from './lib/randomized-lights';

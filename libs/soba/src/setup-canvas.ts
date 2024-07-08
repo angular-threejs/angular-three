@@ -32,7 +32,7 @@ extend(THREE);
 export interface SetupCanvasOptions {
 	camera: { position?: [number, number, number]; fov?: number };
 	performance: Partial<Omit<NgtPerformance, 'regress'>>;
-	background: 'white' | 'black';
+	background: string;
 	controls: boolean | { makeDefault?: boolean };
 	lights: boolean;
 }
@@ -102,7 +102,6 @@ export class StorybookScene {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			console.log('storybook-scene destroy');
 			ref?.destroy();
 		});
 	}

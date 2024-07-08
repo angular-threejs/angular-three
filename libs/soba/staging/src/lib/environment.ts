@@ -4,6 +4,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	Directive,
+	EffectRef,
 	ElementRef,
 	Injector,
 	TemplateRef,
@@ -12,6 +13,7 @@ import {
 	contentChild,
 	inject,
 	input,
+	output,
 	signal,
 	untracked,
 	viewChild,
@@ -266,39 +268,6 @@ export interface NgtsEnvironmentOptions extends Partial<NgtsInjectEnvironmentOpt
 	ground?: boolean | { radius?: number; height?: number; scale?: number };
 }
 
-@Directive({ standalone: true })
-export class NgtsEnvironmentOptionsProvider {
-	options = input({} as NgtsEnvironmentOptions);
-
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	defaultScene = this.store.select('scene');
-
-	envConfig = computed(() => {
-		const {
-			background = false,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		} = this.options();
-
-		return {
-			background,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		};
-	});
-}
-
 const defaultBackground: NgtsEnvironmentOptions = {
 	background: false,
 };
@@ -306,6 +275,7 @@ const defaultBackground: NgtsEnvironmentOptions = {
 @Directive({ standalone: true, selector: 'ngts-environment-map' })
 export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
+	envSet = output<void>();
 
 	autoEffect = injectAutoEffect();
 	store = injectStore();
@@ -343,7 +313,9 @@ export class NgtsEnvironmentMap {
 				const map = this.map();
 				if (!map) return;
 				const { background = false, scene, ...config } = this.envConfig();
-				return setEnvProps(background, scene, this.defaultScene(), map, config);
+				const cleanup = setEnvProps(background, scene, this.defaultScene(), map, config);
+				this.envSet.emit();
+				return () => cleanup();
 			});
 		});
 	}
@@ -352,6 +324,7 @@ export class NgtsEnvironmentMap {
 @Directive({ standalone: true, selector: 'ngts-environment-cube' })
 export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
+	envSet = output<void>();
 
 	autoEffect = injectAutoEffect();
 	store = injectStore();
@@ -393,7 +366,9 @@ export class NgtsEnvironmentCube {
 				const texture = this.texture();
 				if (!texture) return;
 				const { background = false, scene, ...config } = this.envConfig();
-				return setEnvProps(background, scene, this.defaultScene(), texture, config);
+				const cleanup = setEnvProps(background, scene, this.defaultScene(), texture, config);
+				this.envSet.emit();
+				return () => cleanup();
 			});
 		});
 	}
@@ -404,14 +379,19 @@ export class NgtsEnvironmentCube {
 	standalone: true,
 	template: `
 		<ngt-portal [container]="virtualScene">
-			<ng-template portalContent let-injector="injector">
-				<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
+			<ng-template portalContent let-injector="injector" let-container="container">
+				<ng-container
+					[ngTemplateOutlet]="content()"
+					[ngTemplateOutletInjector]="injector"
+					[ngTemplateOutletContext]="{ injector, container }"
+				/>
 
 				<ngt-cube-camera #cubeCamera *args="cameraArgs()" />
+
 				@if (files() || preset()) {
-					<ngts-environment-cube [options]="envCubeOptions()" />
+					<ngts-environment-cube [options]="envCubeOptions()" (envSet)="onEnvSet()" />
 				} @else if (map()) {
-					<ngts-environment-map [options]="envMapOptions()" />
+					<ngts-environment-map [options]="envMapOptions()" (envSet)="onEnvSet()" />
 				}
 			</ng-template>
 		</ngt-portal>
@@ -430,19 +410,20 @@ export class NgtsEnvironmentPortal {
 	};
 	options = input(this.defaultOptions, { transform: mergeInputs(this.defaultOptions) });
 	content = input.required<TemplateRef<unknown>>();
+	envSet = output<void>();
 
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	defaultScene = this.store.select('scene');
-	gl = this.store.select('gl');
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private defaultScene = this.store.select('scene');
+	private gl = this.store.select('gl');
 
-	camera = viewChild.required<ElementRef<CubeCamera>>('cubeCamera');
+	camera = viewChild<ElementRef<CubeCamera>>('cubeCamera');
 
 	map = pick(this.options, 'map');
-	extensions = pick(this.options, 'extensions');
 	files = pick(this.options, 'files');
-	path = pick(this.options, 'path');
 	preset = pick(this.options, 'preset');
+	private extensions = pick(this.options, 'extensions');
+	private path = pick(this.options, 'path');
 
 	envMapOptions = computed(() => ({ background: true, map: this.map(), extensions: this.extensions() }));
 	envCubeOptions = computed(() => ({
@@ -450,6 +431,7 @@ export class NgtsEnvironmentPortal {
 		files: this.files(),
 		preset: this.preset(),
 		extensions: this.extensions(),
+		path: this.path(),
 	}));
 
 	private near = pick(this.options, 'near');
@@ -465,12 +447,31 @@ export class NgtsEnvironmentPortal {
 
 	virtualScene = prepare(new Scene());
 
+	private setEnvEffectRef?: EffectRef;
+
 	constructor() {
 		extend({ CubeCamera });
-		afterNextRender(() => {
-			this.autoEffect(() => {
+
+		let count = 1;
+		injectNextBeforeRender(() => {
+			const frames = this.options().frames;
+			if (frames === Infinity || (frames != null && count < frames)) {
+				const camera = this.camera()?.nativeElement;
+				if (camera) {
+					camera.update(this.gl(), this.virtualScene);
+					count++;
+				}
+			}
+		});
+	}
+
+	// NOTE: we use onEnvSet here to ensure that EnvironmentCube or EnvironmentMap sets the env before the portal
+	onEnvSet() {
+		if (this.setEnvEffectRef) this.setEnvEffectRef.destroy();
+		this.setEnvEffectRef = this.autoEffect(
+			() => {
 				const camera = this.camera();
-				if (!camera.nativeElement) return;
+				if (!camera?.nativeElement) return;
 
 				const [
 					{
@@ -488,10 +489,9 @@ export class NgtsEnvironmentPortal {
 					fbo,
 					defaultScene,
 				] = [this.options(), this.gl(), this.fbo(), this.defaultScene()];
-				if (frames === 1) {
-					camera.nativeElement.update(gl, this.virtualScene);
-				}
-				return setEnvProps(background, scene, defaultScene, fbo.texture, {
+
+				if (frames === 1) camera.nativeElement.update(gl, this.virtualScene);
+				const cleanup = setEnvProps(background, scene, defaultScene, fbo.texture, {
 					blur,
 					backgroundBlurriness,
 					backgroundIntensity,
@@ -499,20 +499,11 @@ export class NgtsEnvironmentPortal {
 					environmentIntensity,
 					environmentRotation,
 				});
-			});
-		});
-
-		let count = 1;
-		injectNextBeforeRender(() => {
-			const frames = this.options().frames;
-			if (frames === Infinity || (frames != null && count < frames)) {
-				const camera = this.camera().nativeElement;
-				if (camera) {
-					camera.update(this.gl(), this.virtualScene);
-					count++;
-				}
-			}
-		});
+				this.envSet.emit();
+				return () => cleanup();
+			},
+			{ manualCleanup: true },
+		);
 	}
 }
 
@@ -520,7 +511,7 @@ export class NgtsEnvironmentPortal {
 	selector: 'ngts-environment-ground',
 	standalone: true,
 	template: `
-		<ngts-environment-map [options]="envMapOptions()" />
+		<ngts-environment-map [options]="envMapOptions()" (envSet)="envSet.emit()" />
 		<ngt-ground-projected-env *args="args()" [scale]="scale()" [height]="height()" [radius]="radius()" />
 	`,
 	imports: [NgtsEnvironmentMap, NgtArgs],
@@ -529,6 +520,7 @@ export class NgtsEnvironmentPortal {
 })
 export class NgtsEnvironmentGround {
 	options = input({} as NgtsEnvironmentOptions);
+	envSet = output<void>();
 
 	private defaultTexture = injectEnvironment(this.options);
 	private texture = computed(() => this.options().map || this.defaultTexture());
@@ -552,22 +544,22 @@ export class NgtsEnvironmentGround {
 	selector: 'ngts-environment',
 	standalone: true,
 	template: `
-		@if (optionsProvider.options().ground) {
-			<ngts-environment-ground [options]="optionsProvider.options()" />
-		} @else if (optionsProvider.options().map) {
-			<ngts-environment-map [options]="optionsProvider.options()" />
+		@if (options().ground) {
+			<ngts-environment-ground [options]="options()" (envSet)="envSet.emit()" />
+		} @else if (options().map) {
+			<ngts-environment-map [options]="options()" (envSet)="envSet.emit()" />
 		} @else if (content()) {
-			<ngts-environment-portal [options]="optionsProvider.options()" [content]="$any(content())" />
+			<ngts-environment-portal [options]="options()" [content]="$any(content())" (envSet)="envSet.emit()" />
 		} @else {
-			<ngts-environment-cube [options]="optionsProvider.options()" />
+			<ngts-environment-cube [options]="options()" (envSet)="envSet.emit()" />
 		}
 	`,
 	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtsEnvironmentPortal, NgtsEnvironmentGround],
-	hostDirectives: [{ directive: NgtsEnvironmentOptionsProvider, inputs: ['options'] }],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsEnvironment {
-	optionsProvider = inject(NgtsEnvironmentOptionsProvider);
+	options = input({} as NgtsEnvironmentOptions);
 	content = contentChild(TemplateRef);
+	envSet = output<void>();
 }
