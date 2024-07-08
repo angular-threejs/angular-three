@@ -105,7 +105,7 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			objects: instanceStore.select('objects'),
 			nonObjects: instanceStore.select('nonObjects'),
 			add(object, type) {
-				const current = instance.__ngt__.instanceStore.get(type);
+				const current = instance.__ngt__.instanceStore.snapshot[type];
 				const foundIndex = current.indexOf((node: NgtInstanceNode) => object === node);
 				if (foundIndex > -1) {
 					current.splice(foundIndex, 1, object);
@@ -113,11 +113,12 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 				} else {
 					instance.__ngt__.instanceStore.update((prev) => ({ [type]: [...prev[type], object] }));
 				}
-				notifyAncestors(instance.__ngt__.instanceStore.get('parent'));
+
+				notifyAncestors(instance.__ngt__.instanceStore.snapshot.parent);
 			},
 			remove(object, type) {
 				instance.__ngt__.instanceStore.update((prev) => ({ [type]: prev[type].filter((node) => node !== object) }));
-				notifyAncestors(instance.__ngt__.instanceStore.get('parent'));
+				notifyAncestors(instance.__ngt__.instanceStore.snapshot.parent);
 			},
 			setParent(parent) {
 				instance.__ngt__.instanceStore.update({ parent });
@@ -133,6 +134,7 @@ function notifyAncestors(instance: NgtInstanceNode | null) {
 	if (!instance) return;
 	const localState = getLocalState(instance);
 	if (!localState) return;
-	localState.instanceStore.update((prev) => ({ objects: prev.objects, nonObjects: prev.nonObjects }));
-	notifyAncestors(localState.instanceStore.get('parent'));
+	const { parent, objects, nonObjects } = localState.instanceStore.snapshot;
+	localState.instanceStore.update({ objects: (objects || []).slice(), nonObjects: (nonObjects || []).slice() });
+	notifyAncestors(parent);
 }
