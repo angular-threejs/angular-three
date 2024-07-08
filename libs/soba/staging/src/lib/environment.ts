@@ -457,7 +457,7 @@ export class NgtsEnvironmentPortal {
 				const [files, preset, map] = [this.files(), this.preset(), this.map()];
 				// NOTE: when there's none of this, we don't render cube or map so we need to setEnv here
 				if (!!files || !!preset || !!map) return;
-				this.onEnvSet();
+				return this.setPortalEnv();
 			});
 		});
 
@@ -479,40 +479,44 @@ export class NgtsEnvironmentPortal {
 		if (this.setEnvEffectRef) this.setEnvEffectRef.destroy();
 		this.setEnvEffectRef = this.autoEffect(
 			() => {
-				const camera = this.camera();
-				if (!camera?.nativeElement) return;
-
-				const [
-					{
-						frames,
-						background = false,
-						scene,
-						blur,
-						backgroundBlurriness,
-						backgroundIntensity,
-						backgroundRotation,
-						environmentIntensity,
-						environmentRotation,
-					},
-					gl,
-					fbo,
-					defaultScene,
-				] = [this.options(), this.gl(), this.fbo(), this.defaultScene()];
-
-				if (frames === 1) camera.nativeElement.update(gl, this.virtualScene);
-				const cleanup = setEnvProps(background, scene, defaultScene, fbo.texture, {
-					blur,
-					backgroundBlurriness,
-					backgroundIntensity,
-					backgroundRotation,
-					environmentIntensity,
-					environmentRotation,
-				});
-				this.envSet.emit();
-				return () => cleanup();
+				return this.setPortalEnv();
 			},
 			{ manualCleanup: true },
 		);
+	}
+
+	private setPortalEnv() {
+		const camera = this.camera();
+		if (!camera?.nativeElement) return;
+
+		const [
+			{
+				frames,
+				background = false,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			},
+			gl,
+			fbo,
+			defaultScene,
+		] = [this.options(), this.gl(), this.fbo(), this.defaultScene()];
+
+		if (frames === 1) camera.nativeElement.update(gl, this.virtualScene);
+		const cleanup = setEnvProps(background, scene, defaultScene, fbo.texture, {
+			blur,
+			backgroundBlurriness,
+			backgroundIntensity,
+			backgroundRotation,
+			environmentIntensity,
+			environmentRotation,
+		});
+		this.envSet.emit();
+		return cleanup;
 	}
 }
 
