@@ -23,7 +23,7 @@ export interface NgtsLightformerOptions {
 	target?: NgtVector3;
 }
 
-const defaultOptions: Partial<NgtMesh> & NgtsLightformerOptions = {
+const defaultOptions: Partial<Omit<NgtMesh, 'scale'>> & NgtsLightformerOptions = {
 	toneMapped: false,
 	color: 'white',
 	form: 'rect',

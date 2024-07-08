@@ -24,16 +24,6 @@ import {
 	Vector4,
 } from 'three';
 
-// export interface NgtsOrbitControlsOptions {
-//   camera?: Camera;
-//   domElement?: HTMLElement;
-//   target?: NgtVector3;
-//   makeDefault: boolean;
-//   regress: boolean;
-//   enableDamping: boolean;
-//   keyEvents: boolean | HTMLElement;
-// }
-
 export interface NgtsCameraControlsOptions {
 	camera?: NgtCamera;
 	domElement?: HTMLElement;
