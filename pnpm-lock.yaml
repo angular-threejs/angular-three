@@ -154,7 +154,7 @@ importers:
         specifier: 18.1.0
         version: 18.1.0(eslint@9.6.0)(typescript@5.4.5)
       '@angular/cli':
-        specifier: ~18.0.7
+        specifier: ~18.0.0
         version: 18.0.7(chokidar@3.6.0)
       '@angular/compiler-cli':
         specifier: 18.0.6

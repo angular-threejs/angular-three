@@ -23,7 +23,7 @@
 		"@angular-eslint/eslint-plugin": "18.1.0",
 		"@angular-eslint/eslint-plugin-template": "18.1.0",
 		"@angular-eslint/template-parser": "18.1.0",
-		"@angular/cli": "~18.0.7",
+		"@angular/cli": "~18.0.0",
 		"@angular/compiler-cli": "18.0.6",
 		"@angular/language-service": "18.0.6",
 		"@nx/angular": "19.4.1",
