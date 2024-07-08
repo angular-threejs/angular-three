@@ -176,7 +176,7 @@ export function createProgram(filePaths, sourceFilePath) {
 		if (!members?.length) return;
 		for (const member of members) {
 			/** @type {string} */
-			const memberName = member.name?.text || member.name?.escapedText;
+			const memberName = member.name?.text || member.name?.escapedText || member.name?.expression?.name?.text || member.name?.expression?.name?.escapedText || member.name;
 
 			const exist =
 				memberName && metadata.attributes.find(({ name }) => [memberName, `[${memberName}]`].includes(name));
