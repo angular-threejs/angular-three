@@ -73,7 +73,8 @@ class MeshReflectorMaterialStory {
 
 	reflectorOptions = computed(() => {
 		const options = this.options();
-		const textures = this.textures() || {};
+		const textures = this.textures();
+		if (!textures) return options;
 		return { ...options, ...textures };
 	});
 
@@ -94,7 +95,7 @@ class MeshReflectorMaterialStory {
 		injectBeforeRender(({ clock }) => {
 			const mesh = this.mesh().nativeElement;
 			mesh.position.y += Math.sin(clock.getElapsedTime()) / 25;
-			mesh.rotation.y = clock.getElapsedTime();
+			mesh.rotation.y = clock.getElapsedTime() / 2;
 		});
 	}
 }

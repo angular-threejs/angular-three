@@ -43,8 +43,8 @@ export class MeshReflectorMaterial extends MeshStandardMaterial {
 	}
 
 	override onBeforeCompile(shader: WebGLProgramParametersWithUniforms) {
-		if (shader.defines && !shader.defines['USE_UV']) {
-			shader.defines['USE_UV'] = '';
+		if (!shader.defines?.['USE_UV']) {
+			shader.defines!['USE_UV'] = '';
 		}
 		shader.uniforms['hasBlur'] = this._hasBlur;
 		shader.uniforms['tDiffuse'] = this._tDiffuse;

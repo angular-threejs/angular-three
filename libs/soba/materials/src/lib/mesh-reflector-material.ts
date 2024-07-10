@@ -5,13 +5,14 @@ import {
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
+	inject,
 	input,
+	Renderer2,
 	untracked,
 	viewChild,
 } from '@angular/core';
 import {
 	applyProps,
-	extend,
 	getLocalState,
 	injectBeforeRender,
 	injectStore,
@@ -121,11 +122,6 @@ export class NgtsMeshReflectorMaterial {
 	]);
 
 	private blur = pick(this.reflectOptions, 'blur');
-	private resolution = pick(this.reflectOptions, 'resolution');
-	private minDepthThreshold = pick(this.reflectOptions, 'minDepthThreshold');
-	private maxDepthThreshold = pick(this.reflectOptions, 'maxDepthThreshold');
-	private depthScale = pick(this.reflectOptions, 'depthScale');
-	private depthToBlurRatioBias = pick(this.reflectOptions, 'depthToBlurRatioBias');
 
 	private normalizedBlur = computed(() => {
 		const blur = this.blur();
@@ -148,8 +144,26 @@ export class NgtsMeshReflectorMaterial {
 
 	private renderTargetParameters = { minFilter: LinearFilter, magFilter: LinearFilter, type: HalfFloatType };
 
-	private fbos = computed(() => {
-		const resolution = this.resolution();
+	private reflectState = computed(() => {
+		const [
+			gl,
+			{
+				resolution,
+				minDepthThreshold,
+				maxDepthThreshold,
+				depthScale,
+				depthToBlurRatioBias,
+				mirror,
+				mixBlur,
+				mixStrength,
+				distortion,
+				distortionMap,
+				mixContrast,
+			},
+			blur,
+			hasBlur,
+		] = [this.gl(), this.reflectOptions(), this.normalizedBlur(), this.hasBlur()];
+
 		const fbo1 = new WebGLRenderTarget(resolution, resolution, this.renderTargetParameters);
 		fbo1.depthBuffer = true;
 		fbo1.depthTexture = new DepthTexture(resolution, resolution);
@@ -157,20 +171,7 @@ export class NgtsMeshReflectorMaterial {
 		fbo1.depthTexture.type = UnsignedShortType;
 		const fbo2 = new WebGLRenderTarget(resolution, resolution, this.renderTargetParameters);
 
-		return { fbo1, fbo2 };
-	});
-
-	private blurPass = computed(() => {
-		const [gl, resolution, blur, minDepthThreshold, maxDepthThreshold, depthScale, depthToBlurRatioBias] = [
-			this.gl(),
-			this.resolution(),
-			this.normalizedBlur(),
-			this.minDepthThreshold(),
-			this.maxDepthThreshold(),
-			this.depthScale(),
-			this.depthToBlurRatioBias(),
-		];
-		return new BlurPass({
+		const blurPass = new BlurPass({
 			gl,
 			resolution,
 			width: blur[0],
@@ -180,26 +181,8 @@ export class NgtsMeshReflectorMaterial {
 			depthScale,
 			depthToBlurRatioBias,
 		});
-	});
 
-	private reflectorParameters = computed(() => {
-		const [
-			{ fbo1, fbo2 },
-			{
-				mirror,
-				mixBlur,
-				mixStrength,
-				minDepthThreshold,
-				maxDepthThreshold,
-				depthScale,
-				depthToBlurRatioBias,
-				distortion,
-				distortionMap,
-				mixContrast,
-			},
-			hasBlur,
-		] = [this.fbos(), this.reflectOptions(), this.hasBlur()];
-		return {
+		const reflectorParameters = {
 			mirror,
 			textureMatrix: this.textureMatrix,
 			mixBlur,
@@ -221,35 +204,36 @@ export class NgtsMeshReflectorMaterial {
 				USE_DISTORTION: distortionMap ? '' : undefined,
 			},
 		};
+
+		return { fbo1, fbo2, blurPass, reflectorParameters };
 	});
 
 	private definesKey = computed(() => {
-		const defines = this.reflectorParameters().defines;
-		return Object.entries(defines).reduce((acc, [key, value]) => (value ? `${acc} ${key}` : acc), '');
+		const defines = this.reflectState().reflectorParameters.defines;
+		return Object.entries(defines).reduce((acc, [key, value]) => (value != null ? `${acc} ${key}` : acc), '');
 	});
 
 	material = computed(() => {
 		// tracking defines key so that the material is recreated when the defines change
 		this.definesKey();
-		return new MeshReflectorMaterial();
+		const material = new MeshReflectorMaterial();
+		applyProps(material, {
+			...untracked(this.reflectState).reflectorParameters,
+			...untracked(this.parameters),
+		});
+		return material;
 	});
 
 	constructor() {
-		extend({ MeshReflectorMaterial });
-
 		const autoEffect = injectAutoEffect();
+		const renderer = inject(Renderer2);
 
 		afterNextRender(() => {
 			autoEffect(() => {
 				const material = this.materialRef()?.nativeElement;
 				if (!material) return;
-				applyProps(material, this.reflectorParameters());
-			});
-
-			autoEffect(() => {
-				const material = this.materialRef()?.nativeElement;
-				if (!material) return;
-				applyProps(material, this.parameters());
+				const { reflectorParameters } = this.reflectState();
+				renderer.setProperty(material, 'parameters', { ...reflectorParameters, ...this.parameters() });
 			});
 		});
 
@@ -263,9 +247,8 @@ export class NgtsMeshReflectorMaterial {
 			const parent = Reflect.get(material, 'parent') ?? untracked(localState.parent);
 			if (!parent) return;
 
-			const { fbo1, fbo2 } = untracked(this.fbos);
+			const { fbo1, fbo2, blurPass } = untracked(this.reflectState);
 			const hasBlur = untracked(this.hasBlur);
-			const blurPass = untracked(this.blurPass);
 
 			parent.visible = false;
 			const currentXrEnabled = gl.xr.enabled;
@@ -296,7 +279,7 @@ export class NgtsMeshReflectorMaterial {
 		if (!parent) return;
 
 		const { camera } = this.store.snapshot;
-		const { reflectorOffset } = untracked(this.options);
+		const { reflectorOffset } = untracked(this.reflectOptions);
 
 		this.reflectorWorldPosition.setFromMatrixPosition(parent.matrixWorld);
 		this.cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
