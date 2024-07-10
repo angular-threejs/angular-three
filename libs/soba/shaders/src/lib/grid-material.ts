@@ -3,7 +3,7 @@ import { getVersion } from 'angular-three-soba/misc';
 import { Color, ColorRepresentation, Side, Vector3 } from 'three';
 import { shaderMaterial } from './shader-material';
 
-export interface NgtGridMaterialOptions {
+export interface GridMaterialOptions {
 	/** Cell size, default: 0.5 */
 	cellSize: number;
 	/** Cell thickness, default: 0.5 */
@@ -115,6 +115,6 @@ declare global {
 		/**
 		 * @extends ngt-shader-material
 		 */
-		'ngt-grid-material': NgtGridMaterialOptions & NgtShaderMaterial;
+		'ngt-grid-material': GridMaterialOptions & NgtShaderMaterial;
 	}
 }

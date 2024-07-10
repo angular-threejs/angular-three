@@ -30,7 +30,7 @@ export const SoftShadowMaterial = shaderMaterial(
    }`,
 );
 
-export interface NgtSoftShadowMaterialOptions {
+export interface SoftShadowMaterialOptions {
 	map: Texture;
 	color?: ColorRepresentation;
 	alphaTest?: number;
@@ -42,6 +42,6 @@ declare global {
 		/**
 		 *  @extends ngt-shader-material
 		 */
-		'ngt-soft-shadow-material': NgtSoftShadowMaterialOptions & NgtShaderMaterial;
+		'ngt-soft-shadow-material': SoftShadowMaterialOptions & NgtShaderMaterial;
 	}
 }

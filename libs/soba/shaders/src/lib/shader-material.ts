@@ -12,6 +12,7 @@ import {
 	Vector3,
 	Vector4,
 } from 'three';
+import { MeshBVHUniformStruct } from 'three-mesh-bvh';
 
 export function shaderMaterial(
 	uniforms: {
@@ -27,6 +28,7 @@ export function shaderMaterial(
 			| Vector3
 			| Vector2
 			| Color
+			| MeshBVHUniformStruct
 			| number
 			| boolean
 			| Array<any>

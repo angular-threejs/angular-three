@@ -8,12 +8,12 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, NgtMesh, omit, pick } from 'angular-three';
-import { GridMaterial, NgtGridMaterialOptions } from 'angular-three-soba/shaders';
+import { GridMaterial, GridMaterialOptions } from 'angular-three-soba/shaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BackSide, Mesh, Plane, PlaneGeometry, ShaderMaterial, Uniform, Vector3 } from 'three';
 
 const defaultOptions: Partial<NgtMesh> &
-	NgtGridMaterialOptions & { planeArgs: ConstructorParameters<typeof PlaneGeometry> } = {
+	GridMaterialOptions & { planeArgs: ConstructorParameters<typeof PlaneGeometry> } = {
 	planeArgs: [],
 	cellSize: 0.5,
 	cellThickness: 0.5,
