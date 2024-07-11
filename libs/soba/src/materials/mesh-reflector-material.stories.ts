@@ -101,7 +101,7 @@ class MeshReflectorMaterialStory {
 }
 
 export default {
-	title: 'Shaders/MeshReflectorMaterial',
+	title: 'Materials/MeshReflectorMaterial',
 	decorators: makeDecorators(),
 } as Meta;
 

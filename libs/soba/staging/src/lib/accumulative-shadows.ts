@@ -8,6 +8,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
+import { MeshDiscardMaterial, SoftShadowMaterial } from '@pmndrs/vanilla';
 import {
 	NgtGroup,
 	createApiToken,
@@ -18,7 +19,6 @@ import {
 	omit,
 	pick,
 } from 'angular-three';
-import { DiscardMaterial, SoftShadowMaterial } from 'angular-three-soba/shaders';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -292,7 +292,7 @@ class ProgressiveLightMap {
 		this.progressiveLightMap2 = new WebGLRenderTarget(this.res, this.res, textureParams);
 
 		// Inject some spicy new logic into a standard phong material
-		this.discardMat = new DiscardMaterial();
+		this.discardMat = new MeshDiscardMaterial();
 		this.targetMat = new MeshLambertMaterial({ fog: false });
 		this.previousShadowMap = { value: this.progressiveLightMap1.texture };
 		this.averagingWindow = { value: 100 };

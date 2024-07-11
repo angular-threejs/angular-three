@@ -1,7 +1,7 @@
+import { shaderMaterial } from '@pmndrs/vanilla';
 import { NgtShaderMaterial } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { Color, ColorRepresentation, Side, Vector3 } from 'three';
-import { shaderMaterial } from './shader-material';
 
 export interface GridMaterialOptions {
 	/** Cell size, default: 0.5 */
