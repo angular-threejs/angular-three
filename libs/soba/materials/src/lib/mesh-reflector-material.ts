@@ -5,23 +5,22 @@ import {
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
-	inject,
 	input,
-	Renderer2,
 	untracked,
 	viewChild,
 } from '@angular/core';
+import { BlurPass, MeshReflectorMaterial } from '@pmndrs/vanilla';
 import {
 	applyProps,
 	getLocalState,
 	injectBeforeRender,
 	injectStore,
+	NgtAnyRecord,
 	NgtArgs,
 	NgtMeshStandardMaterial,
 	omit,
 	pick,
 } from 'angular-three';
-import { BlurPass, MeshReflectorMaterial } from 'angular-three-soba/shaders';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -74,7 +73,7 @@ const defaultOptions: NgtsMeshReflectorMaterialOptions = {
 	selector: 'ngts-mesh-reflector-material',
 	standalone: true,
 	template: `
-		<ngt-primitive #material *args="[material()]" attach="material">
+		<ngt-primitive #material *args="[material()]" [attach]="attach()">
 			<ng-content />
 		</ngt-primitive>
 	`,
@@ -83,6 +82,7 @@ const defaultOptions: NgtsMeshReflectorMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshReflectorMaterial {
+	attach = input('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	private parameters = omit(this.options, [
 		'distortionMap',
@@ -142,8 +142,6 @@ export class NgtsMeshReflectorMaterial {
 	private textureMatrix = new Matrix4();
 	private virtualCamera = new PerspectiveCamera();
 
-	private renderTargetParameters = { minFilter: LinearFilter, magFilter: LinearFilter, type: HalfFloatType };
-
 	private reflectState = computed(() => {
 		const [
 			gl,
@@ -164,12 +162,18 @@ export class NgtsMeshReflectorMaterial {
 			hasBlur,
 		] = [this.gl(), this.reflectOptions(), this.normalizedBlur(), this.hasBlur()];
 
-		const fbo1 = new WebGLRenderTarget(resolution, resolution, this.renderTargetParameters);
+		const renderTargetParameters = {
+			minFilter: LinearFilter,
+			magFilter: LinearFilter,
+			type: HalfFloatType,
+		};
+
+		const fbo1 = new WebGLRenderTarget(resolution, resolution, renderTargetParameters);
 		fbo1.depthBuffer = true;
 		fbo1.depthTexture = new DepthTexture(resolution, resolution);
 		fbo1.depthTexture.format = DepthFormat;
 		fbo1.depthTexture.type = UnsignedShortType;
-		const fbo2 = new WebGLRenderTarget(resolution, resolution, this.renderTargetParameters);
+		const fbo2 = new WebGLRenderTarget(resolution, resolution, renderTargetParameters);
 
 		const blurPass = new BlurPass({
 			gl,
@@ -214,26 +218,33 @@ export class NgtsMeshReflectorMaterial {
 	});
 
 	material = computed(() => {
+		const prevMaterial = untracked(this.materialRef)?.nativeElement;
+
+		if (prevMaterial) {
+			prevMaterial.dispose();
+			delete (prevMaterial as NgtAnyRecord)['__ngt__'];
+			delete (prevMaterial as NgtAnyRecord)['__ngt_renderer__'];
+		}
+
 		// tracking defines key so that the material is recreated when the defines change
 		this.definesKey();
-		const material = new MeshReflectorMaterial();
-		applyProps(material, {
-			...untracked(this.reflectState).reflectorParameters,
-			...untracked(this.parameters),
-		});
-		return material;
+		return new MeshReflectorMaterial();
 	});
 
 	constructor() {
 		const autoEffect = injectAutoEffect();
-		const renderer = inject(Renderer2);
 
 		afterNextRender(() => {
 			autoEffect(() => {
 				const material = this.materialRef()?.nativeElement;
 				if (!material) return;
 				const { reflectorParameters } = this.reflectState();
-				renderer.setProperty(material, 'parameters', { ...reflectorParameters, ...this.parameters() });
+				Object.keys(reflectorParameters.defines).forEach((key) => {
+					if ((reflectorParameters.defines as any)[key] === undefined) {
+						delete (reflectorParameters.defines as any)[key];
+					}
+				});
+				applyProps(material, { ...reflectorParameters, ...this.parameters() });
 			});
 		});
 
@@ -247,8 +258,8 @@ export class NgtsMeshReflectorMaterial {
 			const parent = Reflect.get(material, 'parent') ?? untracked(localState.parent);
 			if (!parent) return;
 
-			const { fbo1, fbo2, blurPass } = untracked(this.reflectState);
-			const hasBlur = untracked(this.hasBlur);
+			const { fbo1, fbo2, blurPass } = this.reflectState();
+			const hasBlur = this.hasBlur();
 
 			parent.visible = false;
 			const currentXrEnabled = gl.xr.enabled;

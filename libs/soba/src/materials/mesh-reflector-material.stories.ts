@@ -32,7 +32,7 @@ const defaultOptions: Partial<NgtsMeshReflectorMaterialOptions> = {
 	blur: [0, 0],
 	depthScale: 0,
 	distortion: 0,
-	normalScale: new Vector2(0),
+	normalScale: new Vector2(0, 0),
 };
 
 @Component({
