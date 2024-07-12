@@ -1,3 +1,4 @@
+import { CubeTexture } from 'three';
 import { NgtCameraManual, NgtSize } from '../store';
 import { is } from './is';
 
@@ -15,6 +16,9 @@ export function checkUpdate(value: unknown) {
 		if (is.perspectiveCamera(value) || is.orthographicCamera(value)) value.updateProjectionMatrix();
 		value.updateMatrixWorld();
 	}
+
+	// NOTE: skip checkNeedsUpdate for CubeTexture
+	if (value && (value as CubeTexture).isCubeTexture) return;
 
 	checkNeedsUpdate(value);
 }
