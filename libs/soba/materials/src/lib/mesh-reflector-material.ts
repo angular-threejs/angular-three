@@ -186,6 +186,20 @@ export class NgtsMeshReflectorMaterial {
 			depthToBlurRatioBias,
 		});
 
+		const defines: NgtAnyRecord = {};
+
+		if (hasBlur) {
+			defines['USE_BLUR'] = '';
+		}
+
+		if (depthScale > 0) {
+			defines['USE_DEPTH'] = '';
+		}
+
+		if (distortionMap) {
+			defines['USE_DISTORTION'] = '';
+		}
+
 		const reflectorParameters = {
 			mirror,
 			textureMatrix: this.textureMatrix,
@@ -202,11 +216,7 @@ export class NgtsMeshReflectorMaterial {
 			distortion,
 			distortionMap,
 			mixContrast,
-			defines: {
-				USE_BLUR: hasBlur ? '' : undefined,
-				USE_DEPTH: depthScale > 0 ? '' : undefined,
-				USE_DISTORTION: distortionMap ? '' : undefined,
-			},
+			defines,
 		};
 
 		return { fbo1, fbo2, blurPass, reflectorParameters };
@@ -239,11 +249,6 @@ export class NgtsMeshReflectorMaterial {
 				const material = this.materialRef()?.nativeElement;
 				if (!material) return;
 				const { reflectorParameters } = this.reflectState();
-				Object.keys(reflectorParameters.defines).forEach((key) => {
-					if ((reflectorParameters.defines as any)[key] === undefined) {
-						delete (reflectorParameters.defines as any)[key];
-					}
-				});
 				applyProps(material, { ...reflectorParameters, ...this.parameters() });
 			});
 		});
