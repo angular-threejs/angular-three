@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtsCustomShaderMaterial } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { patchShaders } from 'gl-noise';
 import { PointsMaterial } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 const shader = {
 	vertex: /* glsl */ `
@@ -58,7 +58,7 @@ const shader = {
 		<ngt-group>
 			<ngt-points>
 				<ngt-icosahedron-geometry *args="[1, 32]" />
-				<ngts-custom-shader-material [baseMaterial]="PointsMaterial" [options]="options" />
+				<ngts-custom-shader-material [baseMaterial]="PointsMaterial" [options]="options()" />
 			</ngt-points>
 		</ngt-group>
 	`,
@@ -69,13 +69,16 @@ const shader = {
 class DefaultCustomShaderMaterialStory {
 	PointsMaterial = PointsMaterial;
 
-	options = {
+	size = input(0.02);
+	transparent = input(true);
+
+	options = computed(() => ({
 		fragmentShader: patchShaders(shader.fragment),
 		vertexShader: patchShaders(shader.vertex),
-		size: 0.02,
+		size: this.size(),
 		uniforms: { uTime: { value: 0 } },
-		transparent: true,
-	};
+		transparent: this.transparent(),
+	}));
 
 	materialRef = viewChild.required(NgtsCustomShaderMaterial);
 
@@ -92,6 +95,10 @@ export default {
 	decorators: makeDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultCustomShaderMaterialStory, {
-	camera: { position: [0, 0, 2.5] },
+export const Default = makeStoryObject(DefaultCustomShaderMaterialStory, {
+	canvasOptions: { camera: { position: [0, 0, 2.5] } },
+	argsOptions: {
+		size: number(0.02, { range: true, min: 0.01, max: 0.1, step: 0.01 }),
+		transparent: true,
+	},
 });

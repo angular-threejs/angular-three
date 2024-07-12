@@ -5,7 +5,7 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial, NgtsMeshTransmissionMaterialOptions } from 'angular-three-soba/materials';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Color, FrontSide } from 'three';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
 	selector: 'gelatinous-cube',
@@ -102,7 +102,7 @@ class GelatinousCube {
 			[options]="{
 				files: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/dancing_hall_1k.hdr',
 				background: true,
-				backgroundBlurriness: 1,
+				backgroundBlurriness: blur(),
 			}"
 		/>
 	`,
@@ -119,6 +119,7 @@ class GelatinousCube {
 })
 class DefaultMeshTransmissionMaterialStory {
 	protected readonly Math = Math;
+	blur = input(0.1);
 	options = input({} as NgtsMeshTransmissionMaterialOptions);
 }
 
@@ -130,6 +131,7 @@ export default {
 export const Default = makeStoryObject(DefaultMeshTransmissionMaterialStory, {
 	canvasOptions: { camera: { fov: 25, position: [15, 0, 15] } },
 	argsOptions: {
+		blur: number(0.1, { range: true, min: 0, max: 1, step: 0.1 }),
 		options: {
 			background: new Color('#839681'),
 			backside: false,

@@ -6,7 +6,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
-	untracked,
 } from '@angular/core';
 import { is, NgtAnyRecord, NgtArgs, omit, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
@@ -62,7 +61,6 @@ export class NgtsCustomShaderMaterial {
 			vertexShader,
 			uniforms,
 			cacheKey,
-			attach: untracked(this.attach),
 		});
 	});
 
