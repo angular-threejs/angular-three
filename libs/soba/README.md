@@ -5,12 +5,12 @@
 ## Installation
 
 ```bash
-npm install angular-three-soba three-stdlib @monogrid/gainmap-js @pmndrs/vanilla
-# yarn add angular-three-soba three-stdlib @monogrid/gainmap-js @pmndrs/vanilla
-# pnpm add angular-three-soba three-stdlib @monogrid/gainmap-js @pmndrs/vanilla
+npm install angular-three-soba three-stdlib
+# yarn add angular-three-soba three-stdlib
+# pnpm add angular-three-soba three-stdlib
 ```
 
-> There are more peer dependencies that the consumers might need to install separately based on the secondary entry points that they pull in
+> There are more peer dependencies that the consumers might need to install separately based on the secondary entry points that they pull in. Check the secondary entry points documentation for more information.
 
 ## Secondary Entry Points
 

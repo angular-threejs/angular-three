@@ -15,7 +15,7 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DirectionalLight, Group, MathUtils, Object3D, OrthographicCamera, Vector2, Vector3 } from 'three';
 import { injectAccumulativeShadowsApi } from './accumulative-shadows';
 
-export interface NgtsRandomizedLightOptions extends Partial<NgtGroup> {
+export interface NgtsRandomizedLightsOptions extends Partial<NgtGroup> {
 	/** How many frames it will jiggle the lights, 1.
 	 *  Frames is context aware, if a provider like AccumulativeShadows exists, frames will be taken from there!  */
 	frames: number;
@@ -43,7 +43,7 @@ export interface NgtsRandomizedLightOptions extends Partial<NgtGroup> {
 	far: number;
 }
 
-const defaultOptions: NgtsRandomizedLightOptions = {
+const defaultOptions: NgtsRandomizedLightsOptions = {
 	castShadow: true,
 	bias: 0.001,
 	mapSize: 512,
@@ -78,7 +78,7 @@ const defaultOptions: NgtsRandomizedLightOptions = {
 })
 export class NgtsRandomizedLights {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightOptions>);
+	parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightsOptions>);
 
 	lights = viewChild.required<ElementRef<Group>>('lights');
 

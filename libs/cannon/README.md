@@ -5,9 +5,9 @@ This library is a wrapper around the [Cannon.js](https://schteppe.github.io/cann
 ## Installation
 
 ```bash
-npm install angular-three-cannon cannon-es cannon-es-debugger @pmndrs/cannon-worker-api
-# yarn add angular-three-cannon cannon-es cannon-es-debugger @pmndrs/cannon-worker-api
-# pnpm add angular-three-cannon cannon-es cannon-es-debugger @pmndrs/cannon-worker-api
+npm install angular-three-cannon cannon-es @pmndrs/cannon-worker-api
+# yarn add angular-three-cannon cannon-es @pmndrs/cannon-worker-api
+# pnpm add angular-three-cannon cannon-es @pmndrs/cannon-worker-api
 ```
 
 > Make sure to already have `angular-three` installed
@@ -82,12 +82,12 @@ The `NgtcPhysicsApi` provides the following properties:
 
 ## Debug
 
-Check [./debug/README.md]
+Read the [debug documentation](./debug/README.md) for more information on how to enable debug mode and view debug information.
 
 ## Bodies
 
-Check [./body/README.md]
+Read the [body documentation](./body/README.md) for more information on how to create physics bodies and apply forces.
 
 ## Constraints
 
-Check [./constraint/README.md]
+Read the [constraint documentation](./constraint/README.md) for more information on how to create constraints between physics bodies.

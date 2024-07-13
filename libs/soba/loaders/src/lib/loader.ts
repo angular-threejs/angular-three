@@ -15,7 +15,7 @@ import { injectProgress } from './progress';
 
 const defaultDataInterpolation = (p: number) => `Loading ${p.toFixed(2)}%`;
 
-export interface NgtsLoaderState {
+export interface NgtsLoaderOptions {
 	containerClass?: string;
 	innerClass?: string;
 	barClass?: string;
@@ -24,7 +24,7 @@ export interface NgtsLoaderState {
 	initialState: (value: boolean) => boolean;
 }
 
-const defaultOptions: NgtsLoaderState = {
+const defaultOptions: NgtsLoaderOptions = {
 	containerClass: '',
 	innerClass: '',
 	barClass: '',

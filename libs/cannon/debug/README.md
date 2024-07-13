@@ -2,6 +2,18 @@
 
 This module provides the `NgtcDebug` directive, which allows you to visualize the physics bodies within your Angular Three Cannon simulations.
 
+| Package              | Description                                    |
+| -------------------- | ---------------------------------------------- |
+| `cannon-es-debugger` | A debug renderer for Cannon.js physics engine. |
+
+This entry point requires the `cannon-es-debugger` package to be installed.
+
+```bash
+npm install cannon-es-debugger
+# yarn add cannon-es-debugger
+# pnpm add cannon-es-debugger
+```
+
 ## NgtcDebugApi
 
 The `NgtcDebugApi` interface provides methods to interact with the debug renderer:
