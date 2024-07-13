@@ -1,5 +1,4 @@
 import { NgtMeshStandardMaterial } from 'angular-three';
-import { GridMaterialOptions } from 'angular-three-soba/shaders';
 import {
 	IUniform,
 	MeshStandardMaterial,
@@ -65,6 +64,6 @@ declare global {
 		/**
 		 * @extends ngt-mesh-standard-material
 		 */
-		'ngt-mesh-wobble-material': GridMaterialOptions & NgtMeshStandardMaterial;
+		'ngt-mesh-wobble-material': MeshWobbleMaterialOptions & NgtMeshStandardMaterial;
 	}
 }
