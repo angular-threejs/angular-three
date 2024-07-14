@@ -13,6 +13,14 @@ npm install three-custom-shader-material @pmndrs/vanilla
 # pnpm add three-custom-shader-material @pmndrs/vanilla
 ```
 
+## TOC
+
+- [NgtsCustomShaderMaterial](#ngtscustomshadermaterial)
+- [NgtsMeshReflectorMaterial](#ngtsmeshreflectormaterial)
+- [NgtsMeshTransmissionMaterial](#ngtsmeshtransmissionmaterial)
+- [NgtsMeshWobbleMaterial](#ngtsmeshwobblematerial)
+- [NgtsMeshRefractionMaterial](#ngtsmeshrefractionmaterial)
+
 ## NgtsCustomShaderMaterial
 
 A component that allows you to create custom shader materials using the `three-custom-shader-material` library. It provides a flexible way to define your own shaders and control the rendering of your objects.

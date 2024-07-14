@@ -2,6 +2,14 @@
 
 This secondary entry point includes various loaders for files such as GLTF, textures, and fonts.
 
+## TOC
+
+- [`injectFont`](#injectfont)
+- [`injectGLTF`](#injectgltf)
+- [`injectTexture`](#injecttexture)
+- [`injectProgress`](#injectprogress)
+- [`NgtsLoader`](#ngtsloader)
+
 ## `injectFont`
 
 Provides a way to inject and load fonts into your Angular component. It takes a function input that returns the font data (either as a `string` URL or a `FontData` object) and an optional injector. It returns a signal that holds the loaded `Font` object or null if not yet loaded.

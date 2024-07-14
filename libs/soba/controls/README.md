@@ -12,6 +12,11 @@ npm install camera-controls
 # pnpm add camera-controls
 ```
 
+## TOC
+
+- [NgtsCameraControls](#ngtscameracontrols)
+- [NgtsOrbitControls](#ngtsorbitcontrols)
+
 ## NgtsCameraControls
 
 A component that provides advanced camera controls based on the `camera-controls` library. It allows you to manipulate the camera's position, rotation, and other properties through various interactions.

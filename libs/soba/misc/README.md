@@ -2,6 +2,13 @@
 
 This secondary entry point includes miscellaneous utilities and components for animations, shadows, and frame buffer objects (FBOs).
 
+## TOC
+
+- [injectAnimations](#injectanimations)
+- [injectFBO](#injectfbo)
+- [NgtsFBO](#ngtsfbo)
+- [NgtsBakeShadows](#ngtsbakeshadows)
+
 ## `injectAnimations`
 
 ```ts

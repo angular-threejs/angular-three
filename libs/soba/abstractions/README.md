@@ -14,6 +14,18 @@ npm install troika-three-text
 # pnpm add troika-three-text
 ```
 
+## TOC
+
+- [NgtsGrid](#ngtsgrid)
+- [NgtsText](#ngtstext)
+- [NgtsText3D](#ngtstext3d)
+- [NgtsLine](#ngtsline)
+- [NgtsQuadraticBezierLine](#ngtsquadraticbezierline)
+- [NgtsCubicBezierLine](#ngtscubicbezierline)
+- [NgtsCatmullRomLine](#ngtscatmullromline)
+- [NgtsEdges](#ngtsedges)
+- [NgtsPrismGeometry](#ngtsprismgeometry)
+
 ## NgtsGrid
 
 A y-up oriented, shader-based grid implementation.
