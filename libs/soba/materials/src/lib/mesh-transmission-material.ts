@@ -107,9 +107,7 @@ export class NgtsMeshTransmissionMaterial {
 	private resolution = pick(this.options, 'resolution');
 	private backsideResolution = pick(this.options, 'backsideResolution');
 	private samples = pick(this.options, 'samples');
-	private transmissionSampler = pick(this.options, 'transmissionSampler');
 	private buffer = pick(this.options, 'buffer');
-	private transmission = pick(this.options, 'transmission');
 	private anisotropy = pick(this.options, 'anisotropy');
 	private anisotropicBlur = pick(this.options, 'anisotropicBlur');
 	private background = pick(this.options, 'background');
@@ -117,6 +115,8 @@ export class NgtsMeshTransmissionMaterial {
 	private backsideThickness = pick(this.options, 'backsideThickness');
 	private backsideEnvMapIntensity = pick(this.options, 'backsideEnvMapIntensity');
 
+	transmissionSampler = pick(this.options, 'transmissionSampler');
+	transmission = pick(this.options, 'transmission');
 	thickness = pick(this.options, 'thickness');
 	side = pick(this.options, 'side');
 
