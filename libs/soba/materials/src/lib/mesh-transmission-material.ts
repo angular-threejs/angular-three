@@ -1,17 +1,17 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
 	ElementRef,
+	inject,
 	input,
 	untracked,
 	viewChild,
 } from '@angular/core';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
 import {
-	applyProps,
 	getLocalState,
 	injectBeforeRender,
 	NgtAnyRecord,
@@ -21,7 +21,6 @@ import {
 	pick,
 } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BackSide, Color, FrontSide, Mesh, NoToneMapping, Texture, ToneMapping } from 'three';
 
@@ -66,7 +65,18 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 	selector: 'ngts-mesh-transmission-material',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[material()]" #material>
+		<ngt-primitive
+			*args="[material()]"
+			#material
+			[attach]="attach()"
+			[parameters]="parameters()"
+			[_transmission]="transmission()"
+			[transmission]="transmissionSampler() ? transmission() : 0"
+			[buffer]="bufferTexture()"
+			[anisotropy]="anisotropicBlurOption()"
+			[side]="side()"
+			[thickness]="thickness()"
+		>
 			<ng-content />
 		</ngt-primitive>
 	`,
@@ -75,8 +85,9 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshTransmissionMaterial {
+	attach = input('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	private parameters = omit(this.options, [
+	parameters = omit(this.options, [
 		'buffer',
 		'transmissionSampler',
 		'backside',
@@ -101,24 +112,23 @@ export class NgtsMeshTransmissionMaterial {
 	private transmission = pick(this.options, 'transmission');
 	private anisotropy = pick(this.options, 'anisotropy');
 	private anisotropicBlur = pick(this.options, 'anisotropicBlur');
-	private thickness = pick(this.options, 'thickness');
-	private side = pick(this.options, 'side');
 	private background = pick(this.options, 'background');
 	private backside = pick(this.options, 'backside');
 	private backsideThickness = pick(this.options, 'backsideThickness');
 	private backsideEnvMapIntensity = pick(this.options, 'backsideEnvMapIntensity');
 
-	materialRef = viewChild<ElementRef<MeshTransmissionMaterial & MeshTransmissionMaterialOptions>>('material');
+	thickness = pick(this.options, 'thickness');
+	side = pick(this.options, 'side');
 
-	private autoEffect = injectAutoEffect();
+	materialRef = viewChild<ElementRef<MeshTransmissionMaterial & MeshTransmissionMaterialOptions>>('material');
 
 	private backResolution = computed(() => this.backsideResolution() || this.resolution());
 
 	private fboBack = injectFBO(() => ({ width: this.backResolution() }));
 	private fboMain = injectFBO(() => ({ width: this.resolution() }));
 
-	private bufferTexture = computed(() => this.buffer() || this.fboMain().texture);
-	private anisotropicBlurOption = computed(() => this.anisotropicBlur() || this.anisotropy());
+	bufferTexture = computed(() => this.buffer() || this.fboMain().texture);
+	anisotropicBlurOption = computed(() => this.anisotropicBlur() || this.anisotropy());
 
 	private discardMaterial = new MeshDiscardMaterial();
 
@@ -136,29 +146,13 @@ export class NgtsMeshTransmissionMaterial {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const material = this.materialRef()?.nativeElement;
-				if (!material) return;
-				applyProps(material, this.parameters());
-			});
-
-			this.autoEffect(() => {
-				const material = this.materialRef()?.nativeElement;
-				if (!material) return;
-				// In order for this to not incur extra cost "transmission" must be set to 0 and treated as a reserved prop.
-				// This is because THREE.WebGLRenderer will check for transmission > 0 and execute extra renders.
-				// The exception is when transmissionSampler is set, in which case we are using three's built in sampler.
-				applyProps(material, {
-					_transmission: this.transmission(),
-					transmission: this.transmissionSampler() ? this.transmission() : 0,
-				});
-			});
-
-			this.updateParameter('buffer', this.bufferTexture);
-			this.updateParameter('anisotropy', this.anisotropicBlurOption);
-			this.updateParameter('side', this.side);
-			this.updateParameter('thickness', this.thickness);
+		inject(DestroyRef).onDestroy(() => {
+			const material = this.materialRef()?.nativeElement;
+			if (material) {
+				material.dispose();
+				delete (material as NgtAnyRecord)['__ngt__'];
+				delete (material as NgtAnyRecord)['__ngt_renderer__'];
+			}
 		});
 
 		let oldBg: Texture | Color | null;
@@ -242,17 +236,6 @@ export class NgtsMeshTransmissionMaterial {
 					gl.toneMapping = oldTone;
 				}
 			}
-		});
-	}
-
-	private updateParameter<TKey extends keyof NgtsMeshTransmissionMaterialOptions>(
-		parameterName: TKey,
-		parameter: () => NgtsMeshTransmissionMaterialOptions[TKey],
-	) {
-		this.autoEffect(() => {
-			const material = this.materialRef()?.nativeElement;
-			if (!material) return;
-			applyProps(material, { [parameterName]: parameter() });
 		});
 	}
 }

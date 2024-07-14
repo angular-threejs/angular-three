@@ -115,3 +115,38 @@ A component that creates a material that makes your geometry wobble and wave aro
 	<ngts-mesh-wobble-material [options]="options()" />
 </ngt-group>
 ```
+
+## NgtsMeshRefractionMaterial
+
+A convincing Glass/Diamond refraction material.
+
+### Object Input (`NgtsMeshRefractionMaterialOptions`)
+
+| Property             | Description                                                                     | Default Value |
+| -------------------- | ------------------------------------------------------------------------------- | ------------- |
+| `envMap`             | (Required) The environment map.                                                 |               |
+| `bounces`            | The number of ray-cast bounces.                                                 | `2`           |
+| `ior`                | The refraction index.                                                           | `2.4`         |
+| `fresnel`            | The Fresnel (strip light).                                                      | `0`           |
+| `aberrationStrength` | The RGB shift intensity.                                                        | `0`           |
+| `color`              | The color of the material.                                                      | `0xffffff`    |
+| `fastChroma`         | Whether to use fewer ray casts for the RGB shift sacrificing physical accuracy. | `true`        |
+
+If you want it to reflect other objects in the scene you best pair it with a cube-camera.
+
+```html
+<ngts-cube-camera>
+	<ngt-mesh *cameraContent="let texture">
+		<ngts-mesh-refraction-material [envMap]="texture()" />
+	</ngt-mesh>
+</ngts-cube-camera>
+```
+
+Otherwise, just pass it an environment map.
+
+```html
+<!-- texture = injectLoader(() => RGBELoader, () => 'path/to/texture.hdr') -->
+<ngt-mesh>
+	<ngts-mesh-refraction-material [envMap]="texture()" />
+</ngt-mesh>
+```

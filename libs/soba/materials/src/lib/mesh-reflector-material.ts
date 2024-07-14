@@ -4,7 +4,9 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
 	ElementRef,
+	inject,
 	input,
 	untracked,
 	viewChild,
@@ -251,6 +253,15 @@ export class NgtsMeshReflectorMaterial {
 				const { reflectorParameters } = this.reflectState();
 				applyProps(material, { ...reflectorParameters, ...this.parameters() });
 			});
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			const material = this.materialRef()?.nativeElement;
+			if (material) {
+				material.dispose();
+				delete (material as NgtAnyRecord)['__ngt__'];
+				delete (material as NgtAnyRecord)['__ngt_renderer__'];
+			}
 		});
 
 		injectBeforeRender(({ gl, scene }) => {

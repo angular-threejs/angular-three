@@ -111,3 +111,111 @@ This component renders 3D text using TextGeometry. It requires fonts in JSON for
 ```html
 <ngts-text-3d text="Hello, World!" [options]="{ font: 'path/to/font.json' }" />
 ```
+
+## NgtsLine
+
+Renders a `THREE.Line2` or `THREE.LineSegments2` (depending on the value of `segments`).
+
+### Object Inputs (NgtsLineOptions)
+
+| Property       | Description                                                  | Default Value |
+| -------------- | ------------------------------------------------------------ | ------------- |
+| `points`       | (Required) Array of points.                                  |               |
+| `color`        | Line color.                                                  | `'black'`     |
+| `linewidth`    | Line width.                                                  | `1`           |
+| `segments`     | Whether to render as `THREE.Line2` or `THREE.LineSegments2`. | `false`       |
+| `dashed`       | Whether the line is dashed.                                  | `false`       |
+| `vertexColors` | Vertex colors.                                               | undefined     |
+
+```html
+<ngts-line [points]="[[0, 0, 0], [1, 1, 1]]" />
+```
+
+## NgtsQuadraticBezierLine
+
+Renders a `THREE.Line2` using `THREE.QuadraticBezierCurve3` for interpolation.
+
+### Object Inputs (NgtsQuadraticBezierLineOptions)
+
+| Property  | Description             | Default Value |
+| --------- | ----------------------- | ------------- |
+| `start`   | (Required) Start point. |               |
+| `end`     | (Required) End point.   |               |
+| `mid`     | Mid point.              |               |
+| `options` | Line options.           | `{}`          |
+
+```html
+<ngts-quadratic-bezier-line [start]="[0, 0, 0]" [end]="[1, 1, 1]" />
+```
+
+## NgtsCubicBezierLine
+
+Renders a `THREE.Line2` using `THREE.CubicBezierCurve3` for interpolation.
+
+### Object Inputs (NgtsCubicBezierLineOptions)
+
+| Property  | Description             | Default Value |
+| --------- | ----------------------- | ------------- |
+| `start`   | (Required) Start point. |               |
+| `end`     | (Required) End point.   |               |
+| `midA`    | (Required) Mid point 1. |               |
+| `midB`    | (Required) Mid point 2. |               |
+| `options` | Line options.           | `{}`          |
+
+```html
+<ngts-cubic-bezier-line [start]="[0, 0, 0]" [end]="[1, 1, 1]" [midA]="[0.5, 0.5, 0.5]" [midB]="[0.5, 0.5, 0.5]" />
+```
+
+## NgtsCatmullRomLine
+
+Renders a `THREE.Line2` using `THREE.CatmullRomCurve3` for interpolation.
+
+### Object Inputs (NgtsCatmullRomLineOptions)
+
+| Property    | Description                                                            | Default Value   |
+| ----------- | ---------------------------------------------------------------------- | --------------- |
+| `points`    | (Required) Array of points.                                            |                 |
+| `closed`    | Whether the curve is closed.                                           | `false`         |
+| `curveType` | Type of curve. Can be `'centripetal'`, `'chordal'`, or `'catmullrom'`. | `'centripetal'` |
+| `tension`   | Tension of the curve.                                                  | `0.5`           |
+| `options`   | Line options.                                                          | `{}`            |
+
+```html
+<ngts-catmull-rom-line [points]="[[0, 0, 0], [1, 1, 1]]" />
+```
+
+## NgtsEdges
+
+Abstracts [THREE.EdgesGeometry](https://threejs.org/docs/#api/en/geometries/EdgesGeometry). It pulls the geometry automatically from its parent, optionally you can ungroup it and give it a `geometry` prop. You can give it children, for instance a custom material. `NgtsEdges` is based on `NgtsLine` and supports all of its options.
+
+### Object Inputs (NgtsEdgesOptions)
+
+| Property    | Description                                                             | Default Value |
+| ----------- | ----------------------------------------------------------------------- | ------------- |
+| `geometry`  | Geometry to use for the edges.                                          | `undefined`   |
+| `threshold` | Display edges only when the angle between two faces exceeds this value. | `15`          |
+
+```html
+<ngt-mesh>
+	<ngt-box-geometry />
+	<ngt-mesh-basic-material />
+	<ngts-edges [options]="{ threshold: 15, scale: 1.1, color: 'white', linewidth: 4 }" />
+</ngt-mesh>
+```
+
+## NgtsPrismGeometry
+
+Abstracts [THREE.ExtrudeGeometry](https://threejs.org/docs/#api/en/geometries/ExtrudeGeometry) to create a prism geometry.
+
+### Object Inputs (NgtsPrismGeometryOptions)
+
+| Property   | Description                  | Default Value |
+| ---------- | ---------------------------- | ------------- |
+| `vertices` | (Required) Array of Vector2. |               |
+
+```html
+<ngt-mesh>
+	<ngts-prism-geometry [vertices]="[[0, 0], [1, 0], [1, 1], [0, 1]]" />
+	<ngt-mesh-basic-material />
+</ngt-mesh>
+```

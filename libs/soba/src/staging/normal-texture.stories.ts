@@ -8,6 +8,7 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 interface SuzyGLTF extends GLTF {
 	nodes: { Suzanne: Mesh };
+	materials: {};
 }
 
 @Component({

@@ -376,7 +376,7 @@ export class NgtRenderer implements Renderer2 {
 
 	setProperty(el: NgtRendererNode, name: string, value: any): void {
 		const rS = el.__ngt_renderer__;
-		if (rS[NgtRendererClassId.destroyed]) return;
+		if (!rS || rS[NgtRendererClassId.destroyed]) return;
 
 		if (rS[NgtRendererClassId.type] === 'three') {
 			if (name === SPECIAL_PROPERTIES.PARAMETERS) {
