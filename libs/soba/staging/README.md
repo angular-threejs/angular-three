@@ -23,6 +23,7 @@ npm install @pmndrs/vanilla @monogrid/gainmap-js
 - [NormalTexture](#normaltexture)
 - [NgtsRenderTexture](#ngtsrendertexture)
 - [NgtsBounds](#ngtsbounds)
+- [NgtsStage](#ngtsstage)
 
 ## NgtsAccumulativeShadows
 
@@ -416,4 +417,45 @@ bounds.moveTo(new Vector3(0, 0, 0));
 bounds.lookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
 bounds.clip();
 bounds.fit();
+```
+
+## NgtsStage
+
+A component that creates a "stage" with proper studio lighting, 0/0/0 top-centred, model-shadows, ground-shadows and optional zoom to fit. Make sure to set `makeDefault` on your controls when `adjustCamera` is true!
+
+### Object Inputs (NgtsStageOptions)
+
+| Property       | Description                                                                                     | Default Value |
+| -------------- | ----------------------------------------------------------------------------------------------- | ------------- |
+| `preset`       | Lighting setup.                                                                                 | 'rembrandt'   |
+| `shadows`      | Controls the ground shadows. Can be `'contact'`, `'accumulative'`, or `NgtsStageShadowsOptions` | 'contact'     |
+| `adjustCamera` | Optionally wraps and centers the models using <Bounds>, can also be a margin.                   | true          |
+| `environment`  | The default environment.                                                                        | 'city'        |
+| `intensity`    | The lighting intensity.                                                                         | 0.5           |
+| `center`       | To adjust centering.                                                                            |               |
+
+#### NgtsStageShadowsOptions
+
+| Property     | Description                                                  | Default Value |
+| ------------ | ------------------------------------------------------------ | ------------- |
+| `type`       | The type of shadows. Can be `'contact'` or `'accumulative'`. | 'contact'     |
+| `offset`     | The shadow plane offset.                                     | 0             |
+| `bias`       | The shadow bias.                                             | -0.0001       |
+| `normalBias` | The shadow normal bias.                                      | 0             |
+| `size`       | The shadow map size.                                         | 1024          |
+
+By default it gives you contact shadows and auto-centering.
+
+```html
+<ngts-stage [options]="{  shadows: 'contact', adjustCamera: true, environment: 'city', intensity: 0.5 }">
+	<ngt-mesh />
+</ngts-stage>
+```
+
+For a little more realistic results enable accumulative shadows, which requires that the canvas, and models, can handle shadows.
+
+```html
+<ngts-stage [options]="{shadows: 'accumulative'}">
+	<ngt-mesh />
+</ngts-stage>
 ```
