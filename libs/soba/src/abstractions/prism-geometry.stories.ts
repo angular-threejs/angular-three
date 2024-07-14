@@ -1,6 +1,7 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
@@ -11,7 +12,7 @@ import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtsPrismGeometry, NgtsPrismGeometryOptions } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
-import { NgtsEnvironment } from 'angular-three-soba/staging';
+import { NgtsContactShadows, NgtsEnvironment } from 'angular-three-soba/staging';
 import { Group } from 'three';
 import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
@@ -49,9 +50,7 @@ const pentagon = [
 			<ngt-group [rotation]="[-Math.PI / 2, 0, 0]" [position]="[-0.275, 0, -0.1]">
 				<ngt-mesh [rotation]="[0, 0, Math.PI]">
 					<ngts-prism-geometry [vertices]="leftTriangle" [options]="options()" />
-					<ngts-mesh-transmission-material
-						[options]="{ color: color(), envMapIntensity: 2, roughness: 0.1, thickness: 1, transmission: 1 }"
-					/>
+					<ngts-mesh-transmission-material [options]="transmissionOptions()" />
 				</ngt-mesh>
 			</ngt-group>
 
@@ -59,9 +58,7 @@ const pentagon = [
 			<ngt-group [rotation]="[-Math.PI / 2, 0, 0]" [position]="[0.275, 0, -0.1]">
 				<ngt-mesh [rotation]="[0, 0, Math.PI]">
 					<ngts-prism-geometry [vertices]="rightTriangle" [options]="options()" />
-					<ngts-mesh-transmission-material
-						[options]="{ color: color(), envMapIntensity: 2, roughness: 0.1, thickness: 1, transmission: 1 }"
-					/>
+					<ngts-mesh-transmission-material [options]="transmissionOptions()" />
 				</ngt-mesh>
 			</ngt-group>
 
@@ -69,9 +66,7 @@ const pentagon = [
 			<ngt-group [rotation]="[-Math.PI / 2, 0, 0]" [position]="[0, 0, 0.05]">
 				<ngt-mesh [rotation]="[0, 0, Math.PI]">
 					<ngts-prism-geometry [vertices]="center" [options]="options()" />
-					<ngts-mesh-transmission-material
-						[options]="{ color: color(), envMapIntensity: 2, roughness: 0.1, thickness: 1, transmission: 1 }"
-					/>
+					<ngts-mesh-transmission-material [options]="transmissionOptions()" />
 				</ngt-mesh>
 			</ngt-group>
 
@@ -79,30 +74,44 @@ const pentagon = [
 			<ngt-group [rotation]="[-Math.PI / 2, 0, 0]" [position]="[0, 0, 0.35]">
 				<ngt-mesh [rotation]="[0, 0, Math.PI]">
 					<ngts-prism-geometry [vertices]="pentagon" [options]="options()" />
-					<ngts-mesh-transmission-material
-						[options]="{ color: color(), envMapIntensity: 2, roughness: 0.1, thickness: 1, transmission: 1 }"
-					/>
+					<ngts-mesh-transmission-material [options]="transmissionOptions()" />
 				</ngt-mesh>
 			</ngt-group>
 		</ngt-group>
 
 		<ngts-environment [options]="{ preset: 'city' }" />
+		<ngts-contact-shadows [options]="{ position: [0, -0.5, 0] }" />
 	`,
-	imports: [NgtsPrismGeometry, NgtArgs, NgtsEnvironment, NgtsMeshTransmissionMaterial, NgtsOrbitControls],
+	imports: [
+		NgtsPrismGeometry,
+		NgtArgs,
+		NgtsEnvironment,
+		NgtsMeshTransmissionMaterial,
+		NgtsOrbitControls,
+		NgtsContactShadows,
+	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DefaultPrismGeometryStory {
+	protected readonly Math = Math;
+	protected readonly leftTriangle = leftTriangle;
+	protected readonly rightTriangle = rightTriangle;
+	protected readonly center = center;
+	protected readonly pentagon = pentagon;
+
 	options = input({} as NgtsPrismGeometryOptions);
 	color = input('#de194a');
-	protected readonly Math = Math;
-
-	leftTriangle = leftTriangle;
-	rightTriangle = rightTriangle;
-	center = center;
-	pentagon = pentagon;
 
 	group = viewChild.required<ElementRef<Group>>('group');
+
+	transmissionOptions = computed(() => ({
+		color: this.color(),
+		envMapIntensity: 2,
+		roughness: 0.1,
+		thickness: 1,
+		transmission: 1,
+	}));
 
 	constructor() {
 		injectBeforeRender(({ delta }) => {

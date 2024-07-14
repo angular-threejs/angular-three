@@ -16,15 +16,35 @@ export const enum NgtRendererClassId {
 	injectorFactory,
 }
 
+// export function kebabToPascal(str: string): string {
+// 	// split the string at each hyphen
+// 	const parts = str.split('-');
+//
+// 	// map over the parts, capitalizing the first letter of each part
+// 	const pascalParts = parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1));
+//
+// 	// join the parts together to create the final PascalCase string
+// 	return pascalParts.join('');
+// }
+
 export function kebabToPascal(str: string): string {
-	// split the string at each hyphen
-	const parts = str.split('-');
+	if (!str) return str; // Handle empty input
 
-	// map over the parts, capitalizing the first letter of each part
-	const pascalParts = parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1));
+	let pascalStr = '';
+	let capitalizeNext = true; // Flag to track capitalization
 
-	// join the parts together to create the final PascalCase string
-	return pascalParts.join('');
+	for (let i = 0; i < str.length; i++) {
+		const char = str[i];
+		if (char === '-') {
+			capitalizeNext = true;
+			continue;
+		}
+
+		pascalStr += capitalizeNext ? char.toUpperCase() : char;
+		capitalizeNext = false;
+	}
+
+	return pascalStr;
 }
 
 export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode) {
