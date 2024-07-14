@@ -1,6 +1,7 @@
 export * from './lib/catmull-rom-line';
 export * from './lib/cubic-bezier-line';
 export * from './lib/edges';
+export * from './lib/gradient-texture';
 export * from './lib/grid';
 export * from './lib/line';
 export * from './lib/prism-geometry';

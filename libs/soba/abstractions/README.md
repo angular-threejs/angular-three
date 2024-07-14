@@ -231,3 +231,25 @@ Abstracts [THREE.ExtrudeGeometry](https://threejs.org/docs/#api/en/geometries/Ex
 	<ngt-mesh-basic-material />
 </ngt-mesh>
 ```
+
+## NgtsGradientTexture
+
+A declarative `THREE.Texture` which attaches to "map" by default. You can use this to create gradient backgrounds.
+
+### Object Inputs (NgtsGradientTextureOptions)
+
+| Property            | Description                                             | Default Value |
+| ------------------- | ------------------------------------------------------- | ------------- |
+| `stops`             | Gradient stops array.                                   | required      |
+| `colors`            | Gradient colors array. Must be the same size as `stops` | required      |
+| `type`              | Gradient type. Can be `'linear'` or `'radial'`.         | `'linear'`    |
+| `size`              | Texture size.                                           | `1024`        |
+| `width`             | Texture width.                                          | `16`          |
+| `innerCircleRadius` | Inner circle radius for radial gradients.               | `0`           |
+| `outerCircleRadius` | Outer circle radius for radial gradients.               | `auto`        |
+
+```html
+<ngt-mesh-basic-material>
+	<ngts-gradient-texture [stops]="[0, 0.5, 1]" [colors]="['red', 'green', 'blue']" />
+</ngt-mesh-basic-material>
+```
