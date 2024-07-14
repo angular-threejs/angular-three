@@ -368,3 +368,36 @@ Required `NgtsRenderTextureContent`
 	</ngt-mesh-basic-material>
 </ngt-mesh>
 ```
+
+## NgtsBounds
+
+Calculates a boundary box and centers the camera accordingly. If you are using camera controls, make sure to pass them the `makeDefault` option. `fit` fits the current view on first render. `clip` sets the cameras near/far planes. `observe` will trigger on window resize. To control the damping animation, use `maxDuration` to set the animation length in seconds, and `interpolateFunc` to define how the animation changes over time (should be an increasing function in [0, 1] interval, `interpolateFunc(0) === 0`, `interpolateFunc(1) === 1`).
+
+### Object Inputs (NgtsBoundsOptions)
+
+| Property          | Description                                  | Default Value |
+| ----------------- | -------------------------------------------- | ------------- |
+| `fit`             | Fits the current view on first render.       | false         |
+| `clip`            | Sets the cameras near/far planes.            | false         |
+| `observe`         | Triggers on window resize.                   | false         |
+| `maxDuration`     | The animation length in seconds.             | 1             |
+| `interpolateFunc` | Defines how the animation changes over time. | default       |
+
+```html
+<ngts-bounds [options]="{ fit: true, clip: true, observe: true, maxDuration: 1,  }">
+	<ngt-mesh />
+</ngts-bounds>
+```
+
+`NgtsBounds` component also acts as a service **for its children**. Inject `NgtsBounds` to refresh the bounds, fit the camera, clip near/far planes, go to camera orientations or focus objects. `refresh(object?: THREE.Object3D | THREE.Box3)` will recalculate bounds, since this can be expensive only call it when you know the view has changed. `reset` centers the view. `moveTo` changes the camera position. `lookAt` changes the camera orientation, with the respect to up-vector, if specified. `clip` sets the cameras near/far planes. `fit` centers the view for non-orthographic cameras (same as reset) or zooms the view for orthographic cameras.
+
+```ts
+const bounds = inject(NgtsBounds);
+
+bounds.refresh();
+bounds.reset();
+bounds.moveTo(new Vector3(0, 0, 0));
+bounds.lookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+bounds.clip();
+bounds.fit();
+```
