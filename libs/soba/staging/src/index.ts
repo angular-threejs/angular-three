@@ -2,6 +2,7 @@ export * from './lib/accumulative-shadows';
 export * from './lib/bb-anchor';
 export * from './lib/bounds';
 export * from './lib/camera-shake';
+export * from './lib/caustics';
 export * from './lib/center';
 export * from './lib/contact-shadows';
 export * from './lib/environment';

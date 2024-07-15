@@ -4,7 +4,6 @@ import {
 	Component,
 	ElementRef,
 	computed,
-	effect,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -31,10 +30,6 @@ class SpinningThing {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		effect(() => {
-			console.log(this.mesh());
-		});
-
 		injectBeforeRender(() => {
 			const { nativeElement } = this.mesh();
 			nativeElement.rotation.x = nativeElement.rotation.y = nativeElement.rotation.z += 0.01;

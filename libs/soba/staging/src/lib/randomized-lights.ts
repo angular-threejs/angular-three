@@ -5,6 +5,7 @@ import {
 	ElementRef,
 	afterNextRender,
 	computed,
+	inject,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -13,7 +14,7 @@ import { getVersion } from 'angular-three-soba/misc';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DirectionalLight, Group, MathUtils, Object3D, OrthographicCamera, Vector2, Vector3 } from 'three';
-import { injectAccumulativeShadowsApi } from './accumulative-shadows';
+import { NgtsAccumulativeShadows } from './accumulative-shadows';
 
 export interface NgtsRandomizedLightsOptions extends Partial<NgtGroup> {
 	/** How many frames it will jiggle the lights, 1.
@@ -65,9 +66,9 @@ const defaultOptions: NgtsRandomizedLightsOptions = {
 		<ngt-group #lights [parameters]="parameters()">
 			@for (i of count(); track $index) {
 				<ngt-directional-light [castShadow]="castShadow()" [intensity]="intensity() / amount()">
-					<ngt-value [rawValue]="bias()" attach="shadow.bias"></ngt-value>
-					<ngt-vector2 *args="[mapSize(), mapSize()]" attach="shadow.mapSize"></ngt-vector2>
-					<ngt-orthographic-camera *args="cameraArgs()" attach="shadow.camera"></ngt-orthographic-camera>
+					<ngt-value [rawValue]="bias()" attach="shadow.bias" />
+					<ngt-vector2 *args="shadowMapSize()" attach="shadow.mapSize" />
+					<ngt-orthographic-camera *args="cameraArgs()" attach="shadow.camera" />
 				</ngt-directional-light>
 			}
 		</ngt-group>
@@ -82,14 +83,15 @@ export class NgtsRandomizedLights {
 
 	lights = viewChild.required<ElementRef<Group>>('lights');
 
-	private autoEffect = injectAutoEffect();
-	private shadowsApi = injectAccumulativeShadowsApi();
+	private accumulativeShadows = inject(NgtsAccumulativeShadows);
 
 	castShadow = pick(this.options, 'castShadow');
 	bias = pick(this.options, 'bias');
-	mapSize = pick(this.options, 'mapSize');
 	intensity = pick(this.options, 'intensity');
 	amount = pick(this.options, 'amount');
+
+	private mapSize = pick(this.options, 'mapSize');
+	shadowMapSize = computed(() => [this.mapSize(), this.mapSize()]);
 
 	private position = pick(this.options, 'position');
 	length = computed(() => new Vector3(...this.position()).length());
@@ -101,19 +103,16 @@ export class NgtsRandomizedLights {
 	private far = pick(this.options, 'far');
 	cameraArgs = computed(() => [-this.size(), this.size(), this.size(), -this.size(), this.near(), this.far()]);
 
-	private updateOptions = pick(this.options, ['ambient', 'radius', 'position']);
-
 	constructor() {
 		extend({ Group, DirectionalLight, OrthographicCamera, Vector2 });
 
+		const autoEffect = injectAutoEffect();
+
 		afterNextRender(() => {
-			this.autoEffect(() => {
+			autoEffect(() => {
 				const lights = this.lights().nativeElement;
-				if (!lights) return;
-				const [shadowsApi] = [this.shadowsApi(), this.updateOptions(), this.length()];
-				if (!shadowsApi) return;
-				shadowsApi.lights.set(lights.uuid, this.update.bind(this));
-				return () => shadowsApi.lights.delete(lights.uuid);
+				this.accumulativeShadows.lightsMap.set(lights.uuid, this.update.bind(this));
+				return () => this.accumulativeShadows.lightsMap.delete(lights.uuid);
 			});
 		});
 	}
@@ -122,7 +121,7 @@ export class NgtsRandomizedLights {
 		let light: Object3D | undefined;
 		const lights = this.lights().nativeElement;
 		if (lights) {
-			const [{ ambient, radius, position }, length] = [this.updateOptions(), this.length()];
+			const [{ ambient, radius, position }, length] = [this.options(), this.length()];
 
 			for (let i = 0; i < lights.children.length; i++) {
 				light = lights.children[i];

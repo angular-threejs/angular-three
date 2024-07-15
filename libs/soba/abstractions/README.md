@@ -253,3 +253,24 @@ A declarative `THREE.Texture` which attaches to "map" by default. You can use th
 	<ngts-gradient-texture [stops]="[0, 0.5, 1]" [colors]="['red', 'green', 'blue']" />
 </ngt-mesh-basic-material>
 ```
+
+## `injectHelper`
+
+A custom inject function to add helpers to existing nodes in the scene. It handles removal of the helper on destroy and auto-updates it by default.
+
+```ts
+class MyCmp {
+	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	helper = injectHelper(this.mesh, () => BoxHelper, { args: ['cyan'] });
+}
+```
+
+### `NgtsHelper`
+
+A declarative way to add helpers to existing nodes in the scene. It handles removal of the helper on destroy and auto-updates it by default.
+
+```html
+<ngt-mesh>
+	<ngts-helper [type]="BoxHelper" [options]="['cyan']" />
+</ngt-mesh>
+```

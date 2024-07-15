@@ -73,7 +73,7 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 			[_transmission]="transmission()"
 			[transmission]="transmissionSampler() ? transmission() : 0"
 			[buffer]="bufferTexture()"
-			[anisotropy]="anisotropicBlurOption()"
+			[anisotropicBlur]="anisotropicBlurOption()"
 			[side]="side()"
 			[thickness]="thickness()"
 		>

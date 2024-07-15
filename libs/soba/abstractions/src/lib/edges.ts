@@ -25,7 +25,9 @@ const defaultOptions: NgtsEdgesOptions = {
 	selector: 'ngts-edges',
 	standalone: true,
 	template: `
-		<ngts-line [points]="tmpPoints" [options]="lineOptions()"></ngts-line>
+		<ngts-line [points]="tmpPoints" [options]="lineOptions()">
+			<ng-content />
+		</ngts-line>
 	`,
 	imports: [NgtsLine],
 	changeDetection: ChangeDetectionStrategy.OnPush,

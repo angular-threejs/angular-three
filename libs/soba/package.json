@@ -51,5 +51,8 @@
 		"tslib": "^2.3.0"
 	},
 	"sideEffects": false,
-	"web-types": "./web-types.json"
+	"web-types": [
+    "../../dist/libs/soba/web-types.json",
+    "./web-types.json"
+  ]
 }
