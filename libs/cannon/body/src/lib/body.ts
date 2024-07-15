@@ -49,7 +49,6 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 		const autoEffect = injectAutoEffect();
 		const debug = inject(NgtcDebug, { optional: true });
 
-		const { add: addToDebug, remove: removeFromDebug } = debug || {};
 		const transform = transformArgs ?? defaultTransformArgs[type];
 		const bodyRef = isSignal(ref) ? ref : signal(ref);
 		const body = computed(() => resolveRef(bodyRef()));
@@ -100,7 +99,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 								prepare(object, props);
 							}
 							physics.api.refs[id] = object;
-							addToDebug?.(id, props, type);
+							debug?.add(id, props, type);
 							setupCollision(physics.api.events, props, id);
 							// @ts-expect-error - if args is undefined, there's default
 							return { ...props, args: transform(props.args) };
@@ -119,7 +118,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 				return () => {
 					uuid.forEach((id) => {
 						delete physics.api.refs[id];
-						removeFromDebug?.(id);
+						debug?.remove(id);
 						delete physics.api.events[id];
 					});
 					currentWorker.removeBodies({ uuid });
