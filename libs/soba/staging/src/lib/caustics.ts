@@ -112,7 +112,7 @@ const defaultOptions: NgtsCausticsOptions = {
 			<ngt-mesh #plane [renderOrder]="2" [rotation]="[-Math.PI / 2, 0, 0]">
 				<ngt-plane-geometry />
 				<ngt-caustics-projection-material
-					[transparent]="false"
+					[transparent]="true"
 					[color]="color()"
 					[causticsTexture]="causticsTarget().texture"
 					[causticsTextureB]="causticsTargetB().texture"

@@ -25,6 +25,9 @@ npm install troika-three-text
 - [NgtsCatmullRomLine](#ngtscatmullromline)
 - [NgtsEdges](#ngtsedges)
 - [NgtsPrismGeometry](#ngtsprismgeometry)
+- [NgtsGradientTexture](#ngtsgradienttexture)
+- [injectHelper](#injecthelper)
+  - [NgtsHelper](#ngtshelper)
 
 ## NgtsGrid
 

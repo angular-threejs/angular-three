@@ -24,6 +24,7 @@ npm install @pmndrs/vanilla @monogrid/gainmap-js
 - [NgtsRenderTexture](#ngtsrendertexture)
 - [NgtsBounds](#ngtsbounds)
 - [NgtsStage](#ngtsstage)
+- [NgtsCaustics](#ngtscaustics)
 
 ## NgtsAccumulativeShadows
 
@@ -458,4 +459,52 @@ For a little more realistic results enable accumulative shadows, which requires 
 <ngts-stage [options]="{shadows: 'accumulative'}">
 	<ngt-mesh />
 </ngts-stage>
+```
+
+## NgtsCaustics
+
+Caustics are swirls of light that appear when light passes through transmissive surfaces. This component uses a raymarching technique to project caustics onto a catcher plane. It is based on [github/N8python/caustics](https://github.com/N8python/caustics).
+
+### Object Inputs (NgtsCausticsOptions)
+
+| Property       | Description                                                     | Default Value |
+| -------------- | --------------------------------------------------------------- | ------------- |
+| `frames`       | How many frames it will render, set it to Infinity for runtime. | 1             |
+| `debug`        | Enables visual cues to help you stage your scene.               | false         |
+| `causticsOnly` | Will display caustics only and skip the models.                 | false         |
+| `backside`     | Will include back faces and enable the backsideIOR prop.        | false         |
+| `ior`          | The IOR refraction index.                                       | 1.1           |
+| `backsideIOR`  | The IOR refraction index for back faces.                        | 1.1           |
+| `worldRadius`  | The texel size.                                                 | 0.3125        |
+| `intensity`    | Intensity of the prjected caustics.                             | 0.05          |
+| `color`        | Caustics color.                                                 | 'white'       |
+| `resolution`   | Buffer resolution.                                              | 2048          |
+| `lightSource`  | Camera position.                                                | [5, 5, 5]     |
+
+It will create a transparent plane that blends the caustics of the objects it receives into your scene. It will only render once and not take resources any longer!
+
+Make sure to use the `debug` flag to help you stage your contents. Like `NgtsContactShadows` and `NgtsAccumulativeShadows` the plane faces Y up.
+
+```html
+<ngts-caustics [options]="{ debug: true }">
+	<ngt-mesh />
+</ngts-caustics>
+```
+
+Sometimes you want to combine caustics for even better visuals, or if you want to emulate multiple lightsources. Use the `causticsOnly` flag in such cases, and it will use the model inside only for calculations.
+
+```html
+<ngts-caustics [options]="{ causticsOnly: true }">
+	<ngt-mesh />
+</ngts-caustics>
+```
+
+The light source can either be defined by prop or by reference. Use the latter if you want to control the light source, for instance in order to move or animate it. Runtime caustics with frames set to `Infinity`, a low resolution, and no backside can be feasible.
+
+```html
+<ngt-object-3D #lightSource [position]="[ 2.5, 5, -2.5 ]" />
+
+<ngts-caustics [options]="{ frames: Infinity, resolution: 256, lightSource }">
+	<ngt-mesh />
+</ngts-caustics>
 ```
