@@ -10,7 +10,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { createApiToken, extend, getLocalState, injectBeforeRender, injectStore, pick } from 'angular-three';
+import { extend, getLocalState, injectBeforeRender, injectStore, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -27,17 +27,6 @@ import { Camera, Group, HalfFloatType, NoToneMapping, Scene, TextureDataType } f
 import { isWebGL2Available } from 'three-stdlib';
 
 extend({ Group });
-
-export interface NgtpEffectComposerApi {
-	composer: EffectComposer;
-	camera: Camera;
-	scene: Scene;
-	normalPass: NormalPass | null;
-	downSamplingPass: DepthDownsamplingPass | null;
-	resolutionScale?: number;
-}
-
-export const [injectEffectComposerApi, provideEffectComposerApi] = createApiToken(() => NgtpEffectComposer);
 
 interface NgtpEffectComposerOptions {
 	enabled: boolean;
@@ -74,20 +63,19 @@ function isConvolution(effect: Effect) {
 			<ng-content />
 		</ngt-group>
 	`,
-	providers: [provideEffectComposerApi()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpEffectComposer {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	injector = inject(Injector);
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	size = this.store.select('size');
-	gl = this.store.select('gl');
-	defaultScene = this.store.select('scene');
-	defaultCamera = this.store.select('camera');
+	private injector = inject(Injector);
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private size = this.store.select('size');
+	private gl = this.store.select('gl');
+	private defaultScene = this.store.select('scene');
+	private defaultCamera = this.store.select('camera');
 
 	depthBuffer = pick(this.options, 'depthBuffer');
 	stencilBuffer = pick(this.options, 'stencilBuffer');
@@ -150,16 +138,6 @@ export class NgtpEffectComposer {
 		}
 
 		return { composer, normalPass, downSamplingPass };
-	});
-
-	api = computed(() => {
-		const [{ composer, normalPass, downSamplingPass }, camera, scene, resolutionScale] = [
-			this.composerData(),
-			this.camera(),
-			this.scene(),
-			this.resolutionScale(),
-		];
-		return { composer, camera, scene, normalPass, downSamplingPass, resolutionScale };
 	});
 
 	constructor() {

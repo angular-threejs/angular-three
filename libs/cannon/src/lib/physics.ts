@@ -28,7 +28,7 @@ import {
 	WorkerFrameMessage,
 	WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { createApiToken, injectBeforeRender, injectStore } from 'angular-three';
+import { injectBeforeRender, injectStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { InstancedMesh, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
@@ -60,8 +60,6 @@ function unique() {
 	const values: unknown[] = [];
 	return (value: unknown) => (values.includes(value) ? false : !!values.push(value));
 }
-
-export const [injectPhysicsApi, providePhysicsApi] = createApiToken(() => NgtcPhysics);
 
 type NgtcCannonEvent = CollideBeginEvent | CollideEndEvent | CollideEvent | RayhitEvent;
 type NgtcCallbackByType<T extends { type: string }> = {
@@ -114,7 +112,6 @@ const defaultOptions: NgtcPhysicsInputs = {
 		<ng-content />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [providePhysicsApi()],
 })
 export class NgtcPhysics {
 	private zone = inject(NgZone);

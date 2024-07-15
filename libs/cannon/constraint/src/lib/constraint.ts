@@ -1,4 +1,14 @@
-import { ElementRef, Injector, Signal, afterNextRender, computed, isSignal, signal, untracked } from '@angular/core';
+import {
+	ElementRef,
+	Injector,
+	Signal,
+	afterNextRender,
+	computed,
+	inject,
+	isSignal,
+	signal,
+	untracked,
+} from '@angular/core';
 import {
 	ConeTwistConstraintOpts,
 	ConstraintTypes,
@@ -8,7 +18,7 @@ import {
 	PointToPointConstraintOpts,
 } from '@pmndrs/cannon-worker-api';
 import { makeId, resolveRef } from 'angular-three';
-import { injectPhysicsApi } from 'angular-three-cannon';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Object3D } from 'three';
@@ -63,14 +73,14 @@ function injectConstraint<
 	{ injector, options = {} as any, disableOnStart = false }: NgtcConstraintOptions<TConstraint> = {},
 ) {
 	return assertInjector(injectConstraint, injector, () => {
-		const physicsApi = injectPhysicsApi({ optional: true });
+		const physics = inject(NgtcPhysics, { optional: true });
 
-		if (!physicsApi) {
+		if (!physics) {
 			throw new Error(`[NGT Cannon] injectConstraint was called outside of <ngtc-physics>`);
 		}
 
 		const autoEffect = injectAutoEffect();
-		const worker = physicsApi.worker;
+		const worker = physics.api.worker;
 
 		const uuid = makeId();
 		const bodyARef = isSignal(bodyA) ? bodyA : signal(bodyA);

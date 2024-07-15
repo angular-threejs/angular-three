@@ -61,25 +61,6 @@ export class SceneGraph {}
 - `stepSize?: number`
 - `tolerance?: number`
 
-## NgtcPhysicsApi
-
-`NgtcPhysicsApi` is an interface that provides access to the internal state and functionality of the `ngtc-physics` component. You can use it to interact with the physics simulation, subscribe to events, and access references to physics bodies.
-
-```typescript
-export class Box {
-	physicsApi = injectPhysicsApi();
-}
-```
-
-The `NgtcPhysicsApi` provides the following properties:
-
-- `bodies`: A dictionary mapping object UUIDs to their corresponding body indices in the physics simulation.
-- `events`: An object for subscribing to physics events (e.g., collide, collideBegin, collideEnd, rayhit).
-- `refs`: An object containing references to the THREE.js objects that are part of the physics simulation.
-- `scaleOverrides`: An object for setting custom scale values for specific objects in the simulation.
-- `subscriptions`: An object for managing event subscriptions.
-- `worker`: A signal representing the Cannon.js worker used for physics calculations.
-
 ## Debug
 
 Read the [debug documentation](./debug/README.md) for more information on how to enable debug mode and view debug information.

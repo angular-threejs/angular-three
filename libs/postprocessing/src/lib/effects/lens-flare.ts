@@ -7,6 +7,7 @@ import {
 	Component,
 	afterNextRender,
 	computed,
+	inject,
 	input,
 } from '@angular/core';
 import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
@@ -15,7 +16,7 @@ import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, Effect } from 'postprocessing';
 import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three';
-import { injectEffectComposerApi } from '../effect-composer';
+import { NgtpEffectComposer } from '../effect-composer';
 
 const LensFlareShader = {
 	fragmentShader: /* glsl */ `
@@ -144,18 +145,18 @@ const defaultOptions: LensFlareOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLensFlare {
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	viewport = this.store.select('viewport');
-	raycaster = this.store.select('raycaster');
-	pointer = this.store.select('pointer');
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private viewport = this.store.select('viewport');
+	private raycaster = this.store.select('raycaster');
+	private pointer = this.store.select('pointer');
 
-	composerApi = injectEffectComposerApi();
+	effectComposer = inject(NgtpEffectComposer);
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	projectedPosition = new Vector3();
-	mouse2d = new Vector2();
+	private projectedPosition = new Vector3();
+	private mouse2d = new Vector2();
 
 	effect = computed(() => {
 		const { position: _, followMouse: __, smoothTime: ___, ...options } = this.options();
@@ -178,10 +179,11 @@ export class NgtpLensFlare {
 			const [effect] = [this.effect()];
 			if (!effect) return;
 
-			const [{ followMouse, position, smoothTime }, pointer, { camera, scene }, raycaster] = [
+			const [{ followMouse, position, smoothTime }, pointer, camera, scene, raycaster] = [
 				this.options(),
 				this.pointer(),
-				this.composerApi(),
+				this.effectComposer.camera(),
+				this.effectComposer.scene(),
 				this.raycaster(),
 			];
 

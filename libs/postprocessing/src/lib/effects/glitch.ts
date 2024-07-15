@@ -32,19 +32,19 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpGlitch {
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	invalidate = this.store.select('invalidate');
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private invalidate = this.store.select('invalidate');
 
 	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });
 
-	active = pick(this.options, 'active');
-	mode = pick(this.options, 'mode');
+	private active = pick(this.options, 'active');
+	private mode = pick(this.options, 'mode');
 
-	delay = vector2(this.options, 'delay');
-	duration = vector2(this.options, 'duration');
-	chromaticAberrationOffset = vector2(this.options, 'chromaticAberrationOffset');
-	strength = vector2(this.options, 'strength');
+	private delay = vector2(this.options, 'delay');
+	private duration = vector2(this.options, 'duration');
+	private chromaticAberrationOffset = vector2(this.options, 'chromaticAberrationOffset');
+	private strength = vector2(this.options, 'strength');
 
 	effect = computed(() => {
 		const [

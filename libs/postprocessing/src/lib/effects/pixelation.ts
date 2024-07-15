@@ -18,7 +18,7 @@ export interface PixelationOptions {
 })
 export class NgtpPixelation {
 	options = input({ granularity: 5 } as PixelationOptions, { transform: mergeInputs({ granularity: 5 }) });
-	granularity = pick(this.options, 'granularity');
+	private granularity = pick(this.options, 'granularity');
 
 	effect = computed(() => new PixelationEffect(this.granularity()));
 }

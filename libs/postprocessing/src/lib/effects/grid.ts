@@ -24,12 +24,12 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGrid {
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	invalidate = this.store.select('invalidate');
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private invalidate = this.store.select('invalidate');
 
 	options = input({} as GridOptions);
-	size = pick(this.options, 'size');
+	private size = pick(this.options, 'size');
 
 	effect = computed(() => {
 		const { size: _, ...options } = this.options();

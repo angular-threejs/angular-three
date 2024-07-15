@@ -53,7 +53,7 @@ export class NgtsGradientTexture {
 	parameters = omit(this.options, ['size', 'width', 'type', 'innerCircleRadius', 'outerCircleRadius']);
 
 	private store = injectStore();
-	private gl = this.store.select('gl');
+	gl = this.store.select('gl');
 	private document = inject(DOCUMENT);
 
 	canvas = computed(() => {

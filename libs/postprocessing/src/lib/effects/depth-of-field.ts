@@ -4,13 +4,14 @@ import {
 	Component,
 	afterNextRender,
 	computed,
+	inject,
 	input,
 } from '@angular/core';
 import { NgtArgs, NgtVector3 } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
 import { DepthPackingStrategies, Texture, Vector3 } from 'three';
-import { injectEffectComposerApi } from '../effect-composer';
+import { NgtpEffectComposer } from '../effect-composer';
 
 type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1]> &
 	Partial<{
@@ -33,15 +34,15 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpDepthOfField {
-	autoEffect = injectAutoEffect();
-	composerApi = injectEffectComposerApi();
+	private autoEffect = injectAutoEffect();
+	private effectComposer = inject(NgtpEffectComposer);
 
 	options = input({} as DOFOptions);
 
-	autoFocus = computed(() => this.options().target != null);
+	private autoFocus = computed(() => this.options().target != null);
 
 	effect = computed(() => {
-		const [{ camera }, options, autoFocus] = [this.composerApi(), this.options(), this.autoFocus()];
+		const [camera, options, autoFocus] = [this.effectComposer.camera(), this.options(), this.autoFocus()];
 
 		const effect = new DepthOfFieldEffect(camera, options);
 

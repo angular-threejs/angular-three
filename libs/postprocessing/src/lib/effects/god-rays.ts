@@ -5,13 +5,14 @@ import {
 	ElementRef,
 	afterNextRender,
 	computed,
+	inject,
 	input,
 } from '@angular/core';
 import { NgtArgs, is } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GodRaysEffect } from 'postprocessing';
 import { Mesh, Points } from 'three';
-import { injectEffectComposerApi } from '../effect-composer';
+import { NgtpEffectComposer } from '../effect-composer';
 
 type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	sun: Mesh | Points | ElementRef<Mesh | Points>;
@@ -28,13 +29,13 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGodRays {
-	autoEffect = injectAutoEffect();
-	composerApi = injectEffectComposerApi();
+	private autoEffect = injectAutoEffect();
+	private effectComposer = inject(NgtpEffectComposer);
 
 	options = input({} as GodRaysOptions);
 
 	effect = computed(() => {
-		const [{ camera }, { sun, ...options }] = [this.composerApi(), this.options()];
+		const [camera, { sun, ...options }] = [this.effectComposer.camera(), this.options()];
 		return new GodRaysEffect(camera, is.ref(sun) ? sun.nativeElement : sun, options);
 	});
 

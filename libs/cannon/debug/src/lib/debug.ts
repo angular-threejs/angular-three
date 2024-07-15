@@ -1,7 +1,7 @@
-import { Directive, afterNextRender, input } from '@angular/core';
+import { Directive, afterNextRender, inject, input } from '@angular/core';
 import { BodyProps, BodyShapeType, propsToBody } from '@pmndrs/cannon-worker-api';
-import { createApiToken, injectBeforeRender, injectStore } from 'angular-three';
-import { injectPhysicsApi } from 'angular-three-cannon';
+import { injectBeforeRender, injectStore } from 'angular-three';
+import { NgtcPhysics } from 'angular-three-cannon';
 import { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -19,8 +19,6 @@ function getMatrix(o: Object3D) {
 	return o.matrix;
 }
 
-export const [injectNgtcDebugApi, provideNgtcDebugApi] = createApiToken(() => NgtcDebug);
-
 export interface NgtcDebugInputs {
 	enabled: boolean;
 	color: string;
@@ -35,10 +33,10 @@ const defaultOptions: NgtcDebugInputs = {
 	impl: CannonDebugger,
 };
 
-@Directive({ selector: 'ngtc-physics[debug]', standalone: true, providers: [provideNgtcDebugApi()] })
+@Directive({ selector: 'ngtc-physics[debug]', standalone: true })
 export class NgtcDebug {
 	private store = injectStore();
-	private physicsApi = injectPhysicsApi();
+	private physics = inject(NgtcPhysics);
 
 	debug = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
@@ -50,18 +48,7 @@ export class NgtcDebug {
 
 	private cannonDebugger!: ReturnType<typeof CannonDebugger>;
 
-	api = {
-		add: (uuid: string, props: BodyProps, type: BodyShapeType) => {
-			const body = propsToBody({ uuid, props, type });
-			this.bodies.push(body);
-			this.bodyMap[uuid] = body;
-		},
-		remove: (uuid: string) => {
-			const debugBodyIndex = this.bodies.indexOf(this.bodyMap[uuid]);
-			if (debugBodyIndex > -1) this.bodies.splice(debugBodyIndex, 1);
-			delete this.bodyMap[uuid];
-		},
-	};
+	api = {};
 
 	constructor() {
 		afterNextRender(() => {
@@ -74,7 +61,7 @@ export class NgtcDebug {
 
 		injectBeforeRender(() => {
 			if (!this.cannonDebugger) return;
-			const refs = this.physicsApi.refs;
+			const refs = this.physics.api.refs;
 			for (const uuid in this.bodyMap) {
 				const ref = refs[uuid];
 				const body = this.bodyMap[uuid];
@@ -92,5 +79,17 @@ export class NgtcDebug {
 				this.cannonDebugger.update();
 			}
 		});
+	}
+
+	add(uuid: string, props: BodyProps, type: BodyShapeType) {
+		const body = propsToBody({ uuid, props, type });
+		this.bodies.push(body);
+		this.bodyMap[uuid] = body;
+	}
+
+	remove(uuid: string) {
+		const debugBodyIndex = this.bodies.indexOf(this.bodyMap[uuid]);
+		if (debugBodyIndex > -1) this.bodies.splice(debugBodyIndex, 1);
+		delete this.bodyMap[uuid];
 	}
 }

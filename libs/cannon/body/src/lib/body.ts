@@ -5,14 +5,15 @@ import {
 	WritableSignal,
 	afterNextRender,
 	computed,
+	inject,
 	isSignal,
 	signal,
 	untracked,
 } from '@angular/core';
 import { BodyShapeType } from '@pmndrs/cannon-worker-api';
 import { resolveRef } from 'angular-three';
-import { injectPhysicsApi } from 'angular-three-cannon';
-import { injectNgtcDebugApi } from 'angular-three-cannon/debug';
+import { NgtcPhysics } from 'angular-three-cannon';
+import { NgtcDebug } from 'angular-three-cannon/debug';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DynamicDrawUsage, InstancedMesh, Object3D } from 'three';
@@ -39,16 +40,16 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 	{ transformArgs, injector }: NgtcBodyOptions<TShape> = {},
 ): Signal<NgtcBodyPublicApi | null> {
 	return assertInjector(injectBody, injector, () => {
-		const physicsApi = injectPhysicsApi({ optional: true });
+		const physics = inject(NgtcPhysics, { optional: true });
 
-		if (!physicsApi) {
+		if (!physics) {
 			throw new Error(`[NGT Cannon] injectBody was called outside of <ngtc-physics>`);
 		}
 
 		const autoEffect = injectAutoEffect();
-		const debugApi = injectNgtcDebugApi({ optional: true });
+		const debug = inject(NgtcDebug, { optional: true });
 
-		const { add: addToDebug, remove: removeFromDebug } = debugApi || {};
+		const { add: addToDebug, remove: removeFromDebug } = debug || {};
 		const transform = transformArgs ?? defaultTransformArgs[type];
 		const bodyRef = isSignal(ref) ? ref : signal(ref);
 		const body = computed(() => resolveRef(bodyRef()));
@@ -56,14 +57,14 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 		const api = computed(() => {
 			const _body = body();
 			if (!_body) return null;
-			const { worker, ...rest } = physicsApi;
+			const { worker, ...rest } = physics.api;
 			if (!worker()) return null;
-			return makeBodyApi(_body, worker(), physicsApi);
+			return makeBodyApi(_body, worker(), physics.api);
 		});
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const currentWorker = physicsApi.worker();
+				const currentWorker = physics.api.worker();
 				if (!currentWorker) return;
 
 				const object = body();
@@ -98,9 +99,9 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 							} else {
 								prepare(object, props);
 							}
-							physicsApi.refs[id] = object;
+							physics.api.refs[id] = object;
 							addToDebug?.(id, props, type);
-							setupCollision(physicsApi.events, props, id);
+							setupCollision(physics.api.events, props, id);
 							// @ts-expect-error - if args is undefined, there's default
 							return { ...props, args: transform(props.args) };
 						}),
@@ -117,9 +118,9 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 
 				return () => {
 					uuid.forEach((id) => {
-						delete physicsApi.refs[id];
+						delete physics.api.refs[id];
 						removeFromDebug?.(id);
-						delete physicsApi.events[id];
+						delete physics.api.events[id];
 					});
 					currentWorker.removeBodies({ uuid });
 				};
