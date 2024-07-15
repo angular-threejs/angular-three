@@ -109,13 +109,9 @@ export class NgtsAccumulativeShadows {
 	private scene = this.store.select('scene');
 	private invalidate = this.store.select('invalidate');
 
-	temporal = pick(this.options, 'temporal');
-	private frames = pick(this.options, 'frames');
-	private blend = pick(this.options, 'blend');
 	private opacity = pick(this.options, 'opacity');
 	private alphaTest = pick(this.options, 'alphaTest');
 	private limit = pick(this.options, 'limit');
-
 	private resolution = pick(this.options, 'resolution');
 
 	private previousPLM: ProgressiveLightMap | undefined;
@@ -133,8 +129,11 @@ export class NgtsAccumulativeShadows {
 	map = computed(() => this.pLM().progressiveLightMap2.texture);
 
 	lightsMap = new Map<string, () => void>();
-	normalizedFrames = computed(() => Math.max(2, this.frames()));
-	normalizedBlend = computed(() => Math.max(2, this.frames() === Infinity ? this.blend() : this.frames()));
+	temporal = computed(() => !!this.options().temporal);
+	frames = computed(() => Math.max(2, this.options().frames));
+	blend = computed(() =>
+		Math.max(2, this.options().frames === Infinity ? this.options().blend : this.options().frames),
+	);
 	count = 0;
 
 	constructor() {
@@ -156,17 +155,12 @@ export class NgtsAccumulativeShadows {
 				// Reset internals, buffers, ...
 				this.reset();
 				// Update lightmap
-				if (!this.temporal() && this.normalizedFrames() !== Infinity) this.update(this.normalizedBlend());
+				if (!this.temporal() && this.frames() !== Infinity) this.update(this.blend());
 			});
 		});
 
 		injectBeforeRender(() => {
-			const [frames, temporal, invalidate, limit] = [
-				this.normalizedFrames(),
-				!!this.temporal(),
-				this.invalidate(),
-				this.limit(),
-			];
+			const [frames, temporal, invalidate, limit] = [this.frames(), !!this.temporal(), this.invalidate(), this.limit()];
 			if ((temporal || frames === Infinity) && this.count < frames && this.count < limit) {
 				invalidate();
 				this.update();
@@ -199,8 +193,8 @@ export class NgtsAccumulativeShadows {
 			material.opacity = this.opacity();
 			material.alphaTest = this.alphaTest();
 		} else {
-			material.opacity = Math.min(this.opacity(), material.opacity + this.opacity() / this.normalizedBlend());
-			material.alphaTest = Math.min(this.alphaTest(), material.alphaTest + this.alphaTest() / this.normalizedBlend());
+			material.opacity = Math.min(this.opacity(), material.opacity + this.opacity() / this.blend());
+			material.alphaTest = Math.min(this.alphaTest(), material.alphaTest + this.alphaTest() / this.blend());
 		}
 
 		// Switch accumulative lights on
@@ -211,7 +205,7 @@ export class NgtsAccumulativeShadows {
 		// Update the lightmap and the accumulative lights
 		for (let i = 0; i < frames; i++) {
 			this.lightsMap.forEach((lightUpdate) => lightUpdate());
-			this.pLM().update(this.camera(), this.normalizedBlend());
+			this.pLM().update(this.camera(), this.blend());
 		}
 		// Switch lights off
 		this.lights().nativeElement.visible = false;
