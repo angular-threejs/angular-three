@@ -52,7 +52,8 @@
 	},
 	"sideEffects": false,
 	"web-types": [
-    "../../dist/libs/soba/web-types.json",
+    "../../dist/libs/core/web-types.json",
+    "./local-web-types.json",
     "./web-types.json"
   ]
 }

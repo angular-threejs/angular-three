@@ -61,10 +61,6 @@ const skipLastNumber = (str) => str.endsWith('0');
 
 export const commonAttributes = [
 	{
-		name: 'ngtCompound',
-		description: 'Annotation that this is a compounded element',
-	},
-	{
 		name: 'attach',
 		description: 'Property to attach to parent. Can be dotted path',
 	},

@@ -6,11 +6,12 @@ This secondary entry point includes a variety of materials for customizing the a
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | `three-custom-shader-material` | Required by `NgtsCustomShaderMaterial`. A custom shader material that can be used to create custom materials. |
 | `@pmndrs/vanilla`              | A list of vanilla THREE.js implementations of various things.                                                 |
+| `three-mesh-bvh`               | Required by `NgtsMeshRefractionMaterial`. A BVH implementation for three.js.                                  |
 
 ```bash
 npm install three-custom-shader-material @pmndrs/vanilla
-# yarn add three-custom-shader-material @pmndrs/vanilla
-# pnpm add three-custom-shader-material @pmndrs/vanilla
+# yarn add three-custom-shader-material @pmndrs/vanilla three-mesh-bvh
+# pnpm add three-custom-shader-material @pmndrs/vanilla three-mesh-bvh
 ```
 
 ## TOC
