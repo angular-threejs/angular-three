@@ -25,6 +25,9 @@ npm install @pmndrs/vanilla @monogrid/gainmap-js
 - [NgtsBounds](#ngtsbounds)
 - [NgtsStage](#ngtsstage)
 - [NgtsCaustics](#ngtscaustics)
+- [NgtsSky](#ngtssky)
+- [NgtsSpotLight](#ngtsspotlight)
+- [NgtsSpotLightShadow](#ngtsspotlightshadow)
 
 ## NgtsAccumulativeShadows
 
@@ -393,118 +396,59 @@ Calculates a boundary box and centers the camera accordingly. If you are using c
 
 ### Object Inputs (NgtsBoundsOptions)
 
-| Property          | Description                                  | Default Value |
-| ----------------- | -------------------------------------------- | ------------- |
-| `fit`             | Fits the current view on first render.       | false         |
-| `clip`            | Sets the cameras near/far planes.            | false         |
-| `observe`         | Triggers on window resize.                   | false         |
-| `maxDuration`     | The animation length in seconds.             | 1             |
-| `interpolateFunc` | Defines how the animation changes over time. | default       |
+| Property      | Description                            | Default Value |
+| ------------- | -------------------------------------- | ------------- |
+| `fit`         | Fits the current view on first render. | false         |
+| `clip`        | Sets the cameras near/far planes.      | false         |
+| `observe`     | Triggers on window resize.             | false         |
+| `maxDuration` | The animation length in seconds.       | 1             |
+
+## NgtsSpotLightShadow
+
+A shadow caster that can help cast shadows of different patterns (textures) onto the scene.
+
+### Object Inputs (NgtsSpotLightShadowOptions)
+
+| Property    | Description                                                 | Default Value |
+| ----------- | ----------------------------------------------------------- | ------------- |
+| `distance`  | Distance between the shadow caster and light.               | 0.4           |
+| `alphaTest` | Sets the alpha value to be used when running an alpha test. | 0.5           |
+| `scale`     | Scale of the shadow caster plane.                           | 1             |
+| `width`     | Width of the shadow map. The higher the more expensive.     | 512           |
+| `height`    | Height of the shadow map. The higher the more expensive.    | 512           |
+| `map`       | Texture - Pattern of the shadow.                            |               |
 
 ```html
-<ngts-bounds [options]="{ fit: true, clip: true, observe: true, maxDuration: 1,  }">
-	<ngt-mesh />
-</ngts-bounds>
+<ngts-spot-light>
+	<ngts-spot-light-shadow
+		[options]="{
+      distance: 0.4,
+      alphaTest: 0.5,
+      scale: 1,
+      width: 512,
+      height: 512,
+    }"
+	/>
+</ngts-spot-light>
 ```
 
-`NgtsBounds` component also acts as a service **for its children**. Inject `NgtsBounds` to refresh the bounds, fit the camera, clip near/far planes, go to camera orientations or focus objects. `refresh(object?: THREE.Object3D | THREE.Box3)` will recalculate bounds, since this can be expensive only call it when you know the view has changed. `reset` centers the view. `moveTo` changes the camera position. `lookAt` changes the camera orientation, with the respect to up-vector, if specified. `clip` sets the cameras near/far planes. `fit` centers the view for non-orthographic cameras (same as reset) or zooms the view for orthographic cameras.
+An optional `shader` input lets you run a custom shader to modify/add effects to your shadow texture. The shader provides the following uniforms and varyings.
 
-```ts
-const bounds = inject(NgtsBounds);
+| Type                | Name         | Notes                                  |
+| ------------------- | ------------ | -------------------------------------- |
+| `varying vec2`      | `vUv`        | UVs of the shadow casting plane        |
+| `uniform sampler2D` | `uShadowMap` | The texture provided to the `map` prop |
+| `uniform float`     | `uTime`      | Current time                           |
 
-bounds.refresh();
-bounds.reset();
-bounds.moveTo(new Vector3(0, 0, 0));
-bounds.lookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-bounds.clip();
-bounds.fit();
+Treat the output of the shader like an alpha map where `1` is opaque and `0` is transparent.
+
+```glsl
+gl_FragColor = vec4(vec3(1.), 1.); // Opaque
+gl_FragColor = vec4(vec3(0.), 1.); // Transparent
 ```
-
-## NgtsStage
-
-A component that creates a "stage" with proper studio lighting, 0/0/0 top-centred, model-shadows, ground-shadows and optional zoom to fit. Make sure to set `makeDefault` on your controls when `adjustCamera` is true!
-
-### Object Inputs (NgtsStageOptions)
-
-| Property       | Description                                                                                     | Default Value |
-| -------------- | ----------------------------------------------------------------------------------------------- | ------------- |
-| `preset`       | Lighting setup.                                                                                 | 'rembrandt'   |
-| `shadows`      | Controls the ground shadows. Can be `'contact'`, `'accumulative'`, or `NgtsStageShadowsOptions` | 'contact'     |
-| `adjustCamera` | Optionally wraps and centers the models using <Bounds>, can also be a margin.                   | true          |
-| `environment`  | The default environment.                                                                        | 'city'        |
-| `intensity`    | The lighting intensity.                                                                         | 0.5           |
-| `center`       | To adjust centering.                                                                            |               |
-
-#### NgtsStageShadowsOptions
-
-| Property     | Description                                                  | Default Value |
-| ------------ | ------------------------------------------------------------ | ------------- |
-| `type`       | The type of shadows. Can be `'contact'` or `'accumulative'`. | 'contact'     |
-| `offset`     | The shadow plane offset.                                     | 0             |
-| `bias`       | The shadow bias.                                             | -0.0001       |
-| `normalBias` | The shadow normal bias.                                      | 0             |
-| `size`       | The shadow map size.                                         | 1024          |
-
-By default it gives you contact shadows and auto-centering.
 
 ```html
-<ngts-stage [options]="{  shadows: 'contact', adjustCamera: true, environment: 'city', intensity: 0.5 }">
-	<ngt-mesh />
-</ngts-stage>
-```
-
-For a little more realistic results enable accumulative shadows, which requires that the canvas, and models, can handle shadows.
-
-```html
-<ngts-stage [options]="{shadows: 'accumulative'}">
-	<ngt-mesh />
-</ngts-stage>
-```
-
-## NgtsCaustics
-
-Caustics are swirls of light that appear when light passes through transmissive surfaces. This component uses a raymarching technique to project caustics onto a catcher plane. It is based on [github/N8python/caustics](https://github.com/N8python/caustics).
-
-### Object Inputs (NgtsCausticsOptions)
-
-| Property       | Description                                                     | Default Value |
-| -------------- | --------------------------------------------------------------- | ------------- |
-| `frames`       | How many frames it will render, set it to Infinity for runtime. | 1             |
-| `debug`        | Enables visual cues to help you stage your scene.               | false         |
-| `causticsOnly` | Will display caustics only and skip the models.                 | false         |
-| `backside`     | Will include back faces and enable the backsideIOR prop.        | false         |
-| `ior`          | The IOR refraction index.                                       | 1.1           |
-| `backsideIOR`  | The IOR refraction index for back faces.                        | 1.1           |
-| `worldRadius`  | The texel size.                                                 | 0.3125        |
-| `intensity`    | Intensity of the prjected caustics.                             | 0.05          |
-| `color`        | Caustics color.                                                 | 'white'       |
-| `resolution`   | Buffer resolution.                                              | 2048          |
-| `lightSource`  | Camera position.                                                | [5, 5, 5]     |
-
-It will create a transparent plane that blends the caustics of the objects it receives into your scene. It will only render once and not take resources any longer!
-
-Make sure to use the `debug` flag to help you stage your contents. Like `NgtsContactShadows` and `NgtsAccumulativeShadows` the plane faces Y up.
-
-```html
-<ngts-caustics [options]="{ debug: true }">
-	<ngt-mesh />
-</ngts-caustics>
-```
-
-Sometimes you want to combine caustics for even better visuals, or if you want to emulate multiple lightsources. Use the `causticsOnly` flag in such cases, and it will use the model inside only for calculations.
-
-```html
-<ngts-caustics [options]="{ causticsOnly: true }">
-	<ngt-mesh />
-</ngts-caustics>
-```
-
-The light source can either be defined by prop or by reference. Use the latter if you want to control the light source, for instance in order to move or animate it. Runtime caustics with frames set to `Infinity`, a low resolution, and no backside can be feasible.
-
-```html
-<ngt-object-3D #lightSource [position]="[ 2.5, 5, -2.5 ]" />
-
-<ngts-caustics [options]="{ frames: Infinity, resolution: 256, lightSource }">
-	<ngt-mesh />
-</ngts-caustics>
+<ngts-spot-light>
+	<ngts-spot-light-shadow [shader]="customShader" [options]="shadowOptions" />
+</ngts-spot-light>
 ```

@@ -1,8 +1,8 @@
 import { computed, Injector } from '@angular/core';
 import { injectBeforeRender, injectStore, pick } from 'angular-three';
-import { injectFBO } from 'angular-three-soba/misc';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { DepthFormat, DepthTexture, UnsignedShortType } from 'three';
+import { injectFBO } from './fbo';
 
 export function injectDepthBuffer(
 	params: () => { size?: number; frames?: number } = () => ({}),

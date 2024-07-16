@@ -8,6 +8,7 @@ This secondary entry point includes miscellaneous utilities and components for a
 - [injectFBO](#injectfbo)
 - [NgtsFBO](#ngtsfbo)
 - [NgtsBakeShadows](#ngtsbakeshadows)
+- [injectDepthBuffer](#injectdepthbuffer)
 
 ## `injectAnimations`
 
@@ -85,4 +86,19 @@ A directive that bakes shadows in your scene. It sets `gl.shadowMap.autoUpdate` 
 
 ```html
 <ngts-bake-shadows />
+```
+
+## injectDepthBuffer
+
+Renders the scene into a depth-buffer. Often effects depend on it and this allows you to render a single buffer and share it, which minimizes the performance impact. It returns the buffer's `depthTexture`.
+
+Since this is a rather expensive effect you can limit the amount of frames it renders when your objects are static. For instance making it render only once by setting `frames: 1`.
+
+```ts
+export class MyCmp {
+	depthBuffer = injectDepthBuffer(() => ({
+		size: 256, // The size of the depth buffer
+		frames: Infinity, // The amount of frames to render
+	}));
+}
 ```
