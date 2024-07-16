@@ -266,7 +266,7 @@ export class NgtsSpotLightShadowShader {
 		return new FullScreenQuad(
 			new ShaderMaterial({
 				uniforms: this.uniforms,
-				vertexShader: /* glsl */ `
+				vertexShader: /* language=glsl glsl */ `
           varying vec2 vUv;
 
           void main() {

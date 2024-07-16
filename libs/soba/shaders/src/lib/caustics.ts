@@ -126,13 +126,13 @@ export const CausticsMaterial = shaderMaterial(
 		size: 10,
 		intensity: 0.5,
 	},
-	/* glsl */ `
+	/* language=glsl glsl */ `
   varying vec2 vUv;
   void main() {
       vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }`,
-	/* glsl */ `
+	/* language=glsl glsl */ `
   uniform mat4 cameraMatrixWorld;
   uniform mat4 cameraProjectionMatrixInv;
   uniform vec3 lightDir;

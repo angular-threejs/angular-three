@@ -19,7 +19,7 @@ import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
 const LensFlareShader = {
-	fragmentShader: /* glsl */ `
+	fragmentShader: /* language=glsl glsl */ `
 
   uniform float iTime;
   uniform vec2 lensPosition;

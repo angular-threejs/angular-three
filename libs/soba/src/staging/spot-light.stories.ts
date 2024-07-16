@@ -34,13 +34,7 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 		<ngts-spot-light [options]="options()">
 			<ngts-spot-light-shadow
 				[shader]="shader()"
-				[options]="{
-					scale: 4,
-					distance: 0.4,
-					width: 2048,
-					height: 2048,
-					map: leafTexture(),
-				}"
+				[options]="{ scale: 4, distance: 0.4, width: 2048, height: 2048, map: leafTexture() }"
 			/>
 		</ngts-spot-light>
 	`,
@@ -70,23 +64,24 @@ class SpotLightShadowStory {
 			},
 		},
 	);
+
 	leafTexture = injectTexture(() => './textures/other/leaves.jpg');
 	shader = computed(() => {
 		if (!this.wind()) return undefined;
-		return /* glsl */ `
-            varying vec2 vUv;
-            uniform sampler2D uShadowMap;
-            uniform float uTime;
-            void main() {
-              // material.repeat.set(2.5) - Since repeat is a shader feature not texture
-              // we need to implement it manually
-              vec2 uv = mod(vUv, 0.4) * 2.5;
-              // Fake wind distortion
-              uv.x += sin(uv.y * 10.0 + uTime * 0.5) * 0.02;
-              uv.y += sin(uv.x * 10.0 + uTime * 0.5) * 0.02;
-              vec3 color = texture2D(uShadowMap, uv).xyz;
-              gl_FragColor = vec4(color, 1.);
-            }
+		return /* language=glsl glsl */ `
+      varying vec2 vUv;
+      uniform sampler2D uShadowMap;
+      uniform float uTime;
+      void main() {
+        // material.repeat.set(2.5) - Since repeat is a shader feature not texture
+        // we need to implement it manually
+        vec2 uv = mod(vUv, 0.4) * 2.5;
+        // Fake wind distortion
+        uv.x += sin(uv.y * 10.0 + uTime * 0.5) * 0.02;
+        uv.y += sin(uv.x * 10.0 + uTime * 0.5) * 0.02;
+        vec3 color = texture2D(uShadowMap, uv).xyz;
+        gl_FragColor = vec4(color, 1.);
+      }
     `;
 	});
 }

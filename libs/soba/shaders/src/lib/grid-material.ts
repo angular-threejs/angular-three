@@ -46,7 +46,7 @@ export const GridMaterial = shaderMaterial(
 		worldCamProjPosition: new Vector3(),
 		worldPlanePosition: new Vector3(),
 	},
-	/* glsl */ `
+	/* language=glsl glsl */ `
     varying vec3 localPosition;
     varying vec4 worldPosition;
 
@@ -69,7 +69,7 @@ export const GridMaterial = shaderMaterial(
       gl_Position = projectionMatrix * viewMatrix * worldPosition;
     }
   `,
-	/* glsl */ `
+	/* language=glsl glsl */ `
     varying vec3 localPosition;
     varying vec4 worldPosition;
 

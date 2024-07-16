@@ -8,7 +8,7 @@ import { PointsMaterial } from 'three';
 import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 const shader = {
-	vertex: /* glsl */ `
+	vertex: /* language=glsl glsl */ `
     uniform float uTime;
     varying float vVisibility;
     varying vec3 vViewNormal;
@@ -28,7 +28,7 @@ const shader = {
       csm_PointSize += ((1. - visibility) * 0.05);
     }
     `,
-	fragment: /* glsl */ `
+	fragment: /* language=glsl glsl */ `
     varying float vVisibility;
     varying vec3 vViewNormal;
 
