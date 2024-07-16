@@ -11,7 +11,6 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { BlurPass, MeshReflectorMaterial } from '@pmndrs/vanilla';
 import {
 	applyProps,
 	getLocalState,
@@ -23,6 +22,7 @@ import {
 	omit,
 	pick,
 } from 'angular-three';
+import { BlurPass, MeshReflectorMaterial } from 'angular-three-soba/vanilla-exports';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {

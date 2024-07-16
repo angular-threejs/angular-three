@@ -11,7 +11,7 @@ import {
 import { extend, getLocalState, injectBeforeRender, NgtGroup, omit, pick, resolveRef } from 'angular-three';
 import { injectHelper, NgtsEdges } from 'angular-three-soba/abstractions';
 import { injectFBO } from 'angular-three-soba/misc';
-import { CausticsProjectionMaterial, createCausticsUpdate } from 'angular-three-soba/shaders';
+import { CausticsProjectionMaterial, createCausticsUpdate } from 'angular-three-soba/vanilla-exports';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {

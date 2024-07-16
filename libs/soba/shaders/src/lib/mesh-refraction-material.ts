@@ -1,5 +1,5 @@
-import { shaderMaterial } from '@pmndrs/vanilla';
 import { getVersion } from 'angular-three-soba/misc';
+import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import * as THREE from 'three';
 import { MeshBVHUniformStruct, shaderIntersectFunction, shaderStructs } from 'three-mesh-bvh';
 
@@ -23,7 +23,7 @@ export const MeshRefractionMaterial = shaderMaterial(
 		viewMatrixInverse: new THREE.Matrix4(),
 		projectionMatrixInverse: new THREE.Matrix4(),
 	},
-	/*glsl*/ `
+	/* language=glsl glsl */ `
   uniform mat4 viewMatrixInverse;
 
   varying vec3 vWorldPosition;
@@ -52,7 +52,7 @@ export const MeshRefractionMaterial = shaderMaterial(
     vNormal = normalize((viewMatrixInverse * vec4(normalMatrix * transformedNormal.xyz, 0.0)).xyz);
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * transformedPosition;
   }`,
-	/*glsl*/ `
+	/* language=glsl glsl */ `
   #define ENVMAP_TYPE_CUBE_UV
   precision highp isampler2D;
   precision highp usampler2D;

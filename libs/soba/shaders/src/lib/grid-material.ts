@@ -1,6 +1,6 @@
-import { shaderMaterial } from '@pmndrs/vanilla';
 import { NgtMaterial } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
+import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import { Color, ColorRepresentation, Side, Vector3 } from 'three';
 
 export interface GridMaterialOptions {

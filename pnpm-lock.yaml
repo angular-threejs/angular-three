@@ -66,8 +66,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(three@0.166.1)
       '@pmndrs/vanilla':
-        specifier: ^1.16.0
-        version: 1.18.0(three@0.166.1)
+        specifier: ^1.19.0
+        version: 1.19.0(three@0.166.1)
       '@swc/helpers':
         specifier: 0.5.11
         version: 0.5.11
@@ -3199,8 +3199,8 @@ packages:
     peerDependencies:
       three: '>=0.139'
 
-  '@pmndrs/vanilla@1.18.0':
-    resolution: {integrity: sha512-nv5KDVzWiBpnVqaUQ+vKIhtrZCgNHpJHH9N5wLpIz4r7IpqH5wtI1itWhsTTNAm+EUxjiv6+54QzXcbkIKqjGg==}
+  '@pmndrs/vanilla@1.19.0':
+    resolution: {integrity: sha512-UA4uZQRmFPQXLQN+BOj2WHOq+tZ/P/dwhy/85HwcejZ6KthUhQHCzoe7pcM5nLh7s4Z56J0Sey/vA9GsyMjjSA==}
     peerDependencies:
       three: '>=0.137'
 
@@ -16836,7 +16836,7 @@ snapshots:
     dependencies:
       three: 0.166.1
 
-  '@pmndrs/vanilla@1.18.0(three@0.166.1)':
+  '@pmndrs/vanilla@1.19.0(three@0.166.1)':
     dependencies:
       glsl-noise: 0.0.0
       three: 0.166.1

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { injectBeforeRender, NgtArgs, omit } from 'angular-three';
-import { MeshWobbleMaterial, MeshWobbleMaterialOptions } from 'angular-three-soba/shaders';
+import { MeshWobbleMaterial, MeshWobbleMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
-export interface NgtsMeshWobbleMaterialOptions extends MeshWobbleMaterialOptions {
+export interface NgtsMeshWobbleMaterialOptions extends MeshWobbleMaterialParameters {
 	speed: number;
 }
 
