@@ -12,4 +12,5 @@ export * from './lib/matcap-texture';
 export * from './lib/normal-texture';
 export * from './lib/randomized-lights';
 export * from './lib/render-texture';
+export * from './lib/sky';
 export * from './lib/stage';
