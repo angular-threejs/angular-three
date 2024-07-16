@@ -38,5 +38,9 @@
 	"dependencies": {
 		"tslib": "^2.3.0"
 	},
-	"sideEffects": false
+	"sideEffects": false,
+  "web-types": [
+    "../../node_modules/angular-three/web-types.json",
+    "node_modules/angular-three/web-types.json"
+  ]
 }

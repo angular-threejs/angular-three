@@ -1,4 +1,4 @@
-import { NgtMeshStandardMaterial } from 'angular-three';
+import { NgtMaterial, NgtMeshStandardMaterial } from 'angular-three';
 import {
 	IUniform,
 	MeshStandardMaterial,
@@ -59,11 +59,14 @@ export class MeshWobbleMaterial extends MeshStandardMaterial {
 	}
 }
 
+export type NgtMeshWobbleMaterial = NgtMaterial<MeshWobbleMaterial, [MeshWobbleMaterialOptions]>;
+
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
 		 * @extends ngt-mesh-standard-material
+		 * @options MeshWobbleMaterialOptions
 		 */
-		'ngt-mesh-wobble-material': MeshWobbleMaterialOptions & NgtMeshStandardMaterial;
+		'ngt-mesh-wobble-material': NgtMeshWobbleMaterial;
 	}
 }

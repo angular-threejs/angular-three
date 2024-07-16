@@ -1,5 +1,4 @@
 import { shaderMaterial } from '@pmndrs/vanilla';
-import { NgtShaderMaterial } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { MeshBVHUniformStruct, shaderIntersectFunction, shaderStructs } from 'three-mesh-bvh';
@@ -168,12 +167,3 @@ export const MeshRefractionMaterial = shaderMaterial(
     #include <${getVersion() >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
   }`,
 );
-
-declare global {
-	interface HTMLElementTagNameMap {
-		/**
-		 * @extends ngt-shader-material
-		 */
-		'ngt-mesh-refraction-material': NgtShaderMaterial;
-	}
-}

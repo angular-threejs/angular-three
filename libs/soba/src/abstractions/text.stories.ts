@@ -57,10 +57,10 @@ class TextCustomMaterialContainer {
 		maxWidth: 200,
 		lineHeight: 1,
 		letterSpacing: 0.02,
-		textAlign: 'left',
+		textAlign: 'left' as const,
 		font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
-		anchorX: 'center',
-		anchorY: 'middle',
+		anchorX: 'center' as const,
+		anchorY: 'middle' as const,
 	};
 
 	textRef = viewChild.required(NgtsText);

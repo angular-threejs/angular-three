@@ -52,8 +52,8 @@
 	},
 	"sideEffects": false,
 	"web-types": [
-    "../../dist/libs/core/web-types.json",
-    "./local-web-types.json",
+    "../../node_modules/angular-three/web-types.json",
+    "../../node_modules/angular-three-soba/web-types.json",
     "./web-types.json"
   ]
 }

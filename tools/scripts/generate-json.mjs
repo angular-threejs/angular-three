@@ -5,11 +5,9 @@ const logger = createLog();
 
 const { metadataJson, webTypesJson, write } = createBareJsons();
 
-const { typeChecker, sourceFile, typeToTypeNode, typeToString, processIntersectionTypeNode, processTypeMembers } =
-	createProgram(['libs/core/src/lib/three-types.ts']);
-
-/** @type {Map<string, { typeDeclaration: ts.TypeAliasDeclaration, type: ts.Type, typeNode: ts.TypeNode, typeString: string}>} */
-const typeDeclarationMap = new Map();
+const { sourceFile, typesMap, processIntersectionTypeNode, processTypeMembers } = createProgram([
+	'libs/core/src/lib/three-types.ts',
+]);
 
 const THREE_MEMBERS_TO_SKIP = ['ngt-primitive'];
 const THREE_ELEMENTS_NAME = 'ThreeElements';
@@ -19,7 +17,7 @@ const THREE_OBJECT_EVENTS_MAP_NAME = 'NgtObject3DEventsMap';
  * @param {{name: string, attributes: any[]}} metadata
  */
 function processObject3DEvents(metadata) {
-	const object3DEventsMapType = typeDeclarationMap.get(THREE_OBJECT_EVENTS_MAP_NAME).type;
+	const object3DEventsMapType = typesMap[THREE_OBJECT_EVENTS_MAP_NAME].type;
 	for (const member of object3DEventsMapType.properties) {
 		metadata.attributes.push({
 			name: `(${member.name})`,
@@ -43,9 +41,8 @@ ts.forEachChild(sourceFile, (node) => {
 			/** @type {ts.TypeReferenceNode} */
 			const threeMemberType = threeMember.type;
 			const threeMemberTypeName = threeMemberType.typeName.text;
-			const cachedType = typeDeclarationMap.get(threeMemberTypeName);
-			// delete parent from typeDeclaration
-			delete cachedType.typeDeclaration.parent;
+			const cachedType = typesMap[threeMemberTypeName];
+
 			if (!THREE_MEMBERS_TO_SKIP.includes(threeMemberName)) {
 				const threeMemberTypeNode = cachedType.typeNode;
 				if (threeMemberTypeNode) {
@@ -58,6 +55,9 @@ ts.forEachChild(sourceFile, (node) => {
 						processTypeMembers(metadataAtMember, threeMemberTypeNode.members);
 					}
 				} else {
+					if (cachedType.typeString.includes(THREE_OBJECT_EVENTS_MAP_NAME)) {
+						processObject3DEvents(metadataAtMember);
+					}
 					processTypeMembers(metadataAtMember, cachedType.type.properties);
 				}
 			}
@@ -68,20 +68,6 @@ ts.forEachChild(sourceFile, (node) => {
 			});
 			webTypesJson.contributions.html.elements.push(metadataAtMember);
 		}
-	}
-
-	if (ts.isTypeAliasDeclaration(node)) {
-		const typeName = node.name.escapedText;
-		const type = typeChecker.getTypeAtLocation(node);
-		const typeNode = typeToTypeNode(type, node);
-		const typeString = typeToString(type, node);
-
-		// remove checker from type
-		delete type.checker;
-
-		typeDeclarationMap.set(typeName, { type, typeDeclaration: node, typeNode, typeString });
-
-		// TODO: we probably should recursively expand the type here as well
 	}
 });
 

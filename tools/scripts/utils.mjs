@@ -1,5 +1,4 @@
 import { createWriteStream, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
-import { join } from 'path';
 import ts from 'typescript';
 import { format } from 'util';
 
@@ -91,93 +90,54 @@ const overlapWithCommonAttributes = (str) =>
 export function createProgram(filePaths, sourceFilePath) {
 	const program = ts.createProgram(filePaths, {
 		module: ts.ModuleKind.ESNext,
-		target: ts.ModuleKind.ESNext,
+		target: ts.ScriptTarget.ESNext,
 		strict: true,
 		emitDeclarationOnly: true,
+		paths: {
+			'angular-three': ['libs/core/src/lib/three-types.ts'],
+		},
+		lib: ['three'],
 	});
 	const typeChecker = program.getTypeChecker();
-	const sourceFile = program.getSourceFile(sourceFilePath || filePaths[0]);
 
 	/**
-	 * @type {Record<string, ts.TypeAliasDeclaration | ts.InterfaceDeclaration>}
+	 * @type {Record<string, {node: ts.InterfaceDeclaration, type: ts.Type, typeNode: ts.TypeNode, typeString: string}>}
 	 */
 	const typesMap = {};
-	/**
-	 * @type {Record<string, string>}
-	 */
-	const relativeImportPaths = {};
-	/**
-	 * @type {Record<string, string>}
-	 */
-	const sobaImportPaths = {};
 
-	ts.forEachChild(sourceFile, (node) => {
-		if (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) {
-			typesMap[node.name.text] = node;
-		} else if (ts.isImportDeclaration(node)) {
-			const moduleSpecifier = node.moduleSpecifier;
-			if (ts.isStringLiteral(moduleSpecifier)) {
-				const importClause = node.importClause;
+	let sourceFile;
 
-				if (importClause) {
-					if (moduleSpecifier.text.startsWith('./') || moduleSpecifier.text.startsWith('../')) {
-						const namedBindings = importClause.namedBindings;
-						if (ts.isNamedImports(namedBindings)) {
-							const currentPaths = (sourceFilePath || filePaths[0]).split('/');
-							currentPaths.pop();
-							const modulePath = join(currentPaths.join('/'), moduleSpecifier.text);
-							namedBindings.elements.forEach((element) => {
-								relativeImportPaths[element.name.escapedText] = modulePath + '.ts';
-							});
-						}
-					} else if (moduleSpecifier.text.startsWith('angular-three-soba')) {
-						const namedBindings = importClause.namedBindings;
-						if (ts.isNamedImports(namedBindings)) {
-							const entryPoint = moduleSpecifier.text.split('/').pop();
-							namedBindings.elements.forEach((element) => {
-								sobaImportPaths[element.name.escapedText] = `libs/soba/${entryPoint}/src`;
-							});
-						}
-					}
-				}
-			}
+	program.getSourceFiles().forEach((sf) => {
+		if (sf.fileName.includes(sourceFilePath || filePaths[0])) {
+			sourceFile = sf;
 		}
+
+		ts.forEachChild(sf, (node) => {
+			if (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) {
+				const type = typeChecker.getTypeAtLocation(node);
+				const typeNode = typeChecker.typeToTypeNode(type, node, TYPE_CHECKER_FLAGS);
+				const typeString = typeChecker.typeToString(type, node, TYPE_CHECKER_FLAGS);
+				typesMap[node.name.text] = { type, typeNode, typeString, node };
+			}
+		});
 	});
-
-	/**
-	 * @param {ts.Type} type
-	 * @param {ts.Node} [node]
-	 *
-	 * @return {ts.TypeNode}
-	 */
-	function typeToTypeNode(type, node) {
-		return typeChecker.typeToTypeNode(type, node, TYPE_CHECKER_FLAGS);
-	}
-
-	/**
-	 * @param {ts.Type} type
-	 * @param {ts.Node} [node]
-	 *
-	 * @return {string}
-	 */
-	function typeToString(type, node) {
-		return typeChecker.typeToString(type, node, TYPE_CHECKER_FLAGS);
-	}
 
 	/**
 	 * @param {{name: string, attributes: any[]}} metadata
-	 * @param {ts.NodeArray<ts.TypeElement>} members
+	 * @param {ts.NodeArray<ts.TypeElement> | string[]} members
 	 */
 	function processTypeMembers(metadata, members) {
 		if (!members?.length) return;
 		for (const member of members) {
 			/** @type {string} */
 			const memberName =
-				member.name?.text ||
-				member.name?.escapedText ||
-				member.name?.expression?.name?.text ||
-				member.name?.expression?.name?.escapedText ||
-				member.name;
+				typeof member === 'string'
+					? member
+					: member.name?.text ||
+						member.name?.escapedText ||
+						member.name?.expression?.name?.text ||
+						member.name?.expression?.name?.escapedText ||
+						member.name;
 
 			const exist =
 				memberName && metadata.attributes.find(({ name }) => [memberName, `[${memberName}]`].includes(name));
@@ -223,50 +183,11 @@ export function createProgram(filePaths, sourceFilePath) {
 		for (const type of typeNode.types) {
 			if (ts.isTypeReferenceNode(type)) {
 				// TODO: we don't know how to get the inheritance of some THREE object without turning the source file into an AST
-				// writeToLog(
-				//     'type reference -->',
-				//     type.typeName,
-				//     type.typeArguments[0].typeArguments[0].typeArguments[0].typeArguments[0].typeArguments[0].typeName.right
-				//         .symbol
-				// ); THREE.Light, THREE.Mesh, THREE.SpotLight
 				const typeReferenceName = type.typeName.text;
 
 				if (typesMap[typeReferenceName]) {
 					const typeDeclaration = typesMap[typeReferenceName];
 					processTypeReferenceNode(metadata, typeDeclaration, sobaMap);
-				} else if (relativeImportPaths[typeReferenceName]) {
-					const { sourceFile: relativeModuleSourceFile } = createProgram([relativeImportPaths[typeReferenceName]]);
-					ts.forEachChild(relativeModuleSourceFile, (relativeModuleNode) => {
-						if (ts.isTypeAliasDeclaration(relativeModuleNode) && relativeModuleNode.name.text === typeReferenceName) {
-							processTypeMembers(metadata, relativeModuleNode.type.members);
-						} else if (
-							ts.isInterfaceDeclaration(relativeModuleNode) &&
-							relativeModuleNode.name.text === typeReferenceName
-						) {
-							processTypeMembers(metadata, relativeModuleNode.members);
-						}
-					});
-				} else if (sobaImportPaths[typeReferenceName]) {
-					const entryPoint = sobaImportPaths[typeReferenceName].split('/')[2];
-					const sobaCollection = sobaMap[entryPoint];
-					if (sobaCollection[typeReferenceName]) {
-						const typeReferencePath = join(
-							sobaImportPaths[typeReferenceName],
-							sobaCollection[typeReferenceName],
-							sobaCollection[typeReferenceName],
-						).concat('.ts');
-						const { sourceFile: sobaReferenceSourceFile } = createProgram([typeReferencePath]);
-						ts.forEachChild(sobaReferenceSourceFile, (sobaReferenceNode) => {
-							if (ts.isTypeAliasDeclaration(sobaReferenceNode) && sobaReferenceNode.name.text === typeReferenceName) {
-								processTypeMembers(metadata, sobaReferenceNode.type.members);
-							} else if (
-								ts.isInterfaceDeclaration(sobaReferenceNode) &&
-								sobaReferenceNode.name.text === typeReferenceName
-							) {
-								processTypeMembers(metadata, sobaReferenceNode.members);
-							}
-						});
-					}
 				}
 			} else if (ts.isTypeLiteralNode(type)) {
 				// this is the type literal that we pass in as an second type argument to NgtOverwrite for NgtObject3DNode
@@ -280,8 +201,6 @@ export function createProgram(filePaths, sourceFilePath) {
 		program,
 		typeChecker,
 		sourceFile,
-		typeToString,
-		typeToTypeNode,
 		processTypeMembers,
 		processIntersectionTypeNode,
 		processTypeReferenceNode,

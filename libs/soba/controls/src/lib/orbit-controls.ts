@@ -14,15 +14,6 @@ export interface NgtsOrbitControlsOptions {
 	keyEvents: boolean | HTMLElement;
 }
 
-declare global {
-	interface HTMLElementTagNameMap {
-		/**
-		 * @extends three-stdlib|OrbitControls
-		 */
-		'ngts-orbit-controls': OrbitControls & NgtsOrbitControlsOptions;
-	}
-}
-
 const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 	enableDamping: true,
 	regress: false,

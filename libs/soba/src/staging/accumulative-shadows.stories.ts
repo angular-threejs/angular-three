@@ -17,7 +17,7 @@ import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
 	selector: 'accumulative-shadows-suzi',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[scene()]" [rotation]="[-0.63, 0, 0]" [scale]="2" [position]="[0, -1.175, 0]" />
+		<ngt-primitive *args="[scene()]" [parameters]="{ rotation: [-0.63, 0, 0], scale: 2, position: [0, -1.175, 0] }" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

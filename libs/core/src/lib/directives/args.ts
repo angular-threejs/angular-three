@@ -14,8 +14,8 @@ import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
 
 @Directive({ selector: 'ng-template[args]', standalone: true })
-export class NgtArgs<TArgs extends any[] = any[]> {
-	args = input.required<TArgs | null>();
+export class NgtArgs {
+	args = input.required<any[] | null>();
 
 	private vcr = inject(ViewContainerRef);
 	private zone = inject(NgZone);
@@ -23,7 +23,7 @@ export class NgtArgs<TArgs extends any[] = any[]> {
 	private autoEffect = injectAutoEffect();
 
 	protected injected = false;
-	protected injectedArgs: TArgs | null = null;
+	protected injectedArgs: any[] | null = null;
 	private view?: EmbeddedViewRef<unknown>;
 
 	constructor() {

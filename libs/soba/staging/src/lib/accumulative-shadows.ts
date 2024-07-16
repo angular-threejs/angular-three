@@ -11,8 +11,8 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { ProgressiveLightMap, SoftShadowMaterial } from '@pmndrs/vanilla';
 import { NgtGroup, extend, getLocalState, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { ProgressiveLightMap, SoftShadowMaterial } from 'angular-three-soba/vanilla-exports';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Mesh, PlaneGeometry } from 'three';

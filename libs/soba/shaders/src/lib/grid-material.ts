@@ -1,5 +1,5 @@
 import { shaderMaterial } from '@pmndrs/vanilla';
-import { NgtShaderMaterial } from 'angular-three';
+import { NgtMaterial } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { Color, ColorRepresentation, Side, Vector3 } from 'three';
 
@@ -110,11 +110,14 @@ export const GridMaterial = shaderMaterial(
   `,
 );
 
+export type NgtGridMaterial = NgtMaterial<InstanceType<typeof GridMaterial>, [GridMaterialOptions]>;
+
 declare global {
 	interface HTMLElementTagNameMap {
 		/**
 		 * @extends ngt-shader-material
+		 * @options GridMaterialOptions
 		 */
-		'ngt-grid-material': GridMaterialOptions & NgtShaderMaterial;
+		'ngt-grid-material': NgtGridMaterial;
 	}
 }

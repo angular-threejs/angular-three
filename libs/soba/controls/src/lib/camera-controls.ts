@@ -32,15 +32,6 @@ export interface NgtsCameraControlsOptions {
 	regress: boolean;
 }
 
-declare global {
-	interface HTMLElementTagNameMap {
-		/**
-		 * @extends camera-controls|CameraControls
-		 */
-		'ngts-camera-controls': CameraControls & NgtsCameraControlsOptions;
-	}
-}
-
 const defaultOptions: Partial<CameraControls> & NgtsCameraControlsOptions = {
 	makeDefault: false,
 	events: false,

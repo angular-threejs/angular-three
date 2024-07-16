@@ -10,7 +10,6 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { MeshDiscardMaterial, MeshTransmissionMaterial } from '@pmndrs/vanilla';
 import {
 	getLocalState,
 	injectBeforeRender,
@@ -21,6 +20,7 @@ import {
 	pick,
 } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
+import { MeshDiscardMaterial, MeshTransmissionMaterial } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BackSide, Color, FrontSide, Mesh, NoToneMapping, Texture, ToneMapping } from 'three';
 

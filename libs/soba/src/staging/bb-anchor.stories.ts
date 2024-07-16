@@ -1,8 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
+import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsBBAnchor, NgtsBBAnchorOptions } from 'angular-three-soba/staging';
+import { BoxHelper } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
@@ -31,17 +33,18 @@ class MeshObject {}
 			<ngts-bb-anchor [options]="options()">
 				<ng-content />
 			</ngts-bb-anchor>
-		</ngt-mesh>
 
-		@if (drawBoundingBox()) {
-			<ngt-box-helper *args="[mesh, 'cyan']" />
-		}
+			@if (drawBoundingBox()) {
+				<ngts-helper [type]="BoxHelper" [options]="['cyan']" />
+			}
+		</ngt-mesh>
 	`,
-	imports: [NgtsBBAnchor, NgtsOrbitControls, NgtArgs],
+	imports: [NgtsBBAnchor, NgtsOrbitControls, NgtArgs, NgtsHelper],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class BBAnchorWrapper {
+	protected readonly BoxHelper = BoxHelper;
 	options = input.required<NgtsBBAnchorOptions>();
 	drawBoundingBox = input(false);
 }
