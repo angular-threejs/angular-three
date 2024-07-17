@@ -72,7 +72,7 @@ class Diamond {
 	standalone: true,
 	template: `
 		<ngt-ambient-light [intensity]="0.5" />
-		<ngt-spot-light [position]="[5, 5, -10]" [angle]="0.15" [penumbra]="1" />
+		<ngt-spot-light #spotLight [position]="[5, 5, -10]" [angle]="0.15" [penumbra]="1" />
 		<ngt-point-light [position]="[-10, -10, -10]" />
 
 		<diamond-flat [rotation]="[0, 0, 0.715]" [position]="[0, -0.175 + 0.5, 0]" [options]="options()" />
@@ -80,7 +80,7 @@ class Diamond {
 		<ngts-caustics
 			[options]="{
 				position: [0, -0.5, 0],
-				lightSource: [5, 5, -10],
+				lightSource: spotLight,
 				color: '#FF8F20',
 				worldRadius: 0.003,
 				ior: 1.16,

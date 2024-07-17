@@ -181,7 +181,7 @@ export class NgtsCaustics {
 
 		const autoEffect = injectAutoEffect();
 
-		const updateParams = computed(() => {
+		const update = createCausticsUpdate(() => {
 			const { lightSource, ...rest } = this.options();
 
 			return {
@@ -200,7 +200,6 @@ export class NgtsCaustics {
 			};
 		});
 
-		const update = createCausticsUpdate(updateParams);
 		injectBeforeRender(({ gl }) => update(gl));
 
 		afterNextRender(() => {
