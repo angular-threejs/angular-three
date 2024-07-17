@@ -1,13 +1,13 @@
 # `angular-three-postprocessing`
 
-This is the main entry point for post-processing effects in Angular Three. It provides a way to apply various visual effects to your 3D scene after it has been rendered. This library relies on `maath` and `postprocessing` as dependencies.
+This is the main entry point for post-processing effects in Angular Three. It provides a way to apply various visual effects to your 3D scene after it has been rendered. This library relies on `maath`, `three-stdlib`, and `postprocessing` as dependencies.
 
 ## Installation
 
 ```bash
-npm install angular-three-postprocessing maath postprocessing
-# yarn add angular-three-postprocessing maath postprocessing
-# pnpm add angular-three-postprocessing maath postprocessing
+npm install angular-three-postprocessing three-stdlib maath postprocessing
+# yarn add angular-three-postprocessing three-stdlib maath postprocessing
+# pnpm add angular-three-postprocessing three-stdlib maath postprocessing
 ```
 
 ## NgtpEffectComposer

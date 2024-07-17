@@ -22,9 +22,9 @@
 	],
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "^18.0.0",
-		"@angular/core": "^18.0.0",
-		"ngxtension": "^3.0.0",
+		"@angular/common": ">=18.0.0",
+		"@angular/core": ">=18.0.0",
+		"ngxtension": ">=3.0.0",
 		"three": ">=0.148.0"
 	},
 	"dependencies": {
