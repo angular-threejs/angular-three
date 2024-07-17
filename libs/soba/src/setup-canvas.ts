@@ -209,12 +209,14 @@ export function makeStoryObject(
 		args = {},
 		argTypes = {},
 		parameters = {},
+		name,
 	}: {
 		canvasOptions?: DeepPartial<SetupCanvasOptions> & { withLoader?: boolean };
 		args?: Record<string, any>;
 		argTypes?: Record<string, any>;
 		argsOptions?: Record<string, any | { defaultValue: any; control: { control: any } }>;
 		parameters?: Record<string, any>;
+		name?: string;
 	} = {},
 ) {
 	for (const [argKey, argOption] of Object.entries(argsOptions)) {
@@ -239,7 +241,7 @@ export function makeStoryObject(
 		}
 	}
 
-	return { render: makeStoryFunction(story, canvasOptions), args, argTypes, parameters };
+	return { name, render: makeStoryFunction(story, canvasOptions), args, argTypes, parameters };
 }
 
 export function number(defaultValue: number): number;

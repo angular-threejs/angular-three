@@ -401,7 +401,9 @@ export class NgtRenderer implements Renderer2 {
 						? value.map((v) => v.toString())
 						: typeof value === 'function'
 							? value
-							: [value];
+							: typeof value === 'string'
+								? value.split('.')
+								: [value];
 				if (parent) attachThreeChild(parent, el);
 				return;
 			}

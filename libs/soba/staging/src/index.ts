@@ -1,4 +1,5 @@
 export * from './lib/accumulative-shadows';
+export * from './lib/backdrop';
 export * from './lib/bb-anchor';
 export * from './lib/bounds';
 export * from './lib/camera-shake';
