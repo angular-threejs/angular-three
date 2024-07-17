@@ -1,0 +1,51 @@
+{
+	"name": "docs",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"targets": {
+		"build": {
+			"executor": "@analogjs/platform:vite",
+			"defaultConfiguration": "production",
+			"configurations": {
+				"development": {
+					"mode": "development"
+				},
+				"production": {
+					"sourcemap": false,
+					"mode": "production"
+				}
+			},
+			"outputs": [
+				"{options.outputPath}",
+				"{workspaceRoot}/dist/apps/docs/.nitro",
+				"{workspaceRoot}/dist/apps/docs/ssr",
+				"{workspaceRoot}/dist/apps/docs/analog"
+			],
+			"options": {
+				"main": "apps/docs/src/main.ts",
+				"configFile": "apps/docs/vite.config.ts",
+				"outputPath": "dist/apps/docs/client",
+				"tsConfig": "apps/docs/tsconfig.app.json"
+			}
+		},
+		"serve": {
+			"executor": "@analogjs/platform:vite-dev-server",
+			"defaultConfiguration": "development",
+			"options": {
+				"buildTarget": "docs:build",
+				"port": 4200
+			},
+			"configurations": {
+				"development": {
+					"buildTarget": "docs:build:development",
+					"hmr": true
+				},
+				"production": {
+					"buildTarget": "docs:build:production"
+				}
+			}
+		}
+	},
+	"tags": [],
+	"sourceRoot": "apps/docs/src"
+}

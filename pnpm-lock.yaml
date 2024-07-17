@@ -154,7 +154,7 @@ importers:
         version: 0.14.4
     devDependencies:
       '@analogjs/platform':
-        specifier: 1.6.1
+        specifier: ^1.3.0
         version: 1.6.1(56ud5p5fv7snaaqa5jtvsejtp4)
       '@analogjs/vite-plugin-angular':
         specifier: 1.6.1
