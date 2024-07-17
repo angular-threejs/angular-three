@@ -28,6 +28,7 @@ npm install @pmndrs/vanilla @monogrid/gainmap-js
 - [NgtsSky](#ngtssky)
 - [NgtsSpotLight](#ngtsspotlight)
 - [NgtsSpotLightShadow](#ngtsspotlightshadow)
+- [NgtsBackdrop](#ngtsbackdrop)
 
 ## NgtsAccumulativeShadows
 
@@ -451,4 +452,22 @@ gl_FragColor = vec4(vec3(0.), 1.); // Transparent
 <ngts-spot-light>
 	<ngts-spot-light-shadow [shader]="customShader" [options]="shadowOptions" />
 </ngts-spot-light>
+```
+
+## NgtsBackdrop
+
+A curved plane, like a studio backdrop. This is for presentational purposes, to break up light and shadows more interestingly.
+
+### Object Inputs (NgtsBackdropOptions)
+
+| Property        | Description                                  | Default Value |
+| --------------- | -------------------------------------------- | ------------- |
+| `floor`         | Stretches the floor segment.                 | 0.25          |
+| `segments`      | Mesh-resolution.                             | 20            |
+| `receiveShadow` | Whether the backdrop should receive shadows. | false         |
+
+```html
+<ngts-backdrop [options]="{ floor: 0.25, segments: 20 }">
+	<ngt-mesh-standard-material color="#353540" />
+</ngts-backdrop>
 ```
