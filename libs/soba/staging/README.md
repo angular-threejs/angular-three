@@ -1,11 +1,11 @@
 # `angular-three-soba/staging`
 
-This secondary entry point includes miscellaneous utilities and components for animations, shadows, frame buffer objects (FBOs), and more. It requires `@pmndrs/vanilla` and `@monogrid/gainmap-js` as additional dependencies.
+This secondary entry point includes miscellaneous utilities and components for animations, shadows, frame buffer objects (FBOs), and more. It requires `@pmndrs/vanilla`, `three-mesh-bvh`, and `@monogrid/gainmap-js` as additional dependencies.
 
 ```bash
-npm install @pmndrs/vanilla @monogrid/gainmap-js
-# yarn add @pmndrs/vanilla @monogrid/gainmap-js
-# pnpm add @pmndrs/vanilla @monogrid/gainmap-js
+npm install @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
+# yarn add @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
+# pnpm add @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
 ```
 
 ## TOC

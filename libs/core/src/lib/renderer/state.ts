@@ -14,6 +14,7 @@ export type NgtRendererState = [
 
 export interface NgtRendererNode {
 	__ngt_renderer__: NgtRendererState;
+	__ngt_dom_parent__?: HTMLElement;
 }
 
 export function createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord, document: Document) {

@@ -29,16 +29,26 @@ import { NgtsLoader } from '../loaders/src/lib/loader';
 
 extend(THREE);
 
-export interface SetupCanvasOptions {
+type OrthographicCameraOptions = {
+	orthographic: true;
+	camera: { position?: [number, number, number]; zoom?: number };
+};
+
+type PerspectiveCameraOptions = {
+	orthographic: false;
 	camera: { position?: [number, number, number]; fov?: number };
+};
+
+export type SetupCanvasOptions = {
 	performance: Partial<Omit<NgtPerformance, 'regress'>>;
 	background: string;
 	controls: boolean | { makeDefault?: boolean };
 	lights: boolean;
-}
+} & (OrthographicCameraOptions | PerspectiveCameraOptions);
 
 const defaultCanvasOptions: SetupCanvasOptions = {
 	camera: { position: [-5, 5, 5], fov: 75 },
+	orthographic: false,
 	performance: { current: 1, min: 0.5, max: 1, debounce: 200 },
 	background: 'black',
 	controls: true,
@@ -133,6 +143,7 @@ export class StorybookSetup {
 		let refEnvInjector: EnvironmentInjector;
 
 		afterNextRender(() => {
+			console.log(this.canvasOptions());
 			untracked(() => {
 				refEnvInjector = createEnvironmentInjector(
 					[
@@ -149,6 +160,7 @@ export class StorybookSetup {
 				ref.setInput('performance', this.canvasOptions().performance);
 				ref.setInput('camera', this.canvasOptions().camera);
 				ref.setInput('sceneGraph', StorybookScene);
+				ref.setInput('orthographic', this.canvasOptions().orthographic);
 				ref.changeDetectorRef.detectChanges();
 			});
 		});
@@ -176,9 +188,19 @@ type DeepPartialObject<T> = {
 };
 
 export function makeCanvasOptions(options: DeepPartial<SetupCanvasOptions> = {}) {
+	const orthographic = options.orthographic ?? defaultCanvasOptions.orthographic;
+	let camera: Partial<SetupCanvasOptions['camera']> = {};
+
+	if (orthographic) {
+		camera = (options.camera || {}) as SetupCanvasOptions['camera'];
+	} else {
+		camera = { ...defaultCanvasOptions.camera, ...(options.camera || {}) } as SetupCanvasOptions['camera'];
+	}
+
 	return {
 		...defaultCanvasOptions,
-		camera: { ...defaultCanvasOptions.camera, ...(options.camera || {}) },
+		orthographic,
+		camera,
 		performance: { ...defaultCanvasOptions.performance, ...(options.performance || {}) },
 		background: options.background ?? defaultCanvasOptions.background,
 		controls: options.controls ?? defaultCanvasOptions.controls,
@@ -189,6 +211,7 @@ export function makeCanvasOptions(options: DeepPartial<SetupCanvasOptions> = {})
 export function makeStoryFunction(
 	story: Type<unknown>,
 	canvasOptions: DeepPartial<SetupCanvasOptions> & { withLoader?: boolean } = {},
+	templateFn: (base: string) => string = (base) => base,
 ) {
 	return (args: Args) => ({
 		props: {
@@ -197,7 +220,9 @@ export function makeStoryFunction(
 			storyOptions: args || {},
 			story,
 		},
-		template: `<storybook-setup [story]="story" [storyOptions]="storyOptions" [canvasOptions]="canvasOptions" [withLoader]="withLoader" />`,
+		template: templateFn(
+			`<storybook-setup [story]="story" [storyOptions]="storyOptions" [canvasOptions]="canvasOptions" [withLoader]="withLoader" />`,
+		),
 	});
 }
 
@@ -205,6 +230,7 @@ export function makeStoryObject(
 	story: Type<unknown>,
 	{
 		canvasOptions = {},
+		templateFn = (base) => base,
 		argsOptions = {},
 		args = {},
 		argTypes = {},
@@ -212,6 +238,7 @@ export function makeStoryObject(
 		name,
 	}: {
 		canvasOptions?: DeepPartial<SetupCanvasOptions> & { withLoader?: boolean };
+		templateFn?: (base: string) => string;
 		args?: Record<string, any>;
 		argTypes?: Record<string, any>;
 		argsOptions?: Record<string, any | { defaultValue: any; control: { control: any } }>;
@@ -241,7 +268,7 @@ export function makeStoryObject(
 		}
 	}
 
-	return { name, render: makeStoryFunction(story, canvasOptions), args, argTypes, parameters };
+	return { name, render: makeStoryFunction(story, canvasOptions, templateFn), args, argTypes, parameters };
 }
 
 export function number(defaultValue: number): number;

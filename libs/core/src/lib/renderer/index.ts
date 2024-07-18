@@ -184,6 +184,12 @@ export class NgtRenderer implements Renderer2 {
 			(newChild instanceof Text || cRS[NgtRendererClassId.type] === 'dom')
 		) {
 			addChild(parent, newChild);
+
+			if (newChild['__ngt_dom_parent__'] && newChild['__ngt_dom_parent__'] instanceof HTMLElement) {
+				this.delegate.appendChild(newChild['__ngt_dom_parent__'], newChild);
+				return;
+			}
+
 			this.delegate.appendChild(parent, newChild);
 			if (cRS) {
 				setParent(newChild, parent);
