@@ -30,7 +30,6 @@ type SuzanneGLTF = GLTF & {
 			</ngt-mesh>
 		}
 	`,
-
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

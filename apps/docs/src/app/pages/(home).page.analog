@@ -1,0 +1,9 @@
+<script lang="ts">
+	import TopNavigationBar from './(home)/top-navigation-bar.analog' with { analog: 'imports' };
+	import Experience from './(home)/experience/experience.analog' with { analog: 'imports' };
+</script>
+
+<template class="h-screen">
+	<TopNavigationBar />
+	<Experience />
+</template>

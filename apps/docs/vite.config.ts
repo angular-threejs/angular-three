@@ -19,6 +19,19 @@ export default defineConfig(({ mode }) => {
 				allow: ['.'],
 			},
 		},
-		plugins: [analog(), nxViteTsPaths(), splitVendorChunkPlugin()],
+		plugins: [
+			analog({
+				ssr: false,
+				vite: {
+					experimental: {
+						supportAnalogFormat: true,
+					},
+				},
+			}),
+			nxViteTsPaths({
+				debug: true,
+			}),
+			splitVendorChunkPlugin(),
+		],
 	};
 });

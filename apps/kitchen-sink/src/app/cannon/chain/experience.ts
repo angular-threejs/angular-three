@@ -211,6 +211,7 @@ export class StaticHandle {
 			<app-pointer-handle [size]="1.5">
 				<app-chain [length]="7" />
 			</app-pointer-handle>
+
 			@for (maxMultiplier of maxMultiplierExamples(); track maxMultiplier.key) {
 				<app-static-handle [radius]="1.5" [position]="maxMultiplier.position">
 					<app-chain [maxMultiplier]="maxMultiplier.value" [length]="8" />

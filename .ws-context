@@ -1,0 +1,9 @@
+{
+  "framework": "angular",
+  "angular-template-syntax": "V_17",
+  "apps/**/*.analog": {
+    "framework": "angular",
+    "angular-template-syntax": "V_17"
+  }
+}
+

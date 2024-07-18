@@ -4,5 +4,13 @@
 	"tabWidth": 2,
 	"printWidth": 120,
 	"plugins": ["prettier-plugin-organize-imports"],
-	"htmlWhitespaceSensitivity": "ignore"
+	"htmlWhitespaceSensitivity": "ignore",
+  "overrides": [
+    {
+      "files": "*.analog",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
 }
