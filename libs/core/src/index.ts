@@ -1,6 +1,7 @@
 export * from './lib/canvas';
 export * from './lib/directives/args';
 export { NgtCamera, NgtComputeFunction, NgtDomEvent, NgtThreeEvent } from './lib/events';
+export * from './lib/html';
 export * from './lib/instance';
 export * from './lib/loader';
 export { addAfterEffect, addEffect, addTail } from './lib/loop';

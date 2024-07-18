@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal, Signal } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { HTML, injectStore, NgtSize } from 'angular-three';
+import { injectStore, NgtHTML } from 'angular-three';
 import {
 	NgtsScrollCanvas,
 	NgtsScrollControls,
@@ -82,13 +82,10 @@ class Suzanne {
 			mes.
 		</h1>
 	`,
-
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class HtmlContent {
-	static [HTML] = true;
-
-	canvasSize = input.required<NgtSize>();
+class HtmlContent extends NgtHTML {
+	canvasSize = this.store.select('size');
 }
 
 @Component({
@@ -102,7 +99,7 @@ class HtmlContent {
 			</ngt-group>
 
 			<div ngts-scroll-html style="width: 100%; color: #ec2d2d">
-				<scroll-html-content [canvasSize]="canvasSize()" />
+				<scroll-html-content />
 			</div>
 		</ngts-scroll-controls>
 	`,

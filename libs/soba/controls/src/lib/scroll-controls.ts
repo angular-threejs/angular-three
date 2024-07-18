@@ -3,15 +3,14 @@ import {
 	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
-	CUSTOM_ELEMENTS_SCHEMA,
-	DestroyRef,
+	Directive,
 	ElementRef,
 	inject,
 	input,
 	model,
 	untracked,
 } from '@angular/core';
-import { extend, HTML, injectBeforeRender, injectStore, NgtAnyRecord, pick } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtHTML, pick, provideHTMLDomElement } from 'angular-three';
 import { easing } from 'maath';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -280,15 +279,7 @@ export class NgtsScrollControls {
 	}
 }
 
-@Component({
-	selector: 'ngt-group[ngts-scroll-canvas]',
-	standalone: true,
-	template: `
-		<ng-content />
-	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+@Directive({ selector: 'ngt-group[ngts-scroll-canvas]', standalone: true })
 export class NgtsScrollCanvas {
 	private host = inject<ElementRef<Group>>(ElementRef);
 	private scrollControls = inject(NgtsScrollControls);
@@ -296,7 +287,6 @@ export class NgtsScrollCanvas {
 	private viewport = this.store.select('viewport');
 
 	constructor() {
-		extend({ Group });
 		injectBeforeRender(() => {
 			const group = this.host.nativeElement;
 
@@ -310,31 +300,18 @@ export class NgtsScrollCanvas {
 	}
 }
 
-@Component({
+@Directive({
 	selector: 'div[ngts-scroll-html]',
 	standalone: true,
-	template: `
-		<ng-content />
-	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: {
-		style: 'position: absolute; top: 0; left: 0; will-change: transform;',
-	},
+	host: { style: 'position: absolute; top: 0; left: 0; will-change: transform;' },
+	providers: [provideHTMLDomElement([NgtsScrollControls], (scrollControls) => scrollControls.fixed)],
 })
-export class NgtsScrollHtml {
-	static [HTML] = true;
-
+export class NgtsScrollHtml extends NgtHTML {
 	private scrollControls = inject(NgtsScrollControls);
-	private host = inject<ElementRef<HTMLDivElement>>(ElementRef);
-	private store = injectStore();
 	private size = this.store.select('size');
 
 	constructor() {
-		// assigning dom parent so that the Renderer knows where to attach the element
-		Object.assign(this.host.nativeElement, {
-			__ngt_dom_parent__: this.scrollControls.fixed,
-		});
-
+		super();
 		injectBeforeRender(() => {
 			if (this.scrollControls.delta > this.scrollControls.eps()) {
 				this.host.nativeElement.style.transform = `translate3d(${
@@ -343,10 +320,6 @@ export class NgtsScrollHtml {
 						: 0
 				}px,${this.scrollControls.horizontal() ? 0 : this.size().height * (this.scrollControls.pages() - 1) * -this.scrollControls.offset}px,0)`;
 			}
-		});
-
-		inject(DestroyRef).onDestroy(() => {
-			delete (this.host.nativeElement as NgtAnyRecord)['__ngt_dom_parent__'];
 		});
 	}
 }
