@@ -143,6 +143,8 @@ export function injectEnvironment(
 			return { files, preset, encoding, path, extensions };
 		});
 
+		const files = pick(adjustedOptions, 'files');
+
 		const resultOptions = computed(() => {
 			const { files } = adjustedOptions();
 			const multiFile = Array.isArray(files);
@@ -194,6 +196,21 @@ export function injectEnvironment(
 
 		const texture = signal<Texture | CubeTexture | null>(null);
 		afterNextRender(() => {
+			autoEffect(() => {
+				const [{ extension, multiFile }, _files] = [untracked(resultOptions), files()];
+
+				if (extension !== 'webp' && extension !== 'jpg' && extension !== 'jpeg') return;
+
+				gl().domElement.addEventListener(
+					'webglcontextlost',
+					() => {
+						// @ts-expect-error - files is correctly passed
+						injectLoader.clear(multiFile ? [_files] : _files);
+					},
+					{ once: true },
+				);
+			});
+
 			const result = injectLoader(
 				loader,
 				// @ts-expect-error
@@ -216,7 +233,7 @@ export function injectEnvironment(
 					},
 				},
 			);
-			//
+
 			autoEffect(() => {
 				const loaderResult = result();
 				if (!loaderResult) return;
@@ -235,8 +252,8 @@ export function injectEnvironment(
 					textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
 
 					if ('colorSpace' in textureResult)
-						(textureResult as any).colorSpace = encoding ?? isCubeMap ? 'srgb' : 'srgb-linear';
-					else (textureResult as any).encoding = encoding ?? isCubeMap ? sRGBEncoding : LinearEncoding;
+						(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
+					else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
 
 					texture.set(textureResult);
 				});

@@ -37,21 +37,6 @@ class Torus {}
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class FilesEnvironmentStory {
-	options = input({} as NgtsEnvironmentOptions);
-}
-
-@Component({
-	standalone: true,
-	template: `
-		<ngts-environment [options]="options()" />
-		<environment-torus />
-		<ngts-orbit-controls [options]="{ autoRotate: true }" />
-	`,
-	imports: [Torus, NgtsEnvironment, NgtsOrbitControls],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
 class DefaultEnvironmentStory {
 	options = input({} as NgtsEnvironmentOptions);
 }
@@ -72,13 +57,23 @@ export const Default = makeStoryObject(DefaultEnvironmentStory, {
 	},
 });
 
-export const Files = makeStoryObject(FilesEnvironmentStory, {
+export const Files = makeStoryObject(DefaultEnvironmentStory, {
 	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },
 	argsOptions: {
 		options: {
 			background: true,
 			files: ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'],
-			path: 'https://drei.pmnd.rs/cube/',
+			path: './cube/',
+		},
+	},
+});
+
+export const GainMap = makeStoryObject(DefaultEnvironmentStory, {
+	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },
+	argsOptions: {
+		options: {
+			files: ['./gainmap/potsdamer_platz_1k.jpg'],
+			background: true,
 		},
 	},
 });

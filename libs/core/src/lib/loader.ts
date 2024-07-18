@@ -166,5 +166,12 @@ _injectLoader.destroy = () => {
 	cached.clear();
 };
 
+_injectLoader.clear = (urls: string | string[]) => {
+	const urlToClear = Array.isArray(urls) ? urls : [urls];
+	urlToClear.forEach((url) => {
+		cached.delete(url);
+	});
+};
+
 export type NgtInjectedLoader = typeof _injectLoader;
 export const injectLoader: NgtInjectedLoader = _injectLoader;
