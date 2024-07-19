@@ -1,7 +1,0 @@
-{
-	"type": "module",
-  "web-types": [
-    "../../node_modules/angular-three/web-types.json",
-    "../../node_modules/angular-three-soba/web-types.json"
-  ]
-}
