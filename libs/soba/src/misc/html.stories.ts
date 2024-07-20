@@ -100,6 +100,12 @@ export const Transform = makeStoryObject(HtmlTransformScene, {
 			sprite: true,
 			distanceFactor: 20,
 			containerClass: 'transformed-container',
+			containerStyle: {
+				background: 'palegreen',
+				fontSize: '50px',
+				padding: '10px 18px',
+				border: '2px solid black',
+			} as Partial<CSSStyleDeclaration>,
 		},
 	},
 });

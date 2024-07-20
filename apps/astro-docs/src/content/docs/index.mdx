@@ -17,9 +17,11 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
-import Test from '../../components/test.analog';
+import Test from '../../components/test.component';
 
-<Test client:visible />
+<div class="h-48 w-48">
+  <Test client:only />
+</div>
 
 ## Next steps
 

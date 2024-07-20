@@ -49,6 +49,7 @@ export interface NgtsHTMLContentOptions {
 	prepend: boolean;
 	fullscreen: boolean;
 	containerClass: string;
+	containerStyle: Partial<CSSStyleDeclaration>;
 	pointerEvents: PointerEventsProperties;
 	calculatePosition: CalculatePosition;
 	sprite: boolean;
@@ -62,6 +63,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 	pointerEvents: 'auto',
 	calculatePosition: defaultCalculatePosition,
 	containerClass: '',
+	containerStyle: {},
 	center: false,
 	prepend: false,
 	fullscreen: false,
@@ -80,7 +82,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 				[style.height.px]="size().height"
 			>
 				<div #transformInner style="position: absolute" [style.pointer-events]="pointerEvents()">
-					<div #container [class]="containerClass()">
+					<div #container [class]="containerClass()" [style]="containerStyle()">
 						<ng-container [ngTemplateOutlet]="content" />
 					</div>
 				</div>
@@ -95,6 +97,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 				[style.width]="fullscreen() ? size().width : 'unset'"
 				[style.height]="fullscreen() ? size().height : 'unset'"
 				[class]="containerClass()"
+				[style]="containerStyle()"
 			>
 				<ng-container [ngTemplateOutlet]="content" />
 			</div>
@@ -134,6 +137,7 @@ export class NgtsHTMLContent extends NgtHTML {
 	fullscreen = pick(this.options, 'fullscreen');
 	pointerEvents = pick(this.options, 'pointerEvents');
 	containerClass = pick(this.options, 'containerClass');
+	containerStyle = pick(this.options, 'containerStyle');
 
 	private target = computed(() => {
 		const parent = resolveRef(this.parent());

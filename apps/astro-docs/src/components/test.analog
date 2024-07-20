@@ -1,5 +1,13 @@
-<script lang="ts"></script>
+<script lang="ts">
+	import SceneGraph from './scene-graph.analog';
+
+	import { NgtCanvas } from 'angular-three' with { analog: 'imports' };
+
+	defineMetadata({
+		exposes: [SceneGraph],
+	});
+</script>
 
 <template>
-	<h1>Hello World!!!!! SFC</h1>
+	<ngt-canvas [sceneGraph]="SceneGraph" />
 </template>
