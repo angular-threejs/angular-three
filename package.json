@@ -11,7 +11,8 @@
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
 		"publish": "nx run-many --target=publish --projects=core,soba,postprocessing,cannon --parallel=false",
 		"publish:beta": "nx run-many --target=publish --projects=core,soba,postprocessing,cannon --parallel=false --tag=beta",
-		"test": "nx test plugin --test-path-pattern=migrations"
+		"test": "nx test plugin --test-path-pattern=migrations",
+    "dev-debug": "nx dev docs"
 	},
 	"private": true,
 	"devDependencies": {

@@ -1,0 +1,5 @@
+<script lang="ts"></script>
+
+<template>
+	<h1>Hello World!!!!! SFC</h1>
+</template>

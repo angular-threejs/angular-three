@@ -108,10 +108,7 @@ const [injectParentRef, , ParentRef] = createNoopInjectionToken<ElementRef<Objec
 	standalone: true,
 	template: `
 		<app-box
-			[castShadow]="true"
-			[receiveShadow]="true"
 			[scale]="shapeConfig().scale"
-			[name]="name()"
 			[color]="shapeConfig().color"
 			[position]="[0, 0, 0]"
 			(pointerdown)="dragConstraint.onPointerDown($event)"

@@ -36,7 +36,7 @@ const defaultOptions: Partial<Omit<NgtMesh, 'scale'>> & NgtsLightformerOptions =
 	standalone: true,
 	template: `
 		<ngt-mesh #mesh [scale]="fixedScale()" [parameters]="parameters()">
-			<ng-content select="[lightformer-geometry]">
+			<ng-content select="[data-lightformer-geometry]">
 				@switch (form()) {
 					@case ('circle') {
 						<ngt-ring-geometry *args="[0, 1, 64]" />
@@ -49,7 +49,7 @@ const defaultOptions: Partial<Omit<NgtMesh, 'scale'>> & NgtsLightformerOptions =
 					}
 				}
 			</ng-content>
-			<ng-content select="[lightformer-material]">
+			<ng-content select="[data-lightformer-material]">
 				<ngt-mesh-basic-material #defaultMaterial [toneMapped]="toneMapped()" [map]="map()" [side]="side" />
 			</ng-content>
 
