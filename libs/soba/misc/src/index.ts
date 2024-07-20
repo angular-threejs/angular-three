@@ -6,4 +6,6 @@ export * from './lib/decal';
 export * from './lib/deprecated';
 export * from './lib/depth-buffer';
 export * from './lib/fbo';
+export * from './lib/html/html';
+export * from './lib/html/html-content';
 export * from './lib/sampler';

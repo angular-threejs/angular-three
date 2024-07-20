@@ -5,6 +5,8 @@ import {
 	ComponentMirror,
 	ComponentRef,
 	DestroyRef,
+	Directive,
+	ElementRef,
 	EnvironmentInjector,
 	InjectionToken,
 	Provider,
@@ -20,10 +22,11 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Args, Decorator, moduleMetadata } from '@storybook/angular';
-import { NgtAnyRecord, NgtArgs, NgtCanvas, NgtPerformance, extend } from 'angular-three';
+import { NgtAnyRecord, NgtArgs, NgtCanvas, NgtPerformance, extend, injectBeforeRender } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
+import { Object3D } from 'three';
 import { NgtsOrbitControls } from '../controls/src/lib/orbit-controls';
 import { NgtsLoader } from '../loaders/src/lib/loader';
 
@@ -143,7 +146,6 @@ export class StorybookSetup {
 		let refEnvInjector: EnvironmentInjector;
 
 		afterNextRender(() => {
-			console.log(this.canvasOptions());
 			untracked(() => {
 				refEnvInjector = createEnvironmentInjector(
 					[
@@ -296,10 +298,18 @@ export function select(defaultValue: string | string[], { multi, options }: { op
 	return { defaultValue, control: { control: multi ? 'multi-select' : 'select', options } };
 }
 
-export function turn(object: THREE.Object3D) {
-	object.rotation.y += 0.01;
-}
-
 export function makeDecorators(providers: Provider[] = [], ...decoratorFns: Decorator[]): Decorator[] {
 	return [moduleMetadata({ imports: [StorybookSetup], providers }), ...decoratorFns];
+}
+
+@Directive({ selector: '[turnable]', standalone: true })
+export class Turnable {
+	constructor() {
+		const element = inject<ElementRef<Object3D>>(ElementRef);
+		injectBeforeRender(() => {
+			const object = element.nativeElement;
+			if (!object.isObject3D) return;
+			object.rotation.y += 0.01;
+		});
+	}
 }

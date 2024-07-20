@@ -164,6 +164,18 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							if (sceneOptions) applyProps(scene, sceneOptions);
 						}
 
+						applyProps(scene, {
+							setAttribute: (name: string, value: string) => {
+								if (canvas instanceof HTMLCanvasElement) {
+									if (canvas.parentElement) {
+										canvas.parentElement.setAttribute(name, value);
+									} else {
+										canvas.setAttribute(name, value);
+									}
+								}
+							},
+						});
+
 						stateToUpdate.scene = prepare(scene, { store });
 					}
 
