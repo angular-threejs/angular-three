@@ -18,6 +18,7 @@ export interface NgtsFloatOptions extends Partial<NgtGroup> {
 	rotationIntensity: number;
 	floatIntensity: number;
 	floatingRange: [number?, number?];
+	autoInvalidate: boolean;
 }
 
 const defaultOptions: NgtsFloatOptions = {
@@ -26,6 +27,7 @@ const defaultOptions: NgtsFloatOptions = {
 	rotationIntensity: 1,
 	floatIntensity: 1,
 	floatingRange: [-0.1, 0.1],
+	autoInvalidate: false,
 };
 
 @Component({
@@ -43,15 +45,24 @@ const defaultOptions: NgtsFloatOptions = {
 })
 export class NgtsFloat {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['enabled', 'speed', 'rotationIntensity', 'floatIntensity', 'floatingRange']);
+	parameters = omit(this.options, [
+		'enabled',
+		'speed',
+		'rotationIntensity',
+		'floatIntensity',
+		'floatingRange',
+		'autoInvalidate',
+	]);
 
 	floatRef = viewChild.required<ElementRef<Group>>('float');
 
 	constructor() {
 		const offset = Math.random() * 10000;
-		injectNextBeforeRender(({ clock }) => {
-			const [{ enabled, speed, rotationIntensity, floatingRange, floatIntensity }] = [this.options()];
+		injectNextBeforeRender(({ clock, invalidate }) => {
+			const [{ enabled, speed, rotationIntensity, floatingRange, floatIntensity, autoInvalidate }] = [this.options()];
 			if (!enabled || speed === 0) return;
+
+			if (autoInvalidate) invalidate();
 
 			const container = this.floatRef().nativeElement;
 

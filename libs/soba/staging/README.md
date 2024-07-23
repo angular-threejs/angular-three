@@ -275,11 +275,12 @@ A component that simulates floating objects by applying a configurable up and do
 
 ### Object Inputs (NgtsFloatOptions)
 
-| Property            | Description                                                           | Default Value |
-| ------------------- | --------------------------------------------------------------------- | ------------- |
-| `speed`             | The speed of the floating animation.                                  | 1             |
-| `rotationIntensity` | The intensity of the rotation during the floating animation.          | 1             |
-| `floatIntensity`    | The intensity of the vertical movement during the floating animation. | 1             |
+| Property            | Description                                                                | Default Value |
+| ------------------- | -------------------------------------------------------------------------- | ------------- |
+| `speed`             | The speed of the floating animation.                                       | 1             |
+| `rotationIntensity` | The intensity of the rotation during the floating animation.               | 1             |
+| `floatIntensity`    | The intensity of the vertical movement during the floating animation.      | 1             |
+| `autoInvalidate`    | Automatically invalidates the scene when the frameloop is set to `demand`. | false         |
 
 ```html
 <ngts-float [options]="{ speed: 1, rotationIntensity: 1, floatIntensity: 1 }">

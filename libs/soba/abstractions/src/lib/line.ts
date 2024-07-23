@@ -6,6 +6,7 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
+	untracked,
 	viewChild,
 } from '@angular/core';
 import { checkNeedsUpdate, injectStore, NgtAfterAttach, NgtArgs, NgtObject3DNode, omit, pick } from 'angular-three';
@@ -140,8 +141,11 @@ export class NgtsLine {
 			});
 
 			autoEffect(() => {
-				const lineGeometry = this.lineGeometry();
-				return () => lineGeometry.dispose();
+				const [lineGeometry, lineMaterial] = [this.lineGeometry(), untracked(this.lineMaterial)];
+				return () => {
+					lineGeometry.dispose();
+					lineMaterial.dispose();
+				};
 			});
 		});
 	}
