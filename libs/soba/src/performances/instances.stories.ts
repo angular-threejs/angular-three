@@ -1,12 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	CUSTOM_ELEMENTS_SCHEMA,
-	input,
-	Signal,
-	signal,
-	viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { injectBeforeRender, injectObjectEvents, omit, pick } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -52,16 +44,20 @@ class Shoe {
 	random = pick(this.data, 'random');
 
 	instance = viewChild.required(NgtsInstance);
-	hovered = signal(false);
+
+	// NOTE: this can be just a property because we use it in the injectBeforeRender loop
+	//  and not bind in the template. If we were to bind it in the template, it would
+	//  have to be a signal
+	hovered = false;
 
 	constructor() {
 		injectObjectEvents(() => this.instance().positionMesh(), {
 			pointerover: (event) => {
 				event.stopPropagation();
-				this.hovered.set(true);
+				this.hovered = true;
 			},
 			pointerout: () => {
-				this.hovered.set(false);
+				this.hovered = false;
 			},
 		});
 
@@ -76,8 +72,8 @@ class Shoe {
 			instance.scale.x =
 				instance.scale.y =
 				instance.scale.z =
-					MathUtils.lerp(instance.scale.z, this.hovered() ? 1.4 : 1, 0.1);
-			instance.color.lerp(color.set(this.hovered() ? 'red' : 'white'), this.hovered() ? 1 : 0.1);
+					MathUtils.lerp(instance.scale.z, this.hovered ? 1.4 : 1, 0.1);
+			instance.color.lerp(color.set(this.hovered ? 'red' : 'white'), this.hovered ? 1 : 0.1);
 		});
 	}
 }
@@ -146,6 +142,6 @@ export const Default = makeStoryObject(DefaultInstancesStory, {
 		camera: { position: [0, 0, 20], fov: 50 },
 	},
 	argsOptions: {
-		range: number(100, { range: true, min: 0, max: 1000, step: 1 }),
+		range: number(100, { range: true, min: 10, max: 500, step: 1 }),
 	},
 });

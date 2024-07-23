@@ -1,4 +1,4 @@
-import { BufferAttribute, Color, ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
+import { Color, ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
 import { NgtInstanceNode, getLocalState, invalidateInstance } from '../instance';
 import { NgtState } from '../store';
 import { NgtAnyRecord } from '../types';
@@ -72,11 +72,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				value.constructor &&
 				targetProp.constructor.name === value.constructor.name
 			) {
-				if (value instanceof BufferAttribute && !value.array) {
-					currentInstance[key] = value;
-				} else {
-					targetProp['copy'](value);
-				}
+				targetProp['copy'](value);
 				if (!ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
 			} // if nothing else fits, just set the single value, ignore undefined
 			else if (value !== undefined) {
