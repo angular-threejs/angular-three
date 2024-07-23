@@ -95,7 +95,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 				}
 				// at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
 				if (child.__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
-				attach(parent, child.__ngt_renderer__[NgtRendererClassId.rawValue], attachProp);
+				attach(parent, child.__ngt_renderer__[NgtRendererClassId.rawValue], attachProp, true);
 			} else {
 				attach(parent, child, attachProp);
 			}

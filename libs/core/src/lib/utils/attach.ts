@@ -4,22 +4,28 @@ import { NgtAnyRecord } from '../types';
 import { applyProps } from './apply-props';
 import { NgtSignalStore } from './signal-store';
 
-export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = []): void {
+export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = [], useApplyProps = false): void {
 	const [base, ...remaining] = paths;
 	if (!base) return;
 
 	if (remaining.length === 0) {
-		applyProps(object, { [base]: value });
+		if (useApplyProps) applyProps(object, { [base]: value });
+		else object[base] = value;
 	} else {
 		assignEmpty(object, base);
-		attach(object[base], value, remaining);
+		attach(object[base], value, remaining, useApplyProps);
 	}
 }
 
-export function detach(parent: NgtAnyRecord, child: NgtAnyRecord, attachProp: string[] | NgtAttachFunction) {
+export function detach(
+	parent: NgtAnyRecord,
+	child: NgtAnyRecord,
+	attachProp: string[] | NgtAttachFunction,
+	useApplyProps = false,
+) {
 	const childLocalState = getLocalState(child);
 	if (childLocalState) {
-		if (Array.isArray(attachProp)) attach(parent, childLocalState.previousAttach, attachProp);
+		if (Array.isArray(attachProp)) attach(parent, childLocalState.previousAttach, attachProp, childLocalState.isRaw);
 		else (childLocalState.previousAttach as () => void)();
 	}
 }

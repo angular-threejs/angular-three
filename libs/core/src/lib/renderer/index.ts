@@ -360,9 +360,10 @@ export class NgtRenderer implements Renderer2 {
 					maybeCoerced = Number(maybeCoerced);
 				}
 				rS[NgtRendererClassId.rawValue] = maybeCoerced;
+			} else {
+				applyProps(el, { [name]: value });
 			}
 
-			applyProps(el, { [name]: value });
 			return false;
 		}
 
