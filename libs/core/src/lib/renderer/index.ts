@@ -265,9 +265,10 @@ export class NgtRenderer implements Renderer2 {
 		// _refChild: NgtRendererNode,
 		// _isMove?: boolean | undefined,
 	): void {
-		if (parent instanceof HTMLElement && (newChild instanceof HTMLElement || newChild instanceof Text)) {
-			return this.delegate.appendChild(parent, newChild);
-		}
+		// NOTE: not sure why this is here. investigate when we have time
+		// if (parent instanceof HTMLElement && (newChild instanceof HTMLElement || newChild instanceof Text)) {
+		// 	return this.delegate.appendChild(parent, newChild);
+		// }
 
 		if (parent == null || !parent.__ngt_renderer__ || parent === newChild) return;
 		this.appendChild(parent, newChild);

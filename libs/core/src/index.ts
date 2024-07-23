@@ -14,6 +14,7 @@ export { createAttachFunction } from './lib/utils/attach';
 export * from './lib/utils/before-render';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
+export * from './lib/utils/object-events';
 export * from './lib/utils/parameters';
 export * from './lib/utils/resolve-ref';
 export * from './lib/utils/signal-store';

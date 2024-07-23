@@ -11,7 +11,11 @@ if (!existsSync(coreMetadataJsonPath)) {
 	execSync(`node tools/scripts/generate-json.mjs`, { cwd: '.' });
 }
 
-const entryPoints = ['shaders/src/lib', 'vanilla-exports/src/index.ts'];
+const entryPoints = [
+	'shaders/src/lib',
+	'vanilla-exports/src/index.ts',
+	'performances/src/lib/instances/position-mesh.ts',
+];
 
 const paths = [];
 for (const entryPoint of entryPoints) {
@@ -88,7 +92,7 @@ for (const path of paths) {
 						} else if (ts.isTypeReferenceNode(member.type)) {
 							const typeDeclaration = typesMap[member.type.typeName.text];
 							if (typeDeclaration) {
-								processTypeReferenceNode(metadataAtMember, typeDeclaration.typeNode);
+								processTypeReferenceNode(metadataAtMember, typeDeclaration.typeNode || typeDeclaration.type);
 							}
 						}
 

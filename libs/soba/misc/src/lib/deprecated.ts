@@ -5,8 +5,8 @@ import { BufferAttribute } from 'three';
  */
 export const setUpdateRange = (attribute: BufferAttribute, updateRange: { offset: number; count: number }): void => {
 	if ('updateRanges' in attribute) {
-		// @ts-expect-error - r159
-		attribute.updateRanges[0] = updateRange;
+		// attribute.updateRanges[0] = updateRange;
+		attribute.addUpdateRange(updateRange.offset, updateRange.count);
 	} else {
 		Object.assign(attribute, { updateRange });
 	}

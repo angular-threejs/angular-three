@@ -28,6 +28,7 @@
 			"angular-three-soba/loaders": ["libs/soba/loaders/src/index.ts"],
 			"angular-three-soba/materials": ["libs/soba/materials/src/index.ts"],
 			"angular-three-soba/misc": ["libs/soba/misc/src/index.ts"],
+			"angular-three-soba/performances": ["libs/soba/performances/src/index.ts"],
 			"angular-three-soba/shaders": ["libs/soba/shaders/src/index.ts"],
 			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts"],
 			"angular-three-soba/vanilla-exports": ["libs/soba/vanilla-exports/src/index.ts"],
