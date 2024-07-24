@@ -7,18 +7,19 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	vite: {
+		ssr: {
+			noExternal: [
+				'angular-three',
+				'angular-three-soba/**',
+				'@angular/common',
+				'@angular/core',
+				'@angular/core/rxjs-interop',
+				'ngxtension/**',
+			],
+		},
 		esbuild: {
 			jsxDev: true,
 		},
-		// plugins: [
-		// 	{
-		// 		name: 'test',
-		// 		enforce: 'post',
-		// 		config: (config) => {
-		// 			return { esbuild: { jsxDev: true } };
-		// 		},
-		// 	},
-		// ],
 	},
 	integrations: [
 		analogjsangular({
@@ -26,22 +27,41 @@ export default defineConfig({
 				experimental: {
 					supportAnalogFormat: true,
 				},
-				// transformFilter: (code, id) => {
-				// 	console.trace('in transform filter');
-				// 	// console.log('in transform filter', {
-				// 	// 	id,
-				// 	// 	evaluated: id.includes('components') && !id.includes('astro') && !id.startsWith('\\x'),
-				// 	// });
-				// 	return false;
-				// },
 			},
 		}),
 		starlight({
 			title: 'Angular Three',
+			logo: {
+				light: './src/assets/angular-three.svg',
+				dark: './src/assets/angular-three-dark.svg',
+			},
 			social: {
 				github: 'https://github.com/angular-threejs/angular-three',
 			},
+			customCss: ['./src/tailwind.css'],
 			sidebar: [
+				{
+					label: 'Introduction',
+					slug: '',
+				},
+				{
+					label: 'Core',
+					items: [
+						{
+							label: 'Getting Started',
+							items: [
+								{
+									label: 'Installation',
+									slug: 'core/getting-started/installation',
+								},
+								{
+									label: 'First Scene',
+									slug: 'core/getting-started/first-scene',
+								},
+							],
+						},
+					],
+				},
 				{
 					label: 'Guides',
 					items: [
@@ -64,6 +84,8 @@ export default defineConfig({
 				plugins: [pluginLineNumbers()],
 			},
 		}),
-		tailwind(),
+		tailwind({
+			applyBaseStyles: false,
+		}),
 	],
 });

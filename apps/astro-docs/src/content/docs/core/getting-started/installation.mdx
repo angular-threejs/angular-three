@@ -1,0 +1,58 @@
+---
+title: Installation
+description: Install Angular Three and its dependencies.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Angular CLI">
+    Angular Three provides an `ng-add` schematic to set up `angular-three` and its dependencies.
+
+    ```shell
+    ng add angular-three
+    ```
+  </TabItem>
+  <TabItem label="Nx">
+    1. Install `angular-three` as a dependency
+
+    ```shell
+    npm install angular-three
+    # yarn add angular-three
+    # pnpm add angular-three
+    ```
+
+    2. Run the `init` generator to set up `angular-three` and its dependencies.
+
+    ```shell
+    nx generate angular-three:init
+    ```
+  </TabItem>
+  <TabItem label="Manual">
+    1. Install `angular-three` and its dependencies.
+
+    ```shell
+    npm install angular-three three ngxtension
+    # yarn add angular-three three ngxtension
+    # pnpm add angular-three three ngxtension
+    ```
+
+    2. Install `@types/three` as a development dependency.
+
+    ```shell
+    npm install --save-dev @types/three
+    # yarn add --dev @types/three
+    # pnpm add --dev @types/three
+    ```
+
+    3. Turn on `skipLibCheck` in `tsconfig.json` file (if haven't already)
+
+    ```json {3}
+    {
+      "compilerOptions": {
+        "skipLibCheck": true
+      }
+    }
+    ```
+  </TabItem>
+</Tabs>
