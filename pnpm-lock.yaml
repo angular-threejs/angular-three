@@ -460,17 +460,17 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(astro@4.12.2(@types/node@20.14.11)(less@4.2.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.2)(typescript@5.5.3))(tailwindcss@3.4.6(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.11)(typescript@5.5.3)))(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.12))(@types/node@20.14.11)(typescript@5.5.3))
       angular-three:
-        specifier: file:../../dist/libs/core
-        version: file:dist/libs/core(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(ngxtension@4.0.0(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(rxjs@7.8.1))(three@0.166.1)(typescript@5.5.3)
+        specifier: ^2.0.0-beta.268
+        version: 2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(ngxtension@4.0.0(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(rxjs@7.8.1))(three@0.166.1)(typescript@5.5.3)
       angular-three-cannon:
-        specifier: file:../../dist/libs/cannon
-        version: file:dist/libs/cannon(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@pmndrs/cannon-worker-api@2.4.0(three@0.166.1))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.166.1)(typescript@5.5.3))(cannon-es@0.20.0)(three@0.166.1)
+        specifier: ^2.0.0-beta.268
+        version: 2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@pmndrs/cannon-worker-api@2.4.0(three@0.166.1))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.166.1)(typescript@5.5.3))(cannon-es@0.20.0)(three@0.166.1)
       angular-three-postprocessing:
-        specifier: file:../../dist/libs/postprocessing
-        version: file:dist/libs/postprocessing(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(maath@0.10.8(@types/three@0.166.0)(three@0.166.1))(postprocessing@6.35.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1)
+        specifier: ^2.0.0-beta.268
+        version: 2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(maath@0.10.8(@types/three@0.166.0)(three@0.166.1))(postprocessing@6.35.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1)
       angular-three-soba:
-        specifier: file:../../dist/libs/soba
-        version: file:dist/libs/soba(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@monogrid/gainmap-js@3.0.5(three@0.166.1))(@pmndrs/vanilla@1.19.0(three@0.166.1))(camera-controls@2.8.5(three@0.166.1))(hls.js@1.5.13)(meshline@3.3.1(three@0.166.1))(stats-gl@2.2.8)(three-custom-shader-material@5.4.0(react@18.3.1)(three@0.166.1))(three-mesh-bvh@0.7.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1)(troika-three-text@0.47.2(three@0.166.1))
+        specifier: ^2.0.0-beta.268
+        version: 2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@monogrid/gainmap-js@3.0.5(three@0.166.1))(@pmndrs/vanilla@1.19.0(three@0.166.1))(camera-controls@2.8.5(three@0.166.1))(hls.js@1.5.13)(meshline@3.3.1(three@0.166.1))(stats-gl@2.2.8)(three-custom-shader-material@5.4.0(react@18.3.1)(three@0.166.1))(three-mesh-bvh@0.7.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1)(troika-three-text@0.47.2(three@0.166.1))
       astro:
         specifier: ^4.10.2
         version: 4.12.2(@types/node@20.14.11)(less@4.2.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.2)(typescript@5.5.3)
@@ -4912,8 +4912,8 @@ packages:
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
 
-  angular-three-cannon@file:dist/libs/cannon:
-    resolution: {directory: dist/libs/cannon, type: directory}
+  angular-three-cannon@2.0.0-beta.268:
+    resolution: {integrity: sha512-P2Rg2HwCM1qFrieoYJO57QIXxHZYql39nI7vq6Efd33AA+H2tBQD2w/qmy+kfc3umvMDV4LIDhkmSXJrGBZvMA==}
     peerDependencies:
       '@angular/common': '>=18.0.0'
       '@angular/core': '>=18.0.0'
@@ -4925,8 +4925,8 @@ packages:
       cannon-es-debugger:
         optional: true
 
-  angular-three-postprocessing@file:dist/libs/postprocessing:
-    resolution: {directory: dist/libs/postprocessing, type: directory}
+  angular-three-postprocessing@2.0.0-beta.268:
+    resolution: {integrity: sha512-q1qHDYwBqmhxMvbAmOEugKd/175PRmTnG/3mGPH/0PgltHl0VO31dcSqkDwVoCloVBRLB8XRCfK0z4hA6KZEXw==}
     peerDependencies:
       '@angular/common': '>=18.0.0'
       '@angular/core': '>=18.0.0'
@@ -4938,8 +4938,8 @@ packages:
       maath:
         optional: true
 
-  angular-three-soba@file:dist/libs/soba:
-    resolution: {directory: dist/libs/soba, type: directory}
+  angular-three-soba@2.0.0-beta.268:
+    resolution: {integrity: sha512-ZrU40TMmg2BeFSjEp8IoVdc3vpkAfDqgxO3qI8MarSl3bqSUqVrRhgocyxlcZUxSrjMnNzhUmqYrpKKC0poLSw==}
     peerDependencies:
       '@angular/common': '>=18.0.0'
       '@angular/core': '>=18.0.0'
@@ -4977,8 +4977,8 @@ packages:
       troika-three-text:
         optional: true
 
-  angular-three@file:dist/libs/core:
-    resolution: {directory: dist/libs/core, type: directory}
+  angular-three@2.0.0-beta.268:
+    resolution: {integrity: sha512-RiCDfQRS0ug7i2ZRqS23aagTMnYy3u32zfXkaHP3MV80PRVRWdmIT55h+E70qEXDWK2WJilXBfW357exkXYtKg==}
     peerDependencies:
       '@angular/common': '>=18.0.0'
       '@angular/core': '>=18.0.0'
@@ -20292,7 +20292,7 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  angular-three-cannon@file:dist/libs/cannon(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@pmndrs/cannon-worker-api@2.4.0(three@0.166.1))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.166.1)(typescript@5.5.3))(cannon-es@0.20.0)(three@0.166.1):
+  angular-three-cannon@2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@pmndrs/cannon-worker-api@2.4.0(three@0.166.1))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.166.1)(typescript@5.5.3))(cannon-es@0.20.0)(three@0.166.1):
     dependencies:
       '@angular/common': 18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1)
       '@angular/core': 18.1.1(rxjs@7.8.1)(zone.js@0.14.8)
@@ -20303,7 +20303,7 @@ snapshots:
     optionalDependencies:
       cannon-es-debugger: 1.0.0(cannon-es@0.20.0)(three@0.166.1)(typescript@5.5.3)
 
-  angular-three-postprocessing@file:dist/libs/postprocessing(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(maath@0.10.8(@types/three@0.166.0)(three@0.166.1))(postprocessing@6.35.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1):
+  angular-three-postprocessing@2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(maath@0.10.8(@types/three@0.166.0)(three@0.166.1))(postprocessing@6.35.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1):
     dependencies:
       '@angular/common': 18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1)
       '@angular/core': 18.1.1(rxjs@7.8.1)(zone.js@0.14.8)
@@ -20314,7 +20314,7 @@ snapshots:
     optionalDependencies:
       maath: 0.10.8(@types/three@0.166.0)(three@0.166.1)
 
-  angular-three-soba@file:dist/libs/soba(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@monogrid/gainmap-js@3.0.5(three@0.166.1))(@pmndrs/vanilla@1.19.0(three@0.166.1))(camera-controls@2.8.5(three@0.166.1))(hls.js@1.5.13)(meshline@3.3.1(three@0.166.1))(stats-gl@2.2.8)(three-custom-shader-material@5.4.0(react@18.3.1)(three@0.166.1))(three-mesh-bvh@0.7.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1)(troika-three-text@0.47.2(three@0.166.1)):
+  angular-three-soba@2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@monogrid/gainmap-js@3.0.5(three@0.166.1))(@pmndrs/vanilla@1.19.0(three@0.166.1))(camera-controls@2.8.5(three@0.166.1))(hls.js@1.5.13)(meshline@3.3.1(three@0.166.1))(stats-gl@2.2.8)(three-custom-shader-material@5.4.0(react@18.3.1)(three@0.166.1))(three-mesh-bvh@0.7.6(three@0.166.1))(three-stdlib@2.30.4(three@0.166.1))(three@0.166.1)(troika-three-text@0.47.2(three@0.166.1)):
     dependencies:
       '@angular/common': 18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1)
       '@angular/core': 18.1.1(rxjs@7.8.1)(zone.js@0.14.8)
@@ -20332,7 +20332,7 @@ snapshots:
       three-mesh-bvh: 0.7.6(three@0.166.1)
       troika-three-text: 0.47.2(three@0.166.1)
 
-  angular-three@file:dist/libs/core(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(ngxtension@4.0.0(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(rxjs@7.8.1))(three@0.166.1)(typescript@5.5.3):
+  angular-three@2.0.0-beta.268(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(ngxtension@4.0.0(@angular/common@18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1))(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(@swc-node/register@1.10.9(@swc/core@1.6.13(@swc/helpers@0.5.12))(@swc/types@0.1.9)(typescript@5.5.3))(@swc/core@1.6.13(@swc/helpers@0.5.12))(rxjs@7.8.1))(three@0.166.1)(typescript@5.5.3):
     dependencies:
       '@angular/common': 18.1.1(@angular/core@18.1.1(rxjs@7.8.1)(zone.js@0.14.8))(rxjs@7.8.1)
       '@angular/core': 18.1.1(rxjs@7.8.1)(zone.js@0.14.8)
