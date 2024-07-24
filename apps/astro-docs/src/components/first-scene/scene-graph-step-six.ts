@@ -8,7 +8,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, injectBeforeRender, injectStore, NgtArgs, type NgtVector3 } from 'angular-three';
-import { Mesh } from 'three';
+import type { Mesh } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
 extend({ OrbitControls });

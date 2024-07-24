@@ -8,7 +8,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender, type NgtVector3 } from 'angular-three';
-import { Mesh } from 'three';
+import type { Mesh } from 'three';
 
 @Component({
 	selector: 'app-cube',

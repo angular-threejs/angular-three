@@ -7,7 +7,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender } from 'angular-three';
-import { Mesh } from 'three';
+import type { Mesh } from 'three';
 
 @Component({
 	standalone: true,

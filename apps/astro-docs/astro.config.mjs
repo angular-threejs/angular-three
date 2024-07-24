@@ -7,12 +7,8 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	vite: {
-		// optimizeDeps: {
-		// 	include: ['rxjs', 'rxjs/operators', '@angular/common', '@angular/common/http', '@angular/core/rxjs-interop'],
-		// },
 		ssr: {
 			noExternal: [
-				// /fesm/,
 				'angular-three',
 				'angular-three-soba/**',
 				'@angular/common',

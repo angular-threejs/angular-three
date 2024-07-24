@@ -14,7 +14,7 @@ extend(THREE);
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'first-scene' },
 })
-export class FirstScene {
+export default class FirstScene {
 	step = input.required<keyof typeof scenes>();
 	sceneGraph = computed(() => scenes[this.step()]);
 }

@@ -4,7 +4,7 @@ description: Create our first 3D scene with Angular Three.
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { FirstScene } from '../../../../components/first-scene/first-scene.ts';
+import FirstScene from '../../../../components/first-scene/first-scene';
 
 Before diving into the API details of Angular Three, let's create a simple scene together to get a feel for what it's like to use Angular Three.
 
@@ -59,6 +59,7 @@ export class AppComponent {
 ```
 
 `NgtCanvas` uses the `sceneGraph` input to render the `SceneGraph` component with the Custom Renderer as well as sets up the following THREE.js building blocks:
+
 - A `WebGLRenderer` with anti-aliasing enabled and transparent background.
 - A default `PerspectiveCamera` with a default position of `[x:0, y:0, z:5]`.
 - A default `Scene`
@@ -72,9 +73,9 @@ We'll set up some basic styles in `styles.css`
 ```css title="src/styles.css"
 html,
 body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
+	height: 100%;
+	width: 100%;
+	margin: 0;
 }
 ```
 
@@ -110,7 +111,7 @@ export class AppComponent {
 
 ```html
 <div class="canvas-container">
-  <ngt-canvas [sceneGraph]="sceneGraph" />
+	<ngt-canvas [sceneGraph]="sceneGraph" />
 </div>
 ```
 
@@ -145,8 +146,8 @@ The catalogue isn't limited to THREE.js core entities. We can extend the catalog
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 extend({
-  OrbitControls // makes ngt-orbit-controls available
-})
+	OrbitControls, // makes ngt-orbit-controls available
+});
 ```
 
 :::
@@ -199,7 +200,7 @@ export class SceneGraph {}
 And here's the result:
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-  <FirstScene client:only step="stepOne"  />
+	<FirstScene client:only step="stepOne" />
 </div>
 
 ## Animation
@@ -239,7 +240,7 @@ export class SceneGraph {
 ```
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-  <FirstScene client:only step="stepTwo"  />
+	<FirstScene client:only step="stepTwo" />
 </div>
 
 ## Make a Component
@@ -274,6 +275,7 @@ Using Angular means we can make components out of our template. Let's do that fo
       }
     }
     ```
+
   </TabItem>
 
   <TabItem label="src/app/scene-graph.component.ts">
@@ -295,6 +297,7 @@ Using Angular means we can make components out of our template. Let's do that fo
     })
     export class SceneGraph {}
     ```
+
   </TabItem>
 </Tabs>
 
@@ -347,7 +350,7 @@ export class Cube {
 Our cube is now _interactive_!
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-  <FirstScene client:only step="stepThree"  />
+	<FirstScene client:only step="stepThree" />
 </div>
 
 ### Render another Cube
@@ -427,7 +430,7 @@ export class SceneGraph {}
 and now we have 2 cubes that have their own states, and react to events independently.
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-  <FirstScene client:only step="stepFour"  />
+	<FirstScene client:only step="stepFour" />
 </div>
 
 ## Lighting
@@ -503,7 +506,7 @@ export class Cube {
 Our cubes look better now, with dimensionality, showing that they are 3D objects.
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-  <FirstScene client:only step="stepFive"  />
+	<FirstScene client:only step="stepFive" />
 </div>
 
 ## Bonus: Take control of the camera
@@ -561,7 +564,7 @@ With Angular Three, we use `NgtArgs` structural directive to pass _Constructor A
 To access the `camera` and `glDomElement`, we use `injectStore` to access the state of the canvas.
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-  <FirstScene client:only step="stepSix"  />
+	<FirstScene client:only step="stepSix" />
 </div>
 
 And that concludes our guide. We have learned how to create a basic scene, add some lights, and make our cubes interactive.
