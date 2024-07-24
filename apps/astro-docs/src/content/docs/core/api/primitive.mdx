@@ -1,0 +1,41 @@
+---
+title: Primitive
+description: Details about the Angular Three `ngt-primitive`
+---
+
+There are occasions where we have a pre-existing entities that we want to include in our Angular Three Scene Graph,
+we can use the `ngt-primitive` element to do this.
+
+```angular-html
+<ngt-primitive *args="[model()]" [parameters]="{ scale: 1.5 }" />
+```
+
+:::note
+
+Learn more about [`NgtArgs`](/core/api/args)
+
+:::
+
+- `ngt-primitive` always requires `*args` with the entity to render.
+- `ngt-primitive` accepts `parameters` which are passed to the entity.
+- Attaching works the same for `ngt-primitive`
+- Differ from other Custom Elements, Angular Three Custom Renderer does not destroy the entity for `ngt-primitive`
+
+A more realistic example would be to use `ngt-primitive` to render a GLTF model.
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-primitive *args="[model()]" [parameters]="{ scale: 0.01 }" />
+  `,
+  imports: [NgtArgs]
+})
+export class Model {
+  private gltf = injectGLTF(() => 'path/to/model.glb');
+  protected model = computed(() => {
+    const gltf = this.gltf();
+    if (!gltf) return null;
+    return gltf.scene;
+  });
+}
+```

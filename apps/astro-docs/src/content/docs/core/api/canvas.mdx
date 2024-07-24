@@ -1,0 +1,73 @@
+---
+title: NgtCanvas
+description: Angular Three Canvas API
+---
+
+Everything in Angular Three starts with the `NgtCanvas` component.
+
+```angular-ts
+@Component({
+  standalone: true,
+  template: `
+    <ngt-canvas
+      [sceneGraph]="SceneGraph"
+      [camera]="cameraOptions"
+      [shadows]="true"
+    />
+  `,
+  imports: [NgtCanvas],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class Experience {
+  SceneGraph = SceneGraph;
+}
+```
+
+## Inputs
+
+| Property       | Description                                                                                                                                                                                                                              | Default Value |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| **sceneGraph** | (required) A Component class that is the root of the Scene Graph. It can also accept `'routed'` and `NgtCanvas` will use `NgtRoutedScene` by default to enable routed Scene Graph.                                                       | -             |
+| orthographic   | A `boolean` flag to determine whether to create an `OrthographicCamera` instead of a `PerspectiveCamera`.                                                                                                                                | false         |
+| camera         | Options for the default camera. Pass in the options accordingly depending on whether the camera is `Orthographic` or `Perspective`                                                                                                       | -             |
+| lookAt         | A `Vector3` or `Partial<LookAt>` that sets the default lookAt position.                                                                                                                                                                  | -             |
+| frameloop      | A `string` that sets the frameloop for the canvas. It can also accept `'always'`, `'demand'`, or `'never'` to set the frameloop type.                                                                                                    | 'always'      |
+| gl             | A `WebGLRenderer` instance or properties that go into the default renderer.                                                                                                                                                              | -             |
+| scene          | A `Scene` instance or properties that go into the default scene.                                                                                                                                                                         | -             |
+| raycaster      | A `Partial<Raycaster>` object that allows you to customize the raycaster.                                                                                                                                                                | -             |
+| legacy         | A `boolean` flag to determine whether to use legacy lights.                                                                                                                                                                              | false         |
+| linear         | A `boolean` flag to determine whether to use linear color space.                                                                                                                                                                         | false         |
+| flat           | A `boolean` flag to determine whether to use flat shading.                                                                                                                                                                               | false         |
+| shadows        | A `boolean` flag to determine whether to enable shadows `PCFSoftShadowMap`. It can also accept a `string` from `'basic', 'percentage', 'soft', or 'variance'` to set the shadow map type. It can also accept a `Partial<WebGLShadowMap>` | false         |
+| events         | A function that allows you to customize the event handler for pointer events. It takes an `EventManager` as an argument and returns an `EventManager`. You can use this to register custom event handlers for pointer events.            | -             |
+| eventSource    | The element that the events will be attached to. If not provided, the events will be attached to the host element of `NgtCanvas` component                                                                                               | -             |
+| eventPrefix    | A `string` that sets the event prefix for the canvas.                                                                                                                                                                                    | 'offset'      |
+| size           | Dimensions of the canvas. It can also accept a `Partial<NgtSize>` to set the width and height.                                                                                                                                           | -             |
+| performance    | A `Partial<NgtPerformance>` object that allows you to customize the performance of the canvas.                                                                                                                                           | -             |
+| dpr            | A `number` or `[min, max]` that sets the device pixel ratio.                                                                                                                                                                             | -             |
+
+## Outputs
+
+| Property      | Description                                             |
+| ------------- | ------------------------------------------------------- |
+| created       | Emit when the canvas is created but before rendering    |
+| pointerMissed | Emit when a pointer event is not captured by any object |
+
+## Canvas Defaults
+
+If you have both the scene graphs in Vanilla THREE.js and Angular Three, and you see that the one in Angular Three _looks different_, it might be because of the defaults that Angular Three sets for the underlying THREE.js building blocks.
+
+`NgtCanvas` sets up a translucent `THREE.WebGLRenderer` with the following constructor arguments:
+
+- antialias = true
+- alpha = true
+- powerReference = 'high-performance'
+
+and the following properties:
+
+- outputEncoding = THREE.sRGBEncoding
+- toneMapping = THREE.ACESFilmicToneMapping
+
+A `window:resize` listener that will update the `THREE.Renderer` and `THREE.Camera` when the container is resized.
+
+From THREE.js 0.139+, `THREE.ColorManagement.legacyMode` is set to `false` to enable automatic conversion of colors based on the Renderer's configured color space. For more on this topic, check [THREE.js Color Management](https://threejs.org/docs/#manual/en/introduction/Color-management).

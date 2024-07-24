@@ -38,6 +38,7 @@ import { createPointerEvents } from './dom/events';
 import { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
 import { provideNgtRenderer } from './renderer';
 import { NgtCanvasConfigurator, NgtCanvasElement, injectCanvasRootInitializer } from './roots';
+import { NgtRoutedScene } from './routed-scene';
 import { NgtDpr, NgtPerformance, NgtRendererLike, NgtSize, NgtState, injectStore, provideStore } from './store';
 import { NgtObject3DNode } from './three-types';
 import { NgtProperties } from './types';
@@ -144,7 +145,12 @@ export class NgtCanvas {
 	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
 
-	sceneGraph = input.required<Type<any>>();
+	sceneGraph = input.required<Type<any>, Type<any> | 'routed'>({
+		transform: (value) => {
+			if (value === 'routed') return NgtRoutedScene;
+			return value;
+		},
+	});
 	gl = input<NgtGLOptions>();
 	size = input<NgtSize>();
 	shadows = input(false, {

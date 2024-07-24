@@ -26,6 +26,7 @@ import { Experience, bloom, glitch, selectedAction } from './experience';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas],
+	providers: [{ provide: 'MyTest' as any, useValue: 'test' }],
 	host: { class: 'basic-soba' },
 })
 export default class Basic {

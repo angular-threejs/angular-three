@@ -1,0 +1,26 @@
+---
+title: Code Editor Setup
+description: Set up your code editor for Angular Three
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Angular Three uses a Custom Renderer and works with THREE.js via a collection of Custom Elements. Hence,
+we need to set up our code editor to recognize these Custom Elements.
+
+<Tabs>
+  <TabItem label="Jetbrains IDE">
+    Angular Three provides and sets up a `web-types.json` file that can be used with Jetbrains IDEs out of the box.
+
+    In the case where manual setup is required, `web-types.json` can be found in the `node_modules/angular-three/web-types.json`
+  </TabItem>
+  <TabItem label="VSCode">
+    Angular Three provides a `metadata.json` file that can be used with VSCode `html.customData` setting.
+    Please refer to the [VSCode documentation](https://code.visualstudio.com/docs/languages/html#_html-custom-data) for more information.
+
+    The `metadata.json` file can be found in the `node_modules/angular-three/metadata.json`
+  </TabItem>
+  <TabItem label="Neovim">
+    TBD
+  </TabItem>
+</Tabs>

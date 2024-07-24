@@ -31,6 +31,11 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 'Angular Three',
+			favicon: './src/assets/angular-three-dark.svg',
+			tableOfContents: {
+				minHeadingLevel: 2,
+				maxHeadingLevel: 4,
+			},
 			logo: {
 				light: './src/assets/angular-three.svg',
 				dark: './src/assets/angular-three-dark.svg',
@@ -55,8 +60,37 @@ export default defineConfig({
 									slug: 'core/getting-started/installation',
 								},
 								{
+									label: 'Editor Setup',
+									slug: 'core/getting-started/editor-setup',
+								},
+								{
 									label: 'First Scene',
 									slug: 'core/getting-started/first-scene',
+								},
+							],
+						},
+						{
+							label: 'API',
+							items: [
+								{
+									label: 'NgtCanvas',
+									slug: 'core/api/canvas',
+								},
+								{
+									label: 'Custom Renderer',
+									slug: 'core/api/custom-renderer',
+								},
+								{
+									label: 'NgtArgs',
+									slug: 'core/api/args',
+								},
+								{
+									label: 'Primitive',
+									slug: 'core/api/primitive',
+								},
+								{
+									label: 'Raw Value',
+									slug: 'core/api/raw-value',
 								},
 							],
 						},

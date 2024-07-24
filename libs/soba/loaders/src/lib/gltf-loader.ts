@@ -1,5 +1,5 @@
-import { Injector, Signal } from '@angular/core';
-import { NgtLoaderResults, NgtObjectMap, injectLoader } from 'angular-three';
+import { computed, Injector, Signal } from '@angular/core';
+import { injectLoader, NgtLoaderResults, NgtObjectMap } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Loader } from 'three';
 import { DRACOLoader, GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
@@ -44,10 +44,20 @@ function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 		injector?: Injector;
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
-): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> {
-	return assertInjector(_injectGLTF, injector, () =>
-		injectLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) }),
-	) as Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null>;
+): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> & { scene: Signal<GLTF['scene'] | null> } {
+	return assertInjector(_injectGLTF, injector, () => {
+		const result = injectLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) });
+
+		Object.defineProperty(result, 'scene', {
+			value: computed(() => {
+				const gltf = result() as unknown as GLTF;
+				if (!gltf) return null;
+				return gltf.scene;
+			}),
+		});
+
+		return result;
+	}) as Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> & { scene: Signal<GLTF['scene'] | null> };
 }
 
 _injectGLTF.preload = <TUrl extends string | string[] | Record<string, string>>(
