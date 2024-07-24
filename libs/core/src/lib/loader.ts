@@ -49,8 +49,13 @@ function load<
 	inputs: () => TUrl,
 	{
 		extensions,
+		onLoad,
 		onProgress,
-	}: { extensions?: NgtLoaderExtensions<TLoaderConstructor>; onProgress?: (event: ProgressEvent) => void } = {},
+	}: {
+		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
+		onLoad?: (data: TData) => void;
+		onProgress?: (event: ProgressEvent) => void;
+	} = {},
 ) {
 	return (): Array<Promise<any>> | null => {
 		const urls = normalizeInputs(inputs());
@@ -76,6 +81,11 @@ function load<
 								if ('scene' in (data as NgtAnyRecord)) {
 									Object.assign(data as NgtAnyRecord, makeObjectGraph((data as NgtAnyRecord)['scene']));
 								}
+
+								if (onLoad) {
+									onLoad(data);
+								}
+
 								resolve(data);
 							},
 							onProgress,
@@ -100,10 +110,12 @@ function _injectLoader<
 	{
 		extensions,
 		onProgress,
+		onLoad,
 		injector,
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
 		onProgress?: (event: ProgressEvent) => void;
+		onLoad?: (data: TData) => void;
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
@@ -115,7 +127,7 @@ function _injectLoader<
 		> | null>(null);
 
 		afterNextRender(() => {
-			const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress });
+			const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress, onLoad });
 			autoEffect(
 				() => {
 					const originalUrls = inputs();

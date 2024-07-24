@@ -1,0 +1,31 @@
+---
+title: injectLoader
+description: A utility to inject a loader into your Angular component.
+---
+
+`injectLoader` is a utility function that abstracts the process of loading 3D assets.
+
+It accepts:
+- A function that returns a `THREE.Loader` constructor
+- A function that returns a `string` or `string[]`
+- An option object that accepts the following properties:
+  - `extensions`: A function that accepts a `THREE.Loader` and returns nothing. It is used to extend the loader with additional functionality.
+  - `onLoad`: A function that accepts the loaded data and returns nothing. It is called after the loader has finished loading the data.
+  - `onProgress`: A function that accepts a `ProgressEvent` and returns nothing. It is called when the loader emits a progress event.
+  - `injector`: An `Injector` instance. It is used to set the Injection Context for the loader
+
+```angular-ts
+import { injectLoader } from 'angular-three';
+
+@Component({
+  template: `
+    @if (gltfResult(); as gltf) {
+      <ngt-primitive *args="[gltf.scene]" />
+    }
+  `,
+})
+export class Experience {
+  gltfResult = injectLoader(() => GLTFLoader, () => 'path/to/model.glb');
+}
+```
+

@@ -1,0 +1,102 @@
+---
+title: Routed Scene
+description: Details about the Angular Three `NgtRoutedScene`
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Angular Three supports routed scenes. This is useful for when you want to have different scene graphs for different routes but keep the
+root `NgtCanvas` component the same.
+
+To enable routed scenes, pass `'routed'` to the `sceneGraph` input of the `NgtCanvas` component.
+
+```angular-html
+<ngt-canvas sceneGraph="routed" />
+```
+
+## Example
+
+To start, we can create two Scene components: `RedScene` and `BlueScene`
+
+<Tabs>
+  <TabItem label="src/app/red-scene.component.ts">
+    ```angular-ts
+    import { Component, viewChild, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
+    import { injectBeforeRender } from 'angular-three';
+
+    @Component({
+      standalone: true,
+      template: `
+       <ngt-mesh #cube>
+           <ngt-box-geometry />
+           <ngt-mesh-basic-material color="red" />
+       </ngt-mesh>
+      `,
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export default class RedScene {
+      cubeRef = viewChild.required<ElementRef<THREE.Mesh>>('cube');
+
+      constructor() {
+       injectBeforeRender(({ clock }) => {
+         this.cube().nativeElement.rotation.x = clock.elapsedTime;
+         this.cube().nativeElement.rotation.y = clock.elapsedTime;
+       });
+      }
+    }
+    ```
+  </TabItem>
+
+  <TabItem label="src/app/blue-scene.component.ts">
+    ```angular-ts
+    import { Component, viewChild, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
+    import { injectBeforeRender } from 'angular-three';
+
+    @Component({
+      standalone: true,
+      template: `
+       <ngt-mesh #cube>
+           <ngt-box-geometry />
+           <ngt-mesh-basic-material color="blue" />
+       </ngt-mesh>
+      `,
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    export default class BlueScene {
+      cubeRef = viewChild.required<ElementRef<THREE.Mesh>>('cube');
+
+      constructor() {
+       injectBeforeRender(({ clock }) => {
+         this.cube().nativeElement.rotation.x = clock.elapsedTime;
+         this.cube().nativeElement.rotation.y = clock.elapsedTime;
+       });
+      }
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+Next, we'll use `RedScene` and `BlueScene` in our routing configuration.
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter([
+      {
+        path: '',
+        loadComponent: () => import('./app/red-scene.component'),
+      },
+      {
+        path: 'blue',
+        loadComponent: () => import('./app/blue-scene.component'),
+      },
+    ]),
+  ],
+}).catch((err) => console.error(err));
+```

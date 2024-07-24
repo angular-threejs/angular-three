@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtGroup, extend, injectNextBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { NgtArgs, NgtGroup, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	Color,
@@ -203,7 +203,7 @@ export class NgtsContactShadows {
 		let initialBackground: Color | Texture | null;
 		let initialOverrideMaterial: Material | null;
 
-		injectNextBeforeRender(() => {
+		injectBeforeRender(() => {
 			const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
 			const [{ frames, blur, smooth }, gl, scene, contactShadows, { depthMaterial, renderTarget }] = [
 				this.options(),

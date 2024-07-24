@@ -313,6 +313,8 @@ The events system in NGT is completely ported from R3F. For more information, pl
 This is **discouraged** at the moment due to how Angular Zoneless Change Detection works.
 `(beforeRender)` handler will trigger change detection on every frame if used with `provideExperimentalZonelessChangeDetection()`.
 
+In the meantime, [`injectBeforeRender`](/core/utilities/before-render) is a better alternative.
+
 :::
 
 To register a callback in the animation loop, listen to the `beforeRender` event on a NGT element.

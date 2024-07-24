@@ -1,5 +1,5 @@
 import { Directive, Signal, afterNextRender, input, untracked } from '@angular/core';
-import { injectNextBeforeRender, injectStore } from 'angular-three';
+import { injectBeforeRender, injectStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Vector3 } from 'three';
@@ -73,7 +73,7 @@ export class NgtsCameraShake {
 			});
 		});
 
-		injectNextBeforeRender(({ delta, clock }) => {
+		injectBeforeRender(({ delta, clock }) => {
 			const [{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate }, camera] = [
 				this.options(),
 				this.camera(),

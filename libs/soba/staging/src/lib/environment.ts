@@ -25,8 +25,8 @@ import {
 	NgtPortalContent,
 	applyProps,
 	extend,
+	injectBeforeRender,
 	injectLoader,
-	injectNextBeforeRender,
 	injectStore,
 	is,
 	pick,
@@ -479,7 +479,7 @@ export class NgtsEnvironmentPortal {
 		});
 
 		let count = 1;
-		injectNextBeforeRender(() => {
+		injectBeforeRender(() => {
 			const frames = this.options().frames;
 			if (frames === Infinity || (frames != null && count < frames)) {
 				const camera = this.camera()?.nativeElement;

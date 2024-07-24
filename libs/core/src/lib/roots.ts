@@ -12,7 +12,7 @@ import {
 	VSMShadowMap,
 	Vector3,
 } from 'three';
-import { NgtCanvasInputs } from './canvas';
+import { NgtCanvasOptions } from './canvas';
 import { prepare } from './instance';
 import { injectLoop } from './loop';
 import { NgtSize, NgtState, injectStore } from './store';
@@ -53,7 +53,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 			}
 
 			let isConfigured = false;
-			let lastCamera: NgtCanvasInputs['camera'];
+			let lastCamera: NgtCanvasOptions['camera'];
 
 			return {
 				isConfigured,
@@ -74,7 +74,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						}
 					}
 				},
-				configure: (inputs: NgtCanvasInputs) => {
+				configure: (inputs: NgtCanvasOptions) => {
 					const {
 						shadows = false,
 						linear = false,

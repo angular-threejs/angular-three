@@ -3,6 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
 import { NgtsBBAnchor, NgtsBBAnchorOptions } from 'angular-three-soba/staging';
 import { BoxHelper } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
@@ -53,6 +54,26 @@ class BBAnchorWrapper {
 	standalone: true,
 	template: `
 		<bb-anchor-wrapper [options]="options()" [drawBoundingBox]="drawBoundingBox()">
+			<ngts-html>
+				<div [ngts-html-content]="{ center: true, containerStyle: { color: 'white', whiteSpace: 'nowrap' } }">
+					HTML content
+				</div>
+			</ngts-html>
+		</bb-anchor-wrapper>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [BBAnchorWrapper, NgtsHTML, NgtsHTMLContent],
+})
+class WithHTMLBBAnchorStory {
+	options = input<NgtsBBAnchorOptions>({ anchor: [1, 1, 1] });
+	drawBoundingBox = input(false);
+}
+
+@Component({
+	standalone: true,
+	template: `
+		<bb-anchor-wrapper [options]="options()" [drawBoundingBox]="drawBoundingBox()">
 			<bb-anchor-mesh-object />
 		</bb-anchor-wrapper>
 	`,
@@ -71,6 +92,16 @@ export default {
 } as Meta;
 
 export const WithMesh = makeStoryObject(WithMeshBBAnchorStory, {
+	canvasOptions: { camera: { position: [2, 2, 2] }, controls: false },
+	argsOptions: {
+		drawBoundingBox: true,
+		options: {
+			anchor: [1, 1, 1],
+		},
+	},
+});
+
+export const WithHTML = makeStoryObject(WithHTMLBBAnchorStory, {
 	canvasOptions: { camera: { position: [2, 2, 2] }, controls: false },
 	argsOptions: {
 		drawBoundingBox: true,

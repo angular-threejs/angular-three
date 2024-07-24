@@ -1,0 +1,54 @@
+---
+title: Portals
+description: Details about the Angular Three `NgtPortal`
+---
+
+In THREE.js, there is a construct called `WebGLRenderTarget`. It is used to render the scene into a texture and then
+render the texture into the canvas. This is useful for things like post-processing effects, or HUD-like visuals.
+
+:::tip[Did you know?]
+
+Recommended read: [Beautiful and Mind-bending Effects with WebGLRenderTarget](https://blog.maximeheckel.com/posts/beautiful-and-mind-bending-effects-with-webgl-render-targets/)
+
+:::
+
+In Angular Three, we can use `NgtPortal` component to create an off-screen buffer that can be used to render secondary scenes.
+
+`NgtPortal` provides a _layered_ `NgtSignalStore<NgtState>` that its children can inject. This makes sure that children of `NgtPortal`
+access the state of the `NgtPortal` and not the root `NgtSignalStore<NgtState>`.
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-torus-geometry />
+    </ngt-mesh>
+
+    <ngt-portal [container]="secondaryScene">
+      <ng-template portalContent>
+        <ngts-perspective-camera [options]="{ makeDefault: true }" />
+        <ngt-mesh>
+          <ngt-box-geometry />
+        </ngt-mesh>
+      </ng-template>
+    </ngt-portal>
+  `,
+  imports: [NgtPortal, NgtPortalContent],
+})
+export class HUD {
+  secondaryScene = new Scene();
+}
+```
+
+The portal can have its own scene, camera, and children.
+
+:::note
+
+The `NgtsPerspectiveCamera` in the example above is an abstraction
+over `THREE.PerspectiveCamera` that has the ability to make itself the default camera for the closest `NgtSignalStore<NgtState>`.
+
+:::
+
+## Examples
+
+TBD

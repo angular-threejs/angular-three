@@ -1,0 +1,59 @@
+---
+title: Performance
+description: Details about the Angular Three Performance
+---
+
+## Reuse Geometries and Materials
+
+Each Geometry and Material consumes the GPU's resources. If we know certain Geometries and/or Materials will repeat, we can reuse them
+
+### Imperative
+
+We can have static geometries and materials as Component's properties
+
+```angular-ts
+@Component({
+  standalone: true,
+  template: `
+    <ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[1, 1, 1]" />
+    <ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[2, 2, 2]" />
+  `,
+})
+export class SceneGraph {
+  readonly sphere = new THREE.SphereGeometry(1, 32, 32);
+  readonly redMaterial = new THREE.MeshBasicMaterial({ color: 'red' });
+}
+````
+
+We can also store these static objects in a Service to reuse across the application or turn them into Signals.
+
+### Declarative
+
+We can put the Geometries and Materials declaratively on the template so they can react to Input changes; and still can reuse them
+
+```angular-html
+<ngt-sphere-geometry #sphere *args="[1, 32, 32]" attach="none" />
+<ngt-mesh-basic-material #redMaterial color="red" attach="none" />
+
+<ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[1, 1, 1]" />
+<ngt-mesh [geometry]="sphere" [material]="redMaterial" [position]="[2, 2, 2]" />
+```
+
+:::tip[Did you know?]
+
+Setting `attach="none"` on the Material and Geometry components will prevent them from being attached to the parent, which is a `Scene` in this case.
+
+:::
+
+## On-demand Rendering
+
+> Credit: [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#on-demand-rendering)
+
+The SceneGraph is usually rendered at 60 frames per second. This makes sense if the SceneGraph contains constantly moving parts (eg: game). Consequently, this drains the device's resources.
+
+If the SceneGraph has static entities, or entities that are allowed to come to a rest, constantly rendering at 60fps would be wasteful. In those cases, we can opt into on-demand rendering, which will only render when necessary. All we have to do is to set `frameloop="demand"` on the `<ngt-canvas>`
+
+```angular-html
+<ngt-canvas [sceneGraph]="SceneGraph" frameloop="demand" />
+```
+

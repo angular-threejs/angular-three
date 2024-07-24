@@ -6,7 +6,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtGroup, extend, injectNextBeforeRender, omit } from 'angular-three';
+import { NgtGroup, extend, injectBeforeRender, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, MathUtils } from 'three';
 
@@ -58,7 +58,7 @@ export class NgtsFloat {
 
 	constructor() {
 		const offset = Math.random() * 10000;
-		injectNextBeforeRender(({ clock, invalidate }) => {
+		injectBeforeRender(({ clock, invalidate }) => {
 			const [{ enabled, speed, rotationIntensity, floatingRange, floatIntensity, autoInvalidate }] = [this.options()];
 			if (!enabled || speed === 0) return;
 

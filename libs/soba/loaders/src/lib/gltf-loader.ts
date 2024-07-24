@@ -38,15 +38,20 @@ function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 		useMeshOpt = true,
 		injector,
 		extensions,
+		onLoad,
 	}: {
 		useDraco?: boolean | string;
 		useMeshOpt?: boolean;
 		injector?: Injector;
 		extensions?: (loader: GLTFLoader) => void;
+		onLoad?: (data: GLTF & NgtObjectMap) => void;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> & { scene: Signal<GLTF['scene'] | null> } {
 	return assertInjector(_injectGLTF, injector, () => {
-		const result = injectLoader(() => GLTFLoader, path, { extensions: _extensions(useDraco, useMeshOpt, extensions) });
+		const result = injectLoader(() => GLTFLoader, path, {
+			extensions: _extensions(useDraco, useMeshOpt, extensions),
+			onLoad,
+		});
 
 		Object.defineProperty(result, 'scene', {
 			value: computed(() => {

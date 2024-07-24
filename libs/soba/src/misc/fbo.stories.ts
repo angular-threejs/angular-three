@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender, injectNextBeforeRender } from 'angular-three';
+import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsFBO } from 'angular-three-soba/misc';
 import { Color, Mesh, Scene, WebGLRenderTarget } from 'three';
@@ -67,7 +67,7 @@ class TargetWrapper {
 	});
 
 	constructor() {
-		injectNextBeforeRender(({ gl }) => {
+		injectBeforeRender(({ gl }) => {
 			const [camera, scene, target] = [this.camera().cameraRef().nativeElement, this.scene(), this.target()];
 			if (!target) return;
 			camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;

@@ -7,8 +7,12 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	vite: {
+		// optimizeDeps: {
+		// 	include: ['rxjs', 'rxjs/operators', '@angular/common', '@angular/common/http', '@angular/core/rxjs-interop'],
+		// },
 		ssr: {
 			noExternal: [
+				// /fesm/,
 				'angular-three',
 				'angular-three-soba/**',
 				'@angular/common',
@@ -51,9 +55,11 @@ export default defineConfig({
 				},
 				{
 					label: 'Core',
+					collapsed: true,
 					items: [
 						{
 							label: 'Getting Started',
+							collapsed: true,
 							items: [
 								{
 									label: 'Installation',
@@ -71,6 +77,7 @@ export default defineConfig({
 						},
 						{
 							label: 'API',
+							collapsed: true,
 							items: [
 								{
 									label: 'NgtCanvas',
@@ -92,25 +99,45 @@ export default defineConfig({
 									label: 'Raw Value',
 									slug: 'core/api/raw-value',
 								},
+								{
+									label: 'Store',
+									slug: 'core/api/store',
+								},
+							],
+						},
+						{
+							label: 'Utilities',
+							collapsed: true,
+							items: [
+								{
+									label: 'injectBeforeRender',
+									slug: 'core/utilities/before-render',
+								},
+								{
+									label: 'injectLoader',
+									slug: 'core/utilities/loader',
+								},
+							],
+						},
+						{
+							label: 'Advanced',
+							collapsed: true,
+							items: [
+								{
+									label: 'Portals',
+									slug: 'core/advanced/portals',
+								},
+								{
+									label: 'Routed Scene',
+									slug: 'core/advanced/routed-scene',
+								},
+								{
+									label: 'Performance',
+									slug: 'core/advanced/performance',
+								},
 							],
 						},
 					],
-				},
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{
-							label: 'Example Guide',
-							slug: 'guides/example',
-						},
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: {
-						directory: 'reference',
-					},
 				},
 			],
 			expressiveCode: {

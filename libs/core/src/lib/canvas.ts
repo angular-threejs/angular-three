@@ -51,7 +51,7 @@ export type NgtGLOptions =
 	| Partial<NgtProperties<WebGLRenderer> | WebGLRendererParameters>
 	| undefined;
 
-export interface NgtCanvasInputs {
+export interface NgtCanvasOptions {
 	/** A threejs renderer instance or props that go into the default renderer */
 	gl?: NgtGLOptions;
 	/** Dimensions to fit the renderer to. Will measure canvas dimensions if omitted */
@@ -156,22 +156,22 @@ export class NgtCanvas {
 	shadows = input(false, {
 		transform: (value) => {
 			if (value === '') return booleanAttribute(value);
-			return value as NonNullable<NgtCanvasInputs['shadows']>;
+			return value as NonNullable<NgtCanvasOptions['shadows']>;
 		},
 	});
 	legacy = input(false, { transform: booleanAttribute });
 	linear = input(false, { transform: booleanAttribute });
 	flat = input(false, { transform: booleanAttribute });
 	orthographic = input(false, { transform: booleanAttribute });
-	frameloop = input<NonNullable<NgtCanvasInputs['frameloop']>>('always');
+	frameloop = input<NonNullable<NgtCanvasOptions['frameloop']>>('always');
 	performance = input<Partial<Omit<NgtPerformance, 'regress'>>>();
 	dpr = input<NgtDpr>([1, 2]);
 	raycaster = input<Partial<Raycaster>>();
 	scene = input<Scene | Partial<Scene>>();
-	camera = input<NonNullable<NgtCanvasInputs['camera']>>();
+	camera = input<NonNullable<NgtCanvasOptions['camera']>>();
 	events = input(createPointerEvents);
 	eventSource = input<HTMLElement | ElementRef<HTMLElement>>();
-	eventPrefix = input<NonNullable<NgtCanvasInputs['eventPrefix']>>('offset');
+	eventPrefix = input<NonNullable<NgtCanvasOptions['eventPrefix']>>('offset');
 	lookAt = input<Vector3 | Parameters<Vector3['set']>>();
 	created = output<NgtState>();
 	pointerMissed = outputFromObservable(this.store.get('pointerMissed$'));
