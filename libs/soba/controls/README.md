@@ -5,11 +5,12 @@ This secondary entry point includes controls for manipulating the camera in your
 | Package           | Description                      |
 | ----------------- | -------------------------------- |
 | `camera-controls` | required by `NgtsCameraControls` |
+| `maath`           | required by `NgtsScrollControls` |
 
 ```bash
-npm install camera-controls
-# yarn add camera-controls
-# pnpm add camera-controls
+npm install camera-controls maath
+# yarn add camera-controls maath
+# pnpm add camera-controls maath
 ```
 
 ## TOC

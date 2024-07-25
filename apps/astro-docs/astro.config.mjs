@@ -1,8 +1,43 @@
 import analogjsangular from '@analogjs/astro-angular';
 import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
-import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
 import { defineConfig } from 'astro/config';
+import { readFileSync } from 'fs';
+
+function includeContentPlugin() {
+	const map = new Map();
+
+	return [
+		{
+			name: 'pre-include-content',
+			enforce: 'pre',
+			transform(code, id) {
+				if (!id.includes('?includeContent')) return;
+				const [filePath] = id.split('?');
+				const fileContent = readFileSync(filePath, 'utf-8');
+
+				if (map.has(filePath)) return;
+				map.set(filePath, fileContent.replace(/\t/g, '  '));
+			},
+		},
+		{
+			name: 'post-include-content',
+			enforce: 'post',
+			transform(code, id) {
+				if (!id.includes('?includeContent')) return;
+				const [filePath] = id.split('?');
+				const fileContent = map.get(filePath);
+
+				return {
+					code: `
+            ${code}
+            export const content = ${JSON.stringify(fileContent)};
+          `,
+				};
+			},
+		},
+	];
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,11 +50,13 @@ export default defineConfig({
 				'@angular/core',
 				'@angular/core/rxjs-interop',
 				'ngxtension/**',
+				'@pmndrs/vanilla',
 			],
 		},
 		esbuild: {
 			jsxDev: true,
 		},
+		plugins: [includeContentPlugin()],
 	},
 	integrations: [
 		analogjsangular({
@@ -31,7 +68,6 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 'Angular Three',
-			site: 'https://angularthree.netlify.app/',
 			favicon: './src/assets/angular-three-dark.svg',
 			tableOfContents: {
 				minHeadingLevel: 2,
@@ -91,11 +127,21 @@ export default defineConfig({
 						},
 					],
 				},
+				{
+					label: 'Soba',
+					items: [
+						{ label: 'Introduction', slug: 'soba/introduction' },
+						{
+							label: 'Abstractions',
+							items: [
+								{ label: 'Introduction', slug: 'soba/abstractions/introduction' },
+								{ label: 'NgtsGradientTexture', slug: 'soba/abstractions/gradient-texture' },
+								{ label: 'NgtsGrid', slug: 'soba/abstractions/grid' },
+							],
+						},
+					],
+				},
 			],
-			expressiveCode: {
-				themes: ['dark-plus', 'light-plus'],
-				plugins: [pluginLineNumbers()],
-			},
 		}),
 		tailwind({ applyBaseStyles: false }),
 	],

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { MeshDistortMaterial } from '@pmndrs/vanilla';
 import { injectBeforeRender, NgtArgs, NgtMeshPhysicalMaterial, omit, pick } from 'angular-three';
-import { MeshDistortMaterialParameters } from 'angular-three-soba/vanilla-exports';
+import { MeshDistortMaterial, MeshDistortMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
 export interface NgtsMeshDistortMaterialOptions
