@@ -31,6 +31,7 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 'Angular Three',
+			site: 'https://angularthree.netlify.app/',
 			favicon: './src/assets/angular-three-dark.svg',
 			tableOfContents: {
 				minHeadingLevel: 2,
@@ -45,10 +46,7 @@ export default defineConfig({
 			},
 			customCss: ['./src/tailwind.css'],
 			sidebar: [
-				{
-					label: 'Introduction',
-					slug: '',
-				},
+				{ label: 'Introduction', slug: '' },
 				{
 					label: 'Core',
 					collapsed: true,
@@ -57,80 +55,38 @@ export default defineConfig({
 							label: 'Getting Started',
 							collapsed: true,
 							items: [
-								{
-									label: 'Installation',
-									slug: 'core/getting-started/installation',
-								},
-								{
-									label: 'Editor Setup',
-									slug: 'core/getting-started/editor-setup',
-								},
-								{
-									label: 'First Scene',
-									slug: 'core/getting-started/first-scene',
-								},
+								{ label: 'Installation', slug: 'core/getting-started/installation' },
+								{ label: 'Editor Setup', slug: 'core/getting-started/editor-setup' },
+								{ label: 'First Scene', slug: 'core/getting-started/first-scene' },
 							],
 						},
 						{
 							label: 'API',
 							collapsed: true,
 							items: [
-								{
-									label: 'NgtCanvas',
-									slug: 'core/api/canvas',
-								},
-								{
-									label: 'Custom Renderer',
-									slug: 'core/api/custom-renderer',
-								},
-								{
-									label: 'NgtArgs',
-									slug: 'core/api/args',
-								},
-								{
-									label: 'Primitive',
-									slug: 'core/api/primitive',
-								},
-								{
-									label: 'Raw Value',
-									slug: 'core/api/raw-value',
-								},
-								{
-									label: 'Store',
-									slug: 'core/api/store',
-								},
+								{ label: 'NgtCanvas', slug: 'core/api/canvas' },
+								{ label: 'Custom Renderer', slug: 'core/api/custom-renderer' },
+								{ label: 'NgtArgs', slug: 'core/api/args' },
+								{ label: 'Primitive', slug: 'core/api/primitive' },
+								{ label: 'Raw Value', slug: 'core/api/raw-value' },
+								{ label: 'Store', slug: 'core/api/store' },
 							],
 						},
 						{
 							label: 'Utilities',
 							collapsed: true,
 							items: [
-								{
-									label: 'injectBeforeRender',
-									slug: 'core/utilities/before-render',
-								},
-								{
-									label: 'injectLoader',
-									slug: 'core/utilities/loader',
-								},
+								{ label: 'injectBeforeRender', slug: 'core/utilities/before-render' },
+								{ label: 'injectLoader', slug: 'core/utilities/loader' },
 							],
 						},
 						{
 							label: 'Advanced',
 							collapsed: true,
 							items: [
-								{
-									label: 'Portals',
-									slug: 'core/advanced/portals',
-								},
-								{
-									label: 'Routed Scene',
-									slug: 'core/advanced/routed-scene',
-								},
-								{
-									label: 'Performance',
-									slug: 'core/advanced/performance',
-								},
+								{ label: 'Portals', slug: 'core/advanced/portals' },
+								{ label: 'Routed Scene', slug: 'core/advanced/routed-scene' },
+								{ label: 'Performance', slug: 'core/advanced/performance' },
 							],
 						},
 					],
@@ -141,8 +97,6 @@ export default defineConfig({
 				plugins: [pluginLineNumbers()],
 			},
 		}),
-		tailwind({
-			applyBaseStyles: false,
-		}),
+		tailwind({ applyBaseStyles: false }),
 	],
 });
