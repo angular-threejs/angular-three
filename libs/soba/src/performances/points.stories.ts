@@ -170,12 +170,10 @@ export default {
 	decorators: makeDecorators(),
 } as Meta;
 
-// <Setup cameraPosition={new Vector3(10, 10, 10)}>
-
 export const BasicPointsBuffer = makeStoryFunction(BasicPointsBufferStory, {
-	camera: { position: [10, 10, 10] },
+	camera: { position: [5, 5, 5] },
 });
 
 export const BasicPointsInstances = makeStoryFunction(BasicPointsInstancesStory, {
-	camera: { position: [10, 10, 10] },
+	camera: { position: [5, 5, 5] },
 });

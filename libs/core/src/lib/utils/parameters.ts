@@ -82,6 +82,9 @@ export function vector2(options: Signal<NgtAnyRecord>, key: string, keepUndefine
 		{ equal: (a, b) => !!a && !!b && a.equals(b) },
 	);
 }
+
+export function vector3(input: Signal<NgtVector3>): Signal<Vector3>;
+export function vector3(input: Signal<NgtVector3>, keepUndefined: true): Signal<Vector3>;
 export function vector3<TObject extends object>(
 	options: Signal<TObject>,
 	key: KeysOfType<TObject, NgtVector3>,
@@ -91,7 +94,29 @@ export function vector3<TObject extends object>(
 	key: KeysOfType<TObject, NgtVector3>,
 	keepUndefined: true,
 ): Signal<Vector3 | undefined>;
-export function vector3(options: Signal<NgtAnyRecord>, key: string, keepUndefined = false) {
+export function vector3(
+	inputOrOptions: Signal<NgtAnyRecord> | Signal<NgtVector3>,
+	keyOrKeepUndefined?: string | true,
+	keepUndefined?: boolean,
+) {
+	if (typeof keyOrKeepUndefined === 'undefined' || typeof keyOrKeepUndefined === 'boolean') {
+		keepUndefined = !!keyOrKeepUndefined;
+		const input = inputOrOptions as Signal<NgtVector3>;
+		return computed(
+			() => {
+				const value = input();
+				if (keepUndefined && value == undefined) return undefined;
+				if (typeof value === 'number') return new Vector3(value, value, value);
+				else if (value) return new Vector3(...(value as Vector3Tuple));
+				else return new Vector3();
+			},
+			{ equal: (a, b) => !!a && !!b && a.equals(b) },
+		);
+	}
+
+	const options = inputOrOptions as Signal<NgtAnyRecord>;
+	const key = keyOrKeepUndefined as string;
+
 	return computed(
 		() => {
 			const value = options()[key];

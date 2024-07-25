@@ -16,6 +16,7 @@ const entryPoints = [
 	'vanilla-exports/src/index.ts',
 	'performances/src/lib/instances/position-mesh.ts',
 	'performances/src/lib/points/position-point.ts',
+	'performances/src/lib/segments/segment-object.ts',
 ];
 
 const paths = [];
