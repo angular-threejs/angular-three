@@ -15,6 +15,7 @@ const entryPoints = [
 	'shaders/src/lib',
 	'vanilla-exports/src/index.ts',
 	'performances/src/lib/instances/position-mesh.ts',
+	'performances/src/lib/points/position-point.ts',
 ];
 
 const paths = [];

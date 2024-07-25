@@ -140,7 +140,6 @@ export class NgtsInstances {
 			autoEffect(() => {
 				const instancedMesh = this.instancedMesh()?.nativeElement;
 				if (!instancedMesh) return;
-				// instancedMesh.instanceMatrix.array = this.buffers().matrices;
 				checkUpdate(instancedMesh.instanceMatrix);
 			});
 		});
