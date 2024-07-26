@@ -21,7 +21,8 @@
 					}
 				],
 				"styles": ["apps/kitchen-sink/src/styles.css"],
-				"scripts": []
+				"scripts": [],
+        "externalDependencies": ["@pmndrs/vanilla"]
 			},
 			"configurations": {
 				"production": {

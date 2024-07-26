@@ -14,6 +14,10 @@ const routes: Routes = [
 		loadComponent: () => import('./render-texture/render-texture'),
 	},
 	{
+		path: 'shaky',
+		loadComponent: () => import('./shaky/shaky'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
