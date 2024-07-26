@@ -11,17 +11,18 @@ import {
 	inject,
 	input,
 	output,
-	signal,
 	viewChild,
 } from '@angular/core';
 import { ConeTwistConstraintOpts, Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, NgtThreeEvent, extend, injectBeforeRender } from 'angular-three';
+import { NgtArgs, NgtThreeEvent, NgtVector3, extend, injectBeforeRender, injectObjectEvents } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCompound, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { NgtcConstraintApi, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
 import { NgtcDebug } from 'angular-three-cannon/debug';
+import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import { createInjectionToken, createNoopInjectionToken } from 'ngxtension/create-injection-token';
+import { NgtsSpotLight } from 'angular-three-soba/staging';
+import { createNoopInjectionToken } from 'ngxtension/create-injection-token';
 import * as THREE from 'three';
 import { Group, Material, Mesh, Object3D } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -29,8 +30,6 @@ import { UiPlane } from '../ui/plane';
 import { createRagdoll } from './config';
 
 extend(THREE);
-
-const [injectCursorRef, provideCursorRef] = createInjectionToken(() => signal<ElementRef<Mesh> | null>(null));
 
 function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
 	const cursorRef = inject(Cursor);
@@ -63,36 +62,52 @@ function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
 	selector: 'app-box',
 	standalone: true,
 	template: `
-		<ngt-mesh
-			#mesh
-			[castShadow]="true"
-			[receiveShadow]="true"
-			[position]="position()"
-			[scale]="scale()"
-			(pointerdown)="pointerdown.emit($any($event))"
-			(pointerup)="pointerup.emit()"
+		<ngts-rounded-box
+			[options]="{
+				width: width(),
+				height: height(),
+				depth: depth(),
+				castShadow: true,
+				receiveShadow: true,
+				position: position(),
+				scale: scale(),
+			}"
 		>
-			<ngt-box-geometry *args="args()" />
 			<ngt-mesh-standard-material [color]="color()" [opacity]="opacity()" [transparent]="transparent()" />
 			<ng-content />
-		</ngt-mesh>
+		</ngts-rounded-box>
 	`,
-	imports: [NgtArgs],
+	imports: [NgtArgs, NgtsRoundedBox],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
+	width = input(1);
+	height = input(1);
+	depth = input(1);
 	color = input('white');
 	opacity = input(1);
 	transparent = input(false);
 	args = input([1, 1, 1]);
-	position = input([0, 0, 0]);
-	scale = input([1, 1, 1]);
+	position = input<NgtVector3>([0, 0, 0]);
+	scale = input<NgtVector3>([1, 1, 1]);
 
 	pointerdown = output<NgtThreeEvent<PointerEvent>>();
 	pointerup = output<void>();
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	roundedBoxRef = viewChild.required(NgtsRoundedBox);
+	meshRef = computed(() => this.roundedBoxRef().meshRef());
+
+	constructor() {
+		injectObjectEvents(this.meshRef, {
+			pointerdown: (event) => {
+				this.pointerdown.emit(event as NgtThreeEvent<PointerEvent>);
+			},
+			pointerup: () => {
+				this.pointerup.emit();
+			},
+		});
+	}
 }
 
 const { joints, shapes } = createRagdoll(4.8, Math.PI / 16, Math.PI / 16, 0);
@@ -171,6 +186,9 @@ export class BodyPart {
 					<ngt-group #eyes>
 						<app-box
 							color="black"
+							[width]="0.2"
+							[height]="0.1"
+							[depth]="0.1"
 							[args]="[0.3, 0.01, 0.1]"
 							[opacity]="0.8"
 							[position]="[-0.3, 0.1, 0.5]"
@@ -178,6 +196,9 @@ export class BodyPart {
 						/>
 						<app-box
 							color="black"
+							[width]="0.2"
+							[height]="0.1"
+							[depth]="0.1"
 							[args]="[0.3, 0.01, 0.1]"
 							[opacity]="0.8"
 							[position]="[0.3, 0.1, 0.5]"
@@ -186,7 +207,10 @@ export class BodyPart {
 					</ngt-group>
 					<app-box
 						#mouth
-						color="#270000"
+						[width]="0.3"
+						[height]="0.05"
+						[depth]="0.1"
+						color="#700000"
 						[args]="[0.3, 0.05, 0.1]"
 						[opacity]="0.8"
 						[position]="[0, -0.2, 0.5]"
@@ -226,7 +250,7 @@ export class RagDoll {
 			const [eyes, mouth] = [this.eyes(), this.mouth()];
 			if (eyes && mouth) {
 				eyes.nativeElement.position.y = Math.sin(clock.getElapsedTime() * 1) * 0.06;
-				mouth.meshRef().nativeElement.scale.y = (1 + Math.sin(clock.getElapsedTime())) * 1.5;
+				mouth.meshRef().nativeElement.scale.y = (1 + Math.sin(clock.getElapsedTime())) * 0.6;
 			}
 		});
 	}
@@ -425,18 +449,29 @@ export class Cursor {
 			<ngt-cone-geometry *args="[2, 2.5, 32]" />
 			<ngt-mesh-standard-material />
 
-			<ngt-point-light [decay]="5" [intensity]="10 * Math.PI" />
-			<ngt-spot-light
-				[angle]="0.4"
-				[decay]="0"
-				[penumbra]="1"
-				[position]="[0, 20, 0]"
-				[intensity]="0.6 * Math.PI"
-				[castShadow]="true"
+			<!--			<ngt-point-light [decay]="5" [intensity]="10 * Math.PI" />-->
+			<ngts-spot-light
+				[options]="{
+					intensity: Math.PI,
+					angle: 0.45,
+					distance: 80,
+					radiusTop: 0.4,
+					radiusBottom: 40,
+					penumbra: 0.2,
+					anglePower: 5,
+					opacity: 0.2,
+					color: 'white',
+					castShadow: true,
+					target: $any(target),
+					decay: 0,
+				}"
 			/>
+
+			<ngt-object3D #target [position]="[0, -1, 0]" />
 		</ngt-mesh>
 	`,
-	imports: [NgtArgs],
+
+	imports: [NgtArgs, NgtsSpotLight],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -492,7 +527,6 @@ export class Lamp {
 		</ngtc-physics>
 	`,
 	imports: [NgtArgs, NgtcPhysics, NgtcDebug, Cursor, Lamp, UiPlane, Chair, Table, RagDoll],
-	providers: [provideCursorRef()],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: { class: 'monday-morning-experience' },
