@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
-import { Meta } from '@storybook/angular';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, type Signal } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
-import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import type { GLTF } from 'three-stdlib';
 
 type SuzanneGLTF = GLTF & {
 	nodes: { Suzanne: Mesh };
@@ -33,7 +31,7 @@ type SuzanneGLTF = GLTF & {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class Suzi {
+export class Suzi {
 	gltf = injectGLTF(
 		() => 'https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/suzanne-high-poly/model.gltf',
 	) as Signal<SuzanneGLTF | null>;
@@ -56,7 +54,7 @@ class Suzi {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class Shadows {}
+export class Shadows {}
 
 @Component({
 	standalone: true,
@@ -106,18 +104,13 @@ class Shadows {}
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class DefaultGridStory {
+export default class GridScene {
 	Math = Math;
 }
 
-export default {
-	title: 'Abstractions/Grid',
-	decorators: makeDecorators(),
-} as Meta;
-
-export const Default = makeStoryFunction(DefaultGridStory, {
-	camera: { position: [10, 12, 12], fov: 25 },
-	lights: false,
-	controls: false,
-	background: '#303035',
-});
+// export const Default = makeStoryFunction(DefaultGridStory, {
+//   camera: { position: [10, 12, 12], fov: 25 },
+//   lights: false,
+//   controls: false,
+//   background: '#303035',
+// });
