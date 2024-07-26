@@ -22,7 +22,15 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Args, Decorator, moduleMetadata } from '@storybook/angular';
-import { NgtAnyRecord, NgtArgs, NgtCanvas, NgtPerformance, extend, injectBeforeRender } from 'angular-three';
+import {
+	NgtAnyRecord,
+	NgtArgs,
+	NgtCanvas,
+	NgtPerformance,
+	extend,
+	injectBeforeRender,
+	resolveRef,
+} from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -306,10 +314,14 @@ export function makeDecorators(providers: Provider[] = [], ...decoratorFns: Deco
 export class Turnable {
 	constructor() {
 		const element = inject<ElementRef<Object3D>>(ElementRef);
-		injectBeforeRender(() => {
-			const object = element.nativeElement;
-			if (!object.isObject3D) return;
-			object.rotation.y += 0.01;
-		});
+		injectTurnable(() => element);
 	}
+}
+
+export function injectTurnable(object: () => Object3D | ElementRef<Object3D> | undefined | null) {
+	return injectBeforeRender(() => {
+		const obj = resolveRef(object());
+		if (!obj) return;
+		obj.rotation.y += 0.01;
+	});
 }

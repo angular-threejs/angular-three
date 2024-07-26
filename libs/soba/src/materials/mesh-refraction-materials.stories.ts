@@ -108,21 +108,12 @@ class Diamond {
 				color: 'orange',
 				colorBlend: 2,
 				toneMapped: true,
-				alphaTest: 0.8,
+				alphaTest: 0.7,
 				opacity: 1,
 				scale: 12,
 			}"
 		>
-			<ngts-randomized-lights
-				[options]="{
-					intensity: Math.PI,
-					position: [5, 5, -10],
-					amount: 8,
-					radius: 10,
-					ambient: 0.5,
-					bias: 0.001,
-				}"
-			/>
+			<ngts-randomized-lights [options]="{ position: [5, 5, -10], amount: 8, radius: 10, ambient: 0.5, bias: 0.001 }" />
 		</ngts-accumulative-shadows>
 
 		<ngts-environment

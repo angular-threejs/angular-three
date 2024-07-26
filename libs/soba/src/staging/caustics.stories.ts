@@ -182,17 +182,10 @@ class Env {
 		<ngt-group [position]="[0, -0.5, 0]" [rotation]="[0, -0.75, 0]">
 			<caustics-scene />
 			<ngts-accumulative-shadows
-				[options]="{ frames: 100, alphaTest: 0.85, opacity: 0.8, color: 'red', scale: 20, position: [0, -0.005, 0] }"
+				[options]="{ frames: 100, alphaTest: 0.75, opacity: 0.8, color: 'red', scale: 20, position: [0, -0.005, 0] }"
 			>
 				<ngts-randomized-lights
-					[options]="{
-						amount: 8,
-						radius: 6,
-						ambient: 0.5,
-						intensity: Math.PI,
-						position: [-1.5, 2.5, -2.5],
-						bias: 0.001,
-					}"
+					[options]="{ amount: 8, radius: 6, ambient: 0.5, position: [-1.5, 2.5, -2.5], bias: 0.001 }"
 				/>
 			</ngts-accumulative-shadows>
 			<caustics-env />
