@@ -113,10 +113,4 @@ export class Experience {
 	Math = Math;
 	bloom = bloom;
 	glitch = glitch;
-
-	test = inject('MyTest' as any, { optional: true });
-
-	constructor() {
-		console.log(this.test);
-	}
 }

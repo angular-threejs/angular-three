@@ -178,7 +178,6 @@ export interface NgtNodeEventMap<TOriginal> {
 
 export type NgtNodeElement<TOriginal, TConstructor> = {
 	attach: string | string[] | NgtAttachFunction;
-	// ref: NgtInjectedRef<TOriginal>;
 	addEventListener<TEventKey extends keyof NgtNodeEventMap<TOriginal>>(
 		type: TEventKey,
 		listener: (this: NgtNodeElement<TOriginal, TConstructor>, ev: NgtNodeEventMap<TOriginal>[TEventKey]) => any,
@@ -196,7 +195,7 @@ export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Ex
 
 export type NgtObject3DEventsMap = {
 	[TEvent in keyof NgtEventHandlers]-?: Parameters<NonNullable<NgtEventHandlers[TEvent]>>[0];
-};
+} & NgtNodeEventMap<NgtInstanceNode>;
 
 export type NgtObject3DNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Expand<
 	NgtOverwrite<
@@ -499,4 +498,5 @@ export interface ThreeElements {
 
 declare global {
 	interface HTMLElementTagNameMap extends ThreeElements {}
+	interface HTMLElementEventMap extends NgtNodeEventMap<NgtInstanceNode> {}
 }

@@ -23,7 +23,7 @@ export function makeId(event?: NgtIntersection): string {
 export function makeDpr(dpr: NgtDpr, window?: Window) {
 	// Err on the side of progress by assuming 2x dpr if we can't detect it
 	// This will happen in workers where window is defined but dpr isn't.
-	const target = typeof window !== 'undefined' ? window.devicePixelRatio ?? 2 : 1;
+	const target = typeof window !== 'undefined' ? (window.devicePixelRatio ?? 2) : 1;
 	return Array.isArray(dpr) ? Math.min(Math.max(dpr[0], target), dpr[1]) : dpr;
 }
 
@@ -48,8 +48,8 @@ export function makeCameraInstance(isOrthographic: boolean, size: NgtSize) {
 }
 
 export type NgtObjectMap = {
-	nodes: { [name: string]: Object3D };
-	materials: { [name: string]: Material };
+	nodes: Record<string, Object3D<any>>;
+	materials: Record<string, Material>;
 	[key: string]: any;
 };
 
