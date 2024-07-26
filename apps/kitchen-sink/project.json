@@ -22,7 +22,7 @@
 				],
 				"styles": ["apps/kitchen-sink/src/styles.css"],
 				"scripts": [],
-        "externalDependencies": ["@pmndrs/vanilla"]
+        "externalDependencies": ["three/examples/jsm/utils/BufferGeometryUtils", "three/examples/jsm/postprocessing/Pass"]
 			},
 			"configurations": {
 				"production": {
