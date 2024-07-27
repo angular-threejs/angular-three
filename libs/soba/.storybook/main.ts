@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/angular';
 import { resolve } from 'node:path';
 
 const config: StorybookConfig = {
-	stories: ['../**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+	stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
 	addons: ['@storybook/addon-essentials', 'storybook-addon-deep-controls'],
 	webpackFinal: async (config) => {
 		config.module?.rules?.push({
