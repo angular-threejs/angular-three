@@ -130,18 +130,7 @@ export default defineConfig({
 				{
 					label: 'Soba',
 					collapsed: true,
-					items: [
-						{ label: 'Introduction', slug: 'soba/introduction' },
-						{
-							label: 'Abstractions',
-							collapsed: true,
-							items: [
-								{ label: 'Introduction', slug: 'soba/abstractions/introduction' },
-								{ label: 'NgtsGradientTexture', slug: 'soba/abstractions/gradient-texture' },
-								{ label: 'NgtsGrid', slug: 'soba/abstractions/grid' },
-							],
-						},
-					],
+					items: [{ label: 'Introduction', slug: 'soba/introduction' }],
 				},
 			],
 		}),
