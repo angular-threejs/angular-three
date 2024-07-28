@@ -4,13 +4,6 @@ import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
-import { Mesh } from 'three';
-import type { GLTF } from 'three-stdlib';
-
-type SuzanneGLTF = GLTF & {
-	nodes: { Suzanne: Mesh };
-	materials: {};
-};
 
 @Component({
 	selector: 'grid-suzi',
@@ -34,7 +27,7 @@ type SuzanneGLTF = GLTF & {
 export class Suzi {
 	gltf = injectGLTF(
 		() => 'https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/suzanne-high-poly/model.gltf',
-	) as Signal<SuzanneGLTF | null>;
+	) as Signal<any | null>;
 
 	rotation = input([0, 0, 0]);
 	scale = input(1);

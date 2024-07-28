@@ -2,6 +2,7 @@ import {
 	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
+	ComponentRef,
 	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
 	inject,
@@ -11,7 +12,6 @@ import {
 } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import type { ComponentRef } from 'react';
 import { CANVAS_OPTIONS } from './canvas-options';
 import { SOBA_CONTENT } from './soba-content';
 
