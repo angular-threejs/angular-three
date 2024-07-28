@@ -3,10 +3,12 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
 	inject,
 	input,
 	signal,
 	Signal,
+	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { injectBeforeRender, injectStore, NgtArgs, NgtHTML } from 'angular-three';
@@ -17,7 +19,7 @@ import {
 	NgtsScrollHtml,
 } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations } from 'angular-three-soba/misc';
+import { injectAnimations, NgtsIntersect } from 'angular-three-soba/misc';
 import { NgtsSky } from 'angular-three-soba/staging';
 import { MathUtils, Mesh } from 'three';
 import { makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';
@@ -111,6 +113,8 @@ class LittlestTokyoStory {
 		<ngt-group [position]="position()" [scale]="scale()">
 			@if (gltf(); as gltf) {
 				<ngt-mesh
+					#mesh
+					[(intersect)]="isIntersect"
 					[geometry]="gltf.nodes.Suzanne.geometry"
 					(pointerover)="hovered.set(true)"
 					(pointerout)="hovered.set(false)"
@@ -123,6 +127,7 @@ class LittlestTokyoStory {
 
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsIntersect],
 })
 class Suzanne {
 	position = input([0, 0, 0]);
@@ -131,6 +136,17 @@ class Suzanne {
 	gltf = injectGLTF(() => './suzanne.glb') as Signal<any>;
 
 	hovered = signal(false);
+	isIntersect = signal(false);
+
+	meshRef = viewChild<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectBeforeRender(({ delta, viewport }) => {
+			const mesh = this.meshRef()?.nativeElement;
+			if (!mesh) return;
+			mesh.rotation.x = MathUtils.damp(mesh.rotation.x, this.isIntersect() ? 0 : -viewport.height / 2 + 1, 4, delta);
+		});
+	}
 }
 
 @Component({
