@@ -4,6 +4,7 @@ import {
 	ArrowHelper,
 	Audio,
 	AxesHelper,
+	BatchedMesh,
 	Bone,
 	Box3Helper,
 	BoxGeometry,
@@ -195,7 +196,9 @@ export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Ex
 
 export type NgtObject3DEventsMap = {
 	[TEvent in keyof NgtEventHandlers]-?: Parameters<NonNullable<NgtEventHandlers[TEvent]>>[0];
-} & NgtNodeEventMap<NgtInstanceNode>;
+};
+
+export type NgtAllObject3DEventsMap = NgtObject3DEventsMap & NgtNodeEventMap<NgtInstanceNode>;
 
 export type NgtObject3DNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Expand<
 	NgtOverwrite<
@@ -209,13 +212,13 @@ export type NgtObject3DNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOrigina
 			quaternion: NgtQuaternion;
 			layers: NgtLayers;
 			dispose: (() => void) | null;
-			addEventListener<TEventKey extends keyof NgtObject3DEventsMap>(
+			addEventListener<TEventKey extends keyof NgtAllObject3DEventsMap>(
 				type: TEventKey,
-				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtObject3DEventsMap[TEventKey]) => any,
+				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtAllObject3DEventsMap[TEventKey]) => any,
 			): void;
-			removeEventListener<TEventKey extends keyof NgtObject3DEventsMap>(
+			removeEventListener<TEventKey extends keyof NgtAllObject3DEventsMap>(
 				type: TEventKey,
-				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtObject3DEventsMap[TEventKey]) => any,
+				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtAllObject3DEventsMap[TEventKey]) => any,
 			): void;
 		}
 	>
@@ -232,6 +235,7 @@ export type NgtPositionalAudio = NgtObject3DNode<PositionalAudio, typeof Positio
 
 export type NgtMesh = NgtObject3DNode<Mesh, typeof Mesh>;
 export type NgtInstancedMesh = NgtObject3DNode<InstancedMesh, typeof InstancedMesh>;
+export type NgtBatchedMesh = NgtObject3DNode<BatchedMesh, typeof BatchedMesh>;
 export type NgtScene = NgtObject3DNode<Scene, typeof Scene>;
 export type NgtSprite = NgtObject3DNode<Sprite, typeof Sprite>;
 export type NgtLOD = NgtObject3DNode<LOD, typeof LOD>;
