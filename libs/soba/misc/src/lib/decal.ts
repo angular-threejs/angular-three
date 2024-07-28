@@ -17,7 +17,7 @@ export interface NgtsDecalOptions extends Partial<NgtMesh> {
 	polygonOffsetFactor: number;
 	depthTest: boolean;
 	debug: boolean;
-	map?: Texture;
+	map?: Texture | null;
 }
 
 const defaultOptions: NgtsDecalOptions = {
@@ -31,7 +31,15 @@ const defaultOptions: NgtsDecalOptions = {
 	standalone: true,
 	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
-			<ng-content />
+			<ngt-value [rawValue]="true" attach="material.transparent" />
+			<ngt-value [rawValue]="true" attach="material.polygonOffset" />
+			<ngt-value [rawValue]="map()" attach="material.map" />
+
+			<ng-content>
+				<!-- we only want to pass through these material properties if they don't use a custom material -->
+				<ngt-value [rawValue]="polygonOffsetFactor()" attach="material.polygonOffsetFactor" />
+				<ngt-value [rawValue]="depthTest()" attach="material.depthTest" />
+			</ng-content>
 
 			@if (debug()) {
 				<ngt-mesh #helper>
@@ -40,12 +48,6 @@ const defaultOptions: NgtsDecalOptions = {
 					<ngt-axes-helper />
 				</ngt-mesh>
 			}
-
-			<ngt-value [rawValue]="true" attach="material.transparent" />
-			<ngt-value [rawValue]="true" attach="material.polygonOffset" />
-			<ngt-value [rawValue]="polygonOffsetFactor()" attach="material.polygonOffsetFactor" />
-			<ngt-value [rawValue]="depthTest()" attach="material.depthTest" />
-			<ngt-value [rawValue]="map()" attach="material.map" />
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

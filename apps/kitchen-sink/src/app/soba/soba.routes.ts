@@ -22,6 +22,10 @@ const routes: Routes = [
 		loadComponent: () => import('./lod/lod'),
 	},
 	{
+		path: 'decal',
+		loadComponent: () => import('./decal/decal'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',

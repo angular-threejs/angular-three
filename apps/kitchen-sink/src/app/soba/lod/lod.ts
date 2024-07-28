@@ -12,6 +12,7 @@ import { Experience } from './experience';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, NgtsLoader, NgtsStats],
+	host: { class: 'lod-soba' },
 })
 export default class LOD {
 	scene = Experience;

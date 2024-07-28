@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
-import { NgtEuler, NgtVector3 } from 'angular-three';
+import { extend, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsBakeShadows } from 'angular-three-soba/misc';
 import { NgtsDetailed } from 'angular-three-soba/performances';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
+import * as THREE from 'three';
 import { Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
+
+extend(THREE);
 
 const positions = [...Array(800)].map(() => ({
 	position: [40 - Math.random() * 80, 40 - Math.random() * 80, 40 - Math.random() * 80],
@@ -67,6 +70,7 @@ export class LODBust {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtsBakeShadows, NgtsEnvironment, NgtsOrbitControls, LODBust],
+	host: { class: 'lod-soba-experience' },
 })
 export class Experience {
 	protected readonly Math = Math;

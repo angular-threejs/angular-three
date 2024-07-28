@@ -11,7 +11,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectTexture } from 'angular-three-soba/loaders';
@@ -62,14 +62,15 @@ class LoopOverInstancedBufferAttribute {
 
 		<ngt-directional-light [position]="[1, -1, 1]" [intensity]="Math.PI" />
 
-		<ngt-mesh #mesh>
+		<ngt-mesh #mesh (click)="onClick($any($event))">
 			<ngt-sphere-geometry *args="[3, 32, 32]" />
 			<ngt-mesh-physical-material color="tomato" [roughness]="0.5" />
 		</ngt-mesh>
 
 		<decal-loop-over-instanced-buffer-attribute [buffer]="bufferAttribute()">
-			<ngts-decal *="let options" [mesh]="meshRef()" [options]="options">
+			<ngts-decal *="let options" [mesh]="$any(mesh)" [options]="options">
 				<ngt-mesh-physical-material
+					[roughness]="0.2"
 					[transparent]="true"
 					[depthTest]="false"
 					[map]="Math.random() > 0.5 ? decals()?.reactMap : decals()?.threeMap"
@@ -107,6 +108,10 @@ class DefaultDecalStory {
 			dummy.lookAt(p.add(normal));
 		},
 	}));
+
+	onClick(event: NgtThreeEvent<PointerEvent>) {
+		console.log(event);
+	}
 }
 
 export default {
