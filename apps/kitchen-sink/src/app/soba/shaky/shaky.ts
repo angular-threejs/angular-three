@@ -1,13 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
+import { NgtsStats } from 'angular-three-soba/stats';
 import { Experience } from './experience';
 
 @Component({
 	standalone: true,
 	template: `
-		<ngt-canvas [sceneGraph]="scene" [shadows]="true" [camera]="{ position: [0, 160, 160], fov: 20 }" [dpr]="[1, 2]" />
+		<ngt-canvas
+			[stats]="{ minimal: true }"
+			[sceneGraph]="scene"
+			[shadows]="true"
+			[camera]="{ position: [0, 160, 160], fov: 20 }"
+			[dpr]="[1, 2]"
+		/>
 	`,
-	imports: [NgtCanvas],
+	imports: [NgtCanvas, NgtsStats],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'shaky-soba' },
 	styles: `

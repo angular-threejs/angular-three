@@ -31,6 +31,7 @@
 			"angular-three-soba/performances": ["libs/soba/performances/src/index.ts"],
 			"angular-three-soba/shaders": ["libs/soba/shaders/src/index.ts"],
 			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts"],
+			"angular-three-soba/stats": ["libs/soba/stats/src/index.ts"],
 			"angular-three-soba/vanilla-exports": ["libs/soba/vanilla-exports/src/index.ts"],
 			"plugin": ["libs/plugin/src/index.ts"]
 		}

@@ -18,6 +18,10 @@ const routes: Routes = [
 		loadComponent: () => import('./shaky/shaky'),
 	},
 	{
+		path: 'lod',
+		loadComponent: () => import('./lod/lod'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
