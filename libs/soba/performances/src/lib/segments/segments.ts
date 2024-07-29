@@ -33,7 +33,7 @@ export class NgtsSegment {
 	normalizedStart = vector3(this.start);
 	normalizedEnd = vector3(this.end);
 
-	segment = viewChild.required<ElementRef<SegmentObject>>('segment');
+	segmentRef = viewChild.required<ElementRef<SegmentObject>>('segment');
 
 	segments = inject(NgtsSegments);
 
@@ -43,7 +43,7 @@ export class NgtsSegment {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				return this.segments.subscribe(this.segment());
+				return this.segments.subscribe(this.segmentRef());
 			});
 		});
 	}

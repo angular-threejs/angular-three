@@ -434,7 +434,7 @@ export class NgtsEnvironmentPortal {
 	private defaultScene = this.store.select('scene');
 	private gl = this.store.select('gl');
 
-	camera = viewChild<ElementRef<CubeCamera>>('cubeCamera');
+	cameraRef = viewChild<ElementRef<CubeCamera>>('cubeCamera');
 
 	map = pick(this.options, 'map');
 	files = pick(this.options, 'files');
@@ -482,7 +482,7 @@ export class NgtsEnvironmentPortal {
 		injectBeforeRender(() => {
 			const frames = this.options().frames;
 			if (frames === Infinity || (frames != null && count < frames)) {
-				const camera = this.camera()?.nativeElement;
+				const camera = this.cameraRef()?.nativeElement;
 				if (camera) {
 					camera.update(this.gl(), this.virtualScene);
 					count++;
@@ -503,7 +503,7 @@ export class NgtsEnvironmentPortal {
 	}
 
 	private setPortalEnv() {
-		const camera = this.camera();
+		const camera = this.cameraRef();
 		if (!camera?.nativeElement) return;
 
 		const [

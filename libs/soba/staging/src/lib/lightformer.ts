@@ -78,8 +78,8 @@ export class NgtsLightformer {
 	toneMapped = pick(this.options, 'toneMapped');
 	map = pick(this.options, 'map');
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	defaultMaterial = viewChild<ElementRef<MeshBasicMaterial>>('defaultMaterial');
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	defaultMaterialRef = viewChild<ElementRef<MeshBasicMaterial>>('defaultMaterial');
 
 	constructor() {
 		extend({ Mesh, MeshBasicMaterial, RingGeometry, PlaneGeometry });
@@ -88,7 +88,7 @@ export class NgtsLightformer {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const material = this.defaultMaterial()?.nativeElement;
+				const material = this.defaultMaterialRef()?.nativeElement;
 				if (material) {
 					applyProps(material, { color: this.color() });
 					material.color.multiplyScalar(this.intensity());
@@ -98,7 +98,7 @@ export class NgtsLightformer {
 			autoEffect(() => {
 				const target = this.target();
 				if (!target) return;
-				const mesh = this.mesh().nativeElement;
+				const mesh = this.meshRef().nativeElement;
 				mesh.lookAt(target);
 			});
 		});

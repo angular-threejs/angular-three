@@ -55,8 +55,6 @@ const defaultOptions: NgtsContactShadowsOptions = {
 	depthWrite: false,
 };
 
-extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
-
 @Component({
 	selector: 'ngts-contact-shadows',
 	standalone: true,
@@ -199,6 +197,8 @@ export class NgtsContactShadows {
 	}
 
 	constructor() {
+		extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
+
 		let count = 0;
 		let initialBackground: Color | Texture | null;
 		let initialOverrideMaterial: Material | null;

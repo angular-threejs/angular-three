@@ -89,9 +89,9 @@ export class NgtsCenter {
 
 	centered = output<NgtsCenterState>();
 
-	group = viewChild.required<ElementRef<Group>>('group');
-	outer = viewChild.required<ElementRef<Group>>('outer');
-	inner = viewChild.required<ElementRef<Group>>('inner');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
+	private outerRef = viewChild.required<ElementRef<Group>>('outer');
+	private innerRef = viewChild.required<ElementRef<Group>>('inner');
 
 	centerOptions = pick(this.options, [
 		'top',
@@ -120,7 +120,12 @@ export class NgtsCenter {
 					group,
 					outer,
 					inner,
-				] = [this.centerOptions(), this.group().nativeElement, this.outer().nativeElement, this.inner().nativeElement];
+				] = [
+					this.centerOptions(),
+					this.groupRef().nativeElement,
+					this.outerRef().nativeElement,
+					this.innerRef().nativeElement,
+				];
 
 				const localState = getLocalState(inner);
 				const children = localState?.objects();

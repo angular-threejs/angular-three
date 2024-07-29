@@ -18,8 +18,6 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, PerspectiveCamera, Texture } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
-extend({ PerspectiveCamera, Group });
-
 export interface NgtsPerspectiveCameraOptions extends Partial<NgtPerspectiveCamera> {
 	/** Registers the camera as the system default, fiber will start rendering with it */
 	makeDefault?: boolean;
@@ -79,6 +77,8 @@ export class NgtsPerspectiveCamera {
 	texture = pick(this.fbo, 'texture');
 
 	constructor() {
+		extend({ PerspectiveCamera, Group });
+
 		afterNextRender(() => {
 			this.autoEffect(() => {
 				if (!this.manual()) {

@@ -1,6 +1,6 @@
-import { Signal, computed } from '@angular/core';
-import { Vector2, Vector2Tuple, Vector3, Vector3Tuple } from 'three';
-import { NgtVector2, NgtVector3 } from '../three-types';
+import { computed, Signal, Type } from '@angular/core';
+import { Vector2, Vector3, Vector4 } from 'three';
+import { NgtVector2, NgtVector3, NgtVector4 } from '../three-types';
 import { NgtAnyRecord } from '../types';
 
 type KeysOfType<TObject extends object, TType> = Exclude<
@@ -61,70 +61,58 @@ export function merge<TObject extends object>(
 	return computed(() => ({ ...toMerge, ...objFn() }));
 }
 
-export function vector2<TObject extends object>(
-	options: Signal<TObject>,
-	key: KeysOfType<TObject, NgtVector2>,
-): Signal<Vector2>;
-export function vector2<TObject extends object>(
-	options: Signal<TObject>,
-	key: KeysOfType<TObject, NgtVector2>,
-	keepUndefined: true,
-): Signal<Vector2 | undefined>;
-export function vector2(options: Signal<NgtAnyRecord>, key: string, keepUndefined = false) {
-	return computed(
-		() => {
-			const value = options()[key];
-			if (keepUndefined && value == undefined) return undefined;
-			if (typeof value === 'number') return new Vector2(value, value);
-			else if (value) return new Vector2(...(value as Vector2Tuple));
-			else return new Vector2();
-		},
-		{ equal: (a, b) => !!a && !!b && a.equals(b) },
-	);
-}
+type NgtVectorComputed<
+	TVector extends Vector2 | Vector3 | Vector4,
+	TNgtVector = TVector extends Vector2 ? NgtVector2 : TVector extends Vector3 ? NgtVector3 : NgtVector4,
+> = {
+	(input: Signal<TNgtVector>): Signal<TVector>;
+	(input: Signal<TNgtVector>, keepUndefined: true): Signal<TVector | undefined>;
+	<TObject extends object>(options: Signal<TObject>, key: KeysOfType<TObject, TNgtVector>): Signal<TVector>;
+	<TObject extends object>(
+		options: Signal<TObject>,
+		key: KeysOfType<TObject, TNgtVector>,
+		keepUndefined: true,
+	): Signal<TVector | undefined>;
+};
 
-export function vector3(input: Signal<NgtVector3>): Signal<Vector3>;
-export function vector3(input: Signal<NgtVector3>, keepUndefined: true): Signal<Vector3>;
-export function vector3<TObject extends object>(
-	options: Signal<TObject>,
-	key: KeysOfType<TObject, NgtVector3>,
-): Signal<Vector3>;
-export function vector3<TObject extends object>(
-	options: Signal<TObject>,
-	key: KeysOfType<TObject, NgtVector3>,
-	keepUndefined: true,
-): Signal<Vector3 | undefined>;
-export function vector3(
-	inputOrOptions: Signal<NgtAnyRecord> | Signal<NgtVector3>,
-	keyOrKeepUndefined?: string | true,
-	keepUndefined?: boolean,
-) {
-	if (typeof keyOrKeepUndefined === 'undefined' || typeof keyOrKeepUndefined === 'boolean') {
-		keepUndefined = !!keyOrKeepUndefined;
-		const input = inputOrOptions as Signal<NgtVector3>;
+function createVectorComputed<TVector extends Vector2 | Vector3 | Vector4>(vectorCtor: Type<TVector>) {
+	type TNgtVector = TVector extends Vector2 ? NgtVector2 : TVector extends Vector3 ? NgtVector3 : NgtVector4;
+	return ((
+		inputOrOptions: Signal<NgtAnyRecord> | Signal<TNgtVector>,
+		keyOrKeepUndefined?: string | true,
+		keepUndefined?: boolean,
+	) => {
+		if (typeof keyOrKeepUndefined === 'undefined' || typeof keyOrKeepUndefined === 'boolean') {
+			keepUndefined = !!keyOrKeepUndefined;
+			const input = inputOrOptions as Signal<TNgtVector>;
+			return computed(
+				() => {
+					const value = input();
+					if (keepUndefined && value == undefined) return undefined;
+					if (typeof value === 'number') return new vectorCtor().setScalar(value);
+					else if (value) return new vectorCtor(...(value as any));
+					else return new vectorCtor();
+				},
+				{ equal: (a, b) => !!a && !!b && a.equals(b as any) },
+			);
+		}
+
+		const options = inputOrOptions as Signal<NgtAnyRecord>;
+		const key = keyOrKeepUndefined as string;
+
 		return computed(
 			() => {
-				const value = input();
+				const value = options()[key];
 				if (keepUndefined && value == undefined) return undefined;
-				if (typeof value === 'number') return new Vector3(value, value, value);
-				else if (value) return new Vector3(...(value as Vector3Tuple));
-				else return new Vector3();
+				if (typeof value === 'number') return new vectorCtor().setScalar(value);
+				else if (value) return new vectorCtor(...(value as any));
+				else return new vectorCtor();
 			},
-			{ equal: (a, b) => !!a && !!b && a.equals(b) },
+			{ equal: (a, b) => !!a && !!b && a.equals(b as any) },
 		);
-	}
-
-	const options = inputOrOptions as Signal<NgtAnyRecord>;
-	const key = keyOrKeepUndefined as string;
-
-	return computed(
-		() => {
-			const value = options()[key];
-			if (keepUndefined && value == undefined) return undefined;
-			if (typeof value === 'number') return new Vector3(value, value, value);
-			else if (value) return new Vector3(...(value as Vector3Tuple));
-			else return new Vector3();
-		},
-		{ equal: (a, b) => !!a && !!b && a.equals(b) },
-	);
+	}) as NgtVectorComputed<TVector, TNgtVector>;
 }
+
+export const vector2 = createVectorComputed(Vector2);
+export const vector3 = createVectorComputed(Vector3);
+export const vector4 = createVectorComputed(Vector4);

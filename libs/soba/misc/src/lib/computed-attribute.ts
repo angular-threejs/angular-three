@@ -15,7 +15,7 @@ import { BufferAttribute, BufferGeometry } from 'three';
 	selector: 'ngts-computed-attribute',
 	standalone: true,
 	template: `
-		<ngt-primitive #primitive *args="[bufferAttribute]" [attach]="['attributes', name()]" [parameters]="options()">
+		<ngt-primitive #attribute *args="[bufferAttribute]" [attach]="['attributes', name()]" [parameters]="options()">
 			<ng-content />
 		</ngt-primitive>
 	`,
@@ -34,24 +34,23 @@ export class NgtsComputedAttribute {
 	options = input({} as Partial<NgtBufferAttribute>);
 
 	bufferAttribute = new BufferAttribute(new Float32Array(0), 1);
-	primitive = viewChild<ElementRef<BufferAttribute>>('primitive');
+	attributeRef = viewChild<ElementRef<BufferAttribute>>('attribute');
 
 	constructor() {
 		const autoEffect = injectAutoEffect();
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const primitive = this.primitive()?.nativeElement;
-				if (!primitive) return;
+				const bufferAttribute = this.attributeRef()?.nativeElement;
+				if (!bufferAttribute) return;
 
-				const localState = getLocalState(primitive);
+				const localState = getLocalState(bufferAttribute);
 				if (!localState) return;
 
-				const geometry = ((primitive as any).parent as BufferGeometry) ?? localState.parent();
-				console.log(geometry);
+				const geometry = ((bufferAttribute as any).parent as BufferGeometry) ?? localState.parent();
 
 				const attribute = this.compute()(geometry);
-				primitive.copy(attribute);
+				bufferAttribute.copy(attribute);
 			});
 		});
 	}

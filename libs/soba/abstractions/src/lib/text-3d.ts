@@ -64,7 +64,7 @@ export class NgtsText3D {
 		'smooth',
 	]);
 
-	mesh = viewChild<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild<ElementRef<Mesh>>('mesh');
 
 	loadedFont = injectFont(this.font);
 	private smooth = pick(this.options, 'smooth');
@@ -94,7 +94,7 @@ export class NgtsText3D {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const [mesh, smooth, textArgs] = [this.mesh()?.nativeElement, this.smooth(), this.textArgs()];
+				const [mesh, smooth, textArgs] = [this.meshRef()?.nativeElement, this.smooth(), this.textArgs()];
 				if (!textArgs || !mesh) return;
 				if (smooth) {
 					mesh.geometry = mergeVertices(mesh.geometry, smooth);

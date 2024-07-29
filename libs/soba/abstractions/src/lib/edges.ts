@@ -48,7 +48,7 @@ export class NgtsEdges {
 		const autoEffect = injectAutoEffect();
 		afterNextRender(() => {
 			autoEffect(() => {
-				const line = this.line().line()?.nativeElement;
+				const line = this.line().lineRef()?.nativeElement;
 				if (!line) return;
 
 				const lS = getLocalState(line);

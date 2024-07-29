@@ -48,8 +48,8 @@ export class NgtsBackdrop {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['floor', 'segments', 'receiveShadow']);
 
-	group = viewChild.required<ElementRef<Group>>('group');
-	plane = viewChild<ElementRef<PlaneGeometry>>('plane');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
+	planeRef = viewChild<ElementRef<PlaneGeometry>>('plane');
 
 	receiveShadow = pick(this.options, 'receiveShadow');
 	segments = pick(this.options, 'segments');
@@ -61,7 +61,7 @@ export class NgtsBackdrop {
 		const autoEffect = injectAutoEffect();
 		afterNextRender(() => {
 			autoEffect(() => {
-				const plane = this.plane()?.nativeElement;
+				const plane = this.planeRef()?.nativeElement;
 				if (!plane) return;
 
 				const [segments, floor] = [this.segments(), this.floor()];

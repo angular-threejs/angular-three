@@ -36,7 +36,7 @@ const scale = new Vector3();
 	selector: 'ngts-instance',
 	standalone: true,
 	template: `
-		<ngt-position-mesh #positionMesh [instance]="instances.instancedMesh()" [parameters]="options()">
+		<ngt-position-mesh #positionMesh [instance]="instances.instancedMeshRef()" [parameters]="options()">
 			<ng-content />
 		</ngt-position-mesh>
 	`,
@@ -48,7 +48,7 @@ export class NgtsInstance {
 
 	instances = inject(NgtsInstances);
 
-	positionMesh = viewChild.required<ElementRef<PositionMesh>>('positionMesh');
+	positionMeshRef = viewChild.required<ElementRef<PositionMesh>>('positionMesh');
 
 	constructor() {
 		extend({ PositionMesh });
@@ -57,7 +57,7 @@ export class NgtsInstance {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				return this.instances.subscribe(this.positionMesh().nativeElement);
+				return this.instances.subscribe(this.positionMeshRef().nativeElement);
 			});
 		});
 	}
@@ -113,7 +113,7 @@ export class NgtsInstances {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['limit', 'frames', 'range']);
 
-	instancedMesh = viewChild.required<ElementRef<InstancedMesh>>('instancedMesh');
+	instancedMeshRef = viewChild.required<ElementRef<InstancedMesh>>('instancedMesh');
 
 	limit = pick(this.options, 'limit');
 
@@ -138,7 +138,7 @@ export class NgtsInstances {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const instancedMesh = this.instancedMesh()?.nativeElement;
+				const instancedMesh = this.instancedMeshRef()?.nativeElement;
 				if (!instancedMesh) return;
 				checkUpdate(instancedMesh.instanceMatrix);
 			});
@@ -148,7 +148,7 @@ export class NgtsInstances {
 		let count = 0;
 
 		injectBeforeRender(() => {
-			const instancedMesh = this.instancedMesh()?.nativeElement;
+			const instancedMesh = this.instancedMeshRef()?.nativeElement;
 			if (!instancedMesh) return;
 			const { frames, limit, range } = this.options();
 			const { matrices, colors } = this.buffers();

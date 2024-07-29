@@ -73,7 +73,7 @@ export class NgtsLine {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['color', 'vertexColors', 'lineWidth', 'segments', 'linewidth', 'dashed']);
 
-	line = viewChild<ElementRef<Line2 | LineSegments2>>('line');
+	lineRef = viewChild<ElementRef<Line2 | LineSegments2>>('line');
 
 	private store = injectStore();
 	private size = this.store.select('size');

@@ -10,8 +10,6 @@ import { NgtGroup, extend, injectBeforeRender, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, MathUtils } from 'three';
 
-extend({ Group });
-
 export interface NgtsFloatOptions extends Partial<NgtGroup> {
 	enabled: boolean;
 	speed: number;
@@ -57,6 +55,8 @@ export class NgtsFloat {
 	floatRef = viewChild.required<ElementRef<Group>>('float');
 
 	constructor() {
+		extend({ Group });
+
 		const offset = Math.random() * 10000;
 		injectBeforeRender(({ clock, invalidate }) => {
 			const [{ enabled, speed, rotationIntensity, floatingRange, floatIntensity, autoInvalidate }] = [this.options()];

@@ -100,8 +100,8 @@ export class NgtsAccumulativeShadows {
 		'toneMapped',
 	]);
 
-	lights = viewChild.required<ElementRef<Group>>('lights');
-	plane = viewChild.required<ElementRef<Mesh<PlaneGeometry, InstanceType<typeof SoftShadowMaterial>>>>('plane');
+	lightsRef = viewChild.required<ElementRef<Group>>('lights');
+	planeRef = viewChild.required<ElementRef<Mesh<PlaneGeometry, InstanceType<typeof SoftShadowMaterial>>>>('plane');
 
 	private store = injectStore();
 	private gl = this.store.select('gl');
@@ -142,13 +142,13 @@ export class NgtsAccumulativeShadows {
 		const autoEffect = injectAutoEffect();
 
 		afterNextRender(() => {
-			this.pLM().configure(this.plane().nativeElement);
+			this.pLM().configure(this.planeRef().nativeElement);
 
 			autoEffect(() => {
 				const sceneLS = getLocalState(this.scene());
 				if (!sceneLS) return;
 				// track deps
-				this.plane();
+				this.planeRef();
 				this.options();
 				sceneLS.objects();
 
@@ -174,13 +174,13 @@ export class NgtsAccumulativeShadows {
 	}
 
 	getMesh() {
-		return this.plane().nativeElement;
+		return this.planeRef().nativeElement;
 	}
 
 	reset() {
 		// Clear buffers, reset opacities, set frame count to 0
 		untracked(this.pLM).clear();
-		const material = untracked(this.plane).nativeElement.material;
+		const material = untracked(this.planeRef).nativeElement.material;
 		material.opacity = 0;
 		material.alphaTest = 0;
 		this.count = 0;
@@ -188,7 +188,7 @@ export class NgtsAccumulativeShadows {
 
 	update(frames = 1) {
 		// Adapt the opacity-blend ratio to the number of frames
-		const material = this.plane().nativeElement.material;
+		const material = this.planeRef().nativeElement.material;
 		if (!this.temporal()) {
 			material.opacity = this.opacity();
 			material.alphaTest = this.alphaTest();
@@ -198,7 +198,7 @@ export class NgtsAccumulativeShadows {
 		}
 
 		// Switch accumulative lights on
-		this.lights().nativeElement.visible = true;
+		this.lightsRef().nativeElement.visible = true;
 		// Collect scene lights and meshes
 		this.pLM().prepare();
 
@@ -208,7 +208,7 @@ export class NgtsAccumulativeShadows {
 			this.pLM().update(this.camera(), this.blend());
 		}
 		// Switch lights off
-		this.lights().nativeElement.visible = false;
+		this.lightsRef().nativeElement.visible = false;
 		// Restore lights and meshes
 		this.pLM().finish();
 	}

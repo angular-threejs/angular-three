@@ -117,7 +117,7 @@ export class NgtsCubeCamera {
 	camera = this.cubeCamera.camera;
 	texture = pick(this.cubeCamera.fbo, 'texture');
 
-	group = viewChild.required<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
 	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
 	constructor() {
@@ -125,7 +125,7 @@ export class NgtsCubeCamera {
 
 		let count = 0;
 		injectBeforeRender(() => {
-			const group = this.group().nativeElement;
+			const group = this.groupRef().nativeElement;
 			if (!group) return;
 
 			const frames = this.options().frames;

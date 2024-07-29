@@ -147,10 +147,10 @@ export class NgtsCaustics {
 	color = pick(this.options, 'color');
 	private resolution = pick(this.options, 'resolution');
 
-	group = viewChild.required<ElementRef<Group>>('group');
-	private scene = viewChild.required<ElementRef<Scene>>('scene');
-	private camera = viewChild.required<ElementRef<OrthographicCamera>>('camera');
-	private plane =
+	groupRef = viewChild.required<ElementRef<Group>>('group');
+	private sceneRef = viewChild.required<ElementRef<Scene>>('scene');
+	private cameraRef = viewChild.required<ElementRef<OrthographicCamera>>('camera');
+	private planeRef =
 		viewChild.required<ElementRef<Mesh<PlaneGeometry, InstanceType<typeof CausticsProjectionMaterial>>>>('plane');
 
 	private normalTargetParams = computed(() => ({
@@ -172,7 +172,7 @@ export class NgtsCaustics {
 	causticsTargetB = injectFBO(this.causticsTargetParams);
 
 	private cameraHelper = injectHelper(
-		() => (this.debug() ? this.camera().nativeElement : null),
+		() => (this.debug() ? this.cameraRef().nativeElement : null),
 		() => CameraHelper,
 	);
 
@@ -192,10 +192,10 @@ export class NgtsCaustics {
 				normalTargetB: this.normalTargetB(),
 				causticsTarget: this.causticsTarget(),
 				causticsTargetB: this.causticsTargetB(),
-				camera: this.camera().nativeElement,
-				scene: this.scene().nativeElement,
-				group: this.group().nativeElement,
-				plane: this.plane().nativeElement,
+				camera: this.cameraRef().nativeElement,
+				scene: this.sceneRef().nativeElement,
+				group: this.groupRef().nativeElement,
+				plane: this.planeRef().nativeElement,
 				helper: this.cameraHelper(),
 			};
 		});
@@ -207,9 +207,9 @@ export class NgtsCaustics {
 				// track all changes
 				this.options();
 				const [group, scene, plane] = [
-					this.group().nativeElement,
-					this.scene().nativeElement,
-					this.plane().nativeElement,
+					this.groupRef().nativeElement,
+					this.sceneRef().nativeElement,
+					this.planeRef().nativeElement,
 				];
 				const groupLocalState = getLocalState(group);
 				const sceneLocalState = getLocalState(scene);

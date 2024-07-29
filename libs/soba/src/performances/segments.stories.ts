@@ -31,7 +31,7 @@ class PerformanceSegmentsStory {
 		injectBeforeRender(({ clock }) => {
 			const segments = this.segmentsRef();
 			segments.forEach((segment, index) => {
-				const segmentObject = segment.segment().nativeElement;
+				const segmentObject = segment.segmentRef().nativeElement;
 
 				const time = clock.elapsedTime;
 				const x = Math.sin((index / 5000) * Math.PI) * 10;

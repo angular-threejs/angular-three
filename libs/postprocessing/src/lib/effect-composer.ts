@@ -86,7 +86,7 @@ export class NgtpEffectComposer {
 	enableNormalPass = pick(this.options, 'enableNormalPass');
 	resolutionScale = pick(this.options, 'resolutionScale');
 
-	group = viewChild.required<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	composerData = computed(() => {
 		const webGL2Available = isWebGL2Available();
@@ -191,7 +191,7 @@ export class NgtpEffectComposer {
 	private updatePasses() {
 		this.autoEffect(() => {
 			const [group, { composer, normalPass, downSamplingPass }, camera] = [
-				this.group(),
+				this.groupRef(),
 				this.composerData(),
 				this.camera(),
 			];

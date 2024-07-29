@@ -76,7 +76,7 @@ class PointWithEvents {
 	finalSize = computed(() => this.size() * (this.clicked() ? 1.5 : 1));
 
 	constructor() {
-		injectObjectEvents(() => this.pointRef().positionPoint(), {
+		injectObjectEvents(() => this.pointRef().positionPointRef(), {
 			pointerover: (event) => {
 				event.stopPropagation();
 				this.hovered.set(true);

@@ -11,8 +11,6 @@ import {
 import { NgtGroup, NgtVector3, extend, getLocalState, injectBeforeRender, omit, vector3 } from 'angular-three';
 import { Box3, Group, Object3D, Vector3 } from 'three';
 
-extend({ Group });
-
 const boundingBox = new Box3();
 const boundingBoxSize = new Vector3();
 
@@ -41,6 +39,8 @@ export class NgtsBBAnchor {
 	private anchor = vector3(this.options, 'anchor');
 
 	constructor() {
+		extend({ Group });
+
 		// Reattach group created by this component to the parent's parent,
 		// so it becomes a sibling of its initial parent.
 		// We do that so the children have no impact on a bounding box of a parent.

@@ -63,7 +63,7 @@ export class NgtsGrid {
 		'side',
 	]);
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	private plane = new Plane();
 	private upVector = new Vector3(0, 1, 0);
@@ -104,7 +104,7 @@ export class NgtsGrid {
 		extend({ Mesh, PlaneGeometry, GridMaterial });
 
 		injectBeforeRender(({ camera }) => {
-			const mesh = this.mesh().nativeElement;
+			const mesh = this.meshRef().nativeElement;
 
 			this.plane.setFromNormalAndCoplanarPoint(this.upVector, this.zeroVector).applyMatrix4(mesh.matrixWorld);
 

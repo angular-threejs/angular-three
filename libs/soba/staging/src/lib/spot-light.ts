@@ -92,7 +92,7 @@ export class NgtsVolumetricMesh {
 
 	options = input(defaultVolumetricMeshOptions, { transform: mergeInputs(defaultVolumetricMeshOptions) });
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	private store = injectStore();
 	size = this.store.select('size');
@@ -136,7 +136,7 @@ export class NgtsVolumetricMesh {
 		const vec = new Vector3();
 
 		injectBeforeRender(() => {
-			const mesh = this.mesh().nativeElement;
+			const mesh = this.meshRef().nativeElement;
 			const material = this.material;
 
 			material.uniforms['spotPosition'].value.copy(mesh.getWorldPosition(vec));

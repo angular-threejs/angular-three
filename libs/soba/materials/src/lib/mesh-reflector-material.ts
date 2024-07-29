@@ -105,7 +105,7 @@ export class NgtsMeshReflectorMaterial {
 	private store = injectStore();
 	private gl = this.store.select('gl');
 
-	private materialRef = viewChild<ElementRef<MeshReflectorMaterial>>('material');
+	materialRef = viewChild<ElementRef<MeshReflectorMaterial>>('material');
 
 	private reflectOptions = pick(this.options, [
 		'distortionMap',

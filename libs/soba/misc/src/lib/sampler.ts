@@ -184,7 +184,7 @@ export class NgtsSampler {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['weight', 'transform', 'count']);
 
-	group = viewChild.required<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	private meshToSample = signal<Mesh | null>(null);
 	private instancedToSample = signal<InstancedMesh | null>(null);
@@ -196,7 +196,7 @@ export class NgtsSampler {
 		afterNextRender(() => {
 			autoEffect(
 				() => {
-					const group = this.group().nativeElement;
+					const group = this.groupRef().nativeElement;
 					const localState = getLocalState(group);
 					if (!localState) return;
 

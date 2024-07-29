@@ -29,7 +29,7 @@ import { NgtPositionPoint, PositionPoint } from './position-point';
 export class NgtsPoint {
 	options = input({} as Partial<NgtPositionPoint>);
 
-	positionPoint = viewChild.required<ElementRef<PositionPoint>>('positionPoint');
+	positionPointRef = viewChild.required<ElementRef<PositionPoint>>('positionPoint');
 
 	points = inject(NgtsPointsInstances);
 
@@ -40,7 +40,7 @@ export class NgtsPoint {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				return this.points.subscribe(this.positionPoint().nativeElement);
+				return this.points.subscribe(this.positionPointRef().nativeElement);
 			});
 		});
 	}

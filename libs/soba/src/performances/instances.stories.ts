@@ -51,7 +51,7 @@ class Shoe {
 	hovered = false;
 
 	constructor() {
-		injectObjectEvents(() => this.instance().positionMesh(), {
+		injectObjectEvents(() => this.instance().positionMeshRef(), {
 			pointerover: (event) => {
 				event.stopPropagation();
 				this.hovered = true;
@@ -64,7 +64,7 @@ class Shoe {
 		const color = new Color();
 
 		injectBeforeRender(({ clock }) => {
-			const instance = this.instance().positionMesh().nativeElement;
+			const instance = this.instance().positionMeshRef().nativeElement;
 			const t = clock.getElapsedTime() + this.random() * 10000;
 
 			instance.rotation.set(Math.cos(t / 4) / 2, Math.sin(t / 4) / 2, Math.cos(t / 1.5) / 2);

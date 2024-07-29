@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { injectBeforeRender, NgtArgs, NgtMeshStandardMaterial, omit } from 'angular-three';
 import { MeshWobbleMaterial, MeshWobbleMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -15,7 +15,7 @@ const defaultOptions: NgtsMeshWobbleMaterialOptions = {
 	selector: 'ngts-mesh-wobble-material',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[material()]" [parameters]="parameters()" [attach]="attach()">
+		<ngt-primitive *args="[material]" [parameters]="parameters()" [attach]="attach()">
 			<ng-content />
 		</ngt-primitive>
 	`,
@@ -28,11 +28,11 @@ export class NgtsMeshWobbleMaterial {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['speed']);
 
-	material = computed(() => new MeshWobbleMaterial());
+	material = new MeshWobbleMaterial();
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
-			const material = this.material();
+			const material = this.material;
 			material.time = clock.elapsedTime * this.options().speed;
 		});
 	}

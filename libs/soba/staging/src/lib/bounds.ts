@@ -84,7 +84,7 @@ const defaultOptions: NgtsBoundsOptions = {
 export class NgtsBounds {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	group = viewChild.required<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	private store = injectStore();
 	private camera = this.store.select('camera');
@@ -222,7 +222,7 @@ export class NgtsBounds {
 	}
 
 	refresh(object?: Object3D | Box3) {
-		const [group, camera] = [untracked(this.group).nativeElement, untracked(this.camera)];
+		const [group, camera] = [untracked(this.groupRef).nativeElement, untracked(this.camera)];
 
 		if (isBox3(object)) this.box.copy(object);
 		else {

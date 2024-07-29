@@ -44,7 +44,7 @@ export class NgtsPrismGeometry {
 		return new Shape(interpolatedVertices);
 	});
 
-	geometry = viewChild<ElementRef<ExtrudeGeometry>>('geometry');
+	geometryRef = viewChild<ElementRef<ExtrudeGeometry>>('geometry');
 
 	constructor() {
 		extend({ ExtrudeGeometry });

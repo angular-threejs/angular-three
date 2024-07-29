@@ -19,8 +19,6 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, OrthographicCamera, Texture } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
-extend({ OrthographicCamera, Group });
-
 export interface NgtsOrthographicCameraOptions extends Partial<NgtOrthographicCamera> {
 	/** Registers the camera as the system default, fiber will start rendering with it */
 	makeDefault?: boolean;
@@ -102,6 +100,8 @@ export class NgtsOrthographicCamera {
 	texture = pick(this.fbo, 'texture');
 
 	constructor() {
+		extend({ OrthographicCamera, Group });
+
 		afterNextRender(() => {
 			this.autoEffect(() => {
 				if (!this.manual()) {

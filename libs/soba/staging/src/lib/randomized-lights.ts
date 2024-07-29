@@ -81,7 +81,7 @@ export class NgtsRandomizedLights {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightsOptions>);
 
-	lights = viewChild.required<ElementRef<Group>>('lights');
+	lightsRef = viewChild.required<ElementRef<Group>>('lights');
 
 	private accumulativeShadows = inject(NgtsAccumulativeShadows);
 
@@ -110,7 +110,7 @@ export class NgtsRandomizedLights {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const lights = this.lights().nativeElement;
+				const lights = this.lightsRef().nativeElement;
 				this.accumulativeShadows.lightsMap.set(lights.uuid, this.update.bind(this));
 				return () => this.accumulativeShadows.lightsMap.delete(lights.uuid);
 			});
@@ -119,7 +119,7 @@ export class NgtsRandomizedLights {
 
 	update() {
 		let light: Object3D | undefined;
-		const lights = this.lights().nativeElement;
+		const lights = this.lightsRef().nativeElement;
 		if (lights) {
 			const [{ ambient, radius, position }, length] = [this.options(), this.length()];
 
