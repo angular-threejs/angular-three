@@ -23,8 +23,17 @@
 	],
 	"license": "MIT",
 	"exports": {
-		"./assets/*": "./assets/*"
-	},
+		"./assets/*": "./assets/*",
+    "./shaders": {
+      "default": "./shaders/src/index.ts"
+    },
+    "./misc": {
+      "default": "./misc/src/index.ts"
+    },
+    "./vanilla-exports": {
+      "default": "./vanilla-exports/src/index.ts"
+    }
+  },
 	"peerDependencies": {
 		"@angular/common": ">=18.0.0",
 		"@angular/core": ">=18.0.0",
