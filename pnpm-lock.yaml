@@ -159,6 +159,9 @@ importers:
       '@analogjs/vite-plugin-angular':
         specifier: ^1.6.4-beta.1
         version: 1.6.4(@angular-devkit/build-angular@18.1.2(77a26yoa47gt6x2x25fgeti6pe))(@ngtools/webpack@18.1.2(@angular/compiler-cli@18.1.2(@angular/compiler@18.1.2(@angular/core@18.1.2(rxjs@7.8.1)(zone.js@0.14.4)))(typescript@5.5.4))(typescript@5.5.4)(webpack@5.93.0(@swc/core@1.7.1(@swc/helpers@0.5.12))(esbuild@0.21.5)))
+      '@analogjs/vitest-angular':
+        specifier: ^1.5.0
+        version: 1.6.4(@analogjs/vite-plugin-angular@1.6.4(@angular-devkit/build-angular@18.1.2(77a26yoa47gt6x2x25fgeti6pe))(@ngtools/webpack@18.1.2(@angular/compiler-cli@18.1.2(@angular/compiler@18.1.2(@angular/core@18.1.2(rxjs@7.8.1)(zone.js@0.14.4)))(typescript@5.5.4))(typescript@5.5.4)(webpack@5.93.0(@swc/core@1.7.1(@swc/helpers@0.5.12))(esbuild@0.21.5))))(@angular-devkit/architect@0.1801.2(chokidar@3.6.0))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.77.8)(stylus@0.59.0)(terser@5.29.2))
       '@angular-devkit/build-angular':
         specifier: 18.1.2
         version: 18.1.2(77a26yoa47gt6x2x25fgeti6pe)
@@ -537,6 +540,13 @@ packages:
 
   '@analogjs/vite-plugin-nitro@1.6.4':
     resolution: {integrity: sha512-rpjIyTMQmjgsOtQDufZYvZsMa0DV6um1vPt31uwNCVoknhVb7VVCkzIZhXloT7XDZxh7tFF2krU/y0gE0awzHQ==}
+
+  '@analogjs/vitest-angular@1.6.4':
+    resolution: {integrity: sha512-X7ybbfwsMV8lKvAioX5MBNMaLf3F9MPTJqXVsUJVuhY3+lsxS4cf9OJSn0bhHPBGoXbGbSlqmoRalFEmNdKMgA==}
+    peerDependencies:
+      '@analogjs/vite-plugin-angular': ^1.3.0 || ^1.3.0-beta.0
+      '@angular-devkit/architect': ^0.1500.0 || ^0.1600.0 || ^0.1700.0 || ^0.1800.0
+      vitest: ^1.3.1
 
   '@angular-devkit/architect@0.1801.2':
     resolution: {integrity: sha512-y2rV8wRwTnmCH/dUo632wHi6r41Gs9XucyGm/ybzB/5tN3x6dS+O3c3zajRpdqTUr8YcD6os6sT+Ay6zS31tOw==}
@@ -13279,6 +13289,12 @@ snapshots:
       - supports-color
       - uWebSockets.js
       - xml2js
+
+  '@analogjs/vitest-angular@1.6.4(@analogjs/vite-plugin-angular@1.6.4(@angular-devkit/build-angular@18.1.2(77a26yoa47gt6x2x25fgeti6pe))(@ngtools/webpack@18.1.2(@angular/compiler-cli@18.1.2(@angular/compiler@18.1.2(@angular/core@18.1.2(rxjs@7.8.1)(zone.js@0.14.4)))(typescript@5.5.4))(typescript@5.5.4)(webpack@5.93.0(@swc/core@1.7.1(@swc/helpers@0.5.12))(esbuild@0.21.5))))(@angular-devkit/architect@0.1801.2(chokidar@3.6.0))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.77.8)(stylus@0.59.0)(terser@5.29.2))':
+    dependencies:
+      '@analogjs/vite-plugin-angular': 1.6.4(@angular-devkit/build-angular@18.1.2(77a26yoa47gt6x2x25fgeti6pe))(@ngtools/webpack@18.1.2(@angular/compiler-cli@18.1.2(@angular/compiler@18.1.2(@angular/core@18.1.2(rxjs@7.8.1)(zone.js@0.14.4)))(typescript@5.5.4))(typescript@5.5.4)(webpack@5.93.0(@swc/core@1.7.1(@swc/helpers@0.5.12))(esbuild@0.21.5)))
+      '@angular-devkit/architect': 0.1801.2(chokidar@3.6.0)
+      vitest: 1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.77.8)(stylus@0.59.0)(terser@5.29.2)
 
   '@angular-devkit/architect@0.1801.2(chokidar@3.6.0)':
     dependencies:
