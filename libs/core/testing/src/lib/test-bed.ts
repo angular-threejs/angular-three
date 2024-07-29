@@ -102,9 +102,19 @@ export class NgtTestBed {
 			for (const subscriber of subscribers) {
 				for (let i = 0; i < frames; i++) {
 					if (Array.isArray(delta)) {
-						promises.push(new Promise(() => subscriber.callback({ ...state, delta: delta[i] || delta[-1] })));
+						promises.push(
+							new Promise((res) => {
+								subscriber.callback({ ...state, delta: delta[i] || delta[-1] });
+								res();
+							}),
+						);
 					} else {
-						promises.push(new Promise(() => subscriber.callback({ ...state, delta })));
+						promises.push(
+							new Promise((res) => {
+								subscriber.callback({ ...state, delta });
+								res();
+							}),
+						);
 					}
 				}
 			}
