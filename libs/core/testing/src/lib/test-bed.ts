@@ -88,6 +88,28 @@ export class NgtTestBed {
 			canvas: mockedCanvas,
 			destroy: fixture.componentInstance.destroy.bind(fixture.componentInstance),
 			fireEvent: this.createEventFirer(store, fixture),
+			advance: this.createAdvance(store),
+		};
+	}
+
+	static createAdvance(store: NgtSignalStore<NgtState>) {
+		return async (frames: number, delta: number | number[] = 1) => {
+			const state = store.snapshot;
+			const subscribers = state.internal.subscribers;
+
+			const promises: Promise<void>[] = [];
+
+			for (const subscriber of subscribers) {
+				for (let i = 0; i < frames; i++) {
+					if (Array.isArray(delta)) {
+						promises.push(new Promise(() => subscriber.callback({ ...state, delta: delta[i] || delta[-1] })));
+					} else {
+						promises.push(new Promise(() => subscriber.callback({ ...state, delta })));
+					}
+				}
+			}
+
+			await Promise.all(promises);
 		};
 	}
 
