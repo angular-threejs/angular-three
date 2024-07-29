@@ -109,6 +109,17 @@ export default defineConfig({
 							],
 						},
 						{
+							label: 'Testing',
+							collapsed: true,
+							badge: { text: 'Preview', variant: 'caution' },
+							items: [
+								{ label: 'Introduction', slug: 'core/testing/introduction' },
+								{ label: 'NgtTestBed', slug: 'core/testing/test-bed' },
+								{ label: 'fireEvent', slug: 'core/testing/fire-event' },
+								{ label: 'advance', slug: 'core/testing/advance' },
+							],
+						},
+						{
 							label: 'Utilities',
 							collapsed: true,
 							items: [

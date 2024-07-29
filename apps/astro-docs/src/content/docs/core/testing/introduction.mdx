@@ -1,0 +1,70 @@
+---
+title: Introduction
+description: Introduction to the Angular Three Testing API
+---
+
+
+import TestBed from '../../../../components/testing/test-bed';
+
+:::caution
+
+This API is in Developer Preview and is subject to change without following semantic versioning.
+
+:::
+
+Angular Three Testing provides a set of utilities to help us write unit tests for the scene graphs built with Angular Three.
+
+In test environment, we do not **actually** render the scene graph. Instead, we assert the state of the scene graph against the expected state
+to ensure that the Angular Three renderer works as expected.
+
+## Example Scenario
+
+Assuming we have the following `SceneGraph`
+
+```angular-ts
+@Component({
+  standalone: true,
+  template: `
+    <ngt-mesh
+      #mesh
+      [scale]="clicked() ? 1.5 : 1"
+      (click)="clicked.set(!clicked())"
+      (pointerover)="hovered.set(true)"
+      (pointerout)="hovered.set(false)"
+    >
+      <ngt-box-geometry />
+      <ngt-mesh-basic-material [color]="hovered() ? 'hotpink' : 'orange'" />
+    </ngt-mesh>
+  `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SceneGraph {
+  hovered = signal(false);
+  clicked = signal(false);
+
+  meshRef = viewChild.required<ElementRef<Mesh>>('mesh')
+
+  constructor() {
+    injectBeforeRender(() => {
+      const mesh = this.meshRef().nativeElement;
+      mesh.rotation.x += 0.01;
+    })
+  }
+}
+```
+
+The _rendered_ result of the above scene graph is as follows:
+
+<div class="h-96 w-full border border-dashed border-accent-500 rounded">
+	<TestBed client:only />
+</div>
+
+Our goal is to test the `SceneGraph` component and assert:
+
+- The mesh is rendered
+- The material color changes when the mesh is hovered
+- The mesh scales when the mesh is clicked
+- The mesh rotates by 0.01 radians per frame
+
+First, let's look at `NgtTestBed`
