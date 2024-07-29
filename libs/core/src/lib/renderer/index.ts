@@ -9,9 +9,9 @@ import {
 	makeEnvironmentProviders,
 } from '@angular/core';
 import { NgtArgs } from '../directives/args';
-import { NgtInstanceNode, NgtLocalState, getLocalState, prepare } from '../instance';
-import { NGT_STORE, NgtState, injectStore, provideStore } from '../store';
-import { NgtAnyRecord } from '../types';
+import { getLocalState, prepare } from '../instance';
+import { NGT_STORE, injectStore, provideStore } from '../store';
+import { NgtAnyRecord, NgtInstanceNode, NgtLocalState, NgtState } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { NgtSignalStore, signalStore } from '../utils/signal-store';

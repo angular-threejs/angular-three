@@ -1,6 +1,5 @@
-import { getLocalState, NgtAttachFunction } from '../instance';
-import { NgtState } from '../store';
-import { NgtAnyRecord } from '../types';
+import { getLocalState } from '../instance';
+import { NgtAnyRecord, NgtAttachFunction, NgtState } from '../types';
 import { applyProps } from './apply-props';
 import { NgtSignalStore } from './signal-store';
 

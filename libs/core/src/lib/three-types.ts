@@ -134,9 +134,7 @@ import {
 	VideoTexture,
 	WireframeGeometry,
 } from 'three';
-import { NgtEventHandlers } from './events';
-import { NgtAfterAttach, NgtAttachFunction, NgtInstanceNode } from './instance';
-import { NgtBeforeRenderEvent } from './store';
+import { NgtAfterAttach, NgtAttachFunction, NgtBeforeRenderEvent, NgtEventHandlers, NgtInstanceNode } from './types';
 
 type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
 type NoEvent<T> = Omit<T, 'addEventListener' | 'removeEventListener'>;

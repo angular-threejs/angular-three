@@ -12,22 +12,17 @@ import {
 	VSMShadowMap,
 	Vector3,
 } from 'three';
-import { NgtCanvasOptions } from './canvas';
 import { prepare } from './instance';
-import { injectLoop } from './loop';
-import { NgtSize, NgtState, injectStore } from './store';
-import { NgtAnyRecord, NgtEquConfig } from './types';
+import { injectLoop, roots } from './loop';
+import { injectStore } from './store';
+import { NgtAnyRecord, NgtCanvasElement, NgtCanvasOptions, NgtEquConfig, NgtSize, NgtState } from './types';
 import { applyProps } from './utils/apply-props';
 import { is } from './utils/is';
 import { makeCameraInstance, makeDpr, makeRendererInstance } from './utils/make';
 import { NgtSignalStore } from './utils/signal-store';
 import { checkNeedsUpdate } from './utils/update';
 
-export type NgtCanvasElement = HTMLCanvasElement | OffscreenCanvas;
-
 const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
-
-export const roots = new Map<NgtCanvasElement, NgtSignalStore<NgtState>>();
 
 export function injectCanvasRootInitializer(injector?: Injector) {
 	return assertInjector(injectCanvasRootInitializer, injector, () => {

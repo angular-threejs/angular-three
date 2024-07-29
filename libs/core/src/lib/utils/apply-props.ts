@@ -1,7 +1,6 @@
 import { Color, ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
-import { NgtInstanceNode, getLocalState, invalidateInstance } from '../instance';
-import { NgtState } from '../store';
-import { NgtAnyRecord } from '../types';
+import { getLocalState, invalidateInstance } from '../instance';
+import { NgtAnyRecord, NgtInstanceNode, NgtState } from '../types';
 import { is } from './is';
 import { checkUpdate } from './update';
 

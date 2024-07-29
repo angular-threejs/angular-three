@@ -23,93 +23,14 @@ import {
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
-import {
-	Camera,
-	OrthographicCamera,
-	PerspectiveCamera,
-	Raycaster,
-	Scene,
-	Vector3,
-	WebGLRenderer,
-	WebGLRendererParameters,
-	WebGLShadowMap,
-} from 'three';
+import { Raycaster, Scene, Vector3 } from 'three';
 import { createPointerEvents } from './dom/events';
-import { NgtCamera, NgtDomEvent, NgtEventManager } from './events';
 import { provideNgtRenderer } from './renderer';
-import { injectCanvasRootInitializer, NgtCanvasConfigurator, NgtCanvasElement } from './roots';
+import { injectCanvasRootInitializer, NgtCanvasConfigurator } from './roots';
 import { NgtRoutedScene } from './routed-scene';
-import { injectStore, NgtDpr, NgtPerformance, NgtRendererLike, NgtSize, NgtState, provideStore } from './store';
-import { NgtObject3DNode } from './three-types';
-import { NgtProperties } from './types';
+import { injectStore, provideStore } from './store';
+import { NgtCanvasOptions, NgtDomEvent, NgtDpr, NgtGLOptions, NgtPerformance, NgtSize, NgtState } from './types';
 import { is } from './utils/is';
-import { NgtSignalStore } from './utils/signal-store';
-
-export type NgtGLOptions =
-	| NgtRendererLike
-	| ((canvas: NgtCanvasElement) => NgtRendererLike)
-	| Partial<NgtProperties<WebGLRenderer> | WebGLRendererParameters>
-	| undefined;
-
-export interface NgtCanvasOptions {
-	/** A threejs renderer instance or props that go into the default renderer */
-	gl?: NgtGLOptions;
-	/** Dimensions to fit the renderer to. Will measure canvas dimensions if omitted */
-	size?: NgtSize;
-	/**
-	 * Enables shadows (by default PCFsoft). Can accept `gl.shadowMap` options for fine-tuning,
-	 * but also strings: 'basic' | 'percentage' | 'soft' | 'variance'.
-	 * @see https://threejs.org/docs/#api/en/renderers/WebGLRenderer.shadowMap
-	 */
-	shadows?: boolean | 'basic' | 'percentage' | 'soft' | 'variance' | Partial<WebGLShadowMap>;
-	/**
-	 * Disables three r139 color management.
-	 * @see https://threejs.org/docs/#manual/en/introduction/Color-management
-	 */
-	legacy?: boolean;
-	/** Switch off automatic sRGB color space and gamma correction */
-	linear?: boolean;
-	/** Use `THREE.NoToneMapping` instead of `THREE.ACESFilmicToneMapping` */
-	flat?: boolean;
-	/** Creates an orthographic camera */
-	orthographic?: boolean;
-	/**
-	 * R3F's render mode. Set to `demand` to only render on state change or `never` to take control.
-	 * @see https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#on-demand-rendering
-	 */
-	frameloop?: 'always' | 'demand' | 'never';
-	/**
-	 * R3F performance options for adaptive performance.
-	 * @see https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance#movement-regression
-	 */
-	performance?: Partial<Omit<NgtPerformance, 'regress'>>;
-	/** Target pixel ratio. Can clamp between a range: `[min, max]` */
-	dpr?: NgtDpr;
-	/** Props that go into the default raycaster */
-	raycaster?: Partial<Raycaster>;
-	/** A `Scene` instance or props that go into the default scene */
-	scene?: Scene | Partial<Scene>;
-	/** A `Camera` instance or props that go into the default camera */
-	camera?: (
-		| NgtCamera
-		| Partial<
-				NgtObject3DNode<Camera, typeof Camera> &
-					NgtObject3DNode<PerspectiveCamera, typeof PerspectiveCamera> &
-					NgtObject3DNode<OrthographicCamera, typeof OrthographicCamera>
-		  >
-	) & {
-		/** Flags the camera as manual, putting projection into your own hands */
-		manual?: boolean;
-	};
-	/** An R3F event manager to manage elements' pointer events */
-	events?: (store: NgtSignalStore<NgtState>) => NgtEventManager<HTMLElement>;
-	/** The target where events are being subscribed to, default: the div that wraps canvas */
-	eventSource?: HTMLElement | ElementRef<HTMLElement>;
-	/** The event prefix that is cast into canvas pointer x/y events, default: "offset" */
-	eventPrefix?: 'offset' | 'client' | 'page' | 'layer' | 'screen';
-	/** Default coordinate for the camera to look at */
-	lookAt?: Vector3 | Parameters<Vector3['set']>;
-}
 
 @Component({
 	selector: 'ngt-canvas',
@@ -292,3 +213,5 @@ export class NgtCanvas {
 		});
 	}
 }
+
+export const injectRoot = injectCanvasRootInitializer;

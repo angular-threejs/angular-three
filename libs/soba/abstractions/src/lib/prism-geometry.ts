@@ -1,5 +1,4 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
@@ -9,7 +8,6 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, NgtArgs } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ExtrudeGeometry, ExtrudeGeometryOptions, Shape, Vector2 } from 'three';
 
@@ -50,16 +48,5 @@ export class NgtsPrismGeometry {
 
 	constructor() {
 		extend({ ExtrudeGeometry });
-
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			// autoEffect(() => {
-			// 	const geometry = this.geometry()?.nativeElement;
-			// 	if (!geometry) return;
-			//
-			// 	geometry.center();
-			// });
-		});
 	}
 }

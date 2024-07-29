@@ -1,6 +1,7 @@
 import { DestroyRef, Injector, inject } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { NgtBeforeRenderRecord, injectStore } from '../store';
+import { injectStore } from '../store';
+import { NgtBeforeRenderRecord } from '../types';
 
 export function injectBeforeRender(
 	cb: NgtBeforeRenderRecord['callback'],

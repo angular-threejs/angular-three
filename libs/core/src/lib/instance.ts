@@ -1,62 +1,6 @@
-import { Signal } from '@angular/core';
-import { NgtEventHandlers } from './events';
-import { NgtState } from './store';
-import { NgtAnyRecord } from './types';
-import { NgtSignalStore, signalStore } from './utils/signal-store';
+import { NgtAnyRecord, NgtInstanceNode, NgtLocalInstanceState, NgtLocalState } from './types';
+import { signalStore } from './utils/signal-store';
 import { checkUpdate } from './utils/update';
-
-export type NgtAttachFunction<TChild = any, TParent = any> = (
-	parent: TParent,
-	child: TChild,
-	store: NgtSignalStore<NgtState>,
-) => void | (() => void);
-
-export interface NgtAfterAttach<
-	TChild extends NgtInstanceNode = NgtInstanceNode,
-	TParent extends NgtInstanceNode = NgtInstanceNode,
-> {
-	parent: TParent;
-	node: TChild;
-}
-
-export interface NgtLocalInstanceState {
-	objects: NgtInstanceNode[];
-	nonObjects: NgtInstanceNode[];
-	parent: NgtInstanceNode | null;
-}
-
-export interface NgtLocalState {
-	/** the store of the canvas that the instance is being rendered to */
-	store: NgtSignalStore<NgtState>;
-	// objects related to this instance
-	instanceStore: NgtSignalStore<NgtLocalInstanceState>;
-	// shortcut to signals
-	parent: Signal<NgtLocalInstanceState['parent']>;
-	objects: Signal<NgtLocalInstanceState['objects']>;
-	nonObjects: Signal<NgtLocalInstanceState['nonObjects']>;
-	// shortcut to add/remove object to list
-	add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
-	remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
-	setParent: (parent: NgtInstanceNode | null) => void;
-	// if this THREE instance is a ngt-primitive
-	primitive?: boolean;
-	// if this THREE object has any events bound to it
-	eventCount: number;
-	// list of handlers to handle the events
-	handlers: Partial<NgtEventHandlers>;
-	// attach information so that we can detach as well as reset
-	attach?: string[] | NgtAttachFunction;
-	// previously attach information so we can reset as well as clean up
-	previousAttach?: unknown | (() => void);
-	// is raw value
-	isRaw?: boolean;
-	// priority for before render
-	priority?: number;
-	onUpdate?: (node: NgtInstanceNode) => void;
-	onAttach?: (afterAttach: NgtAfterAttach) => void;
-}
-
-export type NgtInstanceNode<TNode = any> = { __ngt__: NgtLocalState } & NgtAnyRecord & TNode;
 
 export function getLocalState<TInstance extends object>(obj: TInstance | undefined): NgtLocalState | undefined {
 	if (!obj) return undefined;

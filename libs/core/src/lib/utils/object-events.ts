@@ -3,7 +3,7 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Object3D } from 'three';
 import { supportedEvents } from '../dom/events';
-import { NgtDomEvent, NgtThreeEvent } from '../events';
+import { NgtDomEvent, NgtThreeEvent } from '../types';
 import { resolveRef } from './resolve-ref';
 
 export function injectObjectEvents(

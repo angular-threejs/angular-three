@@ -9,9 +9,7 @@ import {
 	Scene,
 	Texture,
 } from 'three';
-import { NgtInstanceNode } from '../instance';
-import { NgtRendererLike } from '../store';
-import { NgtAnyRecord, NgtEquConfig } from '../types';
+import { NgtAnyRecord, NgtEquConfig, NgtInstanceNode, NgtRendererLike } from '../types';
 
 export const is = {
 	obj: (a: unknown): a is object => a === Object(a) && !Array.isArray(a) && typeof a !== 'function',

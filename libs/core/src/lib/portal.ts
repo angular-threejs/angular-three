@@ -19,10 +19,10 @@ import {
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
-import { NgtComputeFunction } from './events';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
-import { injectStore, NgtSize, NgtState, provideStore } from './store';
+import { injectStore, provideStore } from './store';
+import { NgtComputeFunction, NgtSize, NgtState } from './types';
 import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
 import { signalStore } from './utils/signal-store';

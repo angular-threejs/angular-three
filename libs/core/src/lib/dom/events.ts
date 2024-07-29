@@ -1,6 +1,5 @@
-import { createEvents, NgtDomEvent, NgtEventManager, NgtEvents } from '../events';
-import { NgtState } from '../store';
-import { NgtAnyRecord } from '../types';
+import { createEvents } from '../events';
+import { NgtAnyRecord, NgtDomEvent, NgtEventManager, NgtEvents, NgtState } from '../types';
 import { NgtSignalStore } from '../utils/signal-store';
 
 const DOM_EVENTS = {

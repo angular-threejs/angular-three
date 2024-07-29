@@ -1,9 +1,9 @@
 import { createInjectionToken } from 'ngxtension/create-injection-token';
-import { roots } from './roots';
-import { NgtState } from './store';
+import { NgtCanvasElement, NgtGlobalRenderCallback, NgtState } from './types';
 import { NgtSignalStore } from './utils/signal-store';
 
-export type NgtGlobalRenderCallback = (timeStamp: number) => void;
+export const roots = new Map<NgtCanvasElement, NgtSignalStore<NgtState>>();
+
 type SubItem = { callback: NgtGlobalRenderCallback };
 
 function createSubs(callback: NgtGlobalRenderCallback, subs: Set<SubItem>): () => void {

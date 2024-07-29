@@ -1,6 +1,7 @@
 import { untracked } from '@angular/core';
 import { removeInteractivity } from '../events';
-import { getLocalState, invalidateInstance, NgtInstanceNode } from '../instance';
+import { getLocalState, invalidateInstance } from '../instance';
+import { NgtInstanceNode } from '../types';
 import { attach, detach } from '../utils/attach';
 import { is } from '../utils/is';
 import { SPECIAL_EVENTS } from './constants';

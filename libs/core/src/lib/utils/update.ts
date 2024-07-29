@@ -1,5 +1,5 @@
 import { CubeTexture } from 'three';
-import { NgtCameraManual, NgtSize } from '../store';
+import { NgtCameraManual, NgtSize } from '../types';
 import { is } from './is';
 
 export function checkNeedsUpdate(value: unknown) {
