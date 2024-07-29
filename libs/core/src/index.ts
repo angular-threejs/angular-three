@@ -1,4 +1,5 @@
 export * from './lib/canvas';
+export * from './lib/canvas-handler';
 export * from './lib/directives/args';
 export { NgtCamera, NgtComputeFunction, NgtDomEvent, NgtThreeEvent } from './lib/events';
 export * from './lib/html';
