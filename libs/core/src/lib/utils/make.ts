@@ -1,5 +1,5 @@
 import { Material, MathUtils, Mesh, Object3D, OrthographicCamera, PerspectiveCamera, WebGLRenderer } from 'three';
-import { NgtGLOptions } from '../canvas-handler';
+import { NgtGLOptions } from '../canvas';
 import { NgtIntersection } from '../events';
 import { NgtCanvasElement } from '../roots';
 import { NgtDpr, NgtSize } from '../store';

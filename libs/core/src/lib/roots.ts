@@ -12,7 +12,7 @@ import {
 	VSMShadowMap,
 	Vector3,
 } from 'three';
-import { NgtCanvasOptions } from './canvas-handler';
+import { NgtCanvasOptions } from './canvas';
 import { prepare } from './instance';
 import { injectLoop } from './loop';
 import { NgtSize, NgtState, injectStore } from './store';

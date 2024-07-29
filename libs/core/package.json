@@ -56,5 +56,8 @@
 			"angular-three-rapier"
 		]
 	},
-	"web-types": "./web-types.json"
+	"web-types": [
+    "./web-types.json",
+    "../../node_modules/angular-three/web-types.json"
+  ]
 }

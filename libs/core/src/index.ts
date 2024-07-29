@@ -1,13 +1,13 @@
 export * from './lib/canvas';
-export * from './lib/canvas-handler';
 export * from './lib/directives/args';
-export { NgtCamera, NgtComputeFunction, NgtDomEvent, NgtThreeEvent } from './lib/events';
+export { NgtCamera, NgtComputeFunction, NgtDomEvent, NgtEventHandlers, NgtThreeEvent } from './lib/events';
 export * from './lib/html';
 export * from './lib/instance';
 export * from './lib/loader';
 export { addAfterEffect, addEffect, addTail } from './lib/loop';
 export { NgtPortal, NgtPortalContent } from './lib/portal';
 export * from './lib/renderer';
+export { injectCanvasRootInitializer } from './lib/roots';
 export * from './lib/routed-scene';
 export * from './lib/store';
 export * from './lib/utils/apply-props';
