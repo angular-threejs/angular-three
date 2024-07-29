@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	getLocalState,
 	injectCanvasRootInitializer,
-	injectStore,
 	NGT_STORE,
 	NgtAnyRecord,
 	NgtCanvasOptions,
@@ -42,7 +41,6 @@ export class NgtTestBed {
 					provide: ENVIRONMENT_INITIALIZER,
 					useFactory: () => {
 						const initRoot = injectCanvasRootInitializer();
-						const store = injectStore();
 
 						return () => {
 							const configurator = initRoot(mockedCanvas);
@@ -57,8 +55,6 @@ export class NgtTestBed {
 								...canvasConfiguration,
 								events: undefined,
 							});
-
-							store.update((state) => ({ internal: { ...state.internal, active: true } }));
 						};
 					},
 					multi: true,
@@ -145,7 +141,9 @@ export class NgtTestBed {
 				target: el,
 				currentTarget: el,
 				sourceEvent: eventData,
+				nativeEvent: eventData,
 				object: el,
+				eventObject: el,
 				...eventData,
 			};
 
