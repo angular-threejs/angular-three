@@ -117,6 +117,7 @@ export default defineConfig({
 								{ label: 'NgtTestBed', slug: 'core/testing/test-bed' },
 								{ label: 'fireEvent', slug: 'core/testing/fire-event' },
 								{ label: 'advance', slug: 'core/testing/advance' },
+								{ label: 'toGraph', slug: 'core/testing/to-graph' },
 							],
 						},
 						{
