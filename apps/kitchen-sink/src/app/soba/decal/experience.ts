@@ -125,7 +125,7 @@ export class Bunny {
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
-			const text = this.textRef()?.troikaMesh();
+			const text = this.textRef()?.troikaMesh;
 			if (text) {
 				text.position.x = Math.sin(clock.elapsedTime) * 6.5;
 			}

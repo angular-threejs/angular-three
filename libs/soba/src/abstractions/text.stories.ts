@@ -26,7 +26,7 @@ class TextContainer {
 
 	constructor() {
 		injectBeforeRender(() => {
-			const text = this.textRef().troikaMesh();
+			const text = this.textRef().troikaMesh;
 			text.rotation.y += 0.01;
 		});
 	}
@@ -67,7 +67,7 @@ class TextCustomMaterialContainer {
 
 	constructor() {
 		injectBeforeRender(() => {
-			const text = this.textRef().troikaMesh();
+			const text = this.textRef().troikaMesh;
 			text.rotation.y += 0.01;
 		});
 	}

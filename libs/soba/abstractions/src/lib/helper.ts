@@ -77,7 +77,7 @@ export function injectHelper<
 	standalone: true,
 	selector: 'ngts-helper',
 	template: `
-		<ngt-object-3D #helper />
+		<ngt-object3D #helper />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,

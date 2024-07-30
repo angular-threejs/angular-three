@@ -100,7 +100,7 @@ class Cube {
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
-			const text = this.textRef()?.troikaMesh();
+			const text = this.textRef()?.troikaMesh;
 			if (text) {
 				text.position.x = Math.sin(clock.elapsedTime) * 2;
 			}

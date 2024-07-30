@@ -5,7 +5,6 @@ import {
 	Component,
 	DestroyRef,
 	afterNextRender,
-	computed,
 	inject,
 	input,
 	output,
@@ -62,7 +61,7 @@ const defaultOptions: NgtsTextOptions = {
 	standalone: true,
 	template: `
 		<ngt-primitive
-			*args="args()"
+			*args="[troikaMesh]"
 			[text]="text()"
 			[font]="font()"
 			[anchorX]="anchorX()"
@@ -97,12 +96,11 @@ export class NgtsText {
 	sdfGlyphSize = pick(this.options, 'sdfGlyphSize');
 	fontSize = pick(this.options, 'fontSize');
 
-	troikaMesh = computed(() => new Text(), { equal: Object.is });
-	args = computed(() => [this.troikaMesh()]);
+	troikaMesh = new Text();
 
 	constructor() {
 		inject(DestroyRef).onDestroy(() => {
-			this.troikaMesh().dispose();
+			this.troikaMesh.dispose();
 		});
 
 		// NOTE: this could be just effect but autoEffect is used for consistency
@@ -116,9 +114,9 @@ export class NgtsText {
 		afterNextRender(() => {
 			this.autoEffect(() => {
 				const [invalidate, text] = [this.invalidate(), this.text(), this.options()];
-				this.troikaMesh().sync(() => {
+				this.troikaMesh.sync(() => {
 					invalidate();
-					this.synced.emit(this.troikaMesh());
+					this.synced.emit(this.troikaMesh);
 				});
 			});
 		});

@@ -32,6 +32,9 @@
     },
     "./vanilla-exports": {
       "default": "./vanilla-exports/src/index.ts"
+    },
+    "./loaders": {
+      "default": "./loaders/src/index.ts"
     }
   },
 	"peerDependencies": {

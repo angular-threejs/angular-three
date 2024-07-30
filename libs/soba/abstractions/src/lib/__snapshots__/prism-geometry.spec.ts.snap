@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NgtsPrismGeometry > should render properly 1`] = `
+[
+  {
+    "children": [],
+    "name": "",
+    "type": "Mesh",
+  },
+]
+`;

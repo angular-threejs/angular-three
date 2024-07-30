@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NgtsHelper > should render properly 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [],
+        "name": "",
+        "type": "Object3D",
+      },
+    ],
+    "name": "",
+    "type": "Mesh",
+  },
+  {
+    "children": [],
+    "name": "",
+    "type": "BoxHelper",
+  },
+]
+`;

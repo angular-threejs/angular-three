@@ -6,7 +6,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { checkNeedsUpdate, injectStore, NgtAfterAttach, NgtArgs, NgtObject3DNode, omit, pick } from 'angular-three';
@@ -51,7 +50,7 @@ const defaultOptions: NgtsLineOptions = {
 		<ngt-primitive *args="[line2()]" #line [parameters]="parameters()">
 			<ngt-primitive *args="[lineGeometry()]" attach="geometry" (attached)="onGeometryAttached($any($event))" />
 			<ngt-primitive
-				*args="[lineMaterial()]"
+				*args="[lineMaterial]"
 				attach="material"
 				[color]="color()"
 				[vertexColors]="vertex()"
@@ -89,7 +88,7 @@ export class NgtsLine {
 	resolution = computed(() => [this.size().width, this.size().height]);
 
 	line2 = computed(() => (this.segments() ? new LineSegments2() : new Line2()));
-	lineMaterial = computed(() => new LineMaterial());
+	lineMaterial = new LineMaterial();
 
 	itemSize = computed(() => ((this.vertexColors()?.[0] as number[] | undefined)?.length === 4 ? 4 : 3));
 
@@ -131,7 +130,7 @@ export class NgtsLine {
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const [lineMaterial, dashed] = [this.lineMaterial(), this.dashed()];
+				const [lineMaterial, dashed] = [this.lineMaterial, this.dashed()];
 				if (dashed) {
 					lineMaterial.defines['USE_DASH'] = '';
 				} else {
@@ -141,7 +140,7 @@ export class NgtsLine {
 			});
 
 			autoEffect(() => {
-				const [lineGeometry, lineMaterial] = [this.lineGeometry(), untracked(this.lineMaterial)];
+				const [lineGeometry, lineMaterial] = [this.lineGeometry(), this.lineMaterial];
 				return () => {
 					lineGeometry.dispose();
 					lineMaterial.dispose();

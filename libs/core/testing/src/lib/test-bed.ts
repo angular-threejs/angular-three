@@ -12,8 +12,15 @@ import {
 	NgtState,
 	provideStore,
 } from 'angular-three';
+import { Object3D } from 'three';
 import { NgtTestCanvas } from './test-canvas';
 import { createMockCanvas } from './utils/mock-canvas';
+
+export interface NgtTestGraphedObject {
+	type: string;
+	name: string;
+	children: NgtTestGraphedObject[];
+}
 
 export class NgtTestBed {
 	static create<T extends Type<any>>(
@@ -85,6 +92,22 @@ export class NgtTestBed {
 			destroy: fixture.componentInstance.destroy.bind(fixture.componentInstance),
 			fireEvent: this.createEventFirer(store, fixture),
 			advance: this.createAdvance(store),
+			toGraph: this.createToGraph(store),
+		};
+	}
+
+	static createToGraph(store: NgtSignalStore<NgtState>) {
+		function graphify(type: string, name: string, children: NgtTestGraphedObject[]): NgtTestGraphedObject {
+			return { type, name, children };
+		}
+
+		function toGraph(node: Object3D): NgtTestGraphedObject[] {
+			return node.children.map((child) => graphify(child.type, child.name || '', toGraph(child)));
+		}
+
+		return () => {
+			const state = store.snapshot;
+			return toGraph(state.scene);
 		};
 	}
 

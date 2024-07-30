@@ -24,12 +24,13 @@ describe(NgtsPrismGeometry.name, () => {
 	class SceneGraph {}
 
 	it('should render properly', async () => {
-		const { scene, fixture } = NgtTestBed.create(SceneGraph);
+		const { scene, fixture, toGraph } = NgtTestBed.create(SceneGraph);
 		fixture.detectChanges();
 
 		expect(scene.children.length).toEqual(1);
 		const mesh = scene.children[0] as Mesh<ExtrudeGeometry>;
 
 		expect(mesh.geometry.type).toEqual('ExtrudeGeometry');
+		expect(toGraph()).toMatchSnapshot();
 	});
 });
