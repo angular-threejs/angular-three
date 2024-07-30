@@ -1,0 +1,38 @@
+---
+title: toGraph
+description: Details about the Angular Three Testing `toGraph` function
+---
+
+`toGraph` is a function that allows you to convert a THREE.js object into a simple `NgtTestGraphObject`.
+
+This is useful for snapshot testing as it _at least_ provides the scene graph structure.
+
+:::caution
+
+In many cases, we can use `toJSON` on the THREE.js object to better structure. However, this is not always possible
+
+- The `uuid` property will always be different for each test run making it difficult to do snapshot testing
+- Some THREE.objects do not have `toJSON` method and will throw an error when we try to call `scene.toJSON()` from the root
+
+:::
+
+```ts
+const { fixture, toGraph } = NgtTestBed.create(SceneGraph);
+fixture.detectChanges();
+
+expect(toGraph()).toMatchSnapshot();
+
+/**
+ * For a scene with a single mesh
+ *
+ * [
+ *   {
+ *     "type": "Mesh",
+ *     "name": "",
+ *     "children": []
+ *   }
+ * ]
+ */
+```
+
+
