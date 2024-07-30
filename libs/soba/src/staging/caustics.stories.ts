@@ -39,14 +39,14 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 				<ngts-caustics
 					[options]="{
-						backfaces: true,
+						backside: true,
 						color,
 						focus: [0, -1.2, 0],
 						lightSource: [-1.2, 3, -2],
 						intensity: 0.003,
 						worldRadius: 0.26 / 10,
 						ior: 0.9,
-						backfaceIor: 1.26,
+						backsideIOR: 1.26,
 					}"
 				>
 					<ngt-mesh [castShadow]="true" [receiveShadow]="true" [geometry]="gltf.nodes.glass.geometry">
@@ -94,15 +94,7 @@ class Scene {
 	selector: 'caustics-env',
 	standalone: true,
 	template: `
-		<ngts-environment
-			[options]="{
-				frames: Infinity,
-				preset: 'city',
-				resolution: 256,
-				background: true,
-				blur: 0.8,
-			}"
-		>
+		<ngts-environment [options]="{ frames: Infinity, preset: 'city', resolution: 256, background: true, blur: 0.8 }">
 			<ng-template>
 				<ngts-lightformer
 					[options]="{ intensity: 4, rotation: [Math.PI / 2, 0, 0], position: [0, 5, -9], scale: [10, 10, 1] }"

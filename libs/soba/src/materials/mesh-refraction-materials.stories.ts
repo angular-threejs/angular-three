@@ -12,11 +12,17 @@ import {
 import {
 	NgtsAccumulativeShadows,
 	NgtsCaustics,
+	NgtsCausticsOptions,
 	NgtsEnvironment,
 	NgtsRandomizedLights,
 } from 'angular-three-soba/staging';
 import { RGBELoader } from 'three-stdlib';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
+
+injectLoader.preload(
+	() => RGBELoader,
+	() => 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr',
+);
 
 @Component({
 	selector: 'diamond-flat',
@@ -28,13 +34,13 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 					@if (gltf(); as gltf) {
 						<ngts-caustics
 							[options]="{
-								backfaces: true,
+								backside: true,
 								color: 'white',
 								position: [0, -0.5, 0],
-								lightSource: [5, 5, -10],
+								lightSource: lightSource(),
 								worldRadius: 0.1,
 								ior: 1.8,
-								backfaceIor: 1.1,
+								backsideIOR: 1.1,
 								intensity: 0.1,
 							}"
 						>
@@ -59,6 +65,7 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 class Diamond {
 	rotation = input([0, 0, 0]);
 	position = input([0, 0, 0]);
+	lightSource = input<NgtsCausticsOptions['lightSource']>();
 	options = input({} as NgtsMeshRefractionMaterialOptions);
 
 	gltf = injectGLTF(() => './dflat.glb') as Signal<any | null>;
@@ -75,7 +82,12 @@ class Diamond {
 		<ngt-spot-light #spotLight [position]="[5, 5, -10]" [angle]="0.15" [penumbra]="1" />
 		<ngt-point-light [position]="[-10, -10, -10]" />
 
-		<diamond-flat [rotation]="[0, 0, 0.715]" [position]="[0, -0.175 + 0.5, 0]" [options]="options()" />
+		<diamond-flat
+			[lightSource]="spotLight"
+			[rotation]="[0, 0, 0.715]"
+			[position]="[0, -0.175 + 0.5, 0]"
+			[options]="options()"
+		/>
 
 		<ngts-caustics
 			[options]="{
