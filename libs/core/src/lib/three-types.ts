@@ -357,77 +357,262 @@ export type NgtFogExp2 = NgtNode<FogExp2, typeof FogExp2>;
 export type NgtShape = NgtNode<Shape, typeof Shape>;
 
 export interface ThreeElements {
+	/**
+	 * @from node_modules/@types/three/src/core/Object3D.d.ts
+	 */
 	'ngt-object3D': NgtObject3D;
 
-	// `audio` works but conflicts with @types/react. Try using PositionalAudio from @react-three/drei instead
+	/**
+	 * @from node_modules/@types/three/src/audio/Audio.d.ts
+	 */
 	'ngt-audio': NgtAudio;
+	/**
+	 * @from node_modules/@types/three/src/audio/AudioListener.d.ts
+	 */
 	'ngt-audio-listener': NgtAudioListener;
+	/**
+	 * @from node_modules/@types/three/src/audio/PositionalAudio.d.ts
+	 */
 	'ngt-positional-audio': NgtPositionalAudio;
 
+	/**
+	 * @from node_modules/@types/three/src/objects/Mesh.d.ts
+	 */
 	'ngt-mesh': NgtMesh;
+	/**
+	 * @from node_modules/@types/three/src/objects/InstancedMesh.d.ts
+	 */
 	'ngt-instanced-mesh': NgtInstancedMesh;
+	/**
+	 * @from node_modules/@types/three/src/scenes/Scene.d.ts
+	 */
 	'ngt-scene': NgtScene;
+	/**
+	 * @from node_modules/@types/three/src/objects/Sprite.d.ts
+	 */
 	'ngt-sprite': NgtSprite;
+	/**
+	 * @from node_modules/@types/three/src/objects/LOD.d.ts
+	 */
 	'ngt-lOD': NgtLOD;
+	/**
+	 * @from node_modules/@types/three/src/objects/SkinnedMesh.d.ts
+	 */
 	'ngt-skinned-mesh': NgtSkinnedMesh;
+	/**
+	 * @from node_modules/@types/three/src/objects/Skeleton.d.ts
+	 */
 	'ngt-skeleton': NgtSkeleton;
+	/**
+	 * @from node_modules/@types/three/src/objects/Bone.d.ts
+	 */
 	'ngt-bone': NgtBone;
 
+	/**
+	 * @from node_modules/@types/three/src/objects/Line.d.ts
+	 */
 	'ngt-line': NgtLine;
+	/**
+	 * @from node_modules/@types/three/src/objects/LineSegments.d.ts
+	 */
 	'ngt-line-segments': NgtLineSegments;
+	/**
+	 * @from node_modules/@types/three/src/objects/LineLoop.d.ts
+	 */
 	'ngt-line-loop': NgtLineLoop;
+	/**
+	 * @from node_modules/@types/three/src/objects/Points.d.ts
+	 */
 	'ngt-points': NgtPoints;
+	/**
+	 * @from node_modules/@types/three/src/objects/Group.d.ts
+	 */
 	'ngt-group': NgtGroup;
 
 	// cameras
+	/**
+	 * @from node_modules/@types/three/src/cameras/Camera.d.ts
+	 */
 	'ngt-camera': NgtCameraNode;
+	/**
+	 * @from node_modules/@types/three/src/cameras/PerspectiveCamera.d.ts
+	 */
 	'ngt-perspective-camera': NgtPerspectiveCamera;
+	/**
+	 * @from node_modules/@types/three/src/cameras/OrthographicCamera.d.ts
+	 */
 	'ngt-orthographic-camera': NgtOrthographicCamera;
+	/**
+	 * @from node_modules/@types/three/src/cameras/CubeCamera.d.ts
+	 */
 	'ngt-cube-camera': NgtCubeCamera;
+	/**
+	 * @from node_modules/@types/three/src/cameras/ArrayCamera.d.ts
+	 */
 	'ngt-array-camera': NgtArrayCamera;
 
 	// geometry
+	/**
+	 * @from node_modules/@types/three/src/core/InstancedBufferGeometry.d.ts
+	 */
 	'ngt-instanced-buffer-geometry': NgtInstancedBufferGeometry;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferGeometry.d.ts
+	 */
 	'ngt-buffer-geometry': NgtBufferGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/WireframeGeometry.d.ts
+	 */
 	'ngt-wireframe-geometry': NgtWireframeGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/TetrahedronGeometry.d.ts
+	 */
 	'ngt-tetrahedron-geometry': NgtTetrahedronGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/OctahedronGeometry.d.ts
+	 */
 	'ngt-octahedron-geometry': NgtOctahedronGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/IcosahedronGeometry.d.ts
+	 */
 	'ngt-icosahedron-geometry': NgtIcosahedronGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/PolyhedronGeometry.d.ts
+	 */
 	'ngt-polyhedron-geometry': NgtPolyhedronGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/DodecahedronGeometry.d.ts
+	 */
 	'ngt-dodecahedron-geometry': NgtDodecahedronGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/TubeGeometry.d.ts
+	 */
 	'ngt-tube-geometry': NgtTubeGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/TorusKnotGeometry.d.ts
+	 */
 	'ngt-torus-knot-geometry': NgtTorusKnotGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/TorusGeometry.d.ts
+	 */
 	'ngt-torus-geometry': NgtTorusGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/SphereGeometry.d.ts
+	 */
 	'ngt-sphere-geometry': NgtSphereGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/RingGeometry.d.ts
+	 */
 	'ngt-ring-geometry': NgtRingGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/PlaneGeometry.d.ts
+	 */
 	'ngt-plane-geometry': NgtPlaneGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/LatheGeometry.d.ts
+	 */
 	'ngt-lathe-geometry': NgtLatheGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/ShapeGeometry.d.ts
+	 */
 	'ngt-shape-geometry': NgtShapeGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/ExtrudeGeometry.d.ts
+	 */
 	'ngt-extrude-geometry': NgtExtrudeGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/EdgesGeometry.d.ts
+	 */
 	'ngt-edges-geometry': NgtEdgesGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/ConeGeometry.d.ts
+	 */
 	'ngt-cone-geometry': NgtConeGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/CylinderGeometry.d.ts
+	 */
 	'ngt-cylinder-geometry': NgtCylinderGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/CircleGeometry.d.ts
+	 */
 	'ngt-circle-geometry': NgtCircleGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/BoxGeometry.d.ts
+	 */
 	'ngt-box-geometry': NgtBoxGeometry;
+	/**
+	 * @from node_modules/@types/three/src/geometries/CapsuleGeometry.d.ts
+	 */
 	'ngt-capsule-geometry': NgtCapsuleGeometry;
 
 	// materials
+	/**
+	 * @from node_modules/@types/three/src/materials/ShadowMaterial.d.ts
+	 */
 	'ngt-shadow-material': NgtShadowMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/SpriteMaterial.d.ts
+	 */
 	'ngt-sprite-material': NgtSpriteMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/RawShaderMaterial.d.ts
+	 */
 	'ngt-raw-shader-material': NgtRawShaderMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/ShaderMaterial.d.ts
+	 */
 	'ngt-shader-material': NgtShaderMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/PointsMaterial.d.ts
+	 */
 	'ngt-points-material': NgtPointsMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshPhysicalMaterial.d.ts
+	 */
 	'ngt-mesh-physical-material': NgtMeshPhysicalMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshStandardMaterial.d.ts
+	 */
 	'ngt-mesh-standard-material': NgtMeshStandardMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshPhongMaterial.d.ts
+	 */
 	'ngt-mesh-phong-material': NgtMeshPhongMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshToonMaterial.d.ts
+	 */
 	'ngt-mesh-toon-material': NgtMeshToonMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshNormalMaterial.d.ts
+	 */
 	'ngt-mesh-normal-material': NgtMeshNormalMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshLambertMaterial.d.ts
+	 */
 	'ngt-mesh-lambert-material': NgtMeshLambertMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshDepthMaterial.d.ts
+	 */
 	'ngt-mesh-depth-material': NgtMeshDepthMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshDistanceMaterial.d.ts
+	 */
 	'ngt-mesh-distance-material': NgtMeshDistanceMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshBasicMaterial.d.ts
+	 */
 	'ngt-mesh-basic-material': NgtMeshBasicMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshMatcapMaterial.d.ts
+	 */
 	'ngt-mesh-matcap-material': NgtMeshMatcapMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/LineDashedMaterial.d.ts
+	 */
 	'ngt-line-dashed-material': NgtLineDashedMaterial;
+	/**
+	 * @from node_modules/@types/three/src/materials/LineBasicMaterial.d.ts
+	 */
 	'ngt-line-basic-material': NgtLineBasicMaterial;
 
 	// primitive
@@ -437,64 +622,231 @@ export interface ThreeElements {
 	'ngt-value': NgtValue;
 
 	// lights and other
+	/**
+	 * @from node_modules/@types/three/src/lights/SpotLightShadow.d.ts
+	 */
 	'ngt-spot-light-shadow': NgtSpotLightShadow;
+	/**
+	 * @from node_modules/@types/three/src/lights/SpotLight.d.ts
+	 */
 	'ngt-spot-light': NgtSpotLight;
+	/**
+	 * @from node_modules/@types/three/src/lights/PointLight.d.ts
+	 */
 	'ngt-point-light': NgtPointLight;
+	/**
+	 * @from node_modules/@types/three/src/lights/RectAreaLight.d.ts
+	 */
 	'ngt-rect-area-light': NgtRectAreaLight;
+	/**
+	 * @from node_modules/@types/three/src/lights/HemisphereLight.d.ts
+	 */
 	'ngt-hemisphere-light': NgtHemisphereLight;
+	/**
+	 * @from node_modules/@types/three/src/lights/DirectionalLightShadow.d.ts
+	 */
 	'ngt-directional-light-shadow': NgtDirectionalLightShadow;
+	/**
+	 * @from node_modules/@types/three/src/lights/DirectionalLight.d.ts
+	 */
 	'ngt-directional-light': NgtDirectionalLight;
+	/**
+	 * @from node_modules/@types/three/src/lights/AmbientLight.d.ts
+	 */
 	'ngt-ambient-light': NgtAmbientLight;
+	/**
+	 * @from node_modules/@types/three/src/lights/LightShadow
+	 */
 	'ngt-light-shadow': NgtLightShadow;
+	/**
+	 * @from node_modules/@types/three/src/lights/LightProbe.d.ts
+	 */
 	'ngt-light-probe': NgtLightProbe;
 
 	// helpers
+	/**
+	 * @from node_modules/@types/three/src/helpers/SpotLightHelper.d.ts
+	 */
 	'ngt-spot-light-helper': NgtSpotLightHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/SkeletonHelper.d.ts
+	 */
 	'ngt-skeleton-helper': NgtSkeletonHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/PointLightHelper.d.ts
+	 */
 	'ngt-point-light-helper': NgtPointLightHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/HemisphereLightHelper.d.ts
+	 */
 	'ngt-hemisphere-light-helper': NgtHemisphereLightHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/GridHelper.d.ts
+	 */
 	'ngt-grid-helper': NgtGridHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/PolarGridHelper.d.ts
+	 */
 	'ngt-polar-grid-helper': NgtPolarGridHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/DirectionalLightHelper.d.ts
+	 */
 	'ngt-directional-light-helper': NgtDirectionalLightHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/CameraHelper.d.ts
+	 */
 	'ngt-camera-helper': NgtCameraHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/BoxHelper.d.ts
+	 */
 	'ngt-box-helper': NgtBoxHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/Box3Helper.d.ts
+	 */
 	'ngt-box3-helper': NgtBox3Helper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/PlaneHelper.d.ts
+	 */
 	'ngt-plane-helper': NgtPlaneHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/ArrowHelper.d.ts
+	 */
 	'ngt-arrow-helper': NgtArrowHelper;
+	/**
+	 * @from node_modules/@types/three/src/helpers/AxesHelper.d.ts
+	 */
 	'ngt-axes-helper': NgtAxesHelper;
 
 	// textures
+	/**
+	 * @from node_modules/@types/three/src/textures/Texture.d.ts
+	 */
 	'ngt-texture': NgtTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/VideoTexture.d.ts
+	 */
 	'ngt-video-texture': NgtVideoTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/DataTexture.d.ts
+	 */
 	'ngt-data-texture': NgtDataTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/Data3DTexture.d.ts
+	 */
 	'ngt-data3D-texture': NgtData3DTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/CompressedTexture.d.ts
+	 */
 	'ngt-compressed-texture': NgtCompressedTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/CubeTexture.d.ts
+	 */
 	'ngt-cube-texture': NgtCubeTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/CanvasTexture.d.ts
+	 */
 	'ngt-canvas-texture': NgtCanvasTexture;
+	/**
+	 * @from node_modules/@types/three/src/textures/DepthTexture.d.ts
+	 */
 	'ngt-depth-texture': NgtDepthTexture;
 
 	// misc
+	/**
+	 * @from node_modules/@types/three/src/core/Raycaster.d.ts
+	 */
 	'ngt-raycaster': NgtRaycaster;
+	/**
+	 * @from node_modules/@types/three/src/math/Vector2.d.ts
+	 */
 	'ngt-vector2': NgtVector2Node;
+	/**
+	 * @from node_modules/@types/three/src/math/Vector3.d.ts
+	 */
 	'ngt-vector3': NgtVector3Node;
+	/**
+	 * @from node_modules/@types/three/src/math/Vector4.d.ts
+	 */
 	'ngt-vector4': NgtVector4Node;
+	/**
+	 * @from node_modules/@types/three/src/math/Euler.d.ts
+	 */
 	'ngt-euler': NgtEulerNode;
+	/**
+	 * @from node_modules/@types/three/src/math/Matrix3.d.ts
+	 */
 	'ngt-matrix3': NgtMatrix3Node;
+	/**
+	 * @from node_modules/@types/three/src/math/Matrix4.d.ts
+	 */
 	'ngt-matrix4': NgtMatrix4Node;
+	/**
+	 * @from node_modules/@types/three/src/math/Quaternion.d.ts
+	 */
 	'ngt-quaternion': NgtQuaternionNode;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 */
 	'ngt-buffer-attribute': NgtBufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Float16BufferAttribute
+	 */
 	'ngt-float16-buffer-attribute': NgtFloat16BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Float32BufferAttribute
+	 */
 	'ngt-float32-buffer-attribute': NgtFloat32BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Int8BufferAttribute
+	 */
 	'ngt-int8-buffer-attribute': NgtInt8BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Int16BufferAttribute
+	 */
 	'ngt-int16-buffer-attribute': NgtInt16BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Int32BufferAttribute
+	 */
 	'ngt-int32-buffer-attribute': NgtInt32BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Uint8BufferAttribute
+	 */
 	'ngt-unit8-buffer-attribute': NgtUint8BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Uint16BufferAttribute
+	 */
 	'ngt-unit16-buffer-attribute': NgtUint16BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
+	 * @symbol Uint32BufferAttribute
+	 */
 	'ngt-unit32-buffer-attribute': NgtUint32BufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/core/InstancedBufferAttribute.d.ts
+	 */
 	'ngt-instanced-buffer-attribute': NgtInstancedBufferAttribute;
+	/**
+	 * @from node_modules/@types/three/src/math/Color.d.ts
+	 */
 	'ngt-color': NgtColor;
+	/**
+	 * @from node_modules/@types/three/src/scenes/Fog.d.ts
+	 */
 	'ngt-fog': NgtFog;
+	/**
+	 * @from node_modules/@types/three/src/scenes/FogExp2.d.ts
+	 */
 	'ngt-fog-exp2': NgtFogExp2;
+	/**
+	 * @from node_modules/@types/three/src/extras/core/Shape.d.ts
+	 */
 	'ngt-shape': NgtShape;
 }
 

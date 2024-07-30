@@ -1,17 +1,21 @@
 import ts from 'typescript';
-import { commonAttributes, createBareJsons, createLog, createProgram } from './utils.mjs';
+import {
+	commonAttributes,
+	createBareJsons,
+	createLog,
+	createProgram,
+	THREE_ELEMENTS_NAME,
+	THREE_MEMBERS_TO_SKIP,
+	THREE_OBJECT_EVENTS_MAP_NAME,
+} from './utils.mjs';
 
 const logger = createLog();
 
 const { metadataJson, webTypesJson, write } = createBareJsons();
 
-const { sourceFile, typesMap, processIntersectionTypeNode, processTypeMembers } = createProgram([
+const { sourceFile, typesMap, descriptionsMap, processIntersectionTypeNode, processTypeMembers } = createProgram([
 	'libs/core/src/lib/three-types.ts',
 ]);
-
-const THREE_MEMBERS_TO_SKIP = ['ngt-primitive'];
-const THREE_ELEMENTS_NAME = 'ThreeElements';
-const THREE_OBJECT_EVENTS_MAP_NAME = 'NgtObject3DEventsMap';
 
 /**
  * @param {{name: string, attributes: any[]}} metadata
@@ -31,12 +35,20 @@ ts.forEachChild(sourceFile, (node) => {
 		for (let i = 0; i < node.members.length; i++) {
 			/** @type {ts.PropertySignature} */
 			const threeMember = node.members[i];
+
 			// skip parent for now
 			delete threeMember.parent;
 
 			const threeMemberName = threeMember.name.text;
 
 			const metadataAtMember = { name: threeMemberName, attributes: [] };
+
+			if (descriptionsMap[threeMemberName]) {
+				metadataAtMember.description = descriptionsMap[threeMemberName].classDescription;
+				metadataAtMember['description-sections'] = {
+					'Constructor Description': descriptionsMap[threeMemberName].constructorDescription,
+				};
+			}
 
 			/** @type {ts.TypeReferenceNode} */
 			const threeMemberType = threeMember.type;
@@ -63,8 +75,17 @@ ts.forEachChild(sourceFile, (node) => {
 			}
 
 			metadataJson.tags.push({
-				...metadataAtMember,
-				attributes: [...metadataAtMember.attributes, ...commonAttributes],
+				name: metadataAtMember.name,
+				description: metadataAtMember.description
+					? {
+							kind: 'markdown',
+							value: metadataAtMember.description.concat(
+								'\n\n',
+								metadataAtMember['description-sections']['Constructor Description'],
+							),
+						}
+					: metadataAtMember.name,
+				attributes: metadataAtMember.attributes.concat(commonAttributes),
 			});
 			webTypesJson.contributions.html.elements.push(metadataAtMember);
 		}

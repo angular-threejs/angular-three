@@ -2,6 +2,10 @@ import { createWriteStream, existsSync, mkdirSync, unlinkSync, writeFileSync } f
 import ts from 'typescript';
 import { format } from 'util';
 
+export const THREE_MEMBERS_TO_SKIP = ['ngt-primitive'];
+export const THREE_ELEMENTS_NAME = 'ThreeElements';
+export const THREE_OBJECT_EVENTS_MAP_NAME = 'NgtObject3DEventsMap';
+
 export function removeLogFile() {
 	if (existsSync('tmp/log.txt')) {
 		unlinkSync('tmp/log.txt');
@@ -87,6 +91,35 @@ export const commonAttributes = [
 const overlapWithCommonAttributes = (str) =>
 	commonAttributes.some((attr) => attr.name === str || attr.name === `[${str}]`);
 
+/**
+ * @param {ts.JSDoc | ts.JSDocTag} jsDoc
+ * @param {string[]} texts
+ * @returns {string}
+ */
+function concatAllJsDocText(jsDoc, texts = []) {
+	if (jsDoc.comment) {
+		if (typeof jsDoc.comment === 'string') {
+			texts.push(jsDoc.comment);
+		} else {
+			jsDoc.comment.forEach((cm) => {
+				if (cm.name) {
+					texts.push(`${cm.name.escapedText || cm.name.text || cm.name} ${cm.text}`);
+				} else {
+					texts.push(cm.text);
+				}
+			});
+		}
+	}
+
+	if (jsDoc.tags) {
+		jsDoc.tags.forEach((tag) => {
+			concatAllJsDocText(tag, texts);
+		});
+	}
+
+	return texts.join('\n');
+}
+
 export function createProgram(filePaths, sourceFilePath) {
 	const program = ts.createProgram(filePaths, {
 		module: ts.ModuleKind.ESNext,
@@ -104,12 +137,18 @@ export function createProgram(filePaths, sourceFilePath) {
 	 * @type {Record<string, {node: ts.InterfaceDeclaration, type: ts.Type, typeNode: ts.TypeNode, typeString: string}>}
 	 */
 	const typesMap = {};
+	const descriptionsMap = {};
 
 	let sourceFile;
 
-	program.getSourceFiles().forEach((sf) => {
-		if (sf.fileName.includes(sourceFilePath || filePaths[0])) {
-			sourceFile = sf;
+	for (const sf of program.getSourceFiles()) {
+		try {
+			if (sf.fileName.includes(sourceFilePath || filePaths[0])) {
+				sourceFile = sf;
+			}
+		} catch (er) {
+			/* ignore */
+			console.log('err');
 		}
 
 		ts.forEachChild(sf, (node) => {
@@ -118,9 +157,76 @@ export function createProgram(filePaths, sourceFilePath) {
 				const typeNode = typeChecker.typeToTypeNode(type, node, TYPE_CHECKER_FLAGS);
 				const typeString = typeChecker.typeToString(type, node, TYPE_CHECKER_FLAGS);
 				typesMap[node.name.text] = { type, typeNode, typeString, node };
+
+				if (node.name.text === THREE_ELEMENTS_NAME) {
+					const dtsCollection = {};
+
+					for (const member of node.members) {
+						if (ts.isPropertySignature(member)) {
+							const jsDocs = member['jsDoc'] || [];
+							/** @type {ts.JSDocTag[]} */
+							const tags = jsDocs[0]?.tags || [];
+							const fromTag = tags[0];
+							const symbolTag = tags[1];
+
+							if (fromTag) {
+								const dtsPath = fromTag.comment;
+								const dtsName = symbolTag?.comment || dtsPath.split('/').pop().split('.')[0];
+								dtsCollection[member.name.text] = { dtsPath, dtsName };
+							}
+						}
+					}
+
+					const dtsProgram = ts.createProgram(
+						Object.values(dtsCollection).map((c) => c.dtsPath),
+						{
+							module: ts.ModuleKind.ESNext,
+							target: ts.ScriptTarget.ESNext,
+							strict: true,
+							emitDeclarationOnly: true,
+						},
+					);
+
+					for (const member of node.members) {
+						if (ts.isPropertySignature(member)) {
+							if (!dtsCollection[member.name.text]) continue;
+							const { dtsPath, dtsName } = dtsCollection[member.name.text];
+
+							const dtsSourceFile = dtsProgram.getSourceFiles().find((sf) => sf.fileName.includes(dtsPath));
+							if (!dtsSourceFile) continue;
+
+							ts.forEachChild(dtsSourceFile, (dtsNode) => {
+								if (ts.isClassDeclaration(dtsNode) && dtsNode.name.text === dtsName) {
+									const classJsDocs = dtsNode['jsDoc'] || [];
+									/** @type {ts.JSDoc} */
+									const classJsDoc = classJsDocs[0];
+									const descriptions = {};
+
+									if (classJsDoc) {
+										descriptions['classDescription'] = concatAllJsDocText(classJsDoc);
+									}
+
+									for (const member of dtsNode.members) {
+										if (ts.isConstructorDeclaration(member)) {
+											const constructorJsDocs = member['jsDoc'] || [];
+											const constructorJsDoc = constructorJsDocs[0];
+											if (constructorJsDoc) {
+												descriptions['constructorDescription'] = concatAllJsDocText(constructorJsDoc);
+											}
+										}
+									}
+
+									if (Object.keys(descriptions).length) {
+										descriptionsMap[member.name.text] = descriptions;
+									}
+								}
+							});
+						}
+					}
+				}
 			}
 		});
-	});
+	}
 
 	/**
 	 * @param {{name: string, attributes: any[]}} metadata
@@ -205,6 +311,7 @@ export function createProgram(filePaths, sourceFilePath) {
 		processIntersectionTypeNode,
 		processTypeReferenceNode,
 		typesMap,
+		descriptionsMap,
 	};
 }
 
@@ -230,6 +337,7 @@ export function createBareJsons(packageName = 'angular-three', libName = 'core')
 			html: {
 				attributes: commonAttributes,
 				elements: [],
+				'description-markup': 'markdown',
 			},
 		},
 	};
