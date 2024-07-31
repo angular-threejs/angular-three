@@ -132,6 +132,7 @@ export default defineConfig({
 							label: 'Advanced',
 							collapsed: true,
 							items: [
+								{ label: 'Directives', slug: 'core/advanced/directives' },
 								{ label: 'Portals', slug: 'core/advanced/portals' },
 								{ label: 'Routed Scene', slug: 'core/advanced/routed-scene' },
 								{ label: 'Performance', slug: 'core/advanced/performance' },

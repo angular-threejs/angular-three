@@ -60,7 +60,6 @@ describe('test canvas', () => {
 
 	it('should test', async () => {
 		const { scene, fireEvent, advance } = NgtTestBed.create(SceneGraph);
-		fireEvent.setAutoDetectChanges(true);
 
 		expect(scene.children.length).toEqual(2);
 

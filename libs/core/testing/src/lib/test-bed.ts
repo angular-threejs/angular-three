@@ -143,7 +143,7 @@ export class NgtTestBed {
 	}
 
 	static createEventFirer(store: NgtSignalStore<NgtState>, fixture: ComponentFixture<NgtTestCanvas>) {
-		let autoDetectChanges = false;
+		let autoDetectChanges = true;
 
 		async function fireEvent(el: NgtInstanceNode, eventName: keyof NgtEventHandlers, eventData: NgtAnyRecord = {}) {
 			const localState = getLocalState(el);

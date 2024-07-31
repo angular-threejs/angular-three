@@ -183,6 +183,7 @@ export class NgtcPhysics {
 
 		this.autoEffect(() => {
 			const [worker, value] = [untracked(this.worker), computedValue()];
+			// @ts-expect-error
 			worker[key] = value;
 		});
 	}

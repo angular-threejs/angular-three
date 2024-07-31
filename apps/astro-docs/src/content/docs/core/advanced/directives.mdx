@@ -1,0 +1,65 @@
+---
+title: Extending Functionality with Directives
+description: Details about extending functionality with Directives
+---
+
+import CursorScene from '../../../../components/cursor/cursor';
+
+Angular Three elements are like regular DOM elements; they are just rendered to the Canvas instead of the DOM.
+With that in mind, we can extend the functionality of Angular Three elements by using Directives like we do with regular DOM elements.
+
+## Attribute Directives in Angular
+
+When we attach an **Attribute Directive** to an element, we have access to the element's host instance via `ElementRef` token. Angular Three elements
+return the actual THREE.js entity instance as the host instance so that we can access the THREE.js APIs to extend the functionality of the element.
+
+## Build a `cursor` Directive
+
+Let's build a `cursor` directive that will change the cursor to a `pointer` when the element is hovered.
+
+```angular-ts {'inject ElementRef<Object3D>': 4-5} {'Get localState': 9-10} {'Attach pointer events to host element': 14-15}
+@Directive({selector: '[cursor]', standalone: true})
+export class Cursor {
+  constructor() {
+
+		const elementRef = inject<ElementRef<Object3D>>(ElementRef);
+		const nativeElement = elementRef.nativeElement;
+
+		if (!nativeElement.isObject3D) return;
+
+		const localState = getLocalState(nativeElement);
+		if (!localState) return;
+
+		const document = inject(DOCUMENT);
+
+		injectObjectEvents(() => nativeElement, {
+			pointerover: () => {
+				document.body.style.cursor = 'pointer';
+			},
+			pointerout: () => {
+				document.body.style.cursor = 'default';
+			},
+		});
+  }
+}
+```
+
+Now, we can use the `cursor` directive on any element to change the cursor to a `pointer` when the element is hovered.
+
+:::note
+
+We do not constraint the type of the element that the `cursor` directive can be attached to but it only works for elements that
+are subjected to the events system like `Mesh` etc...
+
+:::
+
+```angular-html 'cursor'
+<ngt-mesh cursor (pointerover)="hovered.set(true)" (pointerout)="hovered.set(false)">
+	<ngt-box-geometry />
+	<ngt-mesh-standard-material [color]="hovered() ? 'mediumpurple' : 'maroon'" />
+</ngt-mesh>
+```
+
+<div class="h-96 w-full border border-dashed border-accent-500 rounded">
+	<CursorScene client:only />
+</div>
