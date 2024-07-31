@@ -33,9 +33,6 @@
 		"@phenomnomnominal/tsquery": "^6.0.0",
 		"nx": "^19.0.0"
 	},
-	"sideEffects": [
-		"**/three-types.d.ts"
-	],
 	"generators": "./plugin/generators.json",
 	"schematics": "./plugin/generators.json",
 	"nx-migrations": {

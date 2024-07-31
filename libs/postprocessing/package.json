@@ -29,11 +29,6 @@
 		"three": ">=0.148.0",
 		"three-stdlib": "^2.0.0"
 	},
-	"peerDependenciesMeta": {
-		"maath": {
-			"optional": true
-		}
-	},
 	"dependencies": {
 		"tslib": "^2.3.0"
 	},

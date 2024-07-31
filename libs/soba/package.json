@@ -79,9 +79,6 @@
     },
     "stats-gl": {
       "optional": true
-    },
-    "stats.js": {
-      "optional": true
     }
 	},
 	"dependencies": {
