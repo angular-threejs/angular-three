@@ -31,7 +31,7 @@ import {
 import { injectBeforeRender, injectStore } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { InstancedMesh, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
+import { InstancedMesh, Matrix4, Object3D, Quaternion, QuaternionTuple, Vector3 } from 'three';
 
 const v = new Vector3();
 const s = new Vector3(1, 1, 1);
@@ -46,7 +46,7 @@ function apply(
 	object?: Object3D,
 ) {
 	if (index !== undefined) {
-		m.compose(v.fromArray(positions, index * 3), q.fromArray(quaternions, index * 4), scale);
+		m.compose(v.fromArray(positions, index * 3), q.fromArray(quaternions as QuaternionTuple, index * 4), scale);
 		if (object) {
 			object.matrixAutoUpdate = false;
 			object.matrix.copy(m);
@@ -183,7 +183,6 @@ export class NgtcPhysics {
 
 		this.autoEffect(() => {
 			const [worker, value] = [untracked(this.worker), computedValue()];
-			// @ts-expect-error
 			worker[key] = value;
 		});
 	}
