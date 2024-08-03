@@ -46,11 +46,13 @@ export default defineConfig({
 			noExternal: [
 				'angular-three',
 				'angular-three-soba/**',
+				'angular-three-cannon/**',
 				'@angular/common',
 				'@angular/core',
 				'@angular/core/rxjs-interop',
 				'ngxtension/**',
 				'@pmndrs/vanilla',
+				'@pmndrs/cannon-worker-api',
 			],
 		},
 		esbuild: {
@@ -144,6 +146,15 @@ export default defineConfig({
 					label: 'Soba',
 					collapsed: true,
 					items: [{ label: 'Introduction', slug: 'soba/introduction' }],
+				},
+				{
+					label: 'Cannon',
+					collapsed: true,
+					items: [
+						{ label: 'Introduction', slug: 'cannon/introduction' },
+						{ label: 'How it works', slug: 'cannon/how-it-works' },
+						{ label: 'Debug', slug: 'cannon/debug' },
+					],
 				},
 			],
 		}),
