@@ -157,7 +157,7 @@ ${node.getFullText()}
 				const withoutBraces = node.getFullText().slice(0, -1);
 				return `
 ${withoutBraces}
-  scene = Experience;
+  sceneGraph = Experience;
 }`;
 			});
 		} else {
