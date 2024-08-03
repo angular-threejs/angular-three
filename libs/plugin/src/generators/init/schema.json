@@ -2,5 +2,13 @@
 	"$schema": "http://json-schema.org/schema",
 	"cli": "nx",
 	"$id": "Init",
-	"title": "Init Angular Three"
+	"title": "Init Angular Three",
+  "type": "object",
+  "properties": {
+    "skipGenerateExperience": {
+      "type": "boolean",
+      "description": "Skip generating Experience component",
+      "default": false
+    }
+  }
 }

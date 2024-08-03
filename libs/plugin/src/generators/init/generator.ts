@@ -17,7 +17,14 @@ import { type ArrayLiteralExpression, type NoSubstitutionTemplateLiteral } from 
 import { addMetadataJson } from '../utils';
 import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../version';
 
-export async function initGenerator(tree: Tree) {
+export interface InitGeneratorOptions {
+	skipGenerateExperience: boolean;
+}
+
+export async function initGenerator(
+	tree: Tree,
+	{ skipGenerateExperience = false }: Partial<InitGeneratorOptions> = {},
+) {
 	logger.log('Initializing Angular Three...');
 
 	const packageJson = readJson(tree, 'package.json');
@@ -45,6 +52,14 @@ export async function initGenerator(tree: Tree) {
 
 	addMetadataJson(tree, 'angular-three/metadata.json');
 
+	if (skipGenerateExperience) {
+		await formatFiles(tree);
+
+		return () => {
+			installPackagesTask(tree);
+		};
+	}
+
 	const { generateExperience } = await prompt<{ generateExperience: 'append' | 'replace' | 'none' }>({
 		type: 'select',
 		name: 'generateExperience',
@@ -63,7 +78,7 @@ export async function initGenerator(tree: Tree) {
 			(project) => project.projectType === 'application',
 		);
 		let selectedProject: string;
-		if (applicationProjects.length > 1) {
+		if (applicationProjects.length === 1) {
 			selectedProject = applicationProjects[0].name;
 		} else {
 			// prompt
@@ -107,7 +122,7 @@ export async function initGenerator(tree: Tree) {
 			return warnExperienceWasNotGenerated(tree, `AppComponent was not found`);
 		}
 
-		// TODO: revisit if standalone:true becomes the default
+		// TODO (chau): revisit if standalone:true becomes the default
 		const isStandalone = appComponentContent.includes(`standalone: true`);
 		if (!isStandalone) {
 			return warnExperienceWasNotGenerated(tree, `AppComponent is not a Standalone Component`);
