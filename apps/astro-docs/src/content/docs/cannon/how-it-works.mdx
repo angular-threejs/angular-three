@@ -3,7 +3,8 @@ title: How it works
 description: How Angular Three Cannon works
 ---
 
-import CannonSample from '../../../components/cannon/sample';
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import CannonSample, { content } from '../../../components/cannon/sample?includeContent';
 
 ### Import `NgtcPhysics` from `angular-three-cannon`
 
@@ -88,6 +89,15 @@ export class Box {
 
 ### Example
 
-<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<CannonSample client:only />
-</div>
+<Tabs>
+  <TabItem label="Preview">
+    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+	    <CannonSample client:only />
+    </div>
+  </TabItem>
+  <TabItem label="Code">
+    <Code code={content} lang="angular-ts" />
+  </TabItem>
+</Tabs>
+
+

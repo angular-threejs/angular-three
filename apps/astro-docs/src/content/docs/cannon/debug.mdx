@@ -3,7 +3,8 @@ title: Debug
 description: Details about the Angular Three Cannon Debug
 ---
 
-import CannonSampleDebug from '../../../components/cannon/sample-debug';
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import CannonSampleDebug, { content } from '../../../components/cannon/sample-debug?includeContent';
 
 `angular-three-cannon/debug` provides a debug experience for Cannon.js physics engine using `cannon-es-debugger`. This
 allows us to visualize how Cannon _sees_ the 3D scene graph.
@@ -74,6 +75,13 @@ injectBox(
 
 ### Example
 
-<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<CannonSampleDebug client:only />
-</div>
+<Tabs>
+  <TabItem label="Preview">
+    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+      <CannonSampleDebug client:only />
+    </div>
+  </TabItem>
+  <TabItem label="Code">
+    <Code code={content} lang="angular-ts" />
+  </TabItem>
+</Tabs>
