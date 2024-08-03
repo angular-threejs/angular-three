@@ -74,9 +74,12 @@ export async function initGenerator(
 
 	if (generateExperience !== 'none') {
 		const projects = getProjects(tree);
-		const applicationProjects = Array.from(projects.values()).filter(
-			(project) => project.projectType === 'application',
-		);
+		const applicationProjects = Array.from(projects.entries()).reduce((acc, [projectName, project]) => {
+			if (project.projectType === 'application') {
+				acc.push({ name: projectName, ...project });
+			}
+			return acc;
+		}, []);
 		let selectedProject: string;
 		if (applicationProjects.length === 1) {
 			selectedProject = applicationProjects[0].name;
@@ -130,7 +133,7 @@ export async function initGenerator(
 
 		let updatedContent = tsquery.replace(
 			appComponentContent,
-			'Identifier[name="imports"] ~ ArrayLiteralExpression',
+			'PropertyAssignment:has(Identifier[name="imports"]) ArrayLiteralExpression',
 			(node: ArrayLiteralExpression) => {
 				return `[${node.elements.map((element) => element['escapedText']).join(', ')}, NgtCanvas]`;
 			},
@@ -149,7 +152,7 @@ ${node.getFullText()}
 		const classMembersQuery = 'ClassDeclaration > :matches(PropertyDeclaration,MethodDeclaration)';
 		const members = tsquery.match(appComponentContentAst, classMembersQuery);
 
-		if (members.length === 0) {
+		if (members.length === 0 || generateExperience === 'replace') {
 			updatedContent = tsquery.replace(updatedContent, 'ClassDeclaration', (node) => {
 				const withoutBraces = node.getFullText().slice(0, -1);
 				return `
@@ -160,7 +163,7 @@ ${withoutBraces}
 		} else {
 			updatedContent = tsquery.replace(updatedContent, classMembersQuery, (node) => {
 				return `
-scene = Experience;
+sceneGraph = Experience;
 ${node.getFullText()}`;
 			});
 		}
@@ -170,19 +173,19 @@ ${node.getFullText()}`;
 				generateExperience === 'append'
 					? `
 ${appComponentTemplateContent}
-<ngt-canvas [sceneGraph]="scene" />`
-					: `<ngt-canvas [sceneGraph]="scene" />`;
+<ngt-canvas [sceneGraph]="sceneGraph" />`
+					: `<ngt-canvas [sceneGraph]="sceneGraph" />`;
 			tree.write(appComponentTemplatePath, updatedTemplateContent);
 		} else {
 			updatedContent = tsquery.replace(
 				updatedContent,
-				'Identifier[name="template"] ~ NoSubstitutionTemplateLiteral',
+				'PropertyAssignment:has(Identifier[name="template"]) NoSubstitutionTemplateLiteral',
 				(node: NoSubstitutionTemplateLiteral) => {
 					return generateExperience === 'append'
 						? `\`
 ${node.getFullText()}
-<ngt-canvas [sceneGraph]="scene" />\``
-						: `\`<ngt-canvas [sceneGraph]="scene" />\``;
+<ngt-canvas [sceneGraph]="sceneGraph" />\``
+						: `\`<ngt-canvas [sceneGraph]="sceneGraph" />\``;
 				},
 			);
 		}
