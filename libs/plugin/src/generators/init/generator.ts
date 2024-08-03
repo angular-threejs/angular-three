@@ -181,9 +181,10 @@ ${appComponentTemplateContent}
 				updatedContent,
 				'PropertyAssignment:has(Identifier[name="template"]) NoSubstitutionTemplateLiteral',
 				(node: NoSubstitutionTemplateLiteral) => {
+					const fullText = node.getFullText().trim().slice(1, -1);
 					return generateExperience === 'append'
 						? `\`
-${node.getFullText()}
+${fullText}
 <ngt-canvas [sceneGraph]="sceneGraph" />\``
 						: `\`<ngt-canvas [sceneGraph]="sceneGraph" />\``;
 				},
