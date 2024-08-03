@@ -309,6 +309,12 @@ importers:
       cypress:
         specifier: ^13.13.2
         version: 13.13.2
+      cz-git:
+        specifier: ^1.9.4
+        version: 1.9.4
+      czg:
+        specifier: ^1.9.4
+        version: 1.9.4
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
@@ -6099,6 +6105,15 @@ packages:
   cytoscape@3.30.1:
     resolution: {integrity: sha512-TRJc3HbBPkHd50u9YfJh2FxD1lDLZ+JXnJoyBn5LkncoeuT7fapO/Hq/Ed8TdFclaKshzInge2i30bg7VKeoPQ==}
     engines: {node: '>=0.10'}
+
+  cz-git@1.9.4:
+    resolution: {integrity: sha512-VntWcIEFfW8+7RgwYaRn1r10NhUkl8/8ZdJQRupEdqE7QXBCSjNP8hKSk9zhSLzYAsdXfGEAwiAYJM1T2Qsh8w==}
+    engines: {node: '>=v12.20.0'}
+
+  czg@1.9.4:
+    resolution: {integrity: sha512-x9V/FXA3XUmK6PMvP2WC3WPTA4xAUCcjFcL6HxJSLUAn4gKshMHWLkIfWSCsEqmenn5IIX0/L7NuBJ7/luDqCA==}
+    engines: {node: '>=v12.20.0'}
+    hasBin: true
 
   d3-array@2.12.1:
     resolution: {integrity: sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==}
@@ -21513,6 +21528,10 @@ snapshots:
       cytoscape: 3.30.1
 
   cytoscape@3.30.1: {}
+
+  cz-git@1.9.4: {}
+
+  czg@1.9.4: {}
 
   d3-array@2.12.1:
     dependencies:

@@ -3,16 +3,12 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"scripts": {
-		"release": "dotenv release-it --",
 		"storybook": "nx storybook soba",
-		"sandbox": "nx serve sandbox",
-		"example": "nx serve examples",
 		"generate-json": "node tools/scripts/generate-json.mjs",
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
 		"publish": "nx run-many --target=publish --projects=core,soba,postprocessing,cannon --parallel=false",
 		"publish:beta": "nx run-many --target=publish --projects=core,soba,postprocessing,cannon --parallel=false --tag=beta",
-		"test": "nx test plugin --test-path-pattern=migrations",
-		"dev-debug": "nx dev docs"
+    "commit": "czg"
 	},
 	"private": true,
 	"devDependencies": {
@@ -68,6 +64,8 @@
 		"@typescript-eslint/utils": "7.17.0",
 		"autoprefixer": "^10.4.20",
 		"cypress": "^13.13.2",
+		"cz-git": "^1.9.4",
+    "czg": "^1.9.4",
 		"dotenv-cli": "^7.4.2",
 		"enquirer": "^2.4.1",
 		"eslint": "9.8.0",
@@ -159,5 +157,11 @@
 		"node_modules/angular-three/web-types.json",
 		"node_modules/angular-three-soba/web-types.json"
 	],
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git",
+      "czConfig": "cz.config.js"
+    }
+  },
 	"packageManager": "pnpm@9.6.0"
 }
