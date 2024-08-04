@@ -12,7 +12,8 @@ function includeContentPlugin() {
 			name: 'pre-include-content',
 			enforce: 'pre',
 			transform(code, id) {
-				if (!id.includes('?includeContent')) return;
+				if (!id.includes('?includeContent') || id.includes('astro-entry')) return;
+
 				const [filePath] = id.split('?');
 				const fileContent = readFileSync(filePath, 'utf-8');
 
