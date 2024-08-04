@@ -11,7 +11,7 @@ function includeContentPlugin() {
 		{
 			name: 'pre-include-content',
 			enforce: 'pre',
-			transform(code, id) {
+			transform(_, id) {
 				if (!id.includes('?includeContent') || id.includes('astro-entry')) return;
 
 				const [filePath] = id.split('?');
@@ -25,7 +25,7 @@ function includeContentPlugin() {
 			name: 'post-include-content',
 			enforce: 'post',
 			transform(code, id) {
-				if (!id.includes('?includeContent')) return;
+				if (!id.includes('?includeContent') || id.includes('astro-entry')) return;
 				const [filePath] = id.split('?');
 				const fileContent = map.get(filePath);
 
