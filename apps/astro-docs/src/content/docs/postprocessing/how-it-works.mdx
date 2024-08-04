@@ -1,0 +1,64 @@
+---
+title: How it works
+description: How Angular Three Postprocessing works
+---
+
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import PostprocessingSample, { content } from '../../../components/postprocessing/sample?includeContent';
+
+### Import `NgtpEffectComposer` from `angular-three-postprocessing`
+
+```angular-ts
+import { NgtpEffectComposer } from 'angular-three-postprocessing';
+```
+
+### Render the `NgtpEffectComposer` component in your scene graph
+
+```angular-ts
+@Component({
+  standalone: true,
+  imports: [NgtpEffectComposer],
+  template: `
+    <ngtp-effect-composer>
+      <!--  effects  -->
+    </ngtp-effect-composer>
+  `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+### Pick an effect
+
+```diff lang="angular-ts"
+-import { NgtpEffectComposer } from 'angular-three-postprocessing';
++import { NgtpEffectComposer, NgtpBloom, NgtpNoise } from 'angular-three-postprocessing';
+
+@Component({
+  standalone: true,
+  imports: [NgtpEffectComposer, NgtpBloom, NgtpNoise],
+  template: `
+    <ngtp-effect-composer>
++      <ngtp-bloom />
++      <ngtp-noise />
+    </ngtp-effect-composer>
+  `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+```
+
+### Example
+
+<Tabs>
+  <TabItem label="Preview">
+    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+	    <PostprocessingSample client:only />
+    </div>
+  </TabItem>
+  <TabItem label="Code">
+    <Code code={content} lang="angular-ts" />
+  </TabItem>
+</Tabs>
+
+

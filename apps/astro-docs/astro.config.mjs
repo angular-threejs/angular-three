@@ -156,6 +156,14 @@ export default defineConfig({
 						{ label: 'Debug', slug: 'cannon/debug' },
 					],
 				},
+				{
+					label: 'Postprocessing',
+					collapsed: true,
+					items: [
+						{ label: 'Introduction', slug: 'postprocessing/introduction' },
+						{ label: 'How it works', slug: 'postprocessing/how-it-works' },
+					],
+				},
 			],
 		}),
 		tailwind({ applyBaseStyles: false }),
