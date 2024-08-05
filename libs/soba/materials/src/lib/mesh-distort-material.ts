@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtMeshPhysicalMaterial, omit, pick } from 'angular-three';
+import { injectBeforeRender, NgtArgs, NgtAttachable, NgtMeshPhysicalMaterial, omit, pick } from 'angular-three';
 import { MeshDistortMaterial, MeshDistortMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
@@ -27,7 +27,7 @@ const defaultOptions: NgtsMeshDistortMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshDistortMaterial {
-	attach = input('material');
+	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['speed']);
 

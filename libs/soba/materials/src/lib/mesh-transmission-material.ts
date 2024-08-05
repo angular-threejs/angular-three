@@ -15,6 +15,7 @@ import {
 	injectBeforeRender,
 	NgtAnyRecord,
 	NgtArgs,
+	NgtAttachable,
 	NgtMeshPhysicalMaterial,
 	omit,
 	pick,
@@ -85,7 +86,7 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshTransmissionMaterial {
-	attach = input('material');
+	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, [
 		'buffer',

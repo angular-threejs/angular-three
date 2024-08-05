@@ -191,6 +191,8 @@ export type NgtAttachFunction<TChild = any, TParent = any> = (
 	store: NgtSignalStore<NgtState>,
 ) => void | (() => void);
 
+export type NgtAttachable<TChild = any, TParent = any> = NgtAttachFunction<TChild, TParent> | string | string[];
+
 export interface NgtAfterAttach<
 	TChild extends NgtInstanceNode = NgtInstanceNode,
 	TParent extends NgtInstanceNode = NgtInstanceNode,

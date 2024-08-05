@@ -8,7 +8,7 @@ import {
 	input,
 	untracked,
 } from '@angular/core';
-import { extend, injectStore, NgtArgs, NgtTexture, omit } from 'angular-three';
+import { extend, injectStore, NgtArgs, NgtAttachable, NgtTexture, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { CanvasTexture, Color, ColorRepresentation } from 'three';
 
@@ -46,7 +46,7 @@ const defaultOptions: NgtsGradientTextureOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsGradientTexture {
-	attach = input('map');
+	attach = input<NgtAttachable>('map');
 	stops = input.required<Array<number>>();
 	colors = input.required<Array<ColorRepresentation>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

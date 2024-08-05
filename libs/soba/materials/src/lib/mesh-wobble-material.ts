@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtMeshStandardMaterial, omit } from 'angular-three';
+import { injectBeforeRender, NgtArgs, NgtAttachable, NgtMeshStandardMaterial, omit } from 'angular-three';
 import { MeshWobbleMaterial, MeshWobbleMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
@@ -24,7 +24,7 @@ const defaultOptions: NgtsMeshWobbleMaterialOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsMeshWobbleMaterial {
-	attach = input('material');
+	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['speed']);
 

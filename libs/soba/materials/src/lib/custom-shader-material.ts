@@ -7,7 +7,7 @@ import {
 	ElementRef,
 	input,
 } from '@angular/core';
-import { is, NgtAnyRecord, NgtArgs, omit, pick } from 'angular-three';
+import { is, NgtAnyRecord, NgtArgs, NgtAttachable, omit, pick } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Material } from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
@@ -26,7 +26,7 @@ import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 })
 export class NgtsCustomShaderMaterial {
 	baseMaterial = input.required<Material | typeof Material | ElementRef<Material>>();
-	attach = input<string | string[]>('material');
+	attach = input<NgtAttachable>('material');
 	options = input({} as Omit<ConstructorParameters<typeof CustomShaderMaterial>[0], 'baseMaterial'>);
 	parameters = omit(this.options, ['fragmentShader', 'vertexShader', 'uniforms', 'cacheKey']);
 

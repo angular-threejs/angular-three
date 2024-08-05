@@ -17,6 +17,7 @@ import {
 	injectStore,
 	NgtAnyRecord,
 	NgtArgs,
+	NgtAttachable,
 	NgtShaderMaterial,
 	omit,
 	pick,
@@ -78,7 +79,7 @@ function isCubeTexture(def: CubeTexture | Texture): def is CubeTexture {
 })
 export class NgtsMeshRefractionMaterial {
 	envMap = input.required<CubeTexture | Texture>();
-	attach = input('material');
+	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['fastChroma', 'aberrationStrength']);
 

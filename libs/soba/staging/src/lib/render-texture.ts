@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {
 	NgtArgs,
+	NgtAttachable,
 	NgtComputeFunction,
 	NgtPortal,
 	NgtPortalContent,
@@ -161,7 +162,7 @@ let incrementId = 0;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsRenderTexture {
-	attach = input<string | string[]>('map');
+	attach = input<NgtAttachable>('map');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, [
 		'samples',

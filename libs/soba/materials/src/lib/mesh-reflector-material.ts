@@ -18,6 +18,7 @@ import {
 	injectStore,
 	NgtAnyRecord,
 	NgtArgs,
+	NgtAttachable,
 	NgtMeshStandardMaterial,
 	omit,
 	pick,
@@ -84,7 +85,7 @@ const defaultOptions: NgtsMeshReflectorMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshReflectorMaterial {
-	attach = input('material');
+	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	private parameters = omit(this.options, [
 		'distortionMap',
