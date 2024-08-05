@@ -49,6 +49,7 @@ export abstract class NgtHTML {
 		}
 
 		this.destroyRef.onDestroy(() => {
+			(this.host.nativeElement as NgtAnyRecord)['__ngt_dom_parent__'] = null;
 			delete (this.host.nativeElement as NgtAnyRecord)['__ngt_dom_parent__'];
 		});
 	}
