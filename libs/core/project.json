@@ -36,7 +36,8 @@
 					"pnpm exec nx build core",
 					"pnpm exec nx build-ecosystem core",
 					"pnpm exec nx generate-json core",
-					"pnpm exec nx build plugin"
+					"pnpm exec nx build plugin",
+					"pnpm exec nx post-package core"
 				],
 				"parallel": false
 			}
@@ -58,6 +59,13 @@
 			"command": "npm publish --tag=beta",
 			"options": {
 				"cwd": "dist/libs/core"
+			}
+		},
+		"post-package": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": ["node ./tools/scripts/release/post-package-core.mjs"],
+				"parallel": false
 			}
 		},
 		"test": {

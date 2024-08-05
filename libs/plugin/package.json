@@ -1,27 +1,4 @@
 {
 	"name": "plugin",
-	"dependencies": {
-		"@nx/devkit": "^19.0.0",
-		"tslib": "^2.3.0"
-	},
-	"nx-migrations": {
-		"migrations": "./migrations.json",
-		"packageGroup": [
-			"angular-three-soba",
-			"angular-three-postprocessing",
-			"angular-three-cannon",
-			"angular-three-rapier"
-		]
-	},
-	"ng-update": {
-		"migrations": "./migrations.json",
-		"packageGroup": [
-			"angular-three-soba",
-			"angular-three-postprocessing",
-			"angular-three-cannon",
-			"angular-three-rapier"
-		]
-	},
-	"type": "commonjs",
-	"generators": "./generators.json"
+	"type": "commonjs"
 }
