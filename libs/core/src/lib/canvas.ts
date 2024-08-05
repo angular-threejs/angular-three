@@ -61,7 +61,6 @@ export class NgtCanvas {
 	private autoEffect = injectAutoEffect();
 
 	private host = inject<ElementRef<HTMLElement>>(ElementRef);
-	private viewContainerRef = inject(ViewContainerRef);
 	private zone = inject(NgZone);
 	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
@@ -204,7 +203,7 @@ export class NgtCanvas {
 				[provideNgtRenderer(this.store)],
 				this.environmentInjector,
 			);
-			this.glRef = this.viewContainerRef.createComponent(untracked(this.sceneGraph), {
+			this.glRef = untracked(this.glCanvasViewContainerRef).createComponent(untracked(this.sceneGraph), {
 				environmentInjector: this.glEnvironmentInjector,
 				injector: this.injector,
 			});
@@ -213,5 +212,3 @@ export class NgtCanvas {
 		});
 	}
 }
-
-export const injectRoot = injectCanvasRootInitializer;

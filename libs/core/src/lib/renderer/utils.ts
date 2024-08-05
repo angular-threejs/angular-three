@@ -216,6 +216,7 @@ export function processThreeEvent(
 		while (root.get('previousRoot')) {
 			root = root.get('previousRoot')!;
 		}
+
 		const interactions = root.get('internal', 'interaction') || [];
 		interactions.push(instance);
 	}
