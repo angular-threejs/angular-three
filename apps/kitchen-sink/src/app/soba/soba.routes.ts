@@ -26,6 +26,10 @@ const routes: Routes = [
 		loadComponent: () => import('./decal/decal'),
 	},
 	{
+		path: 'html-chart',
+		loadComponent: () => import('./html-chart/html-chart'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',

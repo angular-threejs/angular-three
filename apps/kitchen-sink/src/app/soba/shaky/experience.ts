@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, NgtArgs } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsEnvironment } from 'angular-three-soba/staging';
-import * as THREE from 'three';
 import { Group, Vector3 } from 'three';
 import { RectAreaLightUniformsLib } from 'three-stdlib';
 import { Model } from './model';
-
-extend(THREE);
 
 RectAreaLightUniformsLib.init();
 

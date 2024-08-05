@@ -10,17 +10,14 @@ import {
 	input,
 	signal,
 } from '@angular/core';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer, NgtpGlitch } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
-import * as THREE from 'three';
 import { Bone, Group, MeshStandardMaterial, Object3D, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
-
-extend(THREE);
 
 export const selectedAction = signal('Strut');
 export const bloom = signal(false);

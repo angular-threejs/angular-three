@@ -109,6 +109,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgTemplateOutlet],
+	host: { 'data-ngts-html-content': '' },
 })
 export class NgtsHTMLContent extends NgtHTML {
 	options = input(defaultHtmlContentOptions, {

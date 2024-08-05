@@ -8,15 +8,12 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
+import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
-import * as THREE from 'three';
 import { Mesh } from 'three';
-
-extend(THREE);
 
 @Component({
 	selector: 'app-dodecahedron',

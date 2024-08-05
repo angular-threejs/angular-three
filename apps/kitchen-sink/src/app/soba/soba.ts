@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { extend } from 'angular-three';
+import * as THREE from 'three';
+
+extend(THREE);
 
 @Component({
 	standalone: true,
@@ -29,5 +33,5 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 	host: { class: 'soba' },
 })
 export default class Soba {
-	examples = ['basic', 'hud', 'render-texture', 'shaky', 'lod', 'decal'];
+	examples = ['basic', 'hud', 'render-texture', 'shaky', 'lod', 'decal', 'html-chart'];
 }
