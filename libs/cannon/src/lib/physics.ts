@@ -41,10 +41,10 @@ export interface NgtcCannonWorkerEvents {
 	rayhit: WorkerRayhitEvent;
 }
 
-export interface NgtcCannonWorker extends CannonWorkerAPI {
+export type NgtcCannonWorker = CannonWorkerAPI & {
 	on: <K extends keyof NgtcCannonWorkerEvents>(event: K, cb: (data: NgtcCannonWorkerEvents[K]['data']) => void) => void;
 	removeAllListeners: () => void;
-}
+};
 
 const v = new Vector3();
 const s = new Vector3(1, 1, 1);
