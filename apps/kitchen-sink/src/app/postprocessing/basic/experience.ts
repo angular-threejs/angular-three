@@ -6,12 +6,9 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
+import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtpEffectComposer, NgtpGodRays } from 'angular-three-postprocessing';
-import * as THREE from 'three';
 import { Group, Mesh } from 'three';
-
-extend(THREE);
 
 // NOTE: this is to be used with GodRaysEffect as the effect needs a sun source
 @Component({

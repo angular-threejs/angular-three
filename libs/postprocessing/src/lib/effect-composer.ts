@@ -26,9 +26,7 @@ import {
 import { Camera, Group, HalfFloatType, NoToneMapping, Scene, TextureDataType } from 'three';
 import { isWebGL2Available } from 'three-stdlib';
 
-extend({ Group });
-
-interface NgtpEffectComposerOptions {
+export interface NgtpEffectComposerOptions {
 	enabled: boolean;
 	depthBuffer?: boolean;
 	/** Only used for SSGI currently, leave it disabled for everything else unless it's needed */
@@ -141,6 +139,8 @@ export class NgtpEffectComposer {
 	});
 
 	constructor() {
+		extend({ Group });
+
 		afterNextRender(() => {
 			this.disableToneMapping();
 			this.setComposerSize();

@@ -6,6 +6,10 @@ const routes: Routes = [
 		loadComponent: () => import('./basic/basic'),
 	},
 	{
+		path: 'outline',
+		loadComponent: () => import('./outline/outline'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',

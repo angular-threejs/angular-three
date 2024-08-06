@@ -15,6 +15,7 @@ export * from './hue-saturation';
 export * from './lens-flare';
 export * from './lut';
 export * from './noise';
+export * from './outline';
 export * from './pixelation';
 export * from './scanline';
 export * from './sepia';
