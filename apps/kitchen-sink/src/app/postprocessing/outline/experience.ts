@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { NgtArgs, NgtHexify, NgtSelect, NgtSelection } from 'angular-three';
-import { NgtpEffectComposer, NgtpOutline } from 'angular-three-postprocessing';
+import { NgtArgs, NgtSelect, NgtSelection } from 'angular-three';
+import { NgtpEffectComposer, NgtpOutline, NgtpSMAA } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { KernelSize } from 'postprocessing';
 
 /**
  * There are multiple ways to use the Outline effect.
@@ -50,16 +51,18 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 			</ngt-mesh>
 		</ngt-group>
 
-		<ngtp-effect-composer [options]="{ autoClear: false }">
-			<ngtp-outline [options]="{ edgeStrength: 100, pulseSpeed: 0 }" />
+		<ngtp-effect-composer [options]="{ autoClear: false, multisampling: 0 }">
+			<ngtp-outline [options]="{ edgeStrength: 2.5, pulseSpeed: 0, blur: true, kernelSize: KernelSize.SMALL }" />
+			<ngtp-smaa />
 		</ngtp-effect-composer>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'postprocessing-sample' },
 	hostDirectives: [NgtSelection],
-	imports: [NgtsOrbitControls, NgtSelect, NgtHexify, NgtpEffectComposer, NgtpOutline, NgtArgs],
+	imports: [NgtsOrbitControls, NgtSelect, NgtpEffectComposer, NgtpOutline, NgtArgs, NgtpSMAA],
 })
 export class Experience {
+	KernelSize = KernelSize;
 	hovered = signal(false);
 }
