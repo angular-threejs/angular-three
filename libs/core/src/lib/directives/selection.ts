@@ -12,12 +12,12 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { getLocalState, NgtObjectEvents } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Group, Object3D } from 'three';
+import { getLocalState } from '../instance';
 import { extend } from '../renderer';
 import { NgtGroup } from '../three-types';
-import { NgtObjectEventsHostDirective } from '../utils/object-events';
+import { NgtObjectEvents, NgtObjectEventsHostDirective } from '../utils/object-events';
 
 @Directive({ standalone: true, selector: '[ngtSelection]' })
 export class NgtSelection {
