@@ -15,7 +15,7 @@ import { easing } from 'maath';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, Effect } from 'postprocessing';
-import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three';
+import { Color, Mesh, Texture, Uniform, Vector2, Vector3, WebGLRenderTarget, WebGLRenderer } from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
 const LensFlareShader = {
@@ -114,7 +114,7 @@ export class LensFlareEffect extends Effect {
 		});
 	}
 
-	override update(_renderer: any, _inputBuffer: any, deltaTime: number) {
+	override update(_renderer: WebGLRenderer, _inputBuffer: WebGLRenderTarget, deltaTime: number) {
 		const iTime = this.uniforms.get('iTime');
 		if (iTime) {
 			iTime.value += deltaTime;
@@ -138,7 +138,7 @@ const defaultOptions: LensFlareOptions = {
 	selector: 'ngtp-lens-flare',
 	standalone: true,
 	template: `
-		<ngt-primitive *args="[effect()]" [dispose]="null" />
+		<ngt-primitive *args="[effect()]" [parameters]="{ dispose: null }" />
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

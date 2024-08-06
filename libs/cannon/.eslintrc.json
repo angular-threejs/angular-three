@@ -8,7 +8,7 @@
 			"rules": {
 				"@angular-eslint/directive-class-suffix": "off",
 				"@angular-eslint/component-class-suffix": "off",
-        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+				"@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
 			}
 		},
 		{
@@ -20,17 +20,20 @@
 			"files": ["*.json"],
 			"parser": "jsonc-eslint-parser",
 			"rules": {
-				"@nx/dependency-checks": ["error", {
-          "ignoredDependencies": [
-            "angular-three",
-            "ngxtension",
-            "@analogjs/vite-plugin-angular",
-            "@nx/vite",
-            "vite",
-            "@angular/common",
-            "tslib"
-          ]
-        }]
+				"@nx/dependency-checks": [
+					"error",
+					{
+						"ignoredDependencies": [
+							"@analogjs/vite-plugin-angular",
+							"@angular/common",
+							"@nx/vite",
+							"angular-three",
+							"ngxtension",
+							"tslib",
+							"vite"
+						]
+					}
+				]
 			}
 		}
 	]

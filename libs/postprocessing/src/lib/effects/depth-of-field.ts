@@ -7,21 +7,14 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector3 } from 'angular-three';
+import { NgtAnyRecord, NgtArgs, NgtVector3 } from 'angular-three';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
 import { DepthPackingStrategies, Texture, Vector3 } from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
 type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1]> &
-	Partial<{
-		target: NgtVector3;
-		depthTexture: {
-			texture: Texture;
-			// TODO: narrow to DepthPackingStrategies
-			packing: number;
-		};
-	}>;
+	Partial<{ target: NgtVector3; depthTexture: { texture: Texture; packing: DepthPackingStrategies } }>;
 
 @Component({
 	selector: 'ngtp-depth-of-field',
@@ -53,7 +46,7 @@ export class NgtpDepthOfField {
 			effect.setDepthTexture(options.depthTexture.texture, options.depthTexture.packing as DepthPackingStrategies);
 		}
 		// Temporary fix that restores DOF 6.21.3 behavior, everything since then lets shapes leak through the blur
-		const maskPass = (effect as any).maskPass;
+		const maskPass = (effect as NgtAnyRecord)['maskPass'];
 		maskPass.maskFunction = MaskFunction.MULTIPLY_RGB_SET_ALPHA;
 
 		return effect;
