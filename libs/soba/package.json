@@ -38,19 +38,20 @@
     }
   },
 	"peerDependencies": {
-		"@angular/common": ">=18.0.0",
-		"@angular/core": ">=18.0.0",
+		"@angular/common": ">=18.0.0 <19.0.0",
+		"@angular/core": ">=18.0.0 <19.0.0",
 		"@monogrid/gainmap-js": "^3.0.0",
 		"@pmndrs/vanilla": "^1.19.0",
 		"camera-controls": "^2.8.0",
 		"hls.js": "^1.5.0",
+    "maath": ">=0.10.0 <0.11.0",
 		"meshline": "^3.1.0",
 		"stats-gl": "^2.0.0",
-		"three": ">=0.148.0",
+		"three": ">=0.148.0 <0.168.0",
 		"three-custom-shader-material": "^5.4.0",
-		"three-mesh-bvh": "^0.5.0 || ^0.6.0",
+		"three-mesh-bvh": ">=0.5.0 <0.8.0",
 		"three-stdlib": "^2.0.0",
-		"troika-three-text": "^0.47.0"
+		"troika-three-text": ">=0.47.0 <0.50.0"
 	},
 	"peerDependenciesMeta": {
 		"@monogrid/gainmap-js": {
@@ -69,6 +70,9 @@
       "optional": true
     },
     "three-mesh-bvh": {
+      "optional": true
+    },
+    "maath": {
       "optional": true
     },
     "meshline": {
