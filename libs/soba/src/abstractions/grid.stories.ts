@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs } from 'angular-three';
+import { NgtAnyRecord, NgtArgs } from 'angular-three';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -11,7 +11,7 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 type SuzanneGLTF = GLTF & {
 	nodes: { Suzanne: Mesh };
-	materials: {};
+	materials: NgtAnyRecord;
 };
 
 @Component({

@@ -1,5 +1,5 @@
 import { Preview } from '@storybook/angular';
-// @ts-ignore
+// @ts-expect-error - we can import mdx
 import DocumentationTemplate from './documentation-template.mdx';
 
 export default {

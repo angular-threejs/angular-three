@@ -262,17 +262,17 @@ export class NgtsScrollControls {
 		return this._fixed;
 	}
 
-	range(from: number, distance: number, margin: number = 0): number {
+	range(from: number, distance: number, margin = 0): number {
 		const start = from - margin;
 		const end = start + distance + margin * 2;
 		return this.offset < start ? 0 : this.offset > end ? 1 : (this.offset - start) / (end - start);
 	}
 
-	curve(from: number, distance: number, margin: number = 0): number {
+	curve(from: number, distance: number, margin = 0): number {
 		return Math.sin(this.range(from, distance, margin) * Math.PI);
 	}
 
-	visible(from: number, distance: number, margin: number = 0): boolean {
+	visible(from: number, distance: number, margin = 0): boolean {
 		const start = from - margin;
 		const end = start + distance + margin * 2;
 		return this.offset >= start && this.offset <= end;

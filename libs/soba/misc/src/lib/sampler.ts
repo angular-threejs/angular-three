@@ -204,7 +204,10 @@ export class NgtsSampler {
 
 					this.meshToSample.set(mesh ?? (localState.objects().find((c) => c.type === 'Mesh') as Mesh));
 					this.instancedToSample.set(
-						instances ?? (localState.objects().find((c) => c.hasOwnProperty('instanceMatrix')) as InstancedMesh),
+						instances ??
+							(localState
+								.objects()
+								.find((c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix')) as InstancedMesh),
 					);
 				},
 				{ allowSignalWrites: true },

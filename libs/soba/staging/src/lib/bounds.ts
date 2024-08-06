@@ -23,20 +23,6 @@ interface ControlsProto {
 	removeEventListener: (event: string, callback: (event: any) => void) => void;
 }
 
-interface OriginT {
-	camPos: Vector3;
-	camRot: Quaternion;
-	camZoom: number;
-}
-
-interface GoalT {
-	camPos: Vector3 | undefined;
-	camRot: Quaternion | undefined;
-	camZoom: number | undefined;
-	camUp: Vector3 | undefined;
-	target: Vector3 | undefined;
-}
-
 enum AnimationState {
 	NONE = 0,
 	START = 1,

@@ -17,9 +17,9 @@ function randomEuler() {
 	return [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI];
 }
 
-const data = Array.from({ length: 1000 }, (r: number = 10) => ({
+const data = Array.from({ length: 1000 }, (r: number) => ({
 	random: Math.random(),
-	position: randomVector(r),
+	position: randomVector(r ?? 10),
 	rotation: randomEuler(),
 }));
 

@@ -113,7 +113,7 @@ export class NgtsText {
 
 		afterNextRender(() => {
 			this.autoEffect(() => {
-				const [invalidate, text] = [this.invalidate(), this.text(), this.options()];
+				const [invalidate] = [this.invalidate(), this.text(), this.options()];
 				this.troikaMesh.sync(() => {
 					invalidate();
 					this.synced.emit(this.troikaMesh);

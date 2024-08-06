@@ -123,7 +123,8 @@ export function injectEnvironment(
 ) {
 	return assertInjector(injectEnvironment, injector, () => {
 		const adjustedOptions = computed(() => {
-			let { files, path, preset, extensions, encoding } = options();
+			const { preset, extensions, encoding, ...rest } = options();
+			let { files, path } = rest;
 
 			if (files == null) {
 				files = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png'];
@@ -213,7 +214,7 @@ export function injectEnvironment(
 
 			const result = injectLoader(
 				loader,
-				// @ts-expect-error
+				// @ts-expect-error - ensure the files is an array
 				() => {
 					const { files } = adjustedOptions();
 					return Array.isArray(files) ? [files] : files;
@@ -242,7 +243,7 @@ export function injectEnvironment(
 					const { multiFile, extension, isCubeMap } = resultOptions();
 					const { encoding } = adjustedOptions();
 
-					// @ts-expect-error
+					// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
 					let textureResult = (multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
 
 					if (extension === 'jpg' || extension === 'jpeg' || extension === 'webp') {
