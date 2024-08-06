@@ -84,7 +84,7 @@ export function setupCollision(
 export function makeBodyApi(
 	body: Object3D,
 	worker: CannonWorkerAPI,
-	{ subscriptions, scaleOverrides }: NgtcPhysicsApi,
+	{ subscriptions, scaleOverrides }: Pick<NgtcPhysicsApi, 'subscriptions' | 'scaleOverrides'>,
 ) {
 	const makeAtomic = <T extends AtomicName>(type: T, index?: number) => {
 		const op: SetOpName<T> = `set${capitalize(type)}`;
@@ -221,10 +221,10 @@ export function makeBodyApi(
 }
 
 export const defaultTransformArgs = {
-	Plane: (args: PlaneProps['args']) => [],
+	Plane: (_: PlaneProps['args']) => [],
 	Box: (args: BoxProps['args'] = [1, 1, 1]) => args,
 	Trimesh: (args: TrimeshArgs) => args,
-	Cylinder: (args: CylinderArgs = []) => [],
+	Cylinder: (_: CylinderArgs = []) => [],
 	Heightfield: (args: HeightfieldArgs) => args,
 	ConvexPolyhedron: ([vertices, faces, normals, axes, boundingSphereRadius]: ConvexPolyhedronArgs = []) => [
 		vertices && vertices.map(makeTriplet),
@@ -233,7 +233,7 @@ export const defaultTransformArgs = {
 		axes && axes.map(makeTriplet),
 		boundingSphereRadius,
 	],
-	Particle: (args: ParticleProps['args']) => [],
+	Particle: (_: ParticleProps['args']) => [],
 	Sphere: (args: SphereArgs = [1]) => {
 		if (!Array.isArray(args)) throw new Error('Sphere body args must be an array');
 		return [args[0]];

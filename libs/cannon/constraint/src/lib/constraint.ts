@@ -70,7 +70,11 @@ function injectConstraint<
 	type: TConstraint,
 	bodyA: ElementRef<A> | A | Signal<ElementRef<A> | A | undefined>,
 	bodyB: ElementRef<B> | B | Signal<ElementRef<B> | B | undefined>,
-	{ injector, options = {} as any, disableOnStart = false }: NgtcConstraintOptions<TConstraint> = {},
+	{
+		injector,
+		options = {} as NgtcConstraintOptionsMap[TConstraint],
+		disableOnStart = false,
+	}: NgtcConstraintOptions<TConstraint> = {},
 ) {
 	return assertInjector(injectConstraint, injector, () => {
 		const physics = inject(NgtcPhysics, { optional: true });

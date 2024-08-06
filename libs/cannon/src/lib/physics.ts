@@ -33,6 +33,19 @@ import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { InstancedMesh, Matrix4, Object3D, Quaternion, QuaternionTuple, Vector3 } from 'three';
 
+export interface NgtcCannonWorkerEvents {
+	collide: WorkerCollideEvent;
+	collideBegin: WorkerCollideBeginEvent;
+	collideEnd: WorkerCollideEndEvent;
+	frame: WorkerFrameMessage;
+	rayhit: WorkerRayhitEvent;
+}
+
+export interface NgtcCannonWorker extends CannonWorkerAPI {
+	on: <K extends keyof NgtcCannonWorkerEvents>(event: K, cb: (data: NgtcCannonWorkerEvents[K]['data']) => void) => void;
+	removeAllListeners: () => void;
+}
+
 const v = new Vector3();
 const s = new Vector3(1, 1, 1);
 const q = new Quaternion();
@@ -122,7 +135,8 @@ export class NgtcPhysics {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private invalidate = this.store.select('invalidate');
-	private worker = signal<CannonWorkerAPI>(null!);
+	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator
+	private worker = signal<CannonWorkerAPI>(null);
 
 	api: NgtcPhysicsApi = {
 		bodies: {},
@@ -155,11 +169,8 @@ export class NgtcPhysics {
 	}
 
 	private connectWorker() {
-		this.autoEffect((injector) => {
-			const worker = this.worker() as CannonWorkerAPI & {
-				on: (event: string, cb: (...args: any[]) => void) => void;
-				removeAllListeners: () => void;
-			};
+		this.autoEffect(() => {
+			const worker = this.worker() as NgtcCannonWorker;
 			if (!worker) return;
 
 			worker.connect();
@@ -183,7 +194,7 @@ export class NgtcPhysics {
 
 		this.autoEffect(() => {
 			const [worker, value] = [untracked(this.worker), computedValue()];
-			// @ts-expect-error
+			// @ts-expect-error - we know key is a valid key of CannonWorkerAPI
 			worker[key] = value;
 		});
 	}
@@ -193,9 +204,9 @@ export class NgtcPhysics {
 		injectBeforeRender(
 			({ delta }) => {
 				const [{ isPaused, maxSubSteps, stepSize }, worker] = [this.options(), this.worker()];
-				if (isPaused || !worker) return;
+				if (isPaused || !worker || stepSize == null) return;
 				timeSinceLastCalled += delta;
-				worker.step({ maxSubSteps, stepSize: stepSize!, timeSinceLastCalled });
+				worker.step({ maxSubSteps, stepSize, timeSinceLastCalled });
 				timeSinceLastCalled = 0;
 			},
 			{ injector: this.injector },

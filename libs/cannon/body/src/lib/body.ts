@@ -58,7 +58,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 			if (!_body) return null;
 			const { worker, ...rest } = physics.api;
 			if (!worker()) return null;
-			return makeBodyApi(_body, worker(), physics.api);
+			return makeBodyApi(_body, worker(), rest);
 		});
 
 		afterNextRender(() => {
@@ -109,7 +109,12 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 				// Register on mount, unregister on unmount
 				currentWorker.addBodies({
 					props: props.map(({ onCollide, onCollideBegin, onCollideEnd, ...serializableProps }) => {
-						return { onCollide: Boolean(onCollide), ...serializableProps };
+						return {
+							onCollide: Boolean(onCollide),
+							onCollideBegin: Boolean(onCollideBegin),
+							onCollideEnd: Boolean(onCollideEnd),
+							...serializableProps,
+						};
 					}),
 					type,
 					uuid,
