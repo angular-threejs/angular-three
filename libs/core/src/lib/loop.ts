@@ -147,7 +147,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 
 	function advance(
 		timestamp: number,
-		runGlobalEffects: boolean = true,
+		runGlobalEffects = true,
 		store?: NgtSignalStore<NgtState>,
 		frame?: XRFrame,
 	): void {

@@ -47,7 +47,6 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 
 	// whether the child is added to the parent with parent.add()
 	let added = false;
-	let attached = false;
 
 	// assign store on child if not already exist
 	// or child store is not the same as parent store

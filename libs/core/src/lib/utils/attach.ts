@@ -16,12 +16,7 @@ export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = [
 	}
 }
 
-export function detach(
-	parent: NgtAnyRecord,
-	child: NgtAnyRecord,
-	attachProp: string[] | NgtAttachFunction,
-	useApplyProps = false,
-) {
+export function detach(parent: NgtAnyRecord, child: NgtAnyRecord, attachProp: string[] | NgtAttachFunction) {
 	const childLocalState = getLocalState(child);
 	if (childLocalState) {
 		if (Array.isArray(attachProp)) attach(parent, childLocalState.previousAttach, attachProp, childLocalState.isRaw);

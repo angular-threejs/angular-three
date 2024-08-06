@@ -28,18 +28,22 @@ export function createMockCanvas({
 
 	if (globalThis.HTMLCanvasElement) {
 		const getContext = HTMLCanvasElement.prototype.getContext;
-		HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, id: string) {
+		HTMLCanvasElement.prototype.getContext = function (
+			this: HTMLCanvasElement,
+			...args: Parameters<typeof getContext>
+		) {
+			const id = args[0];
 			if (id.startsWith('webgl')) return new WebGL2RenderingContext(this);
-			return getContext.apply(this, arguments as any);
+			return getContext.apply(this, args);
 		} as any;
 	}
 
 	beforeReturn?.(canvas);
 
 	class WebGLRenderingContext extends WebGL2RenderingContext {}
-	// @ts-expect-error
+	// @ts-expect-error - WebGLRenderingContext is not defined in the global scope for non-browser
 	globalThis.WebGLRenderingContext ??= WebGLRenderingContext;
-	// @ts-expect-error
+	// @ts-expect-error - WebGL2RenderingContext is not defined in the global scope for non-browser
 	globalThis.WebGL2RenderingContext ??= WebGL2RenderingContext;
 
 	return canvas;

@@ -128,7 +128,7 @@ export class NgtRenderer implements Renderer2 {
 		if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
 			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
 			const object = injectedArgs[0];
-			let localState = getLocalState(object);
+			const localState = getLocalState(object);
 			if (!localState) {
 				// NOTE: if an object isn't already "prepared", we prepare it
 				prepare(object, { store: this.rootStore, primitive: true });
@@ -328,7 +328,7 @@ export class NgtRenderer implements Renderer2 {
 		el: NgtRendererNode,
 		name: string,
 		value: string,
-		namespace?: string | null | undefined,
+		_namespace?: string | null | undefined,
 	): boolean {
 		const rS = el.__ngt_renderer__;
 		if (rS[NgtRendererClassId.destroyed]) return false;

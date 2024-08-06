@@ -56,17 +56,19 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					const root = roots.get(canvas);
 					if (root) {
 						root.update((state) => ({ internal: { ...state.internal, active: false } }));
-						try {
-							const state = root.get();
-							state.events.disconnect?.();
-							state.gl?.renderLists?.dispose?.();
-							state.gl?.forceContextLoss?.();
-							if (state.gl?.xr) state.xr.disconnect();
-							dispose(state);
-							roots.delete(canvas);
-						} catch (e) {
-							console.error('[NGT] Unexpected error while destroying Canvas Root', e);
-						}
+						setTimeout(() => {
+							try {
+								const state = root.get();
+								state.events.disconnect?.();
+								state.gl?.renderLists?.dispose?.();
+								state.gl?.forceContextLoss?.();
+								if (state.gl?.xr) state.xr.disconnect();
+								dispose(state);
+								roots.delete(canvas);
+							} catch (e) {
+								console.error('[NGT] Unexpected error while destroying Canvas Root', e);
+							}
+						}, timeout);
 					}
 				},
 				configure: (inputs: NgtCanvasOptions) => {
@@ -235,8 +237,8 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					// Avoid accessing ColorManagement to play nice with older versions
 					if (ColorManagement) {
 						const colorManagement = ColorManagement as NgtAnyRecord;
-						if ('enabled' in colorManagement) colorManagement['enabled'] = !legacy ?? false;
-						else if ('legacyMode' in colorManagement) colorManagement['legacyMode'] = legacy ?? true;
+						if ('enabled' in colorManagement) colorManagement['enabled'] = !legacy;
+						else if ('legacyMode' in colorManagement) colorManagement['legacyMode'] = legacy;
 					}
 
 					if (!isConfigured) {
