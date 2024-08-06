@@ -1,23 +1,16 @@
 import {
 	afterNextRender,
 	booleanAttribute,
-	ChangeDetectionStrategy,
-	Component,
-	CUSTOM_ELEMENTS_SCHEMA,
 	Directive,
 	ElementRef,
 	inject,
 	input,
 	signal,
 	untracked,
-	viewChild,
 } from '@angular/core';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
-import { Group, Object3D } from 'three';
+import { Group, Mesh, Object3D } from 'three';
 import { getLocalState } from '../instance';
-import { extend } from '../renderer';
-import { NgtGroup } from '../three-types';
-import { NgtObjectEvents, NgtObjectEventsHostDirective } from '../utils/object-events';
 
 @Directive({ standalone: true, selector: '[ngtSelection]' })
 export class NgtSelection {
@@ -35,47 +28,38 @@ export class NgtSelection {
 	}
 }
 
-@Component({
-	selector: 'ngt-select',
-	standalone: true,
-	template: `
-		<ngt-group #group [parameters]="options()">
-			<ng-content />
-		</ngt-group>
-	`,
-	hostDirectives: [NgtObjectEventsHostDirective],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+@Directive({ standalone: true, selector: 'ngt-group[ngtSelect], ngt-mesh[ngtSelect]' })
 export class NgtSelect {
-	enabled = input(false, { transform: booleanAttribute });
-	options = input({} as Partial<NgtGroup>);
+	enabled = input(false, { transform: booleanAttribute, alias: 'ngtSelect' });
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	host = inject<ElementRef<Group | Mesh>>(ElementRef);
 
 	constructor() {
-		extend({ Group });
-
-		const objectEvents = inject(NgtObjectEvents, { host: true });
 		const selection = inject(NgtSelection);
 		const autoEffect = injectAutoEffect();
 
 		afterNextRender(() => {
-			objectEvents.ngtObjectEvents.set(this.groupRef());
-
 			autoEffect(
 				() => {
-					const group = this.groupRef().nativeElement;
-					const localState = getLocalState(group);
+					const host = this.host.nativeElement;
+					if (!host) return;
+
+					const localState = getLocalState(host);
 					if (!localState) return;
 
 					const enabled = this.enabled();
 					if (!enabled) return;
 
+					// ngt-mesh[ngtSelect]
+					if (host.type === 'Mesh') {
+						selection.select(host);
+						return () => selection.unselect(host);
+					}
+
 					const [collection] = [untracked(selection.collection), localState.objects()];
 					let changed = false;
 					const current: Object3D[] = [];
-					group.traverse((child) => {
+					host.traverse((child) => {
 						child.type === 'Mesh' && current.push(child);
 						if (collection.indexOf(child) === -1) changed = true;
 					});
