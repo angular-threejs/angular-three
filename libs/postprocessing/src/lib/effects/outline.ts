@@ -149,17 +149,17 @@ export class NgtpOutline {
 				// NOTE: we run this effect if declarative NgtSelection is enabled
 				const selectionEnabled = this.ngtSelection.enabled();
 				if (!selectionEnabled) return;
-				return this.handleSelectionChangeEffect(this.ngtSelection.collection, this.effect, this.invalidate);
+				return this.handleSelectionChangeEffect(this.ngtSelection.selected, this.effect, this.invalidate);
 			});
 		});
 	}
 
 	private handleSelectionChangeEffect(
-		collection: () => Array<Object3D | ElementRef<Object3D>> | undefined,
+		selected: () => Array<Object3D | ElementRef<Object3D>> | undefined,
 		_effect: () => OutlineEffect,
 		_invalidate: () => () => void,
 	) {
-		const selection = collection();
+		const selection = selected();
 		if (!selection || selection.length === 0) return;
 
 		const [effect, invalidate] = [_effect(), _invalidate()];
