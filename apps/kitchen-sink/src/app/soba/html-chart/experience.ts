@@ -78,7 +78,7 @@ export class ChartContainer extends NgtHTML {
 			<ngt-mesh-toon-material color="#fbb03b" />
 
 			<ngts-html [options]="{ occlude: true, transform: true, position: [0, 0, 0.3] }">
-				<div [ngts-html-content]="{ distanceFactor: 0 }">
+				<div [ngtsHTMLContent]="{ distanceFactor: 0 }">
 					<app-chart-container />
 				</div>
 			</ngts-html>

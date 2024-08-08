@@ -30,6 +30,10 @@ const routes: Routes = [
 		loadComponent: () => import('./html-chart/html-chart'),
 	},
 	{
+		path: 'lowpoly-earth',
+		loadComponent: () => import('./lowpoly-earth/lowpoly-earth'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
