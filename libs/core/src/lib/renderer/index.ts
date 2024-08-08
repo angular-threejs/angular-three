@@ -89,6 +89,11 @@ export class NgtRenderer implements Renderer2 {
 	createElement(name: string, namespace?: string | null | undefined) {
 		const element = this.delegate.createElement(name, namespace);
 
+		// if there's namespace, we don't do anything
+		if (namespace) {
+			return createNode('dom', element, this.document);
+		}
+
 		// on first pass, we return the Root Scene as the root node
 		if (this.isRoot) {
 			this.isRoot = false;
