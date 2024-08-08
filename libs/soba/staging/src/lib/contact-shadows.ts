@@ -184,13 +184,13 @@ export class NgtsContactShadows {
 		blurPlane.visible = true;
 		blurPlane.material = horizontalBlurMaterial;
 		horizontalBlurMaterial.uniforms['tDiffuse'].value = renderTarget.texture;
-		horizontalBlurMaterial.uniforms['h'].value = (blur * 1) / 256;
+		horizontalBlurMaterial.uniforms['h'].value = blur / 256;
 		this.gl().setRenderTarget(renderTargetBlur);
 		this.gl().render(blurPlane, shadowsCamera);
 
 		blurPlane.material = verticalBlurMaterial;
 		verticalBlurMaterial.uniforms['tDiffuse'].value = renderTargetBlur.texture;
-		verticalBlurMaterial.uniforms['v'].value = (blur * 1) / 256;
+		verticalBlurMaterial.uniforms['v'].value = blur / 256;
 		this.gl().setRenderTarget(renderTarget);
 		this.gl().render(blurPlane, shadowsCamera);
 		blurPlane.visible = false;
@@ -205,18 +205,19 @@ export class NgtsContactShadows {
 
 		injectBeforeRender(() => {
 			const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
+			if (!shadowsCamera) return;
 			const [{ frames, blur, smooth }, gl, scene, contactShadows, { depthMaterial, renderTarget }] = [
 				this.options(),
 				this.gl(),
 				this.scene(),
-				this.contactShadowsRef(),
+				this.contactShadowsRef().nativeElement,
 				this.shadowsOptions(),
 			];
-			if (shadowsCamera && (frames === Infinity || count < frames)) {
+			if (frames === Infinity || count < frames * frames) {
 				count++;
 				initialBackground = scene.background;
 				initialOverrideMaterial = scene.overrideMaterial;
-				contactShadows.nativeElement.visible = false;
+				contactShadows.visible = false;
 				scene.background = null;
 				scene.overrideMaterial = depthMaterial;
 				gl.setRenderTarget(renderTarget);
@@ -224,7 +225,7 @@ export class NgtsContactShadows {
 				this.blurShadows(blur);
 				if (smooth) this.blurShadows(blur * 0.4);
 				gl.setRenderTarget(null);
-				contactShadows.nativeElement.visible = true;
+				contactShadows.visible = true;
 				scene.overrideMaterial = initialOverrideMaterial;
 				scene.background = initialBackground;
 			}
