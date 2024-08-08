@@ -7,6 +7,7 @@ import {
 	ElementRef,
 	inject,
 	Injector,
+	signal,
 	viewChild,
 } from '@angular/core';
 import { NgtArgs, NgtHTML } from 'angular-three';
@@ -35,17 +36,20 @@ export class ChartContainer extends NgtHTML {
 		// NOTE: I'm doing this dirty because I am lazy.
 		const injector = inject(Injector);
 		afterNextRender(() => {
-			const chart = new Chart(this.chartContainer().nativeElement, {
-				type: 'bar',
-				data: {
-					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-					datasets: [{ label: '# of Votes', data: this.data, borderWidth: 1 }],
-				},
-				options: { scales: { y: { beginAtZero: true } } },
-			});
-
 			effect(
 				(onCleanup) => {
+					const chartReady = Experience.chartReady();
+					if (!chartReady) return;
+
+					const chart = new Chart(this.chartContainer().nativeElement, {
+						type: 'bar',
+						data: {
+							labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+							datasets: [{ label: '# of Votes', data: this.data, borderWidth: 1 }],
+						},
+						options: { scales: { y: { beginAtZero: true } } },
+					});
+
 					const id = setInterval(() => {
 						// randomize the data
 						this.data.forEach((_, index) => {
@@ -88,4 +92,6 @@ export class ChartContainer extends NgtHTML {
 })
 export class Experience {
 	protected readonly Math = Math;
+
+	static chartReady = signal(false);
 }

@@ -23,6 +23,7 @@ export default class HtmlChart {
 			script = document.createElement('script');
 			script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js';
 			document.head.appendChild(script);
+			Experience.chartReady.set(true);
 		});
 
 		inject(DestroyRef).onDestroy(() => {
