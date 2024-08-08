@@ -15,7 +15,7 @@ import { makeDecorators, makeStoryObject, Turnable } from '../setup-canvas';
 				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
 
 				<ngts-html [options]="{ transform: transform() }">
-					<div [ngts-html-content]="{ distanceFactor: 30 }" style="color: white;">
+					<div [ngtsHTMLContent]="{ distanceFactor: 30 }" style="color: white;">
 						<h1>First</h1>
 					</div>
 				</ngts-html>
@@ -26,7 +26,7 @@ import { makeDecorators, makeStoryObject, Turnable } from '../setup-canvas';
 				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
 
 				<ngts-html [options]="{ transform: transform() }">
-					<div [ngts-html-content]="{ distanceFactor: 30 }" style="color: white;">
+					<div [ngtsHTMLContent]="{ distanceFactor: 30 }" style="color: white;">
 						<h1>Second</h1>
 					</div>
 				</ngts-html>
@@ -37,7 +37,7 @@ import { makeDecorators, makeStoryObject, Turnable } from '../setup-canvas';
 				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
 
 				<ngts-html [options]="{ transform: transform() }">
-					<div [ngts-html-content]="{ distanceFactor: 30 }" style="color: white;">
+					<div [ngtsHTMLContent]="{ distanceFactor: 30 }" style="color: white;">
 						<h1>Third</h1>
 					</div>
 				</ngts-html>
@@ -60,7 +60,7 @@ class HtmlScene {
 	template: `
 		<html-scene color="palegreen" [transform]="true">
 			<ngts-html [options]="htmlOptions()">
-				<div [ngts-html-content]="htmlContentOptions()">Transform mode</div>
+				<div [ngtsHTMLContent]="htmlContentOptions()">Transform mode</div>
 			</ngts-html>
 		</html-scene>
 	`,

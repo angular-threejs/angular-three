@@ -55,7 +55,7 @@ class BBAnchorWrapper {
 	template: `
 		<bb-anchor-wrapper [options]="options()" [drawBoundingBox]="drawBoundingBox()">
 			<ngts-html>
-				<div [ngts-html-content]="{ center: true, containerStyle: { color: 'white', whiteSpace: 'nowrap' } }">
+				<div [ngtsHTMLContent]="{ center: true, containerStyle: { color: 'white', whiteSpace: 'nowrap' } }">
 					HTML content
 				</div>
 			</ngts-html>

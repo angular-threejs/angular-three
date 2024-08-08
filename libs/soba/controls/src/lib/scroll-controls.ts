@@ -279,7 +279,7 @@ export class NgtsScrollControls {
 	}
 }
 
-@Directive({ selector: 'ngt-group[ngts-scroll-canvas]', standalone: true })
+@Directive({ selector: 'ngt-group[ngtsScrollCanvas]', standalone: true })
 export class NgtsScrollCanvas {
 	private host = inject<ElementRef<Group>>(ElementRef);
 	private scrollControls = inject(NgtsScrollControls);
@@ -301,7 +301,7 @@ export class NgtsScrollCanvas {
 }
 
 @Directive({
-	selector: 'div[ngts-scroll-html]',
+	selector: 'div[ngtsScrollHTML]',
 	standalone: true,
 	host: { style: 'position: absolute; top: 0; left: 0; will-change: transform;' },
 	providers: [provideHTMLDomElement([NgtsScrollControls], (scrollControls) => scrollControls.fixed)],

@@ -71,7 +71,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 };
 
 @Component({
-	selector: '[ngts-html-content]',
+	selector: '[ngtsHTMLContent]',
 	standalone: true,
 	template: `
 		@if (html.transform()) {
@@ -114,7 +114,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 export class NgtsHTMLContent extends NgtHTML {
 	options = input(defaultHtmlContentOptions, {
 		transform: mergeInputs(defaultHtmlContentOptions),
-		alias: 'ngts-html-content',
+		alias: 'ngtsHTMLContent',
 	});
 	occluded = output<boolean>();
 

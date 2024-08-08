@@ -202,13 +202,13 @@ class HtmlContent extends NgtHTML {
 	standalone: true,
 	template: `
 		<ngts-scroll-controls [(progress)]="progress" [options]="options()">
-			<ngt-group ngts-scroll-canvas>
+			<ngt-group ngtsScrollCanvas>
 				<scroll-suzanne [scale]="2" />
 				<scroll-suzanne [position]="[-viewport().width / 8, -viewport().height, 0]" [scale]="3" />
 				<scroll-suzanne [position]="[viewport().width / 4, -viewport().height * 2, 0]" [scale]="1.5" />
 			</ngt-group>
 
-			<div ngts-scroll-html style="width: 100%; color: #ec2d2d">
+			<div ngtsScrollHTML style="width: 100%; color: #ec2d2d">
 				<scroll-html-content />
 			</div>
 		</ngts-scroll-controls>
