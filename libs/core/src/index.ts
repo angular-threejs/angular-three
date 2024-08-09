@@ -16,6 +16,7 @@ export * from './lib/utils/attach';
 export * from './lib/utils/before-render';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
+export * from './lib/utils/non-nullish';
 export * from './lib/utils/object-events';
 export * from './lib/utils/parameters';
 export * from './lib/utils/resolve-ref';
