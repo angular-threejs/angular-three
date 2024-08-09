@@ -13,14 +13,12 @@ import {
 	Color,
 	ColorRepresentation,
 	Group,
-	Material,
 	Mesh,
 	MeshBasicMaterial,
 	MeshDepthMaterial,
 	OrthographicCamera,
 	PlaneGeometry,
 	ShaderMaterial,
-	Texture,
 	WebGLRenderTarget,
 } from 'three';
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib';
@@ -119,24 +117,20 @@ export class NgtsContactShadows {
 	private color = pick(this.options, 'color');
 	private near = pick(this.options, 'near');
 	private far = pick(this.options, 'far');
+	private smooth = pick(this.options, 'smooth');
+	private frames = pick(this.options, 'frames');
+	private blur = pick(this.options, 'blur');
 
-	private shadowsOptions = computed(() => {
-		const [width, height, resolution, color] = [
-			this.scaledWidth(),
-			this.scaledHeight(),
-			this.resolution(),
-			this.color(),
-		];
-		const renderTarget = new WebGLRenderTarget(resolution, resolution);
-		const renderTargetBlur = new WebGLRenderTarget(resolution, resolution);
-		renderTargetBlur.texture.generateMipmaps = renderTarget.texture.generateMipmaps = false;
-
-		const planeGeometry = new PlaneGeometry(width, height).rotateX(Math.PI / 2);
-		const blurPlane = new Mesh(planeGeometry);
-		const depthMaterial = new MeshDepthMaterial();
-		depthMaterial.depthTest = depthMaterial.depthWrite = false;
-		depthMaterial.onBeforeCompile = (shader) => {
-			shader.uniforms = { ...shader.uniforms, ucolor: { value: new Color(color) } };
+	private renderTarget = computed(() => this.createRenderTarget(this.resolution()));
+	private renderTargetBlur = computed(() => this.createRenderTarget(this.resolution()));
+	planeGeometry = computed(() => new PlaneGeometry(this.scaledWidth(), this.scaledHeight()).rotateX(Math.PI / 2));
+	private blurPlane = computed(() => new Mesh(this.planeGeometry()));
+	private depthMaterial = computed(() => {
+		const color = new Color(this.color());
+		const material = new MeshDepthMaterial();
+		material.depthTest = material.depthWrite = false;
+		material.onBeforeCompile = (shader) => {
+			shader.uniforms = { ...shader.uniforms, ucolor: { value: color } };
 			shader.fragmentShader = shader.fragmentShader.replace(
 				`void main() {`, //
 				`uniform vec3 ucolor;
@@ -149,86 +143,107 @@ export class NgtsContactShadows {
 				'vec4( ucolor * fragCoordZ * 2.0, ( 1.0 - fragCoordZ ) * 1.0 );',
 			);
 		};
-
-		const horizontalBlurMaterial = new ShaderMaterial(HorizontalBlurShader);
-		const verticalBlurMaterial = new ShaderMaterial(VerticalBlurShader);
-		verticalBlurMaterial.depthTest = horizontalBlurMaterial.depthTest = false;
-
-		return {
-			renderTarget,
-			planeGeometry,
-			depthMaterial,
-			blurPlane,
-			horizontalBlurMaterial,
-			verticalBlurMaterial,
-			renderTargetBlur,
-		};
+		return material;
 	});
+
+	private horizontalBlurMaterial = new ShaderMaterial({ ...HorizontalBlurShader, depthTest: false });
+	private verticalBlurMaterial = new ShaderMaterial({ ...VerticalBlurShader, depthTest: false });
 
 	renderOrder = pick(this.options, 'renderOrder');
 	opacity = pick(this.options, 'opacity');
 	depthWrite = pick(this.options, 'depthWrite');
-	planeGeometry = computed(() => this.shadowsOptions().planeGeometry);
-	texture = computed(() => this.shadowsOptions().renderTarget.texture);
+	texture = pick(this.renderTarget, 'texture');
 	cameraArgs = computed(() => {
 		const [width, height, near, far] = [this.scaledWidth(), this.scaledHeight(), this.near(), this.far()];
 		return [-width / 2, width / 2, height / 2, -height / 2, near, far];
 	});
 
-	private blurShadows(blur: number) {
-		const { renderTarget, renderTargetBlur, blurPlane, horizontalBlurMaterial, verticalBlurMaterial } =
-			this.shadowsOptions();
+	constructor() {
+		extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
+
+		let count = 0;
+		injectBeforeRender(() => {
+			const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
+			if (!shadowsCamera) return;
+
+			const frames = this.frames();
+			if (frames === Infinity || count < frames) {
+				this.renderShadows();
+				count++;
+			}
+		});
+	}
+
+	private renderShadows() {
 		const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
 		if (!shadowsCamera) return;
+
+		const [blur, smooth, gl, scene, contactShadows, depthMaterial, renderTarget] = [
+			this.blur(),
+			this.smooth(),
+			this.gl(),
+			this.scene(),
+			this.contactShadowsRef().nativeElement,
+			this.depthMaterial(),
+			this.renderTarget(),
+		];
+
+		const initialBackground = scene.background;
+		const initialOverrideMaterial = scene.overrideMaterial;
+		const initialClearAlpha = gl.getClearAlpha();
+
+		contactShadows.visible = false;
+		scene.background = null;
+		scene.overrideMaterial = depthMaterial;
+		gl.setClearAlpha(0);
+
+		// render to the render target to get the depths
+		gl.setRenderTarget(renderTarget);
+		gl.render(scene, shadowsCamera);
+
+		this.blurShadows(blur);
+		if (smooth) this.blurShadows(blur * 0.4);
+
+		// reset
+		gl.setRenderTarget(null);
+
+		contactShadows.visible = true;
+		scene.overrideMaterial = initialOverrideMaterial;
+		scene.background = initialBackground;
+		gl.setClearAlpha(initialClearAlpha);
+	}
+
+	private blurShadows(blur: number) {
+		const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
+		if (!shadowsCamera) return;
+
+		const [blurPlane, horizontalBlurMaterial, verticalBlurMaterial, renderTargetBlur, renderTarget, gl] = [
+			this.blurPlane(),
+			this.horizontalBlurMaterial,
+			this.verticalBlurMaterial,
+			this.renderTargetBlur(),
+			this.renderTarget(),
+			this.gl(),
+		];
 
 		blurPlane.visible = true;
 		blurPlane.material = horizontalBlurMaterial;
 		horizontalBlurMaterial.uniforms['tDiffuse'].value = renderTarget.texture;
 		horizontalBlurMaterial.uniforms['h'].value = blur / 256;
-		this.gl().setRenderTarget(renderTargetBlur);
-		this.gl().render(blurPlane, shadowsCamera);
+		gl.setRenderTarget(renderTargetBlur);
+		gl.render(blurPlane, shadowsCamera);
 
 		blurPlane.material = verticalBlurMaterial;
 		verticalBlurMaterial.uniforms['tDiffuse'].value = renderTargetBlur.texture;
 		verticalBlurMaterial.uniforms['v'].value = blur / 256;
-		this.gl().setRenderTarget(renderTarget);
-		this.gl().render(blurPlane, shadowsCamera);
+		gl.setRenderTarget(renderTarget);
+		gl.render(blurPlane, shadowsCamera);
 		blurPlane.visible = false;
 	}
 
-	constructor() {
-		extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
-
-		let count = 0;
-		let initialBackground: Color | Texture | null;
-		let initialOverrideMaterial: Material | null;
-
-		injectBeforeRender(() => {
-			const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
-			if (!shadowsCamera) return;
-			const [{ frames, blur, smooth }, gl, scene, contactShadows, { depthMaterial, renderTarget }] = [
-				this.options(),
-				this.gl(),
-				this.scene(),
-				this.contactShadowsRef().nativeElement,
-				this.shadowsOptions(),
-			];
-			if (frames === Infinity || count < frames * frames) {
-				count++;
-				initialBackground = scene.background;
-				initialOverrideMaterial = scene.overrideMaterial;
-				contactShadows.visible = false;
-				scene.background = null;
-				scene.overrideMaterial = depthMaterial;
-				gl.setRenderTarget(renderTarget);
-				gl.render(scene, shadowsCamera);
-				this.blurShadows(blur);
-				if (smooth) this.blurShadows(blur * 0.4);
-				gl.setRenderTarget(null);
-				contactShadows.visible = true;
-				scene.overrideMaterial = initialOverrideMaterial;
-				scene.background = initialBackground;
-			}
-		});
+	private createRenderTarget(resolution: number) {
+		const renderTarget = new WebGLRenderTarget(resolution, resolution);
+		renderTarget.texture.generateMipmaps = false;
+		return renderTarget;
 	}
 }

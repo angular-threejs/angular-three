@@ -1,12 +1,15 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
 	computed,
+	contentChild,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
 	signal,
 	Signal,
+	TemplateRef,
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs, NgtEuler, NgtHTML, NgtVector3 } from 'angular-three';
@@ -103,16 +106,19 @@ export class MarkerIcon extends NgtHTML {
 					</ngt-group>
 				</ngt-mesh>
 			</ngt-group>
+
+			<ng-container [ngTemplateOutlet]="content()" />
 		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [Marker, MarkerIcon],
+	imports: [Marker, MarkerIcon, NgTemplateOutlet],
 })
 export class Model {
 	protected readonly Math = Math;
 
 	position = input<NgtVector3>([0, 0, 0]);
+	content = contentChild.required(TemplateRef);
 
 	gltf = injectGLTF(() => './earth.gltf') as Signal<any>;
 }
@@ -122,13 +128,14 @@ export class Model {
 	template: `
 		<ngt-color *args="['#ececec']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5" />
-		<app-model [position]="[0, 0.25, 0]" />
+		<app-model [position]="[0, 0.25, 0]">
+			<ng-template>
+				<ngts-contact-shadows
+					[options]="{ frames: 1, scale: 5, position: [0, -1, 0], far: 1, blur: 5, color: '#204080' }"
+				/>
+			</ng-template>
+		</app-model>
 		<ngts-environment [options]="{ preset: 'city' }" />
-		<!-- NOTE: frames is set to 6 because we have a racing condition where the shadows are not rendered. -->
-		<!-- Ideally, we only want to render the shadows for the first frame -->
-		<ngts-contact-shadows
-			[options]="{ frames: 6, scale: 5, position: [0, -1, 0], far: 1, blur: 5, color: '#204080' }"
-		/>
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -138,3 +145,5 @@ export class Model {
 export class Experience {
 	protected readonly Math = Math;
 }
+
+injectGLTF.preload(() => './earth.gltf');

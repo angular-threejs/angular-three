@@ -29,8 +29,6 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 	};
 }
 
-export type NgtsGLTF<T extends Partial<NgtObjectMap>> = GLTF & NgtObjectMap & T;
-
 function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 	path: () => TUrl,
 	{
