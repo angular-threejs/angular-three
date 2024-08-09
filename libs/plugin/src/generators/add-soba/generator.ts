@@ -25,7 +25,7 @@ export async function addSobaGenerator(tree: Tree) {
 	logger.info('Adding angular-three-soba...');
 	addMetadataJson(tree, 'angular-three-soba/metadata.json');
 
-	const { peerDependencies } = await prompt<{ peerDependencies: string[][] }>({
+	const { peerDependencies } = await prompt<{ peerDependencies: string[] }>({
 		type: 'multiselect',
 		name: 'peerDependencies',
 		message: `To know which peer dependencies we need to add, please select the secondary entry points you are planning to use:`,
@@ -49,11 +49,15 @@ export async function addSobaGenerator(tree: Tree) {
 				message: 'I am not sure. Let me add all the peer dependencies.',
 			},
 		],
+		// @ts-expect-error - result is typed for single select but we're using multi select
+		result(values) {
+			const mapped = this.map(values);
+			return (values as unknown as string[]).flatMap((value) => mapped[value]);
+		},
 	});
 
 	// flatten, dedupe peerDependencies, add to packagesToAdd
 	peerDependencies
-		.flat()
 		.filter((item, index, array) => array.indexOf(item) === index)
 		.forEach((item) => {
 			if (!packagesToAdd.includes(item)) {
