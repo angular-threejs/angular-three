@@ -13,7 +13,11 @@ export function addMetadataJson(tree: Tree, metadataJsonPath: string) {
 			writeJson(tree, vscodeSettingsPath, {});
 		}
 		updateJson(tree, vscodeSettingsPath, (json) => {
-			if (json['html.customData'] && Array.isArray(json['html.customData'])) {
+			if (
+				json['html.customData'] &&
+				Array.isArray(json['html.customData']) &&
+				!json['html.customData'].includes(metadataJsonPath)
+			) {
 				json['html.customData'].push(metadataJsonPath);
 			} else {
 				json['html.customData'] = [metadataJsonPath];
