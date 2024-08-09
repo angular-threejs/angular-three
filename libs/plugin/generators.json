@@ -5,6 +5,11 @@
 			"factory": "./src/generators/init/generator",
 			"schema": "./src/generators/init/schema.json",
 			"description": "Init Angular Three with proper packages and config"
+		},
+		"add-soba": {
+			"factory": "./src/generators/add-soba/generator",
+			"schema": "./src/generators/add-soba/schema.json",
+			"description": "Add angular-three-soba to your project"
 		}
 	},
 	"schematics": {
@@ -12,6 +17,11 @@
 			"factory": "./src/generators/init/compat",
 			"schema": "./src/generators/init/schema.json",
 			"description": "Add Angular Three with proper packages and config"
-		}
+		},
+    "add-soba": {
+      "factory": "./src/generators/add-soba/compat",
+      "schema": "./src/generators/add-soba/schema.json",
+      "description": "Add angular-three-soba to your project"
+    }
 	}
 }
