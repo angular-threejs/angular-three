@@ -34,6 +34,10 @@ const routes: Routes = [
 		loadComponent: () => import('./lowpoly-earth/lowpoly-earth'),
 	},
 	{
+		path: 'stars',
+		loadComponent: () => import('./stars/stars'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
