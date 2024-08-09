@@ -55,14 +55,7 @@ export interface NgtsRenderTextureOptions extends Partial<Omit<NgtTexture, 'atta
 	compute?: (event: any, state: any, previous: any) => false | undefined;
 }
 
-@Component({
-	standalone: true,
-	selector: 'ngts-render-texture-container',
-	template: `
-		<ng-content />
-	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+@Directive({ standalone: true, selector: '[ngtsRenderTextureContainer]' })
 export class NgtsRenderTextureContainer {
 	fbo = input.required<WebGLRenderTarget>();
 	renderPriority = input.required<number>();
@@ -86,6 +79,7 @@ export class NgtsRenderTextureContainer {
 				({ gl, scene, camera }) => {
 					const [fbo, frames] = [this.fbo(), this.frames()];
 					// NOTE: render  the frames ^ 2
+					//  due to some race condition, we want to render double the frames here.
 					if (frames === Infinity || count < frames * frames) {
 						oldAutoClear = gl.autoClear;
 						oldXrEnabled = gl.xr.enabled;
@@ -139,19 +133,18 @@ let incrementId = 0;
 	template: `
 		<ngt-portal [container]="virtualScene()" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
 			<ng-template portalContent let-injector="injector" let-container="container">
-				<ngts-render-texture-container
+				<ng-container
+					ngtsRenderTextureContainer
 					[fbo]="fbo()"
 					[renderPriority]="renderPriority()"
 					[frames]="frames()"
 					[injector]="injector"
+					[ngTemplateOutlet]="content()"
+					[ngTemplateOutletInjector]="injector"
+					[ngTemplateOutletContext]="{ container, injector }"
 				>
-					<ng-container
-						[ngTemplateOutlet]="content()"
-						[ngTemplateOutletInjector]="injector"
-						[ngTemplateOutletContext]="{ container, injector }"
-					/>
 					<ngt-group (pointerover)="onPointerOver()" />
-				</ngts-render-texture-container>
+				</ng-container>
 			</ng-template>
 		</ngt-portal>
 
