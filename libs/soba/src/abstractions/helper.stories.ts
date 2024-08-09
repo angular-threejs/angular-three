@@ -46,8 +46,8 @@ class CameraHelperStory {
 			<ngt-sphere-geometry />
 			<ngt-mesh-basic-material />
 
-			<ngts-helper [type]="BoxHelper" [options]="$any(['royalblue'])" />
-			<ngts-helper [type]="VertexNormalsHelper" [options]="$any([1, '#ff0000'])" />
+			<ngts-helper [type]="BoxHelper" [options]="['royalblue']" />
+			<ngts-helper [type]="VertexNormalsHelper" [options]="[1, '#ff0000']" />
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

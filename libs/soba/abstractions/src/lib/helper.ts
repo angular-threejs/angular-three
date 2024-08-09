@@ -26,8 +26,8 @@ export function injectHelper<
 	helperConstructor: () => TConstructor,
 	{
 		injector,
-		args = () => [] as unknown as HelperArgs<TConstructor>,
-	}: { injector?: Injector; args?: () => HelperArgs<TConstructor> } = {},
+		args = () => [] as unknown as HelperArgs<ConstructorParameters<TConstructor>>,
+	}: { injector?: Injector; args?: () => HelperArgs<ConstructorParameters<TConstructor>> } = {},
 ) {
 	return assertInjector(injectHelper, injector, () => {
 		const autoEffect = injectAutoEffect();
@@ -84,7 +84,9 @@ export function injectHelper<
 })
 export class NgtsHelper<TConstructor extends new (...args: any[]) => Object3D> {
 	type = input.required<TConstructor>();
-	options = input<HelperArgs<TConstructor>>([] as unknown as HelperArgs<TConstructor>);
+	options = input<HelperArgs<ConstructorParameters<TConstructor>>>(
+		[] as unknown as HelperArgs<ConstructorParameters<TConstructor>>,
+	);
 
 	helperRef = viewChild.required<ElementRef<Object3D>>('helper');
 
