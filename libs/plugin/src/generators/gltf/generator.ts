@@ -1,5 +1,6 @@
 import { formatFiles, logger, names, readJson, readProjectConfiguration, Tree, workspaceRoot } from '@nx/devkit';
 import { prompt } from 'enquirer';
+import { loadEsmModule } from 'ng-packagr/lib/utils/load-esm';
 import { addSobaGenerator } from '../add-soba/generator';
 
 export interface GltfGeneratorSchema {
@@ -44,7 +45,10 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	}
 
 	try {
-		const injectGLTF = await import('angular-three-soba/loaders').then((m) => m.injectGLTF);
+		const injectGLTF = await loadEsmModule<typeof import('angular-three-soba/loaders')>(
+			'angular-three-soba/loaders',
+		).then((m) => m.injectGLTF);
+		// const injectGLTF = await import('angular-three-soba/loaders').then((m) => m.injectGLTF);
 
 		const { gltfPath, project, console: toConsole, modelName, outputPath, draco, meshopt } = normalizeOptions(options);
 

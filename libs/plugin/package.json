@@ -1,4 +1,4 @@
 {
 	"name": "plugin",
-	"type": "module"
+	"type": "commonjs"
 }
