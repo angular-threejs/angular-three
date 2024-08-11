@@ -115,7 +115,7 @@ function _injectLoader<
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
 		onProgress?: (event: ProgressEvent) => void;
-		onLoad?: (data: TData) => void;
+		onLoad?: (data: NoInfer<TData>) => void;
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
@@ -167,8 +167,9 @@ _injectLoader.preload = <
 	loaderConstructorFactory: (inputs: string[]) => TLoaderConstructor,
 	inputs: () => TUrl,
 	extensions?: NgtLoaderExtensions<TLoaderConstructor>,
+	onLoad?: (data: NoInfer<TData>) => void,
 ) => {
-	const effects = load(loaderConstructorFactory, inputs, { extensions })();
+	const effects = load(loaderConstructorFactory, inputs, { extensions, onLoad })();
 	if (effects) {
 		void Promise.all(effects);
 	}
