@@ -42,12 +42,13 @@ function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 		useMeshOpt?: boolean;
 		injector?: Injector;
 		extensions?: (loader: GLTFLoader) => void;
-		onLoad?: (data: GLTF & NgtObjectMap) => void;
+		onLoad?: (data: NgtLoaderResults<TUrl, GLTF & NgtObjectMap>) => void;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> & { scene: Signal<GLTF['scene'] | null> } {
 	return assertInjector(_injectGLTF, injector, () => {
 		const result = injectLoader(() => GLTFLoader, path, {
 			extensions: _extensions(useDraco, useMeshOpt, extensions),
+			// @ts-expect-error - we know the type of the data
 			onLoad,
 		});
 
@@ -69,9 +70,21 @@ _injectGLTF.preload = <TUrl extends string | string[] | Record<string, string>>(
 		useDraco = true,
 		useMeshOpt = true,
 		extensions,
-	}: { useDraco?: boolean | string; useMeshOpt?: boolean; extensions?: (loader: GLTFLoader) => void } = {},
+		onLoad,
+	}: {
+		useDraco?: boolean | string;
+		useMeshOpt?: boolean;
+		extensions?: (loader: GLTFLoader) => void;
+		onLoad?: (data: NgtLoaderResults<TUrl, GLTF & NgtObjectMap>) => void;
+	} = {},
 ) => {
-	injectLoader.preload(() => GLTFLoader, path, _extensions(useDraco, useMeshOpt, extensions) as any);
+	injectLoader.preload(
+		() => GLTFLoader,
+		path,
+		_extensions(useDraco, useMeshOpt, extensions) as any,
+		// @ts-expect-error - we know the type of the data
+		onLoad,
+	);
 };
 
 _injectGLTF.setDecoderPath = (path: string) => {
