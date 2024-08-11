@@ -10,6 +10,11 @@
 			"factory": "./src/generators/add-soba/generator",
 			"schema": "./src/generators/add-soba/schema.json",
 			"description": "Add angular-three-soba to your project"
+		},
+		"gltf": {
+			"factory": "./src/generators/gltf/generator",
+			"schema": "./src/generators/gltf/schema.json",
+			"description": "gltf generator"
 		}
 	},
 	"schematics": {
@@ -18,10 +23,15 @@
 			"schema": "./src/generators/init/schema.json",
 			"description": "Add Angular Three with proper packages and config"
 		},
-    "add-soba": {
-      "factory": "./src/generators/add-soba/compat",
-      "schema": "./src/generators/add-soba/schema.json",
-      "description": "Add angular-three-soba to your project"
+		"add-soba": {
+			"factory": "./src/generators/add-soba/compat",
+			"schema": "./src/generators/add-soba/schema.json",
+			"description": "Add angular-three-soba to your project"
+		},
+    "gltf": {
+      "factory": "./src/generators/gltf/compat",
+      "schema": "./src/generators/gltf/schema.json",
+      "description": "gltf generator"
     }
 	}
 }
