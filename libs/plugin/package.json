@@ -1,7 +1,4 @@
 {
 	"name": "plugin",
-	"type": "commonjs",
-	"dependencies": {
-		"@nx/devkit": "19.5.6"
-	}
+	"type": "module"
 }
