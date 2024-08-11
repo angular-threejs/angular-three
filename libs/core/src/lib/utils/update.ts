@@ -10,7 +10,8 @@ export function checkNeedsUpdate(value: unknown) {
 }
 
 export function checkUpdate(value: unknown) {
-	if (is.object3D(value)) value.updateMatrix();
+	// TODO (chau): this is messing with PivotControls. Re-evaluate later
+	// if (is.object3D(value)) value.updateMatrix();
 
 	if (is.camera(value)) {
 		if (is.perspectiveCamera(value) || is.orthographicCamera(value)) value.updateProjectionMatrix();
