@@ -128,7 +128,7 @@ const defaultInstancesOptions: NgtsPointsInstancesOptions = { limit: 1000 };
 			#points
 			[userData]="{ instances: positionPoints }"
 			[matrixAutoUpdate]="false"
-			[raycast]="nullRaycast"
+			[raycast]="null"
 			[parameters]="parameters()"
 		>
 			<ngt-buffer-geometry>
@@ -161,8 +161,6 @@ const defaultInstancesOptions: NgtsPointsInstancesOptions = { limit: 1000 };
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsPointsInstances {
-	protected readonly nullRaycast = () => null;
-
 	options = input(defaultInstancesOptions, { transform: mergeInputs(defaultInstancesOptions) });
 	parameters = omit(this.options, ['limit', 'range']);
 

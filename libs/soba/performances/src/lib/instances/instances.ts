@@ -82,7 +82,7 @@ const defaultOptions: NgtsInstancesOptions = {
 			#instancedMesh
 			[userData]="{ instances }"
 			[matrixAutoUpdate]="false"
-			[raycast]="nullRaycast"
+			[raycast]="null"
 			[parameters]="parameters()"
 		>
 			<ngt-instanced-buffer-attribute
@@ -108,7 +108,6 @@ const defaultOptions: NgtsInstancesOptions = {
 })
 export class NgtsInstances {
 	protected readonly DynamicDrawUsage = DynamicDrawUsage;
-	protected readonly nullRaycast = () => null;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['limit', 'frames', 'range']);

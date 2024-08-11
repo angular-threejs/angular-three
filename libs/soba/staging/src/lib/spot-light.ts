@@ -67,7 +67,7 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 	selector: 'ngts-volumetric-mesh',
 	standalone: true,
 	template: `
-		<ngt-mesh #mesh [geometry]="geometry()" [raycast]="nullRaycast">
+		<ngt-mesh #mesh [geometry]="geometry()" [raycast]="null">
 			<ngt-primitive *args="[material]" attach="material">
 				<ngt-value attach="uniforms.opacity.value" [rawValue]="opacity()" />
 				<ngt-value attach="uniforms.lightColor.value" [rawValue]="color()" />
@@ -88,8 +88,6 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsVolumetricMesh {
-	nullRaycast = () => null;
-
 	options = input(defaultVolumetricMeshOptions, { transform: mergeInputs(defaultVolumetricMeshOptions) });
 
 	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
