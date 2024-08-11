@@ -210,6 +210,7 @@ export type NgtObject3DNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOrigina
 			quaternion: NgtQuaternion;
 			layers: NgtLayers;
 			dispose: (() => void) | null;
+			raycast: Object3D['raycast'] | null;
 			addEventListener<TEventKey extends keyof NgtAllObject3DEventsMap>(
 				type: TEventKey,
 				listener: (this: NgtObject3DNode<TOriginal, TConstructor>, ev: NgtAllObject3DEventsMap[TEventKey]) => any,

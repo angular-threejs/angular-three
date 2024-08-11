@@ -397,6 +397,10 @@ export class NgtRenderer implements Renderer2 {
 
 		if (rS[NgtRendererClassId.type] === 'three') {
 			if (name === SPECIAL_PROPERTIES.PARAMETERS) {
+				// NOTE: short-cut for null raycast to prevent upstream from creating a nullRaycast property
+				if ('raycast' in value && value['raycast'] === null) {
+					value['raycast'] = () => null;
+				}
 				applyProps(el, value);
 				return;
 			}
@@ -423,6 +427,11 @@ export class NgtRenderer implements Renderer2 {
 								: [value];
 				if (parent) attachThreeChild(parent, el);
 				return;
+			}
+
+			// NOTE: short-cut for null raycast to prevent upstream from creating a nullRaycast property
+			if (name === 'raycast' && value === null) {
+				value = () => null;
 			}
 
 			applyProps(el, { [name]: value });
