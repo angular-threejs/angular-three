@@ -1,5 +1,7 @@
 import { formatFiles, logger, names, readJson, readProjectConfiguration, Tree, workspaceRoot } from '@nx/devkit';
 import { prompt } from 'enquirer';
+import { readFileSync } from 'node:fs';
+import { DRACOLoader, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
 import { addSobaGenerator } from '../add-soba/generator';
 
 export interface GltfGeneratorSchema {
@@ -26,6 +28,48 @@ function buildSelector(fileName: string, prefix: string) {
 	return `${prefix}-${fileName}`;
 }
 
+function toArrayBuffer(buf: Buffer) {
+	const ab = new ArrayBuffer(buf.length);
+	const view = new Uint8Array(ab);
+	for (let i = 0; i < buf.length; ++i) view[i] = buf[i];
+	return ab;
+}
+
+let dracoLoader: DRACOLoader | null = null;
+let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
+const loader = new GLTFLoader();
+
+function load(input: string, draco: boolean | string, meshopt: boolean) {
+	if (draco) {
+		if (!dracoLoader) {
+			dracoLoader = new DRACOLoader();
+		}
+
+		dracoLoader.setDecoderPath(typeof draco === 'string' ? draco : decoderPath);
+		(loader as GLTFLoader).setDRACOLoader(dracoLoader);
+	}
+
+	if (meshopt) {
+		(loader as GLTFLoader).setMeshoptDecoder(typeof MeshoptDecoder === 'function' ? MeshoptDecoder() : MeshoptDecoder);
+	}
+
+	const data = input.startsWith('http')
+		? null
+		: (() => {
+				const fileContent = readFileSync(input);
+				return toArrayBuffer(fileContent);
+			})();
+	const operationFactory = (onLoad: (data: any) => void, onError: (error: ErrorEvent) => void) => {
+		return input.startsWith('http')
+			? loader.load.call(loader, input, onLoad, () => {}, onError)
+			: loader.parse.call(loader, data, input, onLoad, onError);
+	};
+
+	return new Promise((resolve, reject) => {
+		operationFactory(resolve, reject);
+	});
+}
+
 export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	const packageJson = readJson(tree, 'package.json');
 	const hasAngularThreeSoba =
@@ -48,7 +92,7 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 		// 	'angular-three-soba/loaders',
 		// ).then((m) => m.injectGLTF);
 		// // const injectGLTF = await import('angular-three-soba/loaders').then((m) => m.injectGLTF);
-		const injectGLTF = require('angular-three-soba/loaders').injectGLTF;
+		// const injectGLTF = require('angular-three-soba/loaders').injectGLTF;
 
 		const { gltfPath, project, console: toConsole, modelName, outputPath, draco, meshopt } = normalizeOptions(options);
 
@@ -66,13 +110,15 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 			runtimeGltfPath = gltfPath;
 		}
 
-		injectGLTF.preload(() => runtimeGltfPath, {
-			useDraco: draco,
-			useMeshOpt: meshopt,
-			onLoad: (data) => {
-				console.log('data', data);
-			},
-		});
+		await load(runtimeGltfPath, draco, meshopt);
+
+		// injectGLTF.preload(() => runtimeGltfPath, {
+		// 	useDraco: draco,
+		// 	useMeshOpt: meshopt,
+		// 	onLoad: (data) => {
+		// 		console.log('data', data);
+		// 	},
+		// });
 
 		const projectConfig = readProjectConfiguration(tree, project);
 		const modelNames = names(modelName);
