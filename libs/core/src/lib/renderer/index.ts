@@ -7,6 +7,7 @@ import {
 	getDebugNode,
 	inject,
 	makeEnvironmentProviders,
+	untracked,
 } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import { getLocalState, prepare } from '../instance';
@@ -280,6 +281,11 @@ export class NgtRenderer implements Renderer2 {
 	}
 
 	removeChild(parent: NgtRendererNode, oldChild: NgtRendererNode, isHostElement?: boolean | undefined): void {
+		if (parent === null) {
+			parent = (oldChild.__ngt_renderer__[NgtRendererClassId.parent] ||
+				untracked(() => getLocalState(oldChild)?.parent)) as NgtRendererNode;
+		}
+
 		const pRS = parent.__ngt_renderer__;
 		const cRS = oldChild.__ngt_renderer__;
 
