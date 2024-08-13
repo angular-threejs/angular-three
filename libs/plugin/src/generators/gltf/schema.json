@@ -1,0 +1,58 @@
+{
+	"$schema": "https://json-schema.org/schema",
+	"$id": "Gltf",
+	"title": "",
+	"type": "object",
+	"properties": {
+		"gltfPath": {
+			"type": "string",
+			"description": "",
+			"$default": {
+				"$source": "argv",
+				"index": 0
+			},
+			"x-prompt": "Where is your gltf file located?"
+		},
+    "project": {
+      "type": "string",
+      "description": "The name of the project to generate the model component for.",
+      "x-prompt": "What project would you like to generate the model component for?",
+      "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
+      "x-dropdown": "projects",
+      "x-priority": "important"
+    },
+    "console": {
+      "type": "boolean",
+      "description": "Print to console instead of writing to file",
+      "default": false
+    },
+    "modelName": {
+      "type": "string",
+      "description": "Name of the model",
+      "default": "Model"
+    },
+    "outputPath": {
+      "type": "string",
+      "description": "The output path of the generated component",
+      "alias": ["o", "output"]
+    },
+    "draco": {
+      "oneOf": [
+        {
+          "type": "boolean",
+          "description": "Use Draco compression"
+        },
+        {
+          "type": "string",
+          "description": "Use Draco compression with a specific path"
+        }
+      ]
+    },
+    "meshopt": {
+      "type": "boolean",
+      "description": "Use Meshopt compression",
+      "default": true
+    }
+	},
+	"required": ["gltfPath", "project"]
+}
