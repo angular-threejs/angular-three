@@ -10,11 +10,6 @@
 			"factory": "./src/generators/add-soba/generator",
 			"schema": "./src/generators/add-soba/schema.json",
 			"description": "Add angular-three-soba to your project"
-		},
-		"gltf": {
-			"factory": "./src/generators/gltf/generator",
-			"schema": "./src/generators/gltf/schema.json",
-			"description": "gltf generator"
 		}
 	},
 	"schematics": {
@@ -27,11 +22,6 @@
 			"factory": "./src/generators/add-soba/compat",
 			"schema": "./src/generators/add-soba/schema.json",
 			"description": "Add angular-three-soba to your project"
-		},
-    "gltf": {
-      "factory": "./src/generators/gltf/compat",
-      "schema": "./src/generators/gltf/schema.json",
-      "description": "gltf generator"
-    }
+		}
 	}
 }
