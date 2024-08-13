@@ -6,6 +6,7 @@ export const NGXTENSION_VERSION = '^4.0.0';
 export const SOBA_PEER_DEPENDENCIES = {
 	'three-stdlib': '^2.0.0',
 	'@pmndrs/vanilla': '^1.19.0',
+	'@monogrid/gainmap-js': '^3.0.0',
 	'camera-controls': '^2.8.0',
 	'hls.js': '^1.5.0',
 	maath: '^0.10.0',
