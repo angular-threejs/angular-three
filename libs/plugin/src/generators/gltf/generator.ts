@@ -1,12 +1,20 @@
-import { formatFiles, logger, names, readJson, readProjectConfiguration, Tree, workspaceRoot } from '@nx/devkit';
+import {
+	formatFiles,
+	getProjects,
+	logger,
+	names,
+	readJson,
+	readProjectConfiguration,
+	Tree,
+	workspaceRoot,
+} from '@nx/devkit';
 import { prompt } from 'enquirer';
-import { readFileSync } from 'node:fs';
-import { DRACOLoader, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
+import { join } from 'node:path';
 import { addSobaGenerator } from '../add-soba/generator';
+import { parse } from './utils';
 
 export interface GltfGeneratorSchema {
 	gltfPath: string;
-	project: string;
 	console: boolean;
 	modelName: string;
 	meshopt: boolean;
@@ -15,59 +23,17 @@ export interface GltfGeneratorSchema {
 }
 
 function normalizeOptions(options: GltfGeneratorSchema) {
-	let { gltfPath, project, console, modelName, outputPath, draco, meshopt } = options;
+	let { gltfPath, console, modelName, outputPath, draco, meshopt } = options;
 
 	if (draco == null) {
 		draco = true;
 	}
 
-	return { gltfPath, project, console, modelName, outputPath, draco, meshopt };
+	return { gltfPath, console, modelName, outputPath, draco, meshopt };
 }
 
 function buildSelector(fileName: string, prefix: string) {
 	return `${prefix}-${fileName}`;
-}
-
-function toArrayBuffer(buf: Buffer) {
-	const ab = new ArrayBuffer(buf.length);
-	const view = new Uint8Array(ab);
-	for (let i = 0; i < buf.length; ++i) view[i] = buf[i];
-	return ab;
-}
-
-let dracoLoader: DRACOLoader | null = null;
-let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
-const loader = new GLTFLoader();
-
-function load(input: string, draco: boolean | string, meshopt: boolean) {
-	if (draco) {
-		if (!dracoLoader) {
-			dracoLoader = new DRACOLoader();
-		}
-
-		dracoLoader.setDecoderPath(typeof draco === 'string' ? draco : decoderPath);
-		(loader as GLTFLoader).setDRACOLoader(dracoLoader);
-	}
-
-	if (meshopt) {
-		(loader as GLTFLoader).setMeshoptDecoder(typeof MeshoptDecoder === 'function' ? MeshoptDecoder() : MeshoptDecoder);
-	}
-
-	const data = input.startsWith('http')
-		? null
-		: (() => {
-				const fileContent = readFileSync(input);
-				return toArrayBuffer(fileContent);
-			})();
-	const operationFactory = (onLoad: (data: any) => void, onError: (error: ErrorEvent) => void) => {
-		return input.startsWith('http')
-			? loader.load.call(loader, input, onLoad, () => {}, onError)
-			: loader.parse.call(loader, data, input, onLoad, onError);
-	};
-
-	return new Promise((resolve, reject) => {
-		operationFactory(resolve, reject);
-	});
 }
 
 export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
@@ -87,14 +53,41 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 		await addSobaGenerator(tree);
 	}
 
-	try {
-		// const injectGLTF = await loadEsmModule<typeof import('angular-three-soba/loaders')>(
-		// 	'angular-three-soba/loaders',
-		// ).then((m) => m.injectGLTF);
-		// // const injectGLTF = await import('angular-three-soba/loaders').then((m) => m.injectGLTF);
-		// const injectGLTF = require('angular-three-soba/loaders').injectGLTF;
+	const projects = getProjects(tree);
+	const applicationProjects = Array.from(projects.entries()).reduce((acc, [projectName, project]) => {
+		if (project.projectType === 'application') {
+			acc.push(projectName);
+		}
+		return acc;
+	}, [] as string[]);
 
-		const { gltfPath, project, console: toConsole, modelName, outputPath, draco, meshopt } = normalizeOptions(options);
+	let { project } = await prompt<{ project: string }>({
+		type: 'select',
+		name: 'project',
+		message: 'What project would you like to generate the model component for?',
+		choices: [...applicationProjects, 'custom'],
+		required: true,
+	});
+
+	if (project === 'custom') {
+		const { projectName } = await prompt<{ projectName: string }>({
+			type: 'input',
+			name: 'projectName',
+			message: 'What is the name of the project to generate the model component for?',
+			required: true,
+		});
+		project = projectName;
+	}
+
+	const projectConfig = readProjectConfiguration(tree, project);
+
+	if (!projectConfig) {
+		logger.error(`[NGT] ${project} is not a project`);
+		return;
+	}
+
+	try {
+		const { gltfPath, console: toConsole, modelName, outputPath, draco, meshopt } = normalizeOptions(options);
 
 		let runtimeGltfPath: string;
 
@@ -102,25 +95,18 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 			const { path } = await prompt<{ path: string }>({
 				type: 'input',
 				name: 'path',
-				message: 'What is the path to the asset file to be used at runtime (with injectGLTF)?',
+				message: 'What is the path to the asset file to be used at runtime with injectGLTF?',
 				required: true,
 			});
 			runtimeGltfPath = path;
 		} else {
-			runtimeGltfPath = gltfPath;
+			runtimeGltfPath = join(workspaceRoot, gltfPath);
 		}
 
-		await load(runtimeGltfPath, draco, meshopt);
+		const data = await parse(runtimeGltfPath, draco, meshopt);
 
-		// injectGLTF.preload(() => runtimeGltfPath, {
-		// 	useDraco: draco,
-		// 	useMeshOpt: meshopt,
-		// 	onLoad: (data) => {
-		// 		console.log('data', data);
-		// 	},
-		// });
+		console.log(data);
 
-		const projectConfig = readProjectConfiguration(tree, project);
 		const modelNames = names(modelName);
 		const tmpPath = `${workspaceRoot}/tmp/ngt-gltf/${modelNames.fileName}`;
 		const output = toConsole ? tmpPath : (outputPath ?? (projectConfig.sourceRoot || `${projectConfig.root}/src`));

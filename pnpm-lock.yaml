@@ -119,6 +119,9 @@ importers:
       nice-color-palettes:
         specifier: ^3.0.0
         version: 3.0.0
+      node-three-gltf:
+        specifier: ^1.8.1
+        version: 1.8.1(encoding@0.1.13)(three@0.167.1)
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -9716,6 +9719,12 @@ packages:
   node-schedule@2.1.1:
     resolution: {integrity: sha512-OXdegQq03OmXEjt2hZP33W2YPs/E5BcFQks46+G2gAxs4gHOIVD1u7EqlYLYSKsaIpyKCK9Gbk0ta1/gjRSMRQ==}
     engines: {node: '>=6'}
+
+  node-three-gltf@1.8.1:
+    resolution: {integrity: sha512-nLKXh2gZ6/V4H4H0p+Culcbg8cb3XGZlYcRkoWlE14flEFKBPK1cn/BLTSsaEqvBvZO22qkKkirEkyiqF/xSeQ==}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    peerDependencies:
+      three: '>=0.156.0'
 
   non-layered-tidy-tree-layout@2.0.2:
     resolution: {integrity: sha512-gkXMxRzUH+PB0ax9dUN0yYF0S25BqeAYqhgMaLUFmpXLEk7Fcu8f4emJuOAY0V8kjDICxROIKsTAKsV/v355xw==}
@@ -26363,6 +26372,20 @@ snapshots:
       long-timeout: 0.1.1
       sorted-array-functions: 1.3.0
 
+  node-three-gltf@1.8.1(encoding@0.1.13)(three@0.167.1):
+    dependencies:
+      base64-js: 1.5.1
+      jsdom: 20.0.3
+      node-fetch: 2.7.0(encoding@0.1.13)
+      sharp: 0.33.4
+      three: 0.167.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - encoding
+      - supports-color
+      - utf-8-validate
+
   non-layered-tidy-tree-layout@2.0.2: {}
 
   nopt@5.0.0:
@@ -28482,7 +28505,6 @@ snapshots:
       '@img/sharp-wasm32': 0.33.4
       '@img/sharp-win32-ia32': 0.33.4
       '@img/sharp-win32-x64': 0.33.4
-    optional: true
 
   shebang-command@1.2.0:
     dependencies:

@@ -1,5 +1,4 @@
 {
-	"$schema": "https://json-schema.org/schema",
 	"$id": "Gltf",
 	"title": "",
 	"type": "object",
@@ -13,14 +12,6 @@
 			},
 			"x-prompt": "Where is your gltf file located?"
 		},
-    "project": {
-      "type": "string",
-      "description": "The name of the project to generate the model component for.",
-      "x-prompt": "What project would you like to generate the model component for?",
-      "pattern": "(?:^@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*\\/[a-zA-Z0-9-~][a-zA-Z0-9-._~]*|^[a-zA-Z][^:]*)$",
-      "x-dropdown": "projects",
-      "x-priority": "important"
-    },
     "console": {
       "type": "boolean",
       "description": "Print to console instead of writing to file",
