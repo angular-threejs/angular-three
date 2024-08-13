@@ -121,7 +121,7 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 	invalidateInstance(parent);
 }
 
-export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode, dispose?: boolean) {
+export function removeThreeChild(child: NgtInstanceNode, parent?: NgtInstanceNode, dispose?: boolean) {
 	const pLS = getLocalState(parent);
 	const cLS = getLocalState(child);
 
@@ -132,12 +132,14 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 	pLS?.remove(child, 'objects');
 	pLS?.remove(child, 'nonObjects');
 
-	if (cLS?.attach) {
-		detach(parent, child, cLS.attach);
-	} else if (is.object3D(parent) && is.object3D(child)) {
-		parent.remove(child);
-		const store = cLS?.store || pLS?.store;
-		if (store) removeInteractivity(store, child);
+	if (parent) {
+		if (cLS?.attach) {
+			detach(parent, child, cLS.attach);
+		} else if (is.object3D(parent) && is.object3D(child)) {
+			parent.remove(child);
+			const store = cLS?.store || pLS?.store;
+			if (store) removeInteractivity(store, child);
+		}
 	}
 
 	const isPrimitive = cLS?.primitive;
@@ -151,11 +153,13 @@ export function removeThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 		queueMicrotask(() => child['dispose']());
 	}
 
-	invalidateInstance(parent);
+	if (parent) {
+		invalidateInstance(parent);
+	}
 }
 
 function removeThreeRecursive(array: NgtInstanceNode[], parent: NgtInstanceNode, dispose: boolean) {
-	if (array) [...array].forEach((child) => removeThreeChild(parent, child, dispose));
+	if (array) [...array].forEach((child) => removeThreeChild(child, parent, dispose));
 }
 
 export function processThreeEvent(

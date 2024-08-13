@@ -286,6 +286,14 @@ export class NgtRenderer implements Renderer2 {
 				untracked(() => getLocalState(oldChild)?.parent)) as NgtRendererNode;
 		}
 
+		// if parent is still falsy, we don't know what to do with the parent.
+		// we'll just remove the child and destroy it
+		if (!parent) {
+			removeThreeChild(oldChild, undefined, true);
+			this.destroyInternal(oldChild, undefined);
+			return;
+		}
+
 		const pRS = parent.__ngt_renderer__;
 		const cRS = oldChild.__ngt_renderer__;
 
@@ -306,7 +314,7 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'three') {
-			removeThreeChild(parent, oldChild, true);
+			removeThreeChild(oldChild, parent, true);
 			this.destroyInternal(oldChild, parent);
 			return;
 		}
@@ -522,13 +530,13 @@ export class NgtRenderer implements Renderer2 {
 		for (const renderChild of rS[NgtRendererClassId.children] || []) {
 			if (renderChild.__ngt_renderer__?.[NgtRendererClassId.type] === 'three' && parent) {
 				if (parent.__ngt_renderer__?.[NgtRendererClassId.type] === 'three') {
-					removeThreeChild(parent, renderChild, true);
+					removeThreeChild(renderChild, parent, true);
 					continue;
 				}
 
 				const closestInstance = getClosestParentWithInstance(parent);
 				if (closestInstance) {
-					removeThreeChild(closestInstance, renderChild, true);
+					removeThreeChild(renderChild, closestInstance, true);
 				}
 			}
 			this.destroyInternal(renderChild, parent);
