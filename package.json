@@ -32,6 +32,7 @@
 		"@nx/eslint-plugin": "19.5.6",
 		"@nx/jest": "19.5.6",
 		"@nx/js": "19.5.6",
+		"@nx/node": "^19.5.7",
 		"@nx/plugin": "19.5.6",
 		"@nx/storybook": "19.5.6",
 		"@nx/vite": "19.5.6",
