@@ -6,13 +6,13 @@ import { SOBA_PEER_DEPENDENCIES } from '../version';
 const ENTRY_POINTS = {
 	abstractions: ['troika-three-text'],
 	controls: ['camera-controls', 'maath'],
-	materials: ['three-custom-shader-material', 'three-mesh-bvh'],
+	materials: ['three-custom-shader-material'],
 	staging: ['troika-three-text', '@monogrid/gainmap-js'],
 	stats: ['stats-gl'],
 };
 
 export async function addSobaGenerator(tree: Tree) {
-	const packagesToAdd = ['three-stdlib', '@pmndrs/vanilla'];
+	const packagesToAdd = ['three-stdlib', '@pmndrs/vanilla', 'three-mesh-bvh'];
 
 	const packageJson = readJson(tree, 'package.json');
 	const ngtVersion = packageJson['dependencies']['angular-three'] || packageJson['devDependencies']['angular-three'];
@@ -72,7 +72,7 @@ export async function addSobaGenerator(tree: Tree) {
 			}
 			return acc;
 		},
-		{} as Record<string, string>,
+		{ 'angular-three-soba': ngtVersion } as Record<string, string>,
 	);
 
 	// add deps to package.json

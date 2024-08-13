@@ -5,13 +5,14 @@ This module provides abstract components and patterns for building reusable and 
 | Package             | Description                                  |
 | ------------------- | -------------------------------------------- |
 | `troika-three-text` | Required for using the `NgtsText` component. |
+| `three-mesh-bvh`    | Required for `angular-three-soba/shaders`    |
 
 To install these dependencies, use one of the following commands:
 
 ```bash
-npm install troika-three-text
-# yarn add troika-three-text
-# pnpm add troika-three-text
+npm install troika-three-text three-mesh-bvh
+# yarn add troika-three-text three-mesh-bvh
+# pnpm add troika-three-text three-mesh-bvh
 ```
 
 ## TOC
