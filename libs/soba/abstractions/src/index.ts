@@ -1,3 +1,4 @@
+export * from './lib/billboard';
 export * from './lib/catmull-rom-line';
 export * from './lib/cubic-bezier-line';
 export * from './lib/edges';
