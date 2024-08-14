@@ -280,7 +280,7 @@ export class NgtRenderer implements Renderer2 {
 		this.appendChild(parent, newChild);
 	}
 
-	removeChild(parent: NgtRendererNode, oldChild: NgtRendererNode, isHostElement?: boolean | undefined): void {
+	removeChild(parent: NgtRendererNode | null, oldChild: NgtRendererNode, isHostElement?: boolean | undefined): void {
 		if (parent == null) {
 			parent = (untracked(() => getLocalState(oldChild)?.parent) ||
 				oldChild.__ngt_renderer__[NgtRendererClassId.parent]) as NgtRendererNode;
@@ -290,9 +290,14 @@ export class NgtRenderer implements Renderer2 {
 
 		// if parent is still falsy, we don't know what to do with the parent.
 		// we'll just remove the child and destroy it
-		if (parent == null && cRS?.[NgtRendererClassId.type] !== 'three') {
-			removeThreeChild(oldChild, undefined, true);
-			this.destroyInternal(oldChild, undefined);
+		if (parent == null) {
+			if (cRS) {
+				if (cRS[NgtRendererClassId.type] === 'three') {
+					removeThreeChild(oldChild, undefined, true);
+				}
+				this.destroyInternal(oldChild, undefined);
+			}
+
 			return;
 		}
 
