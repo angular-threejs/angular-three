@@ -282,7 +282,7 @@ export class NgtRenderer implements Renderer2 {
 
 	removeChild(parent: NgtRendererNode | null, oldChild: NgtRendererNode, isHostElement?: boolean | undefined): void {
 		if (parent == null) {
-			parent = (untracked(() => getLocalState(oldChild)?.parent) ||
+			parent = (untracked(() => getLocalState(oldChild)?.parent()) ||
 				oldChild.__ngt_renderer__[NgtRendererClassId.parent]) as NgtRendererNode;
 		}
 
