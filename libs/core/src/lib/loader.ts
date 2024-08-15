@@ -44,6 +44,7 @@ function load<
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
 	TLoaderConstructor extends NgtLoaderProto<TData>,
+	TReturn = NgtLoaderReturnType<TData, TLoaderConstructor>,
 >(
 	loaderConstructorFactory: (inputs: string[]) => TLoaderConstructor,
 	inputs: () => TUrl,
@@ -53,7 +54,7 @@ function load<
 		onProgress,
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
-		onLoad?: (data: TData) => void;
+		onLoad?: (data: NoInfer<TReturn>) => void;
 		onProgress?: (event: ProgressEvent) => void;
 	} = {},
 ) {
@@ -83,7 +84,7 @@ function load<
 								}
 
 								if (onLoad) {
-									onLoad(data);
+									onLoad(data as unknown as TReturn);
 								}
 
 								resolve(data);
@@ -115,7 +116,7 @@ function _injectLoader<
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
 		onProgress?: (event: ProgressEvent) => void;
-		onLoad?: (data: NoInfer<TData>) => void;
+		onLoad?: (data: NoInfer<TReturn>) => void;
 		injector?: Injector;
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
@@ -127,7 +128,11 @@ function _injectLoader<
 		> | null>(null);
 
 		afterNextRender(() => {
-			const effector = load(loaderConstructorFactory, inputs, { extensions, onProgress, onLoad });
+			const effector = load(loaderConstructorFactory, inputs, {
+				extensions,
+				onProgress,
+				onLoad: onLoad as (data: unknown) => void,
+			});
 			autoEffect(
 				() => {
 					const originalUrls = inputs();
