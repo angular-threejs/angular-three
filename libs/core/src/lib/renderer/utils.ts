@@ -68,7 +68,19 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 		const attachProp = cLS.attach;
 
 		if (typeof attachProp === 'function') {
-			const attachCleanUp = attachProp(parent, child, cLS.store);
+			let attachCleanUp: ReturnType<typeof attachProp> | undefined = undefined;
+
+			if (cLS.isRaw) {
+				if (cLS.instanceStore.get('parent') !== parent) {
+					cLS.setParent(parent);
+				}
+				// at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
+				if (child.__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
+				attachCleanUp = attachProp(parent, child.__ngt_renderer__[NgtRendererClassId.rawValue], cLS.store);
+			} else {
+				attachCleanUp = attachProp(parent, child, cLS.store);
+			}
+
 			if (attachCleanUp) cLS.previousAttach = attachCleanUp;
 		} else {
 			// we skip attach none if set explicitly
