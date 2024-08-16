@@ -1,0 +1,20 @@
+🩺 The doctor is checking the health of your Storybook..
+╭ Duplicated dependencies found ─────────────────────────────────────────────────────────────────────────╮
+│                                                                                                        │
+│   Attention: The following dependencies are duplicated which might cause unexpected behavior:          │
+│   @storybook/preview-api:                                                                              │
+│   8.2.6, 8.2.9                                                                                         │
+│                                                                                                        │
+│                                                                                                        │
+│   Please try de-duplicating these dependencies by running pnpm dedupe                                  │
+│                                                                                                        │
+│                                                                                                        │
+│   You can find more information for a given dependency by running pnpm list --depth=1 <package-name>   │
+│                                                                                                        │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+You can always recheck the health of your project by running:
+npx storybook doctor
+
+Full logs are available in /Users/nartc/code/github/angular-threejs/angular-three/doctor-storybook.log
+

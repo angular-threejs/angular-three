@@ -2,9 +2,14 @@ import type { StorybookConfig } from '@storybook/angular';
 import { resolve } from 'node:path';
 
 const config: StorybookConfig = {
-	stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
-	addons: ['@storybook/addon-essentials', 'storybook-addon-deep-controls'],
-	webpackFinal: async (config) => {
+    stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
+    addons: [
+        '@storybook/addon-essentials',
+        'storybook-addon-deep-controls',
+        '@chromatic-com/storybook'
+    ],
+
+    webpackFinal: async (config) => {
 		config.module?.rules?.push({
 			test: /\.(glsl|vs|fs|vert|frag)$/,
 			exclude: /node_modules/,
@@ -14,11 +19,15 @@ const config: StorybookConfig = {
 
 		return config;
 	},
-	staticDirs: ['./public', './public/cube'],
-	framework: {
+
+    staticDirs: ['./public', './public/cube'],
+
+    framework: {
 		name: '@storybook/angular',
 		options: {},
 	},
+
+    docs: {}
 };
 
 export default config;
