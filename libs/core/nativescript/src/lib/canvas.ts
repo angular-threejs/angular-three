@@ -2,7 +2,6 @@ import '@nativescript/canvas-three';
 
 import { DOCUMENT } from '@angular/common';
 import {
-	afterNextRender,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
@@ -16,7 +15,6 @@ import {
 	NgZone,
 	NO_ERRORS_SCHEMA,
 	output,
-	signal,
 	Type,
 	untracked,
 	viewChild,
@@ -39,7 +37,6 @@ import {
 	provideNgtRenderer,
 	provideStore,
 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Raycaster, Scene, Vector3, WebGLRenderer } from 'three';
 
 registerElement('Canvas', () => Canvas);
@@ -49,7 +46,7 @@ registerElement('Canvas', () => Canvas);
 	standalone: true,
 	template: `
 		<GridLayout>
-			<Canvas #canvas style="width: 100%; height: auto" (ready)="canvasElement.set($any($event).object)"></Canvas>
+			<Canvas #canvas style="width: 100%; height: auto" (ready)="onReady($event)"></Canvas>
 		</GridLayout>
 	`,
 	providers: [{ provide: DOCUMENT, useValue: document }, provideStore()],
@@ -97,57 +94,49 @@ export class NgtCanvasNative {
 	private glEnvironmentInjector?: EnvironmentInjector;
 	private glRef?: ComponentRef<any>;
 
-	canvasElement = signal<Canvas | null>(null);
-
 	constructor() {
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const canvas = this.canvasElement();
-				if (!canvas) return;
-
-				const dpr = makeDpr(untracked(this.dpr), window);
-				const canvasWidth = canvas.clientWidth * dpr;
-				const canvasHeight = canvas.clientHeight * dpr;
-				Object.assign(canvas, { width: canvasWidth, height: canvasHeight });
-
-				const context = canvas.getContext('webgl2');
-				const gl = new WebGLRenderer({
-					context: context as unknown as WebGLRenderingContext,
-					powerPreference: 'high-performance',
-					antialias: true,
-					alpha: true,
-					...untracked(this.gl),
-				});
-
-				this.zone.runOutsideAngular(() => {
-					this.configurator = this.initRoot(canvas as unknown as HTMLCanvasElement);
-					this.configurator.configure({
-						gl,
-						size: { width: canvasWidth, height: canvasHeight, top: 0, left: 0 },
-						shadows: untracked(this.shadows),
-						legacy: untracked(this.legacy),
-						linear: untracked(this.linear),
-						flat: untracked(this.flat),
-						orthographic: untracked(this.orthographic),
-						frameloop: untracked(this.frameloop),
-						performance: untracked(this.performance),
-						dpr: untracked(this.dpr),
-						raycaster: untracked(this.raycaster),
-						scene: untracked(this.scene),
-						camera: untracked(this.camera),
-						lookAt: untracked(this.lookAt),
-					});
-					untracked(this.noZoneRender.bind(this));
-				});
-			});
-		});
-
 		this.destroyRef.onDestroy(() => {
 			this.glRef?.destroy();
 			this.glEnvironmentInjector?.destroy();
 			this.configurator?.destroy();
+		});
+	}
+
+	onReady(event: any) {
+		const canvas = event.object;
+		const dpr = makeDpr(untracked(this.dpr), window);
+		const canvasWidth = canvas.clientWidth * dpr;
+		const canvasHeight = canvas.clientHeight * dpr;
+		Object.assign(canvas, { width: canvasWidth, height: canvasHeight });
+
+		const context = canvas.getContext('webgl2');
+		const gl = new WebGLRenderer({
+			context: context as unknown as WebGLRenderingContext,
+			powerPreference: 'high-performance',
+			antialias: true,
+			alpha: true,
+			...untracked(this.gl),
+		});
+
+		this.zone.runOutsideAngular(() => {
+			this.configurator = this.initRoot(canvas);
+			this.configurator.configure({
+				gl,
+				size: { width: canvasWidth, height: canvasHeight, top: 0, left: 0 },
+				shadows: untracked(this.shadows),
+				legacy: untracked(this.legacy),
+				linear: untracked(this.linear),
+				flat: untracked(this.flat),
+				orthographic: untracked(this.orthographic),
+				frameloop: untracked(this.frameloop),
+				performance: untracked(this.performance),
+				dpr: untracked(this.dpr),
+				raycaster: untracked(this.raycaster),
+				scene: untracked(this.scene),
+				camera: untracked(this.camera),
+				lookAt: untracked(this.lookAt),
+			});
+			untracked(this.noZoneRender.bind(this));
 		});
 	}
 
