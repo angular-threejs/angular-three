@@ -49,7 +49,7 @@ registerElement('Canvas', () => Canvas);
 	standalone: true,
 	template: `
 		<GridLayout>
-			<Canvas #canvas style="width: 100%; height: auto" (ready)="canvasElement.set($event.object)"></Canvas>
+			<Canvas #canvas style="width: 100%; height: auto" (ready)="canvasElement.set($any($event).object)"></Canvas>
 		</GridLayout>
 	`,
 	providers: [{ provide: DOCUMENT, useValue: document }, provideStore()],
