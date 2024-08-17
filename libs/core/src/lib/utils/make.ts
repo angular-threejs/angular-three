@@ -32,7 +32,7 @@ export function makeRendererInstance<TCanvas extends NgtCanvasElement>(
 	if (is.renderer(customRenderer)) return customRenderer;
 	return new WebGLRenderer({
 		powerPreference: 'high-performance',
-		canvas: canvas,
+		canvas,
 		antialias: true,
 		alpha: true,
 		...glOptions,

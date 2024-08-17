@@ -198,17 +198,12 @@ export class NgtCanvas {
 			this.store.get('events').connect?.(untracked(this.glCanvas).nativeElement);
 		}
 
-		untracked(() => {
-			this.glEnvironmentInjector = createEnvironmentInjector(
-				[provideNgtRenderer(this.store)],
-				this.environmentInjector,
-			);
-			this.glRef = untracked(this.glCanvasViewContainerRef).createComponent(untracked(this.sceneGraph), {
-				environmentInjector: this.glEnvironmentInjector,
-				injector: this.injector,
-			});
-
-			this.glRef.changeDetectorRef.detectChanges();
+		this.glEnvironmentInjector = createEnvironmentInjector([provideNgtRenderer(this.store)], this.environmentInjector);
+		this.glRef = untracked(this.glCanvasViewContainerRef).createComponent(untracked(this.sceneGraph), {
+			environmentInjector: this.glEnvironmentInjector,
+			injector: this.injector,
 		});
+
+		this.glRef.changeDetectorRef.detectChanges();
 	}
 }
