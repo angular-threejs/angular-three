@@ -14,7 +14,8 @@ export const enum NgtRendererClassId {
 	destroyed,
 	rawValue,
 	portalContainer,
-	injectorFactory,
+	debugNode,
+	debugNodeFactory,
 }
 
 export function kebabToPascal(str: string): string {

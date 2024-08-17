@@ -1,4 +1,4 @@
-import { Injector, getDebugNode } from '@angular/core';
+import { DebugNode } from '@angular/core';
 import { NgtAnyRecord } from '../types';
 import { NgtRendererClassId } from './utils';
 
@@ -9,7 +9,8 @@ export type NgtRendererState = [
 	destroyed: boolean,
 	rawValue: any,
 	portalContainer: NgtRendererNode,
-	injectorFactory: () => Injector | undefined,
+	debugNode: DebugNode | undefined,
+	debugNodeFactory: () => DebugNode | undefined,
 ];
 
 export interface NgtRendererNode {
@@ -18,7 +19,7 @@ export interface NgtRendererNode {
 }
 
 export function createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord, document: Document) {
-	const state = [type, null, [], false, undefined!, undefined!, undefined!] as NgtRendererState;
+	const state = [type, null, [], false, undefined!, undefined!, undefined!, undefined!] as NgtRendererState;
 
 	const rendererNode = Object.assign(node, { __ngt_renderer__: state });
 
@@ -28,7 +29,12 @@ export function createNode(type: NgtRendererState[NgtRendererClassId.type], node
 	// NOTE: assign injectorFactory on non-three type since
 	// rendererNode is an instance of DOM Node
 	if (state[NgtRendererClassId.type] !== 'three') {
-		state[NgtRendererClassId.injectorFactory] = () => getDebugNode(rendererNode)?.injector;
+		state[NgtRendererClassId.debugNodeFactory] = () => {
+			if (!state[NgtRendererClassId.debugNode]) {
+				state[NgtRendererClassId.debugNode] = new DebugNode(rendererNode as unknown as Node);
+			}
+			return state[NgtRendererClassId.debugNode];
+		};
 	}
 
 	return rendererNode;

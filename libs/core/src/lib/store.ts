@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import { ElementRef, InjectOptions, InjectionToken, effect, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Clock, Vector2, Vector3 } from 'three';
@@ -10,14 +9,6 @@ import { NgtSignalStore, signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
 
 function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
-	const document = inject(DOCUMENT);
-	const window = document.defaultView;
-
-	if (!window) {
-		// TODO: revisit this when we need to support multiple platforms
-		throw new Error(`[NGT] Window is not available.`);
-	}
-
 	const loop = injectLoop();
 
 	// NOTE: using Subject because we do not care about late-subscribers

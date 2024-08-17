@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import {
+	DebugNode,
 	Injectable,
 	Renderer2,
 	RendererFactory2,
 	RendererType2,
-	getDebugNode,
 	inject,
 	makeEnvironmentProviders,
 	untracked,
@@ -99,7 +99,12 @@ export class NgtRenderer implements Renderer2 {
 		if (this.isRoot) {
 			this.isRoot = false;
 			const node = createNode('three', this.rootStore.snapshot.scene, this.document);
-			node.__ngt_renderer__[NgtRendererClassId.injectorFactory] = () => getDebugNode(element)?.injector;
+			node.__ngt_renderer__[NgtRendererClassId.debugNodeFactory] = () => {
+				if (!node.__ngt_renderer__[NgtRendererClassId.debugNode]) {
+					node.__ngt_renderer__[NgtRendererClassId.debugNode] = new DebugNode(element);
+				}
+				return node.__ngt_renderer__[NgtRendererClassId.debugNode];
+			};
 			return node;
 		}
 
@@ -521,13 +526,15 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (rS[NgtRendererClassId.type] === 'comment') {
-			rS[NgtRendererClassId.injectorFactory] = null!;
+			rS[NgtRendererClassId.debugNode] = null!;
+			rS[NgtRendererClassId.debugNodeFactory] = null!;
 			delete (node as NgtAnyRecord)[SPECIAL_INTERNAL_ADD_COMMENT];
 			this.removeCommentNode(node, this.argsCommentNodes);
 		}
 
 		if (rS[NgtRendererClassId.type] === 'portal') {
-			rS[NgtRendererClassId.injectorFactory] = null!;
+			rS[NgtRendererClassId.debugNode] = null!;
+			rS[NgtRendererClassId.debugNodeFactory] = null!;
 			this.removeCommentNode(node, this.portalCommentsNodes);
 		}
 
@@ -563,7 +570,7 @@ export class NgtRenderer implements Renderer2 {
 	}
 
 	private processPortalContainer(portal: NgtRendererNode) {
-		const injector = portal.__ngt_renderer__[NgtRendererClassId.injectorFactory]?.();
+		const injector = portal.__ngt_renderer__[NgtRendererClassId.debugNodeFactory]?.()?.injector;
 		if (!injector) return;
 
 		const portalStore = injector.get(NGT_STORE, null);
@@ -608,7 +615,7 @@ export class NgtRenderer implements Renderer2 {
 				i--;
 				continue;
 			}
-			const injector = comment.__ngt_renderer__[NgtRendererClassId.injectorFactory]();
+			const injector = comment.__ngt_renderer__[NgtRendererClassId.debugNodeFactory]?.()?.injector;
 			if (!injector) {
 				i--;
 				continue;
@@ -627,41 +634,6 @@ export class NgtRenderer implements Renderer2 {
 		});
 
 		return directive;
-	}
-
-	private tryGetPortalStore() {
-		let store: NgtSignalStore<NgtState> | undefined;
-		const destroyed = [];
-		// we only care about the portal states because NgtStore only differs per Portal
-		let i = this.portalCommentsNodes.length - 1;
-		while (i >= 0) {
-			// loop through the portal state backwards to find the closest NgtStore
-			const portal = this.portalCommentsNodes[i];
-			if (portal.__ngt_renderer__[NgtRendererClassId.destroyed]) {
-				destroyed.push(i);
-				i--;
-				continue;
-			}
-
-			const injector = portal.__ngt_renderer__[NgtRendererClassId.injectorFactory]();
-			if (!injector) {
-				i--;
-				continue;
-			}
-			const instance = injector.get(NGT_STORE, null);
-			// only the instance with previousRoot should pass
-			if (instance && instance.get('previousRoot')) {
-				store = instance;
-				break;
-			}
-			i--;
-		}
-
-		destroyed.forEach((index) => {
-			this.portalCommentsNodes.splice(index, 1);
-		});
-
-		return store || this.rootStore;
 	}
 
 	createText = this.delegate.createText.bind(this.delegate);
