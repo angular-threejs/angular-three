@@ -62,6 +62,9 @@ importers:
       '@monogrid/gainmap-js':
         specifier: ^3.0.5
         version: 3.0.5(three@0.167.1)
+      '@nativescript/angular':
+        specifier: ^18.1.1
+        version: 18.1.1
       '@nativescript/canvas':
         specifier: 2.0.0-webgpu.11
         version: 2.0.0-webgpu.11
@@ -2837,6 +2840,9 @@ packages:
   '@napi-rs/wasm-runtime@0.2.4':
     resolution: {integrity: sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ==}
 
+  '@nativescript/angular@18.1.1':
+    resolution: {integrity: sha512-ed2+Go2gtHiaO9pzdZKK+uae05vihGK0oVMg1e/GMLklyjPyq/dmT1V0Qixxy/Pox6dWwbpsZlMfKcvq+iOJSA==}
+
   '@nativescript/canvas-media@2.0.0-webgpu.11':
     resolution: {integrity: sha512-Hdmv9Qh3SW4mEYTpVEk04O25648td9ga9ZTpy4qydG8qSgIE3mq6Ha8MjzeZELf8MzQrN+FcRws3gzB1Ey2EnQ==}
 
@@ -2851,6 +2857,9 @@ packages:
 
   '@nativescript/canvas@2.0.0-webgpu.11':
     resolution: {integrity: sha512-Js8444eCqlJ2rOfK6lQM8DH/RDvCWEWC7zL0e2lKqSyaMI6lQFKhKmH/YDRZI09YE/ZpoESeBgZ3VGrNep1Y4g==}
+
+  '@nativescript/zone-js@3.0.4':
+    resolution: {integrity: sha512-HfySfQc05COJirClGnkM/VYTqutAob+7OL4H++V3fQrLHR8/cu3aB1E4+CCIKvZKaDIJpRWxAk/RKffVMn2vOw==}
 
   '@netlify/functions@2.8.1':
     resolution: {integrity: sha512-+6wtYdoz0yE06dSa9XkP47tw5zm6g13QMeCwM3MmHx1vn8hzwFa51JtmfraprdkL7amvb7gaNM+OOhQU1h6T8A==}
@@ -16050,6 +16059,11 @@ snapshots:
       '@emnapi/runtime': 1.2.0
       '@tybys/wasm-util': 0.9.0
 
+  '@nativescript/angular@18.1.1':
+    dependencies:
+      '@nativescript/zone-js': 3.0.4
+      tslib: 2.6.3
+
   '@nativescript/canvas-media@2.0.0-webgpu.11': {}
 
   '@nativescript/canvas-polyfill@2.0.0-webgpu.11':
@@ -16073,6 +16087,8 @@ snapshots:
       three: 0.157.0
 
   '@nativescript/canvas@2.0.0-webgpu.11': {}
+
+  '@nativescript/zone-js@3.0.4': {}
 
   '@netlify/functions@2.8.1':
     dependencies:

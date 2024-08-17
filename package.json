@@ -120,6 +120,7 @@
     "@dimforge/rapier3d-compat": "^0.14.0",
     "@ionic/angular": "^7.0.0",
     "@monogrid/gainmap-js": "^3.0.5",
+    "@nativescript/angular": "^18.1.1",
     "@nativescript/canvas": "2.0.0-webgpu.11",
     "@nativescript/canvas-media": "2.0.0-webgpu.11",
     "@nativescript/canvas-three": "2.0.0-webgpu.11",
