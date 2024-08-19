@@ -1,7 +1,6 @@
-import { ElementRef, Injector, afterNextRender, computed, isSignal, signal, untracked } from '@angular/core';
+import { computed, effect, ElementRef, Injector, isSignal, signal, untracked } from '@angular/core';
 import { injectBeforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';
 
 type NgtsAnimationApi<T extends AnimationClip> = {
@@ -24,10 +23,11 @@ export function injectAnimations<TAnimation extends AnimationClip>(
 	{ injector }: { injector?: Injector } = {},
 ) {
 	return assertInjector(injectAnimations, injector, () => {
-		const autoEffect = injectAutoEffect();
-
 		const mixer = new AnimationMixer(null!);
-		injectBeforeRender(({ delta }) => mixer.update(delta));
+		injectBeforeRender(({ delta }) => {
+			if (!mixer.getRoot()) return;
+			mixer.update(delta);
+		});
 
 		let cached = {} as Record<string, AnimationAction>;
 		const actions = {} as NgtsAnimationApi<TAnimation>['actions'];
@@ -44,51 +44,51 @@ export function injectAnimations<TAnimation extends AnimationClip>(
 
 		const ready = signal(false);
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const obj = actualObject() as Object3D | undefined;
-				if (!obj) return;
-				Object.assign(mixer, { _root: obj });
+		effect((onCleanup) => {
+			const obj = actualObject() as Object3D | undefined;
+			if (!obj) return;
+			Object.assign(mixer, { _root: obj });
 
-				const maybeAnimationClips = animations();
-				if (!maybeAnimationClips) return;
+			const maybeAnimationClips = animations();
+			if (!maybeAnimationClips) return;
 
-				const animationClips = Array.isArray(maybeAnimationClips)
-					? maybeAnimationClips
-					: maybeAnimationClips.animations;
+			const animationClips = Array.isArray(maybeAnimationClips) ? maybeAnimationClips : maybeAnimationClips.animations;
 
-				for (let i = 0; i < animationClips.length; i++) {
-					const clip = animationClips[i];
+			for (let i = 0; i < animationClips.length; i++) {
+				const clip = animationClips[i];
 
-					names.push(clip.name);
-					clips.push(clip);
+				names.push(clip.name);
+				clips.push(clip);
 
-					if (!actions[clip.name as TAnimation['name']]) {
-						Object.defineProperty(actions, clip.name, {
-							enumerable: true,
-							get: () => {
-								return cached[clip.name] || (cached[clip.name] = mixer.clipAction(clip, obj));
-							},
-						});
-					}
-				}
+				if (!actions[clip.name as TAnimation['name']]) {
+					Object.defineProperty(actions, clip.name, {
+						enumerable: true,
+						get: () => {
+							if (!cached[clip.name]) {
+								cached[clip.name] = mixer.clipAction(clip, obj);
+							}
 
-				untracked(() => {
-					if (!ready()) {
-						ready.set(true);
-					}
-				});
-
-				return () => {
-					// clear cached
-					cached = {};
-					// stop all actions
-					mixer.stopAllAction();
-					// uncache actions
-					Object.values(actions).forEach((action) => {
-						mixer.uncacheAction(action as AnimationClip, obj);
+							return cached[clip.name];
+						},
 					});
-				};
+				}
+			}
+
+			untracked(() => {
+				if (!ready()) {
+					ready.set(true);
+				}
+			});
+
+			onCleanup(() => {
+				// clear cached
+				cached = {};
+				// stop all actions
+				mixer.stopAllAction();
+				// uncache actions
+				Object.values(actions).forEach((action) => {
+					mixer.uncacheAction(action as AnimationClip, obj);
+				});
 			});
 		});
 

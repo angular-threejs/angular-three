@@ -5,9 +5,11 @@ import {
 	Directive,
 	ElementRef,
 	Signal,
+	computed,
 	effect,
 	inject,
 	input,
+	viewChild,
 } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -23,19 +25,25 @@ type BotGLTF = GLTF & {
 };
 
 @Directive({ selector: '[animations]', standalone: true })
-class BotAnimations {
+export class BotAnimations {
 	animations = input.required<NgtsAnimation>();
 	animation = input('Strut');
-	host = inject<ElementRef<Group>>(ElementRef);
-	animationsApi = injectAnimations(this.animations, this.host);
+	referenceRef = input.required<ElementRef<Bone> | undefined>();
 
 	constructor() {
+		const groupRef = inject<ElementRef<Group>>(ElementRef);
+		const host = computed(() => (this.referenceRef() ? groupRef : null));
+
+		// NOTE: the consumer controls the timing of injectAnimations. It's not afterNextRender anymore
+		//  but when the reference is resolved which in this particular case, it is the Bone mixamorigHips
+		//  that the animations are referring to.
+		const animationsApi = injectAnimations(this.animations, host);
 		effect((onCleanup) => {
-			if (this.animationsApi.ready()) {
+			if (animationsApi.ready()) {
 				const actionName = this.animation();
-				this.animationsApi.actions[actionName]?.reset().fadeIn(0.5).play();
+				animationsApi.actions[actionName]?.reset().fadeIn(0.5).play();
 				onCleanup(() => {
-					this.animationsApi.actions[actionName]?.fadeOut(0.5);
+					animationsApi.actions[actionName]?.fadeOut(0.5);
 				});
 			}
 		});
@@ -48,9 +56,9 @@ class BotAnimations {
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />
 			@if (gltf(); as gltf) {
-				<ngt-group [dispose]="null" [animations]="gltf" [animation]="animation()">
+				<ngt-group [dispose]="null" [animations]="gltf" [animation]="animation()" [referenceRef]="boneRef()">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
-						<ngt-primitive *args="[gltf.nodes.mixamorigHips]" />
+						<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
 						<ngt-skinned-mesh [geometry]="gltf.nodes.YB_Body.geometry" [skeleton]="gltf.nodes.YB_Body.skeleton">
 							<ngt-mesh-matcap-material [matcap]="matcapBody.texture()" />
 						</ngt-skinned-mesh>
@@ -74,6 +82,8 @@ class DefaultAnimationsStory {
 	gltf = injectGLTF(() => './ybot.glb') as Signal<BotGLTF | null>;
 	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
 	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
+
+	boneRef = viewChild<ElementRef<Bone>>('bone');
 }
 
 export default {
