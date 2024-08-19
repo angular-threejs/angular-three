@@ -1,5 +1,5 @@
 import { ElementRef, Injector, afterNextRender, computed, isSignal, signal, untracked } from '@angular/core';
-import { injectBeforeRender, is } from 'angular-three';
+import { injectBeforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';
@@ -15,6 +15,9 @@ export type NgtsAnimation<TAnimation extends AnimationClip = AnimationClip> =
 	| TAnimation[]
 	| { animations: TAnimation[] };
 
+/**
+ * Use afterNextRender
+ */
 export function injectAnimations<TAnimation extends AnimationClip>(
 	animations: () => NgtsAnimation<TAnimation> | undefined | null,
 	object: ElementRef<Object3D> | Object3D | (() => ElementRef<Object3D> | Object3D | undefined | null),
@@ -32,26 +35,18 @@ export function injectAnimations<TAnimation extends AnimationClip>(
 		const names = [] as NgtsAnimationApi<TAnimation>['names'];
 
 		const actualObject = computed(() => {
-			if (is.ref(object)) {
-				return object.nativeElement;
-			}
-
 			if (isSignal(object) || typeof object === 'function') {
-				const value = object();
-				if (is.ref(value)) {
-					return value.nativeElement;
-				}
-				return value;
+				return resolveRef(object());
 			}
 
-			return object;
+			return resolveRef(object);
 		});
 
 		const ready = signal(false);
 
 		afterNextRender(() => {
 			autoEffect(() => {
-				const obj = actualObject();
+				const obj = actualObject() as Object3D | undefined;
 				if (!obj) return;
 				Object.assign(mixer, { _root: obj });
 
