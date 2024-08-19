@@ -7,13 +7,13 @@ import {
 	ViewContainerRef,
 	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 	untracked,
 } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import {
 	ColorSpace,
 	DepthTexture,
@@ -58,7 +58,6 @@ export interface NgtsFBOParams {
 
 export function injectFBO(params: () => NgtsFBOParams, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectFBO, injector, () => {
-		const autoEffect = injectAutoEffect();
 		const store = injectStore();
 		const size = store.select('size');
 		const viewport = store.select('viewport');
@@ -101,12 +100,10 @@ export function injectFBO(params: () => NgtsFBOParams, { injector }: { injector?
 			return target;
 		});
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [{ samples = 0 }, _width, _height, _target] = [settings(), width(), height(), target()];
-				_target.setSize(_width, _height);
-				if (samples) _target.samples = samples;
-			});
+		effect(() => {
+			const [{ samples = 0 }, _width, _height, _target] = [settings(), width(), height(), target()];
+			_target.setSize(_width, _height);
+			if (samples) _target.samples = samples;
 		});
 
 		inject(DestroyRef).onDestroy(() => target().dispose());
@@ -119,19 +116,24 @@ export function injectFBO(params: () => NgtsFBOParams, { injector }: { injector?
 export class NgtsFBO {
 	fbo = input({} as { width: NgtsFBOParams['width']; height: NgtsFBOParams['height'] } & FBOSettings);
 
-	template = inject(TemplateRef);
-	viewContainerRef = inject(ViewContainerRef);
-
-	fboTarget = injectFBO(() => {
-		const { width, height, ...settings } = this.fbo();
-		return { width, height, settings };
-	});
+	private template = inject(TemplateRef);
+	private viewContainerRef = inject(ViewContainerRef);
 
 	constructor() {
 		let ref: EmbeddedViewRef<{ $implicit: ReturnType<typeof injectFBO> }>;
+		const injector = inject(Injector);
+
 		afterNextRender(() => {
+			const fboTarget = injectFBO(
+				() => {
+					const { width, height, ...settings } = this.fbo();
+					return { width, height, settings };
+				},
+				{ injector },
+			);
+
 			untracked(() => {
-				ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: this.fboTarget });
+				ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });
 				ref.detectChanges();
 			});
 		});

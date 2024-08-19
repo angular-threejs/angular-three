@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, injectObjectEvents, omit, pick } from 'angular-three';
+import { injectBeforeRender, NgtObjectEvents, omit, pick } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsInstance, NgtsInstances } from 'angular-three-soba/performances';
@@ -30,12 +30,17 @@ type Data = (typeof data)[number];
 	standalone: true,
 	template: `
 		<ngt-group [parameters]="parameters()">
-			<ngts-instance />
+			<ngts-instance
+				#instance
+				[ngtObjectEvents]="instance.positionMeshRef()"
+				(pointerover)="$event.stopPropagation(); this.hovered = true"
+				(pointerout)="this.hovered = false"
+			/>
 		</ngt-group>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsInstance],
+	imports: [NgtsInstance, NgtObjectEvents],
 })
 class Shoe {
 	data = input.required<Data>();
@@ -51,16 +56,6 @@ class Shoe {
 	hovered = false;
 
 	constructor() {
-		injectObjectEvents(() => this.instance().positionMeshRef(), {
-			pointerover: (event) => {
-				event.stopPropagation();
-				this.hovered = true;
-			},
-			pointerout: () => {
-				this.hovered = false;
-			},
-		});
-
 		const color = new Color();
 
 		injectBeforeRender(({ clock }) => {

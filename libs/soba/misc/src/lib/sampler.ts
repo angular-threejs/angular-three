@@ -3,7 +3,9 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
+	inject,
 	Injector,
 	input,
 	signal,
@@ -69,75 +71,71 @@ export function injectSurfaceSampler(
 			})(),
 		);
 
-		const autoEffect = injectAutoEffect();
+		effect(
+			() => {
+				const currentMesh = resolveRef(mesh());
+				if (!currentMesh) return;
 
-		afterNextRender(() => {
-			autoEffect(
-				() => {
-					const currentMesh = resolveRef(mesh());
-					if (!currentMesh) return;
+				const localState = getLocalState(currentMesh);
+				if (!localState) return;
 
-					const localState = getLocalState(currentMesh);
-					if (!localState) return;
+				const nonObjects = localState.nonObjects();
+				if (
+					!nonObjects ||
+					!nonObjects.length ||
+					nonObjects.every((nonObject) => !(nonObject as BufferGeometry).isBufferGeometry)
+				) {
+					return;
+				}
 
-					const nonObjects = localState.nonObjects();
-					if (
-						!nonObjects ||
-						!nonObjects.length ||
-						nonObjects.every((nonObject) => !(nonObject as BufferGeometry).isBufferGeometry)
-					) {
-						return;
+				const sampler = new MeshSurfaceSampler(currentMesh);
+
+				const { weight, count = 16, transform, instanceMesh } = options();
+
+				if (weight) {
+					sampler.setWeightAttribute(weight);
+				}
+
+				sampler.build();
+
+				const position = new Vector3();
+				const normal = new Vector3();
+				const color = new Color();
+				const dummy = new Object3D();
+				const instance = resolveRef(instanceMesh);
+
+				currentMesh.updateMatrixWorld(true);
+
+				for (let i = 0; i < count; i++) {
+					sampler.sample(position, normal, color);
+
+					if (typeof transform === 'function') {
+						transform({ dummy, sampledMesh: currentMesh, position, normal, color }, i);
+					} else {
+						dummy.position.copy(position);
 					}
 
-					const sampler = new MeshSurfaceSampler(currentMesh);
-
-					const { weight, count = 16, transform, instanceMesh } = options();
-
-					if (weight) {
-						sampler.setWeightAttribute(weight);
-					}
-
-					sampler.build();
-
-					const position = new Vector3();
-					const normal = new Vector3();
-					const color = new Color();
-					const dummy = new Object3D();
-					const instance = resolveRef(instanceMesh);
-
-					currentMesh.updateMatrixWorld(true);
-
-					for (let i = 0; i < count; i++) {
-						sampler.sample(position, normal, color);
-
-						if (typeof transform === 'function') {
-							transform({ dummy, sampledMesh: currentMesh, position, normal, color }, i);
-						} else {
-							dummy.position.copy(position);
-						}
-
-						dummy.updateMatrix();
-
-						if (instance) {
-							instance.setMatrixAt(i, dummy.matrix);
-						}
-
-						dummy.matrix.toArray(untracked(buffer).array, i * 16);
-					}
+					dummy.updateMatrix();
 
 					if (instance) {
-						checkUpdate(instance.instanceMatrix);
+						instance.setMatrixAt(i, dummy.matrix);
 					}
 
-					checkUpdate(buffer);
+					dummy.matrix.toArray(untracked(buffer).array, i * 16);
+				}
 
-					buffer.set(
-						new InstancedBufferAttribute(untracked(buffer).array, untracked(buffer).itemSize).copy(untracked(buffer)),
-					);
-				},
-				{ allowSignalWrites: true },
-			);
-		});
+				if (instance) {
+					checkUpdate(instance.instanceMatrix);
+				}
+
+				checkUpdate(buffer);
+
+				buffer.set(
+					new InstancedBufferAttribute(untracked(buffer).array, untracked(buffer).itemSize).copy(untracked(buffer)),
+				);
+			},
+			{ allowSignalWrites: true },
+		);
 
 		return buffer.asReadonly();
 	});
@@ -192,6 +190,7 @@ export class NgtsSampler {
 	constructor() {
 		extend({ Group });
 		const autoEffect = injectAutoEffect();
+		const injector = inject(Injector);
 
 		afterNextRender(() => {
 			autoEffect(
@@ -212,13 +211,17 @@ export class NgtsSampler {
 				},
 				{ allowSignalWrites: true },
 			);
-		});
 
-		injectSurfaceSampler(this.meshToSample, () => ({
-			count: this.options().count,
-			transform: this.options().transform,
-			weight: this.options().weight,
-			instanceMesh: this.instancedToSample(),
-		}));
+			injectSurfaceSampler(
+				this.meshToSample,
+				() => ({
+					count: this.options().count,
+					transform: this.options().transform,
+					weight: this.options().weight,
+					instanceMesh: this.instancedToSample(),
+				}),
+				{ injector },
+			);
+		});
 	}
 }
