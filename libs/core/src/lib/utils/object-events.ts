@@ -2,6 +2,7 @@ import {
 	afterNextRender,
 	DestroyRef,
 	Directive,
+	effect,
 	ElementRef,
 	inject,
 	Injector,
@@ -10,10 +11,8 @@ import {
 	Renderer2,
 } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Object3D } from 'three';
-import { supportedEvents } from '../dom/events';
-import { NgtDomEvent, NgtThreeEvent } from '../types';
+import { NgtEventHandlers, NgtThreeEvent } from '../types';
 import { resolveRef } from './resolve-ref';
 
 @Directive({ standalone: true, selector: '[ngtObjectEvents]' })
@@ -42,23 +41,27 @@ export class NgtObjectEvents {
 			injectObjectEvents(
 				this.ngtObjectEvents,
 				{
-					click: (event) => this.click.emit(event),
-					dblclick: (event) => this.dblclick.emit(event),
-					contextmenu: (event) => this.contextmenu.emit(event),
-					pointerup: (event) => this.pointerup.emit(event as NgtThreeEvent<PointerEvent>),
-					pointerdown: (event) => this.pointerdown.emit(event as NgtThreeEvent<PointerEvent>),
-					pointerover: (event) => this.pointerover.emit(event as NgtThreeEvent<PointerEvent>),
-					pointerout: (event) => this.pointerout.emit(event as NgtThreeEvent<PointerEvent>),
-					pointerenter: (event) => this.pointerenter.emit(event as NgtThreeEvent<PointerEvent>),
-					pointerleave: (event) => this.pointerleave.emit(event as NgtThreeEvent<PointerEvent>),
-					pointermove: (event) => this.pointermove.emit(event as NgtThreeEvent<PointerEvent>),
-					pointermissed: (event) => this.pointermissed.emit(event),
-					pointercancel: (event) => this.pointercancel.emit(event as NgtThreeEvent<PointerEvent>),
-					wheel: (event) => this.wheel.emit(event as NgtThreeEvent<WheelEvent>),
+					click: this.emitEvent('click'),
+					dblclick: this.emitEvent('dblclick'),
+					contextmenu: this.emitEvent('contextmenu'),
+					pointerup: this.emitEvent('pointerup'),
+					pointerdown: this.emitEvent('pointerdown'),
+					pointerover: this.emitEvent('pointerover'),
+					pointerout: this.emitEvent('pointerout'),
+					pointerenter: this.emitEvent('pointerenter'),
+					pointerleave: this.emitEvent('pointerleave'),
+					pointermove: this.emitEvent('pointermove'),
+					pointermissed: this.emitEvent('pointermissed'),
+					pointercancel: this.emitEvent('pointercancel'),
+					wheel: this.emitEvent('wheel'),
 				},
 				{ injector },
 			);
 		});
+	}
+
+	private emitEvent<TEvent extends keyof NgtEventHandlers>(eventName: TEvent) {
+		return this[eventName].emit.bind(this[eventName]) as NgtEventHandlers[TEvent];
 	}
 }
 
@@ -84,29 +87,25 @@ export const NgtObjectEventsHostDirective = {
 
 export function injectObjectEvents(
 	target: () => ElementRef<Object3D> | Object3D | null | undefined,
-	events: {
-		[K in (typeof supportedEvents)[number]]?: (event: NgtThreeEvent<NgtDomEvent>) => void;
-	},
+	events: NgtEventHandlers,
 	{ injector }: { injector?: Injector } = {},
 ) {
 	return assertInjector(injectObjectEvents, injector, () => {
-		const autoEffect = injectAutoEffect();
 		const renderer = inject(Renderer2);
 
 		const cleanUps: Array<() => void> = [];
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const targetRef = resolveRef(target());
-				if (!targetRef) return;
+		effect((onCleanup) => {
+			const targetRef = resolveRef(target());
 
-				Object.entries(events).forEach(([eventName, eventHandler]) => {
-					cleanUps.push(renderer.listen(targetRef, eventName, eventHandler));
-				});
+			if (!targetRef) return;
 
-				return () => {
-					cleanUps.forEach((cleanUp) => cleanUp());
-				};
+			Object.entries(events).forEach(([eventName, eventHandler]) => {
+				cleanUps.push(renderer.listen(targetRef, eventName, eventHandler));
+			});
+
+			onCleanup(() => {
+				cleanUps.forEach((cleanUp) => cleanUp());
 			});
 		});
 
