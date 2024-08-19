@@ -111,12 +111,14 @@ export class NgtCanvasNative {
 
 		const context = canvas.getContext('webgl2');
 		const gl = new WebGLRenderer({
+			canvas,
 			context: context as unknown as WebGLRenderingContext,
 			powerPreference: 'high-performance',
 			antialias: true,
 			alpha: true,
 			...untracked(this.gl),
 		});
+		gl.setSize(canvasWidth, canvasHeight);
 
 		this.zone.runOutsideAngular(() => {
 			this.configurator = this.initRoot(canvas);
