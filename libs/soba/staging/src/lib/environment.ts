@@ -11,6 +11,7 @@ import {
 	afterNextRender,
 	computed,
 	contentChild,
+	effect,
 	inject,
 	input,
 	output,
@@ -165,6 +166,7 @@ export function injectEnvironment(
 							: firstEntry.startsWith('data:image/jpeg')
 								? 'jpg'
 								: firstEntry.split('.').pop()?.split('?')?.shift()?.toLowerCase();
+
 			return { multiFile, extension, isCubeMap };
 		});
 
@@ -190,74 +192,79 @@ export function injectEnvironment(
 			return loader as typeof Loader;
 		});
 
-		const assertedInjector = inject(Injector);
-		const autoEffect = injectAutoEffect();
 		const store = injectStore();
 		const gl = store.select('gl');
 
 		const texture = signal<Texture | CubeTexture | null>(null);
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [{ extension, multiFile }, _files] = [untracked(resultOptions), files()];
 
-				if (extension !== 'webp' && extension !== 'jpg' && extension !== 'jpeg') return;
+		effect(() => {
+			const [{ extension, multiFile }, _files] = [untracked(resultOptions), files()];
 
-				gl().domElement.addEventListener(
-					'webglcontextlost',
-					() => {
-						// @ts-expect-error - files is correctly passed
-						injectLoader.clear(multiFile ? [_files] : _files);
-					},
-					{ once: true },
-				);
-			});
+			if (extension !== 'webp' && extension !== 'jpg' && extension !== 'jpeg') return;
 
-			const result = injectLoader(
-				loader,
-				// @ts-expect-error - ensure the files is an array
+			gl().domElement.addEventListener(
+				'webglcontextlost',
 				() => {
-					const { files } = adjustedOptions();
-					return Array.isArray(files) ? [files] : files;
+					// @ts-expect-error - files is correctly passed
+					injectLoader.clear(multiFile ? [_files] : _files);
 				},
-				{
-					injector: assertedInjector,
-					extensions: (loader) => {
-						const { extensions, path } = adjustedOptions();
-						const { extension } = resultOptions();
-						if (extension === 'webp' || extension === 'jpg' || extension === 'jpeg') {
-							// @ts-expect-error - Gainmap requires a renderer
-							loader.setRenderer(gl());
-						}
-
-						loader.setPath?.(path);
-						if (extensions) extensions(loader);
-					},
-				},
+				{ once: true },
 			);
+		});
 
-			autoEffect(() => {
-				const loaderResult = result();
-				if (!loaderResult) return;
-
-				untracked(() => {
-					const { multiFile, extension, isCubeMap } = resultOptions();
-					const { encoding } = adjustedOptions();
-
-					// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
-					let textureResult = (multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
-
-					if (extension === 'jpg' || extension === 'jpeg' || extension === 'webp') {
-						textureResult = (textureResult as any).renderTarget?.texture;
+		const result = injectLoader(
+			loader,
+			// @ts-expect-error - ensure the files is an array
+			() => {
+				const { files } = adjustedOptions();
+				return Array.isArray(files) ? [files] : files;
+			},
+			{
+				extensions: (loader) => {
+					const { extensions, path } = adjustedOptions();
+					const { extension } = resultOptions();
+					if (extension === 'webp' || extension === 'jpg' || extension === 'jpeg') {
+						// @ts-expect-error - Gainmap requires a renderer
+						loader.setRenderer(gl());
 					}
 
-					textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
+					loader.setPath?.(path);
+					if (extensions) extensions(loader);
+				},
+			},
+		);
 
-					if ('colorSpace' in textureResult)
-						(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
-					else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
+		effect(() => {
+			const loaderResult = result();
+			if (!loaderResult) return;
 
-					texture.set(textureResult);
-				});
+			untracked(() => {
+				const { multiFile, extension, isCubeMap } = resultOptions();
+				const { encoding } = adjustedOptions();
+
+				// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
+				let textureResult = (multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
+
+				// NOTE: racing condition, we can skip this
+				//  we just said above that if multiFile is false, it is a single Texture
+				if (!multiFile && Array.isArray(textureResult) && textureResult[0] instanceof CubeTexture) {
+					return;
+				}
+
+				if (
+					!(textureResult instanceof CubeTexture) &&
+					(extension === 'jpg' || extension === 'jpeg' || extension === 'webp')
+				) {
+					textureResult = (textureResult as any).renderTarget?.texture;
+				}
+
+				textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
+
+				if ('colorSpace' in textureResult)
+					(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
+				else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
+
+				texture.set(textureResult);
 			});
 		});
 
@@ -295,11 +302,11 @@ export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 	envSet = output<void>();
 
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	defaultScene = this.store.select('scene');
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private defaultScene = this.store.select('scene');
 
-	envConfig = computed(() => {
+	private envConfig = computed(() => {
 		const {
 			background = false,
 			scene,
@@ -323,7 +330,7 @@ export class NgtsEnvironmentMap {
 		};
 	});
 
-	map = pick(this.options, 'map');
+	private map = pick(this.options, 'map');
 
 	constructor() {
 		afterNextRender(() => {
@@ -344,11 +351,12 @@ export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 	envSet = output<void>();
 
-	autoEffect = injectAutoEffect();
-	store = injectStore();
-	defaultScene = this.store.select('scene');
+	private autoEffect = injectAutoEffect();
+	private store = injectStore();
+	private defaultScene = this.store.select('scene');
+	private injector = inject(Injector);
 
-	envConfig = computed(() => {
+	private envConfig = computed(() => {
 		const {
 			background = false,
 			scene,
@@ -372,16 +380,12 @@ export class NgtsEnvironmentCube {
 		};
 	});
 
-	environmentOptions = computed(() => {
-		const { encoding, preset, files, path, extensions } = this.options();
-		return { encoding, preset, files, path, extensions };
-	});
-	texture = injectEnvironment(this.environmentOptions);
-
 	constructor() {
 		afterNextRender(() => {
+			const _texture = injectEnvironment(this.options, { injector: this.injector });
+
 			this.autoEffect(() => {
-				const texture = this.texture();
+				const texture = _texture();
 				if (!texture) return;
 				const { background = false, scene, ...config } = this.envConfig();
 				const cleanup = setEnvProps(background, scene, this.defaultScene(), texture, config);
@@ -553,21 +557,35 @@ export class NgtsEnvironmentGround {
 	options = input({} as NgtsEnvironmentOptions);
 	envSet = output<void>();
 
-	private defaultTexture = injectEnvironment(this.options);
-	private texture = computed(() => this.options().map || this.defaultTexture());
+	args = signal<[Texture | null]>([null]);
 
-	args = computed(() => [this.texture()]);
 	height = computed(() => (this.options().ground as any)?.height);
 	radius = computed(() => (this.options().ground as any)?.radius);
 	scale = computed(() => (this.options().ground as any)?.scale ?? 1000);
 
 	envMapOptions = computed(() => {
 		const { map: _, ...options } = this.options();
-		return Object.assign(options, { map: this.texture() }) as NgtsEnvironmentOptions;
+		const [map] = this.args();
+		return Object.assign(options, { map }) as NgtsEnvironmentOptions;
 	});
 
 	constructor() {
 		extend({ GroundProjectedEnv });
+
+		const injector = inject(Injector);
+		const autoEffect = injectAutoEffect();
+
+		afterNextRender(() => {
+			const defaultTexture = injectEnvironment(this.options, { injector });
+			const texture = computed(() => this.options().map || defaultTexture());
+
+			autoEffect(
+				() => {
+					this.args.set([texture()]);
+				},
+				{ allowSignalWrites: true },
+			);
+		});
 	}
 }
 

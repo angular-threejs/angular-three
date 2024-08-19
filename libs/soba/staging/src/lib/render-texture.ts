@@ -198,7 +198,7 @@ export class NgtsRenderTexture {
 	eventPriority = pick(this.options, 'eventPriority');
 	compute = computed(() => this.options().compute || this.uvCompute);
 
-	uvCompute: NgtComputeFunction = (event, root, previous) => {
+	private uvCompute: NgtComputeFunction = (event, root, previous) => {
 		const fbo = this.fbo();
 		if (!fbo) return;
 		const state = root.snapshot;

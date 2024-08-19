@@ -4,14 +4,17 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	inject,
+	Injector,
 	input,
 	viewChild,
 } from '@angular/core';
 import { extend, injectBeforeRender, injectStore, NgtArgs, NgtSpotLight, omit, pick } from 'angular-three';
 import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { SpotLightMaterial } from 'angular-three-soba/vanilla-exports';
+import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -151,14 +154,13 @@ function injectSpotLightCommon(
 	width: () => number,
 	height: () => number,
 	distance: () => number,
+	injector?: Injector,
 ) {
-	const pos = new Vector3();
-	const dir = new Vector3();
+	assertInjector(injectSpotLightCommon, injector, () => {
+		const pos = new Vector3();
+		const dir = new Vector3();
 
-	const autoEffect = injectAutoEffect();
-
-	afterNextRender(() => {
-		autoEffect(() => {
+		effect(() => {
 			const [_spotLight, _width, _height] = [spotLight()?.nativeElement, width(), height()];
 			if (!_spotLight) return;
 			if (isSpotLight(_spotLight)) {
@@ -171,22 +173,22 @@ function injectSpotLightCommon(
 				throw new Error('NgtsSpotLightShadow must be a child of a NgtsSpotLight');
 			}
 		});
-	});
 
-	injectBeforeRender(() => {
-		const [_spotLight, _mesh] = [spotLight()?.nativeElement, mesh()?.nativeElement];
-		if (!_spotLight || !_mesh) return;
+		injectBeforeRender(() => {
+			const [_spotLight, _mesh] = [spotLight()?.nativeElement, mesh()?.nativeElement];
+			if (!_spotLight || !_mesh) return;
 
-		const A = _spotLight.position;
-		const B = _spotLight.target.position;
+			const A = _spotLight.position;
+			const B = _spotLight.target.position;
 
-		dir.copy(B).sub(A);
-		const len = dir.length();
-		dir.normalize().multiplyScalar(len * distance());
-		pos.copy(A).add(dir);
+			dir.copy(B).sub(A);
+			const len = dir.length();
+			dir.normalize().multiplyScalar(len * distance());
+			pos.copy(A).add(dir);
 
-		_mesh.position.copy(pos);
-		_mesh.lookAt(_spotLight.target.position);
+			_mesh.position.copy(pos);
+			_mesh.lookAt(_spotLight.target.position);
+		});
 	});
 }
 
@@ -286,10 +288,11 @@ export class NgtsSpotLightShadowShader {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
 		const autoEffect = injectAutoEffect();
-
-		injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance);
+		const injector = inject(Injector);
 
 		afterNextRender(() => {
+			injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance, injector);
+
 			autoEffect(() => {
 				this.uniforms.uShadowMap.value = this.map();
 			});
@@ -366,7 +369,11 @@ export class NgtsSpotLightShadowNoShader {
 
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
-		injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance);
+
+		const injector = inject(Injector);
+		afterNextRender(() => {
+			injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance, injector);
+		});
 	}
 }
 

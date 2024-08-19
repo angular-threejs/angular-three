@@ -8,6 +8,7 @@ import {
 	ViewContainerRef,
 	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 	output,
@@ -16,7 +17,6 @@ import {
 } from '@angular/core';
 import { injectTexture } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { RepeatWrapping, Texture, Vector2 } from 'three';
 
 const NORMAL_ROOT = 'https://rawcdn.githack.com/pmndrs/drei-assets/7a3104997e1576f83472829815b00880d88b32fb';
@@ -37,8 +37,6 @@ export function injectNormalTexture(
 	}: { settings?: () => NgtsNormalTextureSettings; onLoad?: (texture: Texture[]) => void; injector?: Injector },
 ) {
 	return assertInjector(injectNormalTexture, injector, () => {
-		const autoEffect = injectAutoEffect();
-
 		const normalList = signal<Record<string, string>>({});
 
 		fetch(LIST_URL)
@@ -68,17 +66,15 @@ export function injectNormalTexture(
 
 		const normalTexture = injectTexture(url, { onLoad });
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const texture = normalTexture();
-				if (!texture) return;
+		effect(() => {
+			const texture = normalTexture();
+			if (!texture) return;
 
-				const { anisotropy = 1, repeat = [1, 1], offset = [0, 0] } = settings();
-				texture.wrapS = texture.wrapT = RepeatWrapping;
-				texture.repeat = new Vector2(repeat[0], repeat[1]);
-				texture.offset = new Vector2(offset[0], offset[1]);
-				texture.anisotropy = anisotropy;
-			});
+			const { anisotropy = 1, repeat = [1, 1], offset = [0, 0] } = settings();
+			texture.wrapS = texture.wrapT = RepeatWrapping;
+			texture.repeat = new Vector2(repeat[0], repeat[1]);
+			texture.offset = new Vector2(offset[0], offset[1]);
+			texture.anisotropy = anisotropy;
 		});
 
 		return { url, texture: normalTexture, numTot };
