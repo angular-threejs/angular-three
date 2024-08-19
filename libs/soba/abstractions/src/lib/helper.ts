@@ -1,9 +1,9 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	Injector,
 	input,
@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { extend, getLocalState, injectBeforeRender, injectStore, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Object3D } from 'three';
 
 type HelperArgs<T> = T extends [infer _, ...infer R] ? R : never;
@@ -30,37 +29,34 @@ export function injectHelper<
 	}: { injector?: Injector; args?: () => HelperArgs<ConstructorParameters<TConstructor>> } = {},
 ) {
 	return assertInjector(injectHelper, injector, () => {
-		const autoEffect = injectAutoEffect();
 		const store = injectStore();
 		const scene = store.select('scene');
 
 		const helper = signal<THelperInstance | null>(null);
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				let currentHelper: THelperInstance | undefined = undefined;
-				const maybeObject3D = object();
-				if (!maybeObject3D) return;
+		effect((onCleanup) => {
+			let currentHelper: THelperInstance | undefined = undefined;
+			const maybeObject3D = object();
+			if (!maybeObject3D) return;
 
-				const object3D = resolveRef(maybeObject3D);
-				if (!object3D) return;
+			const object3D = resolveRef(maybeObject3D);
+			if (!object3D) return;
 
-				currentHelper = new (helperConstructor() as any)(object3D, ...args());
-				if (!currentHelper) return;
+			currentHelper = new (helperConstructor() as any)(object3D, ...args());
+			if (!currentHelper) return;
 
-				untracked(() => {
-					helper.set(currentHelper);
-				});
+			untracked(() => {
+				helper.set(currentHelper);
+			});
 
-				// Prevent the helpers from blocking rays
-				currentHelper.traverse((child) => (child.raycast = () => null));
-				scene().add(currentHelper);
+			// Prevent the helpers from blocking rays
+			currentHelper.traverse((child) => (child.raycast = () => null));
+			scene().add(currentHelper);
 
-				return () => {
-					helper.set(null);
-					scene().remove(currentHelper);
-					currentHelper.dispose?.();
-				};
+			onCleanup(() => {
+				helper.set(null);
+				scene().remove(currentHelper);
+				currentHelper.dispose?.();
 			});
 		});
 
