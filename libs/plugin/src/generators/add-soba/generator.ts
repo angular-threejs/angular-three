@@ -39,7 +39,6 @@ export async function addSobaGenerator(tree: Tree) {
 				value: [
 					'troika-three-text',
 					'three-custom-shader-material',
-					'three-mesh-bvh',
 					'@monogrid/gainmap-js',
 					'camera-controls',
 					'maath',
