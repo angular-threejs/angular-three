@@ -1,6 +1,5 @@
-import { Injector, Signal, afterNextRender, signal } from '@angular/core';
+import { Injector, Signal, effect, signal, untracked } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Loader, Object3D } from 'three';
 import { NgtAnyRecord } from './types';
 import { NgtObjectMap, makeObjectGraph } from './utils/make';
@@ -121,44 +120,41 @@ function _injectLoader<
 	} = {},
 ): Signal<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>> | null> {
 	return assertInjector(_injectLoader, injector, () => {
-		const autoEffect = injectAutoEffect();
 		const response = signal<NgtLoaderResults<
 			TUrl,
 			NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 		> | null>(null);
 
-		afterNextRender(() => {
-			const effector = load(loaderConstructorFactory, inputs, {
-				extensions,
-				onProgress,
-				onLoad: onLoad as (data: unknown) => void,
-			});
-			autoEffect(
-				() => {
-					const originalUrls = inputs();
-					const cachedEffect = effector();
-					if (cachedEffect === null) {
-						response.set(null);
-					} else {
-						Promise.all(cachedEffect).then((results) => {
-							response.update(() => {
-								if (Array.isArray(originalUrls)) return results;
-								if (typeof originalUrls === 'string') return results[0];
-								const keys = Object.keys(originalUrls);
-								return keys.reduce(
-									(result, key) => {
-										(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-										return result;
-									},
-									{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
-								);
-							});
-						});
-					}
-				},
-				{ allowSignalWrites: true },
-			);
+		const effector = load(loaderConstructorFactory, inputs, {
+			extensions,
+			onProgress,
+			onLoad: onLoad as (data: unknown) => void,
 		});
+		effect(
+			() => {
+				const originalUrls = inputs();
+				const cachedEffect = effector();
+				if (cachedEffect === null && untracked(response) !== null) {
+					response.set(null);
+				} else if (cachedEffect !== null) {
+					Promise.all(cachedEffect).then((results) => {
+						response.update(() => {
+							if (Array.isArray(originalUrls)) return results;
+							if (typeof originalUrls === 'string') return results[0];
+							const keys = Object.keys(originalUrls);
+							return keys.reduce(
+								(result, key) => {
+									(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+									return result;
+								},
+								{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
+							);
+						});
+					});
+				}
+			},
+			{ allowSignalWrites: true },
+		);
 
 		return response.asReadonly();
 	});
