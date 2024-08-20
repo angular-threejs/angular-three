@@ -369,9 +369,6 @@ importers:
       ng-packagr:
         specifier: 18.2.0
         version: 18.2.0(@angular/compiler-cli@18.2.0(@angular/compiler@18.2.0(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10)))(typescript@5.5.4))(tailwindcss@3.4.10(ts-node@10.9.2(@swc/core@1.7.11(@swc/helpers@0.5.12))(@types/node@20.14.12)(typescript@5.5.4)))(tslib@2.6.3)(typescript@5.5.4)
-      ngx-resize:
-        specifier: ^2.0.0
-        version: 2.0.0(@angular/common@18.2.0(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10))
       nx:
         specifier: 19.6.0
         version: 19.6.0(@swc-node/register@1.10.9(@swc/core@1.7.11(@swc/helpers@0.5.12))(@swc/types@0.1.12)(typescript@5.5.4))(@swc/core@1.7.11(@swc/helpers@0.5.12))
@@ -2852,17 +2849,23 @@ packages:
   '@nativescript/canvas-media@2.0.0-webgpu.11':
     resolution: {integrity: sha512-Hdmv9Qh3SW4mEYTpVEk04O25648td9ga9ZTpy4qydG8qSgIE3mq6Ha8MjzeZELf8MzQrN+FcRws3gzB1Ey2EnQ==}
 
-  '@nativescript/canvas-polyfill@2.0.0-webgpu.11':
-    resolution: {integrity: sha512-Zqv2IZIHV4KNNxQWkB8BtE9Nn+qZEJ6JoPLNVdn5n8k48xG6UlOGKR3co6nx5a6nOzFePBpqA6hRCrbhM2Laaw==}
+  '@nativescript/canvas-media@2.0.0-webgpu.13':
+    resolution: {integrity: sha512-tvCp0SJIuj/buonq8BHiSfeXrweMny2CHJDq4/BptAwUfLmRQKEWgzC187ml6SMqtAYPIv60WrxenfuBpRKLjg==}
 
-  '@nativescript/canvas-svg@2.0.0-webgpu.11':
-    resolution: {integrity: sha512-SYtUWDPx4py7wsCVxxbZcO+R9Zsl/FOS/GrAaonpfrSbL2DiiK4K67bNhZSN193DPRajc8doxKIaTXm3MDCUjg==}
+  '@nativescript/canvas-polyfill@2.0.0-webgpu.13':
+    resolution: {integrity: sha512-DKUHB7PYSSk/Cg/YFmZpgU8RXXsVBYdLpkvMg6I8nrqpZNDxqHSbKYftPoWfyKvsByrpd65Az/1KZOMqVDYYHA==}
+
+  '@nativescript/canvas-svg@2.0.0-webgpu.13':
+    resolution: {integrity: sha512-/Tde0KSHWwYtswfNvdKQTKdRAVjle5KD3Hk6MadjLaQ4w8tyaEd8iD+77rLRh3s8bQq0R3XlbETmCMizyU2VVg==}
 
   '@nativescript/canvas-three@2.0.0-webgpu.11':
     resolution: {integrity: sha512-v4Su0+Jqfmfgd69+J4JcVCxuuf7kj1L6ZYSFe34gzI+uftjRttMnuI0g+j7XXXwbsaiLzoML+1fApI3SNVz7ZQ==}
 
   '@nativescript/canvas@2.0.0-webgpu.11':
     resolution: {integrity: sha512-Js8444eCqlJ2rOfK6lQM8DH/RDvCWEWC7zL0e2lKqSyaMI6lQFKhKmH/YDRZI09YE/ZpoESeBgZ3VGrNep1Y4g==}
+
+  '@nativescript/canvas@2.0.0-webgpu.13':
+    resolution: {integrity: sha512-UCBzBEIz0VkVJu2ar4J8kKm7kggXJJFS0id5j/HZoIIoY4C9i7RA5p0OuNHWcYpfGkBpS8lJgomiXqjX5Qe7Hg==}
 
   '@nativescript/zone-js@3.0.4':
     resolution: {integrity: sha512-HfySfQc05COJirClGnkM/VYTqutAob+7OL4H++V3fQrLHR8/cu3aB1E4+CCIKvZKaDIJpRWxAk/RKffVMn2vOw==}
@@ -9465,12 +9468,6 @@ packages:
       tailwindcss:
         optional: true
 
-  ngx-resize@2.0.0:
-    resolution: {integrity: sha512-aXMN/KCDJyYOvNtbbzgAEiCJD+inQNqkyaQjMMW09OmxwepHmKPil9/tDQfNSdrmGq6CfYjsygH9vycXTHayyA==}
-    peerDependencies:
-      '@angular/common': ^14.0.0 || ^15.0.0 || ^16.0.0
-      '@angular/core': ^14.0.0 || ^15.0.0 || ^16.0.0
-
   ngxtension@4.0.0:
     resolution: {integrity: sha512-67hzWhQHqUWui9bOwmXast08zDGMlWR38TUhP7FAooFPETGHUCm/134dIo8BdKFTgHpy9Eux8EOkZH31NX6qnw==}
     engines: {node: '>=18'}
@@ -13433,7 +13430,7 @@ snapshots:
       '@angular-devkit/architect': 0.1802.0(chokidar@3.6.0)
       rxjs: 7.8.1
       webpack: 5.93.0(@swc/core@1.7.11(@swc/helpers@0.5.12))(esbuild@0.23.0)
-      webpack-dev-server: 5.0.4(webpack@5.93.0(@swc/core@1.7.11(@swc/helpers@0.5.12))(esbuild@0.23.0))
+      webpack-dev-server: 5.0.4(webpack@5.93.0(@swc/core@1.7.11(@swc/helpers@0.5.12))(esbuild@0.21.5))
     transitivePeerDependencies:
       - chokidar
 
@@ -16176,16 +16173,18 @@ snapshots:
 
   '@nativescript/canvas-media@2.0.0-webgpu.11': {}
 
-  '@nativescript/canvas-polyfill@2.0.0-webgpu.11':
+  '@nativescript/canvas-media@2.0.0-webgpu.13': {}
+
+  '@nativescript/canvas-polyfill@2.0.0-webgpu.13':
     dependencies:
-      '@nativescript/canvas': 2.0.0-webgpu.11
-      '@nativescript/canvas-media': 2.0.0-webgpu.11
-      '@nativescript/canvas-svg': 2.0.0-webgpu.11
+      '@nativescript/canvas': 2.0.0-webgpu.13
+      '@nativescript/canvas-media': 2.0.0-webgpu.13
+      '@nativescript/canvas-svg': 2.0.0-webgpu.13
       '@xmldom/xmldom': 0.8.10
       query-selector: 2.0.0
       set-value: 4.1.0
 
-  '@nativescript/canvas-svg@2.0.0-webgpu.11':
+  '@nativescript/canvas-svg@2.0.0-webgpu.13':
     dependencies:
       '@xmldom/xmldom': 0.8.10
       query-selector: 2.0.0
@@ -16193,10 +16192,12 @@ snapshots:
 
   '@nativescript/canvas-three@2.0.0-webgpu.11':
     dependencies:
-      '@nativescript/canvas-polyfill': 2.0.0-webgpu.11
+      '@nativescript/canvas-polyfill': 2.0.0-webgpu.13
       three: 0.157.0
 
   '@nativescript/canvas@2.0.0-webgpu.11': {}
+
+  '@nativescript/canvas@2.0.0-webgpu.13': {}
 
   '@nativescript/zone-js@3.0.4': {}
 
@@ -25526,12 +25527,6 @@ snapshots:
       tailwindcss: 3.4.10(ts-node@10.9.2(@swc/core@1.7.11(@swc/helpers@0.5.12))(@types/node@22.3.0)(typescript@5.5.4))
     optional: true
 
-  ngx-resize@2.0.0(@angular/common@18.2.0(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10)):
-    dependencies:
-      '@angular/common': 18.2.0(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1)
-      '@angular/core': 18.2.0(rxjs@7.8.1)(zone.js@0.14.10)
-      tslib: 2.6.3
-
   ngxtension@4.0.0(@angular/common@18.2.0(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.0(rxjs@7.8.1)(zone.js@0.14.10))(@swc-node/register@1.10.9(@swc/core@1.7.11(@swc/helpers@0.5.12))(@swc/types@0.1.12)(typescript@5.5.4))(@swc/core@1.7.11(@swc/helpers@0.5.12))(rxjs@7.8.1):
     dependencies:
       '@angular-eslint/bundled-angular-compiler': 18.3.0
@@ -29651,7 +29646,7 @@ snapshots:
       serve-index: 1.9.1
       sockjs: 0.3.24
       spdy: 4.0.2
-      webpack-dev-middleware: 7.3.0(webpack@5.93.0(@swc/core@1.7.11(@swc/helpers@0.5.12))(esbuild@0.23.0))
+      webpack-dev-middleware: 7.3.0(webpack@5.93.0(@swc/core@1.7.11(@swc/helpers@0.5.12))(esbuild@0.21.5))
       ws: 8.18.0
     optionalDependencies:
       webpack: 5.93.0(@swc/core@1.7.11(@swc/helpers@0.5.12))(esbuild@0.23.0)
