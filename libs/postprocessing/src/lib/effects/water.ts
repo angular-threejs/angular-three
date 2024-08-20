@@ -5,7 +5,7 @@ import { Uniform } from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
 
 const WaterShader = {
-	fragmentShader: `
+	fragmentShader: /* language=glsl glsl */ `
   uniform float factor;
   void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
     vec2 vUv = uv;

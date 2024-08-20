@@ -4,7 +4,7 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Effect } from 'postprocessing';
 import { CanvasTexture, Color, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three';
 
-const fragment = `
+const fragment = /* language=glsl glsl */ `
 uniform sampler2D uCharacters;
 uniform float uCharactersCount;
 uniform float uCellSize;

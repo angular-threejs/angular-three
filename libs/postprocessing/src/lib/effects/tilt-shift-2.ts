@@ -5,7 +5,7 @@ import { Uniform } from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
 
 const TiltShiftShader = {
-	fragmentShader: `
+	fragmentShader: /* language=glsl glsl */ `
 
     // original shader by Evan Wallace
 
