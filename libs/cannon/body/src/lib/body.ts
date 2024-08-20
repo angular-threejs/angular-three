@@ -3,8 +3,8 @@ import {
 	Injector,
 	Signal,
 	WritableSignal,
-	afterNextRender,
 	computed,
+	effect,
 	inject,
 	isSignal,
 	signal,
@@ -15,7 +15,6 @@ import { resolveRef } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DynamicDrawUsage, InstancedMesh, Object3D } from 'three';
 import { NgtcArgFn, NgtcBodyPropsMap, NgtcBodyPublicApi, NgtcGetByIndex } from './types';
 import { defaultTransformArgs, makeBodyApi, prepare, setupCollision } from './utils';
@@ -46,7 +45,6 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 			throw new Error(`[NGT Cannon] injectBody was called outside of <ngtc-physics>`);
 		}
 
-		const autoEffect = injectAutoEffect();
 		const debug = inject(NgtcDebug, { optional: true });
 
 		const transform = transformArgs ?? defaultTransformArgs[type];
@@ -61,73 +59,71 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 			return makeBodyApi(_body, worker(), rest);
 		});
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const currentWorker = physics.api.worker();
-				if (!currentWorker) return;
+		effect((onCleanup) => {
+			const currentWorker = physics.api.worker();
+			if (!currentWorker) return;
 
-				const object = body();
+			const object = body();
 
-				if (!isSignal(ref) && !object) {
-					untracked(() => {
-						(bodyRef as WritableSignal<TObject | undefined>).set(resolveRef(ref));
-					});
-					return;
-				}
-
-				if (!object) return;
-
-				const [uuid, props] = (() => {
-					let uuids: string[] = [];
-					let temp: Object3D;
-					if (object instanceof InstancedMesh) {
-						object.instanceMatrix.setUsage(DynamicDrawUsage);
-						uuids = new Array(object.count).fill(0).map((_, i) => `${object.uuid}/${i}`);
-						temp = new Object3D();
-					} else {
-						uuids = [object.uuid];
-					}
-					return [
-						uuids,
-						uuids.map((id, index) => {
-							const props = getPropFn(index);
-							if (temp) {
-								prepare(temp, props);
-								(object as unknown as InstancedMesh).setMatrixAt(index, temp.matrix);
-								(object as unknown as InstancedMesh).instanceMatrix.needsUpdate = true;
-							} else {
-								prepare(object, props);
-							}
-							physics.api.refs[id] = object;
-							debug?.add(id, props, type);
-							setupCollision(physics.api.events, props, id);
-							// @ts-expect-error - if args is undefined, there's default
-							return { ...props, args: transform(props.args) };
-						}),
-					];
-				})();
-				// Register on mount, unregister on unmount
-				currentWorker.addBodies({
-					props: props.map(({ onCollide, onCollideBegin, onCollideEnd, ...serializableProps }) => {
-						return {
-							onCollide: Boolean(onCollide),
-							onCollideBegin: Boolean(onCollideBegin),
-							onCollideEnd: Boolean(onCollideEnd),
-							...serializableProps,
-						};
-					}),
-					type,
-					uuid,
+			if (!isSignal(ref) && !object) {
+				untracked(() => {
+					(bodyRef as WritableSignal<TObject | undefined>).set(resolveRef(ref));
 				});
+				return;
+			}
 
-				return () => {
-					uuid.forEach((id) => {
-						delete physics.api.refs[id];
-						debug?.remove(id);
-						delete physics.api.events[id];
-					});
-					currentWorker.removeBodies({ uuid });
-				};
+			if (!object) return;
+
+			const [uuid, props] = (() => {
+				let uuids: string[] = [];
+				let temp: Object3D;
+				if (object instanceof InstancedMesh) {
+					object.instanceMatrix.setUsage(DynamicDrawUsage);
+					uuids = new Array(object.count).fill(0).map((_, i) => `${object.uuid}/${i}`);
+					temp = new Object3D();
+				} else {
+					uuids = [object.uuid];
+				}
+				return [
+					uuids,
+					uuids.map((id, index) => {
+						const props = getPropFn(index);
+						if (temp) {
+							prepare(temp, props);
+							(object as unknown as InstancedMesh).setMatrixAt(index, temp.matrix);
+							(object as unknown as InstancedMesh).instanceMatrix.needsUpdate = true;
+						} else {
+							prepare(object, props);
+						}
+						physics.api.refs[id] = object;
+						debug?.add(id, props, type);
+						setupCollision(physics.api.events, props, id);
+						// @ts-expect-error - if args is undefined, there's default
+						return { ...props, args: transform(props.args) };
+					}),
+				];
+			})();
+			// Register on mount, unregister on unmount
+			currentWorker.addBodies({
+				props: props.map(({ onCollide, onCollideBegin, onCollideEnd, ...serializableProps }) => {
+					return {
+						onCollide: Boolean(onCollide),
+						onCollideBegin: Boolean(onCollideBegin),
+						onCollideEnd: Boolean(onCollideEnd),
+						...serializableProps,
+					};
+				}),
+				type,
+				uuid,
+			});
+
+			onCleanup(() => {
+				uuid.forEach((id) => {
+					delete physics.api.refs[id];
+					debug?.remove(id);
+					delete physics.api.events[id];
+				});
+				currentWorker.removeBodies({ uuid });
 			});
 		});
 

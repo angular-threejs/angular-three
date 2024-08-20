@@ -3,8 +3,6 @@ import {
 	Component,
 	DestroyRef,
 	EmbeddedViewRef,
-	Injector,
-	NgZone,
 	Signal,
 	afterNextRender,
 	computed,
@@ -127,8 +125,6 @@ const defaultOptions: NgtcPhysicsInputs = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtcPhysics {
-	private zone = inject(NgZone);
-	private injector = inject(Injector);
 	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 
@@ -151,16 +147,22 @@ export class NgtcPhysics {
 
 	constructor() {
 		afterNextRender(() => {
-			this.zone.runOutsideAngular(() => {
-				this.worker.set(new CannonWorkerAPI(this.options()));
-				this.connectWorker();
-				this.updateWorkerState('axisIndex');
-				this.updateWorkerState('broadphase');
-				this.updateWorkerState('gravity');
-				this.updateWorkerState('iterations');
-				this.updateWorkerState('tolerance');
-				this.beforeRender();
-			});
+			this.worker.set(new CannonWorkerAPI(this.options()));
+			this.connectWorker();
+			this.updateWorkerState('axisIndex');
+			this.updateWorkerState('broadphase');
+			this.updateWorkerState('gravity');
+			this.updateWorkerState('iterations');
+			this.updateWorkerState('tolerance');
+		});
+
+		let timeSinceLastCalled = 0;
+		injectBeforeRender(({ delta }) => {
+			const [{ isPaused, maxSubSteps, stepSize }, worker] = [this.options(), this.worker()];
+			if (isPaused || !worker || stepSize == null) return;
+			timeSinceLastCalled += delta;
+			worker.step({ maxSubSteps, stepSize, timeSinceLastCalled });
+			timeSinceLastCalled = 0;
 		});
 
 		inject(DestroyRef).onDestroy(() => {
@@ -197,20 +199,6 @@ export class NgtcPhysics {
 			// @ts-expect-error - we know key is a valid key of CannonWorkerAPI
 			worker[key] = value;
 		});
-	}
-
-	private beforeRender() {
-		let timeSinceLastCalled = 0;
-		injectBeforeRender(
-			({ delta }) => {
-				const [{ isPaused, maxSubSteps, stepSize }, worker] = [this.options(), this.worker()];
-				if (isPaused || !worker || stepSize == null) return;
-				timeSinceLastCalled += delta;
-				worker.step({ maxSubSteps, stepSize, timeSinceLastCalled });
-				timeSinceLastCalled = 0;
-			},
-			{ injector: this.injector },
-		);
 	}
 
 	private collideHandler({ body, contact: { bi, bj, ...contactRest }, target, ...rest }: WorkerCollideEvent['data']) {

@@ -1,14 +1,4 @@
-import {
-	ElementRef,
-	Injector,
-	Signal,
-	afterNextRender,
-	computed,
-	inject,
-	isSignal,
-	signal,
-	untracked,
-} from '@angular/core';
+import { ElementRef, Injector, Signal, computed, effect, inject, isSignal, signal, untracked } from '@angular/core';
 import {
 	ConeTwistConstraintOpts,
 	ConstraintTypes,
@@ -20,7 +10,6 @@ import {
 import { makeId, resolveRef } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Object3D } from 'three';
 
 export interface NgtcConstraintApi {
@@ -83,7 +72,6 @@ function injectConstraint<
 			throw new Error(`[NGT Cannon] injectConstraint was called outside of <ngtc-physics>`);
 		}
 
-		const autoEffect = injectAutoEffect();
 		const worker = physics.api.worker;
 
 		const uuid = makeId();
@@ -114,30 +102,25 @@ function injectConstraint<
 		});
 
 		let alreadyDisabled = false;
-		afterNextRender(() => {
-			autoEffect(() => {
-				const currentWorker = worker();
-				if (!currentWorker) return;
+		effect((onCleanup) => {
+			const currentWorker = worker();
+			if (!currentWorker) return;
 
-				const [a, b] = [bodyAValue(), bodyBValue()];
+			const [a, b] = [bodyAValue(), bodyBValue()];
+			if (!a || !b) return;
 
-				if (a && b) {
-					currentWorker.addConstraint({
-						props: [a.uuid, b.uuid, options],
-						type,
-						uuid,
-					});
-
-					if (disableOnStart && !alreadyDisabled) {
-						alreadyDisabled = true;
-						untracked(api)?.disable();
-					}
-
-					return () => currentWorker.removeConstraint({ uuid });
-				}
-
-				return;
+			currentWorker.addConstraint({
+				props: [a.uuid, b.uuid, options],
+				type,
+				uuid,
 			});
+
+			if (disableOnStart && !alreadyDisabled) {
+				alreadyDisabled = true;
+				untracked(api)?.disable();
+			}
+
+			onCleanup(() => currentWorker.removeConstraint({ uuid }));
 		});
 
 		return api;
