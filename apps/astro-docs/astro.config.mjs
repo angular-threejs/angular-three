@@ -83,6 +83,7 @@ export default defineConfig({
 			social: {
 				github: 'https://github.com/angular-threejs/angular-three',
 			},
+			credits: true,
 			customCss: ['./src/tailwind.css'],
 			sidebar: [
 				{ label: 'Introduction', slug: '' },
