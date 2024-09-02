@@ -474,6 +474,9 @@ importers:
       sharp:
         specifier: ^0.32.5
         version: 0.32.6
+      starlight-blog:
+        specifier: ^0.12.0
+        version: 0.12.0(@astrojs/starlight@0.26.2(astro@4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4)))(astro@4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4))
       tailwindcss:
         specifier: ^3.4.6
         version: 3.4.10(ts-node@10.9.2(@swc/core@1.7.11(@swc/helpers@0.5.12))(@types/node@22.3.0)(typescript@5.5.4))
@@ -845,6 +848,9 @@ packages:
   '@astrojs/prism@3.1.0':
     resolution: {integrity: sha512-Z9IYjuXSArkAUx3N6xj6+Bnvx8OdUSHA8YoOgyepp3+zJmtVYJIl/I18GozdJVW1p5u/CNpl3Km7/gwTJK85cw==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0}
+
+  '@astrojs/rss@4.0.5':
+    resolution: {integrity: sha512-IyJVL6z09AQtxbgLaAwebT3T5YKe4oTHDesqydJv1KLHw+zEzzMCFuuNsEyxjiqu7df9+DDCpDXLj/WRiEUXvw==}
 
   '@astrojs/sitemap@3.1.6':
     resolution: {integrity: sha512-1Qp2NvAzVImqA6y+LubKi1DVhve/hXXgFvB0szxiipzh7BvtuKe4oJJ9dXSqaubaTkt4nMa6dv6RCCAYeB6xaQ==}
@@ -5011,6 +5017,10 @@ packages:
     peerDependencies:
       astro: ^4.0.0-beta || ^3.3.0
 
+  astro-remote@0.3.2:
+    resolution: {integrity: sha512-Xwm6Y+ldQEnDB2l1WwVqeUs3QvUX8LtJWnovpXlf8xhpicPu159jXOhDbHZS9wilGO/+/nR67A1qskF8pDvdGQ==}
+    engines: {node: '>=18.14.1'}
+
   astro@4.15.2:
     resolution: {integrity: sha512-UlkQ/cWRLabOm6eVe6oRwjVAKd47N3+d1ktKpEZ5lqQKwq5uYrXQUu3n0ftsm6SJ+01x2LlPmjRe9OfKAbGpXA==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
@@ -7036,6 +7046,10 @@ packages:
   fast-uri@3.0.1:
     resolution: {integrity: sha512-MWipKbbYiYI0UC7cl8m/i/IWTqfC8YXsqjzybjddLsFjStroQzsHXkc73JutMvBiXmOvapk+axIl79ig5t55Bw==}
 
+  fast-xml-parser@4.4.1:
+    resolution: {integrity: sha512-xkjOecfnKGkSsOwtZ5Pz7Us/T6mrbPQrq0nh+aCO5V9nk5NLWmasAHumTKjiPJPWANe+kAZ84Jc8ooJkzZ88Sw==}
+    hasBin: true
+
   fastq@1.17.1:
     resolution: {integrity: sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==}
 
@@ -8973,6 +8987,11 @@ packages:
     peerDependencies:
       react: '>= 0.14.0'
 
+  marked-footnote@1.2.4:
+    resolution: {integrity: sha512-DB2Kl+wFh6YwZd70qABMY6WUkG1UuyqoNTFoDfGyG79Pz24neYtLBkB+45a7o72V7gkfvbC3CGzIYFobxfMT1Q==}
+    peerDependencies:
+      marked: '>=7.0.0'
+
   marked-gfm-heading-id@4.1.0:
     resolution: {integrity: sha512-xRvV65Fnpq1krNspnyGsBvP0Y6h7/FrJ6U6y4e6zCWffiC1KxFFxFUKVu8ufMHop2xdvpwyWj5jPeA5W5x/6Zw==}
     peerDependencies:
@@ -8987,6 +9006,21 @@ packages:
     resolution: {integrity: sha512-vN6a7AxdxP9PHQ6xI0EN/CesMOjcjqP0+JN/0cO2zypzyiyUhev82nWxA+/9JxYQawDErq8rT3G19AM+IgpmlQ==}
     peerDependencies:
       marked: '>=4 <14'
+
+  marked-plaintify@1.0.1:
+    resolution: {integrity: sha512-KQhxtuVWf3Ij3YMiW4ArlgNOVmzOAlP0o/upsu2+h7Q4TCAwG4UvkYTteZF2sDDomXQnNSLmfyAhoR0gx2Orgw==}
+    peerDependencies:
+      marked: '>=7.0.0'
+
+  marked-smartypants@1.1.8:
+    resolution: {integrity: sha512-2n8oSjL2gSkH6M0dSdRIyLgqqky03iKQkdmoaylmIzwIhYTW204S7ry6zP2iqwSl0zSlJH2xmWgxlZ/4XB1CdQ==}
+    peerDependencies:
+      marked: '>=4 <15'
+
+  marked@12.0.2:
+    resolution: {integrity: sha512-qXUm7e/YKFoqFPYPa3Ukg9xlI5cyAtGmyEIzMfW//m6kXwCy2Ps9DYf5ioijFKQ8qyuscrHoY04iJGctu2Kg0Q==}
+    engines: {node: '>= 18'}
+    hasBin: true
 
   marked@13.0.3:
     resolution: {integrity: sha512-rqRix3/TWzE9rIoFGIn8JmsVfhiuC8VIQ8IdX5TfzmeBucdY05/0UlzKaw0eVtpcN/OdVFpBk7CjKGo9iHJ/zA==}
@@ -11475,6 +11509,10 @@ packages:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
 
+  smartypants@0.2.2:
+    resolution: {integrity: sha512-TzobUYoEft/xBtb2voRPryAUIvYguG0V7Tt3de79I1WfXgCwelqVsGuZSnu3GFGRZhXR90AeEYIM+icuB/S06Q==}
+    hasBin: true
+
   smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
@@ -11591,6 +11629,13 @@ packages:
 
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
+
+  starlight-blog@0.12.0:
+    resolution: {integrity: sha512-SSNkBQIM6RrumGQQqOv76L5Lcefm6faU2+4armlgQh2zod24aOvuCGUcFi3F//DxOWvIx3WRb7X/VRqs3yNO8A==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.24.0'
+      astro: '>=4.8.6'
 
   static-eval@2.1.1:
     resolution: {integrity: sha512-MgWpQ/ZjGieSVB3eOJVs4OA2LT/q1vx98KPCTTQPzq/aLr0YUXTsgryTXr4SLfR0ZfUUCiedM9n/ABeDIyy4mA==}
@@ -11719,6 +11764,9 @@ packages:
   strip-outer@2.0.0:
     resolution: {integrity: sha512-A21Xsm1XzUkK0qK1ZrytDUvqsQWict2Cykhvi0fBQntGG5JSprESasEyV1EZ/4CiR5WB5KjzLTrP/bO37B0wPg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  strnum@1.0.5:
+    resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
 
   strong-log-transformer@2.1.0:
     resolution: {integrity: sha512-B3Hgul+z0L9a236FAUC9iZsL+nVHgoCJnqCbN588DjYxvGXaXaaFbfmQ/JhvKjZwsOukuR72XbHv71Qkug0HxA==}
@@ -12258,6 +12306,9 @@ packages:
     resolution: {integrity: sha512-wNKHUY2hYYkf6oSFfhwwiHo4WCHzHmzcXsqXYTN9ja3iApYIFbb2U6ics9hBcYLHcYGQoAlwnZlTrf3oF+BL/Q==}
     engines: {node: '>=0.8.0'}
     hasBin: true
+
+  ultrahtml@1.5.3:
+    resolution: {integrity: sha512-GykOvZwgDWZlTQMtp5jrD4BVL+gNn2NVlVafjcFUJ7taY20tqYdwdoWBFy6GBJsNTZe1GkGPkSl5knQAjtgceg==}
 
   uncrypto@0.1.3:
     resolution: {integrity: sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==}
@@ -13915,6 +13966,11 @@ snapshots:
   '@astrojs/prism@3.1.0':
     dependencies:
       prismjs: 1.29.0
+
+  '@astrojs/rss@4.0.5':
+    dependencies:
+      fast-xml-parser: 4.4.1
+      kleur: 4.1.5
 
   '@astrojs/sitemap@3.1.6':
     dependencies:
@@ -19738,6 +19794,14 @@ snapshots:
       astro: 4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4)
       rehype-expressive-code: 0.35.6
 
+  astro-remote@0.3.2:
+    dependencies:
+      entities: 4.5.0
+      marked: 12.0.2
+      marked-footnote: 1.2.4(marked@12.0.2)
+      marked-smartypants: 1.1.8(marked@12.0.2)
+      ultrahtml: 1.5.3
+
   astro@4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4):
     dependencies:
       '@astrojs/compiler': 2.10.3
@@ -22086,6 +22150,10 @@ snapshots:
   fast-levenshtein@2.0.6: {}
 
   fast-uri@3.0.1: {}
+
+  fast-xml-parser@4.4.1:
+    dependencies:
+      strnum: 1.0.5
 
   fastq@1.17.1:
     dependencies:
@@ -24769,6 +24837,10 @@ snapshots:
     dependencies:
       react: 18.3.1
 
+  marked-footnote@1.2.4(marked@12.0.2):
+    dependencies:
+      marked: 12.0.2
+
   marked-gfm-heading-id@4.1.0(marked@13.0.3):
     dependencies:
       github-slugger: 2.0.0
@@ -24781,6 +24853,17 @@ snapshots:
   marked-mangle@1.1.8(marked@13.0.3):
     dependencies:
       marked: 13.0.3
+
+  marked-plaintify@1.0.1(marked@12.0.2):
+    dependencies:
+      marked: 12.0.2
+
+  marked-smartypants@1.1.8(marked@12.0.2):
+    dependencies:
+      marked: 12.0.2
+      smartypants: 0.2.2
+
+  marked@12.0.2: {}
 
   marked@13.0.3: {}
 
@@ -28160,6 +28243,8 @@ snapshots:
 
   smart-buffer@4.2.0: {}
 
+  smartypants@0.2.2: {}
+
   smob@1.5.0: {}
 
   sockjs@0.3.24:
@@ -28306,6 +28391,17 @@ snapshots:
   stackback@0.0.2: {}
 
   standard-as-callback@2.1.0: {}
+
+  starlight-blog@0.12.0(@astrojs/starlight@0.26.2(astro@4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4)))(astro@4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4)):
+    dependencies:
+      '@astrojs/rss': 4.0.5
+      '@astrojs/starlight': 0.26.2(astro@4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4))
+      astro: 4.15.2(@types/node@22.3.0)(less@4.2.0)(rollup@4.20.0)(sass@1.77.8)(stylus@0.59.0)(terser@5.31.6)(typescript@5.5.4)
+      astro-remote: 0.3.2
+      github-slugger: 2.0.0
+      marked: 12.0.2
+      marked-plaintify: 1.0.1(marked@12.0.2)
+      ultrahtml: 1.5.3
 
   static-eval@2.1.1:
     dependencies:
@@ -28461,6 +28557,8 @@ snapshots:
       js-tokens: 9.0.0
 
   strip-outer@2.0.0: {}
+
+  strnum@1.0.5: {}
 
   strong-log-transformer@2.1.0:
     dependencies:
@@ -29122,6 +29220,8 @@ snapshots:
 
   uglify-js@3.19.0:
     optional: true
+
+  ultrahtml@1.5.3: {}
 
   uncrypto@0.1.3: {}
 
