@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
+	input,
+	output,
+	signal,
+	Signal,
+} from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtAnyRecord, NgtArgs } from 'angular-three';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
@@ -40,6 +49,14 @@ class Suzi {
 
 	rotation = input([0, 0, 0]);
 	scale = input(1);
+	loaded = output<void>();
+
+	constructor() {
+		effect(() => {
+			const gltf = this.gltf();
+			if (gltf) this.loaded.emit();
+		});
+	}
 }
 
 @Component({
@@ -63,22 +80,24 @@ class Shadows {}
 	template: `
 		<ngt-group [position]="[0, -0.5, 0]">
 			<ngts-center [options]="{ top: true }">
-				<grid-suzi [rotation]="[-0.63, 0, 0]" [scale]="2" />
+				<grid-suzi [rotation]="[-0.63, 0, 0]" [scale]="2" (loaded)="loaded.set(true)" />
 			</ngts-center>
 
-			<ngts-center [options]="{ top: true, position: [-2, 0, 2] }">
-				<ngt-mesh [castShadow]="true">
-					<ngt-sphere-geometry *args="[0.5, 64, 64]" />
-					<ngt-mesh-standard-material color="#9d4b4b" />
-				</ngt-mesh>
-			</ngts-center>
+			@if (loaded()) {
+				<ngts-center [options]="{ top: true, position: [-2, 0, 2] }">
+					<ngt-mesh [castShadow]="true">
+						<ngt-sphere-geometry *args="[0.5, 64, 64]" />
+						<ngt-mesh-standard-material color="#9d4b4b" />
+					</ngt-mesh>
+				</ngts-center>
 
-			<ngts-center [options]="{ top: true, position: [2.5, 0, 1] }">
-				<ngt-mesh [castShadow]="true" [rotation]="[0, Math.PI / 4, 0]">
-					<ngt-box-geometry *args="[0.7, 0.7, 0.7]" />
-					<ngt-mesh-standard-material color="#9d4b4b" />
-				</ngt-mesh>
-			</ngts-center>
+				<ngts-center [options]="{ top: true, position: [2.5, 0, 1] }">
+					<ngt-mesh [castShadow]="true" [rotation]="[0, Math.PI / 4, 0]">
+						<ngt-box-geometry *args="[0.7, 0.7, 0.7]" />
+						<ngt-mesh-standard-material color="#9d4b4b" />
+					</ngt-mesh>
+				</ngts-center>
+			}
 
 			<grid-shadows />
 
@@ -108,6 +127,7 @@ class Shadows {}
 })
 class DefaultGridStory {
 	Math = Math;
+	loaded = signal(false);
 }
 
 export default {
