@@ -42,31 +42,22 @@
 			"outputs": ["{options.outputFile}"]
 		},
 		"storybook": {
-			"executor": "@storybook/angular:start-storybook",
+			"executor": "nx:run-commands",
 			"options": {
-				"port": 4400,
-				"configDir": "libs/soba/.storybook",
-				"browserTarget": "soba:build-storybook",
-				"compodoc": false
-			},
-			"configurations": {
-				"ci": {
-					"quiet": true
-				}
+				"cwd": "libs/soba",
+				"command": "storybook dev --port 4400"
 			}
 		},
 		"build-storybook": {
-			"executor": "@storybook/angular:build-storybook",
+			"executor": "nx:run-commands",
 			"outputs": ["{options.outputDir}"],
 			"options": {
-				"outputDir": "dist/storybook/soba",
-				"configDir": "libs/soba/.storybook",
-				"browserTarget": "soba:build-storybook",
-				"compodoc": false
+				"cwd": "libs/soba",
+				"command": "storybook build --output-dir ../../dist/storybook/soba"
 			},
 			"configurations": {
 				"ci": {
-					"quiet": true
+					"command": "storybook build --output-dir ../../dist/storybook/soba --quiet"
 				}
 			}
 		},
