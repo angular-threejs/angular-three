@@ -34,9 +34,18 @@ const cached = new Map();
 const memoizedLoaders = new WeakMap();
 
 function normalizeInputs(input: string | string[] | Record<string, string>) {
-	if (Array.isArray(input)) return input;
-	if (typeof input === 'string') return [input];
-	return Object.values(input);
+	let urls: string[] = [];
+	if (Array.isArray(input)) {
+		urls = input;
+	} else if (typeof input === 'string') {
+		urls = [input];
+	} else {
+		urls = Object.values(input);
+	}
+
+	return urls.map((url) => {
+		return url.includes('undefined') || url.includes('null') || !url ? '' : url;
+	});
 }
 
 function load<
@@ -60,8 +69,6 @@ function load<
 	return (): Array<Promise<any>> | null => {
 		const urls = normalizeInputs(inputs());
 
-		if (urls.some((url) => url.includes('undefined'))) return null;
-
 		let loader: Loader<TData> = memoizedLoaders.get(loaderConstructorFactory(urls));
 		if (!loader) {
 			loader = new (loaderConstructorFactory(urls))();
@@ -71,6 +78,10 @@ function load<
 		if (extensions) extensions(loader);
 		// TODO: reevaluate this
 		return urls.map((url) => {
+			if (url === '') {
+				return null;
+			}
+
 			if (!cached.has(url)) {
 				cached.set(
 					url,
