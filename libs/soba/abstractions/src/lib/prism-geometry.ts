@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs } from 'angular-three';
+import { extend, NgtArgs, NgtAttachable } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ExtrudeGeometry, ExtrudeGeometryOptions, Shape, Vector2 } from 'three';
 
@@ -25,7 +25,7 @@ const defaultOptions: NgtsPrismGeometryOptions = {
 	selector: 'ngts-prism-geometry',
 	standalone: true,
 	template: `
-		<ngt-extrude-geometry #geometry *args="[shape(), parameters()]">
+		<ngt-extrude-geometry #geometry *args="[shape(), parameters()]" [attach]="attach()">
 			<ng-content />
 		</ngt-extrude-geometry>
 	`,
@@ -34,6 +34,7 @@ const defaultOptions: NgtsPrismGeometryOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsPrismGeometry {
+	attach = input<NgtAttachable>('geometry');
 	vertices = input.required<Array<Vector2 | [number, number]>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
