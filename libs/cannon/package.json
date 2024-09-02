@@ -28,7 +28,7 @@
 		"@pmndrs/cannon-worker-api": "^2.0.0",
 		"cannon-es": ">=0.20.0 <0.21.0",
 		"cannon-es-debugger": "^1.0.0",
-		"three": ">=0.148.0 <0.168.0"
+		"three": ">=0.148.0 <0.169.0"
 	},
   "peerDependenciesMeta": {
     "cannon-es-debugger": {
@@ -36,7 +36,7 @@
     }
   },
 	"dependencies": {
-		"tslib": "^2.3.0"
+		"tslib": "^2.7.0"
 	},
 	"sideEffects": false
 }
