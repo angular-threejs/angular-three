@@ -34,12 +34,11 @@ const config: StorybookConfig & StorybookConfigVite = {
 			plugins: [angular({ jit: true, tsconfig: './.storybook/tsconfig.json' }), nxViteTsPaths()],
 		});
 	},
-
+	staticDirs: ['./public'],
 	framework: {
 		name: '@storybook/angular',
 		options: {},
 	},
-
 	docs: {},
 };
 
