@@ -10,9 +10,9 @@
 	},
 	"private": true,
 	"devDependencies": {
-		"@analogjs/platform": "^1.7.1",
-		"@analogjs/vite-plugin-angular": "^1.7.1",
-		"@analogjs/vitest-angular": "^1.7.1",
+		"@analogjs/platform": "1.8.0-beta.2",
+		"@analogjs/vite-plugin-angular": "1.8.0-beta.2",
+		"@analogjs/vitest-angular": "1.8.0-beta.2",
 		"@angular-devkit/build-angular": "18.2.0",
 		"@angular-devkit/core": "18.2.0",
 		"@angular-devkit/schematics": "18.2.0",
@@ -46,6 +46,7 @@
 		"@storybook/addon-essentials": "8.2.9",
 		"@storybook/addon-interactions": "8.2.9",
 		"@storybook/angular": "8.2.9",
+		"@storybook/builder-vite": "8.2.9",
 		"@storybook/core-server": "8.2.9",
 		"@storybook/manager-api": "^8.2.9",
 		"@storybook/test": "8.2.9",
@@ -101,8 +102,8 @@
 		"vitest-webgl-canvas-mock": "^1.1.0"
 	},
 	"dependencies": {
-		"@analogjs/content": "^1.7.1",
-		"@analogjs/router": "^1.7.1",
+		"@analogjs/content": "1.8.0-beta.2",
+		"@analogjs/router": "1.8.0-beta.2",
 		"@angular/animations": "18.2.0",
 		"@angular/common": "18.2.0",
 		"@angular/compiler": "18.2.0",
