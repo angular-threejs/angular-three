@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { Meta } from '@storybook/angular';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { extend, injectBeforeRender, NgtArgs, NgtCanvas } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
+import * as THREE from 'three';
 import { Mesh } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+
+extend(THREE);
 
 @Component({
 	standalone: true,
@@ -41,10 +42,10 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-class DefaultLightformerStory {
-	Math = Math;
+export class Experience {
+	protected readonly Math = Math;
 
-	cube = viewChild.required<ElementRef<Mesh>>('cube');
+	private cube = viewChild.required<ElementRef<Mesh>>('cube');
 
 	constructor() {
 		injectBeforeRender(({ delta }) => {
@@ -54,13 +55,15 @@ class DefaultLightformerStory {
 	}
 }
 
-export default {
-	title: 'Staging/Lightformer',
-	decorators: makeDecorators(),
-} as Meta;
-
-export const Default = makeStoryFunction(DefaultLightformerStory, {
-	controls: false,
-	lights: false,
-	background: 'ivory',
-});
+@Component({
+	standalone: true,
+	template: `
+		<ngt-canvas [sceneGraph]="scene" [camera]="{ position: [-3, 3, 3] }" />
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtCanvas],
+})
+export default class LightformerScene {
+	scene = Experience;
+}
