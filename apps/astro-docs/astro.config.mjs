@@ -2,7 +2,8 @@ import analogjsangular from '@analogjs/astro-angular';
 import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
 import { defineConfig } from 'astro/config';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import starlightBlog from 'starlight-blog';
 
 function includeContentPlugin() {
 	const map = new Map();
@@ -71,6 +72,17 @@ export default defineConfig({
 		}),
 		starlight({
 			title: 'Angular Three',
+			plugins: [
+				starlightBlog({
+					authors: {
+						chau: {
+							name: 'Chau Tran',
+							url: 'https://nartc.me',
+							picture: 'https://avatars.githubusercontent.com/u/25516557?v=4',
+						},
+					},
+				}),
+			],
 			favicon: './src/assets/angular-three-dark.svg',
 			tableOfContents: {
 				minHeadingLevel: 2,

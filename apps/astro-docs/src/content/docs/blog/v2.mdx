@@ -1,0 +1,412 @@
+---
+title: Angular Three v2 is here! ❤️
+excerpt: Angular Three v2 is here! ❤️
+date: 2024-09-02
+authors:
+  - chau
+tags:
+  - angular
+  - three
+  - release
+featured: true
+---
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import HudScene, {content as hudContent} from '../../../components/hud/hud?includeContent';
+import LightformerScene, {content as lightformerContent} from '../../../components/lightformer/lightformer?includeContent';
+
+
+After almost a year of development, we're thrilled to announce the release of Angular Three v2! 🎉 Through countless examples and tutorials from other [THREE.js](https://threejs.org) ecosystems, we've identified the shortcomings of the previous version of Angular Three. Since then, we've been working tirelessly to enhance the library, making it more stable, performant, and predictable when working with THREE.js scene graphs.
+
+Following over 100 beta releases, we're confident that Angular Three v2 is ready for production and represents a significant improvement for the Angular THREE.js ecosystem as a whole.
+
+## Foreword
+
+Angular Three v2 is a major release with a substantial time gap since the previous version. It aims to address the limitations of the first version, resulting in numerous breaking changes. Some of these changes are subtle and may not be immediately apparent.
+
+Consequently, even though the surface-level APIs of v1 and v2 are similar, as both use a custom renderer, we're not providing an upgrade path from v1 to v2. Additionally, Angular Three v2 requires a minimum of Angular v18. Therefore, Angular Three v2 is better suited for new projects rather than upgrading existing ones.
+
+## What's new in Angular Three v2
+
+- Angular Signals 🚦
+- Improved performance and stability 📈
+- Better composability 🧩
+- Better `Portal` powered components 🪞
+- Improved documentation 📖
+
+While this list might seem modest at first glance, the core improvements in Angular Three v2 unlock a wealth of potential that has been incorporated into other packages like `angular-three-soba`, `angular-three-cannon`, and `angular-three-postprocessing`.
+
+### Angular Signals 🚦
+
+The most significant change in Angular Three v2 is the adoption of [Angular Signals](https://angular.dev/guide/signals). Angular Signals is a powerful and flexible way to manage state in modern Angular applications. Angular Signals also provides an entire set of new tools: Signal Inputs, Signal Outputs, and Signal Queries; all of which are designed to work seamlessly together.
+
+Angular Three v2's core is built on Angular Signals. This means that most, if not all, of Angular Three v2's APIs are Signals-based: they can accept Signals or Functions as arguments and return Signals as results.
+
+Let's examine some examples from across the Angular Three ecosystem.
+
+#### `injectStore`
+
+`injectStore` is a [Custom Inject Function (CIF)](https://nartc.me/blog/inject-function-the-right-way/) that allows the consumers to interact with the Angular Three Store. The store contains THREE.js building blocks such as the root `Scene`, the default `Camera`, and the `Renderer` itself etc...
+
+```angular-ts {'1. Get the NgtStore instance': 14-15} {'2. select() to access the Signals': 17-19} {'3. Use the signals in the template': 7-8}
+@Component({
+  template: `
+    <ngt-mesh>
+      <!-- content -->
+    </ngt-mesh>
+
+
+    <ngt-orbit-controls *args="[camera(), glDomElement()]" />
+  `,
+  imports: [NgtArgs]
+})
+export class MyCmp {
+
+
+  private store = injectStore();
+
+
+  protected camera = this.store.select('camera'); // Signal<NgtCamera>
+  protected domElement = this.store.select('gl', 'domElement'); // Signal<HTMLElement>
+}
+```
+
+#### `injectLoader`
+
+`injectLoader` is a [Custom Inject Function (CIF)](https://nartc.me/blog/inject-function-the-right-way/) that allows the consumers to interact with THREE.js loaders.
+
+```angular-ts {'Signal Input in action': 12-13} {'Integrating seamlessly with Signals': 15-16}
+@Component({
+  template: `
+    @if (gltf(); as gltf) {
+      <ngt-primitive *args="[gltf.scene]" [dispose]="null" />
+    }
+  `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [NgtArgs]
+})
+export class MyModel {
+
+
+  path = input.required<string>();
+
+
+  gltf = injectLoader(() => GLTFLoader, this.path);
+}
+```
+
+#### `injectBody` (from `angular-three-cannon`)
+
+`injectBody` is a [Custom Inject Function (CIF)](https://nartc.me/blog/inject-function-the-right-way/) that allows the consumers to interact with Cannon.js bodies.
+
+```angular-ts {'Signal Queries in action': 14-15} {'Integrating seamlessly with Signals': 17-21} {'Using Signals result to control the physics body': 29-31}
+@Component({
+	template: `
+		<ngt-mesh #mesh [castShadow]="true" [receiveShadow]="true">
+			<ngt-box-geometry *args="[4, 4, 4]" />
+			<ngt-mesh-lambert-material color="white" />
+		</ngt-mesh>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
+})
+export class Box {
+
+
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+
+
+	boxApi = injectBox(
+	  () => ({ args: [4, 4, 4], mass: 1, type: 'Kinematic' }),
+	  this.meshRef
+  );
+
+	constructor() {
+		injectBeforeRender(({ clock }) => {
+			const api = this.boxApi();
+			if (!api) return;
+			const t = clock.getElapsedTime();
+
+
+			api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
+			api.rotation.set(Math.sin(t * 6), Math.cos(t * 6), 0);
+		});
+	}
+}
+```
+
+These examples demonstrate just a few of the Angular Signals integrations. By leveraging Angular Signals, Angular Three v2 has eliminated much of its internal artificial timing and complexity in coordinating different 3D entities. This, in turn, makes Angular Three v2 more performant, stable, and predictable.
+
+### Improved performance and stability 📈
+
+While Angular Three has always been performant, thanks to Angular, the introduction of Angular Signals has allowed Angular Three v2 to significantly improve its stability story, with performance benefiting as well.
+
+#### Elimination of custom `NgtRef`
+
+Before Angular Signals, Angular Three used a custom `NgtRef` to track the life-cycle of THREE.js entities on the template via the `[ref]` custom property binding.
+
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh [ref]="meshRef"></ngt-mesh>
+  `
+})
+export class MyCmp {
+  meshRef = injectNgtRef<Mesh>();
+}
+```
+
+The primary purpose of NgtRef was to provide reactivity to `ElementRef`. With Signal Queries, this is no longer necessary. Instead, Angular Three v2 embraces Angular's approach using its query APIs like `viewChild`, `viewChildren`, `contentChild`, and `contentChildren`.
+
+```diff lang="angular-ts"
+@Component({
+  template: `
+-   <ngt-mesh [ref]="meshRef"></ngt-mesh>
++   <ngt-mesh #mesh></ngt-mesh>
+  `
+})
+export class MyCmp {
+-  meshRef = injectNgtRef<Mesh>();
++  meshRef = viewChild.required<ElementRef<Mesh>>('mesh'); // Signal<ElementRef<Mesh>>
+}
+```
+
+This change reduces the amount of Angular Three internals needed to handle the custom `NgtRef`. The timing of when Signal Queries are resolved is controlled by Angular, and it should be more streamlined and predictable to end users.
+
+#### Change Detection and Events
+
+Previously, Angular Three relied on `ChangeDetectorRef` to trigger change detections on events like `pointerover`, `click`, etc. This was necessary because Angular Three has always run outside Angular Zone, and to provide a better experience for end users, we had to make the event system work as seamlessly as possible. Passing around the `ChangeDetectorRef` and ensuring that the correct Component instance was a significant challenge and was never entirely reliable.
+
+With Angular v18, Signals and `OnPush` change detection strategy have been designed to work well together. This means that end users can use Signal to drive the state of their components, and Angular Three events will be automatically handled by Angular internal change detection mechanism.
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh
+      (pointerover)="hovered.set(true)"
+      (pointerout)="hovered.set(false)"
+      (click)="active.set(!active())"
+      [scale]="scale()"
+    >
+      <ngt-box-geometry />
+      <ngt-mesh-basic-material [color]="color()" />
+    </ngt-mesh>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MyCmp {
+  protected hovered = signal(false);
+  protected active = signal(false);
+
+  protected scale = computed(() => this.active() ? 1.5 : 1);
+  protected color = computed(() => (this.hovered() ? 'hotpink' : 'orange'));
+}
+```
+
+:::tip[Did you know?]
+
+If you are feeling good about Zoneless, you can even enable it with `withExperimentalZonelessChangeDetection` and everything will still work as expected as long as you use Signals to drive the state of your applications.
+
+```ts
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideExperimentalZonelessChangeDetection()
+  ]
+});
+```
+
+:::
+
+These examples are just a few of the many stability improvements that Angular Three v2 has introduced. There are numerous additional "under the hood" enhancements that unlock many more features and possibilities, which we'll explore in the following sections.
+
+### Better composability 🧩
+
+Angular Three v2 overhauls the `NgtRenderer` to make it more composable. `NgtRenderer` now embraces Angular's default content projection
+mechanism to provide a more flexible, predictable, and performant way to render content. In turns, this makes composing different THREE.js entities much easier and more straightforward.
+
+This improvement was inspired by a new addition to Angular Content Projection: Default content. This new feature allows Angular Three to provide default contents for some abstractions like `NgtsLightformer` while still allowing consumers to override it.
+
+Consider the following example:
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-mesh>
+      <ngt-box-geometry />
+      <ng-content select="[data-box-material]">
+        <ngt-mesh-normal-material />
+      </ng-content>
+      <ng-content />
+    </ngt-mesh>
+  `
+})
+export class Box {}
+```
+
+In this snippet, we have a `Box` component that renders a `Mesh` with `BoxGeometry` and a **default** `MeshNormalMaterial`. The `Box` component can be used as follows:
+
+```angular-html
+<app-box />
+
+<app-box>
+  <!-- targeting [data-box-material] content -->
+  <ngt-mesh-basic-material data-box-material color="hotpink" />
+</app-box>
+
+<app-box>
+  <!-- targeting regular content -->
+  <app-box />
+</app-box>
+```
+
+#### Object Inputs
+
+Another win for composability is unlocked by Signal Inputs. With Signal Inputs, Angular Three v2 makes uses of [Object Inputs](https://nartc.me/blog/angular-object-inputs/) to provide a more composable way to pass inputs into custom components via `[parameters]` custom property binding.
+
+Let's revisit the Box component and allow consumers to pass in everything they can pass into Box to control the Mesh and the geometry.
+
+```angular-ts
+import { NgtMesh } from 'angular-three';
+
+@Component({
+  template: `
+    <ngt-mesh [parameters]="options()">
+      <ngt-box-geometry *args="boxArgs()" />
+      <ng-content select="[data-box-material]">
+        <ngt-mesh-normal-material />
+      </ng-content>
+      <ng-content />
+    </ngt-mesh>
+  `,
+  imports: [NgtArgs]
+})
+export class Box {
+  boxArgs = input<ConstructorParameters<BoxGeometry>>([1, 1, 1]);
+  options = input<Partial<NgtMesh>>({});
+}
+```
+
+Now the consumers can use `Box` component as follows:
+
+```angular-html
+<app-box [boxArgs]="[2, 2, 2]" />
+
+<app-box [options]="{ position: [1.5, 0, 0] }" />
+<app-box [options]="{ position: [-1.5, 0, 0] }">
+  <app-box [options]="{ position: [0, 0.5, 0], scale: 0.5 }" />
+</app-box>
+```
+
+All `angular-three-soba` components are built on top of Object Inputs concept, which allows for a much better composability story without the need to implement custom `ngtCompound` construct in the renderer internals.
+
+Thanks to this new improvement, abstractions in `angular-three-soba` are significantly easier to use and reason about. Here's another example of `Text3D` component with `Center` and `Float`.
+
+```angular-html {'center things': 3-4 } {'float things': 6-7 } {'text 3d': 9-10 } { 'content projection for text material': 16-17 }
+<!-- centering a floating text 3d -->
+
+
+<ngts-center>
+
+
+  <ngts-float>
+
+
+    <ngts-text-3d
+      text="hello world"
+      font="helvetiker_regular.typeface.json"
+      [options]="{ curveSegments: 32, bevelEnabled: true, bevelSize: 0.04, bevelThickness: 0.1, height: 0.5, lineHeight: 0.5, letterSpacing: -0.06, size: 1.5 }"
+    >
+
+
+      <ngt-mesh-normal-material />
+    </ngts-text-3d>
+  </ngts-float>
+</ngts-center>
+```
+
+You just use them, nest them, and compose them. The possibilities are endless.
+
+### Better `Portal` powered components 🪞
+
+`NgtPortal` has also received a major upgrade. It is now truly a portal with a separate layered `NgtStore` on top of the default root `NgtStore`. This means that the content of `NgtPortal` is rendered into an off-screen buffer, with access to the state of both the root and the layered `NgtStore`. This allows consumers to have better predictability and control over the components rendered inside an `ngt-portal` component.
+
+#### Heads-up display example
+
+For instance, we can use `NgtPortal` and `NgtsRenderTexture` (which also relies on `NgtPortal`) to create a heads-up display (HUD) sample.
+
+The main scene contains the torus (donut). The view cube (HUD) is rendered in a portal with its own `PerspectiveCamera`. Then each face of the view cube is yet rendered into a separate portal with its own `OrthographicCamera` and a `Text` component to render the face name.
+
+You can check out the code here: [HudScene](https://github.com/angular-threejs/angular-three/blob/main/apps/kitchen-sink/src/app/soba/hud/experience.ts)
+
+<Tabs>
+  <TabItem label="Preview">
+    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+      <HudScene client:only />
+    </div>
+  </TabItem>
+  <TabItem label="Code">
+    <Code code={hudContent} lang="angular-ts" />
+  </TabItem>
+</Tabs>
+
+#### Environment with Lightformers
+
+`NgtsEnvironment` with content projection has never worked correctly. Now with v2 `NgtPortal`, we can finally have proper `NgtsEnvironment` content with `NgtsLightformer` to control the lighting of the environment.
+
+<Tabs>
+  <TabItem label="Preview">
+    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+      <LightformerScene client:only />
+    </div>
+  </TabItem>
+  <TabItem label="Code">
+    <Code code={lightformerContent} lang="angular-ts" />
+  </TabItem>
+</Tabs>
+
+### Improved documentation 📖
+
+Angular Three v2 documentation is powered by [Starlight](https://starlight.astro.build/) and [AnalogJS](https://analogjs.org) to provide an enhanced experience for Angular users.
+
+- Improved syntax highlighting powered by [Expressive Code](https://expressive-code.com/) and [Shiki](https://shiki.style)
+- Embedded Angular components powered by [AnalogJS](https://analogjs.org)
+
+This very release blog post is powered by the same stack, making it a delight to work with. With this, we aim to provide a superior documentation experience for Angular Three users.
+
+## Getting Started
+
+To get started with Angular Three v2, check out the [documentation](https://angularthree.org/).
+
+## Roadmap
+
+As we celebrate the release of Angular Three v2, our focus now shifts to promoting its adoption and ensuring its stability. Here's a glimpse of our immediate plans:
+
+- **Promotion and Education**: We're committed to creating a wealth of resources to help developers get the most out of Angular Three v2. This includes:
+  - Writing in-depth articles and blog posts about various features and use cases
+  - Developing comprehensive tutorials covering both basic and advanced topics
+  - Creating video content to demonstrate real-world applications of Angular Three v2
+
+- **Enhancing Test Coverage**: To maintain the reliability and stability of Angular Three, we're prioritizing the expansion of our unit test suite. This will help us catch potential issues early and ensure a smooth experience for all users.
+
+- **Community Engagement**: We plan to actively engage with the community through workshops, webinars, and conference talks to showcase the power and flexibility of Angular Three v2.
+
+We're excited about these next steps and look forward to seeing what amazing projects our community will create with Angular Three v2!
+
+## Acknowledgements
+
+The journey to Angular Three v2 has been a collaborative effort, and we'd like to express our heartfelt gratitude to several key contributors:
+
+- **The PMNDRS Ecosystem**: We owe a great deal to the PMNDRS (Poimandres) community and their various `@pmndrs` packages. Their innovative work in the 3D web space has been a constant source of inspiration and has significantly influenced the direction of Angular Three.
+
+- **The Angular Team**: We extend our sincere thanks to the Angular team for their continuous improvements to the framework. Many of the enhancements in Angular Three v2, particularly those leveraging Signals, were made possible by the Angular team's forward-thinking approach to reactive programming.
+
+- **The Wider Angular Community**: Last but not least, we're grateful to the entire Angular community for your support, enthusiasm, and patience throughout this development process. Your passion for pushing the boundaries of what's possible with Angular continues to drive us forward.
+
+We're proud to be part of such a vibrant and supportive ecosystem, and we look forward to continuing this journey with all of you as we explore the exciting possibilities that Angular Three v2 brings to the world of 3D web development.
+
+## Conclusion
+
+The development of Angular Three v2 has been a long journey, but we're excited to see what you can create with it. We hope you enjoy the improvements and new features that Angular Three v2 brings to the table. If you have any feedback or suggestions, please don't hesitate to reach out to us on [GitHub](https://github.com/angular-threejs/angular-three/issues).
+
+Thank you for reading this blog post. We hope you found it informative and learned something new. Happy coding!

@@ -57,3 +57,32 @@ If the SceneGraph has static entities, or entities that are allowed to come to a
 <ngt-canvas [sceneGraph]="SceneGraph" frameloop="demand" />
 ```
 
+When using `frameloop="demand"`, Angular Three will render: when properties of the entities change, when the camera moves via custom controls (from `angular-three-soba`) etc...
+To render, `invalidate()` function needs to be called and this is done automatically by Angular Three when necessary.
+
+The consumers can also call `invalidate()` manually to render _on demand_.
+
+```angular-ts
+@Component()
+export class MyCmp {
+  private store = injectStore();
+
+  protected invalidate = this.store.select('invalidate');
+
+  constructor() {
+    effect(() => {
+      const invalidate = this.invalidate();
+
+      // do something
+
+      // ready to render
+      invalidate();
+    })
+  }
+
+  onSomething() {
+    // or use the invalidate() from the Store snapshot
+    this.store.snapshot.invalidate();
+  }
+}
+```
