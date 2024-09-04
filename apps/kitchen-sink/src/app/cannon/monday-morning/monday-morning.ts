@@ -17,5 +17,5 @@ import { Experience } from './experience';
 	host: { class: 'monday-morning-cannon cursor-none' },
 })
 export default class MondayMorning {
-	scene = Experience;
+	protected scene = Experience;
 }

@@ -33,7 +33,7 @@ extend(THREE);
 	host: { class: 'soba' },
 })
 export default class Soba {
-	examples = [
+	protected examples = [
 		'stars',
 		'basic',
 		'hud',

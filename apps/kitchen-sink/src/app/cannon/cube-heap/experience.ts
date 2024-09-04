@@ -11,15 +11,12 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
+import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcBodyPublicApi, injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
-import * as THREE from 'three';
 import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../colors';
 import { shape } from './state';
-
-extend(THREE);
 
 @Component({
 	selector: 'app-plane',
@@ -36,8 +33,12 @@ extend(THREE);
 })
 export class Plane {
 	rotation = input<Triplet>([0, 0, 0]);
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	plane = injectPlane(() => ({ rotation: this.rotation() }), this.mesh);
+
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectPlane(() => ({ rotation: this.rotation() }), this.mesh);
+	}
 }
 
 @Directive()
@@ -73,8 +74,8 @@ export abstract class InstancesInput {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Boxes extends InstancesInput {
-	args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
-	mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
+	protected args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
+	private mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
 	bodyApi = injectBox(
 		() => ({ args: this.args(), mass: 1, position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5] }),
@@ -98,8 +99,8 @@ export class Boxes extends InstancesInput {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Spheres extends InstancesInput {
-	args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
-	mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
+	protected args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
+	private mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
 	bodyApi = injectSphere(
 		() => ({ args: [this.size()], mass: 1, position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5] }),
@@ -136,12 +137,12 @@ export class Spheres extends InstancesInput {
 	host: { class: 'cube-heap-experience' },
 })
 export class Experience {
-	Math = Math;
-	shape = shape.asReadonly();
+	protected Math = Math;
+	protected shape = shape.asReadonly();
 
-	size = signal(0.1);
-	count = signal(200);
-	colors = computed(() => {
+	protected size = signal(0.1);
+	protected count = signal(200);
+	protected colors = computed(() => {
 		const array = new Float32Array(this.count() * 3);
 		const color = new Color();
 		for (let i = 0; i < this.count(); i++)

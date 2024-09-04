@@ -13,5 +13,5 @@ import { Experience } from './experience';
 	host: { class: 'chain-cannon' },
 })
 export default class Chain {
-	scene = Experience;
+	protected scene = Experience;
 }

@@ -18,7 +18,7 @@ import { shape } from './state';
 	host: { class: 'cube-heap-cannon' },
 })
 export default class CubeHeap {
-	scene = Experience;
+	protected scene = Experience;
 
 	onPointerMissed() {
 		shape.update((prev) => (prev === 'box' ? 'sphere' : 'box'));

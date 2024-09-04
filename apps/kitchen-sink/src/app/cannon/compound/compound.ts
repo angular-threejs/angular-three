@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	host: { class: 'compound-cannon' },
 })
 export default class Compound {
-	scene = Experience;
+	protected scene = Experience;
 }

@@ -23,7 +23,7 @@ declare const Chart: any;
 	imports: [NgtCanvas],
 })
 export default class HtmlChart {
-	sceneGraph = Experience;
+	protected sceneGraph = Experience;
 
 	constructor() {
 		const injector = inject(Injector);

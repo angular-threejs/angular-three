@@ -14,7 +14,11 @@ import { AdditiveBlending, DoubleSide, MathUtils, Vector3 } from 'three';
 	imports: [NgtsInstance],
 })
 export class WindShape {
-	randomPosition = [MathUtils.randFloatSpread(8), MathUtils.randFloatSpread(5), MathUtils.randFloatSpread(8)] as const;
+	protected randomPosition = [
+		MathUtils.randFloatSpread(8),
+		MathUtils.randFloatSpread(5),
+		MathUtils.randFloatSpread(8),
+	] as const;
 	private v3 = new Vector3();
 	private randomSpeed = MathUtils.randFloat(0.05, 0.5);
 
@@ -65,5 +69,5 @@ export class Winds {
 	protected readonly DoubleSide = DoubleSide;
 	protected readonly AdditiveBlending = AdditiveBlending;
 
-	count = Array.from({ length: 200 }, (_, i) => i);
+	protected count = Array.from({ length: 200 }, (_, i) => i);
 }

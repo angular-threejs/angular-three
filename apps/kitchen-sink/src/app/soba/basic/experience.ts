@@ -33,7 +33,7 @@ type BotGLTF = GLTF & {
 @Directive({ selector: '[animations]', standalone: true })
 export class BotAnimations {
 	animations = input.required<NgtsAnimation>();
-	referenceRef = input.required<ElementRef<Bone> | undefined>();
+	referenceRef = input.required<ElementRef<Object3D> | undefined>();
 
 	constructor() {
 		const groupRef = inject<ElementRef<Group>>(ElementRef);
@@ -82,13 +82,13 @@ export class BotAnimations {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Bot {
-	Math = Math;
+	protected Math = Math;
 
-	gltf = injectGLTF(() => './ybot.glb') as Signal<BotGLTF | null>;
-	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
-	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
+	protected gltf = injectGLTF(() => './ybot.glb') as Signal<BotGLTF | null>;
+	protected matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
+	protected matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
 
-	boneRef = viewChild<ElementRef<Bone>>('bone');
+	protected boneRef = viewChild<ElementRef<Bone>>('bone');
 }
 
 @Component({
@@ -118,7 +118,7 @@ export class Bot {
 	host: { class: 'soba-experience' },
 })
 export class Experience {
-	Math = Math;
-	bloom = bloom;
-	glitch = glitch;
+	protected Math = Math;
+	protected bloom = bloom;
+	protected glitch = glitch;
 }

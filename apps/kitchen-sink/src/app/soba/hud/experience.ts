@@ -31,8 +31,9 @@ import { Matrix4, Mesh, Scene } from 'three';
 })
 export class Torus {
 	scale = input(1);
-	hovered = signal(false);
-	color = computed(() => (this.hovered() ? 'hotpink' : 'orange'));
+
+	protected hovered = signal(false);
+	protected color = computed(() => (this.hovered() ? 'hotpink' : 'orange'));
 }
 
 @Component({
@@ -62,9 +63,8 @@ export class FaceMaterial {
 	index = input.required<number>();
 	text = input.required<string>();
 
-	box = inject(Box);
-
-	color = computed(() => (this.box.hovered() === this.index() ? 'hotpink' : 'orange'));
+	private box = inject(Box);
+	protected color = computed(() => (this.box.hovered() === this.index() ? 'hotpink' : 'orange'));
 }
 
 @Component({
@@ -95,11 +95,10 @@ export class Box {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	hovered = signal(-1);
-	clicked = signal(false);
+	protected clicked = signal(false);
+	protected scale = computed(() => (this.clicked() ? 1.5 : 1));
 
-	scale = computed(() => (this.clicked() ? 1.5 : 1));
-
-	faces = ['front', 'back', 'top', 'bottom', 'left', 'right'];
+	protected faces = ['front', 'back', 'top', 'bottom', 'left', 'right'];
 
 	constructor() {
 		injectBeforeRender(({ delta }) => {
@@ -129,29 +128,28 @@ export class Box {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewCube {
-	Math = Math;
-	matrix = new Matrix4();
+	protected Math = Math;
 
 	private store = injectStore();
 	private camera = this.store.select('camera');
 	private viewport = this.store.select('viewport');
 
-	box = viewChild(Box);
+	private box = viewChild(Box);
 
-	boxPosition = computed(() => [this.viewport().width / 2 - 1, this.viewport().height / 2 - 1, 0]);
-
-	scene = computed(() => {
+	protected boxPosition = computed(() => [this.viewport().width / 2 - 1, this.viewport().height / 2 - 1, 0]);
+	protected scene = computed(() => {
 		const scene = new Scene();
 		scene.name = 'hud-view-cube-virtual-scene';
 		return scene;
 	});
 
 	constructor() {
+		const matrix = new Matrix4();
 		injectBeforeRender(() => {
 			const box = this.box()?.mesh().nativeElement;
 			if (box) {
-				this.matrix.copy(this.camera().matrix).invert();
-				box.quaternion.setFromRotationMatrix(this.matrix);
+				matrix.copy(this.camera().matrix).invert();
+				box.quaternion.setFromRotationMatrix(matrix);
 			}
 		});
 	}
@@ -175,5 +173,5 @@ export class ViewCube {
 	host: { class: 'hud-experience' },
 })
 export class Experience {
-	Math = Math;
+	protected Math = Math;
 }

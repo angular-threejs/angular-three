@@ -15,5 +15,5 @@ import { Experience } from './experience';
 	host: { class: 'lod-soba' },
 })
 export default class LOD {
-	scene = Experience;
+	protected scene = Experience;
 }

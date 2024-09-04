@@ -181,13 +181,13 @@ injectGLTF.preload(() => './pink-d.glb');
 	imports: [NgtArgs, NgtsMeshReflectorMaterial],
 })
 export class Model {
-	protected readonly Math = Math;
+	protected Math = Math;
 
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtVector3>([0, 0, 0]);
 
-	gltf = injectGLTF(() => './pink-d.glb') as Signal<any | null>;
-	material = new MeshPhysicalMaterial({
+	protected gltf = injectGLTF(() => './pink-d.glb') as Signal<any | null>;
+	protected material = new MeshPhysicalMaterial({
 		color: new Color('#bb86a1').convertSRGBToLinear(),
 		roughness: 0,
 		clearcoat: 1,

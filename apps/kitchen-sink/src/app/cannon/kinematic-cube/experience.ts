@@ -8,15 +8,12 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, extend, injectBeforeRender } from 'angular-three';
+import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import * as THREE from 'three';
 import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../colors';
-
-extend(THREE);
 
 @Component({
 	selector: 'app-plane',
@@ -36,14 +33,11 @@ export class Plane {
 	position = input<Triplet>([0, 0, 0]);
 	rotation = input<Triplet>([0, 0, 0]);
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	plane = injectPlane(
-		() => ({
-			position: this.position(),
-			rotation: this.rotation(),
-		}),
-		this.mesh,
-	);
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectPlane(() => ({ position: this.position(), rotation: this.rotation() }), this.mesh);
+	}
 }
 
 @Component({
@@ -60,13 +54,15 @@ export class Plane {
 	imports: [NgtArgs],
 })
 export class Box {
-	args: Triplet = [4, 4, 4];
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	boxApi = injectBox(() => ({ args: this.args, mass: 1, type: 'Kinematic' }), this.mesh);
+	protected args: Triplet = [4, 4, 4];
+
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
+		const boxApi = injectBox(() => ({ args: this.args, mass: 1, type: 'Kinematic' }), this.mesh);
+
 		injectBeforeRender(({ clock }) => {
-			const api = this.boxApi();
+			const api = boxApi();
 			if (!api) return;
 			const t = clock.getElapsedTime();
 			api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
@@ -98,17 +94,9 @@ export class Box {
 export class InstancedSpheres {
 	count = input(100);
 
-	instancedMesh = viewChild<ElementRef<InstancedMesh>>('instancedMesh');
-	sphere = injectSphere(
-		(index) => ({
-			args: [1],
-			mass: 1,
-			position: [Math.random() - 0.5, Math.random() - 0.5, index * 2],
-		}),
-		this.instancedMesh,
-	);
+	private instancedMesh = viewChild<ElementRef<InstancedMesh>>('instancedMesh');
 
-	colors = computed(() => {
+	protected colors = computed(() => {
 		const array = new Float32Array(this.count() * 3);
 		const color = new Color();
 		for (let i = 0; i < this.count(); i++) {
@@ -119,6 +107,17 @@ export class InstancedSpheres {
 		}
 		return array;
 	});
+
+	constructor() {
+		injectSphere(
+			(index) => ({
+				args: [1],
+				mass: 1,
+				position: [Math.random() - 0.5, Math.random() - 0.5, index * 2],
+			}),
+			this.instancedMesh,
+		);
+	}
 }
 
 @Component({
@@ -152,6 +151,6 @@ export class InstancedSpheres {
 	host: { class: 'kimenatic-experience' },
 })
 export class Experience {
-	Math = Math;
-	niceColors = niceColors;
+	protected Math = Math;
+	protected niceColors = niceColors;
 }

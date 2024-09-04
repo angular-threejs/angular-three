@@ -29,8 +29,8 @@ import { Experience, bloom, glitch, selectedAction } from './experience';
 	host: { class: 'basic-soba' },
 })
 export default class Basic {
-	scene = Experience;
-	selectedAction = selectedAction;
-	bloom = bloom;
-	glitch = glitch;
+	protected scene = Experience;
+	protected selectedAction = selectedAction;
+	protected bloom = bloom;
+	protected glitch = glitch;
 }

@@ -39,13 +39,13 @@ export class Marker {
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtEuler>([0, 0, 0]);
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	private groupRef = viewChild.required<ElementRef<Group>>('group');
 
-	isOccluded = signal(false);
+	protected isOccluded = signal(false);
 	private isInRange = signal(false);
 
 	private isVisible = computed(() => !this.isOccluded() && this.isInRange());
-	containerStyle = computed(() => ({
+	protected containerStyle = computed(() => ({
 		transition: 'all 0.2s',
 		opacity: this.isVisible() ? '1' : '0',
 		transform: `scale(${this.isVisible() ? 1 : 0.25})`,
@@ -115,12 +115,13 @@ export class MarkerIcon extends NgtHTML {
 	imports: [Marker, MarkerIcon, NgTemplateOutlet],
 })
 export class Model {
-	protected readonly Math = Math;
+	protected Math = Math;
 
 	position = input<NgtVector3>([0, 0, 0]);
-	content = contentChild.required(TemplateRef);
 
-	gltf = injectGLTF(() => './earth.gltf') as Signal<any>;
+	protected content = contentChild.required(TemplateRef);
+
+	protected gltf = injectGLTF(() => './earth.gltf') as Signal<any>;
 }
 
 @Component({
@@ -129,11 +130,10 @@ export class Model {
 		<ngt-color *args="['#ececec']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5" />
 		<app-model [position]="[0, 0.25, 0]">
-			<ng-template>
-				<ngts-contact-shadows
-					[options]="{ frames: 1, scale: 5, position: [0, -1, 0], far: 1, blur: 5, color: '#204080' }"
-				/>
-			</ng-template>
+			<ngts-contact-shadows
+				*
+				[options]="{ frames: 1, scale: 5, position: [0, -1, 0], far: 1, blur: 5, color: '#204080' }"
+			/>
 		</app-model>
 		<ngts-environment [options]="{ preset: 'city' }" />
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
@@ -143,7 +143,7 @@ export class Model {
 	imports: [Model, NgtsEnvironment, NgtsContactShadows, NgtsOrbitControls, NgtArgs],
 })
 export class Experience {
-	protected readonly Math = Math;
+	protected Math = Math;
 }
 
 injectGLTF.preload(() => './earth.gltf');

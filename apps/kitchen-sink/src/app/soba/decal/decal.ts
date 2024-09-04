@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	imports: [NgtCanvas],
 })
 export default class Decal {
-	scene = Experience;
+	protected scene = Experience;
 }

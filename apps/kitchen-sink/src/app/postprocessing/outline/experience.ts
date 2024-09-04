@@ -63,6 +63,6 @@ import { KernelSize } from 'postprocessing';
 	imports: [NgtsOrbitControls, NgtSelect, NgtpEffectComposer, NgtpOutline, NgtArgs, NgtpSMAA],
 })
 export class Experience {
-	KernelSize = KernelSize;
-	hovered = signal(false);
+	protected KernelSize = KernelSize;
+	protected hovered = signal(false);
 }

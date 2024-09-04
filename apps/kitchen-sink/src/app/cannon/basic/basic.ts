@@ -19,7 +19,6 @@ import { State } from './state';
 	providers: [State],
 })
 export default class Basic {
-	scene = Experience;
-
-	state = inject(State);
+	protected scene = Experience;
+	protected state = inject(State);
 }

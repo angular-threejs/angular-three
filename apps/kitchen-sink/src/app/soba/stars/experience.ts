@@ -26,7 +26,7 @@ export class Experience {
 	protected readonly Math = Math;
 	protected readonly sphere = random.inSphere(new Float32Array(5000), { radius: 1.5 }) as Float32Array;
 
-	pointsBufferRef = viewChild.required(NgtsPointsBuffer);
+	private pointsBufferRef = viewChild.required(NgtsPointsBuffer);
 
 	constructor() {
 		injectBeforeRender(({ delta }) => {

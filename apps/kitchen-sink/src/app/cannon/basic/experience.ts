@@ -10,15 +10,12 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectPlane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import * as THREE from 'three';
 import { Mesh } from 'three';
 import { State } from './state';
-
-extend(THREE);
 
 @Component({
 	selector: 'app-plane',
@@ -35,9 +32,12 @@ extend(THREE);
 })
 export class Plane {
 	position = input<Triplet>([0, 0, 0]);
-	args = [1000, 1000];
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	plane = injectPlane(() => ({ mass: 0, position: this.position(), args: this.args }), this.mesh);
+	protected args = [1000, 1000];
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectPlane(() => ({ mass: 0, position: this.position(), args: this.args }), this.mesh);
+	}
 }
 
 @Component({
@@ -55,9 +55,12 @@ export class Plane {
 })
 export class Box {
 	position = input<Triplet>([0, 0, 0]);
-	args: Triplet = [2, 2, 2];
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	box = injectBox(() => ({ mass: 10000, position: this.position(), args: this.args }), this.mesh);
+	protected args: Triplet = [2, 2, 2];
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectBox(() => ({ mass: 10000, position: this.position(), args: this.args }), this.mesh);
+	}
 }
 
 @Component({
@@ -100,9 +103,9 @@ export class Box {
 	host: { class: 'basic-experience' },
 })
 export class Experience {
-	Math = Math;
-	state = inject(State);
-	showPlane = signal(true);
+	protected Math = Math;
+	protected state = inject(State);
+	protected showPlane = signal(true);
 
 	constructor() {
 		afterNextRender(() => {

@@ -33,5 +33,5 @@ import { Experience } from './experience';
 	imports: [NgtCanvas],
 })
 export default class Stars {
-	sceneGraph = Experience;
+	protected sceneGraph = Experience;
 }

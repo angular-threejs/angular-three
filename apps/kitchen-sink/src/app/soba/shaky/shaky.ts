@@ -43,5 +43,5 @@ import { Experience } from './experience';
 	`,
 })
 export default class RenderTexture {
-	scene = Experience;
+	protected scene = Experience;
 }

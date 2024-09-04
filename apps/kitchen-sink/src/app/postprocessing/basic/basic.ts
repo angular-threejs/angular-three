@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	host: { class: 'basic-postprocessing' },
 })
 export default class Basic {
-	scene = Experience;
+	protected scene = Experience;
 }

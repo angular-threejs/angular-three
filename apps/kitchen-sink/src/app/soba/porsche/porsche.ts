@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgtCanvas } from 'angular-three';
+import { injectBeforeRender, NgtCanvas } from 'angular-three';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
-import { CameraRig } from './camera-rig';
+import { Vector3 } from 'three';
 import { color, colorAsHex } from './color';
 import { Lightformers } from './lightformers';
 import { Model } from './model';
@@ -36,11 +36,20 @@ import { Model } from './model';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtsAccumulativeShadows, NgtsRandomizedLights, Model, NgtsEnvironment, Lightformers],
-	hostDirectives: [CameraRig],
 })
 export class Scene {
 	protected Math = Math;
 	protected Infinity = Infinity;
+
+	constructor() {
+		const v = new Vector3();
+
+		injectBeforeRender(({ clock, camera }) => {
+			const t = clock.elapsedTime;
+			camera.position.lerp(v.set(Math.sin(t / 5), 0, 12 + Math.cos(t / 5) / 2), 0.05);
+			camera.lookAt(0, 0, 0);
+		});
+	}
 }
 
 @Component({

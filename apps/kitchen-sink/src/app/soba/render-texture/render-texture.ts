@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	host: { class: 'fbo-render-texture' },
 })
 export default class RenderTexture {
-	scene = Experience;
+	protected scene = Experience;
 }

@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	host: { class: 'hud-soba' },
 })
 export default class RenderTexture {
-	scene = Experience;
+	protected scene = Experience;
 }

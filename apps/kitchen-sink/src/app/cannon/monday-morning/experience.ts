@@ -14,7 +14,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { ConeTwistConstraintOpts, Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, NgtThreeEvent, NgtVector3, extend, injectBeforeRender, injectObjectEvents } from 'angular-three';
+import { NgtArgs, NgtThreeEvent, NgtVector3, injectBeforeRender, injectObjectEvents } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCompound, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { NgtcConstraintApi, injectConeTwist, injectPointToPoint } from 'angular-three-cannon/constraint';
@@ -22,14 +22,10 @@ import { NgtcDebug } from 'angular-three-cannon/debug';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsSpotLight } from 'angular-three-soba/staging';
-import { createNoopInjectionToken } from 'ngxtension/create-injection-token';
-import * as THREE from 'three';
 import { Group, Material, Mesh, Object3D } from 'three';
 import { GLTF } from 'three-stdlib';
 import { UiPlane } from '../ui/plane';
 import { createRagdoll } from './config';
-
-extend(THREE);
 
 function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
 	const cursorRef = inject(Cursor);
@@ -95,7 +91,7 @@ export class Box {
 	pointerdown = output<NgtThreeEvent<PointerEvent>>();
 	pointerup = output<void>();
 
-	roundedBoxRef = viewChild.required(NgtsRoundedBox);
+	private roundedBoxRef = viewChild.required(NgtsRoundedBox);
 	meshRef = computed(() => this.roundedBoxRef().meshRef());
 
 	constructor() {
@@ -115,8 +111,6 @@ const { joints, shapes } = createRagdoll(4.8, Math.PI / 16, Math.PI / 16, 0);
 function double([x, y, z]: Readonly<Triplet>): Triplet {
 	return [x * 2, y * 2, z * 2];
 }
-
-const [injectParentRef, , ParentRef] = createNoopInjectionToken<ElementRef<Object3D>>('parent body part ref');
 
 @Component({
 	selector: 'app-body-part',
@@ -142,19 +136,20 @@ export class BodyPart {
 	name = input.required<keyof typeof shapes>();
 	constraintOpts = input<ConeTwistConstraintOpts>();
 
-	shapeConfig = computed(() => {
+	protected shapeConfig = computed(() => {
 		const { color, position, args, mass } = shapes[this.name()];
 		return { color, position, args, mass, scale: double(args) };
 	});
 
 	private box = viewChild.required(Box);
 
-	body = computed(() => this.box().meshRef());
-	dragConstraint = injectDragConstraint(this.body);
+	private body = computed(() => this.box().meshRef());
+	protected dragConstraint = injectDragConstraint(this.body);
 
 	constructor() {
 		const injector = inject(Injector);
 		const parent = inject(BodyPart, { skipSelf: true, optional: true });
+
 		injectBox(
 			() => ({
 				args: [...this.shapeConfig().args],
@@ -240,7 +235,7 @@ export class BodyPart {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RagDoll {
-	joints = joints;
+	protected joints = joints;
 
 	private eyes = viewChild<ElementRef<Group>>('eyes');
 	private mouth = viewChild('mouth', { read: Box });
@@ -279,7 +274,7 @@ export class RagDoll {
 })
 export class Chair {
 	private group = viewChild.required<ElementRef<Group>>('group');
-	dragConstraint = injectDragConstraint(this.group);
+	protected dragConstraint = injectDragConstraint(this.group);
 
 	constructor() {
 		injectCompound(
@@ -339,19 +334,14 @@ interface CupGLTF extends GLTF {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Mug {
-	gltf = injectGLTF(() => './cup.glb') as Signal<CupGLTF | null>;
+	protected gltf = injectGLTF(() => './cup.glb') as Signal<CupGLTF | null>;
 	private group = viewChild.required<ElementRef<Group>>('group');
 
-	dragConstraint = injectDragConstraint(this.group);
+	protected dragConstraint = injectDragConstraint(this.group);
 
 	constructor() {
 		injectCylinder(
-			() => ({
-				args: [0.6, 0.6, 1, 16],
-				mass: 1,
-				position: [9, 0, 0],
-				rotation: [Math.PI / 2, 0, 0],
-			}),
+			() => ({ args: [0.6, 0.6, 1, 16], mass: 1, position: [9, 0, 0], rotation: [Math.PI / 2, 0, 0] }),
 			this.group,
 		);
 	}
@@ -421,14 +411,7 @@ export class Cursor {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		const sphereApi = injectSphere<Mesh>(
-			() => ({
-				args: [0.5],
-				position: [0, 0, 10000],
-				type: 'Static',
-			}),
-			this.mesh,
-		);
+		const sphereApi = injectSphere<Mesh>(() => ({ args: [0.5], position: [0, 0, 10000], type: 'Static' }), this.mesh);
 		injectBeforeRender(({ pointer, viewport: { width, height } }) => {
 			const x = pointer.x * width;
 			const y = (pointer.y * height) / 1.9 + -x / 3.5;
@@ -476,26 +459,18 @@ export class Cursor {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Lamp {
-	Math = Math;
+	protected Math = Math;
 
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-
-	dragConstraint = injectDragConstraint(this.mesh);
+	protected dragConstraint = injectDragConstraint(this.mesh);
 
 	constructor() {
 		const obj = new Object3D();
 		injectSphere(() => ({ args: [1], position: [0, 16, 0], type: 'Static' }), obj);
 		injectBox(
-			() => ({
-				angulardamping: 1.99,
-				args: [1, 0, 5],
-				linearDamping: 0.9,
-				mass: 1,
-				position: [0, 16, 0],
-			}),
+			() => ({ angulardamping: 1.99, args: [1, 0, 5], linearDamping: 0.9, mass: 1, position: [0, 16, 0] }),
 			this.mesh,
 		);
-
 		injectPointToPoint(obj, this.mesh, { options: { pivotA: [0, 0, 0], pivotB: [0, 2, 0] } });
 	}
 }
@@ -532,5 +507,5 @@ export class Lamp {
 	host: { class: 'monday-morning-experience' },
 })
 export class Experience {
-	Math = Math;
+	protected Math = Math;
 }

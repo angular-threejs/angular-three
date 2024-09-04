@@ -4,21 +4,18 @@ import {
 	Component,
 	ElementRef,
 	afterNextRender,
+	effect,
 	input,
 	output,
 	signal,
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectCompound, injectPlane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
-import * as THREE from 'three';
 import { Group } from 'three';
-
-extend(THREE);
 
 @Component({
 	selector: 'app-plane',
@@ -41,8 +38,11 @@ extend(THREE);
 })
 export class Plane {
 	rotation = input<Triplet>([0, 0, 0]);
-	group = viewChild.required<ElementRef<Group>>('group');
-	plane = injectPlane(() => ({ type: 'Static', rotation: this.rotation() }), this.group);
+	private group = viewChild.required<ElementRef<Group>>('group');
+
+	constructor() {
+		injectPlane(() => ({ type: 'Static', rotation: this.rotation() }), this.group);
+	}
 }
 
 @Component({
@@ -65,8 +65,8 @@ export class Plane {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompoundBody {
-	boxSize: Triplet = [1, 1, 1];
-	sphereRadius = 0.65;
+	protected boxSize: Triplet = [1, 1, 1];
+	protected sphereRadius = 0.65;
 
 	position = input<Triplet>([0, 0, 0]);
 	rotation = input<Triplet>([0, 0, 0]);
@@ -76,36 +76,33 @@ export class CompoundBody {
 	positionChanged = output<Triplet>();
 	rotationChanged = output<Triplet>();
 
-	group = viewChild.required<ElementRef<Group>>('group');
-
-	compoundApi = injectCompound(
-		() => ({
-			isTrigger: this.isTrigger(),
-			mass: this.mass(),
-			position: this.position(),
-			rotation: this.rotation(),
-			shapes: [
-				{ args: this.boxSize, position: [0, 0, 0], rotation: [0, 0, 0], type: 'Box' },
-				{ args: [this.sphereRadius], position: [1, 0, 0], rotation: [0, 0, 0], type: 'Sphere' },
-			],
-		}),
-		this.group,
-	);
+	private group = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
-		afterNextRender(() => {
-			autoEffect(() => {
-				const api = this.compoundApi();
-				if (!api) return;
+		const compoundApi = injectCompound(
+			() => ({
+				isTrigger: this.isTrigger(),
+				mass: this.mass(),
+				position: this.position(),
+				rotation: this.rotation(),
+				shapes: [
+					{ args: this.boxSize, position: [0, 0, 0], rotation: [0, 0, 0], type: 'Box' },
+					{ args: [this.sphereRadius], position: [1, 0, 0], rotation: [0, 0, 0], type: 'Sphere' },
+				],
+			}),
+			this.group,
+		);
 
-				const positionCleanup = api.position.subscribe(this.positionChanged.emit.bind(this.positionChanged));
-				const rotationCleanup = api.rotation.subscribe(this.rotationChanged.emit.bind(this.rotationChanged));
+		effect((onCleanup) => {
+			const api = compoundApi();
+			if (!api) return;
 
-				return () => {
-					positionCleanup();
-					rotationCleanup();
-				};
+			const positionCleanup = api.position.subscribe(this.positionChanged.emit.bind(this.positionChanged));
+			const rotationCleanup = api.rotation.subscribe(this.rotationChanged.emit.bind(this.rotationChanged));
+
+			onCleanup(() => {
+				positionCleanup();
+				rotationCleanup();
 			});
 		});
 	}
@@ -145,13 +142,13 @@ export class CompoundBody {
 	host: { class: 'compound-experience' },
 })
 export class Experience {
-	Math = Math;
+	protected Math = Math;
 
-	ready = signal(false);
-	copy = signal(false);
+	protected ready = signal(false);
+	protected copy = signal(false);
 
-	position: Triplet = [0, 0, 0];
-	rotation: Triplet = [0, 0, 0];
+	protected position: Triplet = [0, 0, 0];
+	protected rotation: Triplet = [0, 0, 0];
 
 	constructor() {
 		afterNextRender(() => {

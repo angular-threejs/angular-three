@@ -46,17 +46,17 @@ import { Mesh } from 'three';
 	imports: [NgtArgs, NgtsDecal],
 })
 export class Dodecahedron {
-	protected readonly Math = Math;
+	protected Math = Math;
 
 	scale = input(1);
 	position = input([0, 0, 0]);
 
-	texture = injectTexture(() => './three.png');
+	protected texture = injectTexture(() => './three.png');
 
-	clicked = signal(false);
-	hovered = signal(false);
+	protected clicked = signal(false);
+	protected hovered = signal(false);
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	private meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
 		injectBeforeRender(({ delta }) => {
@@ -116,9 +116,9 @@ export class Dodecahedron {
 export class Bunny {
 	protected readonly Math = Math;
 
-	gltf = injectGLTF(() => './bunny-transformed.glb') as Signal<any | null>;
+	protected gltf = injectGLTF(() => './bunny-transformed.glb') as Signal<any | null>;
 
-	textRef = viewChild(NgtsText);
+	private textRef = viewChild(NgtsText);
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
@@ -136,7 +136,7 @@ export class Bunny {
 		<ngt-color attach="background" *args="['#f0f0f0']" />
 		<ngt-ambient-light [intensity]="0.25 * Math.PI" />
 		<ngt-spot-light [decay]="0" [position]="[10, 10, 10]" [angle]="0.15" [penumbra]="1" />
-		<ngt-point-light [decay]="0" [position]="[-10, 0, -5]" [angle]="0.5" [intensity]="6" />
+		<ngt-point-light [decay]="0" [position]="[-10, 0, -5]" [intensity]="6" />
 		<ngt-group [position]="[0, -0.75, 0]">
 			<app-bunny />
 			<app-dodecahedron [position]="[-0.9, 2, 0.4]" [scale]="0.1" />
@@ -169,5 +169,5 @@ export class Bunny {
 	],
 })
 export class Experience {
-	protected readonly Math = Math;
+	protected Math = Math;
 }

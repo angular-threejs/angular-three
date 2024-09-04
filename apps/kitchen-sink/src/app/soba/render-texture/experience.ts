@@ -42,13 +42,13 @@ export class Dodecahedron {
 	scale = input(1);
 	name = input('');
 
-	hover = signal(false);
-	active = signal(false);
+	protected hover = signal(false);
+	protected active = signal(false);
 
-	color = computed(() => (this.hover() ? 'hotpink' : '#5de4c7'));
-	meshScale = computed(() => (this.active() ? 1.5 : 1));
+	protected color = computed(() => (this.hover() ? 'hotpink' : '#5de4c7'));
+	protected meshScale = computed(() => (this.active() ? 1.5 : 1));
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
 		injectBeforeRender(() => {
@@ -90,7 +90,7 @@ export class Dodecahedron {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Material {
-	textRef = viewChild(NgtsText);
+	private textRef = viewChild(NgtsText);
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
@@ -122,7 +122,7 @@ export class Cube {}
 	template: `
 		<ngt-color *args="['#cecece']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5" />
-		<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" [decay]="0" />
+		<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" />
 		<app-cube />
 		<app-dodecahedron [position]="[0, 1, 0]" [scale]="0.2" name="root" />
 		<ngts-contact-shadows [options]="{ frames: 1, position: [0, -0.5, 0], blur: 1, opacity: 0.75 }" />
@@ -135,5 +135,5 @@ export class Cube {}
 	host: { class: 'render-texture-experience' },
 })
 export class Experience {
-	Math = Math;
+	protected Math = Math;
 }

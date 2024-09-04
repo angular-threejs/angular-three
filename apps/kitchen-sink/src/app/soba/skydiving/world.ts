@@ -18,5 +18,5 @@ import { BackSide } from 'three';
 })
 export class World {
 	protected readonly BackSide = BackSide;
-	skyTexture = injectTexture(() => './sky-texture.jpg');
+	protected skyTexture = injectTexture(() => './sky-texture.jpg');
 }

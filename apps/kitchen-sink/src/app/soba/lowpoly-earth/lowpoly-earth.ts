@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	imports: [NgtCanvas],
 })
 export default class LowpolyEarth {
-	sceneGraph = Experience;
+	protected sceneGraph = Experience;
 }

@@ -33,5 +33,5 @@ extend(THREE);
 	host: { class: 'postprocessing' },
 })
 export default class Postprocessing {
-	examples = ['basic', 'outline'];
+	protected examples = ['basic', 'outline'];
 }

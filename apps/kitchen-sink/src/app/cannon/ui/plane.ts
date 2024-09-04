@@ -31,17 +31,22 @@ import { PositionRotationInput } from './position-rotation-input';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiPlane {
-	positionRotationInput = inject(PositionRotationInput, { host: true });
+	protected positionRotationInput = inject(PositionRotationInput, { host: true });
+
 	color = input('#171717');
 	size = input(10);
 	useShadowMaterial = input(true);
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	plane = injectPlane(
-		() => ({
-			type: 'Static',
-			rotation: this.positionRotationInput.rotation(),
-			position: this.positionRotationInput.position(),
-		}),
-		this.mesh,
-	);
+
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+
+	constructor() {
+		injectPlane(
+			() => ({
+				type: 'Static',
+				rotation: this.positionRotationInput.rotation(),
+				position: this.positionRotationInput.position(),
+			}),
+			this.mesh,
+		);
+	}
 }

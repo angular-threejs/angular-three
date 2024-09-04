@@ -15,5 +15,5 @@ import { SceneGraph } from './scene-graph';
 	host: { class: 'skydiving-soba' },
 })
 export default class SkyDiving {
-	sceneGraph = SceneGraph;
+	protected sceneGraph = SceneGraph;
 }

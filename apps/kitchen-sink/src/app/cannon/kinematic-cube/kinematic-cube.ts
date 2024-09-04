@@ -12,5 +12,5 @@ import { Experience } from './experience';
 	host: { class: 'kinematic-cannon' },
 })
 export default class KinematicCube {
-	scene = Experience;
+	protected scene = Experience;
 }

@@ -28,8 +28,8 @@ declare const Chart: any;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartContainer extends NgtHTML {
-	chartContainer = viewChild.required<ElementRef<HTMLCanvasElement>>('chartContainer');
-	data = Array.from({ length: 6 }, () => Math.random() * 100);
+	private chartContainer = viewChild.required<ElementRef<HTMLCanvasElement>>('chartContainer');
+	private data = Array.from({ length: 6 }, () => Math.random() * 100);
 
 	constructor() {
 		super();
@@ -91,7 +91,7 @@ export class ChartContainer extends NgtHTML {
 	imports: [NgtArgs, NgtsOrbitControls, NgtsHTML, NgtsHTMLContent, ChartContainer],
 })
 export class Experience {
-	protected readonly Math = Math;
+	protected Math = Math;
 
 	static chartReady = signal(false);
 }

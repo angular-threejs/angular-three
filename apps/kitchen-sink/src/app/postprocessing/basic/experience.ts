@@ -66,7 +66,7 @@ export class Sun {
 	host: { class: 'experience-basic-postprocessing' },
 })
 export class Experience {
-	group = viewChild.required<ElementRef<Group>>('group');
+	private group = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
 		injectBeforeRender(() => {

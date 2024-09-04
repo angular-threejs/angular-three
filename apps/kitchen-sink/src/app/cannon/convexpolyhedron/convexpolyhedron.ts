@@ -12,6 +12,6 @@ import { Experience } from './experience';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'convex-cannon' },
 })
-export default class ConvexPolyhydron {
-	scene = Experience;
+export default class ConvexPolyhedron {
+	protected scene = Experience;
 }

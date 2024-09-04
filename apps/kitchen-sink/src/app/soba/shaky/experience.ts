@@ -34,7 +34,7 @@ RectAreaLightUniformsLib.init();
 export class Light {
 	protected readonly Math = Math;
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	private groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {

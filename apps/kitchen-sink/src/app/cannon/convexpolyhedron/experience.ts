@@ -11,18 +11,15 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, extend } from 'angular-three';
+import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectConvexPolyhedron } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import * as THREE from 'three';
 import { BoxGeometry, BufferGeometry, ConeGeometry, Mesh } from 'three';
 import { GLTF, Geometry } from 'three-stdlib';
 import { UiPlane } from '../ui/plane';
 import { PositionRotationInput } from '../ui/position-rotation-input';
-
-extend(THREE);
 
 function toConvexProps(bufferGeometry: BufferGeometry): [vertices: Triplet[], faces: Triplet[]] {
 	const geo = new Geometry().fromBufferGeometry(bufferGeometry);
@@ -52,12 +49,14 @@ function toConvexProps(bufferGeometry: BufferGeometry): [vertices: Triplet[], fa
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cone {
-	positionRotationInputs = inject(PositionRotationInput, { host: true });
-	sides = input.required<number>();
-	geometry = computed(() => new ConeGeometry(0.7, 0.7, this.sides(), 1));
-	args = computed(() => toConvexProps(this.geometry()));
+	protected positionRotationInputs = inject(PositionRotationInput, { host: true });
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	sides = input.required<number>();
+
+	protected geometry = computed(() => new ConeGeometry(0.7, 0.7, this.sides(), 1));
+	private args = computed(() => toConvexProps(this.geometry()));
+
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
 		injectConvexPolyhedron(
@@ -93,13 +92,13 @@ export class Cone {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cube {
-	positionRotationInputs = inject(PositionRotationInput, { host: true });
+	protected positionRotationInputs = inject(PositionRotationInput, { host: true });
 	size = input.required<number>();
 	// NOTE: this is wildly inefficient vs useBox
-	geometry = computed(() => new BoxGeometry(this.size(), this.size(), this.size()));
-	args = computed(() => toConvexProps(this.geometry()));
+	protected geometry = computed(() => new BoxGeometry(this.size(), this.size(), this.size()));
+	private args = computed(() => toConvexProps(this.geometry()));
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
 		injectConvexPolyhedron(
@@ -140,21 +139,21 @@ type DiamondGLTF = GLTF & {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Diamond {
-	positionRotationInputs = inject(PositionRotationInput, { host: true });
+	protected positionRotationInputs = inject(PositionRotationInput, { host: true });
 
-	gltf = injectGLTF(() => './diamond.glb') as Signal<DiamondGLTF | null>;
-	geometry = computed(() => {
+	private gltf = injectGLTF(() => './diamond.glb') as Signal<DiamondGLTF | null>;
+	protected geometry = computed(() => {
 		const gltf = this.gltf();
 		if (!gltf) return null;
 		return gltf.nodes.Cylinder.geometry;
 	});
-	args = computed(() => {
+	private args = computed(() => {
 		const geometry = this.geometry();
 		if (!geometry) return undefined;
 		return toConvexProps(geometry);
 	});
 
-	mesh = viewChild<ElementRef<Mesh>>('mesh');
+	private mesh = viewChild<ElementRef<Mesh>>('mesh');
 
 	constructor() {
 		injectConvexPolyhedron(
@@ -201,9 +200,10 @@ export class Diamond {
 	host: { class: 'convex-experience' },
 })
 export class Experience {
-	Math = Math;
-	invertGravity = signal(false);
-	gravity = computed<Triplet>(() => [0, this.invertGravity() ? 5 : -10, 0]);
+	protected Math = Math;
+
+	private invertGravity = signal(false);
+	protected gravity = computed<Triplet>(() => [0, this.invertGravity() ? 5 : -10, 0]);
 
 	toggleInvertGravity() {
 		this.invertGravity.update((prev) => !prev);

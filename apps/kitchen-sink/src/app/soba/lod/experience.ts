@@ -43,7 +43,7 @@ export class LODBust {
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtEuler>([0, 0, 0]);
 
-	gltfs = injectGLTF(() => [
+	protected gltfs = injectGLTF(() => [
 		'./bust-1-d.glb',
 		'./bust-2-d.glb',
 		'./bust-3-d.glb',
@@ -70,6 +70,6 @@ export class LODBust {
 	host: { class: 'lod-soba-experience' },
 })
 export class Experience {
-	protected readonly Math = Math;
-	protected readonly positions = positions;
+	protected Math = Math;
+	protected positions = positions;
 }
