@@ -38,6 +38,14 @@ const routes: Routes = [
 		loadComponent: () => import('./stars/stars'),
 	},
 	{
+		path: 'skydiving',
+		loadComponent: () => import('./skydiving/skydiving'),
+	},
+	{
+		path: 'porsche',
+		loadComponent: () => import('./porsche/porsche'),
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',

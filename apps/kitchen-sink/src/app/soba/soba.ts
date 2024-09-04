@@ -33,5 +33,17 @@ extend(THREE);
 	host: { class: 'soba' },
 })
 export default class Soba {
-	examples = ['basic', 'hud', 'render-texture', 'shaky', 'lod', 'decal', 'html-chart', 'lowpoly-earth', 'stars'];
+	examples = [
+		'basic',
+		'hud',
+		'render-texture',
+		'shaky',
+		'lod',
+		'decal',
+		'html-chart',
+		'lowpoly-earth',
+		'stars',
+		'skydiving',
+		'porsche',
+	];
 }
