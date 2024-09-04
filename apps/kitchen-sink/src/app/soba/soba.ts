@@ -34,6 +34,7 @@ extend(THREE);
 })
 export default class Soba {
 	examples = [
+		'stars',
 		'basic',
 		'hud',
 		'render-texture',
@@ -42,7 +43,6 @@ export default class Soba {
 		'decal',
 		'html-chart',
 		'lowpoly-earth',
-		'stars',
 		'skydiving',
 		'porsche',
 	];

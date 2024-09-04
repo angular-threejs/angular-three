@@ -47,7 +47,7 @@ const routes: Routes = [
 	},
 	{
 		path: '',
-		redirectTo: 'basic',
+		redirectTo: 'stars',
 		pathMatch: 'full',
 	},
 ];
