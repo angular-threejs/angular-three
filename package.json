@@ -125,7 +125,7 @@
 		"@nativescript/canvas-media": "2.0.0-webgpu.11",
 		"@nativescript/canvas-three": "2.0.0-webgpu.11",
 		"@pmndrs/cannon-worker-api": "^2.4.0",
-		"@pmndrs/vanilla": "^1.19.2",
+		"@pmndrs/vanilla": "^1.19.3",
 		"@swc/helpers": "0.5.12",
 		"camera-controls": "^2.9.0",
 		"cannon-es": "^0.20.0",
