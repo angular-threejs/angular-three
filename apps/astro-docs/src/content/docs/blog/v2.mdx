@@ -396,8 +396,34 @@ The testing API is currently in Developer Preview and may be subject to changes 
 
 Here's a simple example of how you might use the testing utilities:
 
-```ts
+```angular-ts
 import { NgtTestBed } from 'angular-three/testing';
+
+@Component({
+  standalone: true,
+  template: `
+    <ngt-mesh #mesh (click)="clicked.set(!clicked())">
+      <ngt-box-geometry />
+      <ngt-mesh-standard-material [color]="color()" />
+    </ngt-mesh>
+  `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MyThreeComponent {
+  clicked = signal(false);
+  color = computed(() => (this.clicked() ? 'hotpink' : 'orange'));
+
+  meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+
+  constructor() {
+    injectBeforeRender(({ delta }) => {
+      const mesh = this.meshRef().nativeElement;
+      mesh.rotation.x += delta;
+      mesh.rotation.y += delta;
+    });
+  }
+}
 
 describe('MyThreeComponent', () => {
   it('should render a mesh', async () => {
