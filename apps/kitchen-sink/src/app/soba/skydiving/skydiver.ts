@@ -1,8 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, Signal } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
+	ElementRef,
+	Signal,
+	viewChild,
+} from '@angular/core';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { injectGLTF, injectTexture } from 'angular-three-soba/loaders';
 import { injectAnimations } from 'angular-three-soba/misc';
-import { BufferGeometry, DoubleSide, Mesh, MeshStandardMaterial, ShaderMaterial, SkinnedMesh } from 'three';
+import { Bone, BufferGeometry, DoubleSide, Mesh, MeshStandardMaterial, ShaderMaterial, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
 
 type SkydiverGLTF = GLTF & {
@@ -20,7 +28,7 @@ type SkydiverGLTF = GLTF & {
 		<ngt-group [dispose]="null">
 			@if (gltf(); as gltf) {
 				<ngt-group>
-					<ngt-primitive *args="[gltf.nodes.mixamorigHips]" />
+					<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
 					<ngt-skinned-mesh [geometry]="gltf.nodes.skydiver_2.geometry" [skeleton]="gltf.nodes.skydiver_2.skeleton">
 						@if (textures(); as textures) {
 							<ngt-mesh-standard-material
@@ -48,16 +56,10 @@ type SkydiverGLTF = GLTF & {
 	imports: [NgtArgs],
 })
 export class Skydiver {
-	protected readonly DoubleSide = DoubleSide;
+	protected DoubleSide = DoubleSide;
 
-	gltf = injectGLTF(() => './skydiver.glb') as Signal<SkydiverGLTF | null>;
-	private model = computed(() => {
-		const gltf = this.gltf();
-		if (!gltf) return null;
-		return gltf.scene;
-	});
-
-	textures = injectTexture(
+	protected gltf = injectGLTF(() => './skydiver.glb') as Signal<SkydiverGLTF | null>;
+	protected textures = injectTexture(
 		() => ({
 			baseColor: './texture/skydiver_BaseColor.webp',
 			roughness: './texture/skydiver_Roughness.webp',
@@ -74,9 +76,10 @@ export class Skydiver {
 		},
 	);
 
-	animations = injectAnimations(this.gltf, this.model);
+	private boneRef = viewChild<ElementRef<Bone>>('bone');
+	private animations = injectAnimations(this.gltf, this.boneRef);
 
-	onBeforeCompile: MeshStandardMaterial['onBeforeCompile'] = (shader) => {
+	protected onBeforeCompile: MeshStandardMaterial['onBeforeCompile'] = (shader) => {
 		const gltf = this.gltf();
 
 		Object.assign(shader.uniforms, {
@@ -102,11 +105,12 @@ export class Skydiver {
 	};
 
 	constructor() {
-		effect(() => {
+		effect((onCleanup) => {
 			const ready = this.animations.ready();
 			if (!ready) return;
 			const { actions } = this.animations;
 			actions['animation_0']?.reset().play();
+			onCleanup(() => actions['animation_0']?.stop());
 		});
 
 		injectBeforeRender(({ clock }) => {

@@ -178,6 +178,10 @@ export default defineConfig({
 						{ label: 'How it works', slug: 'postprocessing/how-it-works' },
 					],
 				},
+				{
+					label: 'Demo',
+					link: 'https://demo.angularthree.org',
+				},
 			],
 		}),
 		tailwind({ applyBaseStyles: false }),
