@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { extend } from 'angular-three';
 import * as THREE from 'three';
+import routes from './postprocessing.routes';
 
 extend(THREE);
 
@@ -33,5 +34,5 @@ extend(THREE);
 	host: { class: 'postprocessing' },
 })
 export default class Postprocessing {
-	protected examples = ['basic', 'outline'];
+	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);
 }
