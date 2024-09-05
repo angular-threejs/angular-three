@@ -1,15 +1,24 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
-import { Experience, invert } from './experience';
+import { Experience, invert, logo } from './experience';
 
 @Component({
 	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="scene" [shadows]="true" [gl]="{ stencil: true }" />
-		<label class="absolute top-2 right-2 font-mono flex gap-2 items-center">
-			<input type="checkbox" [value]="invert()" (change)="onChange($event)" />
-			invert
-		</label>
+		<div
+			class="absolute top-2 right-2 p-4 flex flex-col gap-4 items-center rounded border border-black border-dotted font-mono"
+		>
+			<label class="flex gap-2 items-center">
+				<input type="checkbox" [value]="invert()" (change)="onInvertChange($event)" />
+				invert
+			</label>
+			<select [value]="logo()" (change)="onLogoChange($event)">
+				<option value="angular">Angular</option>
+				<option value="nx">Nx</option>
+			</select>
+		</div>
+
 		<a
 			class="absolute top-2 left-2 font-mono underline"
 			href="https://pmndrs.github.io/examples/demos/inverted-stencil-buffer"
@@ -25,9 +34,15 @@ import { Experience, invert } from './experience';
 export default class InvertedStencilBuffer {
 	protected scene = Experience;
 	protected invert = invert;
+	protected logo = logo;
 
-	onChange(event: Event) {
+	onInvertChange(event: Event) {
 		const target = event.target as HTMLInputElement;
 		this.invert.set(target.checked);
+	}
+
+	onLogoChange(event: Event) {
+		const target = event.target as HTMLSelectElement;
+		this.logo.set(target.value as 'angular' | 'nx');
 	}
 }

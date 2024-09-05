@@ -4,9 +4,11 @@ import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls, NgtsPivotControls } from 'angular-three-soba/controls';
 import { NgtsBounds, NgtsEnvironment, NgtsFloat, NgtsMask } from 'angular-three-soba/staging';
 import { ColorRepresentation } from 'three';
+import { Angular } from './angular';
 import { Nx } from './nx';
 
 export const invert = signal(false);
+export const logo = signal<'angular' | 'nx'>('angular');
 
 @Component({
 	selector: 'app-frame',
@@ -90,8 +92,14 @@ export class Box {
 		<app-circular-mask />
 		<ngts-bounds [options]="{ fit: true, clip: true, observe: true }">
 			<ngts-float [options]="{ floatIntensity: 4, rotationIntensity: 0, speed: 4 }">
-				<!--				<app-angular [invert]="invert()" [scale]="20" />-->
-				<app-nx [invert]="invert()" [scale]="20" />
+				@switch (logo()) {
+					@case ('angular') {
+						<app-angular [invert]="invert()" [scale]="20" />
+					}
+					@case ('nx') {
+						<app-nx [invert]="invert()" [scale]="20" />
+					}
+				}
 			</ngts-float>
 			<app-box
 				color="#EAC435"
@@ -111,9 +119,10 @@ export class Box {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'inverted-stencil-buffer-soba-experience' },
-	imports: [CircularMask, NgtsBounds, NgtsFloat, Box, NgtsEnvironment, NgtsOrbitControls, NgtArgs, Nx],
+	imports: [CircularMask, NgtsBounds, NgtsFloat, Box, NgtsEnvironment, NgtsOrbitControls, NgtArgs, Nx, Angular],
 })
 export class Experience {
 	protected readonly Math = Math;
 	protected invert = invert;
+	protected logo = logo;
 }
