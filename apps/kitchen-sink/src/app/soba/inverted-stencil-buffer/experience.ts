@@ -6,9 +6,10 @@ import { NgtsBounds, NgtsEnvironment, NgtsFloat, NgtsMask } from 'angular-three-
 import { ColorRepresentation } from 'three';
 import { Angular } from './angular';
 import { Nx } from './nx';
+import { NxCloud } from './nx-cloud';
 
 export const invert = signal(false);
-export const logo = signal<'angular' | 'nx'>('angular');
+export const logo = signal<'angular' | 'nx' | 'nx-cloud'>('nx');
 
 @Component({
 	selector: 'app-frame',
@@ -99,6 +100,9 @@ export class Box {
 					@case ('nx') {
 						<app-nx [invert]="invert()" [scale]="20" />
 					}
+					@case ('nx-cloud') {
+						<app-nx-cloud [invert]="invert()" [scale]="160" />
+					}
 				}
 			</ngts-float>
 			<app-box
@@ -119,7 +123,18 @@ export class Box {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'inverted-stencil-buffer-soba-experience' },
-	imports: [CircularMask, NgtsBounds, NgtsFloat, Box, NgtsEnvironment, NgtsOrbitControls, NgtArgs, Nx, Angular],
+	imports: [
+		CircularMask,
+		NgtsBounds,
+		NgtsFloat,
+		Box,
+		NgtsEnvironment,
+		NgtsOrbitControls,
+		NgtArgs,
+		Nx,
+		Angular,
+		NxCloud,
+	],
 })
 export class Experience {
 	protected readonly Math = Math;

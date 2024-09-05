@@ -16,6 +16,7 @@ import { Experience, invert, logo } from './experience';
 			<select [value]="logo()" (change)="onLogoChange($event)">
 				<option value="angular">Angular</option>
 				<option value="nx">Nx</option>
+				<option value="nx-cloud">Nx Cloud</option>
 			</select>
 		</div>
 
@@ -43,6 +44,6 @@ export default class InvertedStencilBuffer {
 
 	onLogoChange(event: Event) {
 		const target = event.target as HTMLSelectElement;
-		this.logo.set(target.value as 'angular' | 'nx');
+		this.logo.set(target.value as 'angular' | 'nx' | 'nx-cloud');
 	}
 }
