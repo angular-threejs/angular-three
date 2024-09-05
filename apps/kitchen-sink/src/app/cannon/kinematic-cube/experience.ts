@@ -13,7 +13,7 @@ import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { Color, InstancedMesh, Mesh } from 'three';
-import niceColors from '../colors';
+import niceColors from '../../colors';
 
 @Component({
 	selector: 'app-plane',

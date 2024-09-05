@@ -46,6 +46,14 @@ const routes: Routes = [
 		loadComponent: () => import('./porsche/porsche'),
 	},
 	{
+		path: 'instances',
+		loadComponent: () => import('./instances/instances'),
+	},
+	{
+		path: 'inverted-stencil-buffer',
+		loadComponent: () => import('./inverted-stencil-buffer/inverted-stencil-buffer'),
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',

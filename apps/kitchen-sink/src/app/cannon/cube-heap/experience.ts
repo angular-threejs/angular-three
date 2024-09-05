@@ -15,7 +15,7 @@ import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcBodyPublicApi, injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
 import { Color, InstancedMesh, Mesh } from 'three';
-import niceColors from '../colors';
+import niceColors from '../../colors';
 import { shape } from './state';
 
 @Component({
