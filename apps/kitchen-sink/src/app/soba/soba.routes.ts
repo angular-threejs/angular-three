@@ -54,6 +54,10 @@ const routes: Routes = [
 		loadComponent: () => import('./inverted-stencil-buffer/inverted-stencil-buffer'),
 	},
 	{
+		path: 'simple-sound-analyser',
+		loadComponent: () => import('./simple-sound-analyser/simple-sound-analyser'),
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
