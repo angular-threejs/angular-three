@@ -1,19 +1,10 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	input,
-	signal,
-	Signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls, NgtsPivotControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectMask, NgtsBounds, NgtsEnvironment, NgtsFloat, NgtsMask } from 'angular-three-soba/staging';
-import { ColorRepresentation, Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
-import { GLTF } from 'three-stdlib';
+import { NgtsBounds, NgtsEnvironment, NgtsFloat, NgtsMask } from 'angular-three-soba/staging';
+import { ColorRepresentation } from 'three';
+import { Nx } from './nx';
 
 export const invert = signal(false);
 
@@ -88,62 +79,6 @@ export class Box {
 	rotation = input<NgtEuler>([0, 0, 0]);
 }
 
-type AngularGLTF = GLTF & {
-	nodes: { Curve: Mesh; Curve001: Mesh; Curve002: Mesh; Curve003: Mesh };
-	materials: { SVGMat: MeshStandardMaterial };
-};
-
-@Component({
-	selector: 'app-angular',
-	standalone: true,
-	template: `
-		@if (gltf(); as gltf) {
-			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-2.5, -3, 0]" [rotation]="[Math.PI / 2, 0, 0]">
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve001.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve002.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve003.geometry"
-					[material]="material()"
-				/>
-			</ngt-group>
-		}
-	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class Angular {
-	protected readonly Math = Math;
-
-	invert = input(false);
-	scale = input(1);
-
-	protected gltf = injectGLTF(() => './angular.glb') as Signal<AngularGLTF | null>;
-	protected stencilParameters = injectMask(() => 1, this.invert);
-
-	protected material = computed(() => {
-		const stencilParameters = this.stencilParameters();
-		return new MeshPhongMaterial({ color: '#E72BAA', ...stencilParameters });
-	});
-}
-
 @Component({
 	standalone: true,
 	template: `
@@ -153,10 +88,10 @@ export class Angular {
 		<ngt-hemisphere-light [intensity]="Math.PI * 1.5" groundColor="red" />
 
 		<app-circular-mask />
-		<app-circular-mask [position]="[2, 0, 0]" />
 		<ngts-bounds [options]="{ fit: true, clip: true, observe: true }">
 			<ngts-float [options]="{ floatIntensity: 4, rotationIntensity: 0, speed: 4 }">
-				<app-angular [invert]="invert()" [scale]="20" />
+				<!--				<app-angular [invert]="invert()" [scale]="20" />-->
+				<app-nx [invert]="invert()" [scale]="20" />
 			</ngts-float>
 			<app-box
 				color="#EAC435"
@@ -176,7 +111,7 @@ export class Angular {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'inverted-stencil-buffer-soba-experience' },
-	imports: [CircularMask, NgtsBounds, NgtsFloat, Angular, Box, NgtsEnvironment, NgtsOrbitControls, NgtArgs],
+	imports: [CircularMask, NgtsBounds, NgtsFloat, Box, NgtsEnvironment, NgtsOrbitControls, NgtArgs, Nx],
 })
 export class Experience {
 	protected readonly Math = Math;
