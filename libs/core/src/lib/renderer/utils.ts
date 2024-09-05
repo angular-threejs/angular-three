@@ -1,10 +1,11 @@
 import { untracked } from '@angular/core';
+import { EventDispatcher, Object3D } from 'three';
 import { removeInteractivity } from '../events';
 import { getLocalState, invalidateInstance } from '../instance';
 import { NgtInstanceNode } from '../types';
 import { attach, detach } from '../utils/attach';
 import { is } from '../utils/is';
-import { SPECIAL_EVENTS } from './constants';
+import { SPECIAL_EVENTS, THREE_NATIVE_EVENTS } from './constants';
 
 // @internal
 export const enum NgtRendererClassId {
@@ -209,6 +210,20 @@ export function processThreeEvent(
 		return () => {
 			lS.onUpdate = undefined;
 		};
+	}
+
+	if (THREE_NATIVE_EVENTS.includes(eventName) && instance instanceof EventDispatcher) {
+		// NOTE: rename to dispose because that's the event type, not disposed.
+		if (eventName === 'disposed') {
+			eventName = 'dispose';
+		}
+
+		if ((instance as Object3D).parent && (eventName === 'added' || eventName === 'removed')) {
+			callback({ type: eventName, target: instance });
+		}
+
+		instance.addEventListener(eventName, callback);
+		return () => instance.removeEventListener(eventName, callback);
 	}
 
 	if (!lS.handlers) lS.handlers = {};

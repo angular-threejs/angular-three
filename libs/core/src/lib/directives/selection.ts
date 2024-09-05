@@ -32,14 +32,14 @@ export class NgtSelect {
 		afterNextRender(() => {
 			autoEffect(
 				() => {
+					const enabled = this.enabled();
+					if (!enabled) return;
+
 					const host = elementRef.nativeElement;
 					if (!host) return;
 
 					const localState = getLocalState(host);
 					if (!localState) return;
-
-					const enabled = this.enabled();
-					if (!enabled) return;
 
 					// ngt-mesh[ngtSelect]
 					if (host.type === 'Mesh') {

@@ -20,3 +20,5 @@ export const SPECIAL_EVENTS = {
 	UPDATED: 'updated',
 	ATTACHED: 'attached',
 } as const;
+
+export const THREE_NATIVE_EVENTS = ['added', 'removed', 'childadded', 'childremoved', 'disposed'];

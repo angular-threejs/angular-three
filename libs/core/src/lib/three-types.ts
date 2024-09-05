@@ -169,10 +169,18 @@ export type NgtVector4 = NgtVectorLike<Vector4>;
 export type NgtLayers = Layers | Parameters<Layers['set']>[0];
 export type NgtQuaternion = Quaternion | Parameters<Quaternion['set']>;
 
+export type ThreeDisposeEvent = { type: 'dispose'; target: NgtInstanceNode };
+export type ThreeAddedEvent = { type: 'added'; target: NgtInstanceNode };
+export type ThreeRemovedEvent = { type: 'removed'; target: NgtInstanceNode };
+export type ThreeChildAddedEvent = { type: 'childadded'; target: NgtInstanceNode; child: NgtInstanceNode };
+export type ThreeChildRemovedEvent = { type: 'childremoved'; target: NgtInstanceNode; child: NgtInstanceNode };
+
 export interface NgtNodeEventMap<TOriginal> {
 	attached: NgtAfterAttach<NgtInstanceNode, TOriginal>;
 	updated: TOriginal;
 	beforeRender: NgtBeforeRenderEvent<TOriginal>;
+	// NOTE: this is named "disposed" to differentiate it from [dispose] property.
+	disposed: ThreeDisposeEvent;
 }
 
 export type NgtNodeElement<TOriginal, TConstructor> = {
@@ -194,6 +202,11 @@ export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Ex
 
 export type NgtObject3DEventsMap = {
 	[TEvent in keyof NgtEventHandlers]-?: Parameters<NonNullable<NgtEventHandlers[TEvent]>>[0];
+} & {
+	added: ThreeAddedEvent;
+	removed: ThreeRemovedEvent;
+	childadded: ThreeChildAddedEvent;
+	childremoved: ThreeChildRemovedEvent;
 };
 
 export type NgtAllObject3DEventsMap = NgtObject3DEventsMap & NgtNodeEventMap<NgtInstanceNode>;
@@ -853,5 +866,5 @@ export interface ThreeElements {
 
 declare global {
 	interface HTMLElementTagNameMap extends ThreeElements {}
-	interface HTMLElementEventMap extends NgtNodeEventMap<NgtInstanceNode> {}
+	interface HTMLElementEventMap extends NgtAllObject3DEventsMap {}
 }
