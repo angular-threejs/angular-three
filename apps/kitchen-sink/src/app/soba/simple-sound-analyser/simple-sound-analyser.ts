@@ -12,12 +12,9 @@ import { Overlay } from './overlay';
 	`,
 	imports: [NgtCanvas, Overlay],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'simple-sound-analyser-soba' },
+	host: { class: 'simple-sound-analyser-soba block h-full w-full' },
 	styles: `
 		:host {
-			display: block;
-			height: 100%;
-			width: 100%;
 			background: linear-gradient(15deg, rgb(82, 81, 88) 0%, rgb(255, 247, 248) 100%);
 		}
 	`,
