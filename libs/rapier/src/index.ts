@@ -1,1 +1,7 @@
-export * from './lib/rapier/rapier.component';
+export * from './lib/colliders';
+export * from './lib/instanced-rigid-bodies';
+export * from './lib/mesh-collider';
+export * from './lib/physics';
+export * from './lib/rigid-body';
+
+export type * from './lib/types';

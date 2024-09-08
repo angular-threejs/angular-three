@@ -17,6 +17,11 @@ export const appRoutes: Route[] = [
 		loadChildren: () => import('./soba/soba.routes'),
 	},
 	{
+		path: 'rapier',
+		loadComponent: () => import('./rapier/rapier'),
+		loadChildren: () => import('./rapier/rapier.routes'),
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',
