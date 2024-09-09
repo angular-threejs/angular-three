@@ -151,7 +151,11 @@ export default defineConfig({
 							items: [
 								{ label: 'Directives', slug: 'core/advanced/directives' },
 								{ label: 'Portals', slug: 'core/advanced/portals' },
-								{ label: 'Routed Scene', slug: 'core/advanced/routed-scene' },
+								{
+									label: 'Routed Scene',
+									slug: 'core/advanced/routed-scene',
+									badge: { text: 'Bug', variant: 'danger' },
+								},
 								{ label: 'Performance', slug: 'core/advanced/performance' },
 							],
 						},
