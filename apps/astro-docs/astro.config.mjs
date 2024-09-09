@@ -112,6 +112,7 @@ export default defineConfig({
 								{ label: 'First Scene', slug: 'core/getting-started/first-scene' },
 							],
 						},
+						{ label: 'Migrate to v2', slug: 'core/migrate-v2' },
 						{
 							label: 'API',
 							collapsed: true,

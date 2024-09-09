@@ -1,0 +1,147 @@
+---
+title: Migrate to V2
+description: Details about Angular Three v2 migration
+---
+
+As mentioned in the [v2 release blog post](https://angularthree.org/blog/v2), Angular Three v2 is a major release with a substantial change in the migration strategy. It aims to address the limitations of the previous version, resulting in numerous breaking changes. Some of these changes are subtle and may not be immediately apparent.
+
+While it is mentioned that migration path cannot be provided in details, I will try my best to provide a non-exhaustive overview of the changes and how to migrate.
+
+## Custom Renderer
+
+While many have noticed the custom renderer usage from the previous version of the documentation, it has been brought to my attention that some folks are still using `angular-three` before the custom renderer.
+
+Here's a quick summary:
+
+- Use `NgtCanvas` with `sceneGraph` input instead of putting your scene graph as content child of `ngt-canvas`
+
+```diff lang="angular-html"
+- <ngt-canvas>
+-   <ngt-mesh>
+-     <ngt-box-geometry />
+-     <ngt-mesh-basic-material />
+-   </ngt-mesh>
+- </ngt-canvas>
+
++ <ngt-canvas [sceneGraph]="sceneGraph" />
+```
+
+- `sceneGraph` is a reference to a `Component` that renders your entire scene graph.
+
+```angular-ts
+@Component({
+  standalone: true,
+  template: `
+    <ngt-mesh>
+      <ngt-box-geometry />
+      <ngt-mesh-basic-material />
+    </ngt-mesh>
+  `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class SceneGraph {}
+
+@Component({
+  template: `
+    <ngt-canvas [sceneGraph]="sceneGraph" />
+  `,
+  imports: [NgtCanvas],
+})
+export class App {
+  protected sceneGraph = SceneGraph;
+}
+```
+
+- `CUSTOM_ELEMENTS_SCHEMA` is required. Please refer to the [Custom Renderer](/core/api/custom-renderer) documentation for more information.
+- All `ngt-*` elements do not have an importable symbol (they're not `Directive` nor `Component`).
+
+## Scene Graph Inputs
+
+Since the `sceneGraph` reference is passed in as an input and the `NgtCanvas` will  render the scene graph with the custom renderer, there is no straightforward way to pass Inputs to the scene graph component itself.
+
+Use a shared service or a shared `Signal` to pass data from outside to the Scene Graph component.
+
+```angular-ts
+const count = signal(0);
+
+@Component({
+  template: `<ngt-mesh (click)="onClick()"></ngt-mesh>`,
+})
+export class SceneGraph {
+  onClick() {
+    count.update((prev) => prev + 1);
+  }
+}
+
+@Component({
+  template: `
+    <ngt-canvas [sceneGraph]="sceneGraph" />
+    <p>Current count: {{ count() }}</p>
+  `,
+})
+export class App {
+  protected sceneGraph = SceneGraph;
+  protected count = count;
+}
+```
+
+## Custom Inject Functions
+
+All of `injectNgt*` functions have been renamed to just `inject*` instead.
+
+```diff
+- injectNgtLoader();
++ injectLoader();
+
+- injectNgtStore();
++ injectStore();
+```
+
+## `NgtSignalStore`
+
+While not common, consumers can use `signalStore()` to create a `NgtSignalStore`. The purpose of `NgtSignalStore` is a minimal store implementation that `angular-three` uses internally.
+
+### Methods
+
+1. `select(...keys, options?)`: Retrieves a Signal of a part of the state.
+   - Can select nested properties using multiple arguments
+   - Returns `Signal<T>` where T is the type of the selected state
+
+2. `get(...keys)`: Retrieves the current value of a part of the state.
+   - Can access nested properties using multiple arguments
+   - Returns the value directly, not wrapped in a Signal
+
+3. `update(stateOrUpdater)`: Updates the state.
+   - Accepts a partial state object or an updater function
+   - Updater function receives the previous state and returns a partial state
+
+4. `state`: A Signal representing the entire state.
+   - Equivalent to `select()` without arguments
+
+5. `snapshot`: A getter that returns the current state value.
+   - Equivalent to `get()` without arguments
+
+### Creation
+
+Created using the `signalStore` function:
+
+```typescript
+signalStore<State>(
+  initialState?: Partial<State> | ((api: Pick<NgtSignalStore<State>, 'get' | 'update' | 'select'>) => Partial<State>),
+  options?: CreateSignalOptions<State>
+): NgtSignalStore<State>
+```
+
+## Signals everywhere
+
+All public APIs return `Signal` instead of `Observable`. Consumers can try to use `toObservable()` to convert it to an `Observable` if needed to minimize the changes.
+
+## `NgtRef`
+
+`NgtRef` has been removed. Use Signal Query API instead: `viewChild`, `viewChildren`, `contentChild`, and `contentChildren`.
+
+## Missing components from `angular-three-soba`
+
+During the work on v2, most components are rewritten from scratch to accommodate the Signal APIs. Hence, there are some components that are missing from previous version of `angular-three-soba`.
+
+If you find missing components, please open an issue on Github.
