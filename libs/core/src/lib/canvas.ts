@@ -96,8 +96,8 @@ export class NgtCanvas {
 	created = output<NgtState>();
 	pointerMissed = outputFromObservable(this.store.get('pointerMissed$'));
 
-	glCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('glCanvas');
-	glCanvasViewContainerRef = viewChild.required('glCanvas', { read: ViewContainerRef });
+	private glCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('glCanvas');
+	private glCanvasViewContainerRef = viewChild.required('glCanvas', { read: ViewContainerRef });
 
 	protected hbPointerEvents = computed(() => (this.eventSource() ? 'none' : 'auto'));
 

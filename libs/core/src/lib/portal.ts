@@ -150,20 +150,20 @@ export class NgtPortal {
 	autoRender = input(false);
 	autoRenderPriority = input(1);
 
-	portalContent = contentChild.required(NgtPortalContent, { read: TemplateRef });
-	portalAnchor = viewChild.required('anchor', { read: ViewContainerRef });
+	private portalContent = contentChild.required(NgtPortalContent, { read: TemplateRef });
+	private portalAnchor = viewChild.required('anchor', { read: ViewContainerRef });
 
 	private injector = inject(Injector);
 	private portalStore = injectStore({ self: true });
 	private parentStore = injectStore({ skipSelf: true });
-	parentScene = this.parentStore.select('scene');
-	parentCamera = this.parentStore.select('camera');
+	protected parentScene = this.parentStore.select('scene');
+	protected parentCamera = this.parentStore.select('camera');
 
 	private raycaster = new Raycaster();
 	private pointer = new Vector2();
 	private portalRendered = signal(false);
 
-	renderAutoBeforeRender = computed(() => this.portalRendered() && this.autoRender());
+	protected renderAutoBeforeRender = computed(() => this.portalRendered() && this.autoRender());
 
 	private portalView?: EmbeddedViewRef<unknown>;
 
