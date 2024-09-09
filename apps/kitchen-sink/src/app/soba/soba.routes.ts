@@ -58,6 +58,10 @@ const routes: Routes = [
 		loadComponent: () => import('./simple-sound-analyser/simple-sound-analyser'),
 	},
 	{
+		path: 'starbucks',
+		loadComponent: () => import('./starbucks/starbucks'),
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
