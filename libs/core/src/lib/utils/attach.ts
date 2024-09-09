@@ -1,6 +1,6 @@
 import { getLocalState } from '../instance';
 import { NgtAnyRecord, NgtAttachFunction, NgtState } from '../types';
-import { applyProps } from './apply-props';
+import { applyProps, NGT_APPLY_PROPS } from './apply-props';
 import { NgtSignalStore } from './signal-store';
 
 export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = [], useApplyProps = false): void {
@@ -11,7 +11,7 @@ export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = [
 		if (useApplyProps) applyProps(object, { [base]: value });
 		else object[base] = value;
 	} else {
-		assignEmpty(object, base);
+		assignEmpty(object, base, useApplyProps);
 		attach(object[base], value, remaining, useApplyProps);
 	}
 }
@@ -24,9 +24,21 @@ export function detach(parent: NgtAnyRecord, child: NgtAnyRecord, attachProp: st
 	}
 }
 
-function assignEmpty(obj: NgtAnyRecord, base: string) {
+function assignEmpty(obj: NgtAnyRecord, base: string, shouldAssignStoreForApplyProps = false) {
 	if ((!Object.hasOwn(obj, base) && Reflect && !!Reflect.has && !Reflect.has(obj, base)) || obj[base] === undefined) {
 		obj[base] = {};
+	}
+
+	if (shouldAssignStoreForApplyProps) {
+		const localState = getLocalState(obj[base]);
+		// if we already have local state, bail out
+		if (localState) return;
+
+		const parentLocalState = getLocalState(obj);
+		// if parent doesn't have local state, bail out
+		if (!parentLocalState) return;
+
+		Object.assign(obj[base], { [NGT_APPLY_PROPS]: parentLocalState.store });
 	}
 }
 

@@ -25,6 +25,10 @@ function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
 	return changes;
 }
 
+// NOTE: this is a workaround to give the instance a change to have the store from the parent.
+//  we clear this property after the applyProps is done
+export const NGT_APPLY_PROPS = '__ngt_apply_props__';
+
 // This function applies a set of changes to the instance
 export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 	// if props is empty
@@ -32,7 +36,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 
 	// filter equals, and reserved props
 	const localState = getLocalState(instance);
-	const rootState = localState?.store?.snapshot ?? ({} as NgtState);
+	const rootState = localState?.store?.snapshot ?? instance[NGT_APPLY_PROPS]?.snapshot ?? ({} as NgtState);
 	const changes = diffProps(instance, props);
 
 	for (let i = 0; i < changes.length; i++) {
@@ -123,6 +127,11 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 
 	if (parent && localState?.onUpdate && changes.length) {
 		localState.onUpdate(instance);
+	}
+
+	// clearing the intermediate store from the instance
+	if (instance[NGT_APPLY_PROPS]) {
+		delete instance[NGT_APPLY_PROPS];
 	}
 
 	return instance;
