@@ -226,7 +226,7 @@ import { Mesh } from 'three';
 })
 export class SceneGraph {
 
-  meshRef = viewChild.required<ElementRef<Mesh>('mesh');
+  meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
   constructor() {
 
@@ -250,7 +250,7 @@ Using Angular means we can make components out of our template. Let's do that fo
 <Tabs>
   <TabItem label="src/app/cube.component.ts">
     ```angular-ts
-    import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
+    import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
     import { injectBeforeRender } from 'angular-three';
     import { Mesh } from 'three';
 
@@ -261,7 +261,8 @@ Using Angular means we can make components out of our template. Let's do that fo
         <ngt-mesh #mesh>
           <ngt-box-geometry />
         </ngt-mesh>
-      `
+      `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     export class Cube {
       meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
@@ -310,8 +311,8 @@ We will add 2 states `hovered` and `clicked` to the cube component:
 - When the cube is clicked, we'll change its scale
 
 ```diff lang="angular-ts" title="src/app/cube.component.ts"
--  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
-+  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, signal } from '@angular/core';
+-  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
++  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild, signal } from '@angular/core';
 import { injectBeforeRender } from 'angular-three';
 import { Mesh } from 'three';
 
@@ -330,6 +331,7 @@ import { Mesh } from 'three';
 +      <ngt-mesh-basic-material [color]="hovered() ? 'darkred' : 'mediumpurple'" />
     </ngt-mesh>
   `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class Cube {
   meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
@@ -361,8 +363,8 @@ However, we need to render the cube in different positions so we can see them bo
 Let's do that by adding a `position` input to the Cube component
 
 ```diff lang="angular-ts" title="src/app/cube.component.ts"
--  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, signal } from '@angular/core';
-+  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, signal, input } from '@angular/core';
+-  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild, signal } from '@angular/core';
++  import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild, signal, input } from '@angular/core';
 
 -  import { injectBeforeRender } from 'angular-three';
 +  import { injectBeforeRender, NgtVector3 } from 'angular-three';
@@ -384,6 +386,7 @@ import { Mesh } from 'three';
       <ngt-mesh-basic-material [color]="hovered() ? 'darkred' : 'mediumpurple'" />
     </ngt-mesh>
   `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class Cube {
 +  position = input<NgtVector3>([0, 0, 0]);
@@ -420,7 +423,7 @@ import { Cube } from './cube.component';
 +   <app-cube [position]="[1.5, 0, 0]" />
 +   <app-cube [position]="[-1.5, 0, 0]" />
   `,
-  imports: [Cube]
+  imports: [Cube],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -463,7 +466,7 @@ export class SceneGraph {
 Next, we will want to change the `Material` of the cube to `MeshStandardMaterial` so that it can be lit by the lights.
 
 ```diff lang="angular-ts" title="src/app/cube.component.ts"
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, signal, input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild, signal, input } from '@angular/core';
 import { injectBeforeRender, NgtVector3 } from 'angular-three';
 import { Mesh } from 'three';
 
@@ -484,6 +487,7 @@ import { Mesh } from 'three';
 +      <ngt-mesh-standard-material [color]="hovered() ? 'darkred' : 'mediumpurple'" />
     </ngt-mesh>
   `,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Cube {
   position = input<NgtVector3>([0, 0, 0]);
