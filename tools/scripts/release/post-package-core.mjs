@@ -17,8 +17,8 @@ if (existsSync(npmIgnorePath)) {
 // update package.json for all libs
 
 try {
-	// read latest version of angular-three from npm beta
-	const latestNpmVersion = execSync('npm view angular-three@beta version').toString().trim();
+	// read latest version of angular-three from npm
+	const latestNpmVersion = execSync('npm view angular-three version').toString().trim();
 
 	// read latest version from git tag first
 	const latestTag = execSync('git describe --tags --abbrev=0').toString().trim();
