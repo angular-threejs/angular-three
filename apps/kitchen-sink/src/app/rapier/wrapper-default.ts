@@ -1,6 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { NgtArgs } from 'angular-three';
 import { NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
@@ -42,8 +41,6 @@ export class Floor {}
 		@if (scene() === 'basic') {
 			<ng-container *ngComponentOutlet="component()" />
 		} @else {
-			<ngt-color attach="background" *args="['#e0e0e0']" />
-
 			<ngtr-physics [options]="{ debug: debug(), interpolate: interpolate(), paused: paused() }">
 				<ngt-directional-light [castShadow]="true" [position]="10">
 					<ngt-value [rawValue]="-40" attach="shadow.camera.bottom" />
@@ -65,7 +62,7 @@ export class Floor {}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrPhysics, NgtsEnvironment, NgtsOrbitControls, NgComponentOutlet, Floor, NgtArgs],
+	imports: [NgtrPhysics, NgtsEnvironment, NgtsOrbitControls, NgComponentOutlet, Floor],
 	host: { class: 'rapier-wrapper-default' },
 })
 export class RapierWrapperDefault {

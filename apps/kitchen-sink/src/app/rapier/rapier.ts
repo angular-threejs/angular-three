@@ -10,7 +10,7 @@ extend(THREE);
 @Component({
 	standalone: true,
 	template: `
-		<div class="h-svh">
+		<div class="h-svh bg-gradient-to-r from-violet-500 to-fuchsia-500">
 			<router-outlet />
 		</div>
 

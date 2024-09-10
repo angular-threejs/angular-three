@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NON_ROOT } from 'angular-three';
+import { injectBeforeRender, NON_ROOT } from 'angular-three';
 import { NgtrCuboidCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -7,8 +7,6 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 @Component({
 	standalone: true,
 	template: `
-		<ngt-color attach="background" *args="['black']" />
-
 		<ngts-perspective-camera [options]="{ makeDefault: true, position: [5, 5, 5] }" />
 
 		<ngtr-physics [options]="{ debug: true }">
@@ -44,7 +42,7 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-rapier' },
-	imports: [NgtrPhysics, NgtrRigidBody, NgtrCuboidCollider, NgtArgs, NgtsOrbitControls, NgtsPerspectiveCamera],
+	imports: [NgtrPhysics, NgtrRigidBody, NgtrCuboidCollider, NgtsOrbitControls, NgtsPerspectiveCamera],
 })
 export class Basic {
 	static [NON_ROOT] = true;
