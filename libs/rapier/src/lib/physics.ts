@@ -46,24 +46,6 @@ const defaultOptions: NgtrPhysicsOptions = {
 	debug: false,
 };
 
-// timeStep = 1 / 60,
-//   paused = false,
-//   interpolate = true,
-//   updatePriority,
-//   updateLoop = "follow",
-//   debug = false,
-//
-//   gravity = [0, -9.81, 0],
-//   allowedLinearError = 0.001,
-//   predictionDistance = 0.002,
-//   numSolverIterations = 4,
-//   numAdditionalFrictionIterations = 4,
-//   numInternalPgsIterations = 1,
-//   minIslandSize = 128,
-//   maxCcdSubsteps = 1,
-//   erp = 0.8,
-//   lengthUnit = 1
-
 @Component({
 	selector: 'ngtr-physics',
 	standalone: true,

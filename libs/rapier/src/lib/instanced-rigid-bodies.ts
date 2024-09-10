@@ -19,10 +19,22 @@ import { NgtrAnyCollider, NgtrRigidBody, rigidBodyDefaultOptions } from './rigid
 import { NgtrRigidBodyOptions, NgtrRigidBodyState, NgtrRigidBodyType } from './types';
 import { createColliderOptions } from './utils';
 
+export interface NgtrInstancedRigidBodyOptions {
+	key: string | number;
+	type?: NgtrRigidBodyType;
+	position?: NgtVector3;
+	rotation?: NgtEuler;
+	scale?: NgtVector3;
+	quaternion?: NgtQuaternion;
+	userData?: NgtObject3D['userData'];
+	options?: NgtrRigidBodyOptions;
+}
+
 const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 
 @Component({
 	selector: 'ngt-object3D[ngtrInstancedRigidBodies]',
+	exportAs: 'instancedRigidBodies',
 	standalone: true,
 	template: `
 		<ngt-object3D #instanceWrapper>
@@ -30,7 +42,16 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 		</ngt-object3D>
 
 		@for (instance of instancesOptions(); track instance.key) {
-			<ngt-object3D [ngtrRigidBody]="instance.type" [options]="instance">
+			<ngt-object3D
+				[ngtrRigidBody]="instance.type"
+				[options]="instance.options"
+				[position]="instance.position"
+				[rotation]="instance.rotation"
+				[scale]="instance.scale"
+				[quaternion]="instance.quaternion"
+				[userData]="instance.userData"
+				[name]="instance.key + '-instanced-rigid-body-' + $index"
+			>
 				<ng-content select="[data-colliders]" />
 
 				@for (childColliderOption of childColliderOptions(); track $index) {
@@ -59,12 +80,18 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 	imports: [NgtrRigidBody, NgtrRigidBody, NgtrAnyCollider],
 })
 export class NgtrInstancedRigidBodies {
-	position = input<NgtVector3>([0, 0, 0]);
-	rotation = input<NgtEuler>([0, 0, 0]);
-	scale = input<NgtVector3>([1, 1, 1]);
-	quaternion = input<NgtQuaternion>([0, 0, 0, 1]);
-	userData = input<NgtObject3D['userData']>();
-	instances = input<Array<NgtrRigidBodyOptions & { key: string | number; type: NgtrRigidBodyType }>>([]);
+	position = input<NgtVector3 | undefined>([0, 0, 0]);
+	rotation = input<NgtEuler | undefined>([0, 0, 0]);
+	scale = input<NgtVector3 | undefined>([1, 1, 1]);
+	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
+	userData = input<NgtObject3D['userData'] | undefined>({});
+	instances = input([], {
+		alias: 'ngtrInstancedRigidBodies',
+		transform: (value: Array<NgtrInstancedRigidBodyOptions> | '') => {
+			if (value === '') return [];
+			return value;
+		},
+	});
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	instanceWrapperRef = viewChild.required<ElementRef<Object3D>>('instanceWrapper');
@@ -84,7 +111,6 @@ export class NgtrInstancedRigidBodies {
 
 		// track object's children
 		localState.objects();
-
 		const firstChild = instanceWrapper.children[0];
 		if (!firstChild || !(firstChild as InstancedMesh).isInstancedMesh) return null;
 
@@ -92,32 +118,32 @@ export class NgtrInstancedRigidBodies {
 	});
 
 	protected instancesOptions = computed(() => {
-		const [instances, options] = [this.instances(), untracked(this.options)];
+		const [instances, options, instancedMesh] = [this.instances(), untracked(this.options), this.instancedMesh()];
+		if (!instancedMesh) return [];
 		return instances.map(
 			(instance, index) =>
 				({
-					...options,
 					...instance,
-					key: `${instance.key}-${index}`,
-					transformState: (state) => {
-						const instancedMesh = untracked(this.instancedMesh);
-
-						if (!instancedMesh) return state;
-
-						return {
-							...state,
-							getMatrix: (matrix) => {
-								instancedMesh.getMatrixAt(index, matrix);
-								return matrix;
-							},
-							setMatrix: (matrix) => {
-								instancedMesh.setMatrixAt(index, matrix);
-								instancedMesh.instanceMatrix.needsUpdate = true;
-							},
-							meshType: 'instancedMesh',
-						} as NgtrRigidBodyState;
+					options: {
+						...options,
+						...(instance.options || {}),
+						transformState: (state) => {
+							return {
+								...state,
+								getMatrix: (matrix) => {
+									instancedMesh.getMatrixAt(index, matrix);
+									return matrix;
+								},
+								setMatrix: (matrix) => {
+									instancedMesh.setMatrixAt(index, matrix);
+									instancedMesh.instanceMatrix.needsUpdate = true;
+								},
+								meshType: 'instancedMesh',
+							} as NgtrRigidBodyState;
+						},
 					},
-				}) as NgtrRigidBodyOptions & { key: string | number; type: NgtrRigidBodyType },
+					key: `${instance.key}-${index}` + `${instancedMesh?.uuid || ''}`,
+				}) as Omit<NgtrInstancedRigidBodyOptions, 'options'> & { options: Partial<NgtrRigidBodyOptions> },
 		);
 	});
 
@@ -137,7 +163,6 @@ export class NgtrInstancedRigidBodies {
 		const objectLocalState = getLocalState(this.objectRef.nativeElement);
 		// track object's children
 		objectLocalState?.nonObjects();
-		objectLocalState?.objects();
 
 		return createColliderOptions(this.objectRef.nativeElement, options);
 	});

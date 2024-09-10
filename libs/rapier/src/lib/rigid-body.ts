@@ -50,12 +50,12 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 	},
 })
 export class NgtrAnyCollider {
-	position = input<NgtVector3>([0, 0, 0]);
-	rotation = input<NgtEuler>([0, 0, 0]);
-	scale = input<NgtVector3>([1, 1, 1]);
-	quaternion = input<NgtQuaternion>([0, 0, 0, 1]);
-	userData = input<NgtObject3D['userData']>();
-	name = input<NgtObject3D['name']>();
+	position = input<NgtVector3 | undefined>([0, 0, 0]);
+	rotation = input<NgtEuler | undefined>([0, 0, 0]);
+	scale = input<NgtVector3 | undefined>([1, 1, 1]);
+	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
+	userData = input<NgtObject3D['userData'] | undefined>({});
+	name = input<NgtObject3D['name'] | undefined>();
 	options = input(colliderDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
 	// TODO: change this to input required when Angular allows setting hostDirective input
@@ -364,16 +364,16 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 export class NgtrRigidBody {
 	type = input('dynamic', {
 		alias: 'ngtrRigidBody',
-		transform: (value: NgtrRigidBodyType | '') => {
-			if (value === '') return 'dynamic' as NgtrRigidBodyType;
+		transform: (value: NgtrRigidBodyType | '' | undefined) => {
+			if (value === '' || value === undefined) return 'dynamic' as NgtrRigidBodyType;
 			return value;
 		},
 	});
-	position = input<NgtVector3>([0, 0, 0]);
-	rotation = input<NgtEuler>([0, 0, 0]);
-	scale = input<NgtVector3>([1, 1, 1]);
-	quaternion = input<NgtQuaternion>([0, 0, 0, 1]);
-	userData = input<NgtObject3D['userData']>({});
+	position = input<NgtVector3 | undefined>([0, 0, 0]);
+	rotation = input<NgtEuler | undefined>([0, 0, 0]);
+	scale = input<NgtVector3 | undefined>([1, 1, 1]);
+	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
+	userData = input<NgtObject3D['userData'] | undefined>({});
 	options = input(rigidBodyDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
 	wake = output<void>();
@@ -431,7 +431,6 @@ export class NgtrRigidBody {
 		const objectLocalState = getLocalState(this.objectRef.nativeElement);
 		// track object's children
 		objectLocalState?.nonObjects();
-		objectLocalState?.objects();
 
 		return createColliderOptions(this.objectRef.nativeElement, options, true);
 	});
