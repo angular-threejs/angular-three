@@ -515,8 +515,8 @@ export class NgtrRigidBody {
 
 		state.object.updateWorldMatrix(true, false);
 		_matrix4.copy(state.object.matrixWorld).decompose(_position, _rotation, _scale);
-		body.setTranslation(_position, false);
-		body.setRotation(_rotation, false);
+		body.setTranslation(_position, true);
+		body.setRotation(_rotation, true);
 
 		const [
 			gravityScale,
