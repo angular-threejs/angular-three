@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
 	{
-		path: 'basic',
-		loadComponent: () => import('./basic/basic'),
+		path: ':scene',
+		loadComponent: () => import('./wrapper'),
 	},
 	{
 		path: '',

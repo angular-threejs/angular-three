@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { extend } from 'angular-three';
 import * as THREE from 'three';
-import routes from './rapier.routes';
+
+import { SCENES_MAP } from './constants';
 
 extend(THREE);
 
@@ -34,5 +35,5 @@ extend(THREE);
 	host: { class: 'rapier' },
 })
 export default class Rapier {
-	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);
+	protected examples = Object.keys(SCENES_MAP);
 }
