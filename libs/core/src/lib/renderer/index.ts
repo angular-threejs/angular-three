@@ -17,7 +17,14 @@ import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { NgtSignalStore, signalStore } from '../utils/signal-store';
 import { NgtAnyConstructor, injectCatalogue } from './catalogue';
-import { HTML, ROUTED_SCENE, SPECIAL_DOM_TAG, SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_PROPERTIES } from './constants';
+import {
+	HTML,
+	NON_ROOT,
+	ROUTED_SCENE,
+	SPECIAL_DOM_TAG,
+	SPECIAL_INTERNAL_ADD_COMMENT,
+	SPECIAL_PROPERTIES,
+} from './constants';
 import {
 	NgtRendererNode,
 	NgtRendererState,
@@ -56,6 +63,8 @@ export class NgtRendererFactory implements RendererFactory2 {
 			this.routedSet.add(type.id);
 		}
 
+		const isNonRoot = (type as NgtAnyRecord)['type'][NON_ROOT];
+
 		let renderer = this.rendererMap.get(type.id);
 		if (!renderer) {
 			this.rendererMap.set(
@@ -67,7 +76,7 @@ export class NgtRendererFactory implements RendererFactory2 {
 					this.portalCommentsNodes,
 					this.catalogue,
 					// setting root scene if there's no routed scene OR this component is the routed Scene
-					!hostElement && (this.routedSet.size === 0 || this.routedSet.has(type.id)),
+					!hostElement && !isNonRoot && (this.routedSet.size === 0 || this.routedSet.has(type.id)),
 				)),
 			);
 		}
@@ -662,4 +671,4 @@ export function provideNgtRenderer(store: NgtSignalStore<NgtState>) {
 }
 
 export { extend } from './catalogue';
-export { HTML, ROUTED_SCENE } from './constants';
+export { HTML, NON_ROOT, ROUTED_SCENE } from './constants';
