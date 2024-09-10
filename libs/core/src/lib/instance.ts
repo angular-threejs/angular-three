@@ -46,8 +46,8 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			handlers: {},
 			instanceStore,
 			parent: instanceStore.select('parent'),
-			objects: instanceStore.select('objects'),
-			nonObjects: instanceStore.select('nonObjects'),
+			objects: instanceStore.select('objects', { equal: (a, b) => a.length === b.length }),
+			nonObjects: instanceStore.select('nonObjects', { equal: (a, b) => a.length === b.length }),
 			add(object, type) {
 				const current = instance.__ngt__.instanceStore.snapshot[type];
 				const foundIndex = current.indexOf((node: NgtInstanceNode) => object === node);
