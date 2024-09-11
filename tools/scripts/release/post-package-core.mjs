@@ -34,7 +34,7 @@ try {
 		latestVersion = split.join('.') + '.' + version;
 	}
 
-	const libs = ['cannon', 'postprocessing', 'soba', 'core'];
+	const libs = ['cannon', 'postprocessing', 'soba', 'core', 'rapier'];
 
 	libs.forEach((lib) => {
 		const libDistPath = `${distPath}/${lib}`;
