@@ -77,6 +77,9 @@ export class NgtrAnyCollider {
 	private restitutionCombineRule = pick(this.options, 'restitutionCombineRule');
 	private activeCollisionTypes = pick(this.options, 'activeCollisionTypes');
 	private contactSkin = pick(this.options, 'contactSkin');
+	private mass = pick(this.options, 'mass');
+	private massProperties = pick(this.options, 'massProperties');
+	private density = pick(this.options, 'density');
 
 	private rigidBody = inject(NgtrRigidBody, { optional: true });
 	private physics = inject(NgtrPhysics);
@@ -139,6 +142,7 @@ export class NgtrAnyCollider {
 
 		effect(() => {
 			this.updateColliderEffect();
+			this.updateMassPropertiesEffect();
 		});
 	}
 
@@ -294,6 +298,40 @@ export class NgtrAnyCollider {
 		if (contactSkin !== undefined) collider.setContactSkin(contactSkin);
 	}
 
+	private updateMassPropertiesEffect() {
+		const collider = this.collider();
+		if (!collider) return;
+
+		const [mass, massProperties, density] = [this.mass(), this.massProperties(), this.density()];
+
+		if (density !== undefined) {
+			if (mass !== undefined || massProperties !== undefined) {
+				throw new Error('[NGT Rapier] Cannot set mass and massProperties along with density');
+			}
+
+			collider.setDensity(density);
+			return;
+		}
+
+		if (mass !== undefined) {
+			if (massProperties !== undefined) {
+				throw new Error('[NGT Rapier] Cannot set massProperties along with mass');
+			}
+			collider.setMass(mass);
+			return;
+		}
+
+		if (massProperties !== undefined) {
+			collider.setMassProperties(
+				massProperties.mass,
+				massProperties.centerOfMass,
+				massProperties.principalAngularInertia,
+				massProperties.angularInertiaLocalFrame,
+			);
+			return;
+		}
+	}
+
 	private createColliderState(
 		collider: Collider,
 		object: Object3D,
@@ -335,6 +373,7 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 
 @Component({
 	selector: 'ngt-object3D[ngtrRigidBody]',
+	exportAs: 'rigidBody',
 	standalone: true,
 	template: `
 		<ng-content />
