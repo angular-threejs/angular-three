@@ -11,6 +11,7 @@ import { filter, map, tap } from 'rxjs';
 			<option value="soba">/soba</option>
 			<option value="cannon">/cannon</option>
 			<option value="postprocessing">/postprocessing</option>
+			<option value="rapier">/rapier</option>
 		</select>
 	`,
 	imports: [RouterOutlet],
