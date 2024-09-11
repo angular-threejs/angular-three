@@ -66,20 +66,22 @@ function injectImpulseJoint<TJoinType extends ImpulseJoint>(
 function createJoint<TJointParams, TJoinType extends ImpulseJoint>(
 	jointDataFn: (rapier: NonNullable<ReturnType<NgtrPhysics['rapier']>>, data: TJointParams) => JointData,
 ) {
-	return (
+	return function _injectJoint(
 		bodyA: ElementRef<RigidBody> | RigidBody | (() => ElementRef<RigidBody> | RigidBody | undefined | null),
 		bodyB: ElementRef<RigidBody> | RigidBody | (() => ElementRef<RigidBody> | RigidBody | undefined | null),
 		{ injector, data }: { injector?: Injector; data: TJointParams },
-	) => {
-		const physics = inject(NgtrPhysics);
+	) {
+		return assertInjector(_injectJoint, injector, () => {
+			const physics = inject(NgtrPhysics);
 
-		const jointData = computed(() => {
-			const rapier = physics.rapier();
-			if (!rapier) return null;
-			return jointDataFn(rapier, data);
+			const jointData = computed(() => {
+				const rapier = physics.rapier();
+				if (!rapier) return null;
+				return jointDataFn(rapier, data);
+			});
+
+			return injectImpulseJoint<TJoinType>(bodyA, bodyB, { injector, data: jointData });
 		});
-
-		return injectImpulseJoint<TJoinType>(bodyA, bodyB, { injector, data: jointData });
 	};
 }
 
@@ -167,12 +169,12 @@ export const injectRopeJoint = createJoint<NgtrRopeJointParams, RopeImpulseJoint
  * The spring joint applies a force proportional to the distance between two objects.
  * @category Hooks - Joints
  */
-export const injectSpringJoint = createJoint<NgtrSpringJointParams, SpringImpulseJoint>((rapier, data) =>
-	rapier.JointData.spring(
+export const injectSpringJoint = createJoint<NgtrSpringJointParams, SpringImpulseJoint>((rapier, data) => {
+	return rapier.JointData.spring(
 		data.restLength,
 		data.stiffness,
 		data.damping,
 		vector3ToRapierVector(data.body1Anchor),
 		vector3ToRapierVector(data.body2Anchor),
-	),
-);
+	);
+});
