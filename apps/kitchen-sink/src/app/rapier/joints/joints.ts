@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs, NgtVector3, NON_ROOT } from 'angular-three';
 import { injectPrismaticJoint, injectSphericalJoint, NgtrRigidBody, NgtrRigidBodyType } from 'angular-three-rapier';
-import { Quaternion } from 'three';
+import { Quaternion, Vector3 } from 'three';
 
 @Component({
 	selector: 'app-rope-segment',
@@ -79,13 +79,20 @@ export class Rope {
 	protected ropeSegments = viewChildren(RopeSegment);
 
 	constructor() {
+		const q = new Quaternion();
+		const v = new Vector3();
+
 		injectBeforeRender(() => {
 			const now = performance.now();
 			const ropeSegments = this.ropeSegments();
 			const firstRope = ropeSegments[0]?.rigidBodyRef()?.rigidBody();
 
 			if (firstRope) {
-				firstRope.setNextKinematicRotation(new Quaternion(0, Math.sin(now / 500) * 3, 0));
+				q.set(0, Math.sin(now / 500) * 3, 0, q.w);
+				v.set(0, Math.sin(now / 500) * 3, 0);
+
+				firstRope.setNextKinematicRotation(q);
+				firstRope.setNextKinematicTranslation(v);
 			}
 		});
 	}
