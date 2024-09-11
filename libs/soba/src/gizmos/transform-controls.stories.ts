@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtMesh } from 'angular-three';
-import { NgtsOrbitControls, NgtsTransformControls } from 'angular-three-soba/controls';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsTransformControls } from 'angular-three-soba/gizmos';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
@@ -84,7 +85,7 @@ class DefaultTransformControlsStory {
 }
 
 export default {
-	title: 'Controls/TransformControls',
+	title: 'Gizmos/TransformControls',
 	decorators: makeDecorators(),
 } as Meta;
 

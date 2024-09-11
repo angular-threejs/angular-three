@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtsPivotControls, NgtsPivotControlsOptions } from 'angular-three-soba/controls';
+import { NgtsPivotControls, NgtsPivotControlsOptions } from 'angular-three-soba/gizmos';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
