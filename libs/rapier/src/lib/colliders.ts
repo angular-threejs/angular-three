@@ -54,7 +54,7 @@ export class NgtrCapsuleCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('capsule');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -74,7 +74,7 @@ export class NgtrBallCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('ball');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -94,7 +94,7 @@ export class NgtrConvexHullCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('roundConvexHull');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -114,7 +114,7 @@ export class NgtrHeightfieldCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('heightfield');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -134,7 +134,7 @@ export class NgtrTrimeshCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('trimesh');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -154,7 +154,7 @@ export class NgtrPolylineCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('polyline');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -174,7 +174,7 @@ export class NgtrRoundCuboidCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('roundCuboid');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -194,7 +194,7 @@ export class NgtrCylinderCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('cylinder');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -214,7 +214,7 @@ export class NgtrRoundCylinderCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('roundCylinder');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -234,7 +234,7 @@ export class NgtrConeCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('cone');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -254,7 +254,7 @@ export class NgtrRoundConeCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('roundCone');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -274,7 +274,7 @@ export class NgtrConvexMeshCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('convexMesh');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
@@ -294,7 +294,7 @@ export class NgtrRoundConvexHullCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexMesh');
+		anyCollider.setShape('roundConvexHull');
 		effect(() => {
 			const args = this.args();
 			untracked(() => {
