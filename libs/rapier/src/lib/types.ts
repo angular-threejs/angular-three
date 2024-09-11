@@ -11,7 +11,7 @@ import {
 	Vector,
 	World,
 } from '@dimforge/rapier3d-compat';
-import { NgtObject3D } from 'angular-three';
+import { NgtObject3D, NgtQuaternion, NgtVector3 } from 'angular-three';
 import { Matrix4, Object3D, Vector3, Vector3Tuple } from 'three';
 
 export type NgtrRigidBodyAutoCollider = 'ball' | 'cuboid' | 'hull' | 'trimesh' | false;
@@ -555,3 +555,44 @@ export type NgtrRoundConeArgs = [halfHeight: number, radius: number, borderRadiu
 export type NgtrConvexMeshArgs = [vertices: ArrayLike<number>, indices: ArrayLike<number>];
 export type NgtrRoundConvexHullArgs = [vertices: ArrayLike<number>, indices: ArrayLike<number>, borderRadius: number];
 export type NgtrRoundConvexMeshArgs = [vertices: ArrayLike<number>, indices: ArrayLike<number>, borderRadius: number];
+
+// Joints
+export interface NgtrSphericalJointParams {
+	body1Anchor: NgtVector3;
+	body2Anchor: NgtVector3;
+}
+
+export interface NgtrFixedJointParams {
+	body1Anchor: NgtVector3;
+	body1LocalFrame: NgtQuaternion;
+	body2Anchor: NgtVector3;
+	body2LocalFrame: NgtQuaternion;
+}
+
+export interface NgtrPrismaticJointParams {
+	body1Anchor: NgtVector3;
+	body2Anchor: NgtVector3;
+	axis: NgtVector3;
+	limits?: [min: number, max: number];
+}
+
+export interface NgtrRevoluteJointParams {
+	body1Anchor: NgtVector3;
+	body2Anchor: NgtVector3;
+	axis: NgtVector3;
+	limits?: [min: number, max: number];
+}
+
+export interface NgtrRopeJointParams {
+	body1Anchor: NgtVector3;
+	body2Anchor: NgtVector3;
+	length: number;
+}
+
+export interface NgtrSpringJointParams {
+	body1Anchor: NgtVector3;
+	body2Anchor: NgtVector3;
+	restLength: number;
+	stiffness: number;
+	damping: number;
+}

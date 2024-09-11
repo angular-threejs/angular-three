@@ -1,6 +1,6 @@
 import { OutputEmitterRef } from '@angular/core';
-import { Quaternion } from '@dimforge/rapier3d-compat';
-import { NgtEuler, NgtVector3 } from 'angular-three';
+import { Quaternion as RapierQuaternion, Vector3 as RapierVector3 } from '@dimforge/rapier3d-compat';
+import { NgtEuler, NgtQuaternion, NgtVector3 } from 'angular-three';
 import { BufferGeometry, Euler, Mesh, Object3D, Vector3 } from 'three';
 import { mergeVertices } from 'three-stdlib';
 import { _matrix4, _position, _quaternion, _rotation, _scale } from './shared';
@@ -58,8 +58,27 @@ export const createSingletonProxy = <
 	return { proxy, reset, set };
 };
 
-export function rapierQuaternionToQuaternion({ x, y, z, w }: Quaternion) {
+export function rapierQuaternionToQuaternion({ x, y, z, w }: RapierQuaternion) {
 	return _quaternion.set(x, y, z, w);
+}
+
+export function vector3ToRapierVector(v: NgtVector3) {
+	if (Array.isArray(v)) {
+		return new RapierVector3(v[0], v[1], v[2]);
+	}
+
+	if (typeof v === 'number') {
+		return new RapierVector3(v, v, v);
+	}
+	const vector = v as Vector3;
+	return new RapierVector3(vector.x, vector.y, vector.z);
+}
+
+export function quaternionToRapierQuaternion(v: NgtQuaternion) {
+	if (Array.isArray(v)) {
+		return new RapierQuaternion(v[0], v[1], v[2], v[3]);
+	}
+	return new RapierQuaternion(v.x, v.y, v.z, v.w);
 }
 
 export function getEmitter<T>(emitterRef: OutputEmitterRef<T> | undefined) {
