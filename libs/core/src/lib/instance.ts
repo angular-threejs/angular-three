@@ -46,8 +46,8 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			handlers: {},
 			instanceStore,
 			parent: instanceStore.select('parent'),
-			objects: instanceStore.select('objects', { equal: (a, b) => a.length === b.length }),
-			nonObjects: instanceStore.select('nonObjects', { equal: (a, b) => a.length === b.length }),
+			objects: instanceStore.select('objects'),
+			nonObjects: instanceStore.select('nonObjects'),
 			add(object, type) {
 				const current = instance.__ngt__.instanceStore.snapshot[type];
 				const foundIndex = current.indexOf((node: NgtInstanceNode) => object === node);
@@ -58,11 +58,11 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 					instance.__ngt__.instanceStore.update((prev) => ({ [type]: [...prev[type], object] }));
 				}
 
-				notifyAncestors(instance.__ngt__.instanceStore.snapshot.parent);
+				notifyAncestors(instance.__ngt__.instanceStore.snapshot.parent, type);
 			},
 			remove(object, type) {
 				instance.__ngt__.instanceStore.update((prev) => ({ [type]: prev[type].filter((node) => node !== object) }));
-				notifyAncestors(instance.__ngt__.instanceStore.snapshot.parent);
+				notifyAncestors(instance.__ngt__.instanceStore.snapshot.parent, type);
 			},
 			setParent(parent) {
 				instance.__ngt__.instanceStore.update({ parent });
@@ -74,11 +74,11 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 	return instance;
 }
 
-function notifyAncestors(instance: NgtInstanceNode | null) {
+function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'nonObjects') {
 	if (!instance) return;
 	const localState = getLocalState(instance);
 	if (!localState) return;
-	const { parent, objects, nonObjects } = localState.instanceStore.snapshot;
-	localState.instanceStore.update({ objects: (objects || []).slice(), nonObjects: (nonObjects || []).slice() });
-	notifyAncestors(parent);
+	const { parent } = localState.instanceStore.snapshot;
+	localState.instanceStore.update({ [type]: (localState.instanceStore.snapshot[type] || []).slice() });
+	notifyAncestors(parent, type);
 }
