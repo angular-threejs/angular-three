@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
-import { NgtsOrbitControls, NgtsPivotControls, OnDragParameters } from 'angular-three-soba/controls';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsPivotControls, OnDragParameters } from 'angular-three-soba/gizmos';
 import { injectGLTF, injectTexture } from 'angular-three-soba/loaders';
 import { NgtsDecal } from 'angular-three-soba/misc';
 import { NgtsAccumulativeShadows, NgtsRandomizedLights } from 'angular-three-soba/staging';
