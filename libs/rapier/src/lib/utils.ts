@@ -1,4 +1,3 @@
-import { OutputEmitterRef } from '@angular/core';
 import { Quaternion as RapierQuaternion, Vector3 as RapierVector3 } from '@dimforge/rapier3d-compat';
 import { NgtEuler, NgtQuaternion, NgtVector3 } from 'angular-three';
 import { BufferGeometry, Euler, Mesh, Object3D, Vector3 } from 'three';
@@ -79,15 +78,6 @@ export function quaternionToRapierQuaternion(v: NgtQuaternion) {
 		return new RapierQuaternion(v[0], v[1], v[2], v[3]);
 	}
 	return new RapierQuaternion(v.x, v.y, v.z, v.w);
-}
-
-export function getEmitter<T>(emitterRef: OutputEmitterRef<T> | undefined) {
-	if (!emitterRef || !emitterRef['listeners']) return undefined;
-	return emitterRef.emit.bind(emitterRef);
-}
-
-export function hasListener(...emitterRefs: (OutputEmitterRef<unknown> | undefined)[]) {
-	return emitterRefs.some((emitterRef) => emitterRef && emitterRef['listeners'] && emitterRef['listeners'].length > 0);
 }
 
 function isChildOfMeshCollider(child: Mesh) {

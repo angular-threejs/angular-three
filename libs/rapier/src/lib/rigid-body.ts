@@ -13,7 +13,17 @@ import {
 	untracked,
 } from '@angular/core';
 import { ActiveEvents, Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier3d-compat';
-import { extend, getLocalState, NgtEuler, NgtObject3D, NgtQuaternion, NgtVector3, pick } from 'angular-three';
+import {
+	extend,
+	getEmitter,
+	getLocalState,
+	hasListener,
+	NgtEuler,
+	NgtObject3D,
+	NgtQuaternion,
+	NgtVector3,
+	pick,
+} from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Matrix4, Object3D, Vector3 } from 'three';
 import { NgtrPhysics } from './physics';
@@ -31,7 +41,7 @@ import {
 	NgtrRigidBodyState,
 	NgtrRigidBodyType,
 } from './types';
-import { createColliderOptions, getEmitter, hasListener } from './utils';
+import { createColliderOptions } from './utils';
 
 const colliderDefaultOptions: NgtrColliderOptions = {
 	contactSkin: 0,
