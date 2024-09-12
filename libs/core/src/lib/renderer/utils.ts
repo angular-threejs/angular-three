@@ -121,7 +121,9 @@ export function attachThreeChild(parent: NgtInstanceNode, child: NgtInstanceNode
 		added = true;
 	}
 
-	pLS.add(child, added ? 'objects' : 'nonObjects');
+	if (pLS.add) {
+		pLS.add(child, added ? 'objects' : 'nonObjects');
+	}
 
 	if (cLS.parent && untracked(cLS.parent) !== parent) {
 		cLS.setParent(parent);
