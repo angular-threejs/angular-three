@@ -270,8 +270,8 @@ export class NgtsPivotControls {
 				const anchor = this.anchor();
 				if (!anchor) return;
 
-				const children = this.childrenRef().nativeElement;
-				const localState = getLocalState(children);
+				const childrenContainer = this.childrenRef().nativeElement;
+				const localState = getLocalState(childrenContainer);
 
 				if (!localState) return;
 
@@ -282,12 +282,12 @@ export class NgtsPivotControls {
 					this.options(),
 					localState.objects(),
 				];
-				children.updateWorldMatrix(true, true);
+				childrenContainer.updateWorldMatrix(true, true);
 
-				mPInv.copy(children.matrixWorld).invert();
+				mPInv.copy(childrenContainer.matrixWorld).invert();
 				bb.makeEmpty();
 
-				children.traverse((obj) => {
+				childrenContainer.traverse((obj) => {
 					if (!(obj as Mesh).geometry) return;
 					if (!(obj as Mesh).geometry.boundingBox) (obj as Mesh).geometry.computeBoundingBox();
 					mL.copy(obj.matrixWorld).premultiply(mPInv);

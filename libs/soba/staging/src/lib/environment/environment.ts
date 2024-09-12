@@ -1,73 +1,39 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-	CUSTOM_ELEMENTS_SCHEMA,
+	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
+	contentChild,
+	CUSTOM_ELEMENTS_SCHEMA,
 	Directive,
 	EffectRef,
 	ElementRef,
-	Injector,
-	TemplateRef,
-	afterNextRender,
-	computed,
-	contentChild,
-	effect,
 	inject,
+	Injector,
 	input,
 	output,
 	signal,
-	untracked,
+	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import { GainMapLoader, HDRJPGLoader } from '@monogrid/gainmap-js';
 import {
-	NgtArgs,
-	NgtPortal,
-	NgtPortalContent,
 	applyProps,
 	extend,
 	injectBeforeRender,
-	injectLoader,
 	injectStore,
 	is,
+	NgtArgs,
+	NgtPortal,
+	NgtPortalContent,
 	pick,
 	prepare,
 } from 'angular-three';
-import { LinearEncoding, TextureEncoding, sRGBEncoding } from 'angular-three-soba/misc';
-import { assertInjector } from 'ngxtension/assert-injector';
 import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	CubeCamera,
-	CubeReflectionMapping,
-	CubeTexture,
-	CubeTextureLoader,
-	EquirectangularReflectionMapping,
-	Euler,
-	HalfFloatType,
-	Loader,
-	Scene,
-	Texture,
-	WebGLCubeRenderTarget,
-} from 'three';
-import { EXRLoader, GroundProjectedEnv, RGBELoader } from 'three-stdlib';
-
-const CUBEMAP_ROOT = 'https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/';
-
-export const ENVIRONMENT_PRESETS = {
-	apartment: 'lebombo_1k.hdr',
-	city: 'potsdamer_platz_1k.hdr',
-	dawn: 'kiara_1_dawn_1k.hdr',
-	forest: 'forest_slope_1k.hdr',
-	lobby: 'st_fagans_interior_1k.hdr',
-	night: 'dikhololo_night_1k.hdr',
-	park: 'rooitou_park_1k.hdr',
-	studio: 'studio_small_03_1k.hdr',
-	sunset: 'venice_sunset_1k.hdr',
-	warehouse: 'empty_warehouse_01_1k.hdr',
-};
-
-export type NgtsEnvironmentPresets = keyof typeof ENVIRONMENT_PRESETS;
+import { CubeCamera, Euler, HalfFloatType, Scene, Texture, WebGLCubeRenderTarget } from 'three';
+import { GroundProjectedEnv } from 'three-stdlib';
+import { injectEnvironment, NgtsEnvironmentPresets, NgtsInjectEnvironmentOptions } from './inject-environment';
 
 function resolveScene(scene: Scene | ElementRef<Scene>) {
 	return is.ref(scene) ? scene.nativeElement : scene;
@@ -108,168 +74,6 @@ function setEnvProps(
 		if (background) target.background = oldbg;
 		applyProps(target, oldSceneProps);
 	};
-}
-
-export interface NgtsInjectEnvironmentOptions {
-	files: string | string[];
-	path: string;
-	preset?: NgtsEnvironmentPresets;
-	extensions?: (loader: Loader) => void;
-	encoding?: TextureEncoding;
-}
-
-export function injectEnvironment(
-	options: () => Partial<NgtsInjectEnvironmentOptions> = () => ({}),
-	{ injector }: { injector?: Injector } = {},
-) {
-	return assertInjector(injectEnvironment, injector, () => {
-		const adjustedOptions = computed(() => {
-			const { preset, extensions, encoding, ...rest } = options();
-			let { files, path } = rest;
-
-			if (files == null) {
-				files = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png'];
-			}
-
-			if (path == null) {
-				path = '';
-			}
-
-			if (preset) {
-				if (!(preset in ENVIRONMENT_PRESETS))
-					throw new Error('Preset must be one of: ' + Object.keys(ENVIRONMENT_PRESETS).join(', '));
-				files = ENVIRONMENT_PRESETS[preset];
-				path = CUBEMAP_ROOT;
-			}
-
-			return { files, preset, encoding, path, extensions };
-		});
-
-		const files = pick(adjustedOptions, 'files');
-
-		const resultOptions = computed(() => {
-			const { files } = adjustedOptions();
-			const multiFile = Array.isArray(files);
-
-			const isCubeMap = multiFile && files.length === 6;
-			const isGainmain = multiFile && files.length === 3 && files.some((file) => file.endsWith('json'));
-			const firstEntry = multiFile ? files[0] : files;
-
-			const extension = isCubeMap
-				? 'cube'
-				: isGainmain
-					? 'webp'
-					: firstEntry.startsWith('data:application/exr')
-						? 'exr'
-						: firstEntry.startsWith('data:application/hdr')
-							? 'hdr'
-							: firstEntry.startsWith('data:image/jpeg')
-								? 'jpg'
-								: firstEntry.split('.').pop()?.split('?')?.shift()?.toLowerCase();
-
-			return { multiFile, extension, isCubeMap };
-		});
-
-		const loader = computed(() => {
-			const { extension } = resultOptions();
-			const loader =
-				extension === 'cube'
-					? CubeTextureLoader
-					: extension === 'hdr'
-						? RGBELoader
-						: extension === 'exr'
-							? EXRLoader
-							: extension === 'jpg' || extension === 'jpeg'
-								? (HDRJPGLoader as unknown as typeof Loader)
-								: extension === 'webp'
-									? (GainMapLoader as unknown as typeof Loader)
-									: null;
-
-			if (!loader) {
-				throw new Error('injectEnvironment: Unrecognized file extension: ' + extension);
-			}
-
-			return loader as typeof Loader;
-		});
-
-		const store = injectStore();
-		const gl = store.select('gl');
-
-		const texture = signal<Texture | CubeTexture | null>(null);
-
-		effect(() => {
-			const [{ extension, multiFile }, _files] = [untracked(resultOptions), files()];
-
-			if (extension !== 'webp' && extension !== 'jpg' && extension !== 'jpeg') return;
-
-			gl().domElement.addEventListener(
-				'webglcontextlost',
-				() => {
-					// @ts-expect-error - files is correctly passed
-					injectLoader.clear(multiFile ? [_files] : _files);
-				},
-				{ once: true },
-			);
-		});
-
-		const result = injectLoader(
-			loader,
-			// @ts-expect-error - ensure the files is an array
-			() => {
-				const { files } = adjustedOptions();
-				return Array.isArray(files) ? [files] : files;
-			},
-			{
-				extensions: (loader) => {
-					const { extensions, path } = adjustedOptions();
-					const { extension } = resultOptions();
-					if (extension === 'webp' || extension === 'jpg' || extension === 'jpeg') {
-						// @ts-expect-error - Gainmap requires a renderer
-						loader.setRenderer(gl());
-					}
-
-					loader.setPath?.(path);
-					if (extensions) extensions(loader);
-				},
-			},
-		);
-
-		effect(() => {
-			const loaderResult = result();
-			if (!loaderResult) return;
-
-			untracked(() => {
-				const { multiFile, extension, isCubeMap } = resultOptions();
-				const { encoding } = adjustedOptions();
-
-				// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
-				let textureResult = (multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
-
-				// NOTE: racing condition, we can skip this
-				//  we just said above that if multiFile is false, it is a single Texture
-				if (!multiFile && Array.isArray(textureResult) && textureResult[0] instanceof CubeTexture) {
-					return;
-				}
-
-				if (
-					!(textureResult instanceof CubeTexture) &&
-					(extension === 'jpg' || extension === 'jpeg' || extension === 'webp')
-				) {
-					textureResult = (textureResult as any).renderTarget?.texture;
-				}
-
-				textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
-
-				if ('colorSpace' in textureResult)
-					(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
-				else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
-
-				texture.set(textureResult);
-			});
-		});
-
-		return texture.asReadonly();
-	});
 }
 
 export interface NgtsEnvironmentOptions extends Partial<NgtsInjectEnvironmentOptions> {

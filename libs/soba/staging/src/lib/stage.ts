@@ -18,7 +18,8 @@ import { NgtsAccumulativeShadows, NgtsAccumulativeShadowsOptions } from './accum
 import { NgtsBounds } from './bounds';
 import { NgtsCenter, NgtsCenterOptions, NgtsCenterState } from './center';
 import { NgtsContactShadows, NgtsContactShadowsOptions } from './contact-shadows';
-import { NgtsEnvironment, NgtsEnvironmentOptions, NgtsEnvironmentPresets } from './environment';
+import { NgtsEnvironment, NgtsEnvironmentOptions } from './environment/environment';
+import { NgtsEnvironmentPresets } from './environment/inject-environment';
 import { NgtsRandomizedLights, NgtsRandomizedLightsOptions } from './randomized-lights';
 
 const presets = {
