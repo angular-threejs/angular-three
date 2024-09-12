@@ -25,13 +25,13 @@
     "publish": {
       "command": "npm publish",
       "options": {
-        "cwd": "dist/libs/cannon"
+        "cwd": "dist/libs/rapier"
       }
     },
     "publish-beta": {
       "command": "npm publish --tag=beta",
       "options": {
-        "cwd": "dist/libs/cannon"
+        "cwd": "dist/libs/rapier"
       }
     },
 		"test": {
