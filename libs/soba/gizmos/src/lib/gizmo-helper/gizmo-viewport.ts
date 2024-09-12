@@ -1,0 +1,294 @@
+import { DOCUMENT } from '@angular/common';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	computed,
+	CUSTOM_ELEMENTS_SCHEMA,
+	inject,
+	input,
+	output,
+	signal,
+} from '@angular/core';
+import {
+	extend,
+	getEmitter,
+	hasListener,
+	injectStore,
+	NgtArgs,
+	NgtEventHandlers,
+	NgtGroup,
+	NgtThreeEvent,
+	NgtVector3,
+	omit,
+	pick,
+} from 'angular-three';
+import { mergeInputs } from 'ngxtension/inject-inputs';
+import {
+	BoxGeometry,
+	CanvasTexture,
+	ColorRepresentation,
+	Group,
+	Mesh,
+	MeshBasicMaterial,
+	Sprite,
+	SpriteMaterial,
+} from 'three';
+import { NgtsGizmoHelper } from './gizmo-helper';
+
+@Component({
+	selector: 'viewport-axis',
+	standalone: true,
+	template: `
+		<ngt-group [rotation]="rotation()">
+			<ngt-mesh [position]="[0.4, 0, 0]">
+				<ngt-box-geometry *args="scale()" />
+				<ngt-mesh-basic-material [color]="color()" [toneMapped]="false" />
+			</ngt-mesh>
+		</ngt-group>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
+})
+export class Axis {
+	scale = input([0.8, 0.05, 0.05], {
+		transform: (value: [number, number, number] | undefined) => {
+			if (value === undefined) return [0.8, 0.05, 0.05];
+			return value;
+		},
+	});
+	color = input<ColorRepresentation>();
+	rotation = input<NgtVector3>([0, 0, 0]);
+
+	constructor() {
+		extend({ Group, Mesh, BoxGeometry, MeshBasicMaterial });
+	}
+}
+
+@Component({
+	selector: 'viewport-axis-head',
+	standalone: true,
+	template: `
+		<ngt-sprite
+			[scale]="scale()"
+			[position]="position()"
+			(pointerover)="onPointerOver($any($event))"
+			(pointerout)="onPointerOut($any($event))"
+			(pointerdown)="onPointerDown($any($event))"
+		>
+			<ngt-sprite-material [map]="texture()" [alphaTest]="0.3" [opacity]="label() ? 1 : 0.75" [toneMapped]="false" />
+		</ngt-sprite>
+	`,
+
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AxisHead {
+	arcStyle = input.required<string>();
+	position = input.required<NgtVector3>();
+	label = input<string>();
+	labelColor = input('#000');
+	axisHeadScale = input(1);
+	disabled = input(false);
+	font = input('18px Inter var, Arial, sans-serif');
+	onClick = input<NgtEventHandlers['click']>();
+
+	private document = inject(DOCUMENT);
+	private gizmoHelper = inject(NgtsGizmoHelper);
+	private store = injectStore();
+	private gl = this.store.select('gl');
+
+	protected texture = computed(() => {
+		const [arcStyle, label, labelColor, font, gl] = [
+			this.arcStyle(),
+			this.label(),
+			this.labelColor(),
+			this.font(),
+			this.gl(),
+		];
+
+		const canvas = this.document.createElement('canvas');
+		canvas.width = 64;
+		canvas.height = 64;
+
+		const context = canvas.getContext('2d')!;
+		context.beginPath();
+		context.arc(32, 32, 16, 0, 2 * Math.PI);
+		context.closePath();
+		context.fillStyle = arcStyle;
+		context.fill();
+
+		if (label) {
+			context.font = font;
+			context.textAlign = 'center';
+			context.fillStyle = labelColor;
+			context.fillText(label, 32, 41);
+		}
+
+		const texture = new CanvasTexture(canvas);
+		texture.anisotropy = gl.capabilities.getMaxAnisotropy() || 1;
+		return texture;
+	});
+
+	protected active = signal(false);
+	protected scale = computed(() => (this.label() ? 1 : 0.75) * (this.active() ? 1.2 : 1) * this.axisHeadScale());
+
+	constructor() {
+		extend({ Sprite, SpriteMaterial });
+	}
+
+	onPointerOver(event: NgtThreeEvent<PointerEvent>) {
+		if (this.disabled()) return;
+
+		event.stopPropagation();
+		this.active.set(true);
+	}
+
+	onPointerOut(event: NgtThreeEvent<PointerEvent>) {
+		if (this.disabled()) return;
+
+		const onClick = this.onClick();
+		if (onClick) onClick(event);
+		else {
+			event.stopPropagation();
+			this.active.set(false);
+		}
+	}
+
+	onPointerDown(event: NgtThreeEvent<PointerEvent>) {
+		if (this.disabled()) return;
+		event.stopPropagation();
+		this.gizmoHelper.tweenCamera(event.object.position);
+	}
+}
+
+export interface NgtsGizmoViewportOptions extends Partial<NgtGroup> {
+	axisColors: [string, string, string];
+	axisScale?: [number, number, number];
+	labels: [string, string, string];
+	axisHeadScale: number;
+	labelColor: string;
+	hideNegativeAxes: boolean;
+	hideAxisHeads: boolean;
+	disabled: boolean;
+	font: string;
+}
+
+const defaultOptions: NgtsGizmoViewportOptions = {
+	axisColors: ['#ff2060', '#20df80', '#2080ff'],
+	labels: ['X', 'Y', 'Z'],
+	axisHeadScale: 1,
+	labelColor: '#000',
+	hideNegativeAxes: false,
+	hideAxisHeads: false,
+	disabled: false,
+	font: '18px Inter var, Arial, sans-serif',
+};
+
+@Component({
+	selector: 'ngts-gizmo-viewport',
+	standalone: true,
+	template: `
+		<ngt-group [scale]="40" [parameters]="parameters()">
+			<viewport-axis [color]="axisColors()[0]" [rotation]="[0, 0, 0]" [scale]="axisScale()" />
+			<viewport-axis [color]="axisColors()[1]" [rotation]="[0, 0, Math.PI / 2]" [scale]="axisScale()" />
+			<viewport-axis [color]="axisColors()[2]" [rotation]="[0, -Math.PI / 2, 0]" [scale]="axisScale()" />
+
+			@if (!hideAxisHeads()) {
+				<viewport-axis-head
+					[arcStyle]="axisColors()[0]"
+					[position]="[1, 0, 0]"
+					[label]="labels()[0]"
+					[labelColor]="labelColor()"
+					[axisHeadScale]="axisHeadScale()"
+					[disabled]="disabled()"
+					[font]="font()"
+					[onClick]="onClick"
+				/>
+				<viewport-axis-head
+					[arcStyle]="axisColors()[1]"
+					[position]="[0, 1, 0]"
+					[label]="labels()[1]"
+					[labelColor]="labelColor()"
+					[axisHeadScale]="axisHeadScale()"
+					[disabled]="disabled()"
+					[font]="font()"
+					[onClick]="onClick"
+				/>
+				<viewport-axis-head
+					[arcStyle]="axisColors()[2]"
+					[position]="[0, 0, 1]"
+					[label]="labels()[2]"
+					[labelColor]="labelColor()"
+					[axisHeadScale]="axisHeadScale()"
+					[disabled]="disabled()"
+					[font]="font()"
+					[onClick]="onClick"
+				/>
+
+				@if (!hideNegativeAxes()) {
+					<viewport-axis-head
+						[arcStyle]="axisColors()[0]"
+						[position]="[-1, 0, 0]"
+						[axisHeadScale]="axisHeadScale()"
+						[disabled]="disabled()"
+						[onClick]="onClick"
+					/>
+					<viewport-axis-head
+						[arcStyle]="axisColors()[1]"
+						[position]="[0, -1, 0]"
+						[axisHeadScale]="axisHeadScale()"
+						[disabled]="disabled()"
+						[onClick]="onClick"
+					/>
+					<viewport-axis-head
+						[arcStyle]="axisColors()[2]"
+						[position]="[0, 0, -1]"
+						[axisHeadScale]="axisHeadScale()"
+						[disabled]="disabled()"
+						[onClick]="onClick"
+					/>
+				}
+			}
+		</ngt-group>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [Axis, AxisHead],
+})
+export class NgtsGizmoViewport {
+	protected readonly Math = Math;
+
+	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+	parameters = omit(this.options, [
+		'axisColors',
+		'axisScale',
+		'labels',
+		'axisHeadScale',
+		'labelColor',
+		'hideNegativeAxes',
+		'hideAxisHeads',
+		'disabled',
+		'font',
+	]);
+	click = output<NgtThreeEvent<MouseEvent>>();
+
+	protected axisColors = pick(this.options, 'axisColors');
+	protected axisScale = pick(this.options, 'axisScale');
+	protected hideAxisHeads = pick(this.options, 'hideAxisHeads');
+	protected hideNegativeAxes = pick(this.options, 'hideNegativeAxes');
+	protected labels = pick(this.options, 'labels');
+	protected axisHeadScale = pick(this.options, 'axisHeadScale');
+	protected labelColor = pick(this.options, 'labelColor');
+	protected disabled = pick(this.options, 'disabled');
+	protected font = pick(this.options, 'font');
+
+	constructor() {
+		extend({ Group });
+	}
+
+	protected get onClick() {
+		if (hasListener(this.click)) return getEmitter(this.click);
+		return undefined;
+	}
+}

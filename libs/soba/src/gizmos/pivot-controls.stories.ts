@@ -23,7 +23,7 @@ class DefaultPivotControlsStory {
 }
 
 export default {
-	title: 'Controls/PivotControls',
+	title: 'Gizmos/PivotControls',
 	decorators: makeDecorators(),
 } as Meta;
 
