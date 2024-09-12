@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtMesh } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsTransformControls } from 'angular-three-soba/gizmos';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { NgtsTransformControls, NgtsTransformControlsOptions } from 'angular-three-soba/gizmos';
+import { makeDecorators, makeStoryFunction, makeStoryObject, select } from '../setup-canvas';
 
 @Component({
 	standalone: true,
@@ -59,7 +59,7 @@ class LockControlsStory {}
 @Component({
 	standalone: true,
 	template: `
-		<ngts-transform-controls>
+		<ngts-transform-controls [options]="{ mode: mode() }">
 			<ngt-mesh>
 				<ngt-box-geometry />
 				<ngt-mesh-basic-material [wireframe]="true" />
@@ -74,6 +74,8 @@ class LockControlsStory {}
 	},
 })
 class DefaultTransformControlsStory {
+	mode = input<NgtsTransformControlsOptions['mode']>('translate');
+
 	private transformControls = viewChild.required(NgtsTransformControls);
 
 	onKeyDown(event: KeyboardEvent) {
@@ -89,6 +91,10 @@ export default {
 	decorators: makeDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultTransformControlsStory);
+export const Default = makeStoryObject(DefaultTransformControlsStory, {
+	argsOptions: {
+		mode: select('translate', { options: ['translate', 'rotate', 'scale'] }),
+	},
+});
 export const LockControls = makeStoryFunction(LockControlsStory, { controls: false });
 export const WithSelection = makeStoryFunction(WithSelectionStory);
