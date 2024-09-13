@@ -3,10 +3,6 @@ import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import * as THREE from 'three';
 import { MeshBVHUniformStruct, shaderIntersectFunction, shaderStructs } from 'three-mesh-bvh';
 
-declare module 'three-mesh-bvh' {
-	const shaderIntersectFunction: string;
-}
-
 export const MeshRefractionMaterial = shaderMaterial(
 	{
 		envMap: null,
