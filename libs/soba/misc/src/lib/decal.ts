@@ -96,6 +96,13 @@ export class NgtsDecal {
 
 				if (!parent) return;
 
+				const parentLocalState = getLocalState(parent);
+				if (!parentLocalState) return;
+
+				// track parent's children
+				const parentNonObjects = parentLocalState.nonObjects();
+				if (!parentNonObjects || !parentNonObjects.length) return;
+
 				const [position, rotation, scale] = [this.position(), this.rotation(), this.scale()];
 				const state = {
 					position: new Vector3(),
