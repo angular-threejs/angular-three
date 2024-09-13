@@ -1,12 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	CUSTOM_ELEMENTS_SCHEMA,
-	effect,
-	Signal,
-	signal,
-	viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, Signal, signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -35,23 +27,22 @@ type CupGLTF = GLTF & {
 				[scale]="2"
 			>
 				<ngt-value [rawValue]="1" attach="material.aoMapIntensity" />
-				<ngt-group [position]="[0, 0.75, 0.5]">
-					<ngts-pivot-controls
-						[options]="{ activeAxes: [true, true, false], scale: 0.55 }"
-						(dragged)="onDrag($event)"
-					/>
-				</ngt-group>
+				<!--				<ngt-group [position]="[0, 0.75, 0.5]">-->
+				<!--					&lt;!&ndash; TODO: not sure why Pivot Controls is not working within the gltf &ndash;&gt;-->
+				<!--					<ngts-pivot-controls-->
+				<!--						[options]="{ activeAxes: [true, true, false], scale: 0.55 }"-->
+				<!--						(dragged)="onDrag($event)"-->
+				<!--					/>-->
+				<!--				</ngt-group>-->
 				<ngts-decal
-					[options]="{
-						map: logoTexture(),
-						position: position(),
-						rotation: rotation(),
-						scale: scale(),
-						depthTest: true,
-					}"
+					[options]="{ map: texture(), position: position(), rotation: rotation(), scale: scale(), depthTest: true }"
 				/>
 			</ngt-mesh>
 		}
+
+		<ngt-group [position]="[0, 0.5, 1]">
+			<ngts-pivot-controls [options]="{ activeAxes: [true, true, false], scale: 0.55 }" (dragged)="onDrag($event)" />
+		</ngt-group>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,25 +54,18 @@ export class Cup {
 	protected scale = signal<NgtVector3>([0.6, 0.6, 0.6]);
 
 	protected gltf = injectGLTF(() => './coffee-transformed.glb') as Signal<CupGLTF | null>;
-	protected logoTexture = injectTexture(() => './1200px-Starbucks_Logo_ab_2011.svg.png');
+	protected texture = injectTexture(() => './1200px-Starbucks_Logo_ab_2011.svg.png');
 
-	decal = viewChild(NgtsDecal);
-
-	constructor() {
-		effect(() => {
-			console.log(this.decal()?.meshRef().nativeElement);
-		});
-	}
+	private p = new Vector3();
+	private s = new Vector3();
+	private q = new Quaternion();
 
 	onDrag({ l }: OnDragParameters) {
-		const position = new Vector3();
-		const scale = new Vector3();
-		const quaternion = new Quaternion();
-		l.decompose(position, quaternion, scale);
-		const rotation = new Euler().setFromQuaternion(quaternion);
-		this.position.set([position.x, position.y + 0.75, position.z + 0.3]);
+		l.decompose(this.p, this.q, this.s);
+		const rotation = new Euler().setFromQuaternion(this.q);
+		this.position.set([this.p.x, this.p.y + 0.75, this.p.z + 0.3]);
 		this.rotation.set([rotation.x, rotation.y, rotation.z]);
-		this.scale.set([0.6 * scale.x, 0.6 * scale.y, 0.6 * scale.z]);
+		this.scale.set([0.6 * this.s.x, 0.6 * this.s.y, 0.6 * this.s.z]);
 	}
 }
 
