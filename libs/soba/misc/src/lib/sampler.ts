@@ -2,19 +2,17 @@ import {
 	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
 	inject,
 	Injector,
 	input,
-	signal,
-	untracked,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, getLocalState, NgtGroup, omit, resolveRef } from 'angular-three';
+import { checkUpdate, extend, getLocalState, NgtGroup, omit, pick, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BufferGeometry, Color, Group, InstancedBufferAttribute, InstancedMesh, Mesh, Object3D, Vector3 } from 'three';
 import { MeshSurfaceSampler } from 'three-stdlib';
@@ -62,82 +60,80 @@ export function injectSurfaceSampler(
 	{ injector }: { injector?: Injector } = {},
 ) {
 	return assertInjector(injectSurfaceSampler, injector, () => {
-		const buffer = signal(
-			(() => {
-				const arr = Array.from({ length: options().count ?? 16 }, () => [
-					1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-				]).flat();
-				return new InstancedBufferAttribute(Float32Array.from(arr), 16);
-			})(),
-		);
+		const initialBufferAttribute = (() => {
+			const arr = Array.from({ length: options().count ?? 16 }, () => [
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+			]).flat();
+			return new InstancedBufferAttribute(Float32Array.from(arr), 16);
+		})();
 
-		effect(
-			() => {
-				const currentMesh = resolveRef(mesh());
-				if (!currentMesh) return;
+		const buffer = computed(() => {
+			const currentMesh = resolveRef(mesh());
+			if (!currentMesh) return initialBufferAttribute;
 
-				const localState = getLocalState(currentMesh);
-				if (!localState) return;
+			const localState = getLocalState(currentMesh);
+			if (!localState) return initialBufferAttribute;
 
-				const nonObjects = localState.nonObjects();
-				if (
-					!nonObjects ||
-					!nonObjects.length ||
-					nonObjects.every((nonObject) => !(nonObject as BufferGeometry).isBufferGeometry)
-				) {
-					return;
+			const nonObjects = localState.nonObjects();
+			if (
+				!nonObjects ||
+				!nonObjects.length ||
+				nonObjects.every((nonObject) => !(nonObject as BufferGeometry).isBufferGeometry)
+			) {
+				return initialBufferAttribute;
+			}
+
+			const sampler = new MeshSurfaceSampler(currentMesh);
+			const { weight, count = 16, transform, instanceMesh } = options();
+
+			if (weight) {
+				sampler.setWeightAttribute(weight);
+			}
+
+			sampler.build();
+
+			const position = new Vector3();
+			const normal = new Vector3();
+			const color = new Color();
+			const dummy = new Object3D();
+			const instance = resolveRef(instanceMesh);
+
+			currentMesh.updateMatrixWorld(true);
+
+			for (let i = 0; i < count; i++) {
+				sampler.sample(position, normal, color);
+
+				if (typeof transform === 'function') {
+					transform({ dummy, sampledMesh: currentMesh, position, normal, color }, i);
+				} else {
+					dummy.position.copy(position);
 				}
 
-				const sampler = new MeshSurfaceSampler(currentMesh);
-
-				const { weight, count = 16, transform, instanceMesh } = options();
-
-				if (weight) {
-					sampler.setWeightAttribute(weight);
-				}
-
-				sampler.build();
-
-				const position = new Vector3();
-				const normal = new Vector3();
-				const color = new Color();
-				const dummy = new Object3D();
-				const instance = resolveRef(instanceMesh);
-
-				currentMesh.updateMatrixWorld(true);
-
-				for (let i = 0; i < count; i++) {
-					sampler.sample(position, normal, color);
-
-					if (typeof transform === 'function') {
-						transform({ dummy, sampledMesh: currentMesh, position, normal, color }, i);
-					} else {
-						dummy.position.copy(position);
-					}
-
-					dummy.updateMatrix();
-
-					if (instance) {
-						instance.setMatrixAt(i, dummy.matrix);
-					}
-
-					dummy.matrix.toArray(untracked(buffer).array, i * 16);
-				}
+				dummy.updateMatrix();
 
 				if (instance) {
-					checkUpdate(instance.instanceMatrix);
+					instance.setMatrixAt(i, dummy.matrix);
 				}
 
-				checkUpdate(buffer);
+				dummy.matrix.toArray(initialBufferAttribute.array, i * 16);
+			}
 
-				buffer.set(
-					new InstancedBufferAttribute(untracked(buffer).array, untracked(buffer).itemSize).copy(untracked(buffer)),
-				);
-			},
-			{ allowSignalWrites: true },
-		);
+			if (instance) {
+				checkUpdate(instance.instanceMatrix);
+			}
 
-		return buffer.asReadonly();
+			checkUpdate(initialBufferAttribute);
+
+			return new InstancedBufferAttribute(initialBufferAttribute.array, initialBufferAttribute.itemSize).copy(
+				initialBufferAttribute,
+			);
+		});
+
+		return computed(() => {
+			const _buffer = buffer();
+			if (!_buffer) return initialBufferAttribute;
+			return _buffer;
+		});
 	});
 }
 
@@ -184,44 +180,41 @@ export class NgtsSampler {
 
 	groupRef = viewChild.required<ElementRef<Group>>('group');
 
-	private meshToSample = signal<Mesh | null>(null);
-	private instancedToSample = signal<InstancedMesh | null>(null);
+	private sampleState = computed(() => {
+		const group = this.groupRef().nativeElement;
+		const localState = getLocalState(group);
+		if (!localState) return { mesh: null, instanced: null };
+
+		const [mesh, instances] = [resolveRef(this.mesh()), resolveRef(this.instances())];
+		const objects = localState.objects();
+
+		return {
+			mesh: mesh ?? (objects.find((c) => c.type === 'Mesh') as Mesh),
+			instanced:
+				instances ?? (objects.find((c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix')) as InstancedMesh),
+		};
+	});
 
 	constructor() {
 		extend({ Group });
-		const autoEffect = injectAutoEffect();
 		const injector = inject(Injector);
 
 		afterNextRender(() => {
-			autoEffect(
-				() => {
-					const group = this.groupRef().nativeElement;
-					const localState = getLocalState(group);
-					if (!localState) return;
+			const meshToSample = pick(this.sampleState, 'mesh');
+			const instancedToSample = pick(this.sampleState, 'instanced');
 
-					const [mesh, instances] = [resolveRef(this.mesh()), resolveRef(this.instances())];
-
-					this.meshToSample.set(mesh ?? (localState.objects().find((c) => c.type === 'Mesh') as Mesh));
-					this.instancedToSample.set(
-						instances ??
-							(localState
-								.objects()
-								.find((c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix')) as InstancedMesh),
-					);
-				},
-				{ allowSignalWrites: true },
-			);
-
-			injectSurfaceSampler(
-				this.meshToSample,
+			const sampler = injectSurfaceSampler(
+				meshToSample,
 				() => ({
 					count: this.options().count,
 					transform: this.options().transform,
 					weight: this.options().weight,
-					instanceMesh: this.instancedToSample(),
+					instanceMesh: instancedToSample(),
 				}),
 				{ injector },
 			);
+
+			effect(sampler, { injector });
 		});
 	}
 }
