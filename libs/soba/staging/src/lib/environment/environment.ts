@@ -1,19 +1,19 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	contentChild,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
 	Directive,
+	effect,
 	EffectRef,
 	ElementRef,
 	inject,
 	Injector,
 	input,
 	output,
-	signal,
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
@@ -29,7 +29,6 @@ import {
 	pick,
 	prepare,
 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { CubeCamera, Euler, HalfFloatType, Scene, Texture, WebGLCubeRenderTarget } from 'three';
 import { GroundProjectedEnv } from 'three-stdlib';
@@ -106,46 +105,42 @@ export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 	envSet = output<void>();
 
-	private autoEffect = injectAutoEffect();
-	private store = injectStore();
-	private defaultScene = this.store.select('scene');
-
-	private envConfig = computed(() => {
-		const {
-			background = false,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		} = this.options();
-
-		return {
-			background,
-			scene,
-			blur,
-			backgroundBlurriness,
-			backgroundIntensity,
-			backgroundRotation,
-			environmentIntensity,
-			environmentRotation,
-		};
-	});
-
-	private map = pick(this.options, 'map');
-
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const map = this.map();
-				if (!map) return;
-				const { background = false, scene, ...config } = this.envConfig();
-				const cleanup = setEnvProps(background, scene, this.defaultScene(), map, config);
-				this.envSet.emit();
-				return () => cleanup();
-			});
+		const store = injectStore();
+		const defaultScene = store.select('scene');
+
+		const _map = pick(this.options, 'map');
+		const _envConfig = computed(() => {
+			const {
+				background = false,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			} = this.options();
+
+			return {
+				background,
+				scene,
+				blur,
+				backgroundBlurriness,
+				backgroundIntensity,
+				backgroundRotation,
+				environmentIntensity,
+				environmentRotation,
+			};
+		});
+
+		effect((onCleanup) => {
+			const map = _map();
+			if (!map) return;
+			const { background = false, scene, ...config } = _envConfig();
+			const cleanup = setEnvProps(background, scene, defaultScene(), map, config);
+			this.envSet.emit();
+			onCleanup(() => cleanup());
 		});
 	}
 }
@@ -155,10 +150,8 @@ export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 	envSet = output<void>();
 
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private defaultScene = this.store.select('scene');
-	private injector = inject(Injector);
 
 	private envConfig = computed(() => {
 		const {
@@ -185,17 +178,15 @@ export class NgtsEnvironmentCube {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			const _texture = injectEnvironment(this.options, { injector: this.injector });
+		const _texture = injectEnvironment(this.options);
 
-			this.autoEffect(() => {
-				const texture = _texture();
-				if (!texture) return;
-				const { background = false, scene, ...config } = this.envConfig();
-				const cleanup = setEnvProps(background, scene, this.defaultScene(), texture, config);
-				this.envSet.emit();
-				return () => cleanup();
-			});
+		effect((onCleanup) => {
+			const texture = _texture();
+			if (!texture) return;
+			const { background = false, scene, ...config } = this.envConfig();
+			const cleanup = setEnvProps(background, scene, this.defaultScene(), texture, config);
+			this.envSet.emit();
+			onCleanup(() => cleanup());
 		});
 	}
 }
@@ -238,21 +229,21 @@ export class NgtsEnvironmentPortal {
 	content = input.required<TemplateRef<unknown>>();
 	envSet = output<void>();
 
-	private autoEffect = injectAutoEffect();
+	private injector = inject(Injector);
 	private store = injectStore();
 	private defaultScene = this.store.select('scene');
 	private gl = this.store.select('gl');
 
-	cameraRef = viewChild<ElementRef<CubeCamera>>('cubeCamera');
+	private cameraRef = viewChild<ElementRef<CubeCamera>>('cubeCamera');
 
-	map = pick(this.options, 'map');
-	files = pick(this.options, 'files');
-	preset = pick(this.options, 'preset');
+	protected map = pick(this.options, 'map');
+	protected files = pick(this.options, 'files');
+	protected preset = pick(this.options, 'preset');
 	private extensions = pick(this.options, 'extensions');
 	private path = pick(this.options, 'path');
 
-	envMapOptions = computed(() => ({ background: true, map: this.map(), extensions: this.extensions() }));
-	envCubeOptions = computed(() => ({
+	protected envMapOptions = computed(() => ({ background: true, map: this.map(), extensions: this.extensions() }));
+	protected envCubeOptions = computed(() => ({
 		background: true,
 		files: this.files(),
 		preset: this.preset(),
@@ -269,22 +260,20 @@ export class NgtsEnvironmentPortal {
 		return fbo;
 	});
 
-	cameraArgs = computed(() => [this.near(), this.far(), this.fbo()]);
-
-	virtualScene = prepare(new Scene());
+	protected cameraArgs = computed(() => [this.near(), this.far(), this.fbo()]);
+	protected virtualScene = prepare(new Scene());
 
 	private setEnvEffectRef?: EffectRef;
 
 	constructor() {
 		extend({ CubeCamera });
 
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [files, preset, map] = [this.files(), this.preset(), this.map()];
-				// NOTE: when there's none of this, we don't render cube or map so we need to setEnv here
-				if (!!files || !!preset || !!map) return;
-				return this.setPortalEnv();
-			});
+		effect((onCleanup) => {
+			const [files, preset, map] = [this.files(), this.preset(), this.map()];
+			// NOTE: when there's none of this, we don't render cube or map so we need to setEnv here
+			if (!!files || !!preset || !!map) return;
+			const cleanup = this.setPortalEnv();
+			onCleanup(() => cleanup?.());
 		});
 
 		let count = 1;
@@ -298,16 +287,21 @@ export class NgtsEnvironmentPortal {
 				}
 			}
 		});
+
+		inject(DestroyRef).onDestroy(() => {
+			if (this.setEnvEffectRef) this.setEnvEffectRef.destroy();
+		});
 	}
 
 	// NOTE: we use onEnvSet here to ensure that EnvironmentCube or EnvironmentMap sets the env before the portal
 	onEnvSet() {
 		if (this.setEnvEffectRef) this.setEnvEffectRef.destroy();
-		this.setEnvEffectRef = this.autoEffect(
-			() => {
-				return this.setPortalEnv();
+		this.setEnvEffectRef = effect(
+			(onCleanup) => {
+				const cleanup = this.setPortalEnv();
+				onCleanup(() => cleanup?.());
 			},
-			{ manualCleanup: true },
+			{ manualCleanup: true, injector: this.injector },
 		);
 	}
 
@@ -361,13 +355,13 @@ export class NgtsEnvironmentGround {
 	options = input({} as NgtsEnvironmentOptions);
 	envSet = output<void>();
 
-	args = signal<[Texture | null]>([null]);
+	private defaultTexture = injectEnvironment(this.options);
 
-	height = computed(() => (this.options().ground as any)?.height);
-	radius = computed(() => (this.options().ground as any)?.radius);
-	scale = computed(() => (this.options().ground as any)?.scale ?? 1000);
-
-	envMapOptions = computed(() => {
+	protected height = computed(() => (this.options().ground as any)?.height);
+	protected radius = computed(() => (this.options().ground as any)?.radius);
+	protected scale = computed(() => (this.options().ground as any)?.scale ?? 1000);
+	protected args = computed(() => [this.options().map || this.defaultTexture()]);
+	protected envMapOptions = computed(() => {
 		const { map: _, ...options } = this.options();
 		const [map] = this.args();
 		return Object.assign(options, { map }) as NgtsEnvironmentOptions;
@@ -375,21 +369,6 @@ export class NgtsEnvironmentGround {
 
 	constructor() {
 		extend({ GroundProjectedEnv });
-
-		const injector = inject(Injector);
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			const defaultTexture = injectEnvironment(this.options, { injector });
-			const texture = computed(() => this.options().map || defaultTexture());
-
-			autoEffect(
-				() => {
-					this.args.set([texture()]);
-				},
-				{ allowSignalWrites: true },
-			);
-		});
 	}
 }
 
