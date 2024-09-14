@@ -1,23 +1,18 @@
-import {
-	afterNextRender,
-	booleanAttribute,
-	Directive,
-	ElementRef,
-	inject,
-	input,
-	signal,
-	untracked,
-} from '@angular/core';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
+import { booleanAttribute, Directive, effect, ElementRef, inject, input, signal, untracked } from '@angular/core';
 import { Group, Mesh, Object3D } from 'three';
 import { getLocalState } from '../instance';
 
 @Directive({ standalone: true, selector: '[ngtSelection]' })
 export class NgtSelection {
 	enabled = input(true, { alias: 'ngtSelection', transform: booleanAttribute });
+
 	private source = signal<Array<ElementRef<Object3D> | Object3D>>([]);
 	selected = this.source.asReadonly();
-	update = this.source.update.bind(this.source);
+
+	update(...args: Parameters<typeof this.source.update>) {
+		if (!this.enabled()) return;
+		this.source.update(...args);
+	}
 }
 
 @Directive({ standalone: true, selector: 'ngt-group[ngtSelect], ngt-mesh[ngtSelect]' })
@@ -27,43 +22,44 @@ export class NgtSelect {
 	constructor() {
 		const elementRef = inject<ElementRef<Group | Mesh>>(ElementRef);
 		const selection = inject(NgtSelection);
-		const autoEffect = injectAutoEffect();
 
-		afterNextRender(() => {
-			autoEffect(
-				() => {
-					const enabled = this.enabled();
-					if (!enabled) return;
+		effect(
+			(onCleanup) => {
+				const selectionEnabled = selection.enabled();
+				if (!selectionEnabled) return;
 
-					const host = elementRef.nativeElement;
-					if (!host) return;
+				const enabled = this.enabled();
+				if (!enabled) return;
 
-					const localState = getLocalState(host);
-					if (!localState) return;
+				const host = elementRef.nativeElement;
+				if (!host) return;
 
-					// ngt-mesh[ngtSelect]
-					if (host.type === 'Mesh') {
-						selection.update((prev) => [...prev, host]);
-						return () => selection.update((prev) => prev.filter((el) => el !== host));
-					}
+				const localState = getLocalState(host);
+				if (!localState) return;
 
-					const [collection] = [untracked(selection.selected), localState.objects()];
-					let changed = false;
-					const current: Object3D[] = [];
-					host.traverse((child) => {
-						child.type === 'Mesh' && current.push(child);
-						if (collection.indexOf(child) === -1) changed = true;
-					});
+				// ngt-mesh[ngtSelect]
+				if (host.type === 'Mesh') {
+					selection.update((prev) => [...prev, host]);
+					onCleanup(() => selection.update((prev) => prev.filter((el) => el !== host)));
+					return;
+				}
 
-					if (!changed) return;
+				const [collection] = [untracked(selection.selected), localState.objects()];
+				let changed = false;
+				const current: Object3D[] = [];
+				host.traverse((child) => {
+					child.type === 'Mesh' && current.push(child);
+					if (collection.indexOf(child) === -1) changed = true;
+				});
 
-					selection.update((prev) => [...prev, ...current]);
-					return () => {
-						selection.update((prev) => prev.filter((el) => !current.includes(el as Object3D)));
-					};
-				},
-				{ allowSignalWrites: true },
-			);
-		});
+				if (!changed) return;
+
+				selection.update((prev) => [...prev, ...current]);
+				onCleanup(() => {
+					selection.update((prev) => prev.filter((el) => !current.includes(el as Object3D)));
+				});
+			},
+			{ allowSignalWrites: true },
+		);
 	}
 }

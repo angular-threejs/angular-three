@@ -51,6 +51,7 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			add(object, type) {
 				const current = instance.__ngt__.instanceStore.snapshot[type];
 				const foundIndex = current.indexOf((node: NgtInstanceNode) => object === node);
+
 				if (foundIndex > -1) {
 					current.splice(foundIndex, 1, object);
 					instance.__ngt__.instanceStore.update({ [type]: current });
