@@ -1,4 +1,4 @@
-import { Injector, Signal, effect, signal, untracked } from '@angular/core';
+import { Injector, Signal, effect, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Loader, Object3D } from 'three';
 import { NgtAnyRecord } from './types';
@@ -43,9 +43,7 @@ function normalizeInputs(input: string | string[] | Record<string, string>) {
 		urls = Object.values(input);
 	}
 
-	return urls.map((url) => {
-		return url.includes('undefined') || url.includes('null') || !url ? '' : url;
-	});
+	return urls.map((url) => (url.includes('undefined') || url.includes('null') || !url ? '' : url));
 }
 
 function load<
@@ -66,7 +64,7 @@ function load<
 		onProgress?: (event: ProgressEvent) => void;
 	} = {},
 ) {
-	return (): Array<Promise<any>> | null => {
+	return (): Array<Promise<any>> => {
 		const urls = normalizeInputs(inputs());
 
 		let loader: Loader<TData> = memoizedLoaders.get(loaderConstructorFactory(urls));
@@ -76,11 +74,9 @@ function load<
 		}
 
 		if (extensions) extensions(loader);
-		// TODO: reevaluate this
+
 		return urls.map((url) => {
-			if (url === '') {
-				return null;
-			}
+			if (url === '') return Promise.resolve(null);
 
 			if (!cached.has(url)) {
 				cached.set(
@@ -105,6 +101,7 @@ function load<
 					}),
 				);
 			}
+
 			return cached.get(url)!;
 		});
 	};
@@ -141,31 +138,25 @@ function _injectLoader<
 			onProgress,
 			onLoad: onLoad as (data: unknown) => void,
 		});
-		effect(
-			() => {
-				const originalUrls = inputs();
-				const cachedEffect = effector();
-				if (cachedEffect === null && untracked(response) !== null) {
-					response.set(null);
-				} else if (cachedEffect !== null) {
-					Promise.all(cachedEffect).then((results) => {
-						response.update(() => {
-							if (Array.isArray(originalUrls)) return results;
-							if (typeof originalUrls === 'string') return results[0];
-							const keys = Object.keys(originalUrls);
-							return keys.reduce(
-								(result, key) => {
-									(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-									return result;
-								},
-								{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
-							);
-						});
-					});
-				}
-			},
-			{ allowSignalWrites: true },
-		);
+
+		effect(() => {
+			const originalUrls = inputs();
+			const cachedEffect = effector();
+			Promise.all(cachedEffect).then((results) => {
+				response.update(() => {
+					if (Array.isArray(originalUrls)) return results;
+					if (typeof originalUrls === 'string') return results[0];
+					const keys = Object.keys(originalUrls);
+					return keys.reduce(
+						(result, key) => {
+							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+							return result;
+						},
+						{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
+					);
+				});
+			});
+		});
 
 		return response.asReadonly();
 	});
