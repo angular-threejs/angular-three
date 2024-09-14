@@ -128,7 +128,10 @@ export class NgtsCenter {
 				];
 
 				const localState = getLocalState(inner);
-				const children = localState?.objects();
+				if (!localState) return;
+
+				localState.nonObjects();
+				const children = localState.objects();
 				if (!children?.length) return;
 
 				outer.matrixWorld.identity();
