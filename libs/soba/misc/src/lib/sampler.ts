@@ -1,12 +1,10 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
-	inject,
 	Injector,
 	input,
 	viewChild,
@@ -178,43 +176,40 @@ export class NgtsSampler {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['weight', 'transform', 'count']);
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-
-	private sampleState = computed(() => {
-		const group = this.groupRef().nativeElement;
-		const localState = getLocalState(group);
-		if (!localState) return { mesh: null, instanced: null };
-
-		const [mesh, instances] = [resolveRef(this.mesh()), resolveRef(this.instances())];
-		const objects = localState.objects();
-
-		return {
-			mesh: mesh ?? (objects.find((c) => c.type === 'Mesh') as Mesh),
-			instanced:
-				instances ?? (objects.find((c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix')) as InstancedMesh),
-		};
-	});
+	// NOTE: this could have been a viewChild.required, but we need to _try_ to consume
+	//  this Signal earlier than when a viewChild.required would resolve.
+	groupRef = viewChild<ElementRef<Group>>('group');
 
 	constructor() {
 		extend({ Group });
-		const injector = inject(Injector);
 
-		afterNextRender(() => {
-			const meshToSample = pick(this.sampleState, 'mesh');
-			const instancedToSample = pick(this.sampleState, 'instanced');
+		const sampleState = computed(() => {
+			const group = this.groupRef()?.nativeElement;
+			const localState = getLocalState(group);
+			if (!localState) return { mesh: null, instanced: null };
 
-			const sampler = injectSurfaceSampler(
-				meshToSample,
-				() => ({
-					count: this.options().count,
-					transform: this.options().transform,
-					weight: this.options().weight,
-					instanceMesh: instancedToSample(),
-				}),
-				{ injector },
-			);
+			const [mesh, instances] = [resolveRef(this.mesh()), resolveRef(this.instances())];
+			const objects = localState.objects();
 
-			effect(sampler, { injector });
+			return {
+				mesh: mesh ?? (objects.find((c) => c.type === 'Mesh') as Mesh),
+				instanced:
+					instances ?? (objects.find((c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix')) as InstancedMesh),
+			};
 		});
+
+		const meshToSample = pick(sampleState, 'mesh');
+		const instancedToSample = pick(sampleState, 'instanced');
+
+		// NOTE: because injectSurfaceSampler returns a computed, we need to consume
+		//  this computed in a Reactive Context (an effect) to ensure the inner logic of
+		//  injectSurfaceSampler is run properly.
+		const sampler = injectSurfaceSampler(meshToSample, () => ({
+			count: this.options().count,
+			transform: this.options().transform,
+			weight: this.options().weight,
+			instanceMesh: instancedToSample(),
+		}));
+		effect(sampler);
 	}
 }

@@ -53,15 +53,6 @@ export class SceneGraph {
 		afterNextRender(() => {
 			untracked(() => {
 				ref = this.anchor().createComponent(this.sobaContent());
-
-				// const componentInputs = this.storyMirror.inputs.map((input) => input.propName);
-				// autoEffect(() => {
-				// 	const storyOptions = this.storyOptions();
-				// 	for (const key of componentInputs) {
-				// 		ref.setInput(key, storyOptions[key]);
-				// 	}
-				// });
-
 				ref.changeDetectorRef.detectChanges();
 			});
 		});
