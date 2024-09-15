@@ -65,7 +65,7 @@ export function injectSurfaceSampler(
 			return new InstancedBufferAttribute(Float32Array.from(arr), 16);
 		})();
 
-		const buffer = computed(() => {
+		return computed(() => {
 			const currentMesh = resolveRef(mesh());
 			if (!currentMesh) return initialBufferAttribute;
 
@@ -125,12 +125,6 @@ export function injectSurfaceSampler(
 			return new InstancedBufferAttribute(initialBufferAttribute.array, initialBufferAttribute.itemSize).copy(
 				initialBufferAttribute,
 			);
-		});
-
-		return computed(() => {
-			const _buffer = buffer();
-			if (!_buffer) return initialBufferAttribute;
-			return _buffer;
 		});
 	});
 }
