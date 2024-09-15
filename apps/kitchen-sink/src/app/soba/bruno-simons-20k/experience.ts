@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal, Signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtpDepthOfField, NgtpEffectComposer, NgtpToneMapping } from 'angular-three-postprocessing';
 import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
@@ -13,6 +13,8 @@ import {
 } from 'angular-three-soba/staging';
 import { MathUtils, Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
+
+export const debug = signal(false);
 
 type HatGLTF = GLTF & {
 	nodes: { Plane006: Mesh; Plane006_1: Mesh };
@@ -118,7 +120,7 @@ export class Model {
 			</ng-template>
 		</ngts-environment>
 
-		<ngtr-physics [options]="{ gravity: [0, -4, 0] }">
+		<ngtr-physics [options]="{ debug: debug(), gravity: [0, -4, 0] }">
 			<app-model [position]="[1, 0, -1.5]" />
 			<app-hats />
 			<ngt-object3D ngtrRigidBody="fixed" [options]="{ colliders: false }" [position]="[0, -1, 0]">
@@ -183,4 +185,6 @@ export class Model {
 export class Experience {
 	protected readonly Infinity = Infinity;
 	protected readonly Math = Math;
+
+	protected debug = debug;
 }

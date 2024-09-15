@@ -1,27 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, Directive, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
+import { ToggleButton } from '../toggle-button';
 import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-default';
-
-@Directive({
-	selector: 'button[toggleButton]',
-	standalone: true,
-	host: {
-		class: 'border rounded px-2 py-1',
-		'(click)': 'onClick()',
-		'[class]': 'hbClass()',
-	},
-})
-export class ToggleButton {
-	value = model.required<boolean>({ alias: 'toggleButton' });
-
-	hbClass = computed(() => {
-		return this.value() ? ['text-white', 'bg-red-600', 'border-red-400'] : ['text-black', 'border-black'];
-	});
-
-	onClick() {
-		this.value.update((prev) => !prev);
-	}
-}
 
 @Component({
 	standalone: true,
