@@ -62,6 +62,10 @@ const routes: Routes = [
 		loadComponent: () => import('./starbucks/starbucks'),
 	},
 	{
+		path: 'bruno-simons-20k',
+		loadComponent: () => import('./bruno-simons-20k/bruno-simons-20k'),
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
