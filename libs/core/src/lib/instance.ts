@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { NgtAnyRecord, NgtInstanceNode, NgtLocalInstanceState, NgtLocalState } from './types';
 import { signalStore } from './utils/signal-store';
 import { checkUpdate } from './utils/update';
@@ -34,9 +35,18 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 				parent: null,
 				objects: [],
 				nonObjects: [],
+				geometryStamp: Date.now(),
 			}),
 			...rest
 		} = localState || {};
+
+		const nonObjects = instanceStore.select('nonObjects');
+		const geometryStamp = instanceStore.select('geometryStamp');
+
+		const nonObjectsChanged = computed(() => {
+			const [_nonObjects] = [nonObjects(), geometryStamp()];
+			return _nonObjects;
+		});
 
 		instance.__ngt__ = {
 			previousAttach: null,
@@ -47,7 +57,7 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			instanceStore,
 			parent: instanceStore.select('parent'),
 			objects: instanceStore.select('objects'),
-			nonObjects: instanceStore.select('nonObjects'),
+			nonObjects: nonObjectsChanged,
 			add(object, type) {
 				const current = instance.__ngt__.instanceStore.snapshot[type];
 				const foundIndex = current.indexOf((node: NgtInstanceNode) => object === node);
@@ -67,6 +77,9 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			},
 			setParent(parent) {
 				instance.__ngt__.instanceStore.update({ parent });
+			},
+			updateGeometryStamp() {
+				instance.__ngt__.instanceStore.update({ geometryStamp: Date.now() });
 			},
 			...rest,
 		} as NgtLocalState;

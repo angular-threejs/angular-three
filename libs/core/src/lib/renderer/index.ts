@@ -429,6 +429,8 @@ export class NgtRenderer implements Renderer2 {
 		const rS = el.__ngt_renderer__;
 		if (!rS || rS[NgtRendererClassId.destroyed]) return;
 
+		const localState = getLocalState(el);
+
 		if (rS[NgtRendererClassId.type] === 'three') {
 			if (name === SPECIAL_PROPERTIES.PARAMETERS) {
 				// NOTE: short-cut for null raycast to prevent upstream from creating a nullRaycast property
@@ -436,10 +438,14 @@ export class NgtRenderer implements Renderer2 {
 					value['raycast'] = () => null;
 				}
 				applyProps(el, value);
+
+				if ('geometry' in value && value['geometry'].isBufferGeometry) {
+					localState?.updateGeometryStamp();
+				}
+
 				return;
 			}
 
-			const localState = getLocalState(el);
 			const parent = localState?.instanceStore.get('parent') || rS[NgtRendererClassId.parent];
 
 			// [rawValue]
@@ -469,6 +475,11 @@ export class NgtRenderer implements Renderer2 {
 			}
 
 			applyProps(el, { [name]: value });
+
+			if (name === 'geometry' && value.isBufferGeometry) {
+				localState?.updateGeometryStamp();
+			}
+
 			return;
 		}
 
