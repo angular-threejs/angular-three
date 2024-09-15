@@ -15,6 +15,7 @@ import {
 	ViewContainerRef,
 	afterNextRender,
 	createEnvironmentInjector,
+	effect,
 	inject,
 	input,
 	reflectComponentType,
@@ -31,7 +32,6 @@ import {
 	injectBeforeRender,
 	resolveRef,
 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Object3D } from 'three';
@@ -93,38 +93,44 @@ const STORY_OPTIONS = new InjectionToken<Signal<Record<string, unknown>>>('story
 	host: { class: 'storybook-scene' },
 })
 export class StorybookScene {
-	Math = Math;
+	protected Math = Math;
 
-	autoEffect = injectAutoEffect();
-	canvasOptions = inject(CANVAS_OPTIONS);
-	story = inject(STORY_COMPONENT);
-	storyMirror = inject(STORY_COMPONENT_MIRROR);
-	storyOptions = inject(STORY_OPTIONS);
+	protected canvasOptions = inject(CANVAS_OPTIONS);
+	private story = inject(STORY_COMPONENT);
+	private storyMirror = inject(STORY_COMPONENT_MIRROR);
+	private storyOptions = inject(STORY_OPTIONS);
 
-	anchor = viewChild.required('anchor', { read: ViewContainerRef });
+	private anchor = viewChild.required('anchor', { read: ViewContainerRef });
+	private ref?: ComponentRef<unknown>;
+	private inputsMirror?: string[];
 
 	constructor() {
-		let ref: ComponentRef<unknown>;
-
 		afterNextRender(() => {
 			untracked(() => {
-				ref = this.anchor().createComponent(this.story);
-
-				const componentInputs = this.storyMirror.inputs.map((input) => input.propName);
-				this.autoEffect(() => {
-					const storyOptions = this.storyOptions();
-					for (const key of componentInputs) {
-						ref.setInput(key, storyOptions[key]);
-					}
-				});
-
-				ref.changeDetectorRef.detectChanges();
+				this.ref = this.anchor().createComponent(this.story);
+				this.setStoryOptions(this.storyOptions());
+				this.ref.changeDetectorRef.detectChanges();
 			});
 		});
 
-		inject(DestroyRef).onDestroy(() => {
-			ref?.destroy();
+		effect(() => {
+			this.setStoryOptions(this.storyOptions());
 		});
+
+		inject(DestroyRef).onDestroy(() => {
+			this.ref?.destroy();
+		});
+	}
+
+	private setStoryOptions(options: NgtAnyRecord) {
+		if (!this.ref) return;
+		if (!this.inputsMirror) {
+			this.inputsMirror = this.storyMirror.inputs.map((input) => input.propName);
+		}
+
+		for (const key of this.inputsMirror) {
+			this.ref.setInput(key, options[key]);
+		}
 	}
 }
 
@@ -146,7 +152,7 @@ export class StorybookSetup {
 	canvasOptions = input(defaultCanvasOptions, { transform: mergeInputs(defaultCanvasOptions) });
 	withLoader = input(false);
 
-	anchor = viewChild.required('anchor', { read: ViewContainerRef });
+	private anchor = viewChild.required('anchor', { read: ViewContainerRef });
 
 	constructor() {
 		const envInjector = inject(EnvironmentInjector);
@@ -176,7 +182,6 @@ export class StorybookSetup {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			console.log('storybook-setup destroy');
 			ref?.destroy();
 			refEnvInjector?.destroy();
 		});
