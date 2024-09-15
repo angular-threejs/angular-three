@@ -7,6 +7,7 @@ import {
 	computed,
 	createEnvironmentInjector,
 	DestroyRef,
+	effect,
 	ElementRef,
 	EnvironmentInjector,
 	inject,
@@ -21,7 +22,6 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
 import { Raycaster, Scene, Vector3 } from 'three';
 import { createPointerEvents } from './dom/events';
@@ -58,7 +58,6 @@ import { is } from './utils/is';
 export class NgtCanvas {
 	private store = injectStore();
 	private initRoot = injectCanvasRootInitializer();
-	private autoEffect = injectAutoEffect();
 
 	private host = inject<ElementRef<HTMLElement>>(ElementRef);
 	private zone = inject(NgZone);
@@ -112,7 +111,12 @@ export class NgtCanvas {
 		afterNextRender(() => {
 			this.zone.runOutsideAngular(() => {
 				this.configurator = this.initRoot(this.glCanvas().nativeElement);
-				this.noZoneResizeEffect();
+				effect(
+					() => {
+						this.noZoneResizeEffect();
+					},
+					{ injector: this.injector },
+				);
 			});
 		});
 
@@ -124,39 +128,37 @@ export class NgtCanvas {
 	}
 
 	private noZoneResizeEffect() {
-		this.autoEffect(() => {
-			const resizeResult = this.resizeResult();
-			if (resizeResult.width > 0 && resizeResult.height > 0) {
-				if (!this.configurator) this.configurator = this.initRoot(this.glCanvas().nativeElement);
-				this.configurator.configure({
-					gl: this.gl(),
-					shadows: this.shadows(),
-					legacy: this.legacy(),
-					linear: this.linear(),
-					flat: this.flat(),
-					orthographic: this.orthographic(),
-					frameloop: this.frameloop(),
-					performance: this.performance(),
-					dpr: this.dpr(),
-					raycaster: this.raycaster(),
-					scene: this.scene(),
-					camera: this.camera(),
-					events: this.events(),
-					eventSource: this.eventSource(),
-					eventPrefix: this.eventPrefix(),
-					lookAt: this.lookAt(),
-					size: resizeResult,
-				});
+		const resizeResult = this.resizeResult();
+		if (resizeResult.width > 0 && resizeResult.height > 0) {
+			if (!this.configurator) this.configurator = this.initRoot(this.glCanvas().nativeElement);
+			this.configurator.configure({
+				gl: this.gl(),
+				shadows: this.shadows(),
+				legacy: this.legacy(),
+				linear: this.linear(),
+				flat: this.flat(),
+				orthographic: this.orthographic(),
+				frameloop: this.frameloop(),
+				performance: this.performance(),
+				dpr: this.dpr(),
+				raycaster: this.raycaster(),
+				scene: this.scene(),
+				camera: this.camera(),
+				events: this.events(),
+				eventSource: this.eventSource(),
+				eventPrefix: this.eventPrefix(),
+				lookAt: this.lookAt(),
+				size: resizeResult,
+			});
 
-				untracked(() => {
-					if (this.glRef) {
-						this.glRef.changeDetectorRef.detectChanges();
-					} else {
-						this.noZoneRender();
-					}
-				});
-			}
-		});
+			untracked(() => {
+				if (this.glRef) {
+					this.glRef.changeDetectorRef.detectChanges();
+				} else {
+					this.noZoneRender();
+				}
+			});
+		}
 	}
 
 	private noZoneRender() {
