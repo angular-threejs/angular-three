@@ -205,6 +205,7 @@ export interface NgtLocalInstanceState {
 	objects: NgtInstanceNode[];
 	nonObjects: NgtInstanceNode[];
 	parent: NgtInstanceNode | null;
+	geometryStamp: number;
 }
 
 export interface NgtLocalState {
@@ -216,10 +217,13 @@ export interface NgtLocalState {
 	parent: Signal<NgtLocalInstanceState['parent']>;
 	objects: Signal<NgtLocalInstanceState['objects']>;
 	nonObjects: Signal<NgtLocalInstanceState['nonObjects']>;
+
 	// shortcut to add/remove object to list
 	add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
 	remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
 	setParent: (parent: NgtInstanceNode | null) => void;
+	updateGeometryStamp: () => void;
+
 	// if this THREE instance is a ngt-primitive
 	primitive?: boolean;
 	// if this THREE object has any events bound to it
