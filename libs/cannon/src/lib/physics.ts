@@ -5,7 +5,7 @@ import {
 	EmbeddedViewRef,
 	Signal,
 	afterNextRender,
-	computed,
+	effect,
 	inject,
 	input,
 	signal,
@@ -26,8 +26,7 @@ import {
 	WorkerFrameMessage,
 	WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { injectBeforeRender, injectStore } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
+import { injectBeforeRender, injectStore, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { InstancedMesh, Matrix4, Object3D, Quaternion, QuaternionTuple, Vector3 } from 'three';
 
@@ -81,7 +80,7 @@ export type NgtcCannonEvents = Record<string, Partial<NgtcCallbackByType<NgtcCan
 
 export type ScaleOverrides = Record<string, Vector3>;
 
-export interface NgtcPhysicsInputs extends CannonWorkerProps {
+export interface NgtcPhysicsOptions extends CannonWorkerProps {
 	isPaused?: boolean;
 	maxSubSteps?: number;
 	shouldInvalidate?: boolean;
@@ -97,7 +96,7 @@ export interface NgtcPhysicsApi {
 	worker: Signal<CannonWorkerAPI>;
 }
 
-const defaultOptions: NgtcPhysicsInputs = {
+const defaultOptions: NgtcPhysicsOptions = {
 	allowSleep: false,
 	axisIndex: 0,
 	broadphase: 'Naive',
@@ -116,6 +115,11 @@ const defaultOptions: NgtcPhysicsInputs = {
 	tolerance: 0.001,
 };
 
+type NgtsPhysicsUpdatableOptions = Extract<
+	keyof NgtcPhysicsOptions,
+	'gravity' | 'iterations' | 'tolerance' | 'broadphase' | 'axisIndex'
+>;
+
 @Component({
 	selector: 'ngtc-physics',
 	standalone: true,
@@ -125,10 +129,15 @@ const defaultOptions: NgtcPhysicsInputs = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtcPhysics {
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+	private axisIndex = pick(this.options, 'axisIndex');
+	private broadphase = pick(this.options, 'broadphase');
+	private gravity = pick(this.options, 'gravity');
+	private iterations = pick(this.options, 'iterations');
+	private tolerance = pick(this.options, 'tolerance');
 
 	private invalidate = this.store.select('invalidate');
 	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator
@@ -148,12 +157,19 @@ export class NgtcPhysics {
 	constructor() {
 		afterNextRender(() => {
 			this.worker.set(new CannonWorkerAPI(this.options()));
-			this.connectWorker();
-			this.updateWorkerState('axisIndex');
-			this.updateWorkerState('broadphase');
-			this.updateWorkerState('gravity');
-			this.updateWorkerState('iterations');
-			this.updateWorkerState('tolerance');
+		});
+
+		effect((onCleanup) => {
+			const cleanup = this.connectWorkerEffect();
+			onCleanup(() => cleanup?.());
+		});
+
+		effect(() => {
+			this.updateWorkerStateEffect('axisIndex', this.axisIndex);
+			this.updateWorkerStateEffect('broadphase', this.broadphase);
+			this.updateWorkerStateEffect('gravity', this.gravity);
+			this.updateWorkerStateEffect('iterations', this.iterations);
+			this.updateWorkerStateEffect('tolerance', this.tolerance);
 		});
 
 		let timeSinceLastCalled = 0;
@@ -170,35 +186,32 @@ export class NgtcPhysics {
 		});
 	}
 
-	private connectWorker() {
-		this.autoEffect(() => {
-			const worker = this.worker() as NgtcCannonWorker;
-			if (!worker) return;
+	private connectWorkerEffect() {
+		const worker = this.worker() as NgtcCannonWorker;
+		if (!worker) return;
 
-			worker.connect();
-			worker.init();
+		worker.connect();
+		worker.init();
 
-			worker.on('collide', this.collideHandler.bind(this));
-			worker.on('collideBegin', this.collideBeginHandler.bind(this));
-			worker.on('collideEnd', this.collideEndHandler.bind(this));
-			worker.on('frame', this.frameHandler.bind(this));
-			worker.on('rayhit', this.rayhitHandler.bind(this));
+		worker.on('collide', this.collideHandler.bind(this));
+		worker.on('collideBegin', this.collideBeginHandler.bind(this));
+		worker.on('collideEnd', this.collideEndHandler.bind(this));
+		worker.on('frame', this.frameHandler.bind(this));
+		worker.on('rayhit', this.rayhitHandler.bind(this));
 
-			return () => {
-				worker.terminate();
-				worker.removeAllListeners();
-			};
-		});
+		return () => {
+			worker.terminate();
+			worker.removeAllListeners();
+		};
 	}
 
-	private updateWorkerState(key: keyof NgtcPhysicsInputs) {
-		const computedValue = computed(() => this.options()[key]);
-
-		this.autoEffect(() => {
-			const [worker, value] = [untracked(this.worker), computedValue()];
-			// @ts-expect-error - we know key is a valid key of CannonWorkerAPI
-			worker[key] = value;
-		});
+	private updateWorkerStateEffect<TUpdatableKey extends NgtsPhysicsUpdatableOptions>(
+		key: TUpdatableKey,
+		option: () => NgtcPhysicsOptions[TUpdatableKey],
+	) {
+		const worker = this.worker();
+		if (!worker) return;
+		Object.assign(worker, { [key]: option() });
 	}
 
 	private collideHandler({ body, contact: { bi, bj, ...contactRest }, target, ...rest }: WorkerCollideEvent['data']) {
