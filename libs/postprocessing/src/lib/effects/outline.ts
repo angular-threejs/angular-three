@@ -1,16 +1,15 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	inject,
 	input,
 	untracked,
 } from '@angular/core';
 import { injectStore, NgtArgs, NgtSelection, omit, pick, resolveRef } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { OutlineEffect } from 'postprocessing';
 import { Object3D } from 'three';
@@ -121,35 +120,38 @@ export class NgtpOutline {
 	});
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const effect = this.effect();
-				return () => effect.dispose();
-			});
+		effect(() => {
+			const [effect, invalidate, selectionLayer] = [this.effect(), this.invalidate(), this.selectionLayer()];
+			effect.selectionLayer = selectionLayer;
+			invalidate();
+		});
 
-			autoEffect(() => {
-				const [effect, invalidate, selectionLayer] = [this.effect(), this.invalidate(), this.selectionLayer()];
-				effect.selectionLayer = selectionLayer;
-				invalidate();
-			});
-
-			autoEffect(() => {
-				// NOTE: we run this effect if declarative NgtSelection is not enabled
-				if (!this.ngtSelection) {
-					// NOTE: if NgtSelection is not used and selection is not provided, we throw
-					if (this.selection() === undefined) {
-						throw new Error('[NGT PostProcessing]: ngtp-outline requires selection input or use NgtSelection');
-					}
-
-					return this.handleSelectionChangeEffect(this.selection, this.effect, this.invalidate);
+		effect((onCleanup) => {
+			// NOTE: we run this effect if declarative NgtSelection is not enabled
+			if (!this.ngtSelection) {
+				// NOTE: if NgtSelection is not used and selection is not provided, we throw
+				if (this.selection() === undefined) {
+					throw new Error('[NGT PostProcessing]: ngtp-outline requires selection input or use NgtSelection');
 				}
+				const cleanup = this.handleSelectionChangeEffect(this.selection, this.effect, this.invalidate);
 
-				// NOTE: we run this effect if declarative NgtSelection is enabled
-				const selectionEnabled = this.ngtSelection.enabled();
-				if (!selectionEnabled) return;
-				return this.handleSelectionChangeEffect(this.ngtSelection.selected, this.effect, this.invalidate);
+				onCleanup(() => {
+					cleanup?.();
+				});
+				return;
+			}
+
+			// NOTE: we run this effect if declarative NgtSelection is enabled
+			const selectionEnabled = this.ngtSelection.enabled();
+			if (!selectionEnabled) return;
+			const cleanup = this.handleSelectionChangeEffect(this.ngtSelection.selected, this.effect, this.invalidate);
+			onCleanup(() => {
+				cleanup?.();
 			});
 		});
 	}

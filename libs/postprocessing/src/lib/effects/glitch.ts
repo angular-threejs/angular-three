@@ -1,13 +1,5 @@
-import {
-	CUSTOM_ELEMENTS_SCHEMA,
-	ChangeDetectionStrategy,
-	Component,
-	afterNextRender,
-	computed,
-	input,
-} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { NgtArgs, NgtVector2, injectStore, pick, vector2 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { GlitchEffect, GlitchMode } from 'postprocessing';
 
@@ -32,7 +24,6 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpGlitch {
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private invalidate = this.store.select('invalidate');
 
@@ -68,17 +59,15 @@ export class NgtpGlitch {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const effect = this.effect();
-				return () => effect.dispose();
-			});
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
 
-			this.autoEffect(() => {
-				const [effect, invalidate, mode, active] = [this.effect(), this.invalidate(), this.mode(), this.active()];
-				effect.mode = active ? mode || GlitchMode.SPORADIC : GlitchMode.DISABLED;
-				invalidate();
-			});
+		effect(() => {
+			const [glitchEffect, invalidate, mode, active] = [this.effect(), this.invalidate(), this.mode(), this.active()];
+			glitchEffect.mode = active ? mode || GlitchMode.SPORADIC : GlitchMode.DISABLED;
+			invalidate();
 		});
 	}
 }

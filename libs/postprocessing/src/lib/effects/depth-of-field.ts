@@ -2,13 +2,12 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
-	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 } from '@angular/core';
 import { NgtAnyRecord, NgtArgs, NgtVector3 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
 import { DepthPackingStrategies, Texture, Vector3 } from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
@@ -27,7 +26,6 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpDepthOfField {
-	private autoEffect = injectAutoEffect();
 	private effectComposer = inject(NgtpEffectComposer);
 
 	options = input({} as DOFOptions);
@@ -53,13 +51,9 @@ export class NgtpDepthOfField {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const effect = this.effect();
-				return () => {
-					effect.dispose();
-				};
-			});
+		effect((onCleanup) => {
+			const depthOfFieldEffect = this.effect();
+			onCleanup(() => depthOfFieldEffect.dispose());
 		});
 	}
 }

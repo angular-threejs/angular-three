@@ -5,14 +5,13 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
-	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 } from '@angular/core';
 import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
 import { easing } from 'maath';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, Effect } from 'postprocessing';
 import { Color, Mesh, Texture, Uniform, Vector2, Vector3, WebGLRenderTarget, WebGLRenderer } from 'three';
@@ -145,7 +144,6 @@ const defaultOptions: LensFlareOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLensFlare {
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private viewport = this.store.select('viewport');
 	private raycaster = this.store.select('raycaster');
@@ -164,15 +162,13 @@ export class NgtpLensFlare {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [effect, viewport] = [this.effect(), this.viewport()];
-				const iResolution = effect.uniforms.get('iResolution');
-				if (iResolution) {
-					iResolution.value.x = viewport.width;
-					iResolution.value.y = viewport.height;
-				}
-			});
+		effect(() => {
+			const [lensFlareEffect, viewport] = [this.effect(), this.viewport()];
+			const iResolution = lensFlareEffect.uniforms.get('iResolution');
+			if (iResolution) {
+				iResolution.value.x = viewport.width;
+				iResolution.value.y = viewport.height;
+			}
 		});
 
 		injectBeforeRender(({ delta }) => {

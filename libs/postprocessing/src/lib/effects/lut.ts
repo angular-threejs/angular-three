@@ -1,13 +1,5 @@
-import {
-	CUSTOM_ELEMENTS_SCHEMA,
-	ChangeDetectionStrategy,
-	Component,
-	afterNextRender,
-	computed,
-	input,
-} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { NgtArgs, injectStore, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { BlendFunction, LUT3DEffect } from 'postprocessing';
 import { Texture } from 'three';
 
@@ -28,7 +20,6 @@ export interface LUTOptions {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLUT {
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private invalidate = this.store.select('invalidate');
 
@@ -41,18 +32,16 @@ export class NgtpLUT {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [effect, { lut, tetrahedralInterpolation }, invalidate] = [
-					this.effect(),
-					this.options(),
-					this.invalidate(),
-				];
+		effect(() => {
+			const [effect, { lut, tetrahedralInterpolation }, invalidate] = [
+				this.effect(),
+				this.options(),
+				this.invalidate(),
+			];
 
-				if (tetrahedralInterpolation) effect.tetrahedralInterpolation = tetrahedralInterpolation;
-				if (lut) effect.lut = lut;
-				invalidate();
-			});
+			if (tetrahedralInterpolation) effect.tetrahedralInterpolation = tetrahedralInterpolation;
+			if (lut) effect.lut = lut;
+			invalidate();
 		});
 	}
 }

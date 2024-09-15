@@ -6,12 +6,12 @@ import {
 	Injector,
 	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 	viewChild,
 } from '@angular/core';
 import { extend, getLocalState, injectBeforeRender, injectStore, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	DepthDownsamplingPass,
@@ -68,7 +68,6 @@ export class NgtpEffectComposer {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private injector = inject(Injector);
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private size = this.store.select('size');
 	private gl = this.store.select('gl');
@@ -141,55 +140,24 @@ export class NgtpEffectComposer {
 	constructor() {
 		extend({ Group });
 
-		afterNextRender(() => {
-			this.disableToneMapping();
-			this.setComposerSize();
-			this.updatePasses();
-
-			injectBeforeRender(
-				({ delta }) => {
-					const [{ composer }, { enabled, autoClear, stencilBuffer }, gl] = [
-						this.composerData(),
-						this.options(),
-						this.gl(),
-					];
-
-					if (enabled) {
-						const currentAutoClear = gl.autoClear;
-						gl.autoClear = autoClear;
-						if (stencilBuffer && !autoClear) gl.clearStencil();
-						composer.render(delta);
-						gl.autoClear = currentAutoClear;
-					}
-				},
-				{ injector: this.injector, priority: this.options().enabled ? this.options().renderPriority : 0 },
-			);
-		});
-	}
-
-	// NOTE: Disable tone mapping because threejs disallows tonemapping on render targets
-	private disableToneMapping() {
-		this.autoEffect(() => {
+		// NOTE: Disable tone mapping because threejs disallows tonemapping on render targets
+		effect((onCleanup) => {
 			const gl = this.gl();
 			const currentTonemapping = gl.toneMapping;
 			gl.toneMapping = NoToneMapping;
-			return () => {
+			onCleanup(() => {
 				gl.toneMapping = currentTonemapping;
-			};
+			});
 		});
-	}
 
-	private setComposerSize() {
-		this.autoEffect(() => {
+		effect(() => {
 			const [{ composer }, { width, height }] = [this.composerData(), this.size()];
 			if (composer) {
 				composer.setSize(width, height);
 			}
 		});
-	}
 
-	private updatePasses() {
-		this.autoEffect(() => {
+		effect((onCleanup) => {
 			const [group, { composer, normalPass, downSamplingPass }, camera] = [
 				this.groupRef(),
 				this.composerData(),
@@ -232,11 +200,33 @@ export class NgtpEffectComposer {
 				if (downSamplingPass) downSamplingPass.enabled = true;
 			}
 
-			return () => {
+			onCleanup(() => {
 				for (const pass of passes) composer?.removePass(pass);
 				if (normalPass) normalPass.enabled = false;
 				if (downSamplingPass) downSamplingPass.enabled = false;
-			};
+			});
+		});
+
+		// NOTE: register beforeRender afterNextRender to ensure input is ready
+		afterNextRender(() => {
+			injectBeforeRender(
+				({ delta }) => {
+					const [{ composer }, { enabled, autoClear, stencilBuffer }, gl] = [
+						this.composerData(),
+						this.options(),
+						this.gl(),
+					];
+
+					if (enabled) {
+						const currentAutoClear = gl.autoClear;
+						gl.autoClear = autoClear;
+						if (stencilBuffer && !autoClear) gl.clearStencil();
+						composer.render(delta);
+						gl.autoClear = currentAutoClear;
+					}
+				},
+				{ injector: this.injector, priority: this.options().enabled ? this.options().renderPriority : 0 },
+			);
 		});
 	}
 }

@@ -3,13 +3,12 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 } from '@angular/core';
 import { NgtArgs, is } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { GodRaysEffect } from 'postprocessing';
 import { Mesh, Points } from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
@@ -29,7 +28,6 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGodRays {
-	private autoEffect = injectAutoEffect();
 	private effectComposer = inject(NgtpEffectComposer);
 
 	options = input({} as GodRaysOptions);
@@ -40,11 +38,9 @@ export class NgtpGodRays {
 	});
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [sun, effect] = [this.options().sun, this.effect()];
-				effect.lightSource = is.ref(sun) ? sun.nativeElement : sun;
-			});
+		effect(() => {
+			const [sun, godRaysEffect] = [this.options().sun, this.effect()];
+			godRaysEffect.lightSource = is.ref(sun) ? sun.nativeElement : sun;
 		});
 	}
 }
