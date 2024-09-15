@@ -144,14 +144,14 @@ const defaultOptions: LensFlareOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLensFlare {
+	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
 	private store = injectStore();
 	private viewport = this.store.select('viewport');
 	private raycaster = this.store.select('raycaster');
 	private pointer = this.store.select('pointer');
 
-	effectComposer = inject(NgtpEffectComposer);
-
-	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+	private effectComposer = inject(NgtpEffectComposer);
 
 	private projectedPosition = new Vector3();
 	private mouse2d = new Vector2();

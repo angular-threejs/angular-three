@@ -28,9 +28,9 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGodRays {
-	private effectComposer = inject(NgtpEffectComposer);
-
 	options = input({} as GodRaysOptions);
+
+	private effectComposer = inject(NgtpEffectComposer);
 
 	effect = computed(() => {
 		const [camera, { sun, ...options }] = [this.effectComposer.camera(), this.options()];

@@ -26,11 +26,11 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpDepthOfField {
-	private effectComposer = inject(NgtpEffectComposer);
-
 	options = input({} as DOFOptions);
 
 	private autoFocus = computed(() => this.options().target != null);
+
+	private effectComposer = inject(NgtpEffectComposer);
 
 	effect = computed(() => {
 		const [camera, options, autoFocus] = [this.effectComposer.camera(), this.options(), this.autoFocus()];

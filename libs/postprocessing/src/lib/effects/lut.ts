@@ -20,11 +20,11 @@ export interface LUTOptions {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLUT {
-	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
-
 	options = input({} as LUTOptions);
 	private lut = pick(this.options, 'lut');
+
+	private store = injectStore();
+	private invalidate = this.store.select('invalidate');
 
 	effect = computed(() => {
 		const [lut, { lut: _, ...options }] = [this.lut(), this.options()];

@@ -24,9 +24,6 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpGlitch {
-	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
-
 	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });
 
 	private active = pick(this.options, 'active');
@@ -36,6 +33,9 @@ export class NgtpGlitch {
 	private duration = vector2(this.options, 'duration');
 	private chromaticAberrationOffset = vector2(this.options, 'chromaticAberrationOffset');
 	private strength = vector2(this.options, 'strength');
+
+	private store = injectStore();
+	private invalidate = this.store.select('invalidate');
 
 	effect = computed(() => {
 		const [
