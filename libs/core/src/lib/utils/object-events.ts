@@ -1,15 +1,4 @@
-import {
-	afterNextRender,
-	DestroyRef,
-	Directive,
-	effect,
-	ElementRef,
-	inject,
-	Injector,
-	model,
-	output,
-	Renderer2,
-} from '@angular/core';
+import { DestroyRef, Directive, effect, ElementRef, inject, Injector, model, output, Renderer2 } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Object3D } from 'three';
 import { NgtEventHandlers, NgtThreeEvent } from '../types';
@@ -35,28 +24,20 @@ export class NgtObjectEvents {
 	ngtObjectEvents = model<ElementRef<Object3D> | Object3D | null | undefined>();
 
 	constructor() {
-		const injector = inject(Injector);
-
-		afterNextRender(() => {
-			injectObjectEvents(
-				this.ngtObjectEvents,
-				{
-					click: this.emitEvent('click'),
-					dblclick: this.emitEvent('dblclick'),
-					contextmenu: this.emitEvent('contextmenu'),
-					pointerup: this.emitEvent('pointerup'),
-					pointerdown: this.emitEvent('pointerdown'),
-					pointerover: this.emitEvent('pointerover'),
-					pointerout: this.emitEvent('pointerout'),
-					pointerenter: this.emitEvent('pointerenter'),
-					pointerleave: this.emitEvent('pointerleave'),
-					pointermove: this.emitEvent('pointermove'),
-					pointermissed: this.emitEvent('pointermissed'),
-					pointercancel: this.emitEvent('pointercancel'),
-					wheel: this.emitEvent('wheel'),
-				},
-				{ injector },
-			);
+		injectObjectEvents(this.ngtObjectEvents, {
+			click: this.emitEvent('click'),
+			dblclick: this.emitEvent('dblclick'),
+			contextmenu: this.emitEvent('contextmenu'),
+			pointerup: this.emitEvent('pointerup'),
+			pointerdown: this.emitEvent('pointerdown'),
+			pointerover: this.emitEvent('pointerover'),
+			pointerout: this.emitEvent('pointerout'),
+			pointerenter: this.emitEvent('pointerenter'),
+			pointerleave: this.emitEvent('pointerleave'),
+			pointermove: this.emitEvent('pointermove'),
+			pointermissed: this.emitEvent('pointermissed'),
+			pointercancel: this.emitEvent('pointercancel'),
+			wheel: this.emitEvent('wheel'),
 		});
 	}
 
