@@ -7,6 +7,7 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
 	Directive,
+	effect,
 	EmbeddedViewRef,
 	inject,
 	Injector,
@@ -17,13 +18,11 @@ import {
 	viewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Camera, Object3D, Raycaster, Scene, Vector2, Vector3 } from 'three';
 import { getLocalState, prepare } from './instance';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from './renderer/constants';
 import { injectStore, provideStore } from './store';
 import { NgtComputeFunction, NgtSize, NgtState } from './types';
-import { injectBeforeRender } from './utils/before-render';
 import { is } from './utils/is';
 import { signalStore } from './utils/signal-store';
 import { updateCamera } from './utils/update';
@@ -45,30 +44,34 @@ export class NgtPortalBeforeRender {
 	parentCamera = input.required<Camera>();
 
 	constructor() {
-		injectAutoEffect()((injector) => {
+		effect((onCleanup) => {
 			// track state
-			this.portalStore.state();
-			const priority = this.renderPriority();
+			const [renderPriority, { internal }] = [this.renderPriority(), this.portalStore.state()];
 
-			let oldClear: boolean;
-			return injectBeforeRender(
-				() => {
-					const { gl, scene, camera } = this.portalStore.snapshot;
-					oldClear = gl.autoClear;
-					if (this.renderPriority() === 1) {
+			let oldClean: boolean;
+
+			const cleanup = internal.subscribe(
+				({ gl, scene, camera }) => {
+					const [parentScene, parentCamera] = [untracked(this.parentScene), untracked(this.parentCamera)];
+					oldClean = gl.autoClear;
+					if (renderPriority === 1) {
 						// clear scene and render with default
 						gl.autoClear = true;
-						gl.render(this.parentScene(), this.parentCamera());
+						gl.render(parentScene, parentCamera);
 					}
+
 					// disable cleaning
 					gl.autoClear = false;
 					gl.clearDepth();
 					gl.render(scene, camera);
 					// restore
-					gl.autoClear = oldClear;
+					gl.autoClear = oldClean;
 				},
-				{ priority, injector },
+				renderPriority,
+				this.portalStore,
 			);
+
+			onCleanup(() => cleanup());
 		});
 	}
 
@@ -168,10 +171,9 @@ export class NgtPortal {
 	private portalView?: EmbeddedViewRef<unknown>;
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
-
 		const parentState = this.parentStore.select();
 
+		// NOTE: we run this in afterNextRender for inputs to resolve
 		afterNextRender(() => {
 			const previousState = this.parentStore.snapshot;
 
@@ -200,25 +202,28 @@ export class NgtPortal {
 					this.portalStore.update((state) => ({ ...state, events: { ...state.events, ...events } })),
 			});
 
-			autoEffect(() => {
-				const state = this.state();
-				const _parentState = parentState();
-				this.portalStore.update((prev) => this.inject(_parentState, prev, state, untracked(this.container)));
-				untracked(() => {
-					if (this.portalView) {
-						this.portalView.detectChanges();
-						return;
-					}
+			effect(
+				() => {
+					const state = this.state();
+					const _parentState = parentState();
+					this.portalStore.update((prev) => this.inject(_parentState, prev, state, untracked(this.container)));
+					untracked(() => {
+						if (this.portalView) {
+							this.portalView.detectChanges();
+							return;
+						}
 
-					this.portalView = this.portalAnchor().createEmbeddedView(
-						this.portalContent(),
-						{ container: this.container(), injector: this.injector },
-						{ injector: this.injector },
-					);
-					this.portalView.detectChanges();
-					this.portalRendered.set(true);
-				});
-			});
+						this.portalView = this.portalAnchor().createEmbeddedView(
+							this.portalContent(),
+							{ container: this.container(), injector: this.injector },
+							{ injector: this.injector },
+						);
+						this.portalView.detectChanges();
+						this.portalRendered.set(true);
+					});
+				},
+				{ injector: this.injector },
+			);
 		});
 
 		inject(DestroyRef).onDestroy(() => {
