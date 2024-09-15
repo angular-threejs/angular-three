@@ -77,6 +77,7 @@ const offsetMatrix = new Matrix4();
 						></div>
 					</ngts-html>
 				}
+
 				<ngt-mesh
 					[visible]="false"
 					[position]="[0, (cylinderLength() + coneLength()) / 2.0, 0]"

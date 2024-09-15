@@ -1,16 +1,15 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	untracked,
 	viewChild,
 } from '@angular/core';
 import { extend, NgtArgs, NgtMesh, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ExtrudeGeometry, Mesh, Shape } from 'three';
 import { toCreasedNormals } from 'three-stdlib';
@@ -87,11 +86,11 @@ export class NgtsRoundedBox {
 	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 	geometryRef = viewChild<ElementRef<ExtrudeGeometry>>('geometry');
 
-	shape = computed(() => {
+	protected shape = computed(() => {
 		const [width, height, radius] = [this.width(), this.height(), this.radius()];
 		return createShape(width, height, radius);
 	});
-	params = computed(() => {
+	protected params = computed(() => {
 		const [depth, radius, smoothness, bevelSegments, steps] = [
 			this.depth(),
 			this.radius(),
@@ -114,18 +113,12 @@ export class NgtsRoundedBox {
 	constructor() {
 		extend({ ExtrudeGeometry, Mesh });
 
-		const autoEffect = injectAutoEffect();
-		afterNextRender(() => {
-			autoEffect(() => {
-				const geometry = this.geometryRef()?.nativeElement;
-				if (!geometry) return;
+		effect(() => {
+			const geometry = this.geometryRef()?.nativeElement;
+			if (!geometry) return;
 
-				this.shape();
-				this.params();
-
-				geometry.center();
-				toCreasedNormals(geometry, untracked(this.creaseAngle));
-			});
+			geometry.center();
+			toCreasedNormals(geometry, untracked(this.creaseAngle));
 		});
 	}
 }

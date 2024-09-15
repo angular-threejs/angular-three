@@ -1,6 +1,5 @@
-import { Directive, Signal, afterNextRender, input, untracked } from '@angular/core';
+import { Directive, Signal, effect, input, untracked } from '@angular/core';
 import { injectBeforeRender, injectStore } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Vector3 } from 'three';
 import { SimplexNoise } from 'three-stdlib';
@@ -39,7 +38,6 @@ const defaultOptions: NgtsCameraShakeOptions = {
 export class NgtsCameraShake {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private camera = this.store.select('camera');
 	private defaultControls = this.store.select('controls') as unknown as Signal<ControlsProto>;
@@ -60,17 +58,16 @@ export class NgtsCameraShake {
 	private rollNoise = new SimplexNoise();
 
 	constructor() {
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const defaultControls = this.defaultControls();
-				if (!defaultControls) return;
-				const camera = this.camera();
+		effect((onCleanup) => {
+			const defaultControls = this.defaultControls();
+			if (!defaultControls) return;
+			const camera = this.camera();
 
-				const callback = () => void (this.initialRotation = camera.rotation.clone());
-				defaultControls.addEventListener('change', callback);
-				callback();
-				return () => void defaultControls.removeEventListener('change', callback);
-			});
+			const callback = () => void (this.initialRotation = camera.rotation.clone());
+			defaultControls.addEventListener('change', callback);
+			callback();
+
+			onCleanup(() => void defaultControls.removeEventListener('change', callback));
 		});
 
 		injectBeforeRender(({ delta, clock }) => {

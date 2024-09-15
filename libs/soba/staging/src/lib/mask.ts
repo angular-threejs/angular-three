@@ -1,9 +1,9 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	Injector,
 	input,
@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { extend, NgtMesh, omit, pick } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	AlwaysStencilFunc,
@@ -73,13 +72,9 @@ export class NgtsMask {
 	constructor() {
 		extend({ Mesh });
 
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [mesh, spread] = [this.meshRef().nativeElement, this.spread()];
-				Object.assign(mesh.material, spread);
-			});
+		effect(() => {
+			const [mesh, spread] = [this.meshRef().nativeElement, this.spread()];
+			Object.assign(mesh.material, spread);
 		});
 	}
 }

@@ -6,6 +6,7 @@ import {
 	ElementRef,
 	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 	untracked,
@@ -13,7 +14,6 @@ import {
 } from '@angular/core';
 import { NgtGroup, extend, getLocalState, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { ProgressiveLightMap, SoftShadowMaterial } from 'angular-three-soba/vanilla-exports';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Mesh, PlaneGeometry } from 'three';
 
@@ -139,24 +139,23 @@ export class NgtsAccumulativeShadows {
 	constructor() {
 		extend({ Group, SoftShadowMaterial, Mesh, PlaneGeometry });
 
-		const autoEffect = injectAutoEffect();
-
 		afterNextRender(() => {
 			this.pLM().configure(this.planeRef().nativeElement);
+		});
 
-			autoEffect(() => {
-				const sceneLS = getLocalState(this.scene());
-				if (!sceneLS) return;
-				// track deps
-				this.planeRef();
-				this.options();
-				sceneLS.objects();
+		effect(() => {
+			const sceneLS = getLocalState(this.scene());
+			if (!sceneLS) return;
 
-				// Reset internals, buffers, ...
-				this.reset();
-				// Update lightmap
-				if (!this.temporal() && this.frames() !== Infinity) this.update(this.blend());
-			});
+			// track deps
+			this.planeRef();
+			this.options();
+			sceneLS.objects();
+
+			// Reset internals, buffers, ...
+			this.reset();
+			// Update lightmap
+			if (!this.temporal() && this.frames() !== Infinity) this.update(this.blend());
 		});
 
 		injectBeforeRender(() => {

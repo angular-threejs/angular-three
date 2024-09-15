@@ -7,13 +7,13 @@ import {
 	TemplateRef,
 	afterNextRender,
 	contentChild,
+	effect,
 	input,
 	untracked,
 	viewChild,
 } from '@angular/core';
 import { NgtPerspectiveCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, PerspectiveCamera, Texture } from 'three';
 import { NgtsCameraContent } from './camera-content';
@@ -56,7 +56,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 })
 export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	protected parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
 	content = contentChild(TemplateRef);
 	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
@@ -64,7 +64,6 @@ export class NgtsPerspectiveCamera {
 	cameraRef = viewChild.required<ElementRef<PerspectiveCamera>>('camera');
 	groupRef = viewChild.required<ElementRef<Group>>('group');
 
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 
 	private camera = this.store.select('camera');
@@ -74,29 +73,30 @@ export class NgtsPerspectiveCamera {
 	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
 	private fbo = injectFBO(() => ({ width: this.resolution() }));
-	texture = pick(this.fbo, 'texture');
+	protected texture = pick(this.fbo, 'texture');
 
 	constructor() {
 		extend({ PerspectiveCamera, Group });
 
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				if (!this.manual()) {
-					this.cameraRef().nativeElement.aspect = this.size().width / this.size().height;
-					this.cameraRef().nativeElement.updateProjectionMatrix();
-				}
-			});
-
-			this.autoEffect(() => {
-				if (this.makeDefault()) {
-					const oldCam = untracked(this.camera);
-					this.store.update({ camera: this.cameraRef().nativeElement });
-					return () => this.store.update(() => ({ camera: oldCam }));
-				}
-				return;
-			});
-
 			this.cameraRef().nativeElement.updateProjectionMatrix();
+		});
+
+		effect(() => {
+			const manual = this.manual();
+			if (manual) return;
+			const [camera, size] = [this.cameraRef().nativeElement, this.size()];
+			camera.aspect = size.width / size.height;
+			camera.updateProjectionMatrix();
+		});
+
+		effect((onCleanup) => {
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const oldCam = untracked(this.camera);
+			this.store.update({ camera: this.cameraRef().nativeElement });
+			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
 
 		let count = 0;

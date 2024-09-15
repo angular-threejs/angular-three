@@ -1,9 +1,9 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
@@ -12,7 +12,6 @@ import { extend, getLocalState, injectBeforeRender, NgtGroup, omit, pick, resolv
 import { injectHelper, NgtsEdges } from 'angular-three-soba/abstractions';
 import { injectFBO } from 'angular-three-soba/misc';
 import { CausticsProjectionMaterial, createCausticsUpdate } from 'angular-three-soba/vanilla-exports';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	CameraHelper,
@@ -179,7 +178,27 @@ export class NgtsCaustics {
 	constructor() {
 		extend({ CausticsProjectionMaterial, Group, Scene, Mesh, PlaneGeometry, LineBasicMaterial, OrthographicCamera });
 
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			// track all changes
+			const [group, scene, plane] = [
+				this.groupRef().nativeElement,
+				this.sceneRef().nativeElement,
+				this.planeRef().nativeElement,
+				this.options(),
+			];
+			const groupLocalState = getLocalState(group);
+			const sceneLocalState = getLocalState(scene);
+			const planeLocalState = getLocalState(plane);
+
+			if (!groupLocalState || !sceneLocalState || !planeLocalState) return;
+
+			groupLocalState.objects();
+			sceneLocalState.objects();
+			planeLocalState.objects();
+			planeLocalState.nonObjects();
+
+			group.updateWorldMatrix(false, true);
+		});
 
 		const update = createCausticsUpdate(() => {
 			const { lightSource, ...rest } = this.options();
@@ -201,29 +220,5 @@ export class NgtsCaustics {
 		});
 
 		injectBeforeRender(({ gl }) => update(gl));
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				// track all changes
-				this.options();
-				const [group, scene, plane] = [
-					this.groupRef().nativeElement,
-					this.sceneRef().nativeElement,
-					this.planeRef().nativeElement,
-				];
-				const groupLocalState = getLocalState(group);
-				const sceneLocalState = getLocalState(scene);
-				const planeLocalState = getLocalState(plane);
-
-				if (!groupLocalState || !sceneLocalState || !planeLocalState) return;
-
-				groupLocalState.objects();
-				sceneLocalState.objects();
-				planeLocalState.objects();
-				planeLocalState.nonObjects();
-
-				group.updateWorldMatrix(false, true);
-			});
-		});
 	}
 }

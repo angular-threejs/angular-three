@@ -3,12 +3,11 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	afterNextRender,
+	effect,
 	input,
 	viewChild,
 } from '@angular/core';
 import { NgtArgs, NgtBufferAttribute, getLocalState } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { BufferAttribute, BufferGeometry } from 'three';
 
 @Component({
@@ -37,21 +36,17 @@ export class NgtsComputedAttribute {
 	attributeRef = viewChild<ElementRef<BufferAttribute>>('attribute');
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const bufferAttribute = this.attributeRef()?.nativeElement;
+			if (!bufferAttribute) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const bufferAttribute = this.attributeRef()?.nativeElement;
-				if (!bufferAttribute) return;
+			const localState = getLocalState(bufferAttribute);
+			if (!localState) return;
 
-				const localState = getLocalState(bufferAttribute);
-				if (!localState) return;
+			const geometry = ((bufferAttribute as any).parent as BufferGeometry) ?? localState.parent();
 
-				const geometry = ((bufferAttribute as any).parent as BufferGeometry) ?? localState.parent();
-
-				const attribute = this.compute()(geometry);
-				bufferAttribute.copy(attribute);
-			});
+			const attribute = this.compute()(geometry);
+			bufferAttribute.copy(attribute);
 		});
 	}
 }

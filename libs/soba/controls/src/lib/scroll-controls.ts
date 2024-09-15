@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	Directive,
+	effect,
 	ElementRef,
 	inject,
 	input,
@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { injectBeforeRender, injectStore, NgtHTML, pick, provideHTMLDomElement } from 'angular-three';
 import { easing } from 'maath';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group } from 'three';
 
@@ -94,141 +93,135 @@ export class NgtsScrollControls {
 	delta = 0;
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
+		effect((onCleanup) => {
+			const target = this.target();
+			if (!target) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const target = this.target();
-				if (!target) return;
+			const parent = target as HTMLElement;
+			const [pages, distance, horizontal, el, fill, fixed, style, prepend, domElement, events] = [
+				this.pages(),
+				this.distance(),
+				this.horizontal(),
+				this.el,
+				this.fill,
+				this.fixed,
+				untracked(this.style),
+				untracked(this.prepend),
+				untracked(this.domElement),
+				untracked(this.events),
+			];
 
-				const parent = target as HTMLElement;
-				const [pages, distance, horizontal, el, fill, fixed, style, prepend, domElement, events] = [
-					this.pages(),
-					this.distance(),
-					this.horizontal(),
-					this.el,
-					this.fill,
-					this.fixed,
-					untracked(this.style),
-					untracked(this.prepend),
-					untracked(this.domElement),
-					untracked(this.events),
-				];
+			el.style.position = 'absolute';
+			el.style.width = '100%';
+			el.style.height = '100%';
+			el.style[horizontal ? 'overflowX' : 'overflowY'] = 'auto';
+			el.style[horizontal ? 'overflowY' : 'overflowX'] = 'hidden';
+			el.style.top = '0px';
+			el.style.left = '0px';
 
-				el.style.position = 'absolute';
-				el.style.width = '100%';
-				el.style.height = '100%';
-				el.style[horizontal ? 'overflowX' : 'overflowY'] = 'auto';
-				el.style[horizontal ? 'overflowY' : 'overflowX'] = 'hidden';
-				el.style.top = '0px';
-				el.style.left = '0px';
+			for (const key in style) {
+				el.style[key] = (style as CSSStyleDeclaration)[key];
+			}
 
-				for (const key in style) {
-					el.style[key] = (style as CSSStyleDeclaration)[key];
-				}
+			fixed.style.position = 'sticky';
+			fixed.style.top = '0px';
+			fixed.style.left = '0px';
+			fixed.style.width = '100%';
+			fixed.style.height = '100%';
+			fixed.style.overflow = 'hidden';
+			el.appendChild(fixed);
 
-				fixed.style.position = 'sticky';
-				fixed.style.top = '0px';
-				fixed.style.left = '0px';
-				fixed.style.width = '100%';
-				fixed.style.height = '100%';
-				fixed.style.overflow = 'hidden';
-				el.appendChild(fixed);
+			fill.style.height = horizontal ? '100%' : `${pages * distance * 100}%`;
+			fill.style.width = horizontal ? `${pages * distance * 100}%` : '100%';
+			fill.style.pointerEvents = 'none';
+			el.appendChild(fill);
 
-				fill.style.height = horizontal ? '100%' : `${pages * distance * 100}%`;
-				fill.style.width = horizontal ? `${pages * distance * 100}%` : '100%';
-				fill.style.pointerEvents = 'none';
-				el.appendChild(fill);
+			if (prepend) parent.prepend(el);
+			else parent.appendChild(el);
 
-				if (prepend) parent.prepend(el);
-				else parent.appendChild(el);
+			// Init scroll one pixel in to allow upward/leftward scroll
+			el[horizontal ? 'scrollLeft' : 'scrollTop'] = 1;
 
-				// Init scroll one pixel in to allow upward/leftward scroll
-				el[horizontal ? 'scrollLeft' : 'scrollTop'] = 1;
+			const oldTarget = (events.connected || domElement) as HTMLElement;
+			requestAnimationFrame(() => events.connect?.(el));
+			const oldCompute = events.compute?.bind(events);
 
-				const oldTarget = (events.connected || domElement) as HTMLElement;
-				requestAnimationFrame(() => events.connect?.(el));
-				const oldCompute = events.compute?.bind(events);
-
-				this.store.snapshot.setEvents({
-					compute(event, store) {
-						const state = store.snapshot;
-						// we are using boundingClientRect because we could not rely on target.offsetTop as canvas could be positioned anywhere in dom
-						const { left, top } = parent.getBoundingClientRect();
-						const offsetX = event.clientX - left;
-						const offsetY = event.clientY - top;
-						state.pointer.set((offsetX / state.size.width) * 2 - 1, -(offsetY / state.size.height) * 2 + 1);
-						state.raycaster.setFromCamera(state.pointer, state.camera);
-					},
-				});
-
-				return () => {
-					parent.removeChild(el);
-					this.store.snapshot.setEvents({ compute: oldCompute });
-					events.connect?.(oldTarget);
-				};
+			this.store.snapshot.setEvents({
+				compute(event, store) {
+					const state = store.snapshot;
+					// we are using boundingClientRect because we could not rely on target.offsetTop as canvas could be positioned anywhere in dom
+					const { left, top } = parent.getBoundingClientRect();
+					const offsetX = event.clientX - left;
+					const offsetY = event.clientY - top;
+					state.pointer.set((offsetX / state.size.width) * 2 - 1, -(offsetY / state.size.height) * 2 + 1);
+					state.raycaster.setFromCamera(state.pointer, state.camera);
+				},
 			});
 
-			autoEffect(() => {
-				const [el, events, size, infinite, invalidate, horizontal, enabled] = [
-					this.el,
-					this.events(),
-					this.size(),
-					this.infinite(),
-					this.invalidate(),
-					this.horizontal(),
-					this.enabled(),
-				];
+			onCleanup(() => {
+				parent.removeChild(el);
+				this.store.snapshot.setEvents({ compute: oldCompute });
+				events.connect?.(oldTarget);
+			});
+		});
 
-				if (events.connected !== el) return;
+		effect((onCleanup) => {
+			const [el, events, size, infinite, invalidate, horizontal, enabled] = [
+				this.el,
+				this.events(),
+				this.size(),
+				this.infinite(),
+				this.invalidate(),
+				this.horizontal(),
+				this.enabled(),
+			];
 
-				const containerLength = size[horizontal ? 'width' : 'height'];
-				const scrollLength = el[horizontal ? 'scrollWidth' : 'scrollHeight'];
-				const scrollThreshold = scrollLength - containerLength;
+			if (events.connected !== el) return;
 
-				let current = 0;
-				let disableScroll = true;
-				let firstRun = true;
+			const containerLength = size[horizontal ? 'width' : 'height'];
+			const scrollLength = el[horizontal ? 'scrollWidth' : 'scrollHeight'];
+			const scrollThreshold = scrollLength - containerLength;
 
-				const onScroll = () => {
-					// Prevent first scroll because it is indirectly caused by the one pixel offset
-					if (!enabled || firstRun) return;
-					invalidate();
-					current = el[horizontal ? 'scrollLeft' : 'scrollTop'];
-					this.scroll = current / scrollThreshold;
+			let current = 0;
+			let disableScroll = true;
+			let firstRun = true;
 
-					if (infinite) {
-						if (!disableScroll) {
-							if (current >= scrollThreshold) {
-								const damp = 1 - this.offset;
-								el[horizontal ? 'scrollLeft' : 'scrollTop'] = 1;
-								this.scroll = this.offset = -damp;
-								disableScroll = true;
-							} else if (current <= 0) {
-								const damp = 1 + this.offset;
-								el[horizontal ? 'scrollLeft' : 'scrollTop'] = scrollLength;
-								this.scroll = this.offset = damp;
-								disableScroll = true;
-							}
+			const onScroll = () => {
+				// Prevent first scroll because it is indirectly caused by the one pixel offset
+				if (!enabled || firstRun) return;
+				invalidate();
+				current = el[horizontal ? 'scrollLeft' : 'scrollTop'];
+				this.scroll = current / scrollThreshold;
+
+				if (infinite) {
+					if (!disableScroll) {
+						if (current >= scrollThreshold) {
+							const damp = 1 - this.offset;
+							el[horizontal ? 'scrollLeft' : 'scrollTop'] = 1;
+							this.scroll = this.offset = -damp;
+							disableScroll = true;
+						} else if (current <= 0) {
+							const damp = 1 + this.offset;
+							el[horizontal ? 'scrollLeft' : 'scrollTop'] = scrollLength;
+							this.scroll = this.offset = damp;
+							disableScroll = true;
 						}
-						if (disableScroll) setTimeout(() => (disableScroll = false), 40);
 					}
+					if (disableScroll) setTimeout(() => (disableScroll = false), 40);
+				}
 
-					untracked(() => {
-						this.progress.set(this.scroll);
-					});
-				};
+				this.progress.set(this.scroll);
+			};
 
-				el.addEventListener('scroll', onScroll, { passive: true });
-				requestAnimationFrame(() => (firstRun = false));
+			el.addEventListener('scroll', onScroll, { passive: true });
+			requestAnimationFrame(() => (firstRun = false));
 
-				const onWheel = (e: WheelEvent) => (el[horizontal ? 'scrollLeft' : 'scrollTop'] += e.deltaY / 2);
-				if (horizontal) el.addEventListener('wheel', onWheel, { passive: true });
+			const onWheel = (e: WheelEvent) => (el[horizontal ? 'scrollLeft' : 'scrollTop'] += e.deltaY / 2);
+			if (horizontal) el.addEventListener('wheel', onWheel, { passive: true });
 
-				return () => {
-					el.removeEventListener('scroll', onScroll);
-					if (horizontal) el.removeEventListener('wheel', onWheel);
-				};
+			onCleanup(() => {
+				el.removeEventListener('scroll', onScroll);
+				if (horizontal) el.removeEventListener('wheel', onWheel);
 			});
 		});
 

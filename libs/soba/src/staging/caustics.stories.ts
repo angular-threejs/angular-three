@@ -3,6 +3,7 @@ import {
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
+	input,
 	Signal,
 	viewChild,
 } from '@angular/core';
@@ -20,7 +21,7 @@ import {
 } from 'angular-three-soba/staging';
 import { easing } from 'maath';
 import { AdditiveBlending, Color, FrontSide, Group, MeshStandardMaterial } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
 	selector: 'caustics-scene',
@@ -39,9 +40,9 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 				<ngts-caustics
 					[options]="{
+						debug: debug(),
 						backside: true,
 						color,
-						focus: [0, -1.2, 0],
 						lightSource: [-1.2, 3, -2],
 						intensity: 0.003,
 						worldRadius: 0.26 / 10,
@@ -75,6 +76,8 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 	imports: [NgtsCenter, NgtsCaustics, NgtsMeshTransmissionMaterial],
 })
 class Scene {
+	debug = input(false);
+
 	gltf = injectGLTF(() => './glass-transformed.glb') as Signal<any>;
 	color = new Color(1, 0.8, 0.8);
 	innerMaterial = new MeshStandardMaterial({
@@ -172,7 +175,7 @@ class Env {
 	standalone: true,
 	template: `
 		<ngt-group [position]="[0, -0.5, 0]" [rotation]="[0, -0.75, 0]">
-			<caustics-scene />
+			<caustics-scene [debug]="debug()" />
 			<ngts-accumulative-shadows
 				[options]="{ frames: 100, alphaTest: 0.75, opacity: 0.8, color: 'red', scale: 20, position: [0, -0.005, 0] }"
 			>
@@ -189,6 +192,8 @@ class Env {
 })
 class DefaultCausticsStory {
 	protected readonly Math = Math;
+
+	debug = input(false);
 }
 
 export default {
@@ -197,8 +202,9 @@ export default {
 } as Meta;
 
 // https://codesandbox.io/p/sandbox/caustics-forked-tfvz8j?file=/src/App.js:42,13
-export const Default = makeStoryFunction(DefaultCausticsStory, {
-	camera: { position: [20, 0.9, 20], fov: 26 },
-	background: '#f0f0f0',
-	controls: false,
+export const Default = makeStoryObject(DefaultCausticsStory, {
+	canvasOptions: { camera: { position: [20, 0.9, 20], fov: 26 }, background: '#f0f0f0', controls: false },
+	argsOptions: {
+		debug: false,
+	},
 });

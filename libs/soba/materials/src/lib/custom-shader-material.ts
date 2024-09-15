@@ -1,14 +1,13 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 } from '@angular/core';
 import { is, NgtAnyRecord, NgtArgs, NgtAttachable, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { Material } from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 
@@ -65,12 +64,9 @@ export class NgtsCustomShaderMaterial {
 	});
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
-		afterNextRender(() => {
-			autoEffect(() => {
-				const material = this.material();
-				return () => material.dispose();
-			});
+		effect((onCleanup) => {
+			const material = this.material();
+			onCleanup(() => material.dispose());
 		});
 	}
 }

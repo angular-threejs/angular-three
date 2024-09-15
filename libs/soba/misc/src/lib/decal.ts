@@ -1,14 +1,13 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
 import { applyProps, extend, getLocalState, NgtMesh, omit, pick, resolveRef } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { AxesHelper, BoxGeometry, Euler, Mesh, MeshNormalMaterial, Object3D, Texture, Vector3 } from 'three';
 import { DecalGeometry } from 'three-stdlib';
@@ -69,77 +68,76 @@ export class NgtsDecal {
 	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 	helperRef = viewChild<ElementRef<Mesh>>('helper');
 
-	map = pick(this.options, 'map');
-	depthTest = pick(this.options, 'depthTest');
-	polygonOffsetFactor = pick(this.options, 'polygonOffsetFactor');
-	debug = pick(this.options, 'debug');
+	protected map = pick(this.options, 'map');
+	protected depthTest = pick(this.options, 'depthTest');
+	protected polygonOffsetFactor = pick(this.options, 'polygonOffsetFactor');
+	protected debug = pick(this.options, 'debug');
 	private position = pick(this.options, 'position');
 	private rotation = pick(this.options, 'rotation');
 	private scale = pick(this.options, 'scale');
 
 	constructor() {
 		extend({ Mesh, BoxGeometry, MeshNormalMaterial, AxesHelper });
-		const autoEffect = injectAutoEffect();
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const thisMesh = this.meshRef().nativeElement;
-				const localState = getLocalState(thisMesh);
-				if (!localState) return;
+		effect((onCleanup) => {
+			const thisMesh = this.meshRef().nativeElement;
+			const localState = getLocalState(thisMesh);
+			if (!localState) return;
 
-				const mesh = resolveRef(this.mesh());
-				const parent = mesh || localState.parent();
+			const parent = resolveRef(this.mesh()) || localState.parent();
 
-				if (parent && !(parent as Mesh).isMesh) {
-					throw new Error('<ngts-decal> must have a Mesh as parent or specify its "mesh" input');
-				}
+			if (parent && !(parent as Mesh).isMesh) {
+				throw new Error('<ngts-decal> must have a Mesh as parent or specify its "mesh" input');
+			}
 
-				if (!parent) return;
+			if (!parent) return;
 
-				const parentLocalState = getLocalState(parent);
-				if (!parentLocalState) return;
+			const parentLocalState = getLocalState(parent);
+			if (!parentLocalState) return;
 
-				// track parent's children
-				const parentNonObjects = parentLocalState.nonObjects();
-				if (!parentNonObjects || !parentNonObjects.length) return;
+			// track parent's children
+			const parentNonObjects = parentLocalState.nonObjects();
+			if (!parentNonObjects || !parentNonObjects.length) {
+				return;
+			}
 
-				const [position, rotation, scale] = [this.position(), this.rotation(), this.scale()];
-				const state = {
-					position: new Vector3(),
-					rotation: new Euler(),
-					scale: new Vector3(1, 1, 1),
-				};
+			// if parent geometry doesn't have its attributes populated properly, we skip
+			if (!parent.geometry?.attributes?.['position']) {
+				return;
+			}
 
-				applyProps(state, { position, scale });
+			const [position, rotation, scale] = [this.position(), this.rotation(), this.scale()];
+			const state = { position: new Vector3(), rotation: new Euler(), scale: new Vector3(1, 1, 1) };
 
-				// zero out the parents matrix world for this operation
-				const matrixWorld = parent.matrixWorld.clone();
-				parent.matrixWorld.identity();
+			applyProps(state, { position, scale });
 
-				if (!rotation || typeof rotation === 'number') {
-					const o = new Object3D();
-					o.position.copy(state.position);
-					o.lookAt(parent.position);
-					if (typeof rotation === 'number') o.rotateZ(rotation);
-					applyProps(state, { rotation: o.rotation });
-				} else {
-					applyProps(state, { rotation });
-				}
+			// zero out the parents matrix world for this operation
+			const matrixWorld = parent.matrixWorld.clone();
+			parent.matrixWorld.identity();
 
-				thisMesh.geometry = new DecalGeometry(parent, state.position, state.rotation, state.scale);
-				const helper = this.helperRef()?.nativeElement;
-				if (helper) {
-					applyProps(helper, state);
-					// Prevent the helpers from blocking rays
-					helper.traverse((child) => (child.raycast = () => null));
-				}
+			if (!rotation || typeof rotation === 'number') {
+				const o = new Object3D();
+				o.position.copy(state.position);
+				o.lookAt(parent.position);
+				if (typeof rotation === 'number') o.rotateZ(rotation);
+				applyProps(state, { rotation: o.rotation });
+			} else {
+				applyProps(state, { rotation });
+			}
 
-				// Reset parents matrix-world
-				parent.matrixWorld = matrixWorld;
+			thisMesh.geometry = new DecalGeometry(parent, state.position, state.rotation, state.scale);
+			const helper = this.helperRef()?.nativeElement;
+			if (helper) {
+				applyProps(helper, state);
+				// Prevent the helpers from blocking rays
+				helper.traverse((child) => (child.raycast = () => null));
+			}
 
-				return () => {
-					thisMesh.geometry.dispose();
-				};
+			// Reset parents matrix-world
+			parent.matrixWorld = matrixWorld;
+
+			onCleanup(() => {
+				thisMesh.geometry.dispose();
 			});
 		});
 	}

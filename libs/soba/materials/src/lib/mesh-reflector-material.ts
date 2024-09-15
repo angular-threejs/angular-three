@@ -1,10 +1,10 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
+	effect,
 	ElementRef,
 	inject,
 	input,
@@ -24,7 +24,6 @@ import {
 	pick,
 } from 'angular-three';
 import { BlurPass, MeshReflectorMaterial } from 'angular-three-soba/vanilla-exports';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	DepthFormat,
@@ -245,15 +244,11 @@ export class NgtsMeshReflectorMaterial {
 	});
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const material = this.materialRef()?.nativeElement;
-				if (!material) return;
-				const { reflectorParameters } = this.reflectState();
-				applyProps(material, { ...reflectorParameters, ...this.parameters() });
-			});
+		effect(() => {
+			const material = this.materialRef()?.nativeElement;
+			if (!material) return;
+			const { reflectorParameters } = this.reflectState();
+			applyProps(material, { ...reflectorParameters, ...this.parameters() });
 		});
 
 		inject(DestroyRef).onDestroy(() => {

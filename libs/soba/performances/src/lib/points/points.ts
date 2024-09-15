@@ -1,16 +1,15 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	inject,
 	input,
 	viewChild,
 } from '@angular/core';
 import { checkUpdate, extend, injectBeforeRender, NgtPoints, omit, pick, resolveRef } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BufferAttribute, BufferGeometry, DynamicDrawUsage, Matrix4, Points, Vector3 } from 'three';
 import { NgtPositionPoint, PositionPoint } from './position-point';
@@ -36,12 +35,9 @@ export class NgtsPoint {
 	constructor() {
 		extend({ PositionPoint });
 
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				return this.points.subscribe(this.positionPointRef().nativeElement);
-			});
+		effect((onCleanup) => {
+			const cleanUp = this.points.subscribe(this.positionPointRef().nativeElement);
+			onCleanup(() => cleanUp());
 		});
 	}
 }
@@ -182,14 +178,11 @@ export class NgtsPointsInstances {
 
 	constructor() {
 		extend({ Points, BufferAttribute, BufferGeometry });
-		const autoEffect = injectAutoEffect();
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const points = this.pointsRef()?.nativeElement;
-				if (!points) return;
-				checkUpdate(points.geometry.attributes['position']);
-			});
+		effect(() => {
+			const points = this.pointsRef()?.nativeElement;
+			if (!points) return;
+			checkUpdate(points.geometry.attributes['position']);
 		});
 
 		injectBeforeRender(() => {

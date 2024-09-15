@@ -1,16 +1,15 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
 import { extend, NgtArgs, NgtMesh, omit, pick } from 'angular-three';
 import { injectFont, NgtsFontInput } from 'angular-three-soba/loaders';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Mesh } from 'three';
 import { mergeVertices, TextGeometry, TextGeometryParameters } from 'three-stdlib';
@@ -50,7 +49,7 @@ export class NgtsText3D {
 	font = input.required<NgtsFontInput>();
 	text = input.required<string>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'letterSpacing',
 		'lineHeight',
 		'size',
@@ -90,17 +89,15 @@ export class NgtsText3D {
 	constructor() {
 		extend({ Mesh, TextGeometry });
 
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const [mesh, textArgs] = [this.meshRef()?.nativeElement, this.textArgs()];
+			if (!textArgs || !mesh) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [mesh, smooth, textArgs] = [this.meshRef()?.nativeElement, this.smooth(), this.textArgs()];
-				if (!textArgs || !mesh) return;
-				if (smooth) {
-					mesh.geometry = mergeVertices(mesh.geometry, smooth);
-					mesh.geometry.computeVertexNormals();
-				}
-			});
+			const smooth = this.smooth();
+			if (smooth) {
+				mesh.geometry = mergeVertices(mesh.geometry, smooth);
+				mesh.geometry.computeVertexNormals();
+			}
 		});
 	}
 }

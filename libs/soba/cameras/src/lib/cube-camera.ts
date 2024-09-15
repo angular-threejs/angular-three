@@ -5,6 +5,7 @@ import {
 	computed,
 	contentChild,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	Injector,
 	input,
@@ -14,7 +15,6 @@ import {
 } from '@angular/core';
 import { extend, injectBeforeRender, injectStore, merge, NgtArgs, NgtGroup, omit, pick } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { CubeCamera, Fog, FogExp2, Group, HalfFloatType, Texture, WebGLCubeRenderTarget } from 'three';
 import { NgtsCameraContent } from './camera-content';
@@ -34,7 +34,6 @@ export interface CubeCameraOptions {
 
 export function injectCubeCamera(options: () => CubeCameraOptions, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectCubeCamera, injector, () => {
-		const autoEffect = injectAutoEffect();
 		const store = injectStore();
 		const gl = store.select('gl');
 		const scene = store.select('scene');
@@ -51,32 +50,25 @@ export function injectCubeCamera(options: () => CubeCameraOptions, { injector }:
 			return fbo;
 		});
 
-		autoEffect(() => {
+		effect((onCleanup) => {
 			const _fbo = fbo();
-			return () => {
-				_fbo.dispose();
-			};
+			onCleanup(() => _fbo.dispose());
 		});
 
-		const camera = computed(() => {
-			return new CubeCamera(near()!, far()!, fbo());
-		});
-
-		const update = computed(() => {
+		const camera = computed(() => new CubeCamera(near()!, far()!, fbo()));
+		const update = () => {
 			const [_scene, _gl, _camera, { envMap, fog }] = [scene(), gl(), camera(), untracked(mergedOptions)];
 			let originalFog: Fog | FogExp2;
 			let originalBackground: Texture;
 
-			return () => {
-				originalFog = _scene.fog as Fog | FogExp2;
-				originalBackground = _scene.background as Texture;
-				_scene.background = envMap || originalBackground;
-				_scene.fog = fog || originalFog;
-				_camera.update(_gl, _scene);
-				_scene.fog = originalFog;
-				_scene.background = originalBackground;
-			};
-		});
+			originalFog = _scene.fog as Fog | FogExp2;
+			originalBackground = _scene.background as Texture;
+			_scene.background = envMap || originalBackground;
+			_scene.fog = fog || originalFog;
+			_camera.update(_gl, _scene);
+			_scene.fog = originalFog;
+			_scene.background = originalBackground;
+		};
 
 		return { fbo, camera, update };
 	});
@@ -129,10 +121,9 @@ export class NgtsCubeCamera {
 			if (!group) return;
 
 			const frames = this.options().frames;
-			const update = this.cubeCamera.update();
 			if (frames === Infinity || count < frames) {
 				group.visible = false;
-				update();
+				this.cubeCamera.update();
 				group.visible = true;
 				count++;
 			}

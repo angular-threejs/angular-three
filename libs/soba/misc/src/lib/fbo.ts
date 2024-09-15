@@ -121,17 +121,14 @@ export class NgtsFBO {
 
 	constructor() {
 		let ref: EmbeddedViewRef<{ $implicit: ReturnType<typeof injectFBO> }>;
-		const injector = inject(Injector);
+
+		const fboTarget = injectFBO(() => {
+			const { width, height, ...settings } = this.fbo();
+			return { width, height, settings };
+		});
 
 		afterNextRender(() => {
-			const fboTarget = injectFBO(
-				() => {
-					const { width, height, ...settings } = this.fbo();
-					return { width, height, settings };
-				},
-				{ injector },
-			);
-
+			// TODO: double check if we need untracked
 			untracked(() => {
 				ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });
 				ref.detectChanges();

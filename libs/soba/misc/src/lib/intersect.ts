@@ -1,14 +1,4 @@
-import {
-	afterNextRender,
-	Directive,
-	effect,
-	ElementRef,
-	inject,
-	Injector,
-	model,
-	signal,
-	WritableSignal,
-} from '@angular/core';
+import { Directive, effect, ElementRef, inject, Injector, model, signal, WritableSignal } from '@angular/core';
 import { addAfterEffect, addEffect, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Object3D } from 'three';
@@ -58,9 +48,6 @@ export class NgtsIntersect {
 
 	constructor() {
 		const host = inject<ElementRef<Object3D>>(ElementRef);
-		const injector = inject(Injector);
-		afterNextRender(() => {
-			injectIntersect(() => host, { source: this.intersect, injector });
-		});
+		injectIntersect(() => host, { source: this.intersect });
 	}
 }

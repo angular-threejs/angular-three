@@ -88,7 +88,6 @@ export class NgtsMatcapTexture {
 	matcapTexture = input<NgtsMatcapTextureOptions>();
 	matcapTextureLoaded = output<Texture[]>();
 
-	private injector = inject(Injector);
 	private template = inject(TemplateRef);
 	private vcr = inject(ViewContainerRef);
 
@@ -98,13 +97,12 @@ export class NgtsMatcapTexture {
 	private ref?: EmbeddedViewRef<{ $implicit: Signal<Texture | null> }>;
 
 	constructor() {
-		afterNextRender(() => {
-			const { texture } = injectMatcapTexture(this.id, {
-				format: this.format,
-				onLoad: this.matcapTextureLoaded.emit.bind(this.matcapTextureLoaded),
-				injector: this.injector,
-			});
+		const { texture } = injectMatcapTexture(this.id, {
+			format: this.format,
+			onLoad: this.matcapTextureLoaded.emit.bind(this.matcapTextureLoaded),
+		});
 
+		afterNextRender(() => {
 			untracked(() => {
 				this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
 				this.ref.detectChanges();

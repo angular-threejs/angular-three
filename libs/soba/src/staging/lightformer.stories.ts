@@ -1,18 +1,28 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
+	input,
+	viewChild,
+} from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
 	standalone: true,
 	template: `
-		<ngts-environment [options]="{ background: true, preset: 'sunset' }">
+		<!-- NOTE: we need to set frames to Infinity if we want to change the color of the lightformer -->
+		<ngts-environment [options]="{ background: true, preset: 'sunset', frames: Infinity }">
 			<ng-template>
 				<ngt-color *args="['black']" attach="background" />
-				<ngts-lightformer [options]="{ position: [0, 0, -5], scale: 10, color: 'red', intensity: 10, form: 'ring' }" />
+				<ngts-lightformer
+					[options]="{ position: [0, 0, -5], scale: 10, intensity: 10, form: 'ring', color: color() }"
+				/>
 			</ng-template>
 		</ngts-environment>
 
@@ -42,7 +52,10 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DefaultLightformerStory {
-	Math = Math;
+	protected readonly Math = Math;
+	protected readonly Infinity = Infinity;
+
+	color = input('red');
 
 	cube = viewChild.required<ElementRef<Mesh>>('cube');
 
@@ -59,8 +72,13 @@ export default {
 	decorators: makeDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultLightformerStory, {
-	controls: false,
-	lights: false,
-	background: 'ivory',
+export const Default = makeStoryObject(DefaultLightformerStory, {
+	canvasOptions: {
+		controls: false,
+		lights: false,
+		background: 'ivory',
+	},
+	argsOptions: {
+		color: color('#ff0000'),
+	},
 });

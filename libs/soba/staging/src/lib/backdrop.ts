@@ -1,14 +1,13 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
 import { checkUpdate, extend, NgtArgs, NgtGroup, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BufferAttribute, Group, Mesh, PlaneGeometry } from 'three';
 
@@ -58,31 +57,28 @@ export class NgtsBackdrop {
 	constructor() {
 		extend({ Group, Mesh, PlaneGeometry });
 
-		const autoEffect = injectAutoEffect();
-		afterNextRender(() => {
-			autoEffect(() => {
-				const plane = this.planeRef()?.nativeElement;
-				if (!plane) return;
+		effect(() => {
+			const plane = this.planeRef()?.nativeElement;
+			if (!plane) return;
 
-				const [segments, floor] = [this.segments(), this.floor()];
+			const [segments, floor] = [this.segments(), this.floor()];
 
-				let i = 0;
-				const offset = segments / segments / 2;
-				const position = plane.attributes['position'] as BufferAttribute;
-				for (let x = 0; x < segments + 1; x++) {
-					for (let y = 0; y < segments + 1; y++) {
-						position.setXYZ(
-							i++,
-							x / segments - offset + (x === 0 ? -floor : 0),
-							y / segments - offset,
-							easeInExpo(x / segments),
-						);
-					}
+			let i = 0;
+			const offset = segments / segments / 2;
+			const position = plane.attributes['position'] as BufferAttribute;
+			for (let x = 0; x < segments + 1; x++) {
+				for (let y = 0; y < segments + 1; y++) {
+					position.setXYZ(
+						i++,
+						x / segments - offset + (x === 0 ? -floor : 0),
+						y / segments - offset,
+						easeInExpo(x / segments),
+					);
 				}
+			}
 
-				checkUpdate(position);
-				plane.computeVertexNormals();
-			});
+			checkUpdate(position);
+			plane.computeVertexNormals();
 		});
 	}
 }

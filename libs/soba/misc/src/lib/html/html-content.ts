@@ -1,9 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
+	effect,
 	ElementRef,
 	inject,
 	input,
@@ -13,7 +13,6 @@ import {
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender, NgtHTML, pick, resolveRef } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Object3D, OrthographicCamera, Vector3 } from 'three';
 import { NgtsHTML } from './html';
@@ -128,17 +127,17 @@ export class NgtsHTMLContent extends NgtHTML {
 	private events = this.store.select('events');
 	private camera = this.store.select('camera');
 	private scene = this.store.select('scene');
-	size = this.store.select('size');
+	protected size = this.store.select('size');
 
 	private parent = pick(this.options, 'parent');
 	private zIndexRange = pick(this.options, 'zIndexRange');
 	private calculatePosition = pick(this.options, 'calculatePosition');
 	private prepend = pick(this.options, 'prepend');
-	center = pick(this.options, 'center');
-	fullscreen = pick(this.options, 'fullscreen');
-	pointerEvents = pick(this.options, 'pointerEvents');
-	containerClass = pick(this.options, 'containerClass');
-	containerStyle = pick(this.options, 'containerStyle');
+	protected center = pick(this.options, 'center');
+	protected fullscreen = pick(this.options, 'fullscreen');
+	protected pointerEvents = pick(this.options, 'pointerEvents');
+	protected containerClass = pick(this.options, 'containerClass');
+	protected containerStyle = pick(this.options, 'containerStyle');
 
 	private target = computed(() => {
 		const parent = resolveRef(this.parent());
@@ -149,74 +148,70 @@ export class NgtsHTMLContent extends NgtHTML {
 	constructor() {
 		super();
 
-		const autoEffect = injectAutoEffect();
 		const renderer = inject(Renderer2);
 
 		let isMeshSizeSet = false;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [occlude, canvasEl, zIndexRange] = [
-					this.html.occlude(),
-					untracked(this.gl).domElement,
-					untracked(this.zIndexRange),
-				];
+		effect(() => {
+			const [occlude, canvasEl, zIndexRange] = [
+				this.html.occlude(),
+				untracked(this.gl).domElement,
+				untracked(this.zIndexRange),
+			];
 
-				if (occlude && occlude === 'blending') {
-					renderer.setStyle(canvasEl, 'z-index', `${Math.floor(zIndexRange[0] / 2)}`);
-					renderer.setStyle(canvasEl, 'position', 'absolute');
-					renderer.setStyle(canvasEl, 'pointer-events', 'none');
-				} else {
-					renderer.removeStyle(canvasEl, 'z-index');
-					renderer.removeStyle(canvasEl, 'position');
-					renderer.removeStyle(canvasEl, 'pointer-events');
-				}
+			if (occlude && occlude === 'blending') {
+				renderer.setStyle(canvasEl, 'z-index', `${Math.floor(zIndexRange[0] / 2)}`);
+				renderer.setStyle(canvasEl, 'position', 'absolute');
+				renderer.setStyle(canvasEl, 'pointer-events', 'none');
+			} else {
+				renderer.removeStyle(canvasEl, 'z-index');
+				renderer.removeStyle(canvasEl, 'position');
+				renderer.removeStyle(canvasEl, 'pointer-events');
+			}
+		});
+
+		effect((onCleanup) => {
+			const [transform, target, hostEl, prepend, scene, calculatePosition, group, size, camera] = [
+				this.html.transform(),
+				this.target(),
+				this.host.nativeElement,
+				untracked(this.prepend),
+				untracked(this.scene),
+				untracked(this.calculatePosition),
+				untracked(this.html.groupRef).nativeElement,
+				untracked(this.size),
+				untracked(this.camera),
+			];
+
+			scene.updateMatrixWorld();
+			renderer.setStyle(hostEl, 'position', 'absolute');
+			renderer.setStyle(hostEl, 'top', '0');
+			renderer.setStyle(hostEl, 'left', '0');
+
+			if (transform) {
+				renderer.setStyle(hostEl, 'pointer-events', 'none');
+				renderer.setStyle(hostEl, 'overflow', 'hidden');
+				renderer.removeStyle(hostEl, 'transform');
+				renderer.removeStyle(hostEl, 'transform-origin');
+			} else {
+				const vec = calculatePosition(group, camera, size);
+				renderer.setStyle(hostEl, 'transform', `translate3d(${vec[0]}px,${vec[1]}px,0)`);
+				renderer.setStyle(hostEl, 'transform-origin', '0 0');
+				renderer.removeStyle(hostEl, 'pointer-events');
+				renderer.removeStyle(hostEl, 'overflow');
+			}
+
+			if (prepend) target.prepend(hostEl);
+			else target.appendChild(hostEl);
+
+			onCleanup(() => {
+				if (target) target.removeChild(hostEl);
 			});
+		});
 
-			autoEffect(() => {
-				const [transform, target, hostEl, prepend, scene, calculatePosition, group, size, camera] = [
-					this.html.transform(),
-					this.target(),
-					this.host.nativeElement,
-					untracked(this.prepend),
-					untracked(this.scene),
-					untracked(this.calculatePosition),
-					untracked(this.html.groupRef).nativeElement,
-					untracked(this.size),
-					untracked(this.camera),
-				];
-
-				scene.updateMatrixWorld();
-				renderer.setStyle(hostEl, 'position', 'absolute');
-				renderer.setStyle(hostEl, 'top', '0');
-				renderer.setStyle(hostEl, 'left', '0');
-
-				if (transform) {
-					renderer.setStyle(hostEl, 'pointer-events', 'none');
-					renderer.setStyle(hostEl, 'overflow', 'hidden');
-					renderer.removeStyle(hostEl, 'transform');
-					renderer.removeStyle(hostEl, 'transform-origin');
-				} else {
-					const vec = calculatePosition(group, camera, size);
-					renderer.setStyle(hostEl, 'transform', `translate3d(${vec[0]}px,${vec[1]}px,0)`);
-					renderer.setStyle(hostEl, 'transform-origin', '0 0');
-					renderer.removeStyle(hostEl, 'pointer-events');
-					renderer.removeStyle(hostEl, 'overflow');
-				}
-
-				if (prepend) target.prepend(hostEl);
-				else target.appendChild(hostEl);
-
-				return () => {
-					if (target) target.removeChild(hostEl);
-				};
-			});
-
-			autoEffect(() => {
-				this.options();
-				this.html.options();
-				isMeshSizeSet = false;
-			});
+		effect(() => {
+			const _ = [this.options(), this.html.options()];
+			isMeshSizeSet = false;
 		});
 
 		let visible = true;

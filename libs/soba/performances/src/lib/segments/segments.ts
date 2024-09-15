@@ -1,16 +1,15 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	inject,
 	input,
 	viewChild,
 } from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, NgtVector3, omit, pick, resolveRef, vector3 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ColorRepresentation, Vector2 } from 'three';
 import { Line2, LineMaterial, LineMaterialParameters, LineSegmentsGeometry } from 'three-stdlib';
@@ -39,12 +38,10 @@ export class NgtsSegment {
 
 	constructor() {
 		extend({ SegmentObject });
-		const autoEffect = injectAutoEffect();
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				return this.segments.subscribe(this.segmentRef());
-			});
+		effect((onCleanup) => {
+			const cleanUp = this.segments.subscribe(this.segmentRef());
+			onCleanup(() => cleanUp());
 		});
 	}
 }

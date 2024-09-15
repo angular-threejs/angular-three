@@ -8,6 +8,7 @@ import {
 	TemplateRef,
 	computed,
 	contentChild,
+	effect,
 	input,
 } from '@angular/core';
 import {
@@ -19,14 +20,12 @@ import {
 	NgtTexture,
 	extend,
 	getLocalState,
-	injectBeforeRender,
 	injectStore,
 	omit,
 	pick,
 	prepare,
 } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
 
@@ -65,17 +64,16 @@ export class NgtsRenderTextureContainer {
 	private store = injectStore();
 
 	constructor() {
-		injectAutoEffect()(() => {
-			// track
-			this.store.state();
-			const renderPriority = this.renderPriority();
+		effect((onCleanup) => {
+			const [renderPriority, { internal }] = [this.renderPriority(), this.store.state()];
 
 			let count = 0;
 			let oldAutoClear: boolean;
 			let oldXrEnabled: boolean;
 			let oldRenderTarget: WebGLRenderTarget | null;
 			let oldIsPresenting: boolean;
-			const sub = injectBeforeRender(
+
+			const cleanup = internal.subscribe(
 				({ gl, scene, camera }) => {
 					const [fbo, frames] = [this.fbo(), this.frames()];
 					// NOTE: render  the frames ^ 2
@@ -97,10 +95,13 @@ export class NgtsRenderTextureContainer {
 						count++;
 					}
 				},
-				{ priority: renderPriority, injector: this.injector() },
+				renderPriority,
+				this.store,
 			);
 
-			return () => sub();
+			onCleanup(() => {
+				cleanup();
+			});
 		});
 	}
 }

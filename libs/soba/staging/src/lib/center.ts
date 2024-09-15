@@ -1,15 +1,15 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	output,
+	untracked,
 	viewChild,
 } from '@angular/core';
 import { extend, getLocalState, NgtGroup, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Box3, Group, Object3D, Sphere, Vector3 } from 'three';
 
@@ -111,51 +111,40 @@ export class NgtsCenter {
 	constructor() {
 		extend({ Group });
 
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const inner = this.innerRef().nativeElement;
+			const localState = getLocalState(inner);
+			if (!localState) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [
-					{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX },
-					group,
-					outer,
-					inner,
-				] = [
-					this.centerOptions(),
-					this.groupRef().nativeElement,
-					this.outerRef().nativeElement,
-					this.innerRef().nativeElement,
-				];
+			const children = [localState.objects(), localState.nonObjects()];
+			if (!children?.length) return;
 
-				const localState = getLocalState(inner);
-				if (!localState) return;
+			const [{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX }, group, outer] =
+				[this.centerOptions(), this.groupRef().nativeElement, this.outerRef().nativeElement];
 
-				localState.nonObjects();
-				const children = localState.objects();
-				if (!children?.length) return;
+			outer.matrixWorld.identity();
+			const box3 = new Box3().setFromObject(inner, precise);
+			const center = new Vector3();
+			const sphere = new Sphere();
 
-				outer.matrixWorld.identity();
-				const box3 = new Box3().setFromObject(inner, precise);
-				const center = new Vector3();
-				const sphere = new Sphere();
+			const width = box3.max.x - box3.min.x;
+			const height = box3.max.y - box3.min.y;
+			const depth = box3.max.z - box3.min.z;
 
-				const width = box3.max.x - box3.min.x;
-				const height = box3.max.y - box3.min.y;
-				const depth = box3.max.z - box3.min.z;
+			box3.getCenter(center);
+			box3.getBoundingSphere(sphere);
 
-				box3.getCenter(center);
-				box3.getBoundingSphere(sphere);
+			const vAlign = top ? height / 2 : bottom ? -height / 2 : 0;
+			const hAlign = left ? -width / 2 : right ? width / 2 : 0;
+			const dAlign = front ? depth / 2 : back ? -depth / 2 : 0;
 
-				const vAlign = top ? height / 2 : bottom ? -height / 2 : 0;
-				const hAlign = left ? -width / 2 : right ? width / 2 : 0;
-				const dAlign = front ? depth / 2 : back ? -depth / 2 : 0;
+			outer.position.set(
+				disable || disableX ? 0 : -center.x + hAlign,
+				disable || disableY ? 0 : -center.y + vAlign,
+				disable || disableZ ? 0 : -center.z + dAlign,
+			);
 
-				outer.position.set(
-					disable || disableX ? 0 : -center.x + hAlign,
-					disable || disableY ? 0 : -center.y + vAlign,
-					disable || disableZ ? 0 : -center.z + dAlign,
-				);
-
+			untracked(() => {
 				this.centered.emit({
 					parent: group.parent!,
 					container: group,

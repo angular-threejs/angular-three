@@ -1,8 +1,8 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	Signal,
@@ -10,7 +10,6 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, injectBeforeRender, injectStore, is, NgtGroup, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Box3, Group, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
 
@@ -103,45 +102,43 @@ export class NgtsBounds {
 	constructor() {
 		extend({ Group });
 
-		const autoEffect = injectAutoEffect();
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [controls, camera] = [this.controls(), untracked(this.camera)];
-				if (!controls) return;
-				const callback = () => {
-					if (controls && this.goal.target && this.animationState !== AnimationState.NONE) {
-						const front = new Vector3().setFromMatrixColumn(camera.matrix, 2);
-						const d0 = this.origin.camPos.distanceTo(controls.target);
-						const d1 = (this.goal.camPos || this.origin.camPos).distanceTo(this.goal.target);
-						const d = (1 - this.t) * d0 + this.t * d1;
+		effect((onCleanup) => {
+			const [controls, camera] = [this.controls(), untracked(this.camera)];
+			if (!controls) return;
 
-						controls.target.copy(camera.position).addScaledVector(front, -d);
-						controls.update();
-					}
+			const callback = () => {
+				if (controls && this.goal.target && this.animationState !== AnimationState.NONE) {
+					const front = new Vector3().setFromMatrixColumn(camera.matrix, 2);
+					const d0 = this.origin.camPos.distanceTo(controls.target);
+					const d1 = (this.goal.camPos || this.origin.camPos).distanceTo(this.goal.target);
+					const d = (1 - this.t) * d0 + this.t * d1;
 
-					this.animationState = AnimationState.NONE;
-				};
-
-				controls.addEventListener('start', callback);
-				return () => controls.removeEventListener('start', callback);
-			});
-
-			let count = 0;
-			autoEffect(() => {
-				const [clip, fit, observe] = [
-					this.clipOption(),
-					this.fitOption(),
-					this.observe(),
-					this.size(),
-					this.camera(),
-					this.controls(),
-				];
-				if (observe || count++ === 0) {
-					this.refresh();
-					if (fit) this.reset().fit();
-					if (clip) this.clip();
+					controls.target.copy(camera.position).addScaledVector(front, -d);
+					controls.update();
 				}
-			});
+
+				this.animationState = AnimationState.NONE;
+			};
+
+			controls.addEventListener('start', callback);
+			onCleanup(() => controls.removeEventListener('start', callback));
+		});
+
+		let count = 0;
+		effect(() => {
+			const [clip, fit, observe] = [
+				this.clipOption(),
+				this.fitOption(),
+				this.observe(),
+				this.size(),
+				this.camera(),
+				this.controls(),
+			];
+			if (observe || count++ === 0) {
+				this.refresh();
+				if (fit) this.reset().fit();
+				if (clip) this.clip();
+			}
 		});
 
 		injectBeforeRender(({ delta }) => {

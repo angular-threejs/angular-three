@@ -1,10 +1,10 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
+	effect,
 	ElementRef,
 	inject,
 	input,
@@ -23,7 +23,6 @@ import {
 	pick,
 } from 'angular-three';
 import { MeshRefractionMaterial } from 'angular-three-soba/shaders';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ColorRepresentation, CubeTexture, Mesh, Texture } from 'three';
 import { MeshBVH, MeshBVHUniformStruct, SAH } from 'three-mesh-bvh';
@@ -93,7 +92,7 @@ export class NgtsMeshRefractionMaterial {
 
 	resolution = computed(() => [this.size().width, this.size().height]);
 	defines = computed(() => {
-		const temp = {} as { [key: string]: string };
+		const _defines = {} as { [key: string]: string };
 		const [envMap, aberrationStrength, fastChroma] = [
 			untracked(this.envMap),
 			this.aberrationStrength(),
@@ -108,16 +107,16 @@ export class NgtsMeshRefractionMaterial {
 		const width = 3 * Math.max(_cubeSize, 16 * 7);
 		const height = 4 * _cubeSize;
 
-		if (isCubeMap) temp['ENVMAP_TYPE_CUBEM'] = '';
-		temp['CUBEUV_TEXEL_WIDTH'] = `${1.0 / width}`;
-		temp['CUBEUV_TEXEL_HEIGHT'] = `${1.0 / height}`;
-		temp['CUBEUV_MAX_MIP'] = `${_lodMax}.0`;
+		if (isCubeMap) _defines['ENVMAP_TYPE_CUBEM'] = '';
+		_defines['CUBEUV_TEXEL_WIDTH'] = `${1.0 / width}`;
+		_defines['CUBEUV_TEXEL_HEIGHT'] = `${1.0 / height}`;
+		_defines['CUBEUV_MAX_MIP'] = `${_lodMax}.0`;
 
 		// Add defines from chromatic aberration
-		if (aberrationStrength > 0) temp['CHROMATIC_ABERRATIONS'] = '';
-		if (fastChroma) temp['FAST_CHROMA'] = '';
+		if (aberrationStrength > 0) _defines['CHROMATIC_ABERRATIONS'] = '';
+		if (fastChroma) _defines['FAST_CHROMA'] = '';
 
-		return temp;
+		return _defines;
 	});
 
 	private defineKeys = computed(() => {
@@ -139,23 +138,19 @@ export class NgtsMeshRefractionMaterial {
 	});
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const material = this.materialRef()?.nativeElement;
+			if (!material) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const material = this.materialRef()?.nativeElement;
-				if (!material) return;
+			const localState = getLocalState(material);
+			if (!localState) return;
 
-				const localState = getLocalState(material);
-				if (!localState) return;
-
-				const parent = untracked(localState.parent);
-				const geometry = (parent as Mesh).geometry;
-				if (geometry) {
-					(material as any).bvh = new MeshBVHUniformStruct();
-					(material as any).bvh.updateFrom(new MeshBVH(geometry.clone().toNonIndexed(), { strategy: SAH }));
-				}
-			});
+			const parent = untracked(localState.parent);
+			const geometry = (parent as Mesh).geometry;
+			if (geometry) {
+				(material as any).bvh = new MeshBVHUniformStruct();
+				(material as any).bvh.updateFrom(new MeshBVH(geometry.clone().toNonIndexed(), { strategy: SAH }));
+			}
 		});
 
 		injectBeforeRender(({ camera }) => {

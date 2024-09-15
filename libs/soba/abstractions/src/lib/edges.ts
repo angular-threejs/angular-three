@@ -1,6 +1,5 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, input, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, viewChild } from '@angular/core';
 import { checkNeedsUpdate, getLocalState, NgtMesh, omit } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BufferAttribute, BufferGeometry, ColorRepresentation, EdgesGeometry, Mesh } from 'three';
 import { LineMaterialParameters } from 'three-stdlib';
@@ -45,35 +44,32 @@ export class NgtsEdges {
 	private memoizedThreshold?: number;
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
-		afterNextRender(() => {
-			autoEffect(() => {
-				const line = this.line().lineRef()?.nativeElement;
-				if (!line) return;
+		effect(() => {
+			const line = this.line().lineRef()?.nativeElement;
+			if (!line) return;
 
-				const lS = getLocalState(line);
-				if (!lS) return;
+			const lS = getLocalState(line);
+			if (!lS) return;
 
-				const parent = lS.parent() as Mesh;
-				if (!parent) return;
+			const parent = lS.parent() as Mesh;
+			if (!parent) return;
 
-				const { geometry: explicitGeometry, threshold } = this.options();
-				const geometry = explicitGeometry ?? parent.geometry;
-				if (!geometry) return;
+			const { geometry: explicitGeometry, threshold } = this.options();
+			const geometry = explicitGeometry ?? parent.geometry;
+			if (!geometry) return;
 
-				const cached = this.memoizedGeometry === geometry && this.memoizedThreshold === threshold;
-				if (cached) return;
+			const cached = this.memoizedGeometry === geometry && this.memoizedThreshold === threshold;
+			if (cached) return;
 
-				this.memoizedGeometry = geometry;
-				this.memoizedThreshold = threshold;
+			this.memoizedGeometry = geometry;
+			this.memoizedThreshold = threshold;
 
-				const points = (new EdgesGeometry(geometry, threshold).attributes['position'] as BufferAttribute)
-					.array as Float32Array;
-				line.geometry.setPositions(points);
-				checkNeedsUpdate(line.geometry.attributes['instanceStart']);
-				checkNeedsUpdate(line.geometry.attributes['instanceEnd']);
-				line.computeLineDistances();
-			});
+			const points = (new EdgesGeometry(geometry, threshold).attributes['position'] as BufferAttribute)
+				.array as Float32Array;
+			line.geometry.setPositions(points);
+			checkNeedsUpdate(line.geometry.attributes['instanceStart']);
+			checkNeedsUpdate(line.geometry.attributes['instanceEnd']);
+			line.computeLineDistances();
 		});
 	}
 }

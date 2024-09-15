@@ -1,24 +1,20 @@
-import { afterNextRender, Directive } from '@angular/core';
+import { DestroyRef, Directive, effect, inject } from '@angular/core';
 import { injectStore } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 
 @Directive({ standalone: true, selector: 'ngts-adaptive-events' })
 export class NgtsAdaptiveEvents {
 	constructor() {
-		const autoEffect = injectAutoEffect();
 		const store = injectStore();
 		const current = store.select('performance', 'current');
+		const currentEnabled = store.snapshot.events.enabled;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const enabled = store.snapshot.events.enabled;
-				return () => store.snapshot.setEvents({ enabled });
-			});
+		effect((onCleanup) => {
+			const _current = current();
+			onCleanup(() => store.snapshot.setEvents({ enabled: _current === 1 }));
+		});
 
-			autoEffect(() => {
-				const _current = current();
-				return () => store.snapshot.setEvents({ enabled: _current === 1 });
-			});
+		inject(DestroyRef).onDestroy(() => {
+			store.snapshot.setEvents({ enabled: currentEnabled });
 		});
 	}
 }

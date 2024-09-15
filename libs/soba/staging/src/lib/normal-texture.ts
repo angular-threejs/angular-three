@@ -90,7 +90,6 @@ export class NgtsNormalTexture {
 	normalTexture = input<NgtsNormalTextureOptions>();
 	normalTextureLoaded = output<Texture[]>();
 
-	private injector = inject(Injector);
 	private template = inject(TemplateRef);
 	private vcr = inject(ViewContainerRef);
 
@@ -103,13 +102,12 @@ export class NgtsNormalTexture {
 	private ref?: EmbeddedViewRef<{ $implicit: Signal<Texture | null> }>;
 
 	constructor() {
-		afterNextRender(() => {
-			const { texture } = injectNormalTexture(this.id, {
-				settings: this.settings,
-				onLoad: this.normalTextureLoaded.emit.bind(this.normalTextureLoaded),
-				injector: this.injector,
-			});
+		const { texture } = injectNormalTexture(this.id, {
+			settings: this.settings,
+			onLoad: this.normalTextureLoaded.emit.bind(this.normalTextureLoaded),
+		});
 
+		afterNextRender(() => {
 			untracked(() => {
 				this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
 				this.ref.detectChanges();

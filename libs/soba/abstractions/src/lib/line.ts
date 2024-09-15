@@ -1,15 +1,14 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
 import { checkNeedsUpdate, injectStore, NgtAfterAttach, NgtArgs, NgtObject3DNode, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, ColorRepresentation, Vector2, Vector3, Vector4 } from 'three';
 import {
@@ -55,7 +54,7 @@ const defaultOptions: NgtsLineOptions = {
 				[color]="color()"
 				[vertexColors]="vertex()"
 				[resolution]="resolution()"
-				[linewidth]="linewidth() ?? lineWidth() ?? 1"
+				[linewidth]="actualLineWidth()"
 				[dashed]="dashed()"
 				[transparent]="itemSize() === 4"
 				[parameters]="parameters()"
@@ -80,17 +79,19 @@ export class NgtsLine {
 	private segments = pick(this.options, 'segments');
 	private vertexColors = pick(this.options, 'vertexColors');
 
-	dashed = pick(this.options, 'dashed');
-	color = pick(this.options, 'color');
-	lineWidth = pick(this.options, 'lineWidth');
-	linewidth = pick(this.options, 'linewidth');
-	vertex = computed(() => Boolean(this.vertexColors()));
-	resolution = computed(() => [this.size().width, this.size().height]);
+	protected dashed = pick(this.options, 'dashed');
+	protected color = pick(this.options, 'color');
+	protected vertex = computed(() => Boolean(this.vertexColors()));
+	protected resolution = computed(() => [this.size().width, this.size().height]);
+
+	private lineWidth = pick(this.options, 'lineWidth');
+	private linewidth = pick(this.options, 'linewidth');
 
 	line2 = computed(() => (this.segments() ? new LineSegments2() : new Line2()));
 	lineMaterial = new LineMaterial();
 
-	itemSize = computed(() => ((this.vertexColors()?.[0] as number[] | undefined)?.length === 4 ? 4 : 3));
+	protected actualLineWidth = computed(() => this.linewidth() ?? this.lineWidth() ?? 1);
+	protected itemSize = computed(() => ((this.vertexColors()?.[0] as number[] | undefined)?.length === 4 ? 4 : 3));
 
 	lineGeometry = computed(() => {
 		const geom = this.segments() ? new LineSegmentsGeometry() : new LineGeometry();
@@ -126,25 +127,21 @@ export class NgtsLine {
 	}
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const [lineMaterial, dashed] = [this.lineMaterial, this.dashed()];
+			if (dashed) {
+				lineMaterial.defines['USE_DASH'] = '';
+			} else {
+				delete lineMaterial.defines['USE_DASH'];
+			}
+			checkNeedsUpdate(lineMaterial);
+		});
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [lineMaterial, dashed] = [this.lineMaterial, this.dashed()];
-				if (dashed) {
-					lineMaterial.defines['USE_DASH'] = '';
-				} else {
-					delete lineMaterial.defines['USE_DASH'];
-				}
-				checkNeedsUpdate(lineMaterial);
-			});
-
-			autoEffect(() => {
-				const [lineGeometry, lineMaterial] = [this.lineGeometry(), this.lineMaterial];
-				return () => {
-					lineGeometry.dispose();
-					lineMaterial.dispose();
-				};
+		effect((onCleanup) => {
+			const [lineGeometry, lineMaterial] = [this.lineGeometry(), this.lineMaterial];
+			onCleanup(() => {
+				lineGeometry.dispose();
+				lineMaterial.dispose();
 			});
 		});
 	}

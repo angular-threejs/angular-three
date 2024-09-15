@@ -1,9 +1,9 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
@@ -13,7 +13,6 @@ import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { injectTexture } from 'angular-three-soba/loaders';
 import { NgtsMeshReflectorMaterial, NgtsMeshReflectorMaterialOptions } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Mesh, RepeatWrapping, Vector2 } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
@@ -81,15 +80,11 @@ class MeshReflectorMaterialStory {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const distortionMap = this.textures()?.distortionMap;
-				if (!distortionMap) return;
-				distortionMap.wrapS = distortionMap.wrapT = RepeatWrapping;
-				distortionMap.repeat.set(4, 4);
-			});
+		effect(() => {
+			const distortionMap = this.textures()?.distortionMap;
+			if (!distortionMap) return;
+			distortionMap.wrapS = distortionMap.wrapT = RepeatWrapping;
+			distortionMap.repeat.set(4, 4);
 		});
 
 		injectBeforeRender(({ clock }) => {

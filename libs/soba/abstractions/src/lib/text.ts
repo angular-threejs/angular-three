@@ -4,13 +4,12 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	DestroyRef,
-	afterNextRender,
+	effect,
 	inject,
 	input,
 	output,
 } from '@angular/core';
 import { NgtArgs, NgtMesh, injectStore, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ColorRepresentation } from 'three';
 // @ts-expect-error - no type def
@@ -84,7 +83,6 @@ export class NgtsText {
 
 	synced = output<Text>();
 
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 	private invalidate = this.store.select('invalidate');
 
@@ -103,21 +101,18 @@ export class NgtsText {
 			this.troikaMesh.dispose();
 		});
 
-		// NOTE: this could be just effect but autoEffect is used for consistency
-		this.autoEffect(() => {
+		effect(() => {
 			const [font, characters, invalidate] = [this.font(), this.characters(), this.invalidate()];
 			if (font) {
 				preloadFont({ font, characters }, () => invalidate());
 			}
 		});
 
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const [invalidate] = [this.invalidate(), this.text(), this.options()];
-				this.troikaMesh.sync(() => {
-					invalidate();
-					this.synced.emit(this.troikaMesh);
-				});
+		effect(() => {
+			const [invalidate] = [this.invalidate(), this.text(), this.options()];
+			this.troikaMesh.sync(() => {
+				invalidate();
+				this.synced.emit(this.troikaMesh);
 			});
 		});
 	}

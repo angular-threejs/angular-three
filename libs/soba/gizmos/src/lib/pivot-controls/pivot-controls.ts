@@ -1,8 +1,8 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	output,
@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { extend, getLocalState, injectBeforeRender, injectStore, NgtAnyRecord, omit, pick } from 'angular-three';
 import { calculateScaleFactor } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Box3, Group, Matrix4, Mesh, Vector3 } from 'three';
 import { NgtsAxisArrow } from './axis-arrow';
@@ -183,6 +182,7 @@ const defaultOptions: NgtsPivotControlsOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtsAxisArrow, NgtsPlaneSlider, NgtsAxisRotator, NgtsScalingSphere],
 })
+// TODO: PivotControls is not working properly with control flow
 export class NgtsPivotControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, [
@@ -263,52 +263,47 @@ export class NgtsPivotControls {
 	constructor() {
 		extend({ Group });
 
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const anchor = this.anchor();
+			if (!anchor) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const anchor = this.anchor();
-				if (!anchor) return;
+			const childrenContainer = this.childrenRef().nativeElement;
+			const localState = getLocalState(childrenContainer);
+			if (!localState) return;
 
-				const childrenContainer = this.childrenRef().nativeElement;
-				const localState = getLocalState(childrenContainer);
+			const [gizmo, offset, invalidate] = [
+				this.gizmoRef().nativeElement,
+				this.offset(),
+				this.invalidate(),
+				this.options(),
+				[localState.objects(), localState.nonObjects()],
+			];
+			childrenContainer.updateWorldMatrix(true, true);
 
-				if (!localState) return;
+			mPInv.copy(childrenContainer.matrixWorld).invert();
+			bb.makeEmpty();
 
-				const [gizmo, offset, invalidate] = [
-					this.gizmoRef().nativeElement,
-					this.offset(),
-					this.invalidate(),
-					this.options(),
-					localState.objects(),
-				];
-				childrenContainer.updateWorldMatrix(true, true);
-
-				mPInv.copy(childrenContainer.matrixWorld).invert();
-				bb.makeEmpty();
-
-				childrenContainer.traverse((obj) => {
-					if (!(obj as Mesh).geometry) return;
-					if (!(obj as Mesh).geometry.boundingBox) (obj as Mesh).geometry.computeBoundingBox();
-					mL.copy(obj.matrixWorld).premultiply(mPInv);
-					const boundingBox = (obj as Mesh).geometry.boundingBox;
-					if (boundingBox) {
-						bbObj.copy(boundingBox);
-						bbObj.applyMatrix4(mL);
-						bb.union(bbObj);
-					}
-				});
-
-				vCenter.copy(bb.max).add(bb.min).multiplyScalar(0.5);
-				vSize.copy(bb.max).sub(bb.min).multiplyScalar(0.5);
-				vAnchorOffset
-					.copy(vSize)
-					.multiply(new Vector3(...anchor))
-					.add(vCenter);
-				vPosition.set(...offset).add(vAnchorOffset);
-				gizmo.position.copy(vPosition);
-				invalidate();
+			childrenContainer.traverse((obj) => {
+				if (!(obj as Mesh).geometry) return;
+				if (!(obj as Mesh).geometry.boundingBox) (obj as Mesh).geometry.computeBoundingBox();
+				mL.copy(obj.matrixWorld).premultiply(mPInv);
+				const boundingBox = (obj as Mesh).geometry.boundingBox;
+				if (boundingBox) {
+					bbObj.copy(boundingBox);
+					bbObj.applyMatrix4(mL);
+					bb.union(bbObj);
+				}
 			});
+
+			vCenter.copy(bb.max).add(bb.min).multiplyScalar(0.5);
+			vSize.copy(bb.max).sub(bb.min).multiplyScalar(0.5);
+			vAnchorOffset
+				.copy(vSize)
+				.multiply(new Vector3(...anchor))
+				.add(vCenter);
+			vPosition.set(...offset).add(vAnchorOffset);
+			gizmo.position.copy(vPosition);
+			invalidate();
 		});
 
 		const vec = new Vector3();

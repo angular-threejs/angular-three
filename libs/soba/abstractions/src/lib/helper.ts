@@ -7,8 +7,6 @@ import {
 	ElementRef,
 	Injector,
 	input,
-	signal,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { extend, getLocalState, injectBeforeRender, injectStore, resolveRef } from 'angular-three';
@@ -32,30 +30,28 @@ export function injectHelper<
 		const store = injectStore();
 		const scene = store.select('scene');
 
-		const helper = signal<THelperInstance | null>(null);
-
-		effect((onCleanup) => {
-			let currentHelper: THelperInstance | undefined = undefined;
+		const helper = computed(() => {
 			const maybeObject3D = object();
-			if (!maybeObject3D) return;
+			if (!maybeObject3D) return null;
 
 			const object3D = resolveRef(maybeObject3D);
-			if (!object3D) return;
+			if (!object3D) return null;
 
-			currentHelper = new (helperConstructor() as any)(object3D, ...args());
+			const currentHelper: THelperInstance = new (helperConstructor() as any)(object3D, ...args());
+			currentHelper.traverse((child) => (child.raycast = () => null));
+			return currentHelper;
+		});
+
+		effect((onCleanup) => {
+			const currentHelper = helper();
 			if (!currentHelper) return;
 
-			untracked(() => {
-				helper.set(currentHelper);
-			});
+			const _scene = scene();
 
-			// Prevent the helpers from blocking rays
-			currentHelper.traverse((child) => (child.raycast = () => null));
-			scene().add(currentHelper);
+			_scene.add(currentHelper);
 
 			onCleanup(() => {
-				helper.set(null);
-				scene().remove(currentHelper);
+				_scene.remove(currentHelper);
 				currentHelper.dispose?.();
 			});
 		});
@@ -65,7 +61,7 @@ export function injectHelper<
 			if (currentHelper) currentHelper.update();
 		});
 
-		return helper.asReadonly();
+		return helper;
 	});
 }
 

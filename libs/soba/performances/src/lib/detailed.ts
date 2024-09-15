@@ -1,14 +1,13 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
 import { extend, getLocalState, injectBeforeRender, NgtLOD, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { LOD } from 'three';
 
@@ -42,18 +41,14 @@ export class NgtsDetailed {
 	constructor() {
 		extend({ LOD });
 
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const lod = this.lodRef().nativeElement;
-				const localState = getLocalState(lod);
-				if (!localState) return;
-				const [, distances, hysteresis] = [localState.objects(), this.distances(), this.hysteresis()];
-				lod.levels.length = 0;
-				lod.children.forEach((object, index) => {
-					lod.levels.push({ object, distance: distances[index], hysteresis });
-				});
+		effect(() => {
+			const lod = this.lodRef().nativeElement;
+			const localState = getLocalState(lod);
+			if (!localState) return;
+			const [, distances, hysteresis] = [localState.objects(), this.distances(), this.hysteresis()];
+			lod.levels.length = 0;
+			lod.children.forEach((object, index) => {
+				lod.levels.push({ object, distance: distances[index], hysteresis });
 			});
 		});
 

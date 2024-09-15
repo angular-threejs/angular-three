@@ -4,6 +4,8 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
+	inject,
 	input,
 	signal,
 	viewChild,
@@ -13,7 +15,6 @@ import { extend, injectBeforeRender, injectObjectEvents, injectStore } from 'ang
 import { NgtsPoint, NgtsPointsBuffer, NgtsPointsInstances } from 'angular-three-soba/performances';
 import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import { buffer, misc } from 'maath';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { MathUtils, Quaternion, Vector3 } from 'three';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
@@ -119,15 +120,15 @@ class BasicPointsInstancesStory {
 	private store = injectStore();
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
+		const destroyRef = inject(DestroyRef);
+
 		afterNextRender(() => {
-			autoEffect(() => {
-				const raycaster = this.store.snapshot.raycaster;
-				const old = raycaster.params.Points.threshold;
-				raycaster.params.Points.threshold = 0.05;
-				return () => {
-					if (raycaster.params.Points) raycaster.params.Points.threshold = old;
-				};
+			const raycaster = this.store.snapshot.raycaster;
+			const old = raycaster.params.Points.threshold;
+			raycaster.params.Points.threshold = 0.05;
+
+			destroyRef.onDestroy(() => {
+				if (raycaster.params.Points) raycaster.params.Points.threshold = old;
 			});
 		});
 	}

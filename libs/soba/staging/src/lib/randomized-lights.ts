@@ -3,15 +3,14 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 	viewChild,
 } from '@angular/core';
 import { NgtArgs, NgtGroup, extend, omit, pick } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DirectionalLight, Group, MathUtils, Object3D, OrthographicCamera, Vector2, Vector3 } from 'three';
 import { NgtsAccumulativeShadows } from './accumulative-shadows';
@@ -106,14 +105,10 @@ export class NgtsRandomizedLights {
 	constructor() {
 		extend({ Group, DirectionalLight, OrthographicCamera, Vector2 });
 
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const lights = this.lightsRef().nativeElement;
-				this.accumulativeShadows.lightsMap.set(lights.uuid, this.update.bind(this));
-				return () => this.accumulativeShadows.lightsMap.delete(lights.uuid);
-			});
+		effect((onCleanup) => {
+			const lights = this.lightsRef().nativeElement;
+			this.accumulativeShadows.lightsMap.set(lights.uuid, this.update.bind(this));
+			onCleanup(() => this.accumulativeShadows.lightsMap.delete(lights.uuid));
 		});
 	}
 

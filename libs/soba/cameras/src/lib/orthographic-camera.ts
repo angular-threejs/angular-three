@@ -8,13 +8,13 @@ import {
 	afterNextRender,
 	computed,
 	contentChild,
+	effect,
 	input,
 	untracked,
 	viewChild,
 } from '@angular/core';
 import { NgtOrthographicCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Color, Group, OrthographicCamera, Texture } from 'three';
 import { NgtsCameraContent } from './camera-content';
@@ -64,7 +64,7 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 })
 export class NgtsOrthographicCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'envMap',
 		'makeDefault',
 		'manual',
@@ -82,43 +82,45 @@ export class NgtsOrthographicCamera {
 	cameraRef = viewChild.required<ElementRef<OrthographicCamera>>('camera');
 	groupRef = viewChild.required<ElementRef<Group>>('group');
 
-	private autoEffect = injectAutoEffect();
 	private store = injectStore();
 
 	private camera = this.store.select('camera');
-	size = this.store.select('size');
+	protected size = this.store.select('size');
 
-	left = computed(() => this.options().left ?? this.size().width / -2);
-	right = computed(() => this.options().right ?? this.size().width / 2);
-	top = computed(() => this.options().top ?? this.size().height / 2);
-	bottom = computed(() => this.options().bottom ?? this.size().height / -2);
+	protected left = computed(() => this.options().left ?? this.size().width / -2);
+	protected right = computed(() => this.options().right ?? this.size().width / 2);
+	protected top = computed(() => this.options().top ?? this.size().height / 2);
+	protected bottom = computed(() => this.options().bottom ?? this.size().height / -2);
 
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
+
 	private fbo = injectFBO(() => ({ width: this.resolution() }));
-	texture = pick(this.fbo, 'texture');
+	protected texture = pick(this.fbo, 'texture');
 
 	constructor() {
 		extend({ OrthographicCamera, Group });
 
 		afterNextRender(() => {
-			this.autoEffect(() => {
-				if (!this.manual()) {
-					this.cameraRef().nativeElement.updateProjectionMatrix();
-				}
-			});
-
-			this.autoEffect(() => {
-				if (this.makeDefault()) {
-					const oldCam = untracked(this.camera);
-					this.store.update({ camera: this.cameraRef().nativeElement });
-					return () => this.store.update(() => ({ camera: oldCam }));
-				}
-				return;
-			});
-
 			this.cameraRef().nativeElement.updateProjectionMatrix();
+		});
+
+		effect(() => {
+			const manual = this.manual();
+			if (manual) return;
+
+			const camera = this.cameraRef().nativeElement;
+			camera.updateProjectionMatrix();
+		});
+
+		effect((onCleanup) => {
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const oldCam = untracked(this.camera);
+			this.store.update({ camera: this.cameraRef().nativeElement });
+			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
 
 		let count = 0;

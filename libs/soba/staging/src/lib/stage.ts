@@ -1,17 +1,16 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
 	Directive,
+	effect,
 	inject,
 	input,
 	output,
 	signal,
 } from '@angular/core';
 import { extend, NgtArgs, NgtGroup, omit, pick } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { AmbientLight, Group, PointLight, SpotLight, Vector2 } from 'three';
 import { NgtsAccumulativeShadows, NgtsAccumulativeShadowsOptions } from './accumulative-shadows';
@@ -89,14 +88,11 @@ export class NgtsStageRefit {
 	adjustCamera = input.required<boolean>();
 
 	constructor() {
-		const autoEffect = injectAutoEffect();
 		const bounds = inject(NgtsBounds);
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const [, adjustCamera] = [this.radius(), this.adjustCamera()];
-				if (adjustCamera) bounds.refresh().clip().fit();
-			});
+		effect(() => {
+			const [, adjustCamera] = [this.radius(), this.adjustCamera()];
+			if (adjustCamera) bounds.refresh().clip().fit();
 		});
 	}
 }

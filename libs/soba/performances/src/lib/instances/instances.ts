@@ -1,9 +1,9 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	inject,
 	input,
@@ -20,7 +20,6 @@ import {
 	resolveRef,
 } from 'angular-three';
 import { setUpdateRange } from 'angular-three-soba/misc';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DynamicDrawUsage, InstancedBufferAttribute, InstancedMesh, Matrix4, Quaternion, Vector3 } from 'three';
 import { NgtPositionMesh, PositionMesh } from './position-mesh';
@@ -53,12 +52,9 @@ export class NgtsInstance {
 	constructor() {
 		extend({ PositionMesh });
 
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				return this.instances.subscribe(this.positionMeshRef().nativeElement);
-			});
+		effect((onCleanup) => {
+			const cleanup = this.instances.subscribe(this.positionMeshRef().nativeElement);
+			onCleanup(() => cleanup());
 		});
 	}
 }
@@ -110,13 +106,13 @@ export class NgtsInstances {
 	protected readonly DynamicDrawUsage = DynamicDrawUsage;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['limit', 'frames', 'range']);
+	protected parameters = omit(this.options, ['limit', 'frames', 'range']);
 
 	instancedMeshRef = viewChild.required<ElementRef<InstancedMesh>>('instancedMesh');
 
-	limit = pick(this.options, 'limit');
+	private limit = pick(this.options, 'limit');
 
-	buffers = computed(() => {
+	protected buffers = computed(() => {
 		const limit = this.limit();
 		const matrices = new Float32Array(limit * 16);
 
@@ -133,14 +129,10 @@ export class NgtsInstances {
 	constructor() {
 		extend({ InstancedMesh, InstancedBufferAttribute });
 
-		const autoEffect = injectAutoEffect();
-
-		afterNextRender(() => {
-			autoEffect(() => {
-				const instancedMesh = this.instancedMeshRef()?.nativeElement;
-				if (!instancedMesh) return;
-				checkUpdate(instancedMesh.instanceMatrix);
-			});
+		effect(() => {
+			const instancedMesh = this.instancedMeshRef()?.nativeElement;
+			if (!instancedMesh) return;
+			checkUpdate(instancedMesh.instanceMatrix);
 		});
 
 		let iterations = 0;

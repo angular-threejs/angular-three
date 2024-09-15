@@ -1,5 +1,4 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
@@ -15,7 +14,6 @@ import { extend, injectBeforeRender, injectStore, NgtArgs, NgtSpotLight, omit, p
 import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { SpotLightMaterial } from 'angular-three-soba/vanilla-exports';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	ColorRepresentation,
@@ -287,29 +285,24 @@ export class NgtsSpotLightShadowShader {
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
-		const autoEffect = injectAutoEffect();
-		const injector = inject(Injector);
+		injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance);
 
-		afterNextRender(() => {
-			injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance, injector);
+		effect(() => {
+			this.uniforms.uShadowMap.value = this.map();
+		});
 
-			autoEffect(() => {
-				this.uniforms.uShadowMap.value = this.map();
+		effect((onCleanup) => {
+			const fsQuad = this.fsQuad();
+			onCleanup(() => {
+				fsQuad.material.dispose();
+				fsQuad.dispose();
 			});
+		});
 
-			autoEffect(() => {
-				const fsQuad = this.fsQuad();
-				return () => {
-					fsQuad.material.dispose();
-					fsQuad.dispose();
-				};
-			});
-
-			autoEffect(() => {
-				const renderTarget = this.renderTarget();
-				return () => {
-					renderTarget.dispose();
-				};
+		effect((onCleanup) => {
+			const renderTarget = this.renderTarget();
+			onCleanup(() => {
+				renderTarget.dispose();
 			});
 		});
 
@@ -370,10 +363,7 @@ export class NgtsSpotLightShadowNoShader {
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
-		const injector = inject(Injector);
-		afterNextRender(() => {
-			injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance, injector);
-		});
+		injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance);
 	}
 }
 

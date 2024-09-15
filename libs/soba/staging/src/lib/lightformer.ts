@@ -1,15 +1,14 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	effect,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
 import { applyProps, extend, NgtArgs, NgtMesh, NgtVector3, omit, pick, vector3 } from 'angular-three';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DoubleSide, Mesh, MeshBasicMaterial, PlaneGeometry, RingGeometry, Texture } from 'three';
 
@@ -84,23 +83,20 @@ export class NgtsLightformer {
 	constructor() {
 		extend({ Mesh, MeshBasicMaterial, RingGeometry, PlaneGeometry });
 
-		const autoEffect = injectAutoEffect();
+		effect(() => {
+			const material = this.defaultMaterialRef()?.nativeElement;
+			if (!material) return;
 
-		afterNextRender(() => {
-			autoEffect(() => {
-				const material = this.defaultMaterialRef()?.nativeElement;
-				if (material) {
-					applyProps(material, { color: this.color() });
-					material.color.multiplyScalar(this.intensity());
-				}
-			});
+			applyProps(material, { color: this.color() });
+			material.color.multiplyScalar(this.intensity());
+		});
 
-			autoEffect(() => {
-				const target = this.target();
-				if (!target) return;
-				const mesh = this.meshRef().nativeElement;
-				mesh.lookAt(target);
-			});
+		effect(() => {
+			const target = this.target();
+			if (!target) return;
+
+			const mesh = this.meshRef().nativeElement;
+			mesh.lookAt(target);
 		});
 	}
 }
