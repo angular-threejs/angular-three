@@ -23,5 +23,6 @@ export * from './shock-wave';
 export * from './smaa';
 export * from './tilt-shift';
 export * from './tilt-shift-2';
+export * from './tone-mapping';
 export * from './vignette';
 export * from './water';
