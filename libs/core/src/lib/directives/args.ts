@@ -1,16 +1,14 @@
 import {
-	afterNextRender,
 	DestroyRef,
 	Directive,
+	effect,
 	EmbeddedViewRef,
 	inject,
 	input,
-	NgZone,
 	TemplateRef,
 	untracked,
 	ViewContainerRef,
 } from '@angular/core';
-import { injectAutoEffect } from 'ngxtension/auto-effect';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
 
 @Directive({ selector: 'ng-template[args]', standalone: true })
@@ -18,9 +16,7 @@ export class NgtArgs {
 	args = input.required<any[] | null>();
 
 	private vcr = inject(ViewContainerRef);
-	private zone = inject(NgZone);
 	private template = inject(TemplateRef);
-	private autoEffect = injectAutoEffect();
 
 	protected injected = false;
 	protected injectedArgs: any[] | null = null;
@@ -33,15 +29,13 @@ export class NgtArgs {
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
 		}
 
-		afterNextRender(() => {
-			this.autoEffect(() => {
-				const value = this.args();
-				if (value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null)) return;
-				this.injected = false;
-				this.injectedArgs = value;
-				untracked(() => {
-					this.createView();
-				});
+		effect(() => {
+			const value = this.args();
+			if (value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null)) return;
+			this.injected = false;
+			this.injectedArgs = value;
+			untracked(() => {
+				this.createView();
 			});
 		});
 
@@ -63,12 +57,8 @@ export class NgtArgs {
 	}
 
 	private createView() {
-		this.zone.runOutsideAngular(() => {
-			if (this.view && !this.view.destroyed) {
-				this.view.destroy();
-			}
-			this.view = this.vcr.createEmbeddedView(this.template);
-			this.view.detectChanges();
-		});
+		if (this.view && !this.view.destroyed) this.view.destroy();
+		this.view = this.vcr.createEmbeddedView(this.template);
+		this.view.detectChanges();
 	}
 }
