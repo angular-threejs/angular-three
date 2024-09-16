@@ -10,31 +10,33 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 		<ngts-perspective-camera [options]="{ makeDefault: true, position: [5, 5, 5] }" />
 
 		<ngtr-physics [options]="{ debug: true }">
-			<ngt-object3D ngtrRigidBody [options]="{ colliders: 'hull' }" [position]="[0, 5, 0]">
-				<ngt-mesh>
-					<ngt-torus-geometry />
-				</ngt-mesh>
-			</ngt-object3D>
+			<ng-template>
+				<ngt-object3D ngtrRigidBody [options]="{ colliders: 'hull' }" [position]="[0, 5, 0]">
+					<ngt-mesh>
+						<ngt-torus-geometry />
+					</ngt-mesh>
+				</ngt-object3D>
 
-			@if (currentCollider() === 1) {
-				<ngt-object3D ngtrCuboidCollider [args]="[1, 0.5, 1]" (collisionExit)="currentCollider.set(2)" />
-			} @else if (currentCollider() === 2) {
-				<ngt-object3D
-					ngtrCuboidCollider
-					[position]="[0, -1, 0]"
-					[args]="[3, 0.5, 3]"
-					(collisionExit)="currentCollider.set(3)"
-				/>
-			} @else if (currentCollider() === 3) {
-				<ngt-object3D
-					ngtrCuboidCollider
-					[position]="[0, -3, 0]"
-					[args]="[6, 0.5, 6]"
-					(collisionExit)="currentCollider.set(4)"
-				/>
-			} @else {
-				<ngt-object3D ngtrCuboidCollider [position]="[0, -6, 0]" [args]="[20, 0.5, 20]" />
-			}
+				@if (currentCollider() === 1) {
+					<ngt-object3D ngtrCuboidCollider [args]="[1, 0.5, 1]" (collisionExit)="currentCollider.set(2)" />
+				} @else if (currentCollider() === 2) {
+					<ngt-object3D
+						ngtrCuboidCollider
+						[position]="[0, -1, 0]"
+						[args]="[3, 0.5, 3]"
+						(collisionExit)="currentCollider.set(3)"
+					/>
+				} @else if (currentCollider() === 3) {
+					<ngt-object3D
+						ngtrCuboidCollider
+						[position]="[0, -3, 0]"
+						[args]="[6, 0.5, 6]"
+						(collisionExit)="currentCollider.set(4)"
+					/>
+				} @else {
+					<ngt-object3D ngtrCuboidCollider [position]="[0, -6, 0]" [args]="[20, 0.5, 20]" />
+				}
+			</ng-template>
 		</ngtr-physics>
 
 		<ngts-orbit-controls />

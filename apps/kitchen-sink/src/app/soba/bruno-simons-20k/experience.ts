@@ -121,11 +121,13 @@ export class Model {
 		</ngts-environment>
 
 		<ngtr-physics [options]="{ debug: debug(), gravity: [0, -4, 0] }">
-			<app-model [position]="[1, 0, -1.5]" />
-			<app-hats />
-			<ngt-object3D ngtrRigidBody="fixed" [options]="{ colliders: false }" [position]="[0, -1, 0]">
-				<ngt-object3D ngtrCuboidCollider [args]="[1000, 1, 1000]" />
-			</ngt-object3D>
+			<ng-template>
+				<app-model [position]="[1, 0, -1.5]" />
+				<app-hats />
+				<ngt-object3D ngtrRigidBody="fixed" [options]="{ colliders: false }" [position]="[0, -1, 0]">
+					<ngt-object3D ngtrCuboidCollider [args]="[1000, 1, 1000]" />
+				</ngt-object3D>
+			</ng-template>
 		</ngtr-physics>
 
 		<ngts-accumulative-shadows

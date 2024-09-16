@@ -175,6 +175,12 @@ export class NgtrAnyCollider {
 		const worldSingleton = this.physics.worldSingleton();
 		if (!worldSingleton) return;
 
+		const localState = getLocalState(this.objectRef.nativeElement);
+		if (!localState) return;
+
+		const parent = localState.parent();
+		if (!parent || !(parent as Object3D).isObject3D) return;
+
 		const state = this.createColliderState(
 			collider,
 			this.objectRef.nativeElement,
@@ -478,6 +484,11 @@ export class NgtrRigidBody {
 		if (!options.colliders) options.colliders = physicsColliders;
 
 		const objectLocalState = getLocalState(this.objectRef.nativeElement);
+		if (!objectLocalState) return [];
+
+		const parent = objectLocalState.parent();
+		if (!parent || !(parent as Object3D).isObject3D) return [];
+
 		// track object's children
 		objectLocalState?.nonObjects();
 
@@ -510,6 +521,12 @@ export class NgtrRigidBody {
 		if (!body) return;
 
 		const transformState = untracked(this.transformState);
+
+		const localState = getLocalState(this.objectRef.nativeElement);
+		if (!localState) return;
+
+		const parent = localState.parent();
+		if (!parent || !(parent as Object3D).isObject3D) return;
 
 		const state = this.createRigidBodyState(body, this.objectRef.nativeElement);
 		this.physics.rigidBodyStates.set(body.handle, transformState ? transformState(state) : state);

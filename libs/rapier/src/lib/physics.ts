@@ -1,12 +1,16 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
 	computed,
+	contentChild,
 	DestroyRef,
+	Directive,
 	effect,
 	inject,
 	input,
 	signal,
+	TemplateRef,
 	untracked,
 } from '@angular/core';
 import RAPIER, { ColliderHandle, EventQueue, Rotation, Vector, World } from '@dimforge/rapier3d-compat';
@@ -46,26 +50,42 @@ const defaultOptions: NgtrPhysicsOptions = {
 	debug: false,
 };
 
+@Directive({ selector: 'ng-template[rapierFallback]', standalone: true })
+export class NgtrPhysicsFallback {
+	static ngTemplateContextGuard(_: NgtrPhysicsFallback, ctx: unknown): ctx is { error: string } {
+		return true;
+	}
+}
+
 @Component({
 	selector: 'ngtr-physics',
 	standalone: true,
 	template: `
-		@if (debug()) {
-			<ngtr-debug [world]="worldSingleton()?.proxy" />
+		@if (rapierConstruct()) {
+			@if (debug()) {
+				<ngtr-debug [world]="worldSingleton()?.proxy" />
+			}
+
+			<ngtr-frame-stepper
+				[ready]="ready()"
+				[stepFn]="step.bind(this)"
+				[type]="updateLoop()"
+				[updatePriority]="updatePriority()"
+			/>
+
+			<ng-container [ngTemplateOutlet]="content()" />
+		} @else if (rapierError() && !!fallbackContent()) {
+			<ng-container [ngTemplateOutlet]="$any(fallbackContent())" [ngTemplateOutletContext]="{ error: rapierError() }" />
 		}
-		<ngtr-frame-stepper
-			[ready]="ready()"
-			[stepFn]="step.bind(this)"
-			[type]="updateLoop()"
-			[updatePriority]="updatePriority()"
-		/>
-		<ng-content />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrDebug, NgtrFrameStepper],
+	imports: [NgtrDebug, NgtrFrameStepper, NgTemplateOutlet],
 })
 export class NgtrPhysics {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+	content = contentChild.required(TemplateRef);
+	fallbackContent = contentChild(NgtrPhysicsFallback);
 
 	protected updatePriority = pick(this.options, 'updatePriority');
 	protected updateLoop = pick(this.options, 'updateLoop');
@@ -90,7 +110,8 @@ export class NgtrPhysics {
 	private store = injectStore();
 	private destroyRef = inject(DestroyRef);
 
-	private rapierConstruct = signal<typeof RAPIER | null>(null);
+	protected rapierConstruct = signal<typeof RAPIER | null>(null);
+	protected rapierError = signal<string | null>(null);
 	rapier = this.rapierConstruct.asReadonly();
 
 	ready = computed(() => !!this.rapier());
@@ -124,7 +145,7 @@ export class NgtrPhysics {
 			.then(this.rapierConstruct.set.bind(this.rapierConstruct))
 			.catch((err) => {
 				console.error(`[NGT] Failed to load rapier3d-compat`, err);
-				return Promise.reject(err);
+				this.rapierError.set(err?.message ?? err.toString());
 			});
 
 		effect(() => {

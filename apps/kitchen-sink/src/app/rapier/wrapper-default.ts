@@ -42,21 +42,23 @@ export class Floor {}
 			<ng-container *ngComponentOutlet="component()" />
 		} @else {
 			<ngtr-physics [options]="{ debug: debug(), interpolate: interpolate(), paused: paused() }">
-				<ngt-directional-light [castShadow]="true" [position]="10">
-					<ngt-value [rawValue]="-40" attach="shadow.camera.bottom" />
-					<ngt-value [rawValue]="40" attach="shadow.camera.top" />
-					<ngt-value [rawValue]="-40" attach="shadow.camera.left" />
-					<ngt-value [rawValue]="40" attach="shadow.camera.right" />
-					<ngt-value [rawValue]="1024" attach="shadow.mapSize.width" />
-					<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
-				</ngt-directional-light>
+				<ng-template>
+					<ngt-directional-light [castShadow]="true" [position]="10">
+						<ngt-value [rawValue]="-40" attach="shadow.camera.bottom" />
+						<ngt-value [rawValue]="40" attach="shadow.camera.top" />
+						<ngt-value [rawValue]="-40" attach="shadow.camera.left" />
+						<ngt-value [rawValue]="40" attach="shadow.camera.right" />
+						<ngt-value [rawValue]="1024" attach="shadow.mapSize.width" />
+						<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
+					</ngt-directional-light>
 
-				<ngts-environment [options]="{ preset: 'apartment' }" />
-				<ngts-orbit-controls />
+					<ngts-environment [options]="{ preset: 'apartment' }" />
+					<ngts-orbit-controls />
 
-				<ng-container *ngComponentOutlet="component()" />
+					<ng-container *ngComponentOutlet="component()" />
 
-				<app-floor />
+					<app-floor />
+				</ng-template>
 			</ngtr-physics>
 		}
 	`,
