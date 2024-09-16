@@ -153,8 +153,8 @@ export class NgtrInstancedRigidBodies {
 		if (colliders === false) return [];
 
 		const physicsColliders = this.physics.colliders();
-		// if physics colliders is false explicitly, disable auto colliders for this object entirely.
-		if (physicsColliders === false) return [];
+		// if physics colliders is false explicitly AND colliders is not set, disable auto colliders for this object entirely.
+		if (physicsColliders === false && colliders === undefined) return [];
 
 		const options = this.options();
 		// if colliders on object is not set, use physics colliders
