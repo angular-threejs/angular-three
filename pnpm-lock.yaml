@@ -445,8 +445,8 @@ importers:
   apps/astro-docs:
     dependencies:
       '@analogjs/astro-angular':
-        specifier: ^1.6.4-beta.1
-        version: 1.6.4(iabkr4ruufdgcnxuxey5cly2ue)
+        specifier: 1.8.0
+        version: 1.8.0(iabkr4ruufdgcnxuxey5cly2ue)
       '@astrojs/check':
         specifier: ^0.9.3
         version: 0.9.3(prettier@3.3.3)(typescript@5.5.4)
@@ -504,8 +504,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@analogjs/astro-angular@1.6.4':
-    resolution: {integrity: sha512-0Te2Y9KFTpyM33GWHH/1zx4IldTOq3X0GK54nds2oEpGK8zswItRMK00m0a8tZDmKFNQYxMhHC4UxxrWDlTv8g==}
+  '@analogjs/astro-angular@1.8.0':
+    resolution: {integrity: sha512-yOO/JTYkNYgCUZduoc9suCspkaUzW+Cw6nnYk4ktKMCH6j04Sa1hqAxSyXGFaljEfZEYsuZVP303JzhGjSp4Rw==}
     peerDependencies:
       '@angular-devkit/build-angular': '>=16.0.0'
       '@angular/animations': '>=16.0.0'
@@ -13219,7 +13219,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@analogjs/astro-angular@1.6.4(iabkr4ruufdgcnxuxey5cly2ue)':
+  '@analogjs/astro-angular@1.8.0(iabkr4ruufdgcnxuxey5cly2ue)':
     dependencies:
       '@analogjs/vite-plugin-angular': 1.8.0(a3fwvlsovv227vfs4piyp2ttle)
       '@angular-devkit/build-angular': 18.2.4(beop2v2oilvrh6sjsm36dddu5m)
