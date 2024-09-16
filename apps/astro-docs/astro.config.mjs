@@ -55,6 +55,7 @@ export default defineConfig({
 				'ngxtension/**',
 				'@pmndrs/vanilla',
 				'@pmndrs/cannon-worker-api',
+				'three-custom-shader-material',
 			],
 		},
 		esbuild: {
