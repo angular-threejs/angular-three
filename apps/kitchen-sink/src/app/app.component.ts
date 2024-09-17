@@ -1,6 +1,7 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { filter, map, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 @Component({
 	selector: 'app-root',
@@ -17,26 +18,18 @@ import { filter, map, tap } from 'rxjs';
 	imports: [RouterOutlet],
 })
 export class AppComponent {
-	currentRoute = signal('soba');
-
 	private router = inject(Router);
 
-	constructor() {
-		effect((onCleanup) => {
-			const sub = this.router.events
-				.pipe(
-					filter((event) => event instanceof NavigationEnd),
-					map(() => this.router.url),
-					tap((url) => {
-						const [segment] = url.split('/').filter(Boolean);
-						this.currentRoute.set(segment);
-					}),
-				)
-				.subscribe();
-
-			onCleanup(() => sub.unsubscribe());
-		});
-	}
+	currentRoute = toSignal(
+		this.router.events.pipe(
+			filter((event) => event instanceof NavigationEnd),
+			map(() => {
+				const [segment] = this.router.url.split('/').filter(Boolean);
+				return segment;
+			}),
+		),
+		{ initialValue: 'soba' },
+	);
 
 	onChange(event: Event) {
 		const target = event.target as HTMLSelectElement;
