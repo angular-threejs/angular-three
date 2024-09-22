@@ -257,7 +257,9 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (state.flat !== flat) stateToUpdate.flat = flat;
 
 					// Set gl props
-					gl.setClearAlpha(0);
+					if (gl.setClearAlpha) {
+						gl.setClearAlpha(0);
+					}
 					gl.setPixelRatio(makeDpr(state.viewport.dpr));
 					gl.setSize(state.size.width, state.size.height);
 
