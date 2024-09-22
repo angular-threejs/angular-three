@@ -26,6 +26,12 @@ export const appRoutes: Route[] = [
 		title: 'Rapier - Angular Three Demo',
 	},
 	{
+		path: 'misc',
+		loadComponent: () => import('./misc/misc'),
+		loadChildren: () => import('./misc/misc.routes'),
+		title: 'Misc - Angular Three Demo',
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',

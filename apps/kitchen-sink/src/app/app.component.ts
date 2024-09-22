@@ -13,6 +13,7 @@ import { filter, map } from 'rxjs';
 			<option value="cannon">/cannon</option>
 			<option value="postprocessing">/postprocessing</option>
 			<option value="rapier">/rapier</option>
+			<option value="misc">/misc</option>
 		</select>
 	`,
 	imports: [RouterOutlet],
