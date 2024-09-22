@@ -45,7 +45,7 @@ export class Experience {
 	})();
 
 	constructor() {
-		injectBeforeRender(({ scene, delta }) => {
+		injectBeforeRender(({ scene }) => {
 			let count = 0;
 			const time = performance.now() / 1000;
 			scene.traverse((child) => {
