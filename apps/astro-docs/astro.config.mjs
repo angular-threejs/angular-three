@@ -174,6 +174,9 @@ export default defineConfig({
 						{ label: 'Introduction', slug: 'cannon/introduction' },
 						{ label: 'How it works', slug: 'cannon/how-it-works' },
 						{ label: 'Debug', slug: 'cannon/debug' },
+						{ label: 'Physics', slug: 'cannon/physics' },
+						{ label: 'Body Functions', slug: 'cannon/bodies' },
+						{ label: 'Constraint Functions', slug: 'cannon/constraints' },
 					],
 				},
 				{
@@ -182,6 +185,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Introduction', slug: 'postprocessing/introduction' },
 						{ label: 'How it works', slug: 'postprocessing/how-it-works' },
+						{ label: 'EffectComposer', slug: 'postprocessing/effect-composer' },
 					],
 				},
 				{

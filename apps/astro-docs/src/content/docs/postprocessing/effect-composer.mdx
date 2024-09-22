@@ -1,0 +1,76 @@
+---
+title: EffectComposer
+description: Details about the Angular Three EffectComposer
+---
+
+# EffectComposer
+
+The EffectComposer is a crucial component in Angular Three's postprocessing pipeline. It allows you to combine multiple postprocessing effects and apply them to your 3D scene. The EffectComposer manages the rendering process, applying effects in the order they are defined.
+
+## Usage
+
+To use the EffectComposer, wrap your effects inside the `<ngtp-effect-composer>` component:
+
+```html
+<ngtp-effect-composer>
+  <!-- Add your effects here -->
+  <ngtp-bloom [options]="bloomOptions" />
+  <ngtp-vignette [options]="vignetteOptions" />
+</ngtp-effect-composer>
+```
+
+## Options
+
+The EffectComposer accepts the following options:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| enabled | boolean | true | Enables or disables the EffectComposer |
+| depthBuffer | boolean | undefined | Enables depth buffer |
+| stencilBuffer | boolean | undefined | Enables stencil buffer |
+| autoClear | boolean | true | Automatically clears the render target |
+| resolutionScale | number | undefined | Scales the render resolution |
+| multisampling | number | 8 | Sets the number of samples for multisampling anti-aliasing |
+| frameBufferType | TextureDataType | HalfFloatType | Sets the frame buffer type |
+| renderPriority | number | 1 | Sets the render priority |
+| camera | Camera | undefined | Custom camera for rendering |
+| scene | Scene | undefined | Custom scene for rendering |
+
+## Examples
+
+1. Basic usage with Bloom and Vignette effects:
+
+```html
+<ngtp-effect-composer>
+  <ngtp-bloom [options]="{ luminanceThreshold: 0.6, luminanceSmoothing: 0.5, intensity: 1.2 }" />
+  <ngtp-vignette [options]="{ offset: 0.5, darkness: 0.5 }" />
+</ngtp-effect-composer>
+```
+
+2. Using EffectComposer with custom options:
+
+```html
+<ngtp-effect-composer [options]="{ autoClear: false, multisampling: 0 }">
+  <ngtp-outline [options]="{ edgeStrength: 2.5, pulseSpeed: 0, blur: true, kernelSize: KernelSize.SMALL }" />
+  <ngtp-smaa />
+</ngtp-effect-composer>
+```
+
+3. Combining EffectComposer with other scene elements:
+
+```html
+<ngt-color attach="background" *args="['black']" />
+
+<ngts-orbit-controls />
+
+<ngt-ambient-light />
+<ngt-point-light [position]="[0, -1, -1]" [decay]="0" color="green" />
+<ngt-directional-light [position]="[0, 1, 1]" />
+
+<!-- Your 3D objects here -->
+
+<ngtp-effect-composer>
+  <ngtp-outline [options]="outlineOptions" />
+  <ngtp-smaa />
+</ngtp-effect-composer>
+```
