@@ -48,15 +48,19 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 		const debug = inject(NgtcDebug, { optional: true });
 
 		const transform = transformArgs ?? defaultTransformArgs[type];
-		const bodyRef = isSignal(ref) ? ref : signal(ref);
+		const isRefSignal = isSignal(ref);
+		const bodyRef = (isRefSignal ? ref : signal(ref)) as WritableSignal<TObject | undefined>;
 		const body = computed(() => resolveRef(bodyRef()));
 
 		const api = computed(() => {
 			const _body = body();
 			if (!_body) return null;
+
 			const { worker, ...rest } = physics.api;
-			if (!worker()) return null;
-			return makeBodyApi(_body, worker(), rest);
+			const _worker = worker();
+			if (!_worker) return null;
+
+			return makeBodyApi(_body, _worker, rest);
 		});
 
 		effect((onCleanup) => {
@@ -65,9 +69,10 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 
 			const object = body();
 
-			if (!isSignal(ref) && !object) {
+			if (!isRefSignal && !object) {
+				// TODO (signal): find a better way to handle this. no setting signal
 				untracked(() => {
-					(bodyRef as WritableSignal<TObject | undefined>).set(resolveRef(ref));
+					bodyRef.set(resolveRef(ref));
 				});
 				return;
 			}
@@ -103,6 +108,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 					}),
 				];
 			})();
+
 			// Register on mount, unregister on unmount
 			currentWorker.addBodies({
 				props: props.map(({ onCollide, onCollideBegin, onCollideEnd, ...serializableProps }) => {

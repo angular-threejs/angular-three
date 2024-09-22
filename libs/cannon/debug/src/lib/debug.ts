@@ -48,8 +48,6 @@ export class NgtcDebug {
 
 	private cannonDebugger!: ReturnType<typeof CannonDebugger>;
 
-	api = {};
-
 	constructor() {
 		afterNextRender(() => {
 			this.defaultScene().add(this.scene);
@@ -61,6 +59,8 @@ export class NgtcDebug {
 
 		injectBeforeRender(() => {
 			if (!this.cannonDebugger) return;
+
+			const enabled = this.debug().enabled;
 			const refs = this.physics.api.refs;
 			for (const uuid in this.bodyMap) {
 				const ref = refs[uuid];
@@ -71,13 +71,9 @@ export class NgtcDebug {
 					body.quaternion.copy(q as unknown as CQuarternion);
 				}
 			}
-			for (const child of this.scene.children) {
-				child.visible = this.debug().enabled;
-			}
 
-			if (this.debug().enabled) {
-				this.cannonDebugger.update();
-			}
+			for (const child of this.scene.children) child.visible = enabled;
+			if (enabled) this.cannonDebugger.update();
 		});
 	}
 

@@ -1,12 +1,9 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	DestroyRef,
-	EmbeddedViewRef,
 	Signal,
 	afterNextRender,
 	effect,
-	inject,
 	input,
 	signal,
 	untracked,
@@ -152,8 +149,6 @@ export class NgtcPhysics {
 		worker: this.worker.asReadonly(),
 	};
 
-	private ref?: EmbeddedViewRef<{ $implicit: NgtcPhysicsApi }>;
-
 	constructor() {
 		afterNextRender(() => {
 			this.worker.set(new CannonWorkerAPI(this.options()));
@@ -179,10 +174,6 @@ export class NgtcPhysics {
 			timeSinceLastCalled += delta;
 			worker.step({ maxSubSteps, stepSize, timeSinceLastCalled });
 			timeSinceLastCalled = 0;
-		});
-
-		inject(DestroyRef).onDestroy(() => {
-			this.ref?.destroy();
 		});
 	}
 
