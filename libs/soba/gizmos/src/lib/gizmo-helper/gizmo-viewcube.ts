@@ -28,7 +28,7 @@ type XYZ = [number, number, number];
 const colors = { bg: '#f0f0f0', hover: '#999', text: 'black', stroke: 'black' };
 const defaultFaces = ['Right', 'Left', 'Top', 'Bottom', 'Front', 'Back'];
 
-interface CommonOptions {
+export interface NgtsViewcubeCommonOptions {
 	font: string;
 	opacity: number;
 	color: string;
@@ -38,7 +38,7 @@ interface CommonOptions {
 	faces: string[];
 }
 
-const defaultFaceMaterialOptions: CommonOptions = {
+const defaultFaceMaterialOptions: NgtsViewcubeCommonOptions = {
 	font: '20px Inter var, Arial, sans-serif',
 	faces: defaultFaces,
 	color: colors.bg,
@@ -122,8 +122,8 @@ export class FaceMaterial {
 	standalone: true,
 	template: `
 		<ngt-mesh
-			(pointerout)="$event.stopPropagation(); hover.set(-1)"
-			(pointermove)="$event.stopPropagation(); hover.set(Math.floor($any($event).faceIndex / 2))"
+			(pointerout)="$any($event).stopPropagation(); hover.set(-1)"
+			(pointermove)="$any($event).stopPropagation(); hover.set(Math.floor($any($event).faceIndex / 2))"
 			(click)="internalOnClick($any($event))"
 		>
 			<ngt-box-geometry />
@@ -137,7 +137,7 @@ export class FaceMaterial {
 	imports: [FaceMaterial],
 })
 export class FaceCube {
-	options = input({} as Partial<CommonOptions>);
+	options = input({} as Partial<NgtsViewcubeCommonOptions>);
 	onClick = input<NgtEventHandlers['click']>();
 
 	private gizmoHelper = inject(NgtsGizmoHelper);
@@ -168,8 +168,8 @@ export class FaceCube {
 		<ngt-mesh
 			[scale]="1.01"
 			[position]="position()"
-			(pointerout)="$event.stopPropagation(); hover.set(false)"
-			(pointerover)="$event.stopPropagation(); hover.set(true)"
+			(pointerout)="$any($event).stopPropagation(); hover.set(false)"
+			(pointerover)="$any($event).stopPropagation(); hover.set(true)"
 			(click)="internalOnClick($any($event))"
 		>
 			<ngt-mesh-basic-material [transparent]="true" [opacity]="0.6" [color]="color()" [visible]="hover()" />
@@ -210,7 +210,7 @@ export class EdgeCube {
 	}
 }
 
-export type NgtsGizmoViewcubeOptions = Partial<CommonOptions>;
+export type NgtsGizmoViewcubeOptions = Partial<NgtsViewcubeCommonOptions>;
 
 @Component({
 	selector: 'ngts-gizmo-viewcube',
@@ -241,7 +241,7 @@ export type NgtsGizmoViewcubeOptions = Partial<CommonOptions>;
 	imports: [FaceCube, EdgeCube],
 })
 export class NgtsGizmoViewcube {
-	options = input({} as NgtsGizmoViewcubeOptions);
+	options = input({} as Partial<NgtsGizmoViewcubeOptions>);
 	click = output<NgtThreeEvent<MouseEvent>>();
 
 	protected hoverColor = pick(this.options, 'hoverColor');
