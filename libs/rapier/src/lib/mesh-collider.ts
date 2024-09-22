@@ -47,18 +47,18 @@ export class NgtrMeshCollider {
 		rigidBodyOptions.colliders = this.colliders();
 
 		const objectLocalState = getLocalState(this.objectRef.nativeElement);
+		if (!objectLocalState) return [];
+
 		// track object's children
-		objectLocalState?.nonObjects();
-		objectLocalState?.objects();
+		objectLocalState.nonObjects();
+		objectLocalState.objects();
 
 		return createColliderOptions(this.objectRef.nativeElement, rigidBodyOptions, false);
 	});
 
 	constructor() {
 		extend({ Object3D });
-		if (!this.objectRef.nativeElement.userData) {
-			this.objectRef.nativeElement.userData = {};
-		}
+		this.objectRef.nativeElement.userData ??= {};
 		this.objectRef.nativeElement.userData['ngtrRapierType'] = 'MeshCollider';
 	}
 }

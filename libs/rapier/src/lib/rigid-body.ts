@@ -486,11 +486,9 @@ export class NgtrRigidBody {
 		const objectLocalState = getLocalState(this.objectRef.nativeElement);
 		if (!objectLocalState) return [];
 
-		const parent = objectLocalState.parent();
+		// track object's parent and non-object children
+		const [parent] = [objectLocalState.parent(), objectLocalState.nonObjects()];
 		if (!parent || !(parent as Object3D).isObject3D) return [];
-
-		// track object's children
-		objectLocalState?.nonObjects();
 
 		return createColliderOptions(this.objectRef.nativeElement, options, true);
 	});

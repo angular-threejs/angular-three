@@ -105,7 +105,8 @@ export class NgtrPhysics {
 	paused = pick(this.options, 'paused');
 	debug = pick(this.options, 'debug');
 	colliders = pick(this.options, 'colliders');
-	gravity = vector3(this.options, 'gravity');
+
+	private gravity = vector3(this.options, 'gravity');
 
 	private store = injectStore();
 	private destroyRef = inject(DestroyRef);
@@ -125,8 +126,8 @@ export class NgtrPhysics {
 	colliderStates: NgtrColliderStateMap = new Map();
 	rigidBodyEvents: NgtrEventMap = new Map();
 	colliderEvents: NgtrEventMap = new Map();
-	beforeStepCallbacks: NgtrWorldStepCallbackSet = new Set();
-	afterStepCallbacks: NgtrWorldStepCallbackSet = new Set();
+	private beforeStepCallbacks: NgtrWorldStepCallbackSet = new Set();
+	private afterStepCallbacks: NgtrWorldStepCallbackSet = new Set();
 
 	private eventQueue = computed(() => {
 		const rapier = this.rapier();

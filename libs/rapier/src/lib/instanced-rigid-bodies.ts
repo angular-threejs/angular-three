@@ -77,7 +77,7 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 		'[quaternion]': 'quaternion()',
 		'[userData]': 'userData()',
 	},
-	imports: [NgtrRigidBody, NgtrRigidBody, NgtrAnyCollider],
+	imports: [NgtrRigidBody, NgtrAnyCollider],
 })
 export class NgtrInstancedRigidBodies {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);
@@ -161,22 +161,22 @@ export class NgtrInstancedRigidBodies {
 		if (!options.colliders) options.colliders = physicsColliders;
 
 		const objectLocalState = getLocalState(this.objectRef.nativeElement);
-		// track object's children
-		objectLocalState?.nonObjects();
+		if (!objectLocalState) return [];
+
+		// track object's parent and non-object children
+		const [parent] = [objectLocalState.parent(), objectLocalState.nonObjects()];
+		if (!parent || !(parent as Object3D).isObject3D) return [];
 
 		return createColliderOptions(this.objectRef.nativeElement, options);
 	});
 
 	constructor() {
 		extend({ Object3D });
-		effect(() => {
-			this.setInstancedMeshMatrixEffect();
-		});
-	}
 
-	private setInstancedMeshMatrixEffect() {
-		const instancedMesh = this.instancedMesh();
-		if (!instancedMesh) return;
-		instancedMesh.instanceMatrix.setUsage(DynamicDrawUsage);
+		effect(() => {
+			const instancedMesh = this.instancedMesh();
+			if (!instancedMesh) return;
+			instancedMesh.instanceMatrix.setUsage(DynamicDrawUsage);
+		});
 	}
 }
