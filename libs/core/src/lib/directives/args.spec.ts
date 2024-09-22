@@ -38,8 +38,8 @@ describe('args', () => {
 
 		expect(fixture.debugElement.queryAll(By.css('div')).length).toEqual(1);
 		const args = fixture.componentInstance.args();
-		expect(args!.value).toEqual([1, 2, 3]);
-		expect(args!.value).toEqual(null);
+		expect(args?.value).toEqual([1, 2, 3]);
+		expect(args?.value).toEqual(null);
 	});
 });
 
