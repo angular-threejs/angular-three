@@ -1,52 +1,29 @@
-import { DestroyRef, Directive, effect, inject, input, model, signal, untracked, WritableSignal } from '@angular/core';
-import { injectStore } from 'angular-three';
-import { Object3D } from 'three';
-import { COLLECTIBLES_SPEED, PLANE_AMP_HEIGHT, PLANE_DEFAULT_HEIGHT, SEA_RADIUS } from '../constants';
+import { DestroyRef, Directive, inject, model, signal, untracked, WritableSignal } from '@angular/core';
+import { PLANE_AMP_HEIGHT, PLANE_DEFAULT_HEIGHT, SEA_RADIUS } from '../constants';
 import { GameStore } from '../game.store';
+import { Spawnable } from '../spawnable/spawnables.store';
 
 export type CollectibleState = 'spawned' | 'collected' | 'skipped';
 
-@Directive()
+@Directive({
+	standalone: true,
+	hostDirectives: [{ directive: Spawnable, inputs: ['initialAngle', 'initialDistance', 'positionX', 'positionY'] }],
+})
 export class Collectible {
-	initialAngle = input(0);
-	initialDistance = input(0);
-	positionX = input(0);
-	positionY = input(0);
 	state = model.required<CollectibleState>();
 
-	protected angle = 0;
-	protected distance = 0;
+	private destroyRef = inject(DestroyRef);
+	private collectiblesStore = inject(CollectiblesStore);
+	private spawnable = inject(Spawnable, { host: true });
 
-	protected gameStore = inject(GameStore);
-	protected collectiblesStore = inject(CollectiblesStore);
-	protected store = injectStore();
+	constructor() {
+		this.spawnable.onCollide(() => this.state.set('collected'));
+		this.spawnable.onSkip(() => this.state.set('skipped'));
 
-	protected constructor() {
 		this.collectiblesStore.collectibles.add(this);
-
-		effect(() => {
-			this.angle = this.initialAngle();
-			this.distance = this.initialDistance();
-		});
-
-		inject(DestroyRef).onDestroy(() => {
+		this.destroyRef.onDestroy(() => {
 			this.collectiblesStore.collectibles.delete(this);
 		});
-	}
-
-	protected rotateAroundSea(object: Object3D, deltaTime: number) {
-		this.angle += deltaTime * 1_000 * this.gameStore.state.speed * COLLECTIBLES_SPEED;
-		if (this.angle > Math.PI * 2) {
-			this.angle -= Math.PI * 2;
-		}
-		object.position.x = Math.cos(this.angle) * (this.distance ?? 1);
-		object.position.y = -SEA_RADIUS + Math.sin(this.angle) * (this.distance ?? 1);
-	}
-
-	protected collide(a: Object3D, b: Object3D, tolerance: number) {
-		const diffPos = a.position.clone().sub(b.position.clone());
-		const d = diffPos.length();
-		return d < tolerance;
 	}
 }
 

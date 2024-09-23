@@ -1,30 +1,22 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
-import { gsap, Power2 } from 'gsap';
 import {
-	Color,
-	ColorRepresentation,
-	CylinderGeometry,
-	Mesh,
-	MeshPhongMaterial,
-	TetrahedronGeometry,
-	Vector3,
-} from 'three';
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
+	inject,
+	viewChild,
+} from '@angular/core';
+import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { CylinderGeometry, Mesh, MeshPhongMaterial } from 'three';
 import { COIN_DISTANCE_TOLERANCE, COLOR_COINS } from '../constants';
+import { GameStore } from '../game.store';
+import { Spawnable, SPAWNABLE_DISTANCE_TOLERANCE, SPAWNABLE_PARTICLE_COLOR } from '../spawnable/spawnables.store';
 import { Collectible } from './collectibles.store';
 
 const coinGeometry = new CylinderGeometry(4, 4, 1, 10);
 const coinMaterial = new MeshPhongMaterial({
 	color: COLOR_COINS,
 	shininess: 1,
-	specular: 0xffffff,
-	flatShading: true,
-});
-
-const particleGeometry = new TetrahedronGeometry(3, 0);
-const particleMaterial = new MeshPhongMaterial({
-	color: 0x009999,
-	shininess: 0,
 	specular: 0xffffff,
 	flatShading: true,
 });
@@ -38,78 +30,35 @@ const particleMaterial = new MeshPhongMaterial({
 			[castShadow]="true"
 			[geometry]="coinGeometry"
 			[material]="coinMaterial"
-			[position]="[positionX(), positionY(), 0]"
+			[position]="[spawnable.positionX(), spawnable.positionY(), 0]"
 		/>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs],
+	hostDirectives: [{ directive: Collectible, inputs: ['state'], outputs: ['stateChange'] }],
+	providers: [
+		{ provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: COIN_DISTANCE_TOLERANCE },
+		{ provide: SPAWNABLE_PARTICLE_COLOR, useValue: COLOR_COINS },
+	],
 })
-export class Coin extends Collectible {
+export class Coin {
 	protected coinGeometry = coinGeometry;
 	protected coinMaterial = coinMaterial;
 
 	private coinRef = viewChild.required<ElementRef<Mesh>>('coin');
 
-	constructor() {
-		super();
-		injectBeforeRender(({ delta }) => {
-			const coin = this.coinRef().nativeElement;
+	private gameStore = inject(GameStore);
+	protected spawnable = inject(Spawnable, { host: true });
 
-			this.rotateAroundSea(coin, delta);
+	constructor() {
+		this.spawnable.spawnable = this.coinRef;
+		this.spawnable.onCollide(() => this.gameStore.incrementCoin());
+
+		injectBeforeRender(() => {
+			const coin = this.coinRef().nativeElement;
 			coin.rotation.x += Math.random() * 0.1;
 			coin.rotation.y += Math.random() * 0.1;
-
-			const airplaneRef = this.gameStore.airplaneRef;
-			if (!airplaneRef) return;
-
-			const airplane = airplaneRef().nativeElement;
-			if (!airplane) return;
-
-			if (this.collide(airplane, coin, COIN_DISTANCE_TOLERANCE)) {
-				this.spawnParticles(coin.position.clone(), 5, COLOR_COINS, 0.8);
-				this.gameStore.incrementCoin();
-				this.state.set('collected');
-			} else if (this.angle > Math.PI) {
-				this.state.set('skipped');
-			}
 		});
-	}
-
-	// NOTE: we don't render the particles on the template because of performance
-	//  If we were to render them on the template, we would need to use a Signal for the condition render.
-	//  This would mean triggering CD.
-	private spawnParticles(pos: Vector3, count: number, color: ColorRepresentation, scale: number) {
-		for (let i = 0; i < count; i++) {
-			const mesh = new Mesh(particleGeometry, particleMaterial);
-			this.store.snapshot.scene.add(mesh);
-
-			mesh.visible = true;
-			mesh.position.copy(pos);
-			mesh.material.color = new Color(color);
-			mesh.material.needsUpdate = true;
-			mesh.scale.set(scale, scale, scale);
-			const targetX = pos.x + (-1 + Math.random() * 2) * 50;
-			const targetY = pos.y + (-1 + Math.random() * 2) * 50;
-			const targetZ = pos.z + (-1 + Math.random() * 2) * 50;
-			const speed = 0.6 + Math.random() * 0.2;
-			gsap.to(mesh.rotation, {
-				duration: speed,
-				x: Math.random() * 12,
-				y: Math.random() * 12,
-			});
-			gsap.to(mesh.scale, { duration: speed, x: 0.1, y: 0.1, z: 0.1 });
-			gsap.to(mesh.position, {
-				duration: speed,
-				x: targetX,
-				y: targetY,
-				z: targetZ,
-				delay: Math.random() * 0.1,
-				ease: Power2.easeOut,
-				onComplete: () => {
-					this.store.snapshot.scene.remove(mesh);
-				},
-			});
-		}
 	}
 }

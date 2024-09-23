@@ -39,6 +39,8 @@ export const DISTANCE_FOR_COINS_SPAWN = 50;
 export const COLLECTIBLE_DISTANCE_TOLERANCE = 15;
 export const COLLECTIBLES_SPEED = 0.6;
 
+export const SPAWNABLES_SPEED = 0.6;
+
 export const ENEMY_DISTANCE_TOLERANCE = 10;
 export const ENEMIES_SPEED = 0.6;
 export const DISTANCE_FOR_ENEMIES_SPAWN = 50;
