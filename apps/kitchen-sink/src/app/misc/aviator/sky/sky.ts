@@ -40,9 +40,8 @@ export class Sky {
 	private skyRef = viewChild.required<ElementRef<Object3D>>('sky');
 	private clouds = viewChildren(Cloud);
 	private cloudObjects = computed(() => {
-		const clouds = this.clouds();
 		const objects: Object3D[] = [];
-		for (const cloud of clouds) {
+		for (const cloud of this.clouds()) {
 			objects.push(cloud.cloudRef().nativeElement);
 		}
 		return objects;

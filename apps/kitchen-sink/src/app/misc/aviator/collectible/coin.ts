@@ -55,14 +55,15 @@ export class Coin extends Collectible {
 		super();
 		injectBeforeRender(({ delta }) => {
 			const coin = this.coinRef().nativeElement;
-			if (!coin) return;
 
 			this.rotateAroundSea(coin, delta);
-
 			coin.rotation.x += Math.random() * 0.1;
 			coin.rotation.y += Math.random() * 0.1;
 
-			const airplane = this.gameStore.airplane();
+			const airplaneRef = this.gameStore.airplaneRef;
+			if (!airplaneRef) return;
+
+			const airplane = airplaneRef().nativeElement;
 			if (!airplane) return;
 
 			if (this.collide(airplane, coin, COIN_DISTANCE_TOLERANCE)) {

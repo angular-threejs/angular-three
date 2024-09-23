@@ -60,14 +60,15 @@ export class Propeller {
 			const propellerGeometry = this.propellerGeometryRef()?.nativeElement;
 			if (!propellerGeometry) return;
 
-			propellerGeometry.attributes['position'].array[4 * 3 + 1] -= 5;
-			propellerGeometry.attributes['position'].array[4 * 3 + 2] += 5;
-			propellerGeometry.attributes['position'].array[5 * 3 + 1] -= 5;
-			propellerGeometry.attributes['position'].array[5 * 3 + 2] -= 5;
-			propellerGeometry.attributes['position'].array[6 * 3 + 1] += 5;
-			propellerGeometry.attributes['position'].array[6 * 3 + 2] += 5;
-			propellerGeometry.attributes['position'].array[7 * 3 + 1] += 5;
-			propellerGeometry.attributes['position'].array[7 * 3 + 2] -= 5;
+			const positions = propellerGeometry.attributes['position'].array;
+			positions[4 * 3 + 1] -= 5;
+			positions[4 * 3 + 2] += 5;
+			positions[5 * 3 + 1] -= 5;
+			positions[5 * 3 + 2] -= 5;
+			positions[6 * 3 + 1] += 5;
+			positions[6 * 3 + 2] += 5;
+			positions[7 * 3 + 1] += 5;
+			positions[7 * 3 + 2] -= 5;
 		});
 
 		injectBeforeRender(({ delta }) => {

@@ -115,8 +115,7 @@ export class Pilot {
 		});
 
 		effect(() => {
-			const sideGeometries = this.sideGeometryRefs();
-			for (const sideGeometry of sideGeometries) {
+			for (const sideGeometry of this.sideGeometryRefs()) {
 				sideGeometry.nativeElement.applyMatrix4(new Matrix4().makeTranslation(-6, 0, 0));
 			}
 		});
@@ -124,7 +123,6 @@ export class Pilot {
 		let angleHairs = 0;
 		injectBeforeRender(({ delta }) => {
 			const topHair = this.topHairRef().nativeElement;
-			if (!topHair) return;
 
 			for (let i = 0; i < topHair.children.length; i++) {
 				const child = topHair.children[i];

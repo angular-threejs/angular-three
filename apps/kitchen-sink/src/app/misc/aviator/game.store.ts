@@ -1,10 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { ElementRef, Injectable, Signal, signal } from '@angular/core';
 import { Object3D } from 'three';
 
 @Injectable()
 export class GameStore {
 	coins = signal(0);
-	airplane = signal<Object3D | null>(null);
+	airplaneRef?: Signal<ElementRef<Object3D>>;
 
 	// NOTE: these aren't signals because they are game state used in the animation loop.
 	state = {

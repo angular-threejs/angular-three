@@ -1,4 +1,5 @@
 import {
+	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
@@ -122,15 +123,9 @@ export class Airplane {
 	constructor() {
 		const gameStore = inject(GameStore);
 
-		effect(
-			() => {
-				const airplane = this.airplaneRef().nativeElement;
-				if (!airplane) return;
-
-				gameStore.airplane.set(airplane);
-			},
-			{ allowSignalWrites: true },
-		);
+		afterNextRender(() => {
+			gameStore.airplaneRef = this.airplaneRef;
+		});
 
 		effect(() => {
 			const suspensionGeometry = this.suspensionGeometryRef()?.nativeElement;
