@@ -6,6 +6,10 @@ const routes: Routes = [
 		loadComponent: () => import('./svg-renderer/svg-renderer'),
 	},
 	{
+		path: 'aviator',
+		loadComponent: () => import('./aviator/aviator'),
+	},
+	{
 		path: '',
 		redirectTo: 'svg-renderer',
 		pathMatch: 'full',
