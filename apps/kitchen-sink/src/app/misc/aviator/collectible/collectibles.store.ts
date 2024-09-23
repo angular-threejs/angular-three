@@ -1,8 +1,10 @@
-import { DestroyRef, Directive, effect, inject, input, model, signal, WritableSignal } from '@angular/core';
+import { DestroyRef, Directive, effect, inject, input, model, signal, untracked, WritableSignal } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { Object3D } from 'three';
 import { COLLECTIBLES_SPEED, PLANE_AMP_HEIGHT, PLANE_DEFAULT_HEIGHT, SEA_RADIUS } from '../constants';
 import { GameStore } from '../game.store';
+
+export type CollectibleState = 'spawned' | 'collected' | 'skipped';
 
 @Directive()
 export class Collectible {
@@ -10,7 +12,7 @@ export class Collectible {
 	initialDistance = input(0);
 	positionX = input(0);
 	positionY = input(0);
-	state = model.required<'spawned' | 'collected' | 'skipped'>();
+	state = model.required<CollectibleState>();
 
 	protected angle = 0;
 	protected distance = 0;
@@ -56,7 +58,7 @@ export class CollectiblesStore {
 	coins = signal<
 		Array<{
 			key: number;
-			state: WritableSignal<'spawned' | 'collected' | 'skipped'>;
+			state: WritableSignal<CollectibleState>;
 			angle: number;
 			distance: number;
 			positionY: number;
@@ -70,14 +72,15 @@ export class CollectiblesStore {
 		const amplitude = 10 + Math.round(Math.random() * 10);
 
 		this.coins.update((prev) => [
-			...prev,
+			// NOTE: we filter out all the coins that are already collected or skipped
+			...prev.filter((coin) => untracked(coin.state) === 'spawned'),
 			...Array.from({ length: nCoins }).map((_, index) => {
 				const angle = -(index * 0.02);
 				const distance = d + Math.cos(index * 0.5) * amplitude;
 
 				return {
 					key: this.gameStore.statistics.coinsSpawned + index,
-					state: signal<'spawned' | 'collected' | 'skipped'>('spawned'),
+					state: signal<CollectibleState>('spawned'),
 					angle,
 					distance,
 					positionY: -SEA_RADIUS + Math.sin(angle) * distance,
