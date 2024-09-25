@@ -25,10 +25,10 @@ import { MeshDiscardMaterial, MeshTransmissionMaterial } from 'angular-three-sob
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BackSide, Color, FrontSide, Mesh, NoToneMapping, Texture, ToneMapping } from 'three';
 
-type MeshTransmissionMaterialOptions = ConstructorParameters<typeof MeshTransmissionMaterial>[0];
+export type MeshTransmissionMaterialOptions = ConstructorParameters<typeof MeshTransmissionMaterial>[0];
 
 export type NgtsMeshTransmissionMaterialOptions = Partial<NgtMeshPhysicalMaterial> &
-	Omit<MeshTransmissionMaterialOptions, 'buffer' | 'anisotropicBlur'> & {
+	Omit<MeshTransmissionMaterialOptions, 'buffer' | 'anisotropicBlur' | 'samples' | 'transmissionSampler'> & {
 		anisotropicBlur?: number;
 		buffer?: Texture;
 		/** transmissionSampler, you can use the threejs transmission sampler texture that is

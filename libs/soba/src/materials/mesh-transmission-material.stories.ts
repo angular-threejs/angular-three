@@ -77,13 +77,7 @@ class GelatinousCube {
 				}"
 			>
 				<ngts-randomized-lights
-					[options]="{
-						radius: 10,
-						ambient: 0.5,
-						intensity: Math.PI,
-						position: [2.5, 8, -2.5],
-						bias: 0.001,
-					}"
+					[options]="{ radius: 10, ambient: 0.5, intensity: Math.PI, position: [2.5, 8, -2.5], bias: 0.001 }"
 				/>
 			</ngts-accumulative-shadows>
 		</ngt-group>
