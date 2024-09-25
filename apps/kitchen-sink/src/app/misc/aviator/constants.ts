@@ -33,6 +33,7 @@ export const WAVES_MAX_SPEED = 0.003;
 export const CAMERA_SENSITIVITY = 0.002;
 
 export const COIN_DISTANCE_TOLERANCE = 15;
+export const POWER_UP_DISTANCE_TOLERANCE = 15;
 export const COINS_SPEED = 0.5;
 export const DISTANCE_FOR_COINS_SPAWN = 50;
 
@@ -44,6 +45,8 @@ export const SPAWNABLES_SPEED = 0.6;
 export const ENEMY_DISTANCE_TOLERANCE = 10;
 export const ENEMIES_SPEED = 0.6;
 export const DISTANCE_FOR_ENEMIES_SPAWN = 50;
+
+export const ATTRACTION_FACTOR = 0.75;
 
 export const COLORS = {
 	red: 0xf25346,
@@ -66,4 +69,5 @@ export const COLOR_SEA_LEVEL = [
 ];
 
 export const COLOR_COINS = 0xffd700; // 0x009999
+export const COLOR_POWER_UPS = 0x8f9992;
 export const COLOR_COLLECTIBLE_BUBBLE = COLOR_COINS;

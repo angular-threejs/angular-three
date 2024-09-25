@@ -10,9 +10,11 @@ import {
 	Signal,
 } from '@angular/core';
 import { injectBeforeRender, injectStore } from 'angular-three';
+import { injectIntersect } from 'angular-three-soba/misc';
 import { gsap, Power2 } from 'gsap';
+import { expo } from 'maath/easing';
 import { ColorRepresentation, Mesh, MeshPhongMaterial, Object3D, TetrahedronGeometry, Vector3 } from 'three';
-import { SEA_RADIUS, SPAWNABLES_SPEED } from '../constants';
+import { ATTRACTION_FACTOR, SEA_RADIUS, SPAWNABLES_SPEED } from '../constants';
 import { GameStore } from '../game.store';
 
 const particleGeometry = new TetrahedronGeometry(3, 0);
@@ -20,6 +22,7 @@ const particleMaterial = new MeshPhongMaterial({ shininess: 0, specular: 0xfffff
 
 export const SPAWNABLE_DISTANCE_TOLERANCE = new InjectionToken<number>('SPAWNABLE_DISTANCE_TOLERANCE');
 export const SPAWNABLE_PARTICLE_COLOR = new InjectionToken<ColorRepresentation>('SPAWNABLE_PARTICLE_COLOR');
+export const SPAWNABLE_ATTRACTABLE = new InjectionToken<boolean>('SPAWNABLE_ATTRACTABLE', { factory: () => false });
 
 @Directive({ standalone: true })
 export class Spawnable {
@@ -37,12 +40,18 @@ export class Spawnable {
 
 	private distanceTolerance = inject(SPAWNABLE_DISTANCE_TOLERANCE);
 	private particleColor = inject(SPAWNABLE_PARTICLE_COLOR);
+	private attractable = inject(SPAWNABLE_ATTRACTABLE);
 
 	// TODO: is there a better way to do this?
-	spawnable?: Signal<ElementRef<Object3D> | undefined>;
-
+	//  We need the actual Object3D here and usually this will be the viewChild on the bottom-most of the composition hierarchy.
+	//  We can't exactly use InjectionToken because of circular dependency.
+	private spawnable?: Signal<ElementRef<Object3D> | undefined>;
 	private onCollides: Array<() => void> = [];
 	private onSkips: Array<() => void> = [];
+
+	private isIntersect = injectIntersect(() => this.spawnable?.()?.nativeElement);
+
+	private tempVector = new Vector3();
 
 	constructor() {
 		effect(() => {
@@ -50,17 +59,23 @@ export class Spawnable {
 			this.distance = this.initialDistance();
 		});
 
-		injectBeforeRender(({ delta }) => {
+		injectBeforeRender(({ delta, clock }) => {
 			const spawnable = this.spawnable?.()?.nativeElement;
 			if (!spawnable) return;
-
-			this.rotateAroundSea(spawnable, delta);
 
 			const airplane = this.gameStore.airplaneRef?.()?.nativeElement;
 			if (!airplane) return;
 
-			if (this.collide(airplane, spawnable, this.distanceTolerance)) {
-				this.spawnParticles(spawnable.position.clone(), 5, this.particleColor, 0.8);
+			this.rotateAroundSea(spawnable, delta);
+
+			const magnetValue = this.gameStore.magnet();
+
+			if (this.attractable && magnetValue > 0 && this.angle > Math.PI / 2.1 && this.isIntersect()) {
+				this.attractToAirplane(spawnable, airplane, clock.elapsedTime);
+			}
+
+			if (this.collide()) {
+				this.spawnParticles(5, 0.8);
 				this.onCollides.forEach((onCollide) => onCollide());
 			} else if (this.angle > Math.PI) {
 				this.onSkips.forEach((onSkip) => onSkip());
@@ -68,6 +83,10 @@ export class Spawnable {
 		});
 
 		this.destroyRef.onDestroy(() => {});
+	}
+
+	assignSpawnable(spawnable: Signal<ElementRef<Object3D> | undefined>) {
+		this.spawnable = spawnable;
 	}
 
 	onCollide(callback: () => void) {
@@ -87,16 +106,25 @@ export class Spawnable {
 		object.position.y = -SEA_RADIUS + Math.sin(this.angle) * (this.distance ?? 1);
 	}
 
-	private collide(a: Object3D, b: Object3D, tolerance: number) {
-		const diffPos = a.position.clone().sub(b.position.clone());
+	private collide() {
+		const spawnable = this.spawnable?.()?.nativeElement;
+		if (!spawnable) return false;
+
+		const airplane = this.gameStore.airplaneRef?.()?.nativeElement;
+		if (!airplane) return false;
+
+		const diffPos = airplane.position.clone().sub(spawnable.position.clone());
 		const d = diffPos.length();
-		return d < tolerance;
+		return d < this.distanceTolerance;
 	}
 
 	// NOTE: we don't render the particles on the template because of performance
 	//  If we were to render them on the template, we would need to use a Signal for the condition render.
 	//  This would mean triggering CD.
-	private spawnParticles(pos: Vector3, count: number, color: ColorRepresentation, scale: number) {
+	private spawnParticles(count: number, scale: number) {
+		const pos = this.spawnable?.()?.nativeElement.position.clone();
+		if (!pos) return;
+
 		for (let i = 0; i < count; i++) {
 			const mesh = new Mesh(particleGeometry, particleMaterial);
 			this.store.snapshot.scene.add(mesh);
@@ -106,7 +134,7 @@ export class Spawnable {
 			mesh.position.copy(pos);
 			mesh.scale.setScalar(scale);
 
-			mesh.material.color.set(color);
+			mesh.material.color.set(this.particleColor);
 			mesh.material.needsUpdate = true;
 
 			const targetX = pos.x + (-1 + Math.random() * 2) * 50;
@@ -132,6 +160,13 @@ export class Spawnable {
 				},
 			});
 		}
+	}
+
+	// TODO: make this better. This sucks!
+	private attractToAirplane(spawnable: Object3D, airplane: Object3D, elapsedTime: number) {
+		this.tempVector.subVectors(airplane.position, spawnable.position);
+		const easeFactor = expo.out((Math.sin(elapsedTime * 2) + 1) / 2);
+		spawnable.position.add(this.tempVector.multiplyScalar(easeFactor * ATTRACTION_FACTOR));
 	}
 }
 

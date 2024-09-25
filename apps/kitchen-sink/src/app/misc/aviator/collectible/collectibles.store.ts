@@ -1,9 +1,28 @@
-import { DestroyRef, Directive, inject, model, signal, untracked, WritableSignal } from '@angular/core';
+import { Directive, inject, Injectable, model, signal, untracked, WritableSignal } from '@angular/core';
 import { PLANE_AMP_HEIGHT, PLANE_DEFAULT_HEIGHT, SEA_RADIUS } from '../constants';
 import { GameStore } from '../game.store';
 import { Spawnable } from '../spawnable/spawnables.store';
 
+export const POWER_UP_TYPES = ['armor', 'magnet', 'doubleCoin'] as const;
+export type PowerUpType = (typeof POWER_UP_TYPES)[number];
+
 export type CollectibleState = 'spawned' | 'collected' | 'skipped';
+export interface CollectibleItem {
+	state: WritableSignal<CollectibleState>;
+	angle: number;
+	distance: number;
+	positionY: number;
+	positionX: number;
+}
+
+export interface CollectibleCoin extends CollectibleItem {
+	key: number;
+}
+
+export interface CollectiblePowerUp extends CollectibleItem {
+	type: PowerUpType;
+	key: string;
+}
 
 @Directive({
 	standalone: true,
@@ -12,36 +31,24 @@ export type CollectibleState = 'spawned' | 'collected' | 'skipped';
 export class Collectible {
 	state = model.required<CollectibleState>();
 
-	private destroyRef = inject(DestroyRef);
-	private collectiblesStore = inject(CollectiblesStore);
 	private spawnable = inject(Spawnable, { host: true });
 
 	constructor() {
 		this.spawnable.onCollide(() => this.state.set('collected'));
 		this.spawnable.onSkip(() => this.state.set('skipped'));
-
-		this.collectiblesStore.collectibles.add(this);
-		this.destroyRef.onDestroy(() => {
-			this.collectiblesStore.collectibles.delete(this);
-		});
 	}
 }
 
+@Injectable()
 export class CollectiblesStore {
-	collectibles = new Set<Collectible>();
-
 	private gameStore = inject(GameStore);
 
-	coins = signal<
-		Array<{
-			key: number;
-			state: WritableSignal<CollectibleState>;
-			angle: number;
-			distance: number;
-			positionY: number;
-			positionX: number;
-		}>
-	>([]);
+	coins = signal<Array<CollectibleCoin>>([]);
+	powerUps = signal<Array<CollectiblePowerUp>>([]);
+
+	state = {
+		lastPowerUpSpawnedAt: 0,
+	};
 
 	spawnCoins() {
 		const nCoins = 1 + Math.floor(Math.random() * 10);
@@ -66,6 +73,25 @@ export class CollectiblesStore {
 			}),
 		]);
 		this.gameStore.statistics.coinsSpawned += nCoins;
+	}
+
+	spawnPowerUps() {
+		const type = POWER_UP_TYPES[Math.floor(Math.random() * 3)];
+
+		this.powerUps.update((prev) => [
+			...prev.filter((powerUp) => untracked(powerUp.state) === 'spawned'),
+			{
+				key: this.gameStore.statistics.powerUpsSpawned + type,
+				type,
+				state: signal<CollectibleState>('spawned'),
+				angle: 0,
+				distance: 1,
+				positionY: -SEA_RADIUS,
+				positionX: SEA_RADIUS + PLANE_DEFAULT_HEIGHT,
+			},
+		]);
+		this.gameStore.statistics.powerUpsSpawned += 1;
+		this.state.lastPowerUpSpawnedAt = this.gameStore.statistics.coinsCollected;
 	}
 
 	private randomFromRange(min: number, max: number) {

@@ -10,7 +10,12 @@ import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { CylinderGeometry, Mesh, MeshPhongMaterial } from 'three';
 import { COIN_DISTANCE_TOLERANCE, COLOR_COINS } from '../constants';
 import { GameStore } from '../game.store';
-import { Spawnable, SPAWNABLE_DISTANCE_TOLERANCE, SPAWNABLE_PARTICLE_COLOR } from '../spawnable/spawnables.store';
+import {
+	Spawnable,
+	SPAWNABLE_ATTRACTABLE,
+	SPAWNABLE_DISTANCE_TOLERANCE,
+	SPAWNABLE_PARTICLE_COLOR,
+} from '../spawnable/spawnables.store';
 import { Collectible } from './collectibles.store';
 
 const coinGeometry = new CylinderGeometry(4, 4, 1, 10);
@@ -22,7 +27,7 @@ const coinMaterial = new MeshPhongMaterial({
 });
 
 @Component({
-	selector: 'app-coin',
+	selector: 'app-collectible-coin',
 	standalone: true,
 	template: `
 		<ngt-mesh
@@ -40,9 +45,10 @@ const coinMaterial = new MeshPhongMaterial({
 	providers: [
 		{ provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: COIN_DISTANCE_TOLERANCE },
 		{ provide: SPAWNABLE_PARTICLE_COLOR, useValue: COLOR_COINS },
+		{ provide: SPAWNABLE_ATTRACTABLE, useValue: true },
 	],
 })
-export class Coin {
+export class CollectibleCoin {
 	protected coinGeometry = coinGeometry;
 	protected coinMaterial = coinMaterial;
 
@@ -52,7 +58,7 @@ export class Coin {
 	protected spawnable = inject(Spawnable, { host: true });
 
 	constructor() {
-		this.spawnable.spawnable = this.coinRef;
+		this.spawnable.assignSpawnable(this.coinRef);
 		this.spawnable.onCollide(() => this.gameStore.incrementCoin());
 
 		injectBeforeRender(() => {
