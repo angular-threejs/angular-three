@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsHTML, NgtsHTMLContent, NgtsHTMLContentOptions, NgtsHTMLOptions } from 'angular-three-soba/misc';
 import { ColorRepresentation } from 'three';
-import { makeDecorators, makeStoryObject, Turnable } from '../setup-canvas';
+import { makeDecorators, makeStoryFunction, makeStoryObject, Turnable } from '../setup-canvas';
 
 @Component({
 	selector: 'html-scene',
@@ -85,10 +85,7 @@ export default {
 	decorators: makeDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(HtmlScene, {
-	canvasOptions: { camera: { position: [-20, 20, -20] } },
-});
-
+export const Default = makeStoryFunction(HtmlScene, { camera: { position: [-20, 20, -20] } });
 export const Transform = makeStoryObject(HtmlTransformScene, {
 	canvasOptions: { camera: { position: [-20, 20, -20] } },
 	argsOptions: {

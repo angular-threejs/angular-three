@@ -18,6 +18,7 @@ import {
 	effect,
 	inject,
 	input,
+	isSignal,
 	reflectComponentType,
 	untracked,
 	viewChild,
@@ -128,8 +129,17 @@ export class StorybookScene {
 			this.inputsMirror = this.storyMirror.inputs.map((input) => input.propName);
 		}
 
+		const component = this.ref.instance as any;
+
 		for (const key of this.inputsMirror) {
-			this.ref.setInput(key, options[key]);
+			const signalInput = component[key];
+			const isSignalInput = signalInput && isSignal(signalInput);
+			const value =
+				isSignalInput && options[key] === undefined && untracked(signalInput) !== undefined
+					? untracked(signalInput)
+					: options[key];
+
+			this.ref.setInput(key, value);
 		}
 	}
 }
