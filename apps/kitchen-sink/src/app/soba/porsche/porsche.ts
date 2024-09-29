@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { injectBeforeRender, NgtCanvas } from 'angular-three';
+import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Vector3 } from 'three';
 import { color, colorAsHex } from './color';
 import { Lightformers } from './lightformers';
 import { Model } from './model';
+
+injectGLTF.preload(() => './911-transformed.glb');
 
 @Component({
 	standalone: true,
@@ -21,16 +24,20 @@ import { Model } from './model';
 		</ngt-spot-light>
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
 
-		<app-porsche [position]="[-0.5, -0.18, 0]" [rotation]="[0, Math.PI / 5, 0]" [scale]="1.6" />
+		<app-porsche-model #model [position]="[-0.5, -0.18, 0]" [rotation]="[0, Math.PI / 5, 0]" [scale]="1.6" />
 
-		<ngts-accumulative-shadows [options]="{ position: [0, -1.16, 0], frames: 100, alphaTest: 0.9, scale: 10 }">
+		<ngts-accumulative-shadows
+			[options]="{ position: [0, -1.16, 0], frames: 100, alphaTest: 0.9, scale: 10, visible: !!model.gltf() }"
+		>
 			<ngts-randomized-lights
 				[options]="{ amount: 8, radius: 10, ambient: 0.5, position: [1, 5, -1], intensity: 1.5 * Math.PI }"
 			/>
 		</ngts-accumulative-shadows>
 
 		<ngts-environment [options]="{ background: true, blur: 1, resolution: 256, frames: Infinity }">
-			<app-lightformers * />
+			<ng-template>
+				<app-lightformers />
+			</ng-template>
 		</ngts-environment>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input } from '@angular/core';
 import { applyProps, NgtArgs } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -5,24 +6,25 @@ import { Mesh } from 'three';
 import { color } from './color';
 
 @Component({
-	selector: 'app-porsche',
+	selector: 'app-porsche-model',
 	standalone: true,
 	template: `
 		<ngt-primitive *args="[model()]" [parameters]="{ position: position(), rotation: rotation(), scale: scale() }" />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+	imports: [NgtArgs, NgTemplateOutlet],
 })
 export class Model {
 	position = input([0, 0, 0]);
 	rotation = input([0, 0, 0]);
 	scale = input(1);
 
-	private gltf = injectGLTF(() => './911-transformed.glb');
+	gltf = injectGLTF(() => './911-transformed.glb');
 	protected model = computed(() => {
 		const gltf = this.gltf();
 		if (!gltf) return null;
+
 		const { scene, nodes, materials } = gltf;
 
 		Object.values(nodes).forEach((node) => {
