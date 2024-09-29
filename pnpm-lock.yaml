@@ -153,8 +153,8 @@ importers:
         specifier: ^2.2.8
         version: 2.2.8
       three-custom-shader-material:
-        specifier: ^5.4.0
-        version: 5.4.0(react@18.3.1)(three@0.169.0)
+        specifier: ^6.0.3
+        version: 6.0.3(react@18.3.1)(three@0.169.0)
       three-mesh-bvh:
         specifier: ^0.7.8
         version: 0.7.8(three@0.169.0)
@@ -12054,6 +12054,18 @@ packages:
       react:
         optional: true
 
+  three-custom-shader-material@6.0.3:
+    resolution: {integrity: sha512-/y4gWelHZf/fmkCJbg+9Upd0GQxeocT69wa0giEQOaGkeoKspODDp0rs4EUEbpmFhglSOEQA8vcu8eU6wVFuFw==}
+    peerDependencies:
+      '@react-three/fiber': '>=8.0'
+      react: '>=18.0'
+      three: '>=0.163'
+    peerDependenciesMeta:
+      '@react-three/fiber':
+        optional: true
+      react:
+        optional: true
+
   three-mesh-bvh@0.7.8:
     resolution: {integrity: sha512-BGEZTOIC14U0XIRw3tO4jY7IjP7n7v24nv9JXS1CyeVRWOCkcOMhRnmENUjuV39gktAw4Ofhr0OvIAiTspQrrw==}
     deprecated: Deprecated due to three.js version incompatibility. Please use v0.8.0, instead.
@@ -22957,7 +22969,8 @@ snapshots:
       glsl-token-properties: 1.0.1
       glsl-token-scope: 1.1.2
 
-  glsl-token-functions@1.0.1: {}
+  glsl-token-functions@1.0.1:
+    optional: true
 
   glsl-token-inject-block@1.1.0: {}
 
@@ -29021,6 +29034,13 @@ snapshots:
       glsl-token-string: 1.0.1
       glsl-tokenizer: 2.1.5
       object-hash: 3.0.0
+      three: 0.169.0
+    optionalDependencies:
+      react: 18.3.1
+    optional: true
+
+  three-custom-shader-material@6.0.3(react@18.3.1)(three@0.169.0):
+    dependencies:
       three: 0.169.0
     optionalDependencies:
       react: 18.3.1
