@@ -112,6 +112,11 @@
           "semverBump": "patch"
         }
       }
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github"
+      }
     }
   }
 }
