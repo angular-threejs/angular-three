@@ -45,7 +45,12 @@
 			"cache": true,
 			"dependsOn": ["^build"],
 			"inputs": ["production", "^production"]
-		}
+		},
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/libs/{projectName}"
+      }
+    }
 	},
 	"namedInputs": {
 		"default": ["{projectRoot}/**/*", "sharedGlobals"],
@@ -86,5 +91,27 @@
 				"cacheableOperations": ["build-storybook"]
 			}
 		}
-	}
+	},
+  "release": {
+    "projects": ["core", "cannon", "postprocessing", "soba", "rapier"],
+    "version": {
+      "preVersionCommand": "nx package core",
+      "generatorOptions": {
+        "packageRoot": "dist/libs/{projectName}",
+        "currentVersionResolver": "git-tag"
+      }
+    },
+    "conventionalCommits": {
+      "types": {
+        "refactor": {
+          "changelog": true,
+          "semverBump": "patch"
+        },
+        "perf": {
+          "changelog": true,
+          "semverBump": "patch"
+        }
+      }
+    }
+  }
 }
