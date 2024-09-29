@@ -1,24 +1,22 @@
-import { computed, effect, ElementRef, Injector, isSignal, signal, untracked } from '@angular/core';
+import { computed, effect, ElementRef, Injector, isSignal, Signal, signal, untracked } from '@angular/core';
 import { injectBeforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';
 
-type NgtsAnimationApi<T extends AnimationClip> = {
+type NgtsAnimationApi<T extends string> = {
 	clips: AnimationClip[];
 	mixer: AnimationMixer;
-	names: T['name'][];
-	actions: { [key in T['name']]: AnimationAction | null };
+	names: T[];
+	actions: { [key in T]: AnimationAction | null };
 };
 
-export type NgtsAnimation<TAnimation extends AnimationClip = AnimationClip> =
-	| TAnimation[]
-	| { animations: TAnimation[] };
+export type NgtsAnimation = AnimationClip[] | { animations: AnimationClip[] };
 
 /**
  * Use afterNextRender
  */
-export function injectAnimations<TAnimation extends AnimationClip>(
-	animations: () => NgtsAnimation<TAnimation> | undefined | null,
+export function injectAnimations<TAnimations extends string>(
+	animations: () => NgtsAnimation | undefined | null,
 	object: ElementRef<Object3D> | Object3D | (() => ElementRef<Object3D> | Object3D | undefined | null),
 	{ injector }: { injector?: Injector } = {},
 ) {
@@ -30,9 +28,9 @@ export function injectAnimations<TAnimation extends AnimationClip>(
 		});
 
 		let cached = {} as Record<string, AnimationAction>;
-		const actions = {} as NgtsAnimationApi<TAnimation>['actions'];
-		const clips = [] as NgtsAnimationApi<TAnimation>['clips'];
-		const names = [] as NgtsAnimationApi<TAnimation>['names'];
+		const actions = {} as NgtsAnimationApi<TAnimations>['actions'];
+		const clips = [] as NgtsAnimationApi<TAnimations>['clips'];
+		const names = [] as NgtsAnimationApi<TAnimations>['names'];
 
 		const actualObject = computed(() => {
 			if (isSignal(object) || typeof object === 'function') {
@@ -57,10 +55,10 @@ export function injectAnimations<TAnimation extends AnimationClip>(
 			for (let i = 0; i < animationClips.length; i++) {
 				const clip = animationClips[i];
 
-				names.push(clip.name);
+				names.push(clip.name as TAnimations);
 				clips.push(clip);
 
-				if (!actions[clip.name as TAnimation['name']]) {
+				if (!actions[clip.name as TAnimations]) {
 					Object.defineProperty(actions, clip.name, {
 						enumerable: true,
 						get: () => {
@@ -92,6 +90,6 @@ export function injectAnimations<TAnimation extends AnimationClip>(
 			});
 		});
 
-		return { clips, mixer, actions, names, ready };
+		return { clips, mixer, actions, names, ready } as NgtsAnimationApi<TAnimations> & { ready: Signal<boolean> };
 	});
 }
