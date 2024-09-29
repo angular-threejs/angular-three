@@ -22,25 +22,9 @@
 			},
 			"defaultConfiguration": "production"
 		},
-    "publish": {
-      "command": "npm publish",
-      "options": {
-        "cwd": "dist/libs/rapier"
-      }
+    "test": {
+      "executor": "@analogjs/vitest-angular:test"
     },
-    "publish-beta": {
-      "command": "npm publish --tag=beta",
-      "options": {
-        "cwd": "dist/libs/rapier"
-      }
-    },
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-			"options": {
-				"jestConfig": "libs/rapier/jest.config.ts"
-			}
-		},
 		"lint": {
 			"executor": "@nx/eslint:lint"
 		}

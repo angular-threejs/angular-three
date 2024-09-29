@@ -22,18 +22,6 @@
 			},
 			"defaultConfiguration": "production"
 		},
-		"publish": {
-			"command": "npm publish",
-			"options": {
-				"cwd": "dist/libs/cannon"
-			}
-		},
-		"publish-beta": {
-			"command": "npm publish --tag=beta",
-			"options": {
-				"cwd": "dist/libs/cannon"
-			}
-		},
 		"test": {
 			"executor": "@analogjs/vitest-angular:test"
 		},

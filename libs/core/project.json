@@ -41,8 +41,7 @@
 					"pnpm exec nx build core",
 					"pnpm exec nx build-ecosystem core",
 					"pnpm exec nx generate-json core",
-					"pnpm exec nx build plugin",
-					"pnpm exec nx post-package core"
+					"pnpm exec nx build plugin"
 				],
 				"parallel": false
 			}
@@ -52,25 +51,6 @@
 			"options": {
 				"commands": ["node ./tools/scripts/generate-json.mjs", "node ./tools/scripts/generate-soba-json.mjs"],
 				"parallel": true
-			}
-		},
-		"publish": {
-			"command": "npm publish",
-			"options": {
-				"cwd": "dist/libs/core"
-			}
-		},
-		"publish-beta": {
-			"command": "npm publish --tag=beta",
-			"options": {
-				"cwd": "dist/libs/core"
-			}
-		},
-		"post-package": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": ["node ./tools/scripts/release/post-package-core.mjs"],
-				"parallel": false
 			}
 		},
 		"test": {
