@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { injectBeforeRender } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsPointMaterial } from 'angular-three-soba/materials';
@@ -6,6 +6,7 @@ import { NgtsPointsBuffer } from 'angular-three-soba/performances';
 import { random } from 'maath';
 
 @Component({
+	selector: 'app-stars-experience',
 	standalone: true,
 	template: `
 		<ngt-group [rotation]="[0, 0, Math.PI / 4]">
@@ -16,7 +17,9 @@ import { random } from 'maath';
 			</ngts-points-buffer>
 		</ngt-group>
 
-		<ngts-orbit-controls [options]="{ enableZoom: false, enablePan: false }" />
+		@if (withEffect()) {
+			<ngts-orbit-controls [options]="{ enableZoom: false, enablePan: false }" />
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +30,8 @@ export class Experience {
 	protected readonly sphere = random.inSphere(new Float32Array(5000), { radius: 1.5 }) as Float32Array;
 
 	private pointsBufferRef = viewChild.required(NgtsPointsBuffer);
+
+	withEffect = input(true);
 
 	constructor() {
 		injectBeforeRender(({ delta }) => {

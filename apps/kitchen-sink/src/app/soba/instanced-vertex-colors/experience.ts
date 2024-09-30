@@ -3,6 +3,7 @@ import {
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
+	input,
 	signal,
 	untracked,
 	viewChild,
@@ -12,6 +13,8 @@ import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
 import { Color, InstancedMesh, Object3D } from 'three';
 import niceColors from '../../colors';
+
+/* credit: https://pmndrs.github.io/examples/demos/instanced-vertex-colors */
 
 const tempObject = new Object3D();
 const tempColor = new Color();
@@ -99,14 +102,17 @@ export class Boxes {
 }
 
 @Component({
+	selector: 'app-instanced-vertex-colors-experience',
 	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['#282828']" />
 		<app-boxes />
-		<ngtp-effect-composer [options]="{ enableNormalPass: false }">
-			<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: Math.PI }" />
-			<ngtp-bloom [options]="{ luminanceThreshold: 1, intensity: 0.5 * Math.PI, levels: 9, mipmapBlur: true }" />
-		</ngtp-effect-composer>
+		@if (withEffect()) {
+			<ngtp-effect-composer [options]="{ enableNormalPass: false }">
+				<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: Math.PI }" />
+				<ngtp-bloom [options]="{ luminanceThreshold: 1, intensity: 0.5 * Math.PI, levels: 9, mipmapBlur: true }" />
+			</ngtp-effect-composer>
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,4 +121,6 @@ export class Boxes {
 })
 export class Experience {
 	protected readonly Math = Math;
+
+	withEffect = input(true);
 }

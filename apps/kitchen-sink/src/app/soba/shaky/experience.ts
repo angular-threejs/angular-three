@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
+	input,
+	viewChild,
+} from '@angular/core';
 import { injectBeforeRender, injectStore, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsEnvironment } from 'angular-three-soba/staging';
@@ -75,16 +82,20 @@ export class Rig {
 }
 
 @Component({
+	selector: 'app-shaky-experience',
 	standalone: true,
 	template: `
 		<ngt-fog attach="fog" *args="['lightpink', 60, 100]" />
 
 		<app-model [position]="[-4.5, -4, 0]" [rotation]="[0, -2.8, 0]" />
 		<app-light />
-		<app-rig />
 
 		<ngts-environment [options]="{ preset: 'warehouse' }" />
-		<ngts-orbit-controls [options]="{ makeDefault: true, minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }" />
+
+		@if (withEffect()) {
+			<app-rig />
+			<ngts-orbit-controls [options]="{ makeDefault: true, minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }" />
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,4 +104,6 @@ export class Rig {
 })
 export class Experience {
 	protected readonly Math = Math;
+
+	withEffect = input(true);
 }

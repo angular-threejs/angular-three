@@ -92,6 +92,7 @@ export class Bot {
 }
 
 @Component({
+	selector: 'app-basic-experience',
 	standalone: true,
 	template: `
 		<ngt-color *args="['#303030']" attach="background" />
@@ -100,15 +101,17 @@ export class Bot {
 
 		<app-bot />
 
-		<ngtp-effect-composer>
-			@if (bloom()) {
-				<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
-			}
+		@if (withEffect()) {
+			<ngtp-effect-composer>
+				@if (bloom()) {
+					<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
+				}
 
-			@if (glitch()) {
-				<ngtp-glitch />
-			}
-		</ngtp-effect-composer>
+				@if (glitch()) {
+					<ngtp-glitch />
+				}
+			</ngtp-effect-composer>
+		}
 
 		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
 	`,
@@ -121,4 +124,6 @@ export class Experience {
 	protected Math = Math;
 	protected bloom = bloom;
 	protected glitch = glitch;
+
+	withEffect = input(true);
 }

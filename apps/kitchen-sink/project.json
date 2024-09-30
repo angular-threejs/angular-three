@@ -21,7 +21,10 @@
 					}
 				],
 				"styles": ["apps/kitchen-sink/src/styles.css"],
-				"scripts": []
+				"scripts": [],
+        "loader": {
+          ".blob": "file"
+        }
 			},
 			"configurations": {
 				"production": {

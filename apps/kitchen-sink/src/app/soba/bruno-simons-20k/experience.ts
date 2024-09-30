@@ -102,6 +102,7 @@ export class Model {
 }
 
 @Component({
+	selector: 'app-bruno-experience',
 	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['#f0f0f0']" />
@@ -146,22 +147,24 @@ export class Model {
 			/>
 		</ngts-accumulative-shadows>
 
-		<ngtp-effect-composer>
-			<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: 1 }" />
-			<ngtp-depth-of-field [options]="{ target: [0, 0, -2.5], focusRange: 0.1, bokehScale: 10 }" />
-			<ngtp-tone-mapping />
-		</ngtp-effect-composer>
+		@if (withEffect()) {
+			<ngtp-effect-composer>
+				<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: 1 }" />
+				<ngtp-depth-of-field [options]="{ target: [0, 0, -2.5], focusRange: 0.1, bokehScale: 10 }" />
+				<ngtp-tone-mapping />
+			</ngtp-effect-composer>
 
-		<ngts-orbit-controls
-			[options]="{
-				autoRotate: true,
-				autoRotateSpeed: 0.1,
-				enablePan: false,
-				enableZoom: false,
-				minPolarAngle: Math.PI / 4,
-				maxPolarAngle: Math.PI / 4,
-			}"
-		/>
+			<ngts-orbit-controls
+				[options]="{
+					autoRotate: true,
+					autoRotateSpeed: 0.1,
+					enablePan: false,
+					enableZoom: false,
+					minPolarAngle: Math.PI / 4,
+					maxPolarAngle: Math.PI / 4,
+				}"
+			/>
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -189,4 +192,6 @@ export class Experience {
 	protected readonly Math = Math;
 
 	protected debug = debug;
+
+	withEffect = input(true);
 }

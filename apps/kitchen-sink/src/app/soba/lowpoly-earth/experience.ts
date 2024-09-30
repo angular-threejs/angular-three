@@ -125,6 +125,7 @@ export class Model {
 }
 
 @Component({
+	selector: 'app-lowpoly-earth-experience',
 	standalone: true,
 	template: `
 		<ngt-color *args="['#ececec']" attach="background" />

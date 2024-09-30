@@ -70,6 +70,10 @@ const routes: Routes = [
 		loadComponent: () => import('./instanced-vertex-colors/instanced-vertex-colors'),
 	},
 	{
+		path: 'portal-shapes',
+		loadComponent: () => import('./portal-shapes/portal-shapes'),
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',

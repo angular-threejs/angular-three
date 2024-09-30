@@ -53,6 +53,7 @@ export class LODBust {
 }
 
 @Component({
+	selector: 'app-lod-experience',
 	standalone: true,
 	template: `
 		@for (p of positions; track $index) {
