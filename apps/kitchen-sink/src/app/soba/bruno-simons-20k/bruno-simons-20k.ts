@@ -14,16 +14,8 @@ import { debug, Experience } from './experience';
 			[camera]="{ position: [-30, 35, -15], near: 30, far: 55, fov: 12 }"
 		/>
 
-		<div class="absolute top-2 right-2 flex flex-col gap-2">
-			<code>
-				Credits:
-				<a class="underline" href="https://pmndrs.github.io/examples/demos/bruno-simons-20k-challenge" target="_blank">
-					Bruno Simons 20K Challenge with R3F
-				</a>
-			</code>
-			<div class="flex gap-2 items-center">
-				<button [(toggleButton)]="debug">Toggle debug</button>
-			</div>
+		<div class="absolute top-10 right-2">
+			<button [(toggleButton)]="debug">Toggle debug</button>
 		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

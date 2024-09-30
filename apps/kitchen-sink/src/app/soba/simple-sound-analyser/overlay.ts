@@ -26,27 +26,19 @@ import { tracks, zoomIndex, zoomTrack } from './tracks';
 			}
 		</div>
 		<div
-			class="absolute top-2 left-0 flex w-full items-center justify-between px-2 opacity-0"
+			class="absolute top-2 left-0 flex w-full px-2 opacity-0 flex-col gap-2 text-black"
 			[class.opacity-100]="audioStore.clicked()"
 		>
-			<div class="flex flex-col gap-2 text-black">
-				<code>
-					Camera currently reacts to:
-					<button
-						class="rounded border border-b-4 border-transparent border-b-gray-400 bg-white px-4 py-1 text-black"
-						(click)="onChangeZoomTrack()"
-					>
-						{{ zoomTrack() }}
-					</button>
-				</code>
-				<code>
-					credits:
-					<a class="underline" href="https://pmndrs.github.io/examples/demos/simple-audio-analyser" target="_blank">
-						R3F Simple Sound Analyser
-					</a>
-				</code>
-			</div>
-			<code class="text-black">Triplet After Triplet · SEGA · Hidenori Shoji</code>
+			<code>
+				Camera currently reacts to:
+				<button
+					class="rounded border border-b-4 border-transparent border-b-gray-400 bg-white px-4 py-1"
+					(click)="onChangeZoomTrack()"
+				>
+					{{ zoomTrack() }}
+				</button>
+			</code>
+			<code>Triplet After Triplet · SEGA · Hidenori Shoji</code>
 		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

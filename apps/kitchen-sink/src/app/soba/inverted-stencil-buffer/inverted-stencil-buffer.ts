@@ -19,14 +19,6 @@ import { Experience, invert, logo } from './experience';
 				<option value="nx-cloud">Nx Cloud</option>
 			</select>
 		</div>
-
-		<a
-			class="absolute top-2 left-2 font-mono underline"
-			href="https://pmndrs.github.io/examples/demos/inverted-stencil-buffer"
-			target="_blank"
-		>
-			credit: R3F Inverted Stencil Buffer
-		</a>
 	`,
 	host: { class: 'inverted-stencil-buffer-soba' },
 	changeDetection: ChangeDetectionStrategy.OnPush,

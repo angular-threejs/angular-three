@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, ActivationEnd, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 
 @Component({
@@ -37,6 +37,13 @@ import { filter } from 'rxjs';
 				</a>
 			</div>
 		</div>
+
+		@if (currentActivatedRouteCredits(); as credits) {
+			<div class="absolute top-2 right-2 font-mono" [class]="credits.class">
+				Credits:
+				<a class="underline" [href]="credits.link" target="_blank" rel="noreferrer">{{ credits.title }}</a>
+			</div>
+		}
 	`,
 	imports: [RouterOutlet],
 })
@@ -44,6 +51,8 @@ export class AppComponent {
 	private router = inject(Router);
 
 	private navigationEnd = toSignal(this.router.events.pipe(filter((event) => event instanceof NavigationEnd)));
+	private activationEnd = toSignal(this.router.events.pipe(filter((event) => event instanceof ActivationEnd)));
+	private route = inject(ActivatedRoute);
 
 	currentRoute = computed(() => {
 		const navigationEnd = this.navigationEnd();
@@ -57,6 +66,20 @@ export class AppComponent {
 		if (!navigationEnd) return '';
 		const paths = navigationEnd.urlAfterRedirects.split('/').filter(Boolean);
 		return `https://github.com/angular-threejs/angular-three/tree/main/apps/kitchen-sink/src/app/${paths.join('/')}`;
+	});
+
+	currentActivatedRouteCredits = computed(() => {
+		const activationEnd = this.activationEnd();
+		if (!activationEnd) return null;
+
+		let deepestChild = activationEnd.snapshot;
+		while (deepestChild && deepestChild.firstChild) {
+			deepestChild = deepestChild.firstChild;
+		}
+
+		if (!deepestChild) return null;
+
+		return deepestChild.data['credits'] as { title: string; link: string; class: string };
 	});
 
 	onChange(event: Event) {

@@ -24,7 +24,6 @@ import { NgtsCenter, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular
 import { Group } from 'three';
 
 import { NgTemplateOutlet } from '@angular/common';
-import CameraControls from 'camera-controls';
 import boldFont from './bold.blob';
 
 @Component({
@@ -36,7 +35,6 @@ import boldFont from './bold.blob';
 			[options]="{ restitution: 0.1, colliders: 'cuboid' }"
 			[position]="position()"
 			[rotation]="rotation()"
-			(pointermissed)="onPointerMissed($any($event))"
 		>
 			<ngts-center>
 				<ngts-text-3d
@@ -56,6 +54,7 @@ import boldFont from './bold.blob';
 						bevelOffset: 0,
 					}"
 					(dblclick)="onDblClick($any($event))"
+					(pointermissed)="onPointerMissed($any($event))"
 				>
 					<ngts-mesh-transmission-material
 						[options]="$any({ clearcoat: 1, samples: 3, thickness: 40, chromaticAberration: 0.25, anisotropy: 0.4 })"
@@ -120,20 +119,20 @@ export class Letter {
 	}
 
 	onDblClick(event: NgtThreeEvent<MouseEvent>) {
-		event.stopPropagation();
-		const controls = this.controls() as CameraControls;
-		if (!controls) return;
-
-		// TODO: not sure why this is not working as expected.
-		//  This is supposed to zoom to the center of the letter, but it's always zooming to the center of the scene
-		void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
+		// event.stopPropagation();
+		// const controls = this.controls() as CameraControls;
+		// if (!controls) return;
+		//
+		// // TODO: not sure why this is not working as expected.
+		// //  This is supposed to zoom to the center of the letter, but it's always zooming to the center of the scene
+		// void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
 	}
 
 	onPointerMissed(event: NgtThreeEvent<MouseEvent>) {
-		event.stopPropagation();
-		const controls = this.controls() as CameraControls;
-		if (!controls) return;
-
-		void controls.reset(true);
+		// event.stopPropagation();
+		// const controls = this.controls() as CameraControls;
+		// if (!controls) return;
+		//
+		// void controls.reset(true);
 	}
 }
