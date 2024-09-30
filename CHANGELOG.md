@@ -1,3 +1,16 @@
+## 2.5.1 (2024-09-30)
+
+
+### 🩹 Fixes
+
+- **plugin:** bump generators versions ([572477d](https://github.com/angular-threejs/angular-three/commit/572477d))
+- **rapier:** do not track entire options object in rigid body colliders options ([8c7915a](https://github.com/angular-threejs/angular-three/commit/8c7915a))
+- **soba:** bump dependencies version ([1c9b7cb](https://github.com/angular-threejs/angular-three/commit/1c9b7cb))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.5.0 (2024-09-30)
 
 
