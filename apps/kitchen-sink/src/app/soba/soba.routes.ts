@@ -66,6 +66,10 @@ const routes: Routes = [
 		loadComponent: () => import('./bruno-simons-20k/bruno-simons-20k'),
 	},
 	{
+		path: 'instanced-vertex-colors',
+		loadComponent: () => import('./instanced-vertex-colors/instanced-vertex-colors'),
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
