@@ -4,6 +4,7 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
+	input,
 	viewChild,
 } from '@angular/core';
 import { extend, NgtArgs } from 'angular-three';
@@ -110,6 +111,7 @@ export class Boxes {
 }
 
 @Component({
+	selector: 'app-instances-experience',
 	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['#e0e0e0']" />
@@ -119,11 +121,15 @@ export class Boxes {
 
 		<app-boxes />
 
-		<ngts-camera-controls />
+		@if (withEffect()) {
+			<ngts-camera-controls />
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'instances-soba-experience' },
 	imports: [NgtsCameraControls, Boxes, NgtArgs],
 })
-export class Experience {}
+export class Experience {
+	withEffect = input(true);
+}

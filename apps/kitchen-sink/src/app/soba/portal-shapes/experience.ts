@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtrCuboidCollider, NgtrPhysics } from 'angular-three-rapier';
-import { NgtsCameraControls } from 'angular-three-soba/controls';
+import { NgtsCameraControls, NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsPreload } from 'angular-three-soba/misc';
-import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
+import { NgtsBounds, NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
 import { Experience as BasicExperience } from '../basic/experience';
-import { Experience as BrunoExperience } from '../bruno-simons-20k/experience';
 import { Experience as InstancedVertexColorsExperience } from '../instanced-vertex-colors/experience';
+import { Experience as InstancesExperience } from '../instances/exprience';
+import { Experience as InvertedStencilBufferExperience } from '../inverted-stencil-buffer/experience';
 import { Experience as LodExperience } from '../lod/experience';
 import { Experience as LowpolyEarthExperience } from '../lowpoly-earth/experience';
 import { Experience as ShakyExperience } from '../shaky/experience';
-import { Experience as StarsExperience } from '../stars/experience';
 import { Letter } from './letter';
 
 /* credit: https://pmndrs.github.io/examples/demos/portal-shapes */
@@ -25,13 +25,17 @@ import { Letter } from './letter';
 				<!-- ANGULAR -->
 				<app-letter char="A" [position]="[1, 50, -1]">
 					<ng-template>
-						<app-basic-experience [withEffect]="false" />
+						<ngt-group [scale]="10">
+							<app-basic-experience [withEffect]="false" />
+						</ngt-group>
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="N" [position]="[2, 60, -2]" [rotation]="[4, 5, 6]">
 					<ng-template>
-						<app-bruno-experience [withEffect]="false" />
+						<ngt-group [scale]="10">
+							<app-instances-experience [withEffect]="false" />
+						</ngt-group>
 					</ng-template>
 				</app-letter>
 
@@ -49,7 +53,7 @@ import { Letter } from './letter';
 
 				<app-letter char="L" [position]="[-2, 90, 2]" [rotation]="[13, 14, 15]">
 					<ng-template>
-						<ngt-group [scale]="15">
+						<ngt-group [scale]="10">
 							<app-lowpoly-earth-experience />
 						</ngt-group>
 					</ng-template>
@@ -63,7 +67,9 @@ import { Letter } from './letter';
 
 				<app-letter char="R" [position]="[-4, 110, 1]" [rotation]="[19, 20, 21]" [stencilBuffer]="true">
 					<ng-template>
-						<app-stars-experience />
+						<ngt-group [scale]="5">
+							<app-inverted-stencil-buffer-experience [withEffect]="false" />
+						</ngt-group>
 					</ng-template>
 				</app-letter>
 
@@ -147,12 +153,14 @@ import { Letter } from './letter';
 		Letter,
 		BasicExperience,
 		NgtArgs,
-		BrunoExperience,
 		InstancedVertexColorsExperience,
 		LodExperience,
 		LowpolyEarthExperience,
 		ShakyExperience,
-		StarsExperience,
+		InvertedStencilBufferExperience,
+		InstancesExperience,
+		NgtsBounds,
+		NgtsOrbitControls,
 	],
 	hostDirectives: [NgtsPreload],
 })

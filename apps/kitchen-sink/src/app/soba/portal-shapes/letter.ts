@@ -8,15 +8,15 @@ import {
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, injectObjectEvents, injectStore, NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtArgs, NgtEuler, NgtThreeEvent, NgtVector3 } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import { NgtsCenter, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
-import CameraControls from 'camera-controls';
 import { Group } from 'three';
 
 import { NgTemplateOutlet } from '@angular/common';
+import CameraControls from 'camera-controls';
 import boldFont from './bold.blob';
 
 @Component({
@@ -28,6 +28,8 @@ import boldFont from './bold.blob';
 			[options]="{ restitution: 0.1, colliders: 'cuboid' }"
 			[position]="position()"
 			[rotation]="rotation()"
+			(dblclick)="onDblClick($any($event))"
+			(pointermissed)="onPointerMissed($any($event))"
 		>
 			<ngts-center>
 				<ngts-text-3d
@@ -89,7 +91,6 @@ export class Letter {
 	rotation = input<NgtEuler>([0, 0, 0]);
 
 	private centerRef = viewChild.required(NgtsCenter);
-	private text3DRef = viewChild.required(NgtsText3D);
 	private contentsRef = viewChild<ElementRef<Group>>('contents');
 
 	protected content = contentChild.required(TemplateRef);
@@ -103,20 +104,25 @@ export class Letter {
 			const contents = this.contentsRef()?.nativeElement;
 			if (!contents) return;
 			// The letters contents are moved to its whereabouts in world coordinates
-			// contents.matrix.copy(this.centerRef().groupRef().nativeElement.matrixWorld);
+			contents.matrix.copy(this.centerRef().groupRef().nativeElement.matrixWorld);
 		});
+	}
 
-		// attach event to the mesh of text3D
-		injectObjectEvents(() => this.text3DRef().meshRef().nativeElement, {
-			dblclick: (event) => {
-				event.stopPropagation();
-				const controls = this.controls() as CameraControls;
-				if (!controls) return;
+	onDblClick(event: NgtThreeEvent<MouseEvent>) {
+		event.stopPropagation();
+		const controls = this.controls() as CameraControls;
+		if (!controls) return;
 
-				// TODO: not sure why this is not working as expected.
-				//  This is supposed to zoom to the center of the letter, but it's always zooming to the center of the scene
-				void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
-			},
-		});
+		// TODO: not sure why this is not working as expected.
+		//  This is supposed to zoom to the center of the letter, but it's always zooming to the center of the scene
+		void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
+	}
+
+	onPointerMissed(event: NgtThreeEvent<MouseEvent>) {
+		event.stopPropagation();
+		const controls = this.controls() as CameraControls;
+		if (!controls) return;
+
+		void controls.reset(true);
 	}
 }

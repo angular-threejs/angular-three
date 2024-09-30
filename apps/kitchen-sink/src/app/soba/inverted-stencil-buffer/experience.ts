@@ -83,6 +83,7 @@ export class Box {
 }
 
 @Component({
+	selector: 'app-inverted-stencil-buffer-experience',
 	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['#e0e0e0']" />
@@ -91,7 +92,7 @@ export class Box {
 		<ngt-hemisphere-light [intensity]="Math.PI * 1.5" groundColor="red" />
 
 		<app-circular-mask />
-		<ngts-bounds [options]="{ fit: true, clip: true, observe: true }">
+		<ngts-bounds [options]="{ fit: withEffect(), clip: withEffect(), observe: withEffect() }">
 			<ngts-float [options]="{ floatIntensity: 4, rotationIntensity: 0, speed: 4 }">
 				@switch (logo()) {
 					@case ('angular') {
@@ -118,7 +119,9 @@ export class Box {
 		</ngts-bounds>
 
 		<ngts-environment [options]="{ preset: 'city' }" />
-		<ngts-orbit-controls [options]="{ makeDefault: true }" />
+		@if (withEffect()) {
+			<ngts-orbit-controls [options]="{ makeDefault: true }" />
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -140,4 +143,6 @@ export class Experience {
 	protected readonly Math = Math;
 	protected invert = invert;
 	protected logo = logo;
+
+	withEffect = input(true);
 }
