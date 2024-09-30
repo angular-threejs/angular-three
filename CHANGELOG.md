@@ -1,3 +1,19 @@
+## 2.5.0 (2024-09-30)
+
+
+### 🚀 Features
+
+- **soba:** add preload ([8387f21](https://github.com/angular-threejs/angular-three/commit/8387f21))
+
+### 🩹 Fixes
+
+- **core:** use findIndex instead of indexOf in instance add new object ([0ae843f](https://github.com/angular-threejs/angular-three/commit/0ae843f))
+- **soba:** use textGeometry in effect for text3d ([eaa2d17](https://github.com/angular-threejs/angular-three/commit/eaa2d17))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.4.0 (2024-09-29)
 
 
