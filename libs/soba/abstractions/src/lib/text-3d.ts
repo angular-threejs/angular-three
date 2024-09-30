@@ -37,7 +37,7 @@ const defaultOptions: Partial<NgtMesh> & NgtsText3DOptions = {
 	standalone: true,
 	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
-			<ngt-text-geometry *args="textArgs()" />
+			<ngt-text-geometry #textGeometry *args="textArgs()" />
 			<ng-content />
 		</ngt-mesh>
 	`,
@@ -63,7 +63,8 @@ export class NgtsText3D {
 		'smooth',
 	]);
 
-	meshRef = viewChild<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	private textGeometryRef = viewChild<ElementRef<TextGeometry>>('textGeometry');
 
 	loadedFont = injectFont(this.font);
 	private smooth = pick(this.options, 'smooth');
@@ -90,12 +91,16 @@ export class NgtsText3D {
 		extend({ Mesh, TextGeometry });
 
 		effect(() => {
-			const [mesh, textArgs] = [this.meshRef()?.nativeElement, this.textArgs()];
-			if (!textArgs || !mesh) return;
+			const [mesh, textGeometry, textArgs] = [
+				this.meshRef()?.nativeElement,
+				this.textGeometryRef()?.nativeElement,
+				this.textArgs(),
+			];
+			if (!textArgs || !textGeometry || !mesh) return;
 
 			const smooth = this.smooth();
 			if (smooth) {
-				mesh.geometry = mergeVertices(mesh.geometry, smooth);
+				mesh.geometry = mergeVertices(textGeometry, smooth);
 				mesh.geometry.computeVertexNormals();
 			}
 		});
