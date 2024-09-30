@@ -8,7 +8,15 @@ import {
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtArgs, NgtEuler, NgtThreeEvent, NgtVector3 } from 'angular-three';
+import {
+	injectBeforeRender,
+	injectStore,
+	NgtArgs,
+	NgtEuler,
+	NgtObjectEvents,
+	NgtThreeEvent,
+	NgtVector3,
+} from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
@@ -28,11 +36,12 @@ import boldFont from './bold.blob';
 			[options]="{ restitution: 0.1, colliders: 'cuboid' }"
 			[position]="position()"
 			[rotation]="rotation()"
-			(dblclick)="onDblClick($any($event))"
 			(pointermissed)="onPointerMissed($any($event))"
 		>
 			<ngts-center>
 				<ngts-text-3d
+					#text3D
+					[ngtObjectEvents]="text3D.meshRef()"
 					[text]="char()"
 					[font]="boldFont"
 					[options]="{
@@ -46,6 +55,7 @@ import boldFont from './bold.blob';
 						bevelSize: 2,
 						bevelOffset: 0,
 					}"
+					(dblclick)="onDblClick($any($event))"
 				>
 					<ngts-mesh-transmission-material
 						[options]="$any({ clearcoat: 1, samples: 3, thickness: 40, chromaticAberration: 0.25, anisotropy: 0.4 })"
@@ -80,6 +90,7 @@ import boldFont from './bold.blob';
 		NgtsRenderTextureContent,
 		NgtArgs,
 		NgTemplateOutlet,
+		NgtObjectEvents,
 	],
 })
 export class Letter {
