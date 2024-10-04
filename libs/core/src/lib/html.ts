@@ -10,6 +10,7 @@ import {
 	Type,
 } from '@angular/core';
 import { HTML } from './renderer';
+import { DOM_PARENT } from './renderer/constants';
 import { injectStore } from './store';
 import { NgtAnyRecord } from './types';
 
@@ -42,15 +43,15 @@ export abstract class NgtHTML {
 	constructor() {
 		if (this.domElement === 'gl') {
 			Object.assign(this.host.nativeElement, {
-				__ngt_dom_parent__: this.store.snapshot.gl.domElement.parentElement,
+				[DOM_PARENT]: this.store.snapshot.gl.domElement.parentElement,
 			});
 		} else if (this.domElement) {
-			Object.assign(this.host.nativeElement, { __ngt_dom_parent__: this.domElement });
+			Object.assign(this.host.nativeElement, { [DOM_PARENT]: this.domElement });
 		}
 
 		this.destroyRef.onDestroy(() => {
-			(this.host.nativeElement as NgtAnyRecord)['__ngt_dom_parent__'] = null;
-			delete (this.host.nativeElement as NgtAnyRecord)['__ngt_dom_parent__'];
+			(this.host.nativeElement as NgtAnyRecord)[DOM_PARENT] = null;
+			delete (this.host.nativeElement as NgtAnyRecord)[DOM_PARENT];
 		});
 	}
 }

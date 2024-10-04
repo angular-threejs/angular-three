@@ -12,12 +12,13 @@ import {
 import { NgtArgs } from '../directives/args';
 import { getLocalState, prepare } from '../instance';
 import { NGT_STORE, injectStore, provideStore } from '../store';
-import { NgtAnyRecord, NgtInstanceNode, NgtLocalState, NgtState } from '../types';
+import { NgtAnyRecord, NgtLocalState, NgtState } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
-import { NgtSignalStore, signalStore } from '../utils/signal-store';
+import { NgtSignalStore } from '../utils/signal-store';
 import { NgtAnyConstructor, injectCatalogue } from './catalogue';
 import {
+	DOM_PARENT,
 	HTML,
 	NON_ROOT,
 	ROUTED_SCENE,
@@ -122,23 +123,9 @@ export class NgtRenderer implements Renderer2 {
 		}
 
 		if (name === SPECIAL_DOM_TAG.NGT_VALUE) {
-			const instanceStore = signalStore({ parent: null, objects: [], nonObjects: [] });
 			return createNode(
 				'three',
-				Object.assign(
-					{ __ngt_renderer__: { rawValue: undefined } },
-					// NOTE: we assign this manually to a raw value node
-					// because we say it is a 'three' node but we're not using prepare()
-					{
-						__ngt__: {
-							isRaw: true,
-							instanceStore,
-							setParent(parent: NgtInstanceNode) {
-								instanceStore.update({ parent });
-							},
-						},
-					},
-				),
+				prepare({ __ngt_renderer__: { rawValue: undefined } }, { store: this.rootStore, isRaw: true }),
 				this.document,
 			);
 		}
@@ -182,8 +169,8 @@ export class NgtRenderer implements Renderer2 {
 		const comment = this.delegate.createComment(value);
 
 		// NOTE: we attach an arrow function to the Comment node
-		// In our directives, we can call this function to then start tracking the RendererNode
-		// this is done to limit the amount of Nodes we need to process for getCreationState
+		//  In our directives, we can call this function to then start tracking the RendererNode
+		//  this is done to limit the amount of Nodes we need to process for getCreationState
 		comment[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args') => {
 			if (node === 'args') {
 				this.argsCommentNodes.push(comment);
@@ -205,8 +192,8 @@ export class NgtRenderer implements Renderer2 {
 		) {
 			addChild(parent, newChild);
 
-			if (newChild['__ngt_dom_parent__'] && newChild['__ngt_dom_parent__'] instanceof HTMLElement) {
-				this.delegate.appendChild(newChild['__ngt_dom_parent__'], newChild);
+			if (newChild[DOM_PARENT] && newChild[DOM_PARENT] instanceof HTMLElement) {
+				this.delegate.appendChild(newChild[DOM_PARENT], newChild);
 				return;
 			}
 
@@ -390,7 +377,7 @@ export class NgtRenderer implements Renderer2 {
 					const localState = getLocalState(el);
 					if (localState) localState.attach = paths;
 				}
-			} else if (name === SPECIAL_PROPERTIES.RAW_VALUE) {
+			} else {
 				// NOTE: coercion
 				let maybeCoerced: string | number | boolean = value;
 				if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
@@ -398,9 +385,12 @@ export class NgtRenderer implements Renderer2 {
 				} else if (!isNaN(Number(maybeCoerced))) {
 					maybeCoerced = Number(maybeCoerced);
 				}
-				rS[NgtRendererClassId.rawValue] = maybeCoerced;
-			} else {
-				applyProps(el, { [name]: value });
+
+				if (name === SPECIAL_PROPERTIES.RAW_VALUE) {
+					rS[NgtRendererClassId.rawValue] = maybeCoerced;
+				} else {
+					applyProps(el, { [name]: maybeCoerced });
+				}
 			}
 
 			return false;
