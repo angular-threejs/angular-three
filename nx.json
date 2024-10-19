@@ -46,11 +46,11 @@
 			"dependsOn": ["^build"],
 			"inputs": ["production", "^production"]
 		},
-    "nx-release-publish": {
-      "options": {
-        "packageRoot": "dist/libs/{projectName}"
-      }
-    }
+		"nx-release-publish": {
+			"options": {
+				"packageRoot": "dist/libs/{projectName}"
+			}
+		}
 	},
 	"namedInputs": {
 		"default": ["{projectRoot}/**/*", "sharedGlobals"],
@@ -92,31 +92,32 @@
 			}
 		}
 	},
-  "release": {
-    "projects": ["core", "cannon", "postprocessing", "soba", "rapier"],
-    "version": {
-      "preVersionCommand": "nx package core",
-      "generatorOptions": {
-        "packageRoot": "dist/libs/{projectName}",
-        "currentVersionResolver": "git-tag"
-      }
-    },
-    "conventionalCommits": {
-      "types": {
-        "refactor": {
-          "changelog": true,
-          "semverBump": "patch"
-        },
-        "perf": {
-          "changelog": true,
-          "semverBump": "patch"
-        }
-      }
-    },
-    "changelog": {
-      "workspaceChangelog": {
-        "createRelease": "github"
-      }
-    }
-  }
+	"release": {
+		"projects": ["core", "cannon", "postprocessing", "soba", "rapier"],
+		"version": {
+			"preVersionCommand": "nx package core",
+			"generatorOptions": {
+				"packageRoot": "dist/libs/{projectName}",
+				"currentVersionResolver": "git-tag"
+			}
+		},
+		"conventionalCommits": {
+			"types": {
+				"refactor": {
+					"changelog": true,
+					"semverBump": "patch"
+				},
+				"perf": {
+					"changelog": true,
+					"semverBump": "patch"
+				}
+			}
+		},
+		"changelog": {
+			"workspaceChangelog": {
+				"createRelease": "github"
+			}
+		}
+	},
+	"useLegacyCache": true
 }
