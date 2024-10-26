@@ -60,7 +60,9 @@ export function prepare<TInstance extends object = NgtAnyRecord>(
 			nonObjects: nonObjectsChanged,
 			add(object, type) {
 				const current = instance.__ngt__.instanceStore.snapshot[type];
-				const foundIndex = current.findIndex((node: NgtInstanceNode) => object === node || object.uuid === node.uuid);
+				const foundIndex = current.findIndex(
+					(node: NgtInstanceNode) => object === node || (!!object.uuid && !!node.uuid && object.uuid === node.uuid),
+				);
 
 				if (foundIndex > -1) {
 					current.splice(foundIndex, 1, object);

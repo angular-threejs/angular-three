@@ -52,6 +52,7 @@ import { KernelSize } from 'postprocessing';
 		</ngt-group>
 
 		<ngtp-effect-composer [options]="{ autoClear: false, multisampling: 0 }">
+			<!-- TODO: outline not working -->
 			<ngtp-outline [options]="{ edgeStrength: 2.5, pulseSpeed: 0, blur: true, kernelSize: KernelSize.SMALL }" />
 			<ngtp-smaa />
 		</ngtp-effect-composer>
