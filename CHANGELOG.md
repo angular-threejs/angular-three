@@ -1,3 +1,17 @@
+## 2.5.2 (2024-10-26)
+
+### 🩹 Fixes
+
+- **core:** check for uuid before comparing uuid in instance store ([8e1617a](https://github.com/angular-threejs/angular-three/commit/8e1617a))
+
+### 💅 Refactors
+
+- **core:** use DOM_PARENT constant for __ngt_dom_parent__ ([800bc6d](https://github.com/angular-threejs/angular-three/commit/800bc6d))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.5.1 (2024-09-30)
 
 
