@@ -46,6 +46,27 @@ export class NgtObjectEvents {
 	}
 }
 
+export const NgtObjectEventsInputs = ['ngtObjectEvents'] as const;
+export const NgtObjectEventsOutputs = [
+	'click',
+	'dblclick',
+	'contextmenu',
+	'pointerup',
+	'pointerdown',
+	'pointerover',
+	'pointerout',
+	'pointerenter',
+	'pointerleave',
+	'pointermove',
+	'pointermissed',
+	'pointercancel',
+	'wheel',
+] as const;
+
+/**
+ * @deprecated Use NgtObjectEventsInputs and NgtObjectEventsOutputs instead along with NgtObjectEvents
+ * @since 2.5.3. Will be removed in 3.0.0
+ */
 export const NgtObjectEventsHostDirective = {
 	directive: NgtObjectEvents,
 	inputs: ['ngtObjectEvents'],
