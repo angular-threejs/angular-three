@@ -1,3 +1,13 @@
+## 2.6.1 (2024-10-30)
+
+### 🩹 Fixes
+
+- **core:** remove as const from object events inputs/outputs ([f539c80](https://github.com/angular-threejs/angular-three/commit/f539c80))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.6.0 (2024-10-30)
 
 ### 🚀 Features
