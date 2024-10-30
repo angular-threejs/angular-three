@@ -20,7 +20,7 @@ import {
 import { NgtObject3DNode } from './three-types';
 import { NgtSignalStore } from './utils/signal-store';
 
-export type NgtProperties<T> = Pick<T, { [K in keyof T]: T[K] extends (_: any) => any ? never : K }[keyof T]>;
+export type NgtProperties<T> = { [K in keyof T as T[K] extends (...args: Array<any>) => any ? never : K]: T[K] };
 export type NgtAnyRecord = Record<string, any>;
 
 export type NgtEquConfig = {

@@ -196,9 +196,11 @@ export type NgtNodeElement<TOriginal, TConstructor> = {
 	__ngt_args__: NgtArguments<TConstructor>;
 };
 
-export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = Expand<
-	NgtExtendedColors<NgtOverwrite<Partial<TNoEvent>, NgtNodeElement<TOriginal, TConstructor>>>
->;
+export type NgtNode<TOriginal, TConstructor, TNoEvent = NoEvent<TOriginal>> = [TNoEvent] extends [
+	{ thisShouldNeverHappen: 'unless the object is of type any' },
+]
+	? NgtExtendedColors<NgtOverwrite<Partial<{}>, NgtNodeElement<{}, {}>>>
+	: NgtExtendedColors<NgtOverwrite<Partial<TNoEvent>, NgtNodeElement<TOriginal, TConstructor>>>;
 
 export type NgtObject3DEventsMap = {
 	[TEvent in keyof NgtEventHandlers]-?: Parameters<NonNullable<NgtEventHandlers[TEvent]>>[0];
