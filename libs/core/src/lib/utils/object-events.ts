@@ -46,7 +46,7 @@ export class NgtObjectEvents {
 	}
 }
 
-export const NgtObjectEventsInputs = ['ngtObjectEvents'] as const;
+export const NgtObjectEventsInputs = ['ngtObjectEvents'];
 export const NgtObjectEventsOutputs = [
 	'click',
 	'dblclick',
@@ -61,7 +61,7 @@ export const NgtObjectEventsOutputs = [
 	'pointermissed',
 	'pointercancel',
 	'wheel',
-] as const;
+];
 
 /**
  * @deprecated Use NgtObjectEventsInputs and NgtObjectEventsOutputs instead along with NgtObjectEvents
