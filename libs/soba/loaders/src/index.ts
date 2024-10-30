@@ -1,3 +1,4 @@
+export * from './lib/fbx-loader';
 export * from './lib/font-loader';
 export * from './lib/gltf-loader';
 export * from './lib/loader';
