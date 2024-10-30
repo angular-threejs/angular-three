@@ -65,7 +65,7 @@ export const NgtObjectEventsOutputs = [
 
 /**
  * @deprecated Use NgtObjectEventsInputs and NgtObjectEventsOutputs instead along with NgtObjectEvents
- * @since 2.5.3. Will be removed in 3.0.0
+ * @since 2.6.0 Will be removed in 3.0.0
  */
 export const NgtObjectEventsHostDirective = {
 	directive: NgtObjectEvents,

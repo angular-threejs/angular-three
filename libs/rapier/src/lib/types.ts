@@ -79,9 +79,24 @@ export interface NgtrPhysicsOptions {
 	maxCcdSubsteps: number;
 
 	/**
+	 * Directly affects the erp (Error Reduction Parameter) which is the proportion (between 0 and 1) of the positional error to be corrected at each time step.
+	 *
+	 * The higher the value, the more the physics engine will try to correct the positional error.
+	 *
+	 * This property is currently undocumented in rapier docs.
+	 *
+	 * @defaultValue 30
+	 */
+	contactNaturalFrequency: number;
+
+	/**
 	 * The Error Reduction Parameter in between 0 and 1, is the proportion of the positional error to be corrected at each time step.
 	 *
 	 * @defaultValue 0.8
+	 * @deprecated This is a noop. Use `contactNaturalFrequency` instead
+	 * @since 2.6.0 Will be removed in 3.0.0
+	 * @see {contactNaturalFrequency}
+	 * @see https://github.com/dimforge/rapier/pull/651 for more information about contactNaturalFrequency
 	 */
 	erp: number;
 

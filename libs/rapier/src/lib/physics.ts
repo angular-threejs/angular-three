@@ -40,6 +40,7 @@ const defaultOptions: NgtrPhysicsOptions = {
 	predictionDistance: 0.002,
 	minIslandSize: 128,
 	maxCcdSubsteps: 1,
+	contactNaturalFrequency: 30,
 	erp: 0.8,
 	lengthUnit: 1,
 	colliders: 'cuboid',
@@ -97,7 +98,7 @@ export class NgtrPhysics {
 	private minIslandSize = pick(this.options, 'minIslandSize');
 	private maxCcdSubsteps = pick(this.options, 'maxCcdSubsteps');
 	private predictionDistance = pick(this.options, 'predictionDistance');
-	private erp = pick(this.options, 'erp');
+	private contactNaturalFrequency = pick(this.options, 'contactNaturalFrequency');
 	private lengthUnit = pick(this.options, 'lengthUnit');
 	private timeStep = pick(this.options, 'timeStep');
 	private interpolate = pick(this.options, 'interpolate');
@@ -180,11 +181,7 @@ export class NgtrPhysics {
 		world.proxy.integrationParameters.minIslandSize = this.minIslandSize();
 		world.proxy.integrationParameters.maxCcdSubsteps = this.maxCcdSubsteps();
 		world.proxy.integrationParameters.normalizedPredictionDistance = this.predictionDistance();
-		/**
-		 * NOTE: we don't know if this is the correct way to set for contact_natural_frequency or not.
-		 * but at least, it gets the `contact_erp` value to be very close with setting `erp`
-		 */
-		world.proxy.integrationParameters.contact_natural_frequency = this.erp() * 1_000;
+		world.proxy.integrationParameters.contact_natural_frequency = this.contactNaturalFrequency();
 		world.proxy.lengthUnit = this.lengthUnit();
 	}
 
