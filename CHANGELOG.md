@@ -1,3 +1,19 @@
+## 2.6.0 (2024-10-30)
+
+### 🚀 Features
+
+- **core:** adjust internal types ([dae630f](https://github.com/angular-threejs/angular-three/commit/dae630f))
+- **rapier:** deprecate erp; add contactNaturalFrequency ([189be32](https://github.com/angular-threejs/angular-three/commit/189be32))
+- **soba:** add injectFBX ([8a6c79a](https://github.com/angular-threejs/angular-three/commit/8a6c79a))
+
+### 🩹 Fixes
+
+- **core:** expose inputs and outputs array for NgtObjectEvents ([6d3e0ed](https://github.com/angular-threejs/angular-three/commit/6d3e0ed))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.5.2 (2024-10-26)
 
 ### 🩹 Fixes
