@@ -1,3 +1,13 @@
+## 2.7.0 (2024-11-01)
+
+### 🚀 Features
+
+- **core:** upgrade ngxtension (with changes to resize) ([07f1f1e](https://github.com/angular-threejs/angular-three/commit/07f1f1e))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.6.1 (2024-10-30)
 
 ### 🩹 Fixes
