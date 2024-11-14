@@ -1,3 +1,14 @@
+## 2.8.0 (2024-11-14)
+
+### 🚀 Features
+
+- **postprocessing:** bump peer deps ([04f39dd](https://github.com/angular-threejs/angular-three/commit/04f39dd))
+- **soba:** bump peer deps ([d203556](https://github.com/angular-threejs/angular-three/commit/d203556))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.7.0 (2024-11-01)
 
 ### 🚀 Features
