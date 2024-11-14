@@ -328,11 +328,11 @@ importers:
         specifier: ^13.15.1
         version: 13.15.1
       cz-git:
-        specifier: ^1.10.1
-        version: 1.10.1
+        specifier: ^1.11.0
+        version: 1.11.0
       czg:
-        specifier: ^1.10.1
-        version: 1.10.1
+        specifier: ^1.11.0
+        version: 1.11.0
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
@@ -6245,12 +6245,12 @@ packages:
     resolution: {integrity: sha512-TRJc3HbBPkHd50u9YfJh2FxD1lDLZ+JXnJoyBn5LkncoeuT7fapO/Hq/Ed8TdFclaKshzInge2i30bg7VKeoPQ==}
     engines: {node: '>=0.10'}
 
-  cz-git@1.10.1:
-    resolution: {integrity: sha512-pBudDYUEqSOgt5cAlAk6BDs/h99lxfiii+1KCxfuVNOgcpn+yz7AejDjdBEJ+XDt7MOeAvcpYW3gi7C7il+IFA==}
+  cz-git@1.11.0:
+    resolution: {integrity: sha512-FCNkpyVmNPX0P8kHtX8uoFcXsJ4bjivMXVS5vc/qCyM8jj+Tuqo6CXQjGQKwKl0Lk9VNz7o6JfPoU/mM/XhxqA==}
     engines: {node: '>=v12.20.0'}
 
-  czg@1.10.1:
-    resolution: {integrity: sha512-melR80u+GA4EWNexwiWkbAPkFkxBqtLMQU4ePmnkF4N9F//8lB9mo1i0PmxphTamhn0N6kRAmnrkFrkRteNW8g==}
+  czg@1.11.0:
+    resolution: {integrity: sha512-go39avnHPvDn1HF4LS1qxj5XPGCQexZ9+y8f+0VlE9plZgRyWUOl4rUCwE4vD1azouIhz/KaauB45A7jPfMxpw==}
     engines: {node: '>=v12.20.0'}
     hasBin: true
 
@@ -21174,9 +21174,9 @@ snapshots:
 
   cytoscape@3.30.1: {}
 
-  cz-git@1.10.1: {}
+  cz-git@1.11.0: {}
 
-  czg@1.10.1: {}
+  czg@1.11.0: {}
 
   d3-array@2.12.1:
     dependencies:
