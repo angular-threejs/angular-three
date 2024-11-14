@@ -147,20 +147,20 @@ importers:
         specifier: ~7.8.1
         version: 7.8.1
       stats-gl:
-        specifier: ^2.2.8
-        version: 2.2.8
+        specifier: ^3.6.0
+        version: 3.6.0(three@0.169.0)
       three-custom-shader-material:
-        specifier: ^6.0.13
-        version: 6.0.13(react@18.3.1)(three@0.169.0)
+        specifier: ^6.1.1
+        version: 6.1.1(react@18.3.1)(three@0.169.0)
       three-mesh-bvh:
-        specifier: ^0.8.2
-        version: 0.8.2(three@0.169.0)
+        specifier: ^0.8.3
+        version: 0.8.3(three@0.169.0)
       three-stdlib:
         specifier: ^2.34.0
         version: 2.34.0(three@0.169.0)
       troika-three-text:
-        specifier: ^0.50.2
-        version: 0.50.2(three@0.169.0)
+        specifier: ^0.52.0
+        version: 0.52.0(three@0.169.0)
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
@@ -11715,6 +11715,14 @@ packages:
   stats-gl@2.2.8:
     resolution: {integrity: sha512-94G5nZvduDmzxBS7K0lYnynYwreZpkknD8g5dZmU6mpwIhy3caCrjAm11Qm1cbyx7mqix7Fp00RkbsonzKWnoQ==}
 
+  stats-gl@3.6.0:
+    resolution: {integrity: sha512-Bpi5nwvC2pls9lcI5sGqAcUqB/2kMYfsR4KoAglXFtY3YUdm7lJFg8FqS7eKKNgg3ruDMNCuwU+uRwPOwJiGnw==}
+    peerDependencies:
+      three: '*'
+    peerDependenciesMeta:
+      three:
+        optional: true
+
   statuses@1.5.0:
     resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==}
     engines: {node: '>= 0.6'}
@@ -12026,12 +12034,12 @@ packages:
       react:
         optional: true
 
-  three-custom-shader-material@6.0.13:
-    resolution: {integrity: sha512-QPKDSKg2VF9a4epVBZSA99WS9J/okk3hkmwrV/lB7bhqwIrWPAvVNtTEF2Qfq9Xd85h1AZdai+iAsna5rkA9Ow==}
+  three-custom-shader-material@6.1.1:
+    resolution: {integrity: sha512-GUvUpMUghOf1EWKaulqPyGCiOAgYMDWvaFEZMam1umqH5Ga+EfKlO7S2r6a9TGSj0Ay+N3wLObHmGdxXWEWJ+g==}
     peerDependencies:
       '@react-three/fiber': '>=8.0'
       react: '>=18.0'
-      three: '>=0.163'
+      three: '>=0.170'
     peerDependenciesMeta:
       '@react-three/fiber':
         optional: true
@@ -12044,8 +12052,8 @@ packages:
     peerDependencies:
       three: '>= 0.151.0'
 
-  three-mesh-bvh@0.8.2:
-    resolution: {integrity: sha512-AgzhAicMVLOJKU7i7ERzLT7A27vqnWThenOm8elljOh9tyz+yffOVzlZReYBtL3G/of3W2mPbsaDA2B7UzZR5g==}
+  three-mesh-bvh@0.8.3:
+    resolution: {integrity: sha512-4G5lBaF+g2auKX3P0yqx+MJC6oVt6sB5k+CchS6Ob0qvH0YIhuUk1eYr7ktsIpY+albCqE80/FVQGV190PmiAg==}
     peerDependencies:
       three: '>= 0.159.0'
 
@@ -12172,8 +12180,8 @@ packages:
     peerDependencies:
       three: '>=0.125.0'
 
-  troika-three-text@0.50.2:
-    resolution: {integrity: sha512-a6ovF0yaXi3EAWVyJ58j6FUjabDwFXebiApS3fFcM1Goz0LT/BVjNE8VN5bJOOMV40cXwqeER+8LgriK9kZAug==}
+  troika-three-text@0.52.0:
+    resolution: {integrity: sha512-4rywfbPxayE5ktmdkCMdnq5BZl5LPVgNElQnJZ9/DAW6JYnY2ft9teCqof4qwdzLMZ7QaIS5NziJRs2XRsQpDg==}
     peerDependencies:
       three: '>=0.125.0'
 
@@ -12187,8 +12195,8 @@ packages:
     peerDependencies:
       three: '>=0.125.0'
 
-  troika-three-utils@0.50.0:
-    resolution: {integrity: sha512-Mpa4OLKv6qxsc5hU9a7CT9JuS6JSmCCT/UAgsuretjPj1tju3xdVP+YizJhLhER78GnZE10IPujBOLzIxW+jpA==}
+  troika-three-utils@0.52.0:
+    resolution: {integrity: sha512-00oxqIIehtEKInOTQekgyknBuRUj1POfOUE2q1OmL+Xlpp4gIu+S0oA0schTyXsDS4d9DkR04iqCdD40rF5R6w==}
     peerDependencies:
       three: '>=0.125.0'
 
@@ -12198,8 +12206,8 @@ packages:
   troika-worker-utils@0.49.0:
     resolution: {integrity: sha512-1xZHoJrG0HFfCvT/iyN41DvI/nRykiBtHqFkGaGgJwq5iXfIZFBiPPEHFpPpgyKM3Oo5ITHXP5wM2TNQszYdVg==}
 
-  troika-worker-utils@0.50.0:
-    resolution: {integrity: sha512-BxNk0w6+d9NYd7El/3RzlzH/F2vovJI1FX9Zb+D7fArVM1EsUXj6+wVwJSrfucy6/HYhfbZPu/lD6Miiw9Byiw==}
+  troika-worker-utils@0.52.0:
+    resolution: {integrity: sha512-W1CpvTHykaPH5brv5VHLfQo9D1OYuo0cSBEUQFFT/nBUzM8iD6Lq2/tgG/f1OelbAS1WtaTPQzE5uM49egnngw==}
 
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
@@ -19076,6 +19084,7 @@ snapshots:
       '@types/webxr': 0.5.19
       fflate: 0.8.2
       meshoptimizer: 0.18.1
+    optional: true
 
   '@types/three@0.169.0':
     dependencies:
@@ -28396,6 +28405,11 @@ snapshots:
   stats-gl@2.2.8:
     dependencies:
       '@types/three': 0.163.0
+    optional: true
+
+  stats-gl@3.6.0(three@0.169.0):
+    optionalDependencies:
+      three: 0.169.0
 
   statuses@1.5.0: {}
 
@@ -28781,7 +28795,7 @@ snapshots:
       react: 18.3.1
     optional: true
 
-  three-custom-shader-material@6.0.13(react@18.3.1)(three@0.169.0):
+  three-custom-shader-material@6.1.1(react@18.3.1)(three@0.169.0):
     dependencies:
       three: 0.169.0
     optionalDependencies:
@@ -28792,7 +28806,7 @@ snapshots:
       three: 0.169.0
     optional: true
 
-  three-mesh-bvh@0.8.2(three@0.169.0):
+  three-mesh-bvh@0.8.3(three@0.169.0):
     dependencies:
       three: 0.169.0
 
@@ -28911,12 +28925,12 @@ snapshots:
       webgl-sdf-generator: 1.1.1
     optional: true
 
-  troika-three-text@0.50.2(three@0.169.0):
+  troika-three-text@0.52.0(three@0.169.0):
     dependencies:
       bidi-js: 1.0.3
       three: 0.169.0
-      troika-three-utils: 0.50.0(three@0.169.0)
-      troika-worker-utils: 0.50.0
+      troika-three-utils: 0.52.0(three@0.169.0)
+      troika-worker-utils: 0.52.0
       webgl-sdf-generator: 1.1.1
 
   troika-three-utils@0.47.2(three@0.169.0):
@@ -28928,7 +28942,7 @@ snapshots:
       three: 0.169.0
     optional: true
 
-  troika-three-utils@0.50.0(three@0.169.0):
+  troika-three-utils@0.52.0(three@0.169.0):
     dependencies:
       three: 0.169.0
 
@@ -28937,7 +28951,7 @@ snapshots:
   troika-worker-utils@0.49.0:
     optional: true
 
-  troika-worker-utils@0.50.0: {}
+  troika-worker-utils@0.52.0: {}
 
   trough@2.2.0: {}
 
