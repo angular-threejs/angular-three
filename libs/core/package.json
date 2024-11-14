@@ -25,31 +25,31 @@
 		"@angular/common": ">=18.0.0 <19.0.0",
 		"@angular/core": ">=18.0.0 <19.0.0",
 		"ngxtension": ">=3.0.0",
-    "three": ">=0.148.0 <0.170.0",
-    "@nativescript/angular": ">=18.0.0 <19.0.0",
-    "@nativescript/canvas": "2.0.0-webgpu.11",
-    "@nativescript/canvas-three": "2.0.0-webgpu.11",
-    "@nativescript/canvas-media": "2.0.0-webgpu.11"
-  },
-  "peerDependenciesMeta": {
-    "@nativescript/angular": {
-      "optional": true
-    },
-    "@nativescript/canvas": {
-      "optional": true
-    },
-    "@nativescript/canvas-three": {
-      "optional": true
-    },
-    "@nativescript/canvas-media": {
-      "optional": true
-    }
-  },
+		"three": ">=0.148.0 <0.170.0",
+		"@nativescript/angular": ">=18.0.0 <19.0.0",
+		"@nativescript/canvas": "2.0.0-webgpu.11",
+		"@nativescript/canvas-three": "2.0.0-webgpu.11",
+		"@nativescript/canvas-media": "2.0.0-webgpu.11"
+	},
+	"peerDependenciesMeta": {
+		"@nativescript/angular": {
+			"optional": true
+		},
+		"@nativescript/canvas": {
+			"optional": true
+		},
+		"@nativescript/canvas-three": {
+			"optional": true
+		},
+		"@nativescript/canvas-media": {
+			"optional": true
+		}
+	},
 	"dependencies": {
 		"tslib": "^2.7.0",
-		"@nx/devkit": "^19.0.0",
+		"@nx/devkit": "^20.0.0",
 		"@phenomnomnominal/tsquery": "^6.0.0",
-		"nx": "^19.0.0"
+		"nx": "^20.0.0"
 	},
 	"generators": "./plugin/generators.json",
 	"schematics": "./plugin/generators.json",
@@ -72,7 +72,7 @@
 		]
 	},
 	"web-types": [
-    "./web-types.json",
-    "../../node_modules/angular-three/web-types.json"
-  ]
+		"./web-types.json",
+		"../../node_modules/angular-three/web-types.json"
+	]
 }
