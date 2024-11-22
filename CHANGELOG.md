@@ -1,3 +1,13 @@
+## 2.8.1 (2024-11-22)
+
+### 🩹 Fixes
+
+- **soba:** address peer deps on three csm ([0f155ad](https://github.com/angular-threejs/angular-three/commit/0f155ad))
+
+### ❤️  Thank You
+
+- nartc
+
 ## 2.8.0 (2024-11-14)
 
 ### 🚀 Features
