@@ -150,8 +150,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0(three@0.169.0)
       three-custom-shader-material:
-        specifier: ^6.1.1
-        version: 6.1.1(react@18.3.1)(three@0.169.0)
+        specifier: ~6.0.0
+        version: 6.0.13(react@18.3.1)(three@0.169.0)
       three-mesh-bvh:
         specifier: ^0.8.3
         version: 0.8.3(three@0.169.0)
@@ -12034,12 +12034,12 @@ packages:
       react:
         optional: true
 
-  three-custom-shader-material@6.1.1:
-    resolution: {integrity: sha512-GUvUpMUghOf1EWKaulqPyGCiOAgYMDWvaFEZMam1umqH5Ga+EfKlO7S2r6a9TGSj0Ay+N3wLObHmGdxXWEWJ+g==}
+  three-custom-shader-material@6.0.13:
+    resolution: {integrity: sha512-QPKDSKg2VF9a4epVBZSA99WS9J/okk3hkmwrV/lB7bhqwIrWPAvVNtTEF2Qfq9Xd85h1AZdai+iAsna5rkA9Ow==}
     peerDependencies:
       '@react-three/fiber': '>=8.0'
       react: '>=18.0'
-      three: '>=0.170'
+      three: '>=0.163'
     peerDependenciesMeta:
       '@react-three/fiber':
         optional: true
@@ -28795,7 +28795,7 @@ snapshots:
       react: 18.3.1
     optional: true
 
-  three-custom-shader-material@6.1.1(react@18.3.1)(three@0.169.0):
+  three-custom-shader-material@6.0.13(react@18.3.1)(three@0.169.0):
     dependencies:
       three: 0.169.0
     optionalDependencies:
