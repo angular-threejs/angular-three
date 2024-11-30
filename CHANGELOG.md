@@ -1,3 +1,17 @@
+## 2.9.0 (2024-11-30)
+
+### 🚀 Features
+
+- **cannon:** bump peer dep to three 170 ([3a09692](https://github.com/angular-threejs/angular-three/commit/3a09692))
+- **core:** bump peer dependency to three 170 ([7493d8c](https://github.com/angular-threejs/angular-three/commit/7493d8c))
+- **postprocessing:** bump peer dep to three 170 ([694ca85](https://github.com/angular-threejs/angular-three/commit/694ca85))
+- **rapier:** bump peer dep to three 170 ([b41385a](https://github.com/angular-threejs/angular-three/commit/b41385a))
+- **soba:** bump peer dep to three 170 and three csm to <6.3.0 ([52b81f6](https://github.com/angular-threejs/angular-three/commit/52b81f6))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.8.1 (2024-11-22)
 
 ### 🩹 Fixes
