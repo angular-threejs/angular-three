@@ -146,7 +146,7 @@
 		"react-dom": "^18.3.1",
 		"rxjs": "~7.8.1",
 		"stats-gl": "^3.6.0",
-		"three-custom-shader-material": "~6.0.0",
+		"three-custom-shader-material": "~6.2.0",
 		"three-mesh-bvh": "^0.8.3",
 		"three-stdlib": "^2.34.0",
 		"troika-three-text": "^0.52.2",
