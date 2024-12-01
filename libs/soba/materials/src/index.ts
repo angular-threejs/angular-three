@@ -1,5 +1,6 @@
 export * from './lib/custom-shader-material';
 export * from './lib/mesh-distort-material';
+export * from './lib/mesh-portal-material';
 export * from './lib/mesh-reflector-material';
 export * from './lib/mesh-refraction-material';
 export * from './lib/mesh-transmission-material';

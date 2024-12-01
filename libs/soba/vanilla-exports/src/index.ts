@@ -3,18 +3,20 @@ import {
 	CausticsMaterial,
 	CausticsProjectionMaterial,
 	CausticsProjectionMaterialType,
+	createCausticsUpdate,
 	MeshDiscardMaterial,
 	MeshDistortMaterial,
 	MeshDistortMaterialParameters,
+	MeshPortalMaterial,
+	meshPortalMaterialApplySDF,
 	MeshReflectorMaterial,
 	MeshTransmissionMaterial,
 	MeshWobbleMaterial,
 	MeshWobbleMaterialParameters,
 	ProgressiveLightMap,
+	shaderMaterial,
 	SoftShadowMaterial,
 	SpotLightMaterial,
-	createCausticsUpdate,
-	shaderMaterial,
 } from '@pmndrs/vanilla';
 import { NgtMaterial } from 'angular-three';
 
@@ -24,6 +26,7 @@ export type NgtCausticsProjectionMaterial = NgtMaterial<
 	CausticsProjectionMaterialType,
 	[CausticsProjectionMaterialType]
 >;
+export type NgtMeshPortalMaterial = NgtMaterial<InstanceType<typeof MeshPortalMaterial>, typeof MeshPortalMaterial>;
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -42,6 +45,11 @@ declare global {
 		 * @rawOptions color|causticsTexture|causticsTextureB|lightProjMatrix|lightViewMatrix
 		 */
 		'ngt-caustics-projection-material': NgtCausticsProjectionMaterial;
+		/**
+		 * @extends ngt-shader-material
+		 * @rawOptions resolution|blur|size|sdf|map
+		 */
+		'ngt-mesh-portal-material': NgtMeshPortalMaterial;
 	}
 }
 
@@ -50,16 +58,18 @@ export {
 	CausticsMaterial,
 	CausticsProjectionMaterial,
 	CausticsProjectionMaterialType,
+	createCausticsUpdate,
 	MeshDiscardMaterial,
 	MeshDistortMaterial,
 	MeshDistortMaterialParameters,
+	MeshPortalMaterial,
+	meshPortalMaterialApplySDF,
 	MeshReflectorMaterial,
 	MeshTransmissionMaterial,
 	MeshWobbleMaterial,
 	MeshWobbleMaterialParameters,
 	ProgressiveLightMap,
+	shaderMaterial,
 	SoftShadowMaterial,
 	SpotLightMaterial,
-	createCausticsUpdate,
-	shaderMaterial,
 };
