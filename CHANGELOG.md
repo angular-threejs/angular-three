@@ -1,3 +1,18 @@
+## 2.10.0 (2024-12-01)
+
+### 🚀 Features
+
+- **soba:** add NgtsMeshPortalMaterial (use pmndrs/vanilla) ([2baa76a](https://github.com/angular-threejs/angular-three/commit/2baa76a))
+
+### 🩹 Fixes
+
+- **core:** adjust NgtAttachable type to accept string | number array (for index) ([447c3e1](https://github.com/angular-threejs/angular-three/commit/447c3e1))
+- **soba:** add default params for injectFBO ([2f2a551](https://github.com/angular-threejs/angular-three/commit/2f2a551))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.9.0 (2024-11-30)
 
 ### 🚀 Features
