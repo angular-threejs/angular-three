@@ -95,7 +95,7 @@ class Side {
 			<ngt-box-geometry *args="[2, 2, 2]" />
 
 			<portal-material-side [rotation]="[0, 0, 0]" bg="orange" [index]="0">
-				<ngt-torus-knot-geometry *args="[0.65, 0.3, 64]" />
+				<ngt-torus-geometry *args="[0.65, 0.3, 64]" />
 			</portal-material-side>
 
 			<portal-material-side [rotation]="[0, Math.PI, 0]" bg="lightblue" [index]="1">
