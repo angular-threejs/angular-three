@@ -56,7 +56,7 @@ export interface NgtsFBOParams {
 	settings?: FBOSettings;
 }
 
-export function injectFBO(params: () => NgtsFBOParams, { injector }: { injector?: Injector } = {}) {
+export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectFBO, injector, () => {
 		const store = injectStore();
 		const size = store.select('size');
