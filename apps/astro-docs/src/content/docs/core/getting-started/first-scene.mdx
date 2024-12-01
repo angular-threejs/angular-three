@@ -208,7 +208,7 @@ And here's the result:
 The best way to animate a THREE.js entity is to participate in the animation loop with `injectBeforeRender`. Let's animate the cube by rotating it on the X and Y axes.
 
 ```angular-ts title="src/app/scene-graph.component.ts" {"Import injectBeforeRender": 2-3} {"Use template variable": 9-10} {"Get the reference with viewChild": 18-19} {"Animate the cube": 22-27}
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ElementRef, viewChild } from '@angular/core';
 
 import { injectBeforeRender } from 'angular-three';
 import { Mesh } from 'three';
