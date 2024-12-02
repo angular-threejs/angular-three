@@ -1,4 +1,4 @@
-import { computed, effect, ElementRef, Injector, isSignal, signal, untracked } from '@angular/core';
+import { computed, effect, ElementRef, Injector, isSignal, Signal, signal, untracked } from '@angular/core';
 import { injectBeforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';
@@ -7,11 +7,12 @@ import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three'
  * name: any to allow consumers to pass in type-safe animation clips
  */
 type NgtsAnimationClipWithoutName = Omit<AnimationClip, 'name'> & { name: any };
-type NgtsAnimationClip = Omit<NgtsAnimationClipWithoutName, 'clone'> & { clone: () => NgtsAnimationClip };
-type NgtsAnimationClips<TAnimationNames extends string> = {
+export type NgtsAnimationClip = Omit<NgtsAnimationClipWithoutName, 'clone'> & { clone: () => NgtsAnimationClip };
+export type NgtsAnimationClips<TAnimationNames extends string> = {
 	[Name in TAnimationNames]: Omit<NgtsAnimationClip, 'name'> & { name: Name };
 }[TAnimationNames];
-type NgtsAnimationApi<T extends NgtsAnimationClip> = {
+export type NgtsAnimationApi<T extends NgtsAnimationClip> = {
+	ready: Signal<boolean>;
 	clips: T[];
 	mixer: AnimationMixer;
 	names: T['name'][];
