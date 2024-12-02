@@ -1,3 +1,14 @@
+## 2.10.6 (2024-12-02)
+
+### 🩹 Fixes
+
+- **cannon:** dummy commit ([942547e](https://github.com/angular-threejs/angular-three/commit/942547e))
+- **rapier:** dummy commit ([1d7ea92](https://github.com/angular-threejs/angular-three/commit/1d7ea92))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.5 (2024-12-02)
 
 ### 🩹 Fixes
