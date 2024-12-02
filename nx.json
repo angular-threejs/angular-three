@@ -8,7 +8,7 @@
 		"package": {
 			"dependsOn": ["build"],
 			"inputs": ["production", "^production"],
-			"cache": false
+			"cache": true
 		},
 		"build-storybook": {
 			"inputs": ["default", "^production", "{projectRoot}/.storybook/**/*", "{projectRoot}/tsconfig.storybook.json"],
