@@ -34,7 +34,8 @@
 						"output": "."
 					}
 				]
-			}
+			},
+			"dependsOn": [{ "target": "build", "projects": "core" }]
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint",

@@ -6,7 +6,8 @@
 		"**comments**": "these scripts are here for convenience to debugging",
 		"generate-json": "node tools/scripts/generate-json.mjs",
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
-		"commit": "czg"
+		"commit": "czg",
+    "package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin && nx generate-json @platform/source"
 	},
 	"private": true,
 	"devDependencies": {
@@ -163,5 +164,16 @@
 			"czConfig": "cz.config.js"
 		}
 	},
-	"packageManager": "pnpm@9.14.4"
+	"packageManager": "pnpm@9.14.4",
+  "nx": {
+    "targets": {
+      "generate-json": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": ["node ./tools/scripts/generate-json.mjs", "node ./tools/scripts/generate-soba-json.mjs"],
+          "parallel": true
+        }
+      }
+    }
+  }
 }
