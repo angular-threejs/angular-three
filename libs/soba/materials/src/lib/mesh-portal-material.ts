@@ -100,9 +100,11 @@ export class ManagePortalScene {
 
 		afterNextRender(() => {
 			portalScene().matrixAutoUpdate = false;
+		});
 
-			// we start the before render in afterNextRender because we need the priority input to be resolved
-			injectBeforeRender(
+		effect((onCleanup) => {
+			// we start the before render in effect because we need the priority input to be resolved
+			const sub = injectBeforeRender(
 				({ gl, camera }) => {
 					const material = this.material();
 
@@ -150,6 +152,7 @@ export class ManagePortalScene {
 				},
 				{ injector, priority: this.priority() },
 			);
+			onCleanup(() => sub());
 		});
 	}
 }
@@ -304,9 +307,6 @@ export class NgtsMeshPortalMaterial {
 			setEvents({ enabled: !events });
 		});
 
-		// React.useEffect(() => {
-		//   if (events !== undefined) setEvents({ enabled: !events })
-		// }, [events])
 		effect(() => {
 			const [material, parent] = [this.materialRef().nativeElement, this.parent()];
 			if (!parent) return;
