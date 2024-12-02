@@ -6,6 +6,24 @@ description: Install Angular Three and its dependencies.
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs>
+  <TabItem label="Using template repository">
+    The easiest way to get started with Angular Three is to use the [template repository](https://github.com/angular-threejs/template)
+
+    The template repository is kept up to date with the latest version of Angular Three.
+
+    :::tip[Did you know?]
+
+    If you have the [Github CLI](https://cli.github.com/) installed, you can use the `gh repo create` command to clone the template repository directly from the command line.
+
+    ```shell
+    gh repo create <username>/<repository-name>
+      --template angular-threejs/template
+      --public
+      --clone
+    ```
+
+    :::
+  </TabItem>
   <TabItem label="Angular CLI">
     Angular Three provides an `ng-add` schematic to set up `angular-three` and its dependencies.
 
@@ -55,4 +73,5 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
     }
     ```
   </TabItem>
+
 </Tabs>

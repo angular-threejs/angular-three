@@ -14,13 +14,10 @@ description: Details about the Angular Three Testing `fireEvent` method
 - `eventData` is an optional object that contains the event data
 
 ```ts
-const { fixture, fireEvent } = NgtTestBed.create(SceneGraph);
+const { fireEvent } = NgtTestBed.create(SceneGraph);
 
 await fireEvent(mesh, 'click');
-fixture.detectChanges();
-
 await fireEvent(mesh, 'pointerover');
-fixture.detectChanges();
 ```
 
 #### `fireEvent.setAutoDetectChanges(auto: boolean)`
