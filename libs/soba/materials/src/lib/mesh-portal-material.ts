@@ -173,7 +173,7 @@ export interface NgtsMeshPortalMaterialOptions extends Partial<NgtShaderMaterial
 }
 
 const defaultOptions: NgtsMeshPortalMaterialOptions = {
-	blend: 0.5,
+	blend: 0,
 	blur: 0,
 	resolution: 512,
 	worldUnits: false,
