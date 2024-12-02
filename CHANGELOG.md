@@ -1,3 +1,17 @@
+## 2.12.0 (2024-12-02)
+
+### 🚀 Features
+
+- **core:** deprecate outputs and inputs shortcut for ObjectEvents. Never worked ([576eeaa](https://github.com/angular-threejs/angular-three/commit/576eeaa))
+
+### 🩹 Fixes
+
+- **soba:** explicit outputs for object events on rounded box ([81ac40c](https://github.com/angular-threejs/angular-three/commit/81ac40c))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.11.0 (2024-12-02)
 
 ### 🚀 Features
