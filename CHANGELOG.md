@@ -1,3 +1,13 @@
+## 2.10.2 (2024-12-02)
+
+### 🩹 Fixes
+
+- **soba:** export new animations types as public api ([00dd7db](https://github.com/angular-threejs/angular-three/commit/00dd7db))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.1 (2024-12-02)
 
 ### 🩹 Fixes
