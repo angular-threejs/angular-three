@@ -1,3 +1,13 @@
+## 2.10.5 (2024-12-02)
+
+### 🩹 Fixes
+
+- **soba:** dummy ([ed2fb54](https://github.com/angular-threejs/angular-three/commit/ed2fb54))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.4 (2024-12-02)
 
 ### 🩹 Fixes
