@@ -5,6 +5,22 @@
 			"inputs": ["production", "^production"],
 			"cache": true
 		},
+		"generate-json": {
+			"inputs": [
+				"production-core",
+				"production-soba",
+				"{workspaceRoot}/tools/scripts/generate-json.mjs",
+				"{workspaceRoot}/tools/scripts/generate-soba-json.mjs",
+				"{workspaceRoot}/tools/scripts/utils.mjs"
+			],
+			"outputs": [
+				"{workspaceRoot}/dist/libs/core/metadata.json",
+				"{workspaceRoot}/dist/libs/core/web-types.json",
+				"{workspaceRoot}/dist/libs/soba/metadata.json",
+				"{workspaceRoot}/dist/libs/soba/web-types.json"
+			],
+			"cache": true
+		},
 		"build-storybook": {
 			"inputs": ["default", "^production", "{projectRoot}/.storybook/**/*", "{projectRoot}/tsconfig.storybook.json"],
 			"cache": true
@@ -49,6 +65,30 @@
 	},
 	"namedInputs": {
 		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"default-core": ["{workspaceRoot}/libs/core/**/*", "sharedGlobals"],
+		"default-soba": ["{workspaceRoot}/libs/soba/**/*", "sharedGlobals"],
+		"production-core": [
+			"default-core",
+			"!{workspaceRoot}/libs/core/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+			"!{workspaceRoot}/libs/core/tsconfig.spec.json",
+			"!{workspaceRoot}/libs/core/jest.config.[jt]s",
+			"!{workspaceRoot}/libs/core/.eslintrc.json",
+			"!{workspaceRoot}/libs/core/src/test-setup.[jt]s",
+			"!{workspaceRoot}/libs/core/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+			"!{workspaceRoot}/libs/core/.storybook/**/*",
+			"!{workspaceRoot}/libs/core/tsconfig.storybook.json"
+		],
+		"production-soba": [
+			"default-soba",
+			"!{workspaceRoot}/libs/soba/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+			"!{workspaceRoot}/libs/soba/tsconfig.spec.json",
+			"!{workspaceRoot}/libs/soba/jest.config.[jt]s",
+			"!{workspaceRoot}/libs/soba/.eslintrc.json",
+			"!{workspaceRoot}/libs/soba/src/test-setup.[jt]s",
+			"!{workspaceRoot}/libs/soba/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+			"!{workspaceRoot}/libs/soba/.storybook/**/*",
+			"!{workspaceRoot}/libs/soba/tsconfig.storybook.json"
+		],
 		"production": [
 			"default",
 			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
