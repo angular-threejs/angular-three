@@ -200,7 +200,7 @@ export class NgtrPhysics {
 		const timeStepVariable = timeStep === 'vary';
 
 		/**
-		 * Fixed timeStep simulation progression
+		 * Fixed timeStep simulation progression.
 		 * @see https://gafferongames.com/post/fix_your_timestep/
 		 */
 		const clampedDelta = MathUtils.clamp(delta, 0, 0.5);
