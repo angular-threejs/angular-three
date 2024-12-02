@@ -1,3 +1,13 @@
+## 2.10.1 (2024-12-02)
+
+### 🩹 Fixes
+
+- **soba:** adjust injectAnimations to be more relaxed with animation clip typing ([cca8a12](https://github.com/angular-threejs/angular-three/commit/cca8a12))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.0 (2024-12-01)
 
 ### 🚀 Features
