@@ -137,7 +137,7 @@ export class NgtcPhysics {
 	private tolerance = pick(this.options, 'tolerance');
 
 	private invalidate = this.store.select('invalidate');
-	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator
+	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator.
 	private worker = signal<CannonWorkerAPI>(null);
 
 	api: NgtcPhysicsApi = {
