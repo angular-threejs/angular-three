@@ -1,3 +1,13 @@
+## 2.11.0 (2024-12-02)
+
+### 🚀 Features
+
+- **soba:** apply objectEvents as host directive to RoundedBox ([8cffded](https://github.com/angular-threejs/angular-three/commit/8cffded))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.7 (2024-12-02)
 
 ### 🩹 Fixes
