@@ -119,5 +119,5 @@
 			}
 		}
 	},
-	"useLegacyCache": true
+	"useLegacyCache": false
 }
