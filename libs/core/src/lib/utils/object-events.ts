@@ -5,6 +5,27 @@ import { NgtEventHandlers, NgtThreeEvent } from '../types';
 import { resolveRef } from './resolve-ref';
 
 @Directive({ standalone: true, selector: '[ngtObjectEvents]' })
+/**
+ * As host directive:
+ * - outputs: [
+ * 'click',
+ * 'dblclick',
+ * 'contextmenu',
+ * 'pointerup',
+ * 'pointerdown',
+ * 'pointerover',
+ * 'pointerout',
+ * 'pointerenter',
+ * 'pointerleave',
+ * 'pointermove',
+ * 'pointermissed',
+ * 'pointercancel',
+ * 'wheel',
+ * ]
+ * - inputs: [
+ *   'ngtObjectEvents'
+ *   ]
+ */
 export class NgtObjectEvents {
 	click = output<NgtThreeEvent<MouseEvent>>();
 	dblclick = output<NgtThreeEvent<MouseEvent>>();
@@ -46,7 +67,16 @@ export class NgtObjectEvents {
 	}
 }
 
+/**
+ * @deprecated this has never worked. Use `NgtObjectEvents` and explicit value for inputs and outputs instead
+ * @since 2.12.0 Will be removed in 3.0.0
+ */
 export const NgtObjectEventsInputs = ['ngtObjectEvents'];
+
+/**
+ * @deprecated this has never worked. Use `NgtObjectEvents` and explicit value for inputs and outputs instead
+ * @since 2.12.0 Will be removed in 3.0.0
+ */
 export const NgtObjectEventsOutputs = [
 	'click',
 	'dblclick',
