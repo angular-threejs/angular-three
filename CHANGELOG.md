@@ -1,3 +1,13 @@
+## 2.10.7 (2024-12-02)
+
+### 🩹 Fixes
+
+- **soba:** restart portal before render when priority changes in MeshPortalMaterial ([55b3258](https://github.com/angular-threejs/angular-three/commit/55b3258))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.6 (2024-12-02)
 
 ### 🩹 Fixes
