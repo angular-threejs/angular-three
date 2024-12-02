@@ -1,3 +1,15 @@
+## 2.10.4 (2024-12-02)
+
+### 🩹 Fixes
+
+- **soba:** dummy ([232d772](https://github.com/angular-threejs/angular-three/commit/232d772))
+- **soba:** dummy again ([c518a2f](https://github.com/angular-threejs/angular-three/commit/c518a2f))
+- **soba:** revert the dummy commits ([1b18d30](https://github.com/angular-threejs/angular-three/commit/1b18d30))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.3 (2024-12-02)
 
 ### 🩹 Fixes
