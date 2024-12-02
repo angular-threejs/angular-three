@@ -5,11 +5,12 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
+	inject,
 	input,
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs, NgtMesh, omit, pick } from 'angular-three';
+import { extend, NgtArgs, NgtMesh, NgtObjectEvents, NgtObjectEventsOutputs, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ExtrudeGeometry, Mesh, Shape } from 'three';
 import { toCreasedNormals } from 'three-stdlib';
@@ -60,6 +61,7 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs],
+	hostDirectives: [{ directive: NgtObjectEvents, outputs: NgtObjectEventsOutputs }],
 })
 export class NgtsRoundedBox {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
@@ -112,6 +114,16 @@ export class NgtsRoundedBox {
 
 	constructor() {
 		extend({ ExtrudeGeometry, Mesh });
+
+		const objectEvents = inject(NgtObjectEvents, { host: true });
+
+		effect(
+			() => {
+				const mesh = this.meshRef().nativeElement;
+				objectEvents.ngtObjectEvents.set(mesh);
+			},
+			{ allowSignalWrites: true },
+		);
 
 		effect(() => {
 			const geometry = this.geometryRef()?.nativeElement;
