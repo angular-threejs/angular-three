@@ -1,3 +1,13 @@
+## 2.10.3 (2024-12-02)
+
+### 🩹 Fixes
+
+- **soba:** default blend to 0 for MeshPortalMaterial ([daa64e4](https://github.com/angular-threejs/angular-three/commit/daa64e4))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.10.2 (2024-12-02)
 
 ### 🩹 Fixes
