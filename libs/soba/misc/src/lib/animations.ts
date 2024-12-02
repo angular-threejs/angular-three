@@ -3,21 +3,29 @@ import { injectBeforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';
 
-type NgtsAnimationApi<T extends AnimationClip> = {
-	clips: AnimationClip[];
+/**
+ * name: any to allow consumers to pass in type-safe animation clips
+ */
+type NgtsAnimationClipWithoutName = Omit<AnimationClip, 'name'> & { name: any };
+type NgtsAnimationClip = Omit<NgtsAnimationClipWithoutName, 'clone'> & { clone: () => NgtsAnimationClip };
+type NgtsAnimationClips<TAnimationNames extends string> = {
+	[Name in TAnimationNames]: Omit<NgtsAnimationClip, 'name'> & { name: Name };
+}[TAnimationNames];
+type NgtsAnimationApi<T extends NgtsAnimationClip> = {
+	clips: T[];
 	mixer: AnimationMixer;
 	names: T['name'][];
 	actions: { [key in T['name']]: AnimationAction | null };
 };
 
-export type NgtsAnimation<TAnimation extends AnimationClip = AnimationClip> =
+export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationClip> =
 	| TAnimation[]
 	| { animations: TAnimation[] };
 
 /**
  * Use afterNextRender
  */
-export function injectAnimations<TAnimation extends AnimationClip>(
+export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 	animations: () => NgtsAnimation<TAnimation> | undefined | null,
 	object: ElementRef<Object3D> | Object3D | (() => ElementRef<Object3D> | Object3D | undefined | null),
 	{ injector }: { injector?: Injector } = {},
