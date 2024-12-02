@@ -10,7 +10,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs, NgtMesh, NgtObjectEvents, NgtObjectEventsOutputs, omit, pick } from 'angular-three';
+import { extend, NgtArgs, NgtMesh, NgtObjectEvents, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { ExtrudeGeometry, Mesh, Shape } from 'three';
 import { toCreasedNormals } from 'three-stdlib';
@@ -61,7 +61,26 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs],
-	hostDirectives: [{ directive: NgtObjectEvents, outputs: NgtObjectEventsOutputs }],
+	hostDirectives: [
+		{
+			directive: NgtObjectEvents,
+			outputs: [
+				'click',
+				'dblclick',
+				'contextmenu',
+				'pointerup',
+				'pointerdown',
+				'pointerover',
+				'pointerout',
+				'pointerenter',
+				'pointerleave',
+				'pointermove',
+				'pointermissed',
+				'pointercancel',
+				'wheel',
+			],
+		},
+	],
 })
 export class NgtsRoundedBox {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
