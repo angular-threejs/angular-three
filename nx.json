@@ -39,7 +39,12 @@
 			}
 		},
 		"@nx/eslint:lint": {
-			"inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"],
+			"inputs": [
+				"default",
+				"{workspaceRoot}/.eslintrc.json",
+				"{workspaceRoot}/.eslintignore",
+				"{workspaceRoot}/eslint.config.js"
+			],
 			"cache": true
 		},
 		"@nx/angular:package": {
@@ -98,7 +103,8 @@
 			"!{projectRoot}/src/test-setup.[jt]s",
 			"!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
 			"!{projectRoot}/.storybook/**/*",
-			"!{projectRoot}/tsconfig.storybook.json"
+			"!{projectRoot}/tsconfig.storybook.json",
+			"!{projectRoot}/eslint.config.js"
 		],
 		"sharedGlobals": []
 	},

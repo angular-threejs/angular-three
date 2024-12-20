@@ -22,9 +22,9 @@
 				],
 				"styles": ["apps/kitchen-sink/src/styles.css"],
 				"scripts": [],
-        "loader": {
-          ".blob": "file"
-        }
+				"loader": {
+					".blob": "file"
+				}
 			},
 			"configurations": {
 				"production": {
@@ -40,7 +40,10 @@
 							"maximumError": "4kb"
 						}
 					],
-          "externalDependencies": ["three/examples/jsm/utils/BufferGeometryUtils", "three/examples/jsm/postprocessing/Pass"],
+					"externalDependencies": [
+						"three/examples/jsm/utils/BufferGeometryUtils",
+						"three/examples/jsm/postprocessing/Pass"
+					],
 					"outputHashing": "all"
 				},
 				"development": {

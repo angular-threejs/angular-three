@@ -22,7 +22,6 @@
 			},
 			"defaultConfiguration": "production"
 		},
-
 		"test": {
 			"executor": "@analogjs/vitest-angular:test"
 		},
