@@ -66,7 +66,10 @@ export class NgtCanvas {
 
 	sceneGraph = input.required<Type<any>, Type<any> | 'routed'>({
 		transform: (value) => {
-			if (value === 'routed') return NgtRoutedScene;
+			if (value === 'routed') {
+				console.warn(`[NGT] 'routed' sceneGraph is not working properly.`);
+				return NgtRoutedScene;
+			}
 			return value;
 		},
 	});
