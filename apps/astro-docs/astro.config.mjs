@@ -49,6 +49,7 @@ export default defineConfig({
 				'angular-three',
 				'angular-three-soba/**',
 				'angular-three-cannon/**',
+				'angular-three-rapier/**',
 				'@angular/common',
 				'@angular/core',
 				'@angular/core/rxjs-interop',

@@ -12,21 +12,21 @@
 	"dependencies": {
 		"@analogjs/astro-angular": "1.9.4",
 		"@astrojs/check": "^0.9.4",
-		"@astrojs/mdx": "^3.1.9",
-		"@astrojs/starlight": "^0.29.2",
-		"@astrojs/tailwind": "^5.1.2",
+		"@astrojs/mdx": "^4.0.3",
+		"@astrojs/starlight": "^0.30.3",
+		"@astrojs/tailwind": "^5.1.4",
 		"angular-three": "^2.9.0",
 		"angular-three-cannon": "^2.9.0",
 		"angular-three-postprocessing": "^2.9.0",
 		"angular-three-soba": "^2.9.0",
-		"astro": "^4.16.16",
+		"astro": "^5.1.1",
 		"sharp": "^0.33.5",
 		"starlight-blog": "^0.15.0",
 		"tailwindcss": "^3.4.15"
 	},
 	"nx": {},
 	"devDependencies": {
-		"@astrojs/starlight-tailwind": "^2.0.3",
+		"@astrojs/starlight-tailwind": "^3.0.0",
 		"@expressive-code/plugin-line-numbers": "^0.38.3"
 	},
 	"web-types": [
