@@ -130,7 +130,7 @@ export type NgtPortalInjectableState = Partial<
 	template: `
 		<ng-container #anchor />
 
-		@if (renderAutoBeforeRender()) {
+		@if (shouldAutoRender()) {
 			<ngt-portal-before-render
 				[renderPriority]="autoRenderPriority()"
 				[parentScene]="parentScene()"
@@ -166,7 +166,7 @@ export class NgtPortal {
 	private pointer = new Vector2();
 	private portalRendered = signal(false);
 
-	protected renderAutoBeforeRender = computed(() => this.portalRendered() && this.autoRender());
+	protected shouldAutoRender = computed(() => this.portalRendered() && this.autoRender());
 
 	private portalView?: EmbeddedViewRef<unknown>;
 

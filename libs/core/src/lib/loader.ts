@@ -133,7 +133,7 @@ function _injectLoader<
 			NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 		> | null>(null);
 
-		const effector = load(loaderConstructorFactory, inputs, {
+		const cachedResultPromisesEffect = load(loaderConstructorFactory, inputs, {
 			extensions,
 			onProgress,
 			onLoad: onLoad as (data: unknown) => void,
@@ -141,8 +141,8 @@ function _injectLoader<
 
 		effect(() => {
 			const originalUrls = inputs();
-			const cachedEffect = effector();
-			Promise.all(cachedEffect).then((results) => {
+			const cachedResultPromises = cachedResultPromisesEffect();
+			Promise.all(cachedResultPromises).then((results) => {
 				response.update(() => {
 					if (Array.isArray(originalUrls)) return results;
 					if (typeof originalUrls === 'string') return results[0];

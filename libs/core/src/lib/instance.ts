@@ -15,6 +15,7 @@ export function invalidateInstance<TInstance extends object>(instance: TInstance
 		while (store.snapshot.previousRoot) {
 			store = store.snapshot.previousRoot;
 		}
+
 		if (store.snapshot.internal.frames === 0) {
 			store.snapshot.invalidate();
 		}

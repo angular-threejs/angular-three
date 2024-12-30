@@ -105,63 +105,70 @@ export class NgtCanvas {
 
 	// NOTE: this signal is updated outside of Zone
 	protected resizeResult = signal<ResizeResult>({} as ResizeResult, { equal: Object.is });
+	private configurator = signal<NgtCanvasConfigurator | null>(null);
 
-	private configurator?: NgtCanvasConfigurator;
 	private glEnvironmentInjector?: EnvironmentInjector;
 	private glRef?: ComponentRef<unknown>;
 
 	constructor() {
+		// NOTE: this means that everything in NgtCanvas will be in afterNextRender.
+		// this allows the content of NgtCanvas to use effect instead of afterNextRender
 		afterNextRender(() => {
+			const canvasElement = this.glCanvas().nativeElement;
 			this.zone.runOutsideAngular(() => {
-				this.configurator = this.initRoot(this.glCanvas().nativeElement);
-				effect(
-					() => {
-						this.noZoneResizeEffect();
-					},
-					{ injector: this.injector },
-				);
+				this.configurator.set(this.initRoot(canvasElement));
 			});
+
+			effect(
+				() => {
+					const resizeResult = this.resizeResult();
+					if (!resizeResult.width || resizeResult.width <= 0 || !resizeResult.height || resizeResult.height <= 0)
+						return;
+
+					const configurator = this.configurator();
+					if (!configurator) return;
+
+					const canvasOptions = {
+						gl: this.gl(),
+						shadows: this.shadows(),
+						legacy: this.legacy(),
+						linear: this.linear(),
+						flat: this.flat(),
+						orthographic: this.orthographic(),
+						frameloop: this.frameloop(),
+						performance: this.performance(),
+						dpr: this.dpr(),
+						raycaster: this.raycaster(),
+						scene: this.scene(),
+						camera: this.camera(),
+						events: this.events(),
+						eventSource: this.eventSource(),
+						eventPrefix: this.eventPrefix(),
+						lookAt: this.lookAt(),
+						size: resizeResult,
+					};
+
+					this.zone.runOutsideAngular(() => {
+						configurator.configure(canvasOptions);
+
+						untracked(() => {
+							if (this.glRef) {
+								this.glRef.changeDetectorRef.detectChanges();
+							} else {
+								this.noZoneRender();
+							}
+						});
+					});
+				},
+				{ injector: this.injector },
+			);
 		});
 
 		inject(DestroyRef).onDestroy(() => {
 			this.glRef?.destroy();
 			this.glEnvironmentInjector?.destroy();
-			this.configurator?.destroy();
+			this.configurator()?.destroy();
 		});
-	}
-
-	private noZoneResizeEffect() {
-		const resizeResult = this.resizeResult();
-		if (resizeResult.width > 0 && resizeResult.height > 0) {
-			if (!this.configurator) this.configurator = this.initRoot(this.glCanvas().nativeElement);
-			this.configurator.configure({
-				gl: this.gl(),
-				shadows: this.shadows(),
-				legacy: this.legacy(),
-				linear: this.linear(),
-				flat: this.flat(),
-				orthographic: this.orthographic(),
-				frameloop: this.frameloop(),
-				performance: this.performance(),
-				dpr: this.dpr(),
-				raycaster: this.raycaster(),
-				scene: this.scene(),
-				camera: this.camera(),
-				events: this.events(),
-				eventSource: this.eventSource(),
-				eventPrefix: this.eventPrefix(),
-				lookAt: this.lookAt(),
-				size: resizeResult,
-			});
-
-			untracked(() => {
-				if (this.glRef) {
-					this.glRef.changeDetectorRef.detectChanges();
-				} else {
-					this.noZoneRender();
-				}
-			});
-		}
 	}
 
 	private noZoneRender() {

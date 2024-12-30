@@ -260,8 +260,8 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (gl.setClearAlpha) {
 						gl.setClearAlpha(0);
 					}
-					gl.setPixelRatio(makeDpr(state.viewport.dpr));
-					gl.setSize(state.size.width, state.size.height);
+					gl.setPixelRatio(makeDpr(state.viewport.dpr ?? dpr));
+					gl.setSize(sizeOptions?.width ?? state.size.width, sizeOptions?.height ?? state.size.height);
 
 					if (
 						is.obj(glOptions) &&
