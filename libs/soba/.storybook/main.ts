@@ -3,17 +3,10 @@ import { StorybookConfigVite } from '@storybook/builder-vite';
 import { UserConfig } from 'vite';
 
 const config: StorybookConfig & StorybookConfigVite = {
-	stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
-	addons: ['@storybook/addon-essentials', 'storybook-addon-deep-controls', '@chromatic-com/storybook'],
-	core: {
-		builder: {
-			name: '@storybook/builder-vite',
-			options: {
-				viteConfigPath: undefined,
-			},
-		},
-	},
-	async viteFinal(config: UserConfig) {
+    stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
+    addons: ['@storybook/addon-essentials', 'storybook-addon-deep-controls', '@chromatic-com/storybook'],
+
+    async viteFinal(config: UserConfig) {
 		// Merge custom configuration into the default config
 		const { mergeConfig } = await import('vite');
 		const { default: angular } = await import('@analogjs/vite-plugin-angular');
@@ -34,12 +27,19 @@ const config: StorybookConfig & StorybookConfigVite = {
 			plugins: [angular({ jit: true, tsconfig: './.storybook/tsconfig.json' }), nxViteTsPaths()],
 		});
 	},
-	staticDirs: ['./public', './public/cube'],
-	framework: {
+
+    staticDirs: ['./public', './public/cube'],
+
+    framework: {
 		name: '@storybook/angular',
-		options: {},
+		options: {
+          builder: {
+            viteConfigPath: undefined
+          }
+        },
 	},
-	docs: {},
+
+    docs: {}
 };
 
 export default config;
