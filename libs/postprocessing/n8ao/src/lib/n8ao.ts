@@ -96,6 +96,11 @@ export class NgtpN8AO {
 		effect(() => {
 			this.setQualityEffect();
 		});
+
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
 	}
 
 	private setQualityEffect() {
