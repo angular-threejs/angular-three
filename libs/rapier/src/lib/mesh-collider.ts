@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { extend, getLocalState } from 'angular-three';
 import { Object3D } from 'three';
-import { NgtrPhysics } from './physics';
 import { NgtrAnyCollider, NgtrRigidBody } from './rigid-body';
 import { NgtrRigidBodyAutoCollider } from './types';
 import { createColliderOptions } from './utils';
@@ -39,8 +38,7 @@ export class NgtrMeshCollider {
 	colliders = input.required<NgtrRigidBodyAutoCollider>({ alias: 'ngtrMeshCollider' });
 
 	objectRef = inject<ElementRef<Object3D>>(ElementRef);
-	rigidBody = inject(NgtrRigidBody);
-	physics = inject(NgtrPhysics);
+	private rigidBody = inject(NgtrRigidBody);
 
 	protected childColliderOptions = computed(() => {
 		const rigidBodyOptions = this.rigidBody.options();

@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { ActiveEvents, Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier3d-compat';
 import {
+	applyProps,
 	extend,
 	getEmitter,
 	getLocalState,
@@ -47,18 +48,7 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 	contactSkin: 0,
 };
 
-@Directive({
-	selector: 'ngt-object3D[ngtrCollider]',
-	standalone: true,
-	host: {
-		'[position]': 'position()',
-		'[rotation]': 'rotation()',
-		'[scale]': 'scale()',
-		'[quaternion]': 'quaternion()',
-		'[userData]': 'userData()',
-		'[name]': 'name()',
-	},
-})
+@Directive({ selector: 'ngt-object3D[ngtrCollider]', standalone: true })
 export class NgtrAnyCollider {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);
 	rotation = input<NgtEuler | undefined>([0, 0, 0]);
@@ -67,6 +57,17 @@ export class NgtrAnyCollider {
 	userData = input<NgtObject3D['userData'] | undefined>({});
 	name = input<NgtObject3D['name'] | undefined>();
 	options = input(colliderDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
+
+	private object3DParameters = computed(() => {
+		return {
+			position: this.position(),
+			rotation: this.rotation(),
+			scale: this.scale(),
+			quaternion: this.quaternion(),
+			userData: this.userData(),
+			name: this.name(),
+		};
+	});
 
 	// TODO: change this to input required when Angular allows setting hostDirective input
 	shape = model<NgtrColliderShape | undefined>(undefined, { alias: 'ngtrCollider' });
@@ -93,7 +94,7 @@ export class NgtrAnyCollider {
 
 	private rigidBody = inject(NgtrRigidBody, { optional: true });
 	private physics = inject(NgtrPhysics);
-	objectRef = inject<ElementRef<Object3D>>(ElementRef);
+	private objectRef = inject<ElementRef<Object3D>>(ElementRef);
 
 	private scaledArgs = computed(() => {
 		const [shape, args] = [
@@ -139,6 +140,11 @@ export class NgtrAnyCollider {
 
 	constructor() {
 		extend({ Object3D });
+
+		effect(() => {
+			const object3DParameters = this.object3DParameters();
+			applyProps(this.objectRef.nativeElement, object3DParameters);
+		});
 
 		effect((onCleanup) => {
 			const cleanup = this.createColliderStateEffect();
@@ -407,13 +413,6 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: {
-		'[position]': 'position()',
-		'[rotation]': 'rotation()',
-		'[scale]': 'scale()',
-		'[quaternion]': 'quaternion()',
-		'[userData]': 'userData()',
-	},
 	imports: [NgtrAnyCollider],
 })
 export class NgtrRigidBody {
@@ -430,6 +429,16 @@ export class NgtrRigidBody {
 	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
 	userData = input<NgtObject3D['userData'] | undefined>({});
 	options = input(rigidBodyDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
+
+	private object3DParameters = computed(() => {
+		return {
+			position: this.position(),
+			rotation: this.rotation(),
+			scale: this.scale(),
+			quaternion: this.quaternion(),
+			userData: this.userData(),
+		};
+	});
 
 	wake = output<void>();
 	sleep = output<void>();
@@ -495,6 +504,11 @@ export class NgtrRigidBody {
 
 	constructor() {
 		extend({ Object3D });
+
+		effect(() => {
+			const object3DParameters = this.object3DParameters();
+			applyProps(this.objectRef.nativeElement, object3DParameters);
+		});
 
 		effect((onCleanup) => {
 			const cleanup = this.createRigidBodyStateEffect();

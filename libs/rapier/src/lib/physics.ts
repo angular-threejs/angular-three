@@ -62,6 +62,9 @@ export class NgtrPhysicsFallback {
 	selector: 'ngtr-physics',
 	standalone: true,
 	template: `
+		@let _rapierError = rapierError();
+		@let _fallbackContent = fallbackContent();
+
 		@if (rapierConstruct()) {
 			@if (debug()) {
 				<ngtr-debug [world]="worldSingleton()?.proxy" />
@@ -75,8 +78,8 @@ export class NgtrPhysicsFallback {
 			/>
 
 			<ng-container [ngTemplateOutlet]="content()" />
-		} @else if (rapierError() && !!fallbackContent()) {
-			<ng-container [ngTemplateOutlet]="$any(fallbackContent())" [ngTemplateOutletContext]="{ error: rapierError() }" />
+		} @else if (_rapierError && _fallbackContent) {
+			<ng-container [ngTemplateOutlet]="_fallbackContent" [ngTemplateOutletContext]="{ error: _rapierError }" />
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -86,7 +89,7 @@ export class NgtrPhysics {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	content = contentChild.required(TemplateRef);
-	fallbackContent = contentChild(NgtrPhysicsFallback);
+	fallbackContent = contentChild(NgtrPhysicsFallback, { read: TemplateRef });
 
 	protected updatePriority = pick(this.options, 'updatePriority');
 	protected updateLoop = pick(this.options, 'updateLoop');
@@ -107,10 +110,9 @@ export class NgtrPhysics {
 	debug = pick(this.options, 'debug');
 	colliders = pick(this.options, 'colliders');
 
-	private gravity = vector3(this.options, 'gravity');
+	private vGravity = vector3(this.options, 'gravity');
 
 	private store = injectStore();
-	private destroyRef = inject(DestroyRef);
 
 	protected rapierConstruct = signal<typeof RAPIER | null>(null);
 	protected rapierError = signal<string | null>(null);
@@ -120,7 +122,7 @@ export class NgtrPhysics {
 	worldSingleton = computed(() => {
 		const rapier = this.rapier();
 		if (!rapier) return null;
-		return createSingletonProxy<World>(() => new rapier.World(untracked(this.gravity)));
+		return createSingletonProxy<World>(() => new rapier.World(untracked(this.vGravity)));
 	});
 
 	rigidBodyStates: NgtrRigidBodyStateMap = new Map();
@@ -154,7 +156,7 @@ export class NgtrPhysics {
 			this.updateWorldEffect();
 		});
 
-		this.destroyRef.onDestroy(() => {
+		inject(DestroyRef).onDestroy(() => {
 			const world = this.worldSingleton();
 			if (world) {
 				world.proxy.free();
@@ -173,7 +175,7 @@ export class NgtrPhysics {
 		const world = this.worldSingleton();
 		if (!world) return;
 
-		world.proxy.gravity = this.gravity();
+		world.proxy.gravity = this.vGravity();
 		world.proxy.integrationParameters.numSolverIterations = this.numSolverIterations();
 		world.proxy.integrationParameters.numAdditionalFrictionIterations = this.numAdditionalFrictionIterations();
 		world.proxy.integrationParameters.numInternalPgsIterations = this.numInternalPgsIterations();

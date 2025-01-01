@@ -16,8 +16,10 @@ export class NgtrFrameStepper {
 			const ready = this.ready();
 			if (!ready) return;
 
-			const [type, updatePriority, stepFn] = [this.type(), this.updatePriority(), this.stepFn()];
+			const [type, stepFn] = [this.type(), this.stepFn()];
+
 			if (type === 'follow') {
+				const updatePriority = this.updatePriority();
 				const cleanup = store.snapshot.internal.subscribe(
 					({ delta }) => {
 						stepFn(delta);

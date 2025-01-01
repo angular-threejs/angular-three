@@ -18,6 +18,7 @@ import {
 	NgtrTrimeshArgs,
 } from './types';
 
+// NOTE: this is ok to use here since we're not exporting this short-cut
 const ANY_COLLIDER_HOST_DIRECTIVE = {
 	directive: NgtrAnyCollider,
 	inputs: ['options', 'name', 'scale', 'position', 'quaternion', 'rotation', 'userData'],

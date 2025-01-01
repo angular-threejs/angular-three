@@ -11,7 +11,16 @@ import {
 	viewChild,
 	viewChildren,
 } from '@angular/core';
-import { extend, getLocalState, NgtEuler, NgtObject3D, NgtQuaternion, NgtVector3, pick } from 'angular-three';
+import {
+	applyProps,
+	extend,
+	getLocalState,
+	NgtEuler,
+	NgtObject3D,
+	NgtQuaternion,
+	NgtVector3,
+	pick,
+} from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DynamicDrawUsage, InstancedMesh, Object3D } from 'three';
 import { NgtrPhysics } from './physics';
@@ -70,13 +79,6 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: {
-		'[position]': 'position()',
-		'[rotation]': 'rotation()',
-		'[scale]': 'scale()',
-		'[quaternion]': 'quaternion()',
-		'[userData]': 'userData()',
-	},
 	imports: [NgtrRigidBody, NgtrAnyCollider],
 })
 export class NgtrInstancedRigidBodies {
@@ -94,7 +96,17 @@ export class NgtrInstancedRigidBodies {
 	});
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	instanceWrapperRef = viewChild.required<ElementRef<Object3D>>('instanceWrapper');
+	private object3DParameters = computed(() => {
+		return {
+			position: this.position(),
+			rotation: this.rotation(),
+			scale: this.scale(),
+			quaternion: this.quaternion(),
+			userData: this.userData(),
+		};
+	});
+
+	private instanceWrapperRef = viewChild.required<ElementRef<Object3D>>('instanceWrapper');
 	rigidBodyRefs = viewChildren(NgtrRigidBody);
 
 	private physics = inject(NgtrPhysics);
@@ -172,6 +184,11 @@ export class NgtrInstancedRigidBodies {
 
 	constructor() {
 		extend({ Object3D });
+
+		effect(() => {
+			const object3DParameters = this.object3DParameters();
+			applyProps(this.objectRef.nativeElement, object3DParameters);
+		});
 
 		effect(() => {
 			const instancedMesh = this.instancedMesh();
