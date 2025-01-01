@@ -20,7 +20,7 @@ import {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { NgtcCannonEvents, NgtcPhysicsApi } from 'angular-three-cannon';
+import { NgtcCannonEvents, NgtcPhysics } from 'angular-three-cannon';
 import { Euler, Object3D, Quaternion, Vector3 } from 'three';
 import { NgtcWorkerApi } from './types';
 
@@ -84,7 +84,7 @@ export function setupCollision(
 export function makeBodyApi(
 	body: Object3D,
 	worker: CannonWorkerAPI,
-	{ subscriptions, scaleOverrides }: Pick<NgtcPhysicsApi, 'subscriptions' | 'scaleOverrides'>,
+	{ subscriptions, scaleOverrides }: Pick<NgtcPhysics, 'subscriptions' | 'scaleOverrides'>,
 ) {
 	const makeAtomic = <T extends AtomicName>(type: T, index?: number) => {
 		const op: SetOpName<T> = `set${capitalize(type)}`;

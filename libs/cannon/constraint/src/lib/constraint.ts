@@ -72,7 +72,7 @@ function injectConstraint<
 			throw new Error(`[NGT Cannon] injectConstraint was called outside of <ngtc-physics>`);
 		}
 
-		const worker = physics.api.worker;
+		const worker = physics.worker;
 
 		const uuid = makeId();
 		const bodyARef = isSignal(bodyA) ? bodyA : signal(bodyA);
@@ -80,7 +80,7 @@ function injectConstraint<
 		const bodyAValue = computed(() => resolveRef(bodyARef()));
 		const bodyBValue = computed(() => resolveRef(bodyBRef()));
 
-		const api = computed(() => {
+		const constraintApi = computed(() => {
 			const _worker = worker();
 			if (!_worker) return null;
 
@@ -106,7 +106,7 @@ function injectConstraint<
 			const currentWorker = worker();
 			if (!currentWorker) return;
 
-			const [a, b] = [bodyAValue(), bodyBValue()];
+			const [a, b, api] = [bodyAValue(), bodyBValue(), untracked(constraintApi)];
 			if (!a || !b) return;
 
 			currentWorker.addConstraint({
@@ -117,13 +117,13 @@ function injectConstraint<
 
 			if (disableOnStart && !alreadyDisabled) {
 				alreadyDisabled = true;
-				untracked(api)?.disable();
+				api?.disable();
 			}
 
 			onCleanup(() => currentWorker.removeConstraint({ uuid }));
 		});
 
-		return api;
+		return constraintApi;
 	});
 }
 

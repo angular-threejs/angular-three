@@ -1,13 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	Signal,
-	afterNextRender,
-	effect,
-	input,
-	signal,
-	untracked,
-} from '@angular/core';
+import { Directive, Injector, afterNextRender, effect, inject, input, signal, untracked } from '@angular/core';
 import {
 	CannonWorkerAPI,
 	CannonWorkerProps,
@@ -84,15 +75,6 @@ export interface NgtcPhysicsOptions extends CannonWorkerProps {
 	stepSize?: number;
 }
 
-export interface NgtcPhysicsApi {
-	bodies: { [uuid: string]: number };
-	events: NgtcCannonEvents;
-	refs: Refs;
-	scaleOverrides: ScaleOverrides;
-	subscriptions: Subscriptions;
-	worker: Signal<CannonWorkerAPI>;
-}
-
 const defaultOptions: NgtcPhysicsOptions = {
 	allowSleep: false,
 	axisIndex: 0,
@@ -117,14 +99,7 @@ type NgtsPhysicsUpdatableOptions = Extract<
 	'gravity' | 'iterations' | 'tolerance' | 'broadphase' | 'axisIndex'
 >;
 
-@Component({
-	selector: 'ngtc-physics',
-	standalone: true,
-	template: `
-		<ng-content />
-	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+@Directive({ selector: 'ngtc-physics', standalone: true })
 export class NgtcPhysics {
 	private store = injectStore();
 
@@ -138,38 +113,48 @@ export class NgtcPhysics {
 
 	private invalidate = this.store.select('invalidate');
 	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator.
-	private worker = signal<CannonWorkerAPI>(null);
+	private cannonWorker = signal<CannonWorkerAPI>(null);
 
-	api: NgtcPhysicsApi = {
-		bodies: {},
-		events: {},
-		refs: {},
-		scaleOverrides: {},
-		subscriptions: {},
-		worker: this.worker.asReadonly(),
-	};
+	bodies: { [uuid: string]: number } = {};
+	events: NgtcCannonEvents = {};
+	refs: Refs = {};
+	scaleOverrides: ScaleOverrides = {};
+	subscriptions: Subscriptions = {};
+	worker = this.cannonWorker.asReadonly();
 
 	constructor() {
+		const injector = inject(Injector);
+
+		// NOTE: set new cannonworker in afterNextRender
+		// - so inputs are resolved
+		// - so the worker is instantiated only once
+		// - effects are started after worker is instantiated
 		afterNextRender(() => {
-			this.worker.set(new CannonWorkerAPI(this.options()));
-		});
+			this.cannonWorker.set(new CannonWorkerAPI(this.options()));
 
-		effect((onCleanup) => {
-			const cleanup = this.connectWorkerEffect();
-			onCleanup(() => cleanup?.());
-		});
+			effect(
+				(onCleanup) => {
+					const cleanup = this.connectWorkerEffect();
+					onCleanup(() => cleanup?.());
+				},
+				{ injector },
+			);
 
-		effect(() => {
-			this.updateWorkerStateEffect('axisIndex', this.axisIndex);
-			this.updateWorkerStateEffect('broadphase', this.broadphase);
-			this.updateWorkerStateEffect('gravity', this.gravity);
-			this.updateWorkerStateEffect('iterations', this.iterations);
-			this.updateWorkerStateEffect('tolerance', this.tolerance);
+			effect(
+				() => {
+					this.updateWorkerStateEffect('axisIndex', this.axisIndex);
+					this.updateWorkerStateEffect('broadphase', this.broadphase);
+					this.updateWorkerStateEffect('gravity', this.gravity);
+					this.updateWorkerStateEffect('iterations', this.iterations);
+					this.updateWorkerStateEffect('tolerance', this.tolerance);
+				},
+				{ injector },
+			);
 		});
 
 		let timeSinceLastCalled = 0;
 		injectBeforeRender(({ delta }) => {
-			const [{ isPaused, maxSubSteps, stepSize }, worker] = [this.options(), this.worker()];
+			const [{ isPaused, maxSubSteps, stepSize }, worker] = [this.options(), this.cannonWorker()];
 			if (isPaused || !worker || stepSize == null) return;
 			timeSinceLastCalled += delta;
 			worker.step({ maxSubSteps, stepSize, timeSinceLastCalled });
@@ -178,7 +163,7 @@ export class NgtcPhysics {
 	}
 
 	private connectWorkerEffect() {
-		const worker = this.worker() as NgtcCannonWorker;
+		const worker = this.cannonWorker() as NgtcCannonWorker;
 		if (!worker) return;
 
 		worker.connect();
@@ -200,13 +185,13 @@ export class NgtcPhysics {
 		key: TUpdatableKey,
 		option: () => NgtcPhysicsOptions[TUpdatableKey],
 	) {
-		const worker = this.worker();
+		const worker = this.cannonWorker();
 		if (!worker) return;
 		Object.assign(worker, { [key]: option() });
 	}
 
 	private collideHandler({ body, contact: { bi, bj, ...contactRest }, target, ...rest }: WorkerCollideEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this;
 		const cb = events[target]?.collide;
 		if (cb) {
 			cb({ body: refs[body], contact: { bi: refs[bi], bj: refs[bj], ...contactRest }, target: refs[target], ...rest });
@@ -214,7 +199,7 @@ export class NgtcPhysics {
 	}
 
 	private collideBeginHandler({ bodyA, bodyB }: WorkerCollideBeginEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this;
 		const cbA = events[bodyA]?.collideBegin;
 		if (cbA) cbA({ body: refs[bodyB], op: 'event', target: refs[bodyA], type: 'collideBegin' });
 		const cbB = events[bodyB]?.collideBegin;
@@ -222,7 +207,7 @@ export class NgtcPhysics {
 	}
 
 	private collideEndHandler({ bodyA, bodyB }: WorkerCollideEndEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this;
 		const cbA = events[bodyA]?.collideEnd;
 		if (cbA) cbA({ body: refs[bodyB], op: 'event', target: refs[bodyA], type: 'collideEnd' });
 		const cbB = events[bodyB]?.collideEnd;
@@ -238,7 +223,7 @@ export class NgtcPhysics {
 	}: WorkerFrameMessage['data']) {
 		const [{ shouldInvalidate }, { bodies, subscriptions, refs, scaleOverrides }, invalidate] = [
 			untracked(this.options),
-			this.api,
+			this,
 			this.invalidate(),
 		];
 		for (let i = 0; i < uuids.length; i++) {
@@ -270,7 +255,7 @@ export class NgtcPhysics {
 	}
 
 	private rayhitHandler({ body, ray: { uuid, ...rayRest }, ...rest }: WorkerRayhitEvent['data']) {
-		const { events, refs } = this.api;
+		const { events, refs } = this;
 		const cb = events[uuid]?.rayhit;
 		if (cb) cb({ body: body ? refs[body] : null, ray: { uuid, ...rayRest }, ...rest });
 	}

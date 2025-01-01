@@ -56,7 +56,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 			const _body = body();
 			if (!_body) return null;
 
-			const { worker, ...rest } = physics.api;
+			const { worker, ...rest } = physics;
 			const _worker = worker();
 			if (!_worker) return null;
 
@@ -64,13 +64,13 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 		});
 
 		effect((onCleanup) => {
-			const currentWorker = physics.api.worker();
+			const currentWorker = physics.worker();
 			if (!currentWorker) return;
 
 			const object = body();
 
 			if (!isRefSignal && !object) {
-				// TODO (signal): find a better way to handle this. no setting signal
+				// TODO (signal): remove untracked in v19
 				untracked(() => {
 					bodyRef.set(resolveRef(ref));
 				});
@@ -100,9 +100,9 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 						} else {
 							prepare(object, props);
 						}
-						physics.api.refs[id] = object;
+						physics.refs[id] = object;
 						debug?.add(id, props, type);
-						setupCollision(physics.api.events, props, id);
+						setupCollision(physics.events, props, id);
 						// @ts-expect-error - if args is undefined, there's default
 						return { ...props, args: transform(props.args) };
 					}),
@@ -125,9 +125,9 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 
 			onCleanup(() => {
 				uuid.forEach((id) => {
-					delete physics.api.refs[id];
+					delete physics.refs[id];
 					debug?.remove(id);
-					delete physics.api.events[id];
+					delete physics.events[id];
 				});
 				currentWorker.removeBodies({ uuid });
 			});

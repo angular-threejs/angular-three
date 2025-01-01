@@ -42,16 +42,17 @@ export class NgtcDebug {
 
 	private defaultScene = this.store.select('scene');
 
-	private scene = new Scene();
+	private debuggerScene = new Scene();
 	private bodies: Body[] = [];
 	private bodyMap: Record<string, Body> = {};
 
 	private cannonDebugger!: ReturnType<typeof CannonDebugger>;
 
 	constructor() {
+		// NOTE: afterNextRender so we only instantiate once after inputs have been resolved
 		afterNextRender(() => {
-			this.defaultScene().add(this.scene);
-			this.cannonDebugger = this.debug().impl(this.scene, { bodies: this.bodies } as World, {
+			this.defaultScene().add(this.debuggerScene);
+			this.cannonDebugger = this.debug().impl(this.debuggerScene, { bodies: this.bodies } as World, {
 				color: this.debug().color,
 				scale: this.debug().scale,
 			});
@@ -61,7 +62,7 @@ export class NgtcDebug {
 			if (!this.cannonDebugger) return;
 
 			const enabled = this.debug().enabled;
-			const refs = this.physics.api.refs;
+			const refs = this.physics.refs;
 			for (const uuid in this.bodyMap) {
 				const ref = refs[uuid];
 				const body = this.bodyMap[uuid];
@@ -72,7 +73,7 @@ export class NgtcDebug {
 				}
 			}
 
-			for (const child of this.scene.children) child.visible = enabled;
+			for (const child of this.debuggerScene.children) child.visible = enabled;
 			if (enabled) this.cannonDebugger.update();
 		});
 	}
