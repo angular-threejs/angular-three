@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { SepiaEffect } from 'postprocessing';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
 extend({ SepiaEffect });
 
@@ -19,7 +19,7 @@ export type SepiaEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpSepia {
 	effect = inject(NgtpEffect, { host: true });

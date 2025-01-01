@@ -42,5 +42,10 @@ export class NgtpGodRays {
 			const [sun, godRaysEffect] = [this.options().sun, this.effect()];
 			godRaysEffect.lightSource = is.ref(sun) ? sun.nativeElement : sun;
 		});
+
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
 	}
 }

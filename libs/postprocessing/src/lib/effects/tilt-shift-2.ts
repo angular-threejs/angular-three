@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, inp
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import { Uniform } from 'three';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
 const TiltShiftShader = {
 	fragmentShader: /* language=glsl glsl */ `
@@ -105,7 +105,7 @@ extend({ TiltShift2Effect });
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.NORMAL })],
 })
 export class NgtpTiltShift2 {

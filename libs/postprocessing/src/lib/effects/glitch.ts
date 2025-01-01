@@ -59,15 +59,15 @@ export class NgtpGlitch {
 	});
 
 	constructor() {
-		effect((onCleanup) => {
-			const effect = this.effect();
-			onCleanup(() => effect.dispose());
-		});
-
 		effect(() => {
 			const [glitchEffect, invalidate, mode, active] = [this.effect(), this.invalidate(), this.mode(), this.active()];
 			glitchEffect.mode = active ? mode || GlitchMode.SPORADIC : GlitchMode.DISABLED;
 			invalidate();
+		});
+
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
 		});
 	}
 }

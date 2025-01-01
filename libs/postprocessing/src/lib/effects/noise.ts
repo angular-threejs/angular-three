@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, NoiseEffect } from 'postprocessing';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
 extend({ NoiseEffect });
 
@@ -19,7 +19,7 @@ export type NoiseEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.COLOR_DODGE })],
 })
 export class NgtpNoise {

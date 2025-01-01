@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BrightnessContrastEffect } from 'postprocessing';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
 extend({ BrightnessContrastEffect });
 
@@ -19,7 +19,7 @@ export type BrightnessEffectOptions = NonNullable<ConstructorParameters<typeof B
 	imports: [NgtArgs, NgtpEffectBlendMode],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpBrightnessContrast {
 	effect = inject(NgtpEffect, { host: true });

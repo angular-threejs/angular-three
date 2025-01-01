@@ -43,5 +43,10 @@ export class NgtpLUT {
 			if (lut) effect.lut = lut;
 			invalidate();
 		});
+
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
 	}
 }

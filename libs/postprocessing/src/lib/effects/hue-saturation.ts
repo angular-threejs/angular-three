@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { HueSaturationEffect } from 'postprocessing';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
 extend({ HueSaturationEffect });
 
@@ -19,7 +19,7 @@ export type HueSaturationEffectOptions = Partial<NonNullable<ConstructorParamete
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpHueSaturation {
 	effect = inject(NgtpEffect, { host: true });

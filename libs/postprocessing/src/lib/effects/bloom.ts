@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, BloomEffect, BloomEffectOptions } from 'postprocessing';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
 extend({ BloomEffect });
 
@@ -17,7 +17,7 @@ extend({ BloomEffect });
 	imports: [NgtArgs, NgtpEffectBlendMode],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.ADD })],
 })
 export class NgtpBloom {

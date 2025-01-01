@@ -35,5 +35,3 @@ export class NgtpEffect {
 	camera = this.store.select('camera');
 	invalidate = this.store.select('invalidate');
 }
-
-export const NgtpEffectHostDirective = { directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] };

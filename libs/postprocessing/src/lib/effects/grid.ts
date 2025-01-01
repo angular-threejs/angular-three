@@ -31,5 +31,10 @@ export class NgtpGrid {
 				effect.setSize(size.width, size.height);
 			}
 		});
+
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
 	}
 }

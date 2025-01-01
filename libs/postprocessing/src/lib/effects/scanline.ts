@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, inp
 import { NgtArgs, extend } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, ScanlineEffect } from 'postprocessing';
-import { NgtpEffect, NgtpEffectBlendMode, NgtpEffectHostDirective, provideDefaultEffectOptions } from '../effect';
+import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
 extend({ ScanlineEffect });
 
@@ -24,7 +24,7 @@ const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [NgtpEffectHostDirective],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.OVERLAY })],
 })
 export class NgtpScanline {

@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Effect } from 'postprocessing';
@@ -135,4 +135,11 @@ const defaultOptions: ASCIIEffectOptions = {
 export class NgtpASCII {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	effect = computed(() => new ASCIIEffect(this.options()));
+
+	constructor() {
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
+	}
 }

@@ -4,7 +4,6 @@ import {
 	Component,
 	ElementRef,
 	Injector,
-	afterNextRender,
 	computed,
 	effect,
 	inject,
@@ -74,18 +73,27 @@ export class NgtpEffectComposer {
 	private defaultScene = this.store.select('scene');
 	private defaultCamera = this.store.select('camera');
 
-	depthBuffer = pick(this.options, 'depthBuffer');
-	stencilBuffer = pick(this.options, 'stencilBuffer');
-	multisampling = pick(this.options, 'multisampling');
-	frameBufferType = pick(this.options, 'frameBufferType');
+	private depthBuffer = pick(this.options, 'depthBuffer');
+	private stencilBuffer = pick(this.options, 'stencilBuffer');
+	private multisampling = pick(this.options, 'multisampling');
+	private frameBufferType = pick(this.options, 'frameBufferType');
+	private enableNormalPass = pick(this.options, 'enableNormalPass');
+	private resolutionScale = pick(this.options, 'resolutionScale');
+	private enabled = pick(this.options, 'enabled');
+	private renderPriority = pick(this.options, 'renderPriority');
+
 	scene = computed(() => this.options().scene ?? this.defaultScene());
 	camera = computed(() => this.options().camera ?? this.defaultCamera());
-	enableNormalPass = pick(this.options, 'enableNormalPass');
-	resolutionScale = pick(this.options, 'resolutionScale');
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	private groupRef = viewChild.required<ElementRef<Group>>('group');
 
-	composerData = computed(() => {
+	private priority = computed(() => {
+		const enabled = this.enabled();
+		if (!enabled) return 0;
+		return this.renderPriority();
+	});
+
+	private composerData = computed(() => {
 		const webGL2Available = isWebGL2Available();
 		const [
 			gl,
@@ -159,15 +167,15 @@ export class NgtpEffectComposer {
 
 		effect((onCleanup) => {
 			const [group, { composer, normalPass, downSamplingPass }, camera] = [
-				this.groupRef(),
+				this.groupRef().nativeElement,
 				this.composerData(),
 				this.camera(),
 			];
 
 			const passes: Pass[] = [];
 
-			if (group.nativeElement && composer) {
-				const localState = getLocalState(group.nativeElement);
+			if (composer) {
+				const localState = getLocalState(group);
 				if (!localState) return;
 
 				const children = localState.nonObjects();
@@ -207,9 +215,10 @@ export class NgtpEffectComposer {
 			});
 		});
 
-		// NOTE: register beforeRender afterNextRender to ensure input is ready
-		afterNextRender(() => {
-			injectBeforeRender(
+		effect((onCleanup) => {
+			const priority = this.priority();
+
+			const sub = injectBeforeRender(
 				({ delta }) => {
 					const [{ composer }, { enabled, autoClear, stencilBuffer }, gl] = [
 						this.composerData(),
@@ -225,8 +234,10 @@ export class NgtpEffectComposer {
 						gl.autoClear = currentAutoClear;
 					}
 				},
-				{ injector: this.injector, priority: this.options().enabled ? this.options().renderPriority : 0 },
+				{ injector: this.injector, priority },
 			);
+
+			onCleanup(() => sub());
 		});
 	}
 }

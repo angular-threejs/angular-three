@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { NgtArgs, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { PixelationEffect } from 'postprocessing';
@@ -21,4 +21,11 @@ export class NgtpPixelation {
 	private granularity = pick(this.options, 'granularity');
 
 	effect = computed(() => new PixelationEffect(this.granularity()));
+
+	constructor() {
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
+	}
 }

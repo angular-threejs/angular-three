@@ -171,6 +171,11 @@ export class NgtpLensFlare {
 			}
 		});
 
+		effect((onCleanup) => {
+			const effect = this.effect();
+			onCleanup(() => effect.dispose());
+		});
+
 		injectBeforeRender(({ delta }) => {
 			const [effect] = [this.effect()];
 			if (!effect) return;
