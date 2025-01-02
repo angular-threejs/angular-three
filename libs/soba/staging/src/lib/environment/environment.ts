@@ -376,14 +376,17 @@ export class NgtsEnvironmentGround {
 	selector: 'ngts-environment',
 	standalone: true,
 	template: `
-		@if (options().ground) {
-			<ngts-environment-ground [options]="options()" (envSet)="envSet.emit()" />
-		} @else if (options().map) {
-			<ngts-environment-map [options]="options()" (envSet)="envSet.emit()" />
-		} @else if (content()) {
-			<ngts-environment-portal [options]="options()" [content]="$any(content())" (envSet)="envSet.emit()" />
+		@let _options = options();
+		@let _content = content();
+
+		@if (_options.ground) {
+			<ngts-environment-ground [options]="_options" (envSet)="envSet.emit()" />
+		} @else if (_options.map) {
+			<ngts-environment-map [options]="_options" (envSet)="envSet.emit()" />
+		} @else if (_content) {
+			<ngts-environment-portal [options]="_options" [content]="_content" (envSet)="envSet.emit()" />
 		} @else {
-			<ngts-environment-cube [options]="options()" (envSet)="envSet.emit()" />
+			<ngts-environment-cube [options]="_options" (envSet)="envSet.emit()" />
 		}
 	`,
 	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtsEnvironmentPortal, NgtsEnvironmentGround],

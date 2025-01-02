@@ -4,7 +4,6 @@ import {
 	Component,
 	DestroyRef,
 	ElementRef,
-	afterNextRender,
 	computed,
 	effect,
 	inject,
@@ -139,7 +138,7 @@ export class NgtsAccumulativeShadows {
 	constructor() {
 		extend({ Group, SoftShadowMaterial, Mesh, PlaneGeometry });
 
-		afterNextRender(() => {
+		effect(() => {
 			this.pLM().configure(this.planeRef().nativeElement);
 		});
 

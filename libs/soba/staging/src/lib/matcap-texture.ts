@@ -6,8 +6,8 @@ import {
 	Signal,
 	TemplateRef,
 	ViewContainerRef,
-	afterNextRender,
 	computed,
+	effect,
 	inject,
 	input,
 	output,
@@ -102,7 +102,7 @@ export class NgtsMatcapTexture {
 			onLoad: this.matcapTextureLoaded.emit.bind(this.matcapTextureLoaded),
 		});
 
-		afterNextRender(() => {
+		effect(() => {
 			untracked(() => {
 				this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
 				this.ref.detectChanges();

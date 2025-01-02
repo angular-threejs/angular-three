@@ -6,7 +6,6 @@ import {
 	Signal,
 	TemplateRef,
 	ViewContainerRef,
-	afterNextRender,
 	computed,
 	effect,
 	inject,
@@ -107,7 +106,7 @@ export class NgtsNormalTexture {
 			onLoad: this.normalTextureLoaded.emit.bind(this.normalTextureLoaded),
 		});
 
-		afterNextRender(() => {
+		effect(() => {
 			untracked(() => {
 				this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
 				this.ref.detectChanges();
