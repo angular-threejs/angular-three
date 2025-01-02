@@ -29,7 +29,7 @@ export class NgtsCustomShaderMaterial {
 	options = input({} as Omit<ConstructorParameters<typeof CustomShaderMaterial>[0], 'baseMaterial'>);
 	parameters = omit(this.options, ['fragmentShader', 'vertexShader', 'uniforms', 'cacheKey']);
 
-	base = computed(() => {
+	private base = computed(() => {
 		const baseMaterial = this.baseMaterial();
 		return is.ref(baseMaterial) ? baseMaterial.nativeElement : baseMaterial;
 	});

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject, input } from '@angular/core';
 import { injectBeforeRender, NgtArgs, NgtAttachable, NgtMeshPhysicalMaterial, omit, pick } from 'angular-three';
 import { MeshDistortMaterial, MeshDistortMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -36,6 +36,8 @@ export class NgtsMeshDistortMaterial {
 	private speed = pick(this.options, 'speed');
 
 	constructor() {
+		inject(DestroyRef).onDestroy(() => this.material.dispose());
+
 		injectBeforeRender(({ clock }) => {
 			this.material.time = clock.getElapsedTime() * this.speed();
 		});

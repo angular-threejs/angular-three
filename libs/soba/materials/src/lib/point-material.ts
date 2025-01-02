@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject, input } from '@angular/core';
 import { NgtArgs, NgtAttachable } from 'angular-three';
 import { PointMaterial } from 'angular-three-soba/shaders';
 import { PointsMaterialParameters } from 'three';
@@ -20,4 +20,8 @@ export class NgtsPointMaterial {
 	options = input({} as PointsMaterialParameters);
 
 	material = new PointMaterial(this.options());
+
+	constructor() {
+		inject(DestroyRef).onDestroy(() => this.material.dispose());
+	}
 }

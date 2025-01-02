@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
@@ -93,16 +92,18 @@ export class ManagePortalScene {
 		});
 
 		effect(() => {
+			portalScene().matrixAutoUpdate = false;
+		});
+
+		effect(() => {
 			const [events, setEvents] = [this.events(), portalSetEvents()];
 			if (!events) return;
 			setEvents({ enabled: events });
 		});
 
-		afterNextRender(() => {
-			portalScene().matrixAutoUpdate = false;
-		});
-
 		effect((onCleanup) => {
+			const priority = this.priority();
+
 			// we start the before render in effect because we need the priority input to be resolved
 			const sub = injectBeforeRender(
 				({ gl, camera }) => {
@@ -115,9 +116,8 @@ export class ManagePortalScene {
 					if (!parent) return;
 
 					const materialBlend = 'blend' in material && typeof material.blend === 'number' ? material.blend : 0;
-					const [worldUnits, priority, rootScene, scene, [quad, blend]] = [
+					const [worldUnits, rootScene, scene, [quad, blend]] = [
 						this.worldUnits(),
-						this.priority(),
 						this.rootScene(),
 						portalScene(),
 						fullScreenQuad(),
@@ -150,7 +150,7 @@ export class ManagePortalScene {
 						}
 					}
 				},
-				{ injector, priority: this.priority() },
+				{ injector, priority },
 			);
 			onCleanup(() => sub());
 		});
@@ -285,19 +285,22 @@ export class NgtsMeshPortalMaterial {
 	constructor() {
 		extend({ MeshPortalMaterial });
 
-		afterNextRender(() => {
-			const material = this.materialRef().nativeElement;
+		effect(
+			() => {
+				const material = this.materialRef().nativeElement;
 
-			const localState = getLocalState(material);
-			if (!localState) return;
+				const localState = getLocalState(material);
+				if (!localState) return;
 
-			const materialParent = localState.parent();
-			if (!materialParent || !(materialParent instanceof Mesh)) return;
+				const materialParent = localState.parent();
+				if (!materialParent || !(materialParent instanceof Mesh)) return;
 
-			// Since the ref above is not tied to a mesh directly (we're inside a material),
-			// it has to be tied to the parent mesh here
-			this.parent.set(materialParent);
-		});
+				// Since the ref above is not tied to a mesh directly (we're inside a material),
+				// it has to be tied to the parent mesh here
+				this.parent.set(materialParent);
+			},
+			{ allowSignalWrites: true },
+		);
 
 		effect(() => {
 			const events = this.events();
