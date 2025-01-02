@@ -63,11 +63,13 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 	selector: 'ngts-gizmo-helper',
 	standalone: true,
 	template: `
+		@let _renderPriority = renderPriority();
+
 		<ngt-portal
 			[container]="scene"
 			[autoRender]="true"
-			[autoRenderPriority]="renderPriority()"
-			[state]="{ events: { priority: renderPriority() + 1 } }"
+			[autoRenderPriority]="_renderPriority"
+			[state]="{ events: { priority: _renderPriority + 1 } }"
 		>
 			<ng-template portalContent let-injector="injector" let-container="container">
 				<ngts-orthographic-camera [options]="{ makeDefault: true, position: [0, 0, 200] }" />

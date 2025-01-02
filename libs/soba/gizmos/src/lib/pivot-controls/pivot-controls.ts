@@ -131,43 +131,49 @@ const defaultOptions: NgtsPivotControlsOptions = {
 			<ngt-group #group [matrix]="matrix()" [matrixAutoUpdate]="false" [parameters]="parameters()">
 				<ngt-group #gizmo [visible]="visible()" [position]="offset()" [rotation]="rotation()">
 					@if (enabled()) {
-						@if (!disableAxes() && activeAxes()[0]) {
+						@let _disableAxes = disableAxes();
+						@let _disableSliders = disableSliders();
+						@let _disableRotations = disableRotations();
+						@let _disableScaling = disableScaling();
+						@let _activeAxes = activeAxes();
+
+						@if (!_disableAxes && _activeAxes[0]) {
 							<ngts-axis-arrow [axis]="0" [direction]="xDir" />
 						}
-						@if (!disableAxes() && activeAxes()[1]) {
+						@if (!_disableAxes && _activeAxes[1]) {
 							<ngts-axis-arrow [axis]="1" [direction]="yDir" />
 						}
-						@if (!disableAxes() && activeAxes()[2]) {
+						@if (!_disableAxes && _activeAxes[2]) {
 							<ngts-axis-arrow [axis]="2" [direction]="zDir" />
 						}
 
-						@if (!disableSliders() && activeAxes()[0] && activeAxes()[1]) {
+						@if (!_disableSliders && _activeAxes[0] && _activeAxes[1]) {
 							<ngts-plane-slider [axis]="2" [dir1]="xDir" [dir2]="yDir" />
 						}
-						@if (!disableSliders() && activeAxes()[0] && activeAxes()[2]) {
+						@if (!_disableSliders && _activeAxes[0] && _activeAxes[2]) {
 							<ngts-plane-slider [axis]="1" [dir1]="zDir" [dir2]="xDir" />
 						}
-						@if (!disableSliders() && activeAxes()[2] && activeAxes()[1]) {
+						@if (!_disableSliders && _activeAxes[2] && _activeAxes[1]) {
 							<ngts-plane-slider [axis]="0" [dir1]="yDir" [dir2]="zDir" />
 						}
 
-						@if (!disableRotations() && activeAxes()[0] && activeAxes()[1]) {
+						@if (!_disableRotations && _activeAxes[0] && _activeAxes[1]) {
 							<ngts-axis-rotator [axis]="2" [dir1]="xDir" [dir2]="yDir" />
 						}
-						@if (!disableRotations() && activeAxes()[0] && activeAxes()[2]) {
+						@if (!_disableRotations && _activeAxes[0] && _activeAxes[2]) {
 							<ngts-axis-rotator [axis]="1" [dir1]="zDir" [dir2]="xDir" />
 						}
-						@if (!disableRotations() && activeAxes()[2] && activeAxes()[1]) {
+						@if (!_disableRotations && _activeAxes[2] && _activeAxes[1]) {
 							<ngts-axis-rotator [axis]="0" [dir1]="yDir" [dir2]="zDir" />
 						}
 
-						@if (!disableScaling() && activeAxes()[0]) {
+						@if (!_disableScaling && _activeAxes[0]) {
 							<ngts-scaling-sphere [axis]="0" [direction]="xDir" />
 						}
-						@if (!disableScaling() && activeAxes()[1]) {
+						@if (!_disableScaling && _activeAxes[1]) {
 							<ngts-scaling-sphere [axis]="1" [direction]="yDir" />
 						}
-						@if (!disableScaling() && activeAxes()[2]) {
+						@if (!_disableScaling && _activeAxes[2]) {
 							<ngts-scaling-sphere [axis]="2" [direction]="zDir" />
 						}
 					}

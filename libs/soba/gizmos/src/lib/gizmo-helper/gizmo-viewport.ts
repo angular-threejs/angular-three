@@ -189,63 +189,71 @@ const defaultOptions: NgtsGizmoViewportOptions = {
 	selector: 'ngts-gizmo-viewport',
 	standalone: true,
 	template: `
+		@let _axisScale = axisScale();
+		@let _axisHeadScale = axisHeadScale();
+		@let _labels = labels();
+		@let _labelColor = labelColor();
+		@let _axisColors = axisColors();
+		@let _font = font();
+		@let _disabled = disabled();
+
 		<ngt-group [scale]="40" [parameters]="parameters()">
-			<viewport-axis [color]="axisColors()[0]" [rotation]="[0, 0, 0]" [scale]="axisScale()" />
-			<viewport-axis [color]="axisColors()[1]" [rotation]="[0, 0, Math.PI / 2]" [scale]="axisScale()" />
-			<viewport-axis [color]="axisColors()[2]" [rotation]="[0, -Math.PI / 2, 0]" [scale]="axisScale()" />
+			<viewport-axis [color]="_axisColors[0]" [rotation]="[0, 0, 0]" [scale]="_axisScale" />
+			<viewport-axis [color]="_axisColors[1]" [rotation]="[0, 0, Math.PI / 2]" [scale]="_axisScale" />
+			<viewport-axis [color]="_axisColors[2]" [rotation]="[0, -Math.PI / 2, 0]" [scale]="_axisScale" />
 
 			@if (!hideAxisHeads()) {
 				<viewport-axis-head
-					[arcStyle]="axisColors()[0]"
+					[arcStyle]="_axisColors[0]"
 					[position]="[1, 0, 0]"
-					[label]="labels()[0]"
-					[labelColor]="labelColor()"
-					[axisHeadScale]="axisHeadScale()"
-					[disabled]="disabled()"
-					[font]="font()"
+					[label]="_labels[0]"
+					[labelColor]="_labelColor"
+					[axisHeadScale]="_axisHeadScale"
+					[disabled]="_disabled"
+					[font]="_font"
 					[onClick]="onClick"
 				/>
 				<viewport-axis-head
-					[arcStyle]="axisColors()[1]"
+					[arcStyle]="_axisColors[1]"
 					[position]="[0, 1, 0]"
-					[label]="labels()[1]"
-					[labelColor]="labelColor()"
-					[axisHeadScale]="axisHeadScale()"
-					[disabled]="disabled()"
-					[font]="font()"
+					[label]="_labels[1]"
+					[labelColor]="_labelColor"
+					[axisHeadScale]="_axisHeadScale"
+					[disabled]="_disabled"
+					[font]="_font"
 					[onClick]="onClick"
 				/>
 				<viewport-axis-head
-					[arcStyle]="axisColors()[2]"
+					[arcStyle]="_axisColors[2]"
 					[position]="[0, 0, 1]"
-					[label]="labels()[2]"
-					[labelColor]="labelColor()"
-					[axisHeadScale]="axisHeadScale()"
-					[disabled]="disabled()"
-					[font]="font()"
+					[label]="_labels[2]"
+					[labelColor]="_labelColor"
+					[axisHeadScale]="_axisHeadScale"
+					[disabled]="_disabled"
+					[font]="_font"
 					[onClick]="onClick"
 				/>
 
 				@if (!hideNegativeAxes()) {
 					<viewport-axis-head
-						[arcStyle]="axisColors()[0]"
+						[arcStyle]="_axisColors[0]"
 						[position]="[-1, 0, 0]"
-						[axisHeadScale]="axisHeadScale()"
-						[disabled]="disabled()"
+						[axisHeadScale]="_axisHeadScale"
+						[disabled]="_disabled"
 						[onClick]="onClick"
 					/>
 					<viewport-axis-head
-						[arcStyle]="axisColors()[1]"
+						[arcStyle]="_axisColors[1]"
 						[position]="[0, -1, 0]"
-						[axisHeadScale]="axisHeadScale()"
-						[disabled]="disabled()"
+						[axisHeadScale]="_axisHeadScale"
+						[disabled]="_disabled"
 						[onClick]="onClick"
 					/>
 					<viewport-axis-head
-						[arcStyle]="axisColors()[2]"
+						[arcStyle]="_axisColors[2]"
 						[position]="[0, 0, -1]"
-						[axisHeadScale]="axisHeadScale()"
-						[disabled]="disabled()"
+						[axisHeadScale]="_axisHeadScale"
+						[disabled]="_disabled"
 						[onClick]="onClick"
 					/>
 				}
