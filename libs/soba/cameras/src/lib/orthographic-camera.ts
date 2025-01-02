@@ -5,7 +5,6 @@ import {
 	Component,
 	ElementRef,
 	TemplateRef,
-	afterNextRender,
 	computed,
 	contentChild,
 	effect,
@@ -102,7 +101,7 @@ export class NgtsOrthographicCamera {
 	constructor() {
 		extend({ OrthographicCamera, Group });
 
-		afterNextRender(() => {
+		effect(() => {
 			this.cameraRef().nativeElement.updateProjectionMatrix();
 		});
 

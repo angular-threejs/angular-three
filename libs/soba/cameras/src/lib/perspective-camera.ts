@@ -5,7 +5,6 @@ import {
 	Component,
 	ElementRef,
 	TemplateRef,
-	afterNextRender,
 	contentChild,
 	effect,
 	input,
@@ -78,7 +77,7 @@ export class NgtsPerspectiveCamera {
 	constructor() {
 		extend({ PerspectiveCamera, Group });
 
-		afterNextRender(() => {
+		effect(() => {
 			this.cameraRef().nativeElement.updateProjectionMatrix();
 		});
 
@@ -98,7 +97,7 @@ export class NgtsPerspectiveCamera {
 			this.store.update({ camera: this.cameraRef().nativeElement });
 			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
-
+		/**/
 		let count = 0;
 		let oldEnvMap: Color | Texture | null = null;
 		injectBeforeRender(({ gl, scene }) => {
