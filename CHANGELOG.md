@@ -1,3 +1,17 @@
+## 2.14.0 (2025-01-02)
+
+### 🚀 Features
+
+- **repo:** bump peer deps on angular ([4027049](https://github.com/angular-threejs/angular-three/commit/4027049))
+
+### 🩹 Fixes
+
+- **core:** make sure camera and dpr is set correctly initially ([ae5ec13](https://github.com/angular-threejs/angular-three/commit/ae5ec13))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.13.0 (2025-01-02)
 
 ### 🚀 Features
