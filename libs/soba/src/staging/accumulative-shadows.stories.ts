@@ -10,7 +10,7 @@ import {
 	NgtsRandomizedLights,
 } from 'angular-three-soba/staging';
 import { CanvasTexture, MeshStandardMaterial, RepeatWrapping, UVMapping } from 'three';
-import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture';
+import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
 import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({

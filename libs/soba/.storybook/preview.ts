@@ -9,5 +9,5 @@ export default {
 			page: DocumentationTemplate,
 		},
 	},
-	tags: ['autodocs', 'autodocs'],
+	tags: ['autodocs'],
 } as Preview;
