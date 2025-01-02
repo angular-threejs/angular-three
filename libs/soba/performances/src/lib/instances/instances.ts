@@ -9,16 +9,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import {
-	checkUpdate,
-	extend,
-	injectBeforeRender,
-	NgtArgs,
-	NgtInstancedMesh,
-	omit,
-	pick,
-	resolveRef,
-} from 'angular-three';
+import { checkUpdate, extend, injectBeforeRender, NgtInstancedMesh, omit, pick, resolveRef } from 'angular-three';
 import { setUpdateRange } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { DynamicDrawUsage, InstancedBufferAttribute, InstancedMesh, Matrix4, Quaternion, Vector3 } from 'three';
@@ -71,8 +62,8 @@ const defaultOptions: NgtsInstancesOptions = {
 };
 
 @Component({
-    selector: 'ngts-instances',
-    template: `
+	selector: 'ngts-instances',
+	template: `
 		<ngt-instanced-mesh
 			#instancedMesh
 			[userData]="{ instances }"
@@ -97,9 +88,8 @@ const defaultOptions: NgtsInstancesOptions = {
 			<ng-content />
 		</ngt-instanced-mesh>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsInstances {
 	protected readonly DynamicDrawUsage = DynamicDrawUsage;

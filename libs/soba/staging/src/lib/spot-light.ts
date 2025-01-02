@@ -65,8 +65,8 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 };
 
 @Component({
-    selector: 'ngts-volumetric-mesh',
-    template: `
+	selector: 'ngts-volumetric-mesh',
+	template: `
 		<ngt-mesh #mesh [geometry]="geometry()" [raycast]="null">
 			<ngt-primitive *args="[material]" attach="material">
 				<ngt-value attach="uniforms.opacity.value" [rawValue]="opacity()" />
@@ -83,9 +83,9 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 			</ngt-primitive>
 		</ngt-mesh>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsVolumetricMesh {
 	options = input(defaultVolumetricMeshOptions, { transform: mergeInputs(defaultVolumetricMeshOptions) });
@@ -367,16 +367,16 @@ export class NgtsSpotLightShadowNoShader {
 }
 
 @Component({
-    selector: 'ngts-spot-light-shadow',
-    template: `
+	selector: 'ngts-spot-light-shadow',
+	template: `
 		@if (shader(); as shader) {
 			<ngts-spot-light-shadow-shader [shader]="shader" [options]="options()" />
 		} @else {
 			<ngts-spot-light-shadow-no-shader [options]="options()" />
 		}
 	`,
-    imports: [NgtsSpotLightShadowShader, NgtsSpotLightShadowNoShader],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtsSpotLightShadowShader, NgtsSpotLightShadowNoShader],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsSpotLightShadow {
 	shader = input<string>();
@@ -395,8 +395,8 @@ const defaultOptions: NgtsSpotLightOptions = {
 };
 
 @Component({
-    selector: 'ngts-spot-light',
-    template: `
+	selector: 'ngts-spot-light',
+	template: `
 		<ngt-group>
 			<ngt-spot-light
 				#spotLight
@@ -417,9 +417,9 @@ const defaultOptions: NgtsSpotLightOptions = {
 			<ng-content />
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs, NgtsVolumetricMesh, NgtsHelper]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsVolumetricMesh, NgtsHelper],
 })
 export class NgtsSpotLight {
 	protected readonly SpotLightHelper = SpotLightHelper;

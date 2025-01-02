@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
@@ -56,8 +55,8 @@ const defaultOptions: NgtsTextOptions = {
 };
 
 @Component({
-    selector: 'ngts-text',
-    template: `
+	selector: 'ngts-text',
+	template: `
 		<ngt-primitive
 			*args="[troikaMesh]"
 			[text]="text()"
@@ -71,9 +70,9 @@ const defaultOptions: NgtsTextOptions = {
 			<ng-content />
 		</ngt-primitive>
 	`,
-    imports: [NgtArgs, NgTemplateOutlet],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsText {
 	text = input.required<string>();
