@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ElementRef, InjectOptions, InjectionToken, effect, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Clock, Vector2, Vector3 } from 'three';
@@ -10,6 +11,8 @@ import { updateCamera } from './utils/update';
 
 function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 	const loop = injectLoop();
+	const document = inject(DOCUMENT);
+	const window = document.defaultView || undefined;
 
 	// NOTE: using Subject because we do not care about late-subscribers
 	const pointerMissed$ = new Subject<MouseEvent>();
@@ -88,8 +91,8 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 
 			size: { width: 0, height: 0, top: 0, left: 0, updateStyle: false },
 			viewport: {
-				initialDpr: 0,
-				dpr: 0,
+				initialDpr: window?.devicePixelRatio || 1,
+				dpr: window?.devicePixelRatio || 1,
 				width: 0,
 				height: 0,
 				top: 0,

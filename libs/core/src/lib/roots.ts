@@ -112,7 +112,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (!state.camera || (state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose))) {
 						lastCamera = cameraOptions;
 						const isCamera = is.camera(cameraOptions);
-						let camera = isCamera ? cameraOptions : makeCameraInstance(orthographic, state.size);
+						let camera = isCamera ? cameraOptions : makeCameraInstance(orthographic, sizeOptions ?? state.size);
 
 						if (!isCamera) {
 							camera.position.z = 5;
@@ -260,7 +260,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (gl.setClearAlpha) {
 						gl.setClearAlpha(0);
 					}
-					gl.setPixelRatio(makeDpr(state.viewport.dpr ?? dpr));
+					gl.setPixelRatio(makeDpr(state.viewport.dpr));
 					gl.setSize(sizeOptions?.width ?? state.size.width, sizeOptions?.height ?? state.size.height);
 
 					if (
@@ -305,9 +305,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 export type NgtCanvasConfigurator = ReturnType<ReturnType<typeof injectCanvasRootInitializer>>;
 
 function computeInitialSize(canvas: NgtCanvasElement, defaultSize?: NgtSize): NgtSize {
-	if (defaultSize) {
-		return defaultSize;
-	}
+	if (defaultSize) return defaultSize;
 
 	if (typeof HTMLCanvasElement !== 'undefined' && canvas instanceof HTMLCanvasElement && canvas.parentElement) {
 		return canvas.parentElement.getBoundingClientRect();
