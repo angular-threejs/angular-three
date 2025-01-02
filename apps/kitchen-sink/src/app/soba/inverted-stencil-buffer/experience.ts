@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
-import { NgtsOrbitControls, NgtsPivotControls } from 'angular-three-soba/controls';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsPivotControls } from 'angular-three-soba/gizmos';
 import { NgtsBounds, NgtsEnvironment, NgtsFloat, NgtsMask } from 'angular-three-soba/staging';
 import { ColorRepresentation } from 'three';
 import { Angular } from './angular';

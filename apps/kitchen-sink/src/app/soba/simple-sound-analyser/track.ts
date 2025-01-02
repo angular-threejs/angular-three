@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
-import { NgtsPivotControls } from 'angular-three-soba/controls';
+import { NgtsPivotControls } from 'angular-three-soba/gizmos';
 import { InstancedMesh, MeshBasicMaterial, Object3D, PlaneGeometry } from 'three';
 import { AudioStore } from './audio.store';
 
