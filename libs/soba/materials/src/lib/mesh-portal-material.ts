@@ -186,8 +186,8 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 };
 
 @Component({
-    selector: 'ngts-mesh-portal-material',
-    template: `
+	selector: 'ngts-mesh-portal-material',
+	template: `
 		<ngt-mesh-portal-material
 			#material
 			[attach]="attach()"
@@ -217,9 +217,9 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 			</ngts-render-texture>
 		</ngt-mesh-portal-material>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsRenderTexture, NgtsRenderTextureContent, ManagePortalScene, NgTemplateOutlet]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsRenderTexture, NgtsRenderTextureContent, ManagePortalScene, NgTemplateOutlet],
 })
 export class NgtsMeshPortalMaterial {
 	attach = input<NgtAttachable>('material');

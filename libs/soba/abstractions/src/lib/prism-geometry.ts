@@ -22,15 +22,15 @@ const defaultOptions: NgtsPrismGeometryOptions = {
 };
 
 @Component({
-    selector: 'ngts-prism-geometry',
-    template: `
+	selector: 'ngts-prism-geometry',
+	template: `
 		<ngt-extrude-geometry #geometry *args="[shape(), parameters()]" [attach]="attach()">
 			<ng-content />
 		</ngt-extrude-geometry>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsPrismGeometry {
 	attach = input<NgtAttachable>('geometry');

@@ -18,16 +18,16 @@ import { Mesh } from 'three';
 import { State } from './state';
 
 @Component({
-    selector: 'app-plane',
-    template: `
+	selector: 'app-plane',
+	template: `
 		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="args" />
 			<ngt-mesh-standard-material color="#171717" />
 		</ngt-mesh>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Plane {
 	position = input<Triplet>([0, 0, 0]);
@@ -40,16 +40,16 @@ export class Plane {
 }
 
 @Component({
-    selector: 'app-box',
-    template: `
+	selector: 'app-box',
+	template: `
 		<ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
 			<ngt-box-geometry *args="args" />
 			<ngt-mesh-standard-material [roughness]="0.5" color="#575757" />
 		</ngt-mesh>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
 	position = input<Triplet>([0, 0, 0]);
@@ -62,7 +62,7 @@ export class Box {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-point-light [position]="[-10, -10, 30]" [intensity]="0.25 * Math.PI" [decay]="0" />
 		<ngt-spot-light
 			[intensity]="0.3 * Math.PI"
@@ -94,10 +94,10 @@ export class Box {
 			}
 		</ngtc-physics>
 	`,
-    imports: [Box, Plane, NgtcPhysics, NgtcDebug],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    host: { class: 'basic-experience' }
+	imports: [Box, Plane, NgtcPhysics, NgtcDebug],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	host: { class: 'basic-experience' },
 })
 export class Experience {
 	protected Math = Math;

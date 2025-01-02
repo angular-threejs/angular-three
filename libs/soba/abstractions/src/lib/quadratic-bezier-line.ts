@@ -14,14 +14,14 @@ const defaultOptions: NgtsQuadraticBezierLineOptions = {
 };
 
 @Component({
-    selector: 'ngts-quadratic-bezier-line',
-    template: `
+	selector: 'ngts-quadratic-bezier-line',
+	template: `
 		<ngts-line [points]="points()" [options]="parameters()">
 			<ng-content />
 		</ngts-line>
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsLine]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsLine],
 })
 export class NgtsQuadraticBezierLine {
 	start = input<Vector3 | [number, number, number]>([0, 0, 0]);

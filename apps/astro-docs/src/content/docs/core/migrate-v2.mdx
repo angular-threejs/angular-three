@@ -57,7 +57,7 @@ export class App {
 
 ## Scene Graph Inputs
 
-Since the `sceneGraph` reference is passed in as an input and the `NgtCanvas` will  render the scene graph with the custom renderer, there is no straightforward way to pass Inputs to the scene graph component itself.
+Since the `sceneGraph` reference is passed in as an input and the `NgtCanvas` will render the scene graph with the custom renderer, there is no straightforward way to pass Inputs to the scene graph component itself.
 
 Use a shared service or a shared `Signal` to pass data from outside to the Scene Graph component.
 
@@ -104,18 +104,22 @@ While not common, consumers can use `signalStore()` to create a `NgtSignalStore`
 ### Methods
 
 1. `select(...keys, options?)`: Retrieves a Signal of a part of the state.
+
    - Can select nested properties using multiple arguments
    - Returns `Signal<T>` where T is the type of the selected state
 
 2. `get(...keys)`: Retrieves the current value of a part of the state.
+
    - Can access nested properties using multiple arguments
    - Returns the value directly, not wrapped in a Signal
 
 3. `update(stateOrUpdater)`: Updates the state.
+
    - Accepts a partial state object or an updater function
    - Updater function receives the previous state and returns a partial state
 
 4. `state`: A Signal representing the entire state.
+
    - Equivalent to `select()` without arguments
 
 5. `snapshot`: A getter that returns the current state value.

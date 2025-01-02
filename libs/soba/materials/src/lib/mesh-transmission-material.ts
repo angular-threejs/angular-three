@@ -63,8 +63,8 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 };
 
 @Component({
-    selector: 'ngts-mesh-transmission-material',
-    template: `
+	selector: 'ngts-mesh-transmission-material',
+	template: `
 		<ngt-primitive
 			*args="[material()]"
 			#material
@@ -80,9 +80,9 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 			<ng-content />
 		</ngt-primitive>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsMeshTransmissionMaterial {
 	attach = input<NgtAttachable>('material');

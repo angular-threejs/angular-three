@@ -33,16 +33,16 @@ const defaultOptions: Partial<NgtMesh> & NgtsText3DOptions = {
 };
 
 @Component({
-    selector: 'ngts-text-3d',
-    template: `
+	selector: 'ngts-text-3d',
+	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
 			<ngt-text-geometry #textGeometry *args="textArgs()" />
 			<ng-content />
 		</ngt-mesh>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsText3D {
 	font = input.required<NgtsFontInput>();

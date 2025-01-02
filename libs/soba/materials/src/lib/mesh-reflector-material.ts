@@ -72,15 +72,15 @@ const defaultOptions: NgtsMeshReflectorMaterialOptions = {
 };
 
 @Component({
-    selector: 'ngts-mesh-reflector-material',
-    template: `
+	selector: 'ngts-mesh-reflector-material',
+	template: `
 		<ngt-primitive #material *args="[material()]" [attach]="attach()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsMeshReflectorMaterial {
 	attach = input<NgtAttachable>('material');

@@ -3,12 +3,12 @@ import { NgtCanvas } from 'angular-three';
 import { Experience } from './exprience';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas [sceneGraph]="scene" [camera]="{ position: [0, 0, 0.01] }" />
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'instances-soba' },
-    imports: [NgtCanvas]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'instances-soba' },
+	imports: [NgtCanvas],
 })
 export default class Instances {
 	protected scene = Experience;

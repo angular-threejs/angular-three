@@ -14,7 +14,7 @@ import { Color, InstancedMesh, Vector3 } from 'three';
 const BALLS = 1000;
 
 @Component({
-    template: `
+	template: `
 		<ngt-group>
 			<ngt-object3D [ngtrInstancedRigidBodies]="bodies" [options]="{ colliders: 'ball', linearDamping: 5 }">
 				<ngt-instanced-mesh #instancedMesh *args="[undefined, undefined, BALLS]" [castShadow]="true">
@@ -24,10 +24,10 @@ const BALLS = 1000;
 			</ngt-object3D>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'cluster-rapier' },
-    imports: [NgtrInstancedRigidBodies, NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'cluster-rapier' },
+	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
 export class ClusterExample {
 	static [NON_ROOT] = true;

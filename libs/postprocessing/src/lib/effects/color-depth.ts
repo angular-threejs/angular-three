@@ -8,17 +8,17 @@ extend({ ColorDepthEffect });
 export type ColorDepthEffectOptions = Partial<NonNullable<ConstructorParameters<typeof ColorDepthEffect>[0]>>;
 
 @Component({
-    selector: 'ngtp-color-depth',
-    template: `
+	selector: 'ngtp-color-depth',
+	template: `
 		<ngt-color-depth-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-color-depth-effect>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs, NgtpEffectBlendMode],
-    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs, NgtpEffectBlendMode],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpColorDepth {
 	effect = inject(NgtpEffect, { host: true });

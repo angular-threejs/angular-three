@@ -2,12 +2,12 @@
 	"cli": "nx",
 	"$id": "Init",
 	"title": "Init Angular Three",
-  "type": "object",
-  "properties": {
-    "skipGenerateExperience": {
-      "type": "boolean",
-      "description": "Skip generating Experience component",
-      "default": false
-    }
-  }
+	"type": "object",
+	"properties": {
+		"skipGenerateExperience": {
+			"type": "boolean",
+			"description": "Skip generating Experience component",
+			"default": false
+		}
+	}
 }

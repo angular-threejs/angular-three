@@ -8,7 +8,7 @@ import { HealthOverlay } from './overlays/health-overlay';
 import { PowerUpsOverlay } from './overlays/power-ups-overlay';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" [camera]="{ fov: 50, near: 0.1, far: 10000 }" [shadows]="true" />
 		<div class="absolute top-4 right-1/2 translate-x-1/2 flex gap-4 items-center">
 			<app-health-overlay />
@@ -20,17 +20,17 @@ import { PowerUpsOverlay } from './overlays/power-ups-overlay';
 			<!--			<button (click)="onTestHealth()" class="text-white font-mono">Test health</button>-->
 		</div>
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtCanvas, CoinOverlay, HealthOverlay, PowerUpsOverlay],
-    providers: [GameStore, CollectiblesStore],
-    styles: `
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtCanvas, CoinOverlay, HealthOverlay, PowerUpsOverlay],
+	providers: [GameStore, CollectiblesStore],
+	styles: `
 		:host {
 			display: block;
 			height: 100%;
 			width: 100%;
 			background: linear-gradient(#101232, #101560);
 		}
-	`
+	`,
 })
 export default class Aviator {
 	protected sceneGraph = Experience;

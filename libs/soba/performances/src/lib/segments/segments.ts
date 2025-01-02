@@ -57,17 +57,17 @@ const defaultSegmentsOptions: NgtsSegmentsOptions = {
 };
 
 @Component({
-    selector: 'ngts-segments',
-    template: `
+	selector: 'ngts-segments',
+	template: `
 		<ngt-primitive #line *args="[line]">
 			<ngt-primitive *args="[geometry]" attach="geometry" />
 			<ngt-primitive *args="[material]" attach="material" [parameters]="materialParameters()" />
 			<ng-content />
 		</ngt-primitive>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsSegments {
 	options = input(defaultSegmentsOptions, { transform: mergeInputs(defaultSegmentsOptions) });

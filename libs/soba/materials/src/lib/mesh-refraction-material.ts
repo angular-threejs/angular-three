@@ -56,8 +56,8 @@ function isCubeTexture(def: CubeTexture | Texture): def is CubeTexture {
 }
 
 @Component({
-    selector: 'ngts-mesh-refraction-material',
-    template: `
+	selector: 'ngts-mesh-refraction-material',
+	template: `
 		<ngt-primitive
 			*args="[material()]"
 			#material
@@ -71,9 +71,9 @@ function isCubeTexture(def: CubeTexture | Texture): def is CubeTexture {
 			<ng-content />
 		</ngt-primitive>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsMeshRefractionMaterial {
 	envMap = input.required<CubeTexture | Texture>();

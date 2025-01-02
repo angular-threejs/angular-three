@@ -49,17 +49,17 @@ export type NgtsTransformControlsOptions = Partial<NgtsTransformControlsObject> 
 	};
 
 @Component({
-    selector: 'ngts-transform-controls',
-    template: `
+	selector: 'ngts-transform-controls',
+	template: `
 		<ngt-primitive *args="[controls()]" [parameters]="controlsOptions()" />
 
 		<ngt-group #group [parameters]="parameters()">
 			<ng-content />
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsTransformControls {
 	object = input<Object3D | ElementRef<Object3D> | undefined | null>(null);

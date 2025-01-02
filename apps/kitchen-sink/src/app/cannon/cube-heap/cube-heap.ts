@@ -4,7 +4,7 @@ import { Experience } from './experience';
 import { shape } from './state';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas
 			[sceneGraph]="scene"
 			[shadows]="true"
@@ -12,9 +12,9 @@ import { shape } from './state';
 			(pointerMissed)="onPointerMissed()"
 		/>
 	`,
-    imports: [NgtCanvas],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'cube-heap-cannon' }
+	imports: [NgtCanvas],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'cube-heap-cannon' },
 })
 export default class CubeHeap {
 	protected scene = Experience;

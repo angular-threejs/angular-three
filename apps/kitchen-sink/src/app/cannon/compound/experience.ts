@@ -18,8 +18,8 @@ import { NgtcDebug } from 'angular-three-cannon/debug';
 import { Group } from 'three';
 
 @Component({
-    selector: 'app-plane',
-    template: `
+	selector: 'app-plane',
+	template: `
 		<ngt-group #group>
 			<ngt-mesh>
 				<ngt-plane-geometry *args="[8, 8]" />
@@ -31,9 +31,9 @@ import { Group } from 'three';
 			</ngt-mesh>
 		</ngt-group>
 	`,
-    imports: [NgtArgs],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	imports: [NgtArgs],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Plane {
 	rotation = input<Triplet>([0, 0, 0]);
@@ -45,8 +45,8 @@ export class Plane {
 }
 
 @Component({
-    selector: 'app-compound-body',
-    template: `
+	selector: 'app-compound-body',
+	template: `
 		<ngt-group #group>
 			<ngt-mesh [castShadow]="true">
 				<ngt-box-geometry *args="boxSize" />
@@ -58,9 +58,9 @@ export class Plane {
 			</ngt-mesh>
 		</ngt-group>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompoundBody {
 	protected boxSize: Triplet = [1, 1, 1];
@@ -107,7 +107,7 @@ export class CompoundBody {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-color attach="background" *args="['#f6d186']" />
 		<ngt-hemisphere-light [intensity]="0.35" />
 		<ngt-spot-light [position]="[5, 5, 5]" [angle]="0.3" [penumbra]="1" [intensity]="2" [castShadow]="true">
@@ -133,10 +133,10 @@ export class CompoundBody {
 			}
 		</ngtc-physics>
 	`,
-    imports: [NgtArgs, NgtcPhysics, NgtcDebug, Plane, CompoundBody],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'compound-experience' }
+	imports: [NgtArgs, NgtcPhysics, NgtcDebug, Plane, CompoundBody],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'compound-experience' },
 })
 export class Experience {
 	protected Math = Math;

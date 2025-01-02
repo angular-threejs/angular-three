@@ -22,7 +22,6 @@ ngtTestBed.advance; // method to advance the animation loop manually per frame
 ngtTestBed.toGraph; // method to convert the scene graph to a simple object
 ```
 
-
 ### Options
 
 `create` accepts an optional second argument that allows us to pass in options to customize the `TestBed`.
@@ -31,8 +30,8 @@ ngtTestBed.toGraph; // method to convert the scene graph to a simple object
 const ngtTestBed = NgtTestBed.create(SceneGraph, {
 	mockCanvasOptions: { width: 1280, height: 720 },
 	canvasConfiguration: {
-	  camera: { position: [0, 0, 5] },
-	  shadows: true
+		camera: { position: [0, 0, 5] },
+		shadows: true,
 	},
 	...TestBedOptions,
 });
@@ -44,6 +43,7 @@ const ngtTestBed = NgtTestBed.create(SceneGraph, {
   Options that determine the Color Space like `linear`, `flat`, `legacy` **can** affect the assertions in the test for THREE.js entities that are affected by different color spaces (e.g: `Color`)
 
   :::
+
 - `mockCanvasOptions` is an object that allows us to customize the mocked canvas element. It accepts `width` and `height` as well as `beforeReturn` which is a function that allows us to return a mocked `HTMLCanvasElement` before the `TestBed` is created.
 
 ## Example Scenario

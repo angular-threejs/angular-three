@@ -10,10 +10,12 @@ tags:
   - release
 featured: true
 ---
-import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
-import HudScene, {content as hudContent} from '../../../components/hud/hud?includeContent';
-import LightformerScene, {content as lightformerContent} from '../../../components/lightformer/lightformer?includeContent';
 
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import HudScene, { content as hudContent } from '../../../components/hud/hud?includeContent';
+import LightformerScene, {
+	content as lightformerContent,
+} from '../../../components/lightformer/lightformer?includeContent';
 
 After almost a year of development, we're thrilled to announce the release of Angular Three v2! 🎉 Through countless examples and tutorials from other [THREE.js](https://threejs.org) ecosystems, we've identified the shortcomings of the previous version of Angular Three. Since then, we've been working tirelessly to enhance the library, making it more stable, performant, and predictable when working with THREE.js scene graphs.
 
@@ -146,7 +148,6 @@ While Angular Three has always been performant, thanks to Angular, the introduct
 
 Before Angular Signals, Angular Three used a custom `NgtRef` to track the life-cycle of THREE.js entities on the template via the `[ref]` custom property binding.
 
-
 ```angular-ts
 @Component({
   template: `
@@ -211,9 +212,7 @@ If you are feeling good about Zoneless, you can even enable it with `withExperim
 
 ```ts
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideExperimentalZonelessChangeDetection()
-  ]
+	providers: [provideExperimentalZonelessChangeDetection()],
 });
 ```
 
@@ -341,14 +340,14 @@ The main scene contains the torus (donut). The view cube (HUD) is rendered in a 
 You can check out the code here: [HudScene](https://github.com/angular-threejs/angular-three/blob/main/apps/kitchen-sink/src/app/soba/hud/experience.ts)
 
 <Tabs>
-  <TabItem label="Preview">
-    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-      <HudScene client:only />
-    </div>
-  </TabItem>
-  <TabItem label="Code">
-    <Code code={hudContent} lang="angular-ts" />
-  </TabItem>
+	<TabItem label="Preview">
+		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
+			<HudScene client:only />
+		</div>
+	</TabItem>
+	<TabItem label="Code">
+		<Code code={hudContent} lang="angular-ts" />
+	</TabItem>
 </Tabs>
 
 #### Environment with Lightformers
@@ -356,14 +355,14 @@ You can check out the code here: [HudScene](https://github.com/angular-threejs/a
 `NgtsEnvironment` with content projection has never worked correctly. Now with v2 `NgtPortal`, we can finally have proper `NgtsEnvironment` content with `NgtsLightformer` to control the lighting of the environment.
 
 <Tabs>
-  <TabItem label="Preview">
-    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-      <LightformerScene client:only />
-    </div>
-  </TabItem>
-  <TabItem label="Code">
-    <Code code={lightformerContent} lang="angular-ts" />
-  </TabItem>
+	<TabItem label="Preview">
+		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
+			<LightformerScene client:only />
+		</div>
+	</TabItem>
+	<TabItem label="Code">
+		<Code code={lightformerContent} lang="angular-ts" />
+	</TabItem>
 </Tabs>
 
 ### Improved documentation 📖
@@ -455,6 +454,7 @@ There is also a [template repository](https://github.com/angular-threejs/templat
 As we celebrate the release of Angular Three v2, our focus now shifts to promoting its adoption and ensuring its stability. Here's a glimpse of our immediate plans:
 
 - **Promotion and Education**: We're committed to creating a wealth of resources to help developers get the most out of Angular Three v2. This includes:
+
   - Writing in-depth articles and blog posts about various features and use cases
   - Developing comprehensive tutorials covering both basic and advanced topics
   - Creating video content to demonstrate real-world applications of Angular Three v2

@@ -12,16 +12,16 @@ import { Group, Mesh } from 'three';
 
 // NOTE: this is to be used with GodRaysEffect as the effect needs a sun source
 @Component({
-    selector: 'app-sun',
-    template: `
+	selector: 'app-sun',
+	template: `
 		<ngt-mesh #sun [position]="position()">
 			<ngt-sphere-geometry *args="[4, 36, 36]" />
 			<ngt-mesh-basic-material [color]="color()" />
 		</ngt-mesh>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Sun {
 	color = input('#00FF00');
@@ -30,7 +30,7 @@ export class Sun {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-color *args="['#171717']" attach="background" />
 
 		<app-sun #sun color="yellow" />
@@ -58,10 +58,10 @@ export class Sun {
 			}
 		</ngtp-effect-composer>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [NgtpEffectComposer, NgtArgs, NgtpGodRays, Sun],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'experience-basic-postprocessing' }
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	imports: [NgtpEffectComposer, NgtArgs, NgtpGodRays, Sun],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'experience-basic-postprocessing' },
 })
 export class Experience {
 	private group = viewChild.required<ElementRef<Group>>('group');

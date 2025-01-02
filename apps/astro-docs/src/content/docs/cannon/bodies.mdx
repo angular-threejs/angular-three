@@ -58,38 +58,38 @@ export class PhysicsBox {
 
 ## Body Functions
 
-| Function | Description | Specific Options |
-|----------|-------------|------------------|
-| `injectBox` | Creates a box-shaped body | `args: [width, height, depth]` |
-| `injectSphere` | Creates a spherical body | `args: [radius]` |
-| `injectPlane` | Creates an infinite plane | No specific options |
-| `injectCylinder` | Creates a cylindrical body | `args: [radiusTop, radiusBottom, height, numSegments]` |
-| `injectHeightfield` | Creates a heightfield body | `args: [data, options]` |
-| `injectParticle` | Creates a particle (point mass) | No specific options |
-| `injectConvexPolyhedron` | Creates a convex polyhedron | `args: [vertices, faces]` |
-| `injectTrimesh` | Creates a triangular mesh body | `args: [vertices, indices]` |
-| `injectCompound` | Creates a compound body | `shapes: Array<{ type, args, position?, rotation? }>` |
+| Function                 | Description                     | Specific Options                                       |
+| ------------------------ | ------------------------------- | ------------------------------------------------------ |
+| `injectBox`              | Creates a box-shaped body       | `args: [width, height, depth]`                         |
+| `injectSphere`           | Creates a spherical body        | `args: [radius]`                                       |
+| `injectPlane`            | Creates an infinite plane       | No specific options                                    |
+| `injectCylinder`         | Creates a cylindrical body      | `args: [radiusTop, radiusBottom, height, numSegments]` |
+| `injectHeightfield`      | Creates a heightfield body      | `args: [data, options]`                                |
+| `injectParticle`         | Creates a particle (point mass) | No specific options                                    |
+| `injectConvexPolyhedron` | Creates a convex polyhedron     | `args: [vertices, faces]`                              |
+| `injectTrimesh`          | Creates a triangular mesh body  | `args: [vertices, indices]`                            |
+| `injectCompound`         | Creates a compound body         | `shapes: Array<{ type, args, position?, rotation? }>`  |
 
 ## Common Options
 
 All body functions accept a set of common options:
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `mass` | number | The mass of the body (0 for static bodies) |
-| `position` | [x: number, y: number, z: number] | Initial position of the body |
-| `rotation` | [x: number, y: number, z: number] | Initial rotation of the body (in radians) |
-| `velocity` | [x: number, y: number, z: number] | Initial velocity of the body |
-| `angularVelocity` | [x: number, y: number, z: number] | Initial angular velocity of the body |
-| `linearDamping` | number | Linear damping of the body (0 = no damping, 1 = full damping) |
-| `angularDamping` | number | Angular damping of the body |
-| `fixedRotation` | boolean | If true, body will not rotate |
-| `collisionFilterGroup` | number | The collision group the body belongs to |
-| `collisionFilterMask` | number | Which groups this body can collide with |
-| `trigger` | boolean | If true, body acts as a trigger (no collision response) |
-| `onCollide` | function | Callback function when collision occurs |
-| `onCollideBegin` | function | Callback function when collision begins |
-| `onCollideEnd` | function | Callback function when collision ends |
+| Option                 | Type                              | Description                                                   |
+| ---------------------- | --------------------------------- | ------------------------------------------------------------- |
+| `mass`                 | number                            | The mass of the body (0 for static bodies)                    |
+| `position`             | [x: number, y: number, z: number] | Initial position of the body                                  |
+| `rotation`             | [x: number, y: number, z: number] | Initial rotation of the body (in radians)                     |
+| `velocity`             | [x: number, y: number, z: number] | Initial velocity of the body                                  |
+| `angularVelocity`      | [x: number, y: number, z: number] | Initial angular velocity of the body                          |
+| `linearDamping`        | number                            | Linear damping of the body (0 = no damping, 1 = full damping) |
+| `angularDamping`       | number                            | Angular damping of the body                                   |
+| `fixedRotation`        | boolean                           | If true, body will not rotate                                 |
+| `collisionFilterGroup` | number                            | The collision group the body belongs to                       |
+| `collisionFilterMask`  | number                            | Which groups this body can collide with                       |
+| `trigger`              | boolean                           | If true, body acts as a trigger (no collision response)       |
+| `onCollide`            | function                          | Callback function when collision occurs                       |
+| `onCollideBegin`       | function                          | Callback function when collision begins                       |
+| `onCollideEnd`         | function                          | Callback function when collision ends                         |
 
 ## Advanced Usage
 

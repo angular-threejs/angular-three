@@ -30,8 +30,8 @@ const defaultOptions: Partial<NgtMesh> &
 };
 
 @Component({
-    selector: 'ngts-grid',
-    template: `
+	selector: 'ngts-grid',
+	template: `
 		<ngt-mesh #mesh [frustumCulled]="false" [parameters]="parameters()">
 			<ngt-plane-geometry *args="planeArgs()" />
 			<ngt-grid-material [transparent]="true" [side]="side()" [parameters]="uniforms()">
@@ -40,9 +40,9 @@ const defaultOptions: Partial<NgtMesh> &
 			<ng-content />
 		</ngt-mesh>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsGrid {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

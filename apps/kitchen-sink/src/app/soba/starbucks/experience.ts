@@ -14,8 +14,8 @@ type CupGLTF = GLTF & {
 	materials: { ['13 - Default']: MeshStandardMaterial };
 };
 @Component({
-    selector: 'app-cup',
-    template: `
+	selector: 'app-cup',
+	template: `
 		@if (gltf(); as gltf) {
 			<ngt-mesh
 				[castShadow]="true"
@@ -43,9 +43,9 @@ type CupGLTF = GLTF & {
 			<ngts-pivot-controls [options]="{ activeAxes: [true, true, false], scale: 0.55 }" (dragged)="onDrag($event)" />
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsPivotControls, NgtsDecal]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsPivotControls, NgtsDecal],
 })
 export class Cup {
 	protected position = signal<NgtVector3>([0, 0.75, 0.3]);
@@ -69,7 +69,7 @@ export class Cup {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngts-orthographic-camera [options]="{ makeDefault: true, position: [0, 10, 100], zoom: 140 }" />
 
 		<ngt-color attach="background" *args="['#027946']" />
@@ -89,10 +89,10 @@ export class Cup {
 
 		<ngts-orbit-controls [options]="{ makeDefault: true }" />
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsOrthographicCamera, NgtArgs, Cup, NgtsAccumulativeShadows, NgtsRandomizedLights, NgtsOrbitControls],
-    host: { class: 'starbucks-soba-experience' }
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsOrthographicCamera, NgtArgs, Cup, NgtsAccumulativeShadows, NgtsRandomizedLights, NgtsOrbitControls],
+	host: { class: 'starbucks-soba-experience' },
 })
 export class Experience {
 	protected readonly Math = Math;

@@ -7,7 +7,7 @@ import routes from './soba.routes';
 extend(THREE);
 
 @Component({
-    template: `
+	template: `
 		<div class="h-svh">
 			<router-outlet />
 		</div>
@@ -28,9 +28,9 @@ extend(THREE);
 			}
 		</ul>
 	`,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'soba' }
+	imports: [RouterOutlet, RouterLink, RouterLinkActive],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'soba' },
 })
 export default class Soba {
 	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);

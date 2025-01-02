@@ -11,15 +11,15 @@ import { NgtArgs, NgtBufferAttribute, getLocalState } from 'angular-three';
 import { BufferAttribute, BufferGeometry } from 'three';
 
 @Component({
-    selector: 'ngts-computed-attribute',
-    template: `
+	selector: 'ngts-computed-attribute',
+	template: `
 		<ngt-primitive #attribute *args="[bufferAttribute]" [attach]="['attributes', name()]" [parameters]="options()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 /**
  * Used exclusively as a child of a BufferGeometry.

@@ -13,18 +13,18 @@ const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
 };
 
 @Component({
-    selector: 'ngtp-scanline',
-    template: `
+	selector: 'ngtp-scanline',
+	template: `
 		<ngt-scanline-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-scanline-effect>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs, NgtpEffectBlendMode],
-    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
-    providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.OVERLAY })]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs, NgtpEffectBlendMode],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.OVERLAY })],
 })
 export class NgtpScanline {
 	effect = inject(NgtpEffect, { host: true });

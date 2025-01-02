@@ -124,8 +124,8 @@ const defaultOptions: NgtsPivotControlsOptions = {
 };
 
 @Component({
-    selector: 'ngts-pivot-controls',
-    template: `
+	selector: 'ngts-pivot-controls',
+	template: `
 		<ngt-group #parent>
 			<ngt-group #group [matrix]="matrix()" [matrixAutoUpdate]="false" [parameters]="parameters()">
 				<ngt-group #gizmo [visible]="visible()" [position]="offset()" [rotation]="rotation()">
@@ -183,9 +183,9 @@ const defaultOptions: NgtsPivotControlsOptions = {
 			</ngt-group>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsAxisArrow, NgtsPlaneSlider, NgtsAxisRotator, NgtsScalingSphere]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsAxisArrow, NgtsPlaneSlider, NgtsAxisRotator, NgtsScalingSphere],
 })
 // TODO: PivotControls is not working properly with control flow
 export class NgtsPivotControls {

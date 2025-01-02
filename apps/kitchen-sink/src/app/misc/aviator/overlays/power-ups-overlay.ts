@@ -56,15 +56,15 @@ export class PowerUp {
 }
 
 @Component({
-    selector: 'app-power-ups-overlay',
-    template: `
+	selector: 'app-power-ups-overlay',
+	template: `
 		@for (powerUp of powerUps; track powerUp) {
 			<app-power-up [powerUp]="powerUp" />
 		}
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'flex gap-2 items-center' },
-    imports: [PowerUp]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'flex gap-2 items-center' },
+	imports: [PowerUp],
 })
 export class PowerUpsOverlay {
 	protected powerUps = POWER_UP_TYPES;

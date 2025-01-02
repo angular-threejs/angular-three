@@ -70,8 +70,8 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 };
 
 @Component({
-    selector: '[ngtsHTMLContent]',
-    template: `
+	selector: '[ngtsHTMLContent]',
+	template: `
 		@if (html.transform()) {
 			<div
 				#transformOuter
@@ -105,9 +105,9 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 			<ng-content />
 		</ng-template>
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgTemplateOutlet],
-    host: { 'data-ngts-html-content': '' }
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgTemplateOutlet],
+	host: { 'data-ngts-html-content': '' },
 })
 export class NgtsHTMLContent extends NgtHTML {
 	options = input(defaultHtmlContentOptions, {

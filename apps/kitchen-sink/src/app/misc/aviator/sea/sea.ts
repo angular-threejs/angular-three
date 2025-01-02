@@ -23,16 +23,16 @@ import {
 import { GameStore } from '../game.store';
 
 @Component({
-    selector: 'app-sea',
-    template: `
+	selector: 'app-sea',
+	template: `
 		<ngt-mesh #mesh [receiveShadow]="true" [position]="[0, -SEA_RADIUS, 0]">
 			<ngt-cylinder-geometry #cylinder *args="[SEA_RADIUS, SEA_RADIUS, SEA_LENGTH, 40, 10]" />
 			<ngt-mesh-phong-material [color]="COLOR_SEA_LEVEL[0]" [transparent]="true" [opacity]="0.8" [flatShading]="true" />
 		</ngt-mesh>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class Sea {
 	protected readonly SEA_RADIUS = SEA_RADIUS;

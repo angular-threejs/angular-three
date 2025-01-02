@@ -3,16 +3,16 @@ import { NgtArgs, NgtVector3 } from 'angular-three';
 import { COLORS } from '../constants';
 
 @Component({
-    selector: 'app-wheel',
-    template: `
+	selector: 'app-wheel',
+	template: `
 		<ngt-mesh [position]="position()">
 			<ngt-box-geometry *args="[30, 15, 10]" />
 			<ngt-mesh-phong-material [color]="COLORS.red" [flatShading]="true" />
 		</ngt-mesh>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class Wheel {
 	protected readonly COLORS = COLORS;

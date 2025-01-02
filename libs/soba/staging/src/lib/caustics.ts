@@ -87,8 +87,8 @@ const defaultOptions: NgtsCausticsOptions = {
 };
 
 @Component({
-    selector: 'ngts-caustics',
-    template: `
+	selector: 'ngts-caustics',
+	template: `
 		<ngt-group #group [parameters]="parameters()">
 			<ngt-scene #scene>
 				<ngt-orthographic-camera #camera [up]="[0, 1, 0]" />
@@ -116,9 +116,9 @@ const defaultOptions: NgtsCausticsOptions = {
 			</ngt-mesh>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsEdges]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsEdges],
 })
 export class NgtsCaustics {
 	protected readonly Math = Math;

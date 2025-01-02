@@ -13,9 +13,9 @@ To use the EffectComposer, wrap your effects inside the `<ngtp-effect-composer>`
 
 ```html
 <ngtp-effect-composer>
-  <!-- Add your effects here -->
-  <ngtp-bloom [options]="bloomOptions" />
-  <ngtp-vignette [options]="vignetteOptions" />
+	<!-- Add your effects here -->
+	<ngtp-bloom [options]="bloomOptions" />
+	<ngtp-vignette [options]="vignetteOptions" />
 </ngtp-effect-composer>
 ```
 
@@ -23,18 +23,18 @@ To use the EffectComposer, wrap your effects inside the `<ngtp-effect-composer>`
 
 The EffectComposer accepts the following options:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| enabled | boolean | true | Enables or disables the EffectComposer |
-| depthBuffer | boolean | undefined | Enables depth buffer |
-| stencilBuffer | boolean | undefined | Enables stencil buffer |
-| autoClear | boolean | true | Automatically clears the render target |
-| resolutionScale | number | undefined | Scales the render resolution |
-| multisampling | number | 8 | Sets the number of samples for multisampling anti-aliasing |
-| frameBufferType | TextureDataType | HalfFloatType | Sets the frame buffer type |
-| renderPriority | number | 1 | Sets the render priority |
-| camera | Camera | undefined | Custom camera for rendering |
-| scene | Scene | undefined | Custom scene for rendering |
+| Option          | Type            | Default       | Description                                                |
+| --------------- | --------------- | ------------- | ---------------------------------------------------------- |
+| enabled         | boolean         | true          | Enables or disables the EffectComposer                     |
+| depthBuffer     | boolean         | undefined     | Enables depth buffer                                       |
+| stencilBuffer   | boolean         | undefined     | Enables stencil buffer                                     |
+| autoClear       | boolean         | true          | Automatically clears the render target                     |
+| resolutionScale | number          | undefined     | Scales the render resolution                               |
+| multisampling   | number          | 8             | Sets the number of samples for multisampling anti-aliasing |
+| frameBufferType | TextureDataType | HalfFloatType | Sets the frame buffer type                                 |
+| renderPriority  | number          | 1             | Sets the render priority                                   |
+| camera          | Camera          | undefined     | Custom camera for rendering                                |
+| scene           | Scene           | undefined     | Custom scene for rendering                                 |
 
 ## Examples
 
@@ -42,8 +42,8 @@ The EffectComposer accepts the following options:
 
 ```html
 <ngtp-effect-composer>
-  <ngtp-bloom [options]="{ luminanceThreshold: 0.6, luminanceSmoothing: 0.5, intensity: 1.2 }" />
-  <ngtp-vignette [options]="{ offset: 0.5, darkness: 0.5 }" />
+	<ngtp-bloom [options]="{ luminanceThreshold: 0.6, luminanceSmoothing: 0.5, intensity: 1.2 }" />
+	<ngtp-vignette [options]="{ offset: 0.5, darkness: 0.5 }" />
 </ngtp-effect-composer>
 ```
 
@@ -51,8 +51,8 @@ The EffectComposer accepts the following options:
 
 ```html
 <ngtp-effect-composer [options]="{ autoClear: false, multisampling: 0 }">
-  <ngtp-outline [options]="{ edgeStrength: 2.5, pulseSpeed: 0, blur: true, kernelSize: KernelSize.SMALL }" />
-  <ngtp-smaa />
+	<ngtp-outline [options]="{ edgeStrength: 2.5, pulseSpeed: 0, blur: true, kernelSize: KernelSize.SMALL }" />
+	<ngtp-smaa />
 </ngtp-effect-composer>
 ```
 
@@ -70,7 +70,7 @@ The EffectComposer accepts the following options:
 <!-- Your 3D objects here -->
 
 <ngtp-effect-composer>
-  <ngtp-outline [options]="outlineOptions" />
-  <ngtp-smaa />
+	<ngtp-outline [options]="outlineOptions" />
+	<ngtp-smaa />
 </ngtp-effect-composer>
 ```

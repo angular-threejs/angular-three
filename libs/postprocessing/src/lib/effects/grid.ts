@@ -6,13 +6,13 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 	Partial<{ size: { width: number; height: number } }>;
 
 @Component({
-    selector: 'ngtp-grid',
-    template: `
+	selector: 'ngtp-grid',
+	template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-    imports: [NgtArgs],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	imports: [NgtArgs],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGrid {
 	options = input({} as GridOptions);

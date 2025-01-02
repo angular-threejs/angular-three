@@ -27,8 +27,8 @@ const coinMaterial = new MeshPhongMaterial({
 });
 
 @Component({
-    selector: 'app-collectible-coin',
-    template: `
+	selector: 'app-collectible-coin',
+	template: `
 		<ngt-mesh
 			#coin
 			[castShadow]="true"
@@ -37,15 +37,15 @@ const coinMaterial = new MeshPhongMaterial({
 			[position]="[spawnable.positionX(), spawnable.positionY(), 0]"
 		/>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs],
-    hostDirectives: [{ directive: Collectible, inputs: ['state'], outputs: ['stateChange'] }],
-    providers: [
-        { provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: COIN_DISTANCE_TOLERANCE },
-        { provide: SPAWNABLE_PARTICLE_COLOR, useValue: COLOR_COINS },
-        { provide: SPAWNABLE_ATTRACTABLE, useValue: true },
-    ]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
+	hostDirectives: [{ directive: Collectible, inputs: ['state'], outputs: ['stateChange'] }],
+	providers: [
+		{ provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: COIN_DISTANCE_TOLERANCE },
+		{ provide: SPAWNABLE_PARTICLE_COLOR, useValue: COLOR_COINS },
+		{ provide: SPAWNABLE_ATTRACTABLE, useValue: true },
+	],
 })
 export class CollectibleCoin {
 	protected coinGeometry = coinGeometry;

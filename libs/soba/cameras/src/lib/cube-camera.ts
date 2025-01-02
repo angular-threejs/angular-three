@@ -86,8 +86,8 @@ const defaultOptions: NgtsCubeCameraOptions = {
 };
 
 @Component({
-    selector: 'ngts-cube-camera',
-    template: `
+	selector: 'ngts-cube-camera',
+	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-primitive *args="[camera()]" />
 			<ngt-group #group>
@@ -95,9 +95,9 @@ const defaultOptions: NgtsCubeCameraOptions = {
 			</ngt-group>
 		</ngt-group>
 	`,
-    imports: [NgtArgs, NgTemplateOutlet],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs, NgTemplateOutlet],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsCubeCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

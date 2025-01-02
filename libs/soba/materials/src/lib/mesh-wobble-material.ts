@@ -12,15 +12,15 @@ const defaultOptions: NgtsMeshWobbleMaterialOptions = {
 };
 
 @Component({
-    selector: 'ngts-mesh-wobble-material',
-    template: `
+	selector: 'ngts-mesh-wobble-material',
+	template: `
 		<ngt-primitive *args="[material]" [parameters]="parameters()" [attach]="attach()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsMeshWobbleMaterial {
 	attach = input<NgtAttachable>('material');

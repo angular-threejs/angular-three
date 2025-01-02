@@ -55,8 +55,8 @@ const upV = new Vector3(0, 1, 0);
 const offsetMatrix = new Matrix4();
 
 @Component({
-    selector: 'ngts-axis-arrow',
-    template: `
+	selector: 'ngts-axis-arrow',
+	template: `
 		<ngt-group #group>
 			<ngt-group
 				[matrix]="matrixL()"
@@ -119,9 +119,9 @@ const offsetMatrix = new Matrix4();
 			</ngt-group>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs, NgtsLine, NgtsHTML, NgtsHTMLContent]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs, NgtsLine, NgtsHTML, NgtsHTMLContent],
 })
 export class NgtsAxisArrow {
 	protected readonly DoubleSide = DoubleSide;

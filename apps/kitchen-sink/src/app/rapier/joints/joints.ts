@@ -13,15 +13,15 @@ import { injectPrismaticJoint, injectSphericalJoint, NgtrRigidBody, NgtrRigidBod
 import { Quaternion, Vector3 } from 'three';
 
 @Component({
-    selector: 'app-rope-segment',
-    imports: [NgtrRigidBody],
-    template: `
+	selector: 'app-rope-segment',
+	imports: [NgtrRigidBody],
+	template: `
 		<ngt-object3D [ngtrRigidBody]="type()" [position]="position()">
 			<ng-content />
 		</ngt-object3D>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RopeSegment {
 	type = input.required<NgtrRigidBodyType>();
@@ -43,8 +43,8 @@ export class RopeJoint {
 }
 
 @Component({
-    selector: 'app-rope',
-    template: `
+	selector: 'app-rope',
+	template: `
 		<ngt-group>
 			@for (i of count(); track $index) {
 				<app-rope-segment [type]="$index === 0 ? 'kinematicPosition' : 'dynamic'" [position]="[$index, 0, 0]">
@@ -67,9 +67,9 @@ export class RopeJoint {
 			}
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RopeSegment, NgtArgs, RopeJoint, NgtrRigidBody]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [RopeSegment, NgtArgs, RopeJoint, NgtrRigidBody],
 })
 export class Rope {
 	length = input.required<number>();
@@ -97,8 +97,8 @@ export class Rope {
 }
 
 @Component({
-    selector: 'app-prismatic',
-    template: `
+	selector: 'app-prismatic',
+	template: `
 		<ngt-group>
 			<ngt-object3D #bodyA ngtrRigidBody>
 				<ngt-mesh>
@@ -112,9 +112,9 @@ export class Rope {
 			</ngt-object3D>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtrRigidBody]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtrRigidBody],
 })
 export class Prismatic {
 	bodyA = viewChild.required('bodyA', { read: NgtrRigidBody });
@@ -130,16 +130,16 @@ export class Prismatic {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-group>
 			<app-rope [length]="40" />
 			<app-prismatic />
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'joints-rapier' },
-    imports: [Rope, Prismatic]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'joints-rapier' },
+	imports: [Rope, Prismatic],
 })
 export class JointsExample {
 	static [NON_ROOT] = true;

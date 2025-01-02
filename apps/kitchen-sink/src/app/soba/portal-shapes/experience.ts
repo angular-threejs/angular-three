@@ -16,7 +16,7 @@ import { Letter } from './letter';
 /* credit: https://pmndrs.github.io/examples/demos/portal-shapes */
 
 @Component({
-    template: `
+	template: `
 		<ngt-color *args="['#4899c9']" attach="background" />
 
 		<ngtr-physics [options]="{ gravity: [0, -60, 0] }">
@@ -140,28 +140,28 @@ import { Letter } from './letter';
 			[options]="{ makeDefault: true, dollyToCursor: true, minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }"
 		/>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        NgtrPhysics,
-        NgtrCuboidCollider,
-        NgtsEnvironment,
-        NgtsLightformer,
-        NgtsContactShadows,
-        NgtsCameraControls,
-        Letter,
-        BasicExperience,
-        NgtArgs,
-        InstancedVertexColorsExperience,
-        LodExperience,
-        LowpolyEarthExperience,
-        ShakyExperience,
-        InvertedStencilBufferExperience,
-        InstancesExperience,
-        NgtsBounds,
-        NgtsOrbitControls,
-    ],
-    hostDirectives: [NgtsPreload]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		NgtrPhysics,
+		NgtrCuboidCollider,
+		NgtsEnvironment,
+		NgtsLightformer,
+		NgtsContactShadows,
+		NgtsCameraControls,
+		Letter,
+		BasicExperience,
+		NgtArgs,
+		InstancedVertexColorsExperience,
+		LodExperience,
+		LowpolyEarthExperience,
+		ShakyExperience,
+		InvertedStencilBufferExperience,
+		InstancesExperience,
+		NgtsBounds,
+		NgtsOrbitControls,
+	],
+	hostDirectives: [NgtsPreload],
 })
 export class Experience {
 	protected readonly Math = Math;

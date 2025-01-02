@@ -53,6 +53,7 @@ To start, we can create two Scene components: `RedScene` and `BlueScene`
       }
     }
     ```
+
   </TabItem>
 
   <TabItem label="src/app/blue-scene.component.ts">
@@ -82,6 +83,7 @@ To start, we can create two Scene components: `RedScene` and `BlueScene`
       }
     }
     ```
+
   </TabItem>
 </Tabs>
 
@@ -93,17 +95,17 @@ import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter([
-      {
-        path: '',
-        loadComponent: () => import('./app/red-scene.component'),
-      },
-      {
-        path: 'blue',
-        loadComponent: () => import('./app/blue-scene.component'),
-      },
-    ]),
-  ],
+	providers: [
+		provideRouter([
+			{
+				path: '',
+				loadComponent: () => import('./app/red-scene.component'),
+			},
+			{
+				path: 'blue',
+				loadComponent: () => import('./app/blue-scene.component'),
+			},
+		]),
+	],
 }).catch((err) => console.error(err));
 ```

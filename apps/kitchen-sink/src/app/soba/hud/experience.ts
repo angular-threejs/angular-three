@@ -17,16 +17,16 @@ import { NgtsEnvironment, NgtsRenderTexture, NgtsRenderTextureContent } from 'an
 import { Matrix4, Mesh, Scene } from 'three';
 
 @Component({
-    selector: 'app-torus',
-    template: `
+	selector: 'app-torus',
+	template: `
 		<ngt-mesh [scale]="scale()" (pointerover)="hovered.set(true)" (pointerout)="hovered.set(false)">
 			<ngt-torus-geometry *args="[1, 0.25, 32, 100]" />
 			<ngt-mesh-standard-material [color]="color()" />
 		</ngt-mesh>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Torus {
 	scale = input(1);
@@ -36,8 +36,8 @@ export class Torus {
 }
 
 @Component({
-    selector: 'app-face-material',
-    template: `
+	selector: 'app-face-material',
+	template: `
 		<ngt-mesh-standard-material [attach]="['material', index()]" [color]="color()">
 			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">
 				<ng-template renderTextureContent>
@@ -53,9 +53,9 @@ export class Torus {
 			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
-    imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsRenderTextureContent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsRenderTextureContent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FaceMaterial {
 	index = input.required<number>();
@@ -66,8 +66,8 @@ export class FaceMaterial {
 }
 
 @Component({
-    selector: 'app-box',
-    template: `
+	selector: 'app-box',
+	template: `
 		<ngt-mesh
 			#mesh
 			[position]="position()"
@@ -82,9 +82,9 @@ export class FaceMaterial {
 			}
 		</ngt-mesh>
 	`,
-    imports: [FaceMaterial],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [FaceMaterial],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
 	position = input([0, 0, 0]);
@@ -105,8 +105,8 @@ export class Box {
 }
 
 @Component({
-    selector: 'app-view-cube',
-    template: `
+	selector: 'app-view-cube',
+	template: `
 		<ngt-portal [container]="scene()" [autoRender]="true">
 			<ng-template portalContent>
 				<ngt-ambient-light [intensity]="Math.PI / 2" />
@@ -119,9 +119,9 @@ export class Box {
 			</ng-template>
 		</ngt-portal>
 	`,
-    imports: [Box, NgtPortal, NgtPortalContent, NgtsPerspectiveCamera],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [Box, NgtPortal, NgtPortalContent, NgtsPerspectiveCamera],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewCube {
 	protected Math = Math;
@@ -152,7 +152,7 @@ export class ViewCube {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-color *args="['#dcdcdc']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
 
@@ -162,10 +162,10 @@ export class ViewCube {
 		<ngts-orbit-controls />
 		<ngts-environment [options]="{ preset: 'city' }" />
 	`,
-    imports: [NgtsOrbitControls, NgtsEnvironment, Torus, ViewCube, NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'hud-experience' }
+	imports: [NgtsOrbitControls, NgtsEnvironment, Torus, ViewCube, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'hud-experience' },
 })
 export class Experience {
 	protected Math = Math;

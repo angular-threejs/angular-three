@@ -59,42 +59,47 @@ export class HingeConstraint {
 
 ## Constraint Functions
 
-| Function | Description | Specific Options |
-|----------|-------------|------------------|
-| `injectPointToPoint` | Creates a point-to-point constraint | `pivotA`, `pivotB` |
-| `injectConeTwist` | Creates a cone twist constraint | `pivotA`, `pivotB`, `axisA`, `axisB` |
-| `injectDistance` | Creates a distance constraint | `distance` |
-| `injectLock` | Creates a lock constraint | `maxForce` |
-| `injectHinge` | Creates a hinge constraint | `pivotA`, `pivotB`, `axisA`, `axisB` |
+| Function             | Description                         | Specific Options                     |
+| -------------------- | ----------------------------------- | ------------------------------------ |
+| `injectPointToPoint` | Creates a point-to-point constraint | `pivotA`, `pivotB`                   |
+| `injectConeTwist`    | Creates a cone twist constraint     | `pivotA`, `pivotB`, `axisA`, `axisB` |
+| `injectDistance`     | Creates a distance constraint       | `distance`                           |
+| `injectLock`         | Creates a lock constraint           | `maxForce`                           |
+| `injectHinge`        | Creates a hinge constraint          | `pivotA`, `pivotB`, `axisA`, `axisB` |
 
 ## Common Options
 
 All constraint functions accept two bodies as the first two arguments, followed by an options object. Common options include:
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `pivotA` | [x: number, y: number, z: number] | The pivot point for body A in local space |
-| `pivotB` | [x: number, y: number, z: number] | The pivot point for body B in local space |
-| `axisA` | [x: number, y: number, z: number] | The axis for body A (for certain constraints) |
-| `axisB` | [x: number, y: number, z: number] | The axis for body B (for certain constraints) |
-| `maxForce` | number | The maximum force that can be applied to maintain the constraint |
+| Option     | Type                              | Description                                                      |
+| ---------- | --------------------------------- | ---------------------------------------------------------------- |
+| `pivotA`   | [x: number, y: number, z: number] | The pivot point for body A in local space                        |
+| `pivotB`   | [x: number, y: number, z: number] | The pivot point for body B in local space                        |
+| `axisA`    | [x: number, y: number, z: number] | The axis for body A (for certain constraints)                    |
+| `axisB`    | [x: number, y: number, z: number] | The axis for body B (for certain constraints)                    |
+| `maxForce` | number                            | The maximum force that can be applied to maintain the constraint |
 
 ## Specific Options
 
 ### PointToPoint Constraint
+
 - No additional specific options
 
 ### ConeTwist Constraint
+
 - `angle`: number - The maximum cone angle in radians
 - `twistAngle`: number - The maximum twist angle in radians
 
 ### Distance Constraint
+
 - `distance`: number - The fixed distance between the bodies
 
 ### Lock Constraint
+
 - No additional specific options
 
 ### Hinge Constraint
+
 - `collideConnected`: boolean - Whether the connected bodies should collide with each other
 
 ## Advanced Usage

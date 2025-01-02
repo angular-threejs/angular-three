@@ -50,36 +50,36 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 };
 
 @Component({
-    selector: 'ngts-rounded-box',
-    template: `
+	selector: 'ngts-rounded-box',
+	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
 			<ngt-extrude-geometry #geometry *args="[shape(), params()]" />
 			<ng-content />
 		</ngt-mesh>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs],
-    hostDirectives: [
-        {
-            directive: NgtObjectEvents,
-            outputs: [
-                'click',
-                'dblclick',
-                'contextmenu',
-                'pointerup',
-                'pointerdown',
-                'pointerover',
-                'pointerout',
-                'pointerenter',
-                'pointerleave',
-                'pointermove',
-                'pointermissed',
-                'pointercancel',
-                'wheel',
-            ],
-        },
-    ]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
+	hostDirectives: [
+		{
+			directive: NgtObjectEvents,
+			outputs: [
+				'click',
+				'dblclick',
+				'contextmenu',
+				'pointerup',
+				'pointerdown',
+				'pointerover',
+				'pointerout',
+				'pointerenter',
+				'pointerleave',
+				'pointermove',
+				'pointermissed',
+				'pointercancel',
+				'wheel',
+			],
+		},
+	],
 })
 export class NgtsRoundedBox {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

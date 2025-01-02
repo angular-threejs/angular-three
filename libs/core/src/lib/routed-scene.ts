@@ -5,11 +5,11 @@ import { filter } from 'rxjs';
 import { ROUTED_SCENE } from './renderer/constants';
 
 @Component({
-    selector: 'ngt-routed-scene',
-    template: `
+	selector: 'ngt-routed-scene',
+	template: `
 		<router-outlet />
 	`,
-    imports: [RouterOutlet]
+	imports: [RouterOutlet],
 })
 export class NgtRoutedScene {
 	static [ROUTED_SCENE] = true;

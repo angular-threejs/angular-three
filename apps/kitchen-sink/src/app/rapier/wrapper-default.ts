@@ -11,8 +11,8 @@ export const interpolate = signal(true);
 export const paused = signal(false);
 
 @Component({
-    selector: 'app-floor',
-    template: `
+	selector: 'app-floor',
+	template: `
 		<ngt-object3D
 			ngtrRigidBody="fixed"
 			[options]="{ colliders: 'cuboid' }"
@@ -27,15 +27,15 @@ export const paused = signal(false);
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtrRigidBody]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtrRigidBody],
 })
 export class Floor {}
 
 @Component({
-    selector: 'app-rapier-wrapper-default',
-    template: `
+	selector: 'app-rapier-wrapper-default',
+	template: `
 		@if (scene() === 'basic') {
 			<ng-container *ngComponentOutlet="component()" />
 		} @else {
@@ -60,10 +60,10 @@ export class Floor {}
 			</ngtr-physics>
 		}
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtrPhysics, NgtsEnvironment, NgtsOrbitControls, NgComponentOutlet, Floor],
-    host: { class: 'rapier-wrapper-default' }
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtrPhysics, NgtsEnvironment, NgtsOrbitControls, NgComponentOutlet, Floor],
+	host: { class: 'rapier-wrapper-default' },
 })
 export class RapierWrapperDefault {
 	private params = injectParams();

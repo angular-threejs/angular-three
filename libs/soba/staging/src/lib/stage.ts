@@ -98,8 +98,8 @@ export class NgtsStageRefit {
 }
 
 @Component({
-    selector: 'ngts-stage',
-    template: `
+	selector: 'ngts-stage',
+	template: `
 		<ngt-ambient-light [intensity]="intensity() / 3" />
 		<ngt-spot-light
 			[penumbra]="1"
@@ -139,18 +139,18 @@ export class NgtsStageRefit {
 			<ngts-environment [options]="environmentOptions()" />
 		}
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        NgtArgs,
-        NgtsBounds,
-        NgtsStageRefit,
-        NgtsCenter,
-        NgtsContactShadows,
-        NgtsAccumulativeShadows,
-        NgtsEnvironment,
-        NgtsRandomizedLights,
-    ]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		NgtArgs,
+		NgtsBounds,
+		NgtsStageRefit,
+		NgtsCenter,
+		NgtsContactShadows,
+		NgtsAccumulativeShadows,
+		NgtsEnvironment,
+		NgtsRandomizedLights,
+	],
 })
 export class NgtsStage {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

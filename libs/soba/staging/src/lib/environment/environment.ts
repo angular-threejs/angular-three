@@ -192,8 +192,8 @@ export class NgtsEnvironmentCube {
 }
 
 @Component({
-    selector: 'ngts-environment-portal',
-    template: `
+	selector: 'ngts-environment-portal',
+	template: `
 		<ngt-portal [container]="virtualScene">
 			<ng-template portalContent let-injector="injector" let-container="container">
 				<ng-container
@@ -212,9 +212,9 @@ export class NgtsEnvironmentCube {
 			</ng-template>
 		</ngt-portal>
 	`,
-    imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal, NgtPortalContent, NgTemplateOutlet],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal, NgtPortalContent, NgTemplateOutlet],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsEnvironmentPortal {
 	private defaultOptions: NgtsEnvironmentOptions = {
@@ -340,14 +340,14 @@ export class NgtsEnvironmentPortal {
 }
 
 @Component({
-    selector: 'ngts-environment-ground',
-    template: `
+	selector: 'ngts-environment-ground',
+	template: `
 		<ngts-environment-map [options]="envMapOptions()" (envSet)="envSet.emit()" />
 		<ngt-ground-projected-env *args="args()" [scale]="scale()" [height]="height()" [radius]="radius()" />
 	`,
-    imports: [NgtsEnvironmentMap, NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtsEnvironmentMap, NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsEnvironmentGround {
 	options = input({} as NgtsEnvironmentOptions);
@@ -371,8 +371,8 @@ export class NgtsEnvironmentGround {
 }
 
 @Component({
-    selector: 'ngts-environment',
-    template: `
+	selector: 'ngts-environment',
+	template: `
 		@let _options = options();
 		@let _content = content();
 
@@ -386,9 +386,9 @@ export class NgtsEnvironmentGround {
 			<ngts-environment-cube [options]="_options" (envSet)="envSet.emit()" />
 		}
 	`,
-    imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtsEnvironmentPortal, NgtsEnvironmentGround],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtsEnvironmentPortal, NgtsEnvironmentGround],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsEnvironment {
 	options = input({} as NgtsEnvironmentOptions);

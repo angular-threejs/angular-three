@@ -4,8 +4,8 @@ import { ActivatedRoute, ActivationEnd, NavigationEnd, Router, RouterOutlet } fr
 import { filter } from 'rxjs';
 
 @Component({
-    selector: 'app-root',
-    template: `
+	selector: 'app-root',
+	template: `
 		<router-outlet />
 
 		<div class="absolute bottom-4 right-4 flex gap-4 items-center">
@@ -44,7 +44,7 @@ import { filter } from 'rxjs';
 			</div>
 		}
 	`,
-    imports: [RouterOutlet]
+	imports: [RouterOutlet],
 })
 export class AppComponent {
 	private router = inject(Router);

@@ -7,13 +7,13 @@ export interface PixelationOptions {
 	granularity: number;
 }
 @Component({
-    selector: 'ngtp-pixelation',
-    template: `
+	selector: 'ngtp-pixelation',
+	template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [NgtArgs]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	imports: [NgtArgs],
 })
 export class NgtpPixelation {
 	options = input({ granularity: 5 } as PixelationOptions, { transform: mergeInputs({ granularity: 5 }) });

@@ -5,12 +5,12 @@
 	"printWidth": 120,
 	"plugins": ["prettier-plugin-organize-imports"],
 	"htmlWhitespaceSensitivity": "ignore",
-  "overrides": [
-    {
-      "files": "*.analog",
-      "options": {
-        "parser": "angular"
-      }
-    }
-  ]
+	"overrides": [
+		{
+			"files": "*.analog",
+			"options": {
+				"parser": "angular"
+			}
+		}
+	]
 }

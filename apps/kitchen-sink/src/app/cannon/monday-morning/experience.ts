@@ -55,8 +55,8 @@ function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
 }
 
 @Component({
-    selector: 'app-box',
-    template: `
+	selector: 'app-box',
+	template: `
 		<ngts-rounded-box
 			[options]="{
 				width: width(),
@@ -72,9 +72,9 @@ function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
 			<ng-content />
 		</ngts-rounded-box>
 	`,
-    imports: [NgtArgs, NgtsRoundedBox],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs, NgtsRoundedBox],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
 	width = input(1);
@@ -112,8 +112,8 @@ function double([x, y, z]: Readonly<Triplet>): Triplet {
 }
 
 @Component({
-    selector: 'app-body-part',
-    template: `
+	selector: 'app-body-part',
+	template: `
 		<app-box
 			[scale]="shapeConfig().scale"
 			[color]="shapeConfig().color"
@@ -126,9 +126,9 @@ function double([x, y, z]: Readonly<Triplet>): Triplet {
 
 		<ng-content />
 	`,
-    imports: [Box, NgTemplateOutlet],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [Box, NgTemplateOutlet],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BodyPart {
 	name = input.required<keyof typeof shapes>();
@@ -170,8 +170,8 @@ export class BodyPart {
 }
 
 @Component({
-    selector: 'app-rag-doll',
-    template: `
+	selector: 'app-rag-doll',
+	template: `
 		<app-body-part name="upperBody">
 			<app-body-part name="head" [constraintOpts]="joints['neckJoint']">
 				<ng-container body-part-parts>
@@ -227,9 +227,9 @@ export class BodyPart {
 			</app-body-part>
 		</app-body-part>
 	`,
-    imports: [Box, BodyPart],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [Box, BodyPart],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RagDoll {
 	protected joints = joints;
@@ -249,8 +249,8 @@ export class RagDoll {
 }
 
 @Component({
-    selector: 'app-chair',
-    template: `
+	selector: 'app-chair',
+	template: `
 		<ngt-group
 			#group
 			(pointerdown)="dragConstraint.onPointerDown($any($event))"
@@ -264,9 +264,9 @@ export class RagDoll {
 			<app-box [position]="[5 + -3.75, -3.5, 2.5]" [scale]="[0.5, 3, 0.5]" />
 		</ngt-group>
 	`,
-    imports: [Box],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [Box],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Chair {
 	private group = viewChild.required<ElementRef<Group>>('group');
@@ -298,8 +298,8 @@ interface CupGLTF extends GLTF {
 }
 
 @Component({
-    selector: 'app-mug',
-    template: `
+	selector: 'app-mug',
+	template: `
 		<ngt-group
 			#group
 			(pointerdown)="dragConstraint.onPointerDown($any($event))"
@@ -324,9 +324,9 @@ interface CupGLTF extends GLTF {
 			</ngt-group>
 		</ngt-group>
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Mug {
 	protected gltf = injectGLTF(() => './cup.glb') as Signal<CupGLTF | null>;
@@ -343,8 +343,8 @@ export class Mug {
 }
 
 @Component({
-    selector: 'app-table',
-    template: `
+	selector: 'app-table',
+	template: `
 		<app-box #seat [scale]="[5, 0.5, 5]" />
 		<app-box #leg1 [scale]="[0.5, 4, 0.5]" />
 		<app-box #leg2 [scale]="[0.5, 4, 0.5]" />
@@ -352,9 +352,9 @@ export class Mug {
 		<app-box #leg4 [scale]="[0.5, 4, 0.5]" />
 		<app-mug />
 	`,
-    imports: [NgtArgs, Mug, Box],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs, Mug, Box],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Table {
 	private seatRef = viewChild('seat', { read: Box });
@@ -388,17 +388,17 @@ export class Table {
 }
 
 @Component({
-    selector: 'app-cursor',
-    template: `
+	selector: 'app-cursor',
+	template: `
 		<ngt-mesh #mesh>
 			<ngt-sphere-geometry *args="[0.5, 32, 32]" />
 			<ngt-mesh-basic-material [fog]="false" [depthTest]="false" [transparent]="true" [opacity]="0.5" />
 		</ngt-mesh>
 		<ng-content />
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cursor {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
@@ -414,8 +414,8 @@ export class Cursor {
 }
 
 @Component({
-    selector: 'app-lamp',
-    template: `
+	selector: 'app-lamp',
+	template: `
 		<ngt-mesh
 			#mesh
 			(pointerdown)="dragConstraint.onPointerDown($any($event))"
@@ -445,9 +445,9 @@ export class Cursor {
 			<ngt-object3D #target [position]="[0, -1, 0]" />
 		</ngt-mesh>
 	`,
-    imports: [NgtArgs, NgtsSpotLight],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs, NgtsSpotLight],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Lamp {
 	protected Math = Math;
@@ -467,7 +467,7 @@ export class Lamp {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-color attach="background" *args="['#171720']" />
 		<ngt-fog attach="fog" *args="['#171720', 20, 70]" />
 		<ngt-ambient-light [intensity]="0.2 * Math.PI" />
@@ -491,10 +491,10 @@ export class Lamp {
 			</app-cursor>
 		</ngtc-physics>
 	`,
-    imports: [NgtArgs, NgtcPhysics, NgtcDebug, Cursor, Lamp, UiPlane, Chair, Table, RagDoll],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    host: { class: 'monday-morning-experience' }
+	imports: [NgtArgs, NgtcPhysics, NgtcDebug, Cursor, Lamp, UiPlane, Chair, Table, RagDoll],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	host: { class: 'monday-morning-experience' },
 })
 export class Experience {
 	protected Math = Math;

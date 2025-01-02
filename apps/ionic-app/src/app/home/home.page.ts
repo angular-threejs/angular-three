@@ -7,16 +7,16 @@ import { Experience } from './experience';
 extend(THREE);
 
 @Component({
-    selector: 'platform-home',
-    imports: [IonicModule, NgtCanvas],
-    template: `
+	selector: 'platform-home',
+	imports: [IonicModule, NgtCanvas],
+	template: `
 		<ion-content [fullscreen]="true">
 			<div id="container">
 				<ngt-canvas [sceneGraph]="scene" [camera]="{ position: [0, -12, 16] }" [shadows]="true" />
 			</div>
 		</ion-content>
 	`,
-    styles: `
+	styles: `
 		#container {
 			text-align: center;
 			position: absolute;
@@ -26,7 +26,7 @@ extend(THREE);
 			height: 100%;
 			transform: translateY(-50%);
 		}
-	`
+	`,
 })
 export class HomePage {
 	scene = Experience;

@@ -3,12 +3,12 @@ import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" />
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'postprocessing-outline' },
-    imports: [NgtCanvas]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'postprocessing-outline' },
+	imports: [NgtCanvas],
 })
 export default class PostprocessingOutline {
 	protected sceneGraph = Experience;

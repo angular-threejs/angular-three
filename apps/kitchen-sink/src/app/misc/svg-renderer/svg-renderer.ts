@@ -4,15 +4,15 @@ import { SVGRenderer } from 'three-stdlib';
 import { Experience } from './experience';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas
 			[sceneGraph]="sceneGraph"
 			[gl]="svgRendererFactory"
 			[camera]="{ fov: 33, near: 0.1, far: 100, position: [0, 0, 10] }"
 		/>
 	`,
-    imports: [NgtCanvas],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtCanvas],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SVGRendererExample {
 	sceneGraph = Experience;

@@ -6,18 +6,18 @@ import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '..
 extend({ BloomEffect });
 
 @Component({
-    selector: 'ngtp-bloom',
-    template: `
+	selector: 'ngtp-bloom',
+	template: `
 		<ngt-bloom-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-bloom-effect>
 	`,
-    imports: [NgtArgs, NgtpEffectBlendMode],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
-    providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.ADD })]
+	imports: [NgtArgs, NgtpEffectBlendMode],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.ADD })],
 })
 export class NgtpBloom {
 	effect = inject(NgtpEffect, { host: true });

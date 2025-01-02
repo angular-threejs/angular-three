@@ -20,8 +20,8 @@ import { NgtsContactShadows, NgtsEnvironment } from 'angular-three-soba/staging'
 import { Group, Vector3 } from 'three';
 
 @Component({
-    selector: 'app-marker',
-    template: `
+	selector: 'app-marker',
+	template: `
 		<ngt-group #group>
 			<ngts-html [options]="{ transform: true, occlude: true, position: position(), rotation: rotation() }">
 				<div [ngtsHTMLContent]="{ containerStyle: containerStyle() }" (occluded)="isOccluded.set($event)">
@@ -30,9 +30,9 @@ import { Group, Vector3 } from 'three';
 			</ngts-html>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtsHTML, NgtsHTMLContent]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsHTML, NgtsHTMLContent],
 })
 export class Marker {
 	position = input<NgtVector3>([0, 0, 0]);
@@ -82,8 +82,8 @@ export class MarkerIcon extends NgtHTML {
 }
 
 @Component({
-    selector: 'app-model',
-    template: `
+	selector: 'app-model',
+	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [rotation]="[-Math.PI / 2, 0, Math.PI]" [position]="position()" [dispose]="null">
 				<ngt-mesh [geometry]="gltf.nodes['URF-Height_Lampd_Ice_0'].geometry" [material]="gltf.materials.Lampd_Ice" />
@@ -108,9 +108,9 @@ export class MarkerIcon extends NgtHTML {
 			<ng-container [ngTemplateOutlet]="content()" />
 		}
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Marker, MarkerIcon, NgTemplateOutlet]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [Marker, MarkerIcon, NgTemplateOutlet],
 })
 export class Model {
 	protected Math = Math;
@@ -123,8 +123,8 @@ export class Model {
 }
 
 @Component({
-    selector: 'app-lowpoly-earth-experience',
-    template: `
+	selector: 'app-lowpoly-earth-experience',
+	template: `
 		<ngt-color *args="['#ececec']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5" />
 		<app-model [position]="[0, 0.25, 0]">
@@ -136,9 +136,9 @@ export class Model {
 		<ngts-environment [options]="{ preset: 'city' }" />
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Model, NgtsEnvironment, NgtsContactShadows, NgtsOrbitControls, NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [Model, NgtsEnvironment, NgtsContactShadows, NgtsOrbitControls, NgtArgs],
 })
 export class Experience {
 	protected Math = Math;

@@ -27,24 +27,24 @@ export class PhysicsScene {}
 
 The `NgtcPhysics` component accepts an `options` input with the following properties:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `allowSleep` | boolean | `false` | If true, allows bodies to fall asleep for better performance |
-| `axisIndex` | number | `0` | Axis index for broadphase optimization |
-| `broadphase` | string | `'Naive'` | Broadphase algorithm to use. Options: 'Naive', 'SAP' |
-| `defaultContactMaterial` | object | `{ contactEquationStiffness: 1e6 }` | Default contact material properties |
-| `frictionGravity` | number[] \| null | `null` | Gravity to use for friction calculations |
-| `gravity` | number[] | `[0, -9.81, 0]` | Gravity force applied to all bodies |
-| `iterations` | number | `5` | Number of solver iterations per step |
-| `quatNormalizeFast` | boolean | `false` | If true, uses fast quaternion normalization |
-| `quatNormalizeSkip` | number | `0` | Number of steps to skip before normalizing quaternions |
-| `size` | number | `1000` | Maximum number of physics bodies |
-| `solver` | string | `'GS'` | Constraint solver to use. Options: 'GS' (Gauss-Seidel) |
-| `tolerance` | number | `0.001` | Solver tolerance |
-| `isPaused` | boolean | `false` | If true, pauses the physics simulation |
-| `maxSubSteps` | number | `10` | Maximum number of sub-steps per frame |
-| `shouldInvalidate` | boolean | `true` | If true, forces a re-render after each physics step |
-| `stepSize` | number | `1/60` | Fixed time step size |
+| Option                   | Type             | Default                             | Description                                                  |
+| ------------------------ | ---------------- | ----------------------------------- | ------------------------------------------------------------ |
+| `allowSleep`             | boolean          | `false`                             | If true, allows bodies to fall asleep for better performance |
+| `axisIndex`              | number           | `0`                                 | Axis index for broadphase optimization                       |
+| `broadphase`             | string           | `'Naive'`                           | Broadphase algorithm to use. Options: 'Naive', 'SAP'         |
+| `defaultContactMaterial` | object           | `{ contactEquationStiffness: 1e6 }` | Default contact material properties                          |
+| `frictionGravity`        | number[] \| null | `null`                              | Gravity to use for friction calculations                     |
+| `gravity`                | number[]         | `[0, -9.81, 0]`                     | Gravity force applied to all bodies                          |
+| `iterations`             | number           | `5`                                 | Number of solver iterations per step                         |
+| `quatNormalizeFast`      | boolean          | `false`                             | If true, uses fast quaternion normalization                  |
+| `quatNormalizeSkip`      | number           | `0`                                 | Number of steps to skip before normalizing quaternions       |
+| `size`                   | number           | `1000`                              | Maximum number of physics bodies                             |
+| `solver`                 | string           | `'GS'`                              | Constraint solver to use. Options: 'GS' (Gauss-Seidel)       |
+| `tolerance`              | number           | `0.001`                             | Solver tolerance                                             |
+| `isPaused`               | boolean          | `false`                             | If true, pauses the physics simulation                       |
+| `maxSubSteps`            | number           | `10`                                | Maximum number of sub-steps per frame                        |
+| `shouldInvalidate`       | boolean          | `true`                              | If true, forces a re-render after each physics step          |
+| `stepSize`               | number           | `1/60`                              | Fixed time step size                                         |
 
 ## Advanced Usage
 

@@ -14,12 +14,12 @@ import { Experience } from './experience';
 declare const Chart: any;
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" [camera]="{ position: [0, 0, 10] }" />
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'html-chart-soba' },
-    imports: [NgtCanvas]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'html-chart-soba' },
+	imports: [NgtCanvas],
 })
 export default class HtmlChart {
 	protected sceneGraph = Experience;

@@ -36,8 +36,8 @@ import {
 import { NgtsGizmoHelper } from './gizmo-helper';
 
 @Component({
-    selector: 'viewport-axis',
-    template: `
+	selector: 'viewport-axis',
+	template: `
 		<ngt-group [rotation]="rotation()">
 			<ngt-mesh [position]="[0.4, 0, 0]">
 				<ngt-box-geometry *args="scale()" />
@@ -45,9 +45,9 @@ import { NgtsGizmoHelper } from './gizmo-helper';
 			</ngt-mesh>
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class Axis {
 	scale = input([0.8, 0.05, 0.05], {
@@ -185,8 +185,8 @@ const defaultOptions: NgtsGizmoViewportOptions = {
 };
 
 @Component({
-    selector: 'ngts-gizmo-viewport',
-    template: `
+	selector: 'ngts-gizmo-viewport',
+	template: `
 		@let _axisScale = axisScale();
 		@let _axisHeadScale = axisHeadScale();
 		@let _labels = labels();
@@ -258,9 +258,9 @@ const defaultOptions: NgtsGizmoViewportOptions = {
 			}
 		</ngt-group>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Axis, AxisHead]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [Axis, AxisHead],
 })
 export class NgtsGizmoViewport {
 	protected readonly Math = Math;

@@ -3,7 +3,7 @@ import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { BufferGeometry, Float32BufferAttribute } from 'three';
 
 @Component({
-    template: `
+	template: `
 		<ngt-color attach="background" *args="['black']" />
 
 		@for (i of [1, 2, 3]; track $index) {
@@ -16,9 +16,9 @@ import { BufferGeometry, Float32BufferAttribute } from 'three';
 			<ngt-line-dashed-material color="blue" [linewidth]="1" [dashSize]="10" [gapSize]="10" />
 		</ngt-line>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class Experience {
 	protected readonly Math = Math;

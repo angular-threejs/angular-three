@@ -134,13 +134,13 @@ const defaultOptions: LensFlareOptions = {
 };
 
 @Component({
-    selector: 'ngtp-lens-flare',
-    template: `
+	selector: 'ngtp-lens-flare',
+	template: `
 		<ngt-primitive *args="[effect()]" [parameters]="{ dispose: null }" />
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLensFlare {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

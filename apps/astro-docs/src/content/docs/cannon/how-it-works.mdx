@@ -55,7 +55,7 @@ export class Box {
 
 `injectBox` accepts some physics properties as an argument and an `() => ElementRef<Object3D>` as the second argument to tie the body to the object.
 
- The returned value is a `Signal<NgtcBodyPublicApi | null>` that can be used to control the body, set position, rotation, and subscribe to changes.
+The returned value is a `Signal<NgtcBodyPublicApi | null>` that can be used to control the body, set position, rotation, and subscribe to changes.
 
 ```angular-ts {20-24}
 import { injectBox } from 'angular-three-cannon/body';
@@ -89,14 +89,12 @@ export class Box {
 ### Example
 
 <Tabs>
-  <TabItem label="Preview">
-    <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	    <CannonSample client:only />
-    </div>
-  </TabItem>
-  <TabItem label="Code">
-    <Code code={content} lang="angular-ts" />
-  </TabItem>
+	<TabItem label="Preview">
+		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
+			<CannonSample client:only />
+		</div>
+	</TabItem>
+	<TabItem label="Code">
+		<Code code={content} lang="angular-ts" />
+	</TabItem>
 </Tabs>
-
-

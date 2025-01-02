@@ -169,7 +169,7 @@ export class Diamond {
 }
 
 @Component({
-    template: `
+	template: `
 		<ngt-color *args="['lightpink']" attach="background" />
 		<ngt-spot-light
 			[angle]="0.3"
@@ -193,10 +193,10 @@ export class Diamond {
 			</ngt-group>
 		</ngtc-physics>
 	`,
-    imports: [NgtArgs, NgtcPhysics, NgtcDebug, UiPlane, Diamond, Cone, Cube],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'convex-experience' }
+	imports: [NgtArgs, NgtcPhysics, NgtcDebug, UiPlane, Diamond, Cone, Cube],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'convex-experience' },
 })
 export class Experience {
 	protected Math = Math;

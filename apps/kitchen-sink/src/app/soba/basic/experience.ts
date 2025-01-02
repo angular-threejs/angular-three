@@ -57,8 +57,8 @@ export class BotAnimations {
 }
 
 @Component({
-    selector: 'app-bot',
-    template: `
+	selector: 'app-bot',
+	template: `
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />
 			@if (gltf(); as gltf) {
@@ -76,9 +76,9 @@ export class BotAnimations {
 			}
 		</ngt-group>
 	`,
-    imports: [NgtArgs, BotAnimations],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs, BotAnimations],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Bot {
 	protected Math = Math;
@@ -91,8 +91,8 @@ export class Bot {
 }
 
 @Component({
-    selector: 'app-basic-experience',
-    template: `
+	selector: 'app-basic-experience',
+	template: `
 		<ngt-color *args="['#303030']" attach="background" />
 		<ngt-ambient-light [intensity]="0.8" />
 		<ngt-point-light [intensity]="Math.PI" [decay]="0" [position]="[0, 6, 0]" />
@@ -113,10 +113,10 @@ export class Bot {
 
 		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
 	`,
-    imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpBloom, NgtpGlitch],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    host: { class: 'soba-experience' }
+	imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpBloom, NgtpGlitch],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	host: { class: 'soba-experience' },
 })
 export class Experience {
 	protected Math = Math;

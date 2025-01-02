@@ -6,6 +6,7 @@ description: A utility to inject a loader into your Angular component.
 `injectLoader` is a utility function that abstracts the process of loading 3D assets.
 
 It accepts:
+
 - A function that returns a `THREE.Loader` constructor
 - A function that returns a `string` or `string[]`
 - An option object that accepts the following properties:
@@ -28,4 +29,3 @@ export class Experience {
   gltfResult = injectLoader(() => GLTFLoader, () => 'path/to/model.glb');
 }
 ```
-

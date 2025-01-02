@@ -4,7 +4,7 @@ import { ToggleButton } from '../../toggle-button';
 import { debug, Experience } from './experience';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas
 			[sceneGraph]="sceneGraph"
 			flat
@@ -17,9 +17,9 @@ import { debug, Experience } from './experience';
 			<button [(toggleButton)]="debug">Toggle debug</button>
 		</div>
 	`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'bruno-simons-2k-soba' },
-    imports: [NgtCanvas, ToggleButton]
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'bruno-simons-2k-soba' },
+	imports: [NgtCanvas, ToggleButton],
 })
 export default class BrunoSimons20k {
 	protected sceneGraph = Experience;

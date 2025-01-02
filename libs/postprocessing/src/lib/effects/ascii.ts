@@ -123,13 +123,13 @@ const defaultOptions: ASCIIEffectOptions = {
 };
 
 @Component({
-    selector: 'ngtp-ascii',
-    template: `
+	selector: 'ngtp-ascii',
+	template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpASCII {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

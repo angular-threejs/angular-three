@@ -16,13 +16,13 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	Partial<{ target: NgtVector3; depthTexture: { texture: Texture; packing: DepthPackingStrategies } }>;
 
 @Component({
-    selector: 'ngtp-depth-of-field',
-    template: `
+	selector: 'ngtp-depth-of-field',
+	template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpDepthOfField {
 	options = input({} as DOFOptions);

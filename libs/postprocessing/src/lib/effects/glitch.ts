@@ -14,13 +14,13 @@ export type GlitchOptions = NonNullable<ConstructorParameters<typeof GlitchEffec
 	}>;
 
 @Component({
-    selector: 'ngtp-glitch',
-    template: `
+	selector: 'ngtp-glitch',
+	template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-    imports: [NgtArgs],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtArgs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpGlitch {
 	options = input({ active: true } as GlitchOptions, { transform: mergeInputs({ active: true }) });

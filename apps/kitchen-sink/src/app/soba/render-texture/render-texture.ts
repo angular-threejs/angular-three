@@ -3,12 +3,12 @@ import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
 
 @Component({
-    template: `
+	template: `
 		<ngt-canvas [sceneGraph]="scene" [camera]="{ position: [5, 5, 5], fov: 25 }" />
 	`,
-    imports: [NgtCanvas],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'fbo-render-texture' }
+	imports: [NgtCanvas],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'fbo-render-texture' },
 })
 export default class RenderTexture {
 	protected scene = Experience;

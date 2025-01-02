@@ -37,8 +37,8 @@ const defaultOptions: NgtsSkyOptions = {
 };
 
 @Component({
-    selector: 'ngts-sky',
-    template: `
+	selector: 'ngts-sky',
+	template: `
 		<ngt-primitive *args="[sky]" [parameters]="parameters()" [scale]="scale()">
 			<ngt-value attach="material.uniforms.mieCoefficient.value" [rawValue]="mieCoefficient()" />
 			<ngt-value attach="material.uniforms.mieDirectionalG.value" [rawValue]="mieDirectionalG()" />
@@ -48,9 +48,9 @@ const defaultOptions: NgtsSkyOptions = {
 			<ng-content />
 		</ngt-primitive>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs],
 })
 export class NgtsSky {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

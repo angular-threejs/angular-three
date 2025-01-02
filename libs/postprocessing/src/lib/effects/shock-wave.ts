@@ -8,17 +8,17 @@ extend({ ShockWaveEffect });
 export type ShockWaveEffectOptions = Partial<NonNullable<ConstructorParameters<typeof ShockWaveEffect>[0]>>;
 
 @Component({
-    selector: 'ngtp-shock-wave',
-    template: `
+	selector: 'ngtp-shock-wave',
+	template: `
 		<ngt-shock-wave-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-shock-wave-effect>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtArgs, NgtpEffectBlendMode],
-    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs, NgtpEffectBlendMode],
+	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpShockWave {
 	effect = inject(NgtpEffect, { host: true });

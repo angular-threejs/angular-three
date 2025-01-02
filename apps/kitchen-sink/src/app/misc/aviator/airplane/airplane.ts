@@ -37,8 +37,8 @@ const backLR = [-40, 5, -5];
 const backLL = [-40, 5, 5];
 
 @Component({
-    selector: 'app-airplane',
-    template: `
+	selector: 'app-airplane',
+	template: `
 		<ngt-object3D
 			#airplane
 			[castShadow]="true"
@@ -98,9 +98,9 @@ const backLL = [-40, 5, 5];
 			<app-pilot [position]="[5, 27, 0]" />
 		</ngt-object3D>
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Pilot, Propeller, Wheel, Tire, NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [Pilot, Propeller, Wheel, Tire, NgtArgs],
 })
 export class Airplane {
 	protected readonly PLANE_DEFAULT_HEIGHT = PLANE_DEFAULT_HEIGHT;

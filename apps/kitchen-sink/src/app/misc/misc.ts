@@ -7,7 +7,7 @@ import routes from './misc.routes';
 extend(THREE);
 
 @Component({
-    template: `
+	template: `
 		<div class="h-svh">
 			<router-outlet />
 		</div>
@@ -28,9 +28,9 @@ extend(THREE);
 			}
 		</ul>
 	`,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'misc' }
+	imports: [RouterOutlet, RouterLink, RouterLinkActive],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'misc' },
 })
 export default class Misc {
 	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);

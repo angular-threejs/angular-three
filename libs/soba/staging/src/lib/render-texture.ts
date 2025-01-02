@@ -129,8 +129,8 @@ export class NgtsRenderTextureContent {
 let incrementId = 0;
 
 @Component({
-    selector: 'ngts-render-texture',
-    template: `
+	selector: 'ngts-render-texture',
+	template: `
 		<ngt-portal [container]="virtualScene()" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
 			<ng-template portalContent let-injector="injector" let-container="container">
 				<ng-container
@@ -150,9 +150,9 @@ let incrementId = 0;
 
 		<ngt-primitive *args="[fbo().texture]" [attach]="attach()" [parameters]="parameters()" />
 	`,
-    imports: [NgtPortal, NgtsRenderTextureContainer, NgtPortalContent, NgtArgs, NgTemplateOutlet],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush
+	imports: [NgtPortal, NgtsRenderTextureContainer, NgtPortalContent, NgtArgs, NgTemplateOutlet],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsRenderTexture {
 	attach = input<NgtAttachable>('map');

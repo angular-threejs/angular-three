@@ -7,7 +7,7 @@ import routes from './cannon.routes';
 extend(THREE);
 
 @Component({
-    template: `
+	template: `
 		<div class="h-svh">
 			<router-outlet />
 		</div>
@@ -28,9 +28,9 @@ extend(THREE);
 			}
 		</ul>
 	`,
-    imports: [RouterOutlet, RouterLink, RouterLinkActive],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'cannon' }
+	imports: [RouterOutlet, RouterLink, RouterLinkActive],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'cannon' },
 })
 export default class Cannon {
 	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);

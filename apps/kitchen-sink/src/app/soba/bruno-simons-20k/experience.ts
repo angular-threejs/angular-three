@@ -22,8 +22,8 @@ type HatGLTF = GLTF & {
 };
 
 @Component({
-    selector: 'app-hats',
-    template: `
+	selector: 'app-hats',
+	template: `
 		@if (gltf(); as gltf) {
 			<ngt-object3D [ngtrInstancedRigidBodies]="instances" [options]="{ colliders: 'hull' }">
 				<ngt-instanced-mesh
@@ -35,9 +35,9 @@ type HatGLTF = GLTF & {
 			</ngt-object3D>
 		}
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtrInstancedRigidBodies, NgtArgs]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
 export class Hats {
 	protected gltf = injectGLTF(() => './blender-threejs-journey-20k-hat-transformed.glb') as Signal<HatGLTF | null>;
@@ -63,8 +63,8 @@ type ModelGLTF = GLTF & {
 };
 
 @Component({
-    selector: 'app-model',
-    template: `
+	selector: 'app-model',
+	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [position]="position()" [dispose]="null">
 				<ngt-object3D ngtrRigidBody="fixed" [options]="{ colliders: 'trimesh' }">
@@ -89,9 +89,9 @@ type ModelGLTF = GLTF & {
 			</ngt-group>
 		}
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgtrRigidBody]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtrRigidBody],
 })
 export class Model {
 	position = input<NgtVector3>([0, 0, 0]);
@@ -100,8 +100,8 @@ export class Model {
 }
 
 @Component({
-    selector: 'app-bruno-experience',
-    template: `
+	selector: 'app-bruno-experience',
+	template: `
 		<ngt-color attach="background" *args="['#f0f0f0']" />
 		<ngt-ambient-light [intensity]="0.5" />
 		<ngt-directional-light [position]="[-10, 10, 5]" [castShadow]="true">
@@ -163,26 +163,26 @@ export class Model {
 			/>
 		}
 	`,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'bruno-simons-2k-soba-experience' },
-    imports: [
-        NgtArgs,
-        NgtsEnvironment,
-        NgtsLightformer,
-        NgtrPhysics,
-        Model,
-        NgtrRigidBody,
-        NgtrCuboidCollider,
-        NgtsAccumulativeShadows,
-        NgtsRandomizedLights,
-        NgtpEffectComposer,
-        NgtpN8AO,
-        NgtpDepthOfField,
-        NgtsOrbitControls,
-        NgtpToneMapping,
-        Hats,
-    ]
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'bruno-simons-2k-soba-experience' },
+	imports: [
+		NgtArgs,
+		NgtsEnvironment,
+		NgtsLightformer,
+		NgtrPhysics,
+		Model,
+		NgtrRigidBody,
+		NgtrCuboidCollider,
+		NgtsAccumulativeShadows,
+		NgtsRandomizedLights,
+		NgtpEffectComposer,
+		NgtpN8AO,
+		NgtpDepthOfField,
+		NgtsOrbitControls,
+		NgtpToneMapping,
+		Hats,
+	],
 })
 export class Experience {
 	protected readonly Infinity = Infinity;
