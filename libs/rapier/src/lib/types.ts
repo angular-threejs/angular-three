@@ -90,17 +90,6 @@ export interface NgtrPhysicsOptions {
 	contactNaturalFrequency: number;
 
 	/**
-	 * The Error Reduction Parameter in between 0 and 1, is the proportion of the positional error to be corrected at each time step.
-	 *
-	 * @defaultValue 0.8
-	 * @deprecated This is a noop. Use `contactNaturalFrequency` instead
-	 * @since 2.6.0 Will be removed in 3.0.0
-	 * @see {contactNaturalFrequency}
-	 * @see https://github.com/dimforge/rapier/pull/651 for more information about contactNaturalFrequency
-	 */
-	erp: number;
-
-	/**
 	 * The approximate size of most dynamic objects in the scene.
 	 *
 	 * This value is used internally to estimate some length-based tolerance.

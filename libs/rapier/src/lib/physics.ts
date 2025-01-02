@@ -41,7 +41,6 @@ const defaultOptions: NgtrPhysicsOptions = {
 	minIslandSize: 128,
 	maxCcdSubsteps: 1,
 	contactNaturalFrequency: 30,
-	erp: 0.8,
 	lengthUnit: 1,
 	colliders: 'cuboid',
 	updateLoop: 'follow',
