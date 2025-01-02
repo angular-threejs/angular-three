@@ -8,7 +8,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs, NgtMesh, omit, pick } from 'angular-three';
+import { extend, NgtArgs, NgtGeometry, NgtMesh, omit, pick } from 'angular-three';
 import { injectFont, NgtsFontInput } from 'angular-three-soba/loaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Mesh } from 'three';
@@ -104,5 +104,17 @@ export class NgtsText3D {
 				mesh.geometry.computeVertexNormals();
 			}
 		});
+	}
+}
+
+export type NgtTextGeometry = NgtGeometry<TextGeometry & TextGeometryParameters, typeof TextGeometry>;
+
+declare global {
+	interface HTMLElementTagNameMap {
+		/**
+		 * @extends ngt-extrude-geometry
+		 * @rawOptions bevelEnabled|bevelOffset|bevelSize|bevelThickness|curveSegments|font|height|size|lineHeight|letterSpacing
+		 */
+		'ngt-text-geometry': NgtTextGeometry;
 	}
 }

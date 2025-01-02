@@ -35,7 +35,7 @@ const defaultOptions: NgtsGradientTextureOptions = {
 		<ngt-canvas-texture
 			*args="[canvas()]"
 			[attach]="attach()"
-			[colorSpace]="gl().outputColorSpace"
+			[colorSpace]="outputColorSpace()"
 			[parameters]="parameters()"
 		>
 			<ng-content />
@@ -53,7 +53,7 @@ export class NgtsGradientTexture {
 	parameters = omit(this.options, ['size', 'width', 'type', 'innerCircleRadius', 'outerCircleRadius']);
 
 	private store = injectStore();
-	gl = this.store.select('gl');
+	outputColorSpace = this.store.select('gl', 'outputColorSpace');
 	private document = inject(DOCUMENT);
 
 	canvas = computed(() => {

@@ -17,6 +17,7 @@ const entryPoints = [
 	'performances/src/lib/instances/position-mesh.ts',
 	'performances/src/lib/points/position-point.ts',
 	'performances/src/lib/segments/segment-object.ts',
+	'abstractions/src/lib/text-3d.ts',
 ];
 
 const paths = [];
