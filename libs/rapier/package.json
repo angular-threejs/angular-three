@@ -26,7 +26,7 @@
 		"@angular/common": ">=18.0.0 <20.0.0",
 		"@angular/core": ">=18.0.0 <20.0.0",
 		"@dimforge/rapier3d-compat": "~0.14.0",
-		"three": ">=0.148.0 <0.171.0"
+		"three": ">=0.148.0 <0.172.0"
 	},
 	"dependencies": {
 		"tslib": "^2.7.0"
