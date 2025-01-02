@@ -8,18 +8,17 @@ extend({ SMAAEffect });
 export type SMAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof SMAAEffect>[0]>>;
 
 @Component({
-	selector: 'ngtp-smaa',
-	template: `
+    selector: 'ngtp-smaa',
+    template: `
 		<ngt-sMAA-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-sMAA-effect>
 	`,
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtpEffectBlendMode],
+    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
 })
 export class NgtpSMAA {
 	effect = inject(NgtpEffect, { host: true });

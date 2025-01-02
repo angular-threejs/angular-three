@@ -20,17 +20,16 @@ const niceColors = ['#99b898', '#fecea8', '#ff847c', '#e84a5f', '#2a363b'] as co
 extend(THREE);
 
 @Component({
-	selector: 'app-plane',
-	standalone: true,
-	template: `
+    selector: 'app-plane',
+    template: `
 		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[1000, 1000]" />
 			<ngt-mesh-phong-material [color]="color()" />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Plane {
 	color = input.required<string>();
@@ -48,17 +47,16 @@ export class Plane {
 }
 
 @Component({
-	selector: 'app-box',
-	standalone: true,
-	template: `
+    selector: 'app-box',
+    template: `
 		<ngt-mesh #mesh [castShadow]="true" [receiveShadow]="true">
 			<ngt-box-geometry *args="args" />
 			<ngt-mesh-lambert-material color="white" />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Box {
 	args: Triplet = [4, 4, 4];
@@ -77,9 +75,8 @@ export class Box {
 }
 
 @Component({
-	selector: 'app-instanced-spheres',
-	standalone: true,
-	template: `
+    selector: 'app-instanced-spheres',
+    template: `
 		<ngt-instanced-mesh
 			#instancedMesh
 			[castShadow]="true"
@@ -92,9 +89,9 @@ export class Box {
 			<ngt-mesh-phong-material [vertexColors]="true" />
 		</ngt-instanced-mesh>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InstancedSpheres {
 	count = input(100);
@@ -123,8 +120,7 @@ export class InstancedSpheres {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-hemisphere-light [intensity]="0.35 * Math.PI" />
 		<ngt-spot-light
 			[angle]="0.3"
@@ -147,10 +143,10 @@ export class InstancedSpheres {
 			<app-instanced-spheres />
 		</ngtc-physics>
 	`,
-	imports: [InstancedSpheres, Box, Plane, NgtcPhysics, NgtArgs, NgtcDebug],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'kimenatic-experience' },
+    imports: [InstancedSpheres, Box, Plane, NgtcPhysics, NgtArgs, NgtcDebug],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'kimenatic-experience' }
 })
 export class Experience {
 	Math = Math;

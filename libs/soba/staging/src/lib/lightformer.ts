@@ -31,9 +31,8 @@ const defaultOptions: Partial<Omit<NgtMesh, 'scale'>> & NgtsLightformerOptions =
 };
 
 @Component({
-	selector: 'ngts-lightformer',
-	standalone: true,
-	template: `
+    selector: 'ngts-lightformer',
+    template: `
 		<ngt-mesh #mesh [scale]="fixedScale()" [parameters]="parameters()">
 			<ng-content select="[data-lightformer-geometry]">
 				@switch (form()) {
@@ -55,9 +54,9 @@ const defaultOptions: Partial<Omit<NgtMesh, 'scale'>> & NgtsLightformerOptions =
 			<ng-content />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsLightformer {
 	side = DoubleSide;

@@ -8,19 +8,18 @@ extend({ NoiseEffect });
 export type NoiseEffectOptions = Partial<NonNullable<ConstructorParameters<typeof NoiseEffect>[0]>>;
 
 @Component({
-	selector: 'ngtp-noise',
-	template: `
+    selector: 'ngtp-noise',
+    template: `
 		<ngt-noise-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-noise-effect>
 	`,
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
-	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.COLOR_DODGE })],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtpEffectBlendMode],
+    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+    providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.COLOR_DODGE })]
 })
 export class NgtpNoise {
 	effect = inject(NgtpEffect, { host: true });

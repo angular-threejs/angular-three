@@ -60,9 +60,8 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 };
 
 @Component({
-	selector: 'ngts-gizmo-helper',
-	standalone: true,
-	template: `
+    selector: 'ngts-gizmo-helper',
+    template: `
 		@let _renderPriority = renderPriority();
 
 		<ngt-portal
@@ -83,9 +82,9 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 			</ng-template>
 		</ngt-portal>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtPortal, NgtPortalContent, NgtsOrthographicCamera, NgTemplateOutlet],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtPortal, NgtPortalContent, NgtsOrthographicCamera, NgTemplateOutlet]
 })
 export class NgtsGizmoHelper {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

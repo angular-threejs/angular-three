@@ -10,18 +10,17 @@ export type ChromaticAberrationEffectOptions = Partial<
 >;
 
 @Component({
-	selector: 'ngtp-chromatic-aberration',
-	template: `
+    selector: 'ngtp-chromatic-aberration',
+    template: `
 		<ngt-chromatic-aberration-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-chromatic-aberration-effect>
 	`,
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtpEffectBlendMode],
+    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
 })
 export class NgtpChromaticAberration {
 	effect = inject(NgtpEffect, { host: true });

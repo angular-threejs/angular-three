@@ -14,15 +14,14 @@ const defaultOptions: NgtsCubicBezierLineOptions = {
 };
 
 @Component({
-	selector: 'ngts-cubic-bezier-line',
-	standalone: true,
-	template: `
+    selector: 'ngts-cubic-bezier-line',
+    template: `
 		<ngts-line [points]="points()" [options]="parameters()">
 			<ng-content />
 		</ngts-line>
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsLine],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsLine]
 })
 export class NgtsCubicBezierLine {
 	start = input.required<Vector3 | [number, number, number]>();

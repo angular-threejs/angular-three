@@ -118,9 +118,8 @@ export class FaceMaterial {
 }
 
 @Component({
-	selector: 'viewcube-face-cube',
-	standalone: true,
-	template: `
+    selector: 'viewcube-face-cube',
+    template: `
 		<ngt-mesh
 			(pointerout)="$any($event).stopPropagation(); hover.set(-1)"
 			(pointermove)="$any($event).stopPropagation(); hover.set(Math.floor($any($event).faceIndex / 2))"
@@ -132,9 +131,9 @@ export class FaceMaterial {
 			}
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [FaceMaterial],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FaceMaterial]
 })
 export class FaceCube {
 	options = input({} as Partial<NgtsViewcubeCommonOptions>);
@@ -162,9 +161,8 @@ export class FaceCube {
 }
 
 @Component({
-	selector: 'viewcube-edge-cube',
-	standalone: true,
-	template: `
+    selector: 'viewcube-edge-cube',
+    template: `
 		<ngt-mesh
 			[scale]="1.01"
 			[position]="position()"
@@ -176,9 +174,9 @@ export class FaceCube {
 			<ngt-box-geometry *args="dimensions()" />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class EdgeCube {
 	dimensions = input.required<XYZ>();
@@ -213,9 +211,8 @@ export class EdgeCube {
 export type NgtsGizmoViewcubeOptions = Partial<NgtsViewcubeCommonOptions>;
 
 @Component({
-	selector: 'ngts-gizmo-viewcube',
-	standalone: true,
-	template: `
+    selector: 'ngts-gizmo-viewcube',
+    template: `
 		<ngt-group [scale]="60">
 			<viewcube-face-cube [options]="options()" [onClick]="onClick" />
 			@for (edge of edges; track $index) {
@@ -236,9 +233,9 @@ export type NgtsGizmoViewcubeOptions = Partial<NgtsViewcubeCommonOptions>;
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [FaceCube, EdgeCube],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FaceCube, EdgeCube]
 })
 export class NgtsGizmoViewcube {
 	options = input({} as Partial<NgtsGizmoViewcubeOptions>);

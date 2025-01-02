@@ -7,9 +7,8 @@ import { Color, MeshPhysicalMaterial } from 'three';
 injectGLTF.preload(() => './pink-d.glb');
 
 @Component({
-	selector: 'app-model',
-	standalone: true,
-	template: `
+    selector: 'app-model',
+    template: `
 		<ngt-group [position]="position()" [rotation]="rotation()">
 			<ngt-mesh
 				[receiveShadow]="true"
@@ -176,9 +175,9 @@ injectGLTF.preload(() => './pink-d.glb');
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsMeshReflectorMaterial],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtsMeshReflectorMaterial]
 })
 export class Model {
 	protected Math = Math;

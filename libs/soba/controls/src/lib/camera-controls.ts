@@ -39,16 +39,15 @@ const defaultOptions: Partial<CameraControls> & NgtsCameraControlsOptions = {
 };
 
 @Component({
-	selector: 'ngts-camera-controls',
-	standalone: true,
-	template: `
+    selector: 'ngts-camera-controls',
+    template: `
 		<ngt-primitive *args="[controls()]" [parameters]="parameters()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtArgs],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [NgtArgs],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtsCameraControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

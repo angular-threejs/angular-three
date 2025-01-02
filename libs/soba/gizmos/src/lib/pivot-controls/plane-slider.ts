@@ -43,9 +43,8 @@ const intersection = new Vector3();
 const offsetMatrix = new Matrix4();
 
 @Component({
-	selector: 'ngts-plane-slider',
-	standalone: true,
-	template: `
+    selector: 'ngts-plane-slider',
+    template: `
 		<ngt-group #group [matrix]="matrixL()" [matrixAutoUpdate]="false">
 			@if (pivotControls.annotations()) {
 				<ngts-html [options]="{ position: [0, 0, 0] }">
@@ -96,9 +95,9 @@ const offsetMatrix = new Matrix4();
 			</ngt-group>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsHTML, NgtsHTMLContent, NgtsLine],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsHTML, NgtsHTMLContent, NgtsLine]
 })
 export class NgtsPlaneSlider {
 	protected readonly DoubleSide = DoubleSide;

@@ -12,18 +12,17 @@ import { BoxGeometry, Mesh, MeshPhongMaterial, Object3D } from 'three';
 import { COLORS } from '../constants';
 
 @Component({
-	selector: 'app-cloud',
-	standalone: true,
-	template: `
+    selector: 'app-cloud',
+    template: `
 		<ngt-object3D #cloud>
 			@for (i of count; track $index) {
 				<ngt-mesh #mesh [geometry]="geometry" [material]="material" [castShadow]="true" [receiveShadow]="true" />
 			}
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Cloud {
 	protected material = new MeshPhongMaterial({ color: COLORS.white });

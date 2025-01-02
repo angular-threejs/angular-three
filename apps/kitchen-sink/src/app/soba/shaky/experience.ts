@@ -52,9 +52,8 @@ export class Light {
 }
 
 @Component({
-	selector: 'app-rig',
-	standalone: true,
-	template: `
+    selector: 'app-rig',
+    template: `
 		<ngts-camera-shake
 			[options]="{
 				maxYaw: 0.01,
@@ -66,8 +65,8 @@ export class Light {
 			}"
 		/>
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsCameraShake],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsCameraShake]
 })
 export class Rig {
 	private vec = new Vector3();
@@ -82,9 +81,8 @@ export class Rig {
 }
 
 @Component({
-	selector: 'app-shaky-experience',
-	standalone: true,
-	template: `
+    selector: 'app-shaky-experience',
+    template: `
 		<ngt-fog attach="fog" *args="['lightpink', 60, 100]" />
 
 		<app-model [position]="[-4.5, -4, 0]" [rotation]="[0, -2.8, 0]" />
@@ -97,10 +95,10 @@ export class Rig {
 			<ngts-orbit-controls [options]="{ makeDefault: true, minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }" />
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'shaky-experience' },
-	imports: [NgtArgs, Light, NgtsEnvironment, Rig, NgtsOrbitControls, Model],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'shaky-experience' },
+    imports: [NgtArgs, Light, NgtsEnvironment, Rig, NgtsOrbitControls, Model]
 })
 export class Experience {
 	protected readonly Math = Math;

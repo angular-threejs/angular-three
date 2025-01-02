@@ -59,9 +59,8 @@ export class NgtrPhysicsFallback {
 }
 
 @Component({
-	selector: 'ngtr-physics',
-	standalone: true,
-	template: `
+    selector: 'ngtr-physics',
+    template: `
 		@let _rapierError = rapierError();
 		@let _fallbackContent = fallbackContent();
 
@@ -82,8 +81,8 @@ export class NgtrPhysicsFallback {
 			<ng-container [ngTemplateOutlet]="_fallbackContent" [ngTemplateOutletContext]="{ error: _rapierError }" />
 		}
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrDebug, NgtrFrameStepper, NgTemplateOutlet],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrDebug, NgtrFrameStepper, NgTemplateOutlet]
 })
 export class NgtrPhysics {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

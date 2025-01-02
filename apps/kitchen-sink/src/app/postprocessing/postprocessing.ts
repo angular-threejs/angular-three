@@ -7,8 +7,7 @@ import routes from './postprocessing.routes';
 extend(THREE);
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<div class="h-svh">
 			<router-outlet />
 		</div>
@@ -29,9 +28,9 @@ extend(THREE);
 			}
 		</ul>
 	`,
-	imports: [RouterOutlet, RouterLink, RouterLinkActive],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'postprocessing' },
+    imports: [RouterOutlet, RouterLink, RouterLinkActive],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'postprocessing' }
 })
 export default class Postprocessing {
 	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);

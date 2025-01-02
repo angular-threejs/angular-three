@@ -125,9 +125,8 @@ export type NgtPortalInjectableState = Partial<
 >;
 
 @Component({
-	selector: 'ngt-portal',
-	standalone: true,
-	template: `
+    selector: 'ngt-portal',
+    template: `
 		<ng-container #anchor />
 
 		@if (shouldAutoRender()) {
@@ -138,10 +137,10 @@ export type NgtPortalInjectableState = Partial<
 			/>
 		}
 	`,
-	imports: [NgtPortalBeforeRender],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideStore(() => signalStore({}))],
+    imports: [NgtPortalBeforeRender],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [provideStore(() => signalStore({}))]
 })
 export class NgtPortal {
 	container = input.required<Object3D>();

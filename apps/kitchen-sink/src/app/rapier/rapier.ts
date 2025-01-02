@@ -8,8 +8,7 @@ import { SCENES_MAP } from './constants';
 extend(THREE);
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<div class="h-svh bg-gradient-to-r from-violet-500 to-fuchsia-500">
 			<router-outlet />
 		</div>
@@ -30,9 +29,9 @@ extend(THREE);
 			}
 		</ul>
 	`,
-	imports: [RouterOutlet, RouterLink, RouterLinkActive],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'rapier' },
+    imports: [RouterOutlet, RouterLink, RouterLinkActive],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'rapier' }
 })
 export default class Rapier {
 	protected examples = Object.keys(SCENES_MAP);

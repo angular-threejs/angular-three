@@ -6,14 +6,13 @@ import { Mesh } from 'three';
 import { color } from './color';
 
 @Component({
-	selector: 'app-porsche-model',
-	standalone: true,
-	template: `
+    selector: 'app-porsche-model',
+    template: `
 		<ngt-primitive *args="[model()]" [parameters]="{ position: position(), rotation: rotation(), scale: scale() }" />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgTemplateOutlet],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgTemplateOutlet]
 })
 export class Model {
 	position = input([0, 0, 0]);

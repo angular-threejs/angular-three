@@ -22,9 +22,8 @@ type SkydiverGLTF = GLTF & {
 };
 
 @Component({
-	selector: 'app-skydiver',
-	standalone: true,
-	template: `
+    selector: 'app-skydiver',
+    template: `
 		<ngt-group [dispose]="null">
 			@if (gltf(); as gltf) {
 				<ngt-group>
@@ -51,9 +50,9 @@ type SkydiverGLTF = GLTF & {
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Skydiver {
 	protected DoubleSide = DoubleSide;

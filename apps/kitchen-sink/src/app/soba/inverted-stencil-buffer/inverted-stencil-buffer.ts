@@ -3,8 +3,7 @@ import { NgtCanvas } from 'angular-three';
 import { Experience, invert, logo } from './experience';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-canvas [sceneGraph]="scene" [shadows]="true" [gl]="{ stencil: true }" />
 		<div
 			class="absolute top-2 right-2 p-4 flex flex-col gap-4 items-center rounded border border-black border-dotted font-mono"
@@ -20,9 +19,9 @@ import { Experience, invert, logo } from './experience';
 			</select>
 		</div>
 	`,
-	host: { class: 'inverted-stencil-buffer-soba' },
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas],
+    host: { class: 'inverted-stencil-buffer-soba' },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtCanvas]
 })
 export default class InvertedStencilBuffer {
 	protected scene = Experience;

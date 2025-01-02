@@ -8,18 +8,17 @@ extend({ DotScreenEffect });
 export type DotScreenEffectOptions = Partial<NonNullable<ConstructorParameters<typeof DotScreenEffect>[0]>>;
 
 @Component({
-	selector: 'ngtp-dot-screen',
-	template: `
+    selector: 'ngtp-dot-screen',
+    template: `
 		<ngt-dot-screen-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-dot-screen-effect>
 	`,
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtpEffectBlendMode],
+    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
 })
 export class NgtpDotScreen {
 	effect = inject(NgtpEffect, { host: true });

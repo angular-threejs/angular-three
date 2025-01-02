@@ -15,8 +15,7 @@ import { injectSuzanne } from '../suzanne';
 const MAX_COUNT = 2000;
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-group>
 			@if (gltf(); as gltf) {
 				<ngt-object3D
@@ -37,10 +36,10 @@ const MAX_COUNT = 2000;
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'instanced-mesh-rapier' },
-	imports: [NgtrInstancedRigidBodies, NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'instanced-mesh-rapier' },
+    imports: [NgtrInstancedRigidBodies, NgtArgs]
 })
 export class InstancedMeshExample {
 	static [NON_ROOT] = true;

@@ -16,9 +16,8 @@ import { InstancedMesh, MeshBasicMaterial, Object3D, PlaneGeometry } from 'three
 import { AudioStore } from './audio.store';
 
 @Component({
-	selector: 'app-track',
-	standalone: true,
-	template: `
+    selector: 'app-track',
+    template: `
 		<ngt-group [position]="position()">
 			<ngt-instanced-mesh #instanced *args="[undefined, undefined, length()]" [castShadow]="true">
 				<ngt-plane-geometry *args="[0.01, 0.05]" />
@@ -28,9 +27,9 @@ import { AudioStore } from './audio.store';
 			<ngts-text [text]="sound()" [options]="{ fontSize: 0.05, color: 'black', position: [0.375, 0, 0] }" />
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsText, NgtsPivotControls],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtsText, NgtsPivotControls]
 })
 export class Track {
 	sound = input.required<'drums' | 'synth' | 'snare'>();

@@ -15,9 +15,8 @@ import { COLORS } from '../constants';
 import { GameStore } from '../game.store';
 
 @Component({
-	selector: 'app-pilot',
-	standalone: true,
-	template: `
+    selector: 'app-pilot',
+    template: `
 		<ngt-object3D [position]="position()">
 			<!-- body -->
 			<ngt-mesh [position]="[2, -12, 0]">
@@ -86,9 +85,9 @@ import { GameStore } from '../game.store';
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Pilot {
 	protected readonly Math = Math;

@@ -15,9 +15,8 @@ import { injectRopeJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-
 const WALL_COLORS = ['#50514F', '#CBD4C2', '#FFFCFF', '#247BA0', '#C3B299'];
 
 @Component({
-	selector: 'app-floor',
-	standalone: true,
-	template: `
+    selector: 'app-floor',
+    template: `
 		<ngt-object3D ngtrRigidBody="fixed" [position]="[0, -1, 0]">
 			<ngt-mesh [receiveShadow]="true">
 				<ngt-box-geometry *args="[20, 1, 20]" />
@@ -25,16 +24,15 @@ const WALL_COLORS = ['#50514F', '#CBD4C2', '#FFFCFF', '#247BA0', '#C3B299'];
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody, NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody, NgtArgs]
 })
 export class Floor {}
 
 @Component({
-	selector: 'app-box-wall',
-	standalone: true,
-	template: `
+    selector: 'app-box-wall',
+    template: `
 		<ngt-group name="wall" [rotation]="[0, -0.7853982, 0]" [position]="[-1.8, 0, -1.8]">
 			@for (row of rows(); track row) {
 				@for (column of columns(); track column) {
@@ -48,9 +46,9 @@ export class Floor {}
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody]
 })
 export class BoxWall {
 	protected readonly WALL_COLORS = WALL_COLORS;
@@ -63,9 +61,8 @@ export class BoxWall {
 }
 
 @Component({
-	selector: 'app-rope-joint',
-	standalone: true,
-	template: `
+    selector: 'app-rope-joint',
+    template: `
 		<ngt-group>
 			<!--      Anchor-->
 			<ngt-object3D #anchor ngtrRigidBody [position]="anchorPosition()" />
@@ -86,9 +83,9 @@ export class BoxWall {
 			</ngt-object3D>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody, NgtArgs, NgtrBallCollider],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody, NgtArgs, NgtrBallCollider]
 })
 export class RopeJoint {
 	length = input.required<number>();
@@ -114,18 +111,17 @@ export class RopeJoint {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-group [scale]="3">
 			<app-floor />
 			<app-box-wall [height]="10" [width]="6" />
 			<app-rope-joint [length]="35" [anchorPosition]="[0, 15, 0]" [ballPosition]="[-8, 15, 8]" />
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'rope-joint-rapier' },
-	imports: [Floor, BoxWall, RopeJoint],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'rope-joint-rapier' },
+    imports: [Floor, BoxWall, RopeJoint]
 })
 export class RopeJointExample {
 	static [NON_ROOT] = true;

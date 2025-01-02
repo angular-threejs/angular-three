@@ -12,16 +12,15 @@ import { Material } from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 
 @Component({
-	selector: 'ngts-custom-shader-material',
-	standalone: true,
-	template: `
+    selector: 'ngts-custom-shader-material',
+    template: `
 		<ngt-primitive *args="[material()]" [attach]="attach()" [parameters]="parameters()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsCustomShaderMaterial {
 	baseMaterial = input.required<Material | typeof Material | ElementRef<Material>>();

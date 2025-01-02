@@ -13,9 +13,8 @@ import { Mesh } from 'three';
 import { PositionRotationInput } from './position-rotation-input';
 
 @Component({
-	selector: 'app-ui-plane',
-	standalone: true,
-	template: `
+    selector: 'app-ui-plane',
+    template: `
 		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[size(), size()]" />
 			@if (useShadowMaterial()) {
@@ -25,10 +24,10 @@ import { PositionRotationInput } from './position-rotation-input';
 			}
 		</ngt-mesh>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	hostDirectives: [{ directive: PositionRotationInput, inputs: ['position', 'rotation'] }],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    hostDirectives: [{ directive: PositionRotationInput, inputs: ['position', 'rotation'] }],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiPlane {
 	protected positionRotationInput = inject(PositionRotationInput, { host: true });

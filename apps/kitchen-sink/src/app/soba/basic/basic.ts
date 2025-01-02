@@ -3,8 +3,7 @@ import { NgtCanvas } from 'angular-three';
 import { Experience, bloom, glitch, selectedAction } from './experience';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-canvas [sceneGraph]="scene" [camera]="{ fov: 75, position: [0, 0, 3] }" [shadows]="true" />
 		<div class="absolute top-0 right-0 flex flex-col">
 			<select [value]="selectedAction()" (change)="selectedAction.set($any($event.target).value)">
@@ -24,9 +23,9 @@ import { Experience, bloom, glitch, selectedAction } from './experience';
 			</div>
 		</div>
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas],
-	host: { class: 'basic-soba' },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtCanvas],
+    host: { class: 'basic-soba' }
 })
 export default class Basic {
 	protected scene = Experience;

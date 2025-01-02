@@ -4,14 +4,13 @@ import { NgtsInstance, NgtsInstances } from 'angular-three-soba/performances';
 import { AdditiveBlending, DoubleSide, MathUtils, Vector3 } from 'three';
 
 @Component({
-	selector: 'app-wind-shape',
-	standalone: true,
-	template: `
+    selector: 'app-wind-shape',
+    template: `
 		<ngts-instance [options]="{ color: 'white', position: randomPosition }" />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsInstance],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsInstance]
 })
 export class WindShape {
 	protected randomPosition = [
@@ -42,9 +41,8 @@ export class WindShape {
 }
 
 @Component({
-	selector: 'app-winds',
-	standalone: true,
-	template: `
+    selector: 'app-winds',
+    template: `
 		<ngt-group>
 			<ngts-instances>
 				<ngt-plane-geometry *args="[0.0135, 1.2]" />
@@ -61,9 +59,9 @@ export class WindShape {
 			</ngts-instances>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsInstances, NgtArgs, WindShape],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsInstances, NgtArgs, WindShape]
 })
 export class Winds {
 	protected readonly DoubleSide = DoubleSide;

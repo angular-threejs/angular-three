@@ -43,9 +43,8 @@ const defaultOptions: NgtsLineOptions = {
 };
 
 @Component({
-	selector: 'ngts-line',
-	standalone: true,
-	template: `
+    selector: 'ngts-line',
+    template: `
 		<ngt-primitive *args="[line2()]" #line [parameters]="parameters()">
 			<ngt-primitive *args="[lineGeometry()]" attach="geometry" (attached)="onGeometryAttached($any($event))" />
 			<ngt-primitive
@@ -62,9 +61,9 @@ const defaultOptions: NgtsLineOptions = {
 			<ng-content />
 		</ngt-primitive>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsLine {
 	points = input.required<Array<Vector3 | Vector2 | [number, number, number] | [number, number] | number>>();

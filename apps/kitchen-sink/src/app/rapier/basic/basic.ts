@@ -5,8 +5,7 @@ import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngts-perspective-camera [options]="{ makeDefault: true, position: [5, 5, 5] }" />
 
 		<ngtr-physics [options]="{ debug: true }">
@@ -41,10 +40,10 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 
 		<ngts-orbit-controls />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'experience-basic-rapier' },
-	imports: [NgtrPhysics, NgtrRigidBody, NgtrCuboidCollider, NgtsOrbitControls, NgtsPerspectiveCamera],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'experience-basic-rapier' },
+    imports: [NgtrPhysics, NgtrRigidBody, NgtrCuboidCollider, NgtsOrbitControls, NgtsPerspectiveCamera]
 })
 export class Basic {
 	static [NON_ROOT] = true;

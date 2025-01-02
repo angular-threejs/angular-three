@@ -16,9 +16,8 @@ import { NgtsContactShadows, NgtsRenderTexture, NgtsRenderTextureContent } from 
 import { Mesh } from 'three';
 
 @Component({
-	selector: 'app-dodecahedron',
-	standalone: true,
-	template: `
+    selector: 'app-dodecahedron',
+    template: `
 		<ngt-group [position]="position()" [scale]="scale()">
 			<ngt-mesh
 				#mesh
@@ -33,9 +32,9 @@ import { Mesh } from 'three';
 			</ngt-mesh>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtArgs],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [NgtArgs],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Dodecahedron {
 	position = input([0, 0, 0]);
@@ -62,9 +61,8 @@ export class Dodecahedron {
 }
 
 @Component({
-	selector: 'app-material',
-	standalone: true,
-	template: `
+    selector: 'app-material',
+    template: `
 		<ngt-mesh-standard-material>
 			<ngts-render-texture [options]="{ anisotropy: 16 }">
 				<ng-template renderTextureContent>
@@ -85,9 +83,9 @@ export class Dodecahedron {
 			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
-	imports: [Dodecahedron, NgtsRenderTexture, NgtsRenderTextureContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [Dodecahedron, NgtsRenderTexture, NgtsRenderTextureContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Material {
 	private textRef = viewChild(NgtsText);
@@ -103,23 +101,21 @@ export class Material {
 }
 
 @Component({
-	selector: 'app-cube',
-	standalone: true,
-	template: `
+    selector: 'app-cube',
+    template: `
 		<ngt-mesh name="the-cube">
 			<ngt-box-geometry />
 			<app-material />
 		</ngt-mesh>
 	`,
-	imports: [Material],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [Material],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Cube {}
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color *args="['#cecece']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5" />
 		<ngt-directional-light [position]="[10, 10, 5]" [intensity]="Math.PI" />
@@ -129,10 +125,10 @@ export class Cube {}
 		<ngts-contact-shadows [options]="{ frames: 1, position: [0, -0.5, 0], blur: 3, color: 'orange' }" />
 		<ngts-orbit-controls [options]="{ minPolarAngle: 0, maxPolarAngle: Math.PI / 2.1 }" />
 	`,
-	imports: [Cube, Dodecahedron, NgtArgs, NgtsOrbitControls, NgtsContactShadows],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'render-texture-experience' },
+    imports: [Cube, Dodecahedron, NgtArgs, NgtsOrbitControls, NgtsContactShadows],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'render-texture-experience' }
 })
 export class Experience {
 	protected Math = Math;

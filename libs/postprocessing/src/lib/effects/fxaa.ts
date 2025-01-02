@@ -8,18 +8,17 @@ extend({ FXAAEffect });
 export type FXAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof FXAAEffect>[0]>>;
 
 @Component({
-	selector: 'ngtp-fxaa',
-	template: `
+    selector: 'ngtp-fxaa',
+    template: `
 		<ngt-fXAA-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-fXAA-effect>
 	`,
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtpEffectBlendMode],
+    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
 })
 export class NgtpFXAA {
 	effect = inject(NgtpEffect, { host: true });

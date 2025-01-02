@@ -14,9 +14,8 @@ import { NgtrRigidBodyAutoCollider } from './types';
 import { createColliderOptions } from './utils';
 
 @Component({
-	selector: 'ngt-object3D[ngtrMeshCollider]',
-	standalone: true,
-	template: `
+    selector: 'ngt-object3D[ngtrMeshCollider]',
+    template: `
 		<ng-content />
 		@for (childColliderOption of childColliderOptions(); track $index) {
 			<ngt-object3D
@@ -30,9 +29,9 @@ import { createColliderOptions } from './utils';
 			/>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrAnyCollider],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrAnyCollider]
 })
 export class NgtrMeshCollider {
 	colliders = input.required<NgtrRigidBodyAutoCollider>({ alias: 'ngtrMeshCollider' });

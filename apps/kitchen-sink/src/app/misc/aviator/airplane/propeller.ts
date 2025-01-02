@@ -13,9 +13,8 @@ import { COLORS } from '../constants';
 import { GameStore } from '../game.store';
 
 @Component({
-	selector: 'app-propeller',
-	standalone: true,
-	template: `
+    selector: 'app-propeller',
+    template: `
 		<ngt-mesh #propeller [castShadow]="true" [receiveShadow]="true" [position]="[60, 0, 0]">
 			<ngt-box-geometry #propellerGeometry *args="[20, 10, 10]" />
 			<ngt-mesh-phong-material [color]="COLORS.brown" [flatShading]="true" />
@@ -40,9 +39,9 @@ import { GameStore } from '../game.store';
 			/>
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Propeller {
 	protected readonly COLORS = COLORS;

@@ -3,8 +3,7 @@ import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-canvas
 			[sceneGraph]="scene"
 			[camera]="{ far: 100, near: 1, position: [-25, 20, 25], zoom: 35 }"
@@ -12,9 +11,9 @@ import { Experience } from './experience';
 			[shadows]="true"
 		/>
 	`,
-	imports: [NgtCanvas],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'monday-morning-cannon cursor-none' },
+    imports: [NgtCanvas],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'monday-morning-cannon cursor-none' }
 })
 export default class MondayMorning {
 	protected scene = Experience;

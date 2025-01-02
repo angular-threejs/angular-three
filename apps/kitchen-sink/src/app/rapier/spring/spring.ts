@@ -14,9 +14,8 @@ import { injectSpringJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-thre
 import { ColorRepresentation } from 'three';
 
 @Component({
-	selector: 'app-box',
-	standalone: true,
-	template: `
+    selector: 'app-box',
+    template: `
 		<ngt-object3D ngtrRigidBody [options]="{ ccd: true, canSleep: false, density: 100 }" [position]="position()">
 			<ngt-mesh [castShadow]="true" [receiveShadow]="true">
 				<ngt-box-geometry />
@@ -24,9 +23,9 @@ import { ColorRepresentation } from 'three';
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody]
 })
 export class Box {
 	position = input<NgtVector3>([0, 0, 0]);
@@ -34,9 +33,8 @@ export class Box {
 }
 
 @Component({
-	selector: 'app-ball-spring',
-	standalone: true,
-	template: `
+    selector: 'app-ball-spring',
+    template: `
 		<ngt-object3D
 			ngtrRigidBody
 			[options]="{ colliders: false, canSleep: false, ccd: true, mass: mass() }"
@@ -51,9 +49,9 @@ export class Box {
 			<ngt-object3D ngtrBallCollider [args]="[0.5]" />
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody, NgtArgs, NgtrBallCollider],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody, NgtArgs, NgtrBallCollider]
 })
 export class BallSpring {
 	floorRigidBody = input.required<NgtrRigidBody>();
@@ -92,8 +90,7 @@ export class BallSpring {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-object3D #floor="rigidBody" ngtrRigidBody="fixed" [position]="[0, 0, 0]" />
 
 		@for (ballPosition of balls; track $index) {
@@ -112,10 +109,10 @@ export class BallSpring {
 			</ngt-group>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'spring-rapier' },
-	imports: [NgtrRigidBody, BallSpring, Box],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'spring-rapier' },
+    imports: [NgtrRigidBody, BallSpring, Box]
 })
 export class SpringExample {
 	static [NON_ROOT] = true;

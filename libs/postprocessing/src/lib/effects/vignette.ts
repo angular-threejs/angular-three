@@ -8,18 +8,17 @@ extend({ VignetteEffect });
 export type VignetteEffectOptions = Partial<NonNullable<ConstructorParameters<typeof VignetteEffect>[0]>>;
 
 @Component({
-	selector: 'ngtp-vignette',
-	template: `
+    selector: 'ngtp-vignette',
+    template: `
 		<ngt-vignette-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-vignette-effect>
 	`,
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtpEffectBlendMode],
-	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtpEffectBlendMode],
+    hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }]
 })
 export class NgtpVignette {
 	effect = inject(NgtpEffect, { host: true });

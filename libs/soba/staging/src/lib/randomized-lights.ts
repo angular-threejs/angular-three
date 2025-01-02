@@ -59,9 +59,8 @@ const defaultOptions: NgtsRandomizedLightsOptions = {
 };
 
 @Component({
-	selector: 'ngts-randomized-lights',
-	standalone: true,
-	template: `
+    selector: 'ngts-randomized-lights',
+    template: `
 		<ngt-group #lights [parameters]="parameters()">
 			@for (i of count(); track $index) {
 				<ngt-directional-light [castShadow]="castShadow()" [intensity]="intensity() / amount()">
@@ -72,9 +71,9 @@ const defaultOptions: NgtsRandomizedLightsOptions = {
 			}
 		</ngt-group>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtsRandomizedLights {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

@@ -56,9 +56,8 @@ const defaultOptions: NgtsTextOptions = {
 };
 
 @Component({
-	selector: 'ngts-text',
-	standalone: true,
-	template: `
+    selector: 'ngts-text',
+    template: `
 		<ngt-primitive
 			*args="[troikaMesh]"
 			[text]="text()"
@@ -72,9 +71,9 @@ const defaultOptions: NgtsTextOptions = {
 			<ng-content />
 		</ngt-primitive>
 	`,
-	imports: [NgtArgs, NgTemplateOutlet],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgTemplateOutlet],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtsText {
 	text = input.required<string>();

@@ -10,14 +10,13 @@ export interface LUTOptions {
 }
 
 @Component({
-	selector: 'ngtp-lut',
-	template: `
+    selector: 'ngtp-lut',
+    template: `
 		<ngt-primitive *args="[effect()]" [dispose]="null" />
 	`,
-	imports: [NgtArgs],
-	standalone: true,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtpLUT {
 	options = input({} as LUTOptions);

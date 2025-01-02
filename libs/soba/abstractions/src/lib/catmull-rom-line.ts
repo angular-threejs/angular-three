@@ -20,15 +20,14 @@ const defaultOptions: NgtsCatmullRomLineOptions = {
 };
 
 @Component({
-	selector: 'ngts-catmull-rom-line',
-	standalone: true,
-	template: `
+    selector: 'ngts-catmull-rom-line',
+    template: `
 		<ngts-line [points]="segmentedPoints()" [options]="lineOptions()">
 			<ng-content />
 		</ngts-line>
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsLine],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsLine]
 })
 export class NgtsCatmullRomLine {
 	points = input.required<Array<Vector3 | [number, number, number]>>();

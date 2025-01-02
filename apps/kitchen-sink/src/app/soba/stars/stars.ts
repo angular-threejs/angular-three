@@ -3,8 +3,7 @@ import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<div style="position: absolute; top: 50%; left: 50%; transform: translate3d(-50%,-50%,0)">
 			<h1
 				style="margin: 0; padding: 0; font-size: 15em; font-weight: 500; letter-spacing: -0.05em; line-height: 1; text-align: center"
@@ -14,9 +13,9 @@ import { Experience } from './experience';
 		</div>
 		<ngt-canvas [sceneGraph]="sceneGraph" [camera]="{ position: [0, 0, 1] }" />
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'stars-soba' },
-	styles: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'stars-soba' },
+    styles: `
 		:host {
 			display: block;
 			height: 100%;
@@ -30,7 +29,7 @@ import { Experience } from './experience';
 			-webkit-text-fill-color: transparent;
 		}
 	`,
-	imports: [NgtCanvas],
+    imports: [NgtCanvas]
 })
 export default class Stars {
 	protected sceneGraph = Experience;

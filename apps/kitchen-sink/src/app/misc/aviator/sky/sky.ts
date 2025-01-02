@@ -16,18 +16,17 @@ import { GameStore } from '../game.store';
 import { Cloud } from './cloud';
 
 @Component({
-	selector: 'app-sky',
-	standalone: true,
-	template: `
+    selector: 'app-sky',
+    template: `
 		<ngt-object3D #sky [position]="[0, -SEA_RADIUS, 0]">
 			@for (i of count; track $index) {
 				<app-cloud />
 			}
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [Cloud],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [Cloud]
 })
 export class Sky {
 	protected readonly SEA_RADIUS = SEA_RADIUS;

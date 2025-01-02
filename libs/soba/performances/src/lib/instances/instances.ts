@@ -71,9 +71,8 @@ const defaultOptions: NgtsInstancesOptions = {
 };
 
 @Component({
-	selector: 'ngts-instances',
-	standalone: true,
-	template: `
+    selector: 'ngts-instances',
+    template: `
 		<ngt-instanced-mesh
 			#instancedMesh
 			[userData]="{ instances }"
@@ -98,9 +97,9 @@ const defaultOptions: NgtsInstancesOptions = {
 			<ng-content />
 		</ngt-instanced-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsInstances {
 	protected readonly DynamicDrawUsage = DynamicDrawUsage;

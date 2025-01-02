@@ -19,17 +19,16 @@ import niceColors from '../../colors';
 import { shape } from './state';
 
 @Component({
-	selector: 'app-plane',
-	standalone: true,
-	template: `
+    selector: 'app-plane',
+    template: `
 		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[10, 10]" />
 			<ngt-shadow-material color="#171717" />
 		</ngt-mesh>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Plane {
 	rotation = input<Triplet>([0, 0, 0]);
@@ -59,9 +58,8 @@ export abstract class InstancesInput {
 }
 
 @Component({
-	selector: 'app-boxes',
-	standalone: true,
-	template: `
+    selector: 'app-boxes',
+    template: `
 		<ngt-instanced-mesh *args="[undefined, undefined, count()]" [receiveShadow]="true" [castShadow]="true" #mesh>
 			<ngt-box-geometry *args="args()">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
@@ -69,9 +67,9 @@ export abstract class InstancesInput {
 			<ngt-mesh-lambert-material [vertexColors]="true" />
 		</ngt-instanced-mesh>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Boxes extends InstancesInput {
 	protected args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
@@ -84,9 +82,8 @@ export class Boxes extends InstancesInput {
 }
 
 @Component({
-	selector: 'app-spheres',
-	standalone: true,
-	template: `
+    selector: 'app-spheres',
+    template: `
 		<ngt-instanced-mesh *args="[undefined, undefined, count()]" [receiveShadow]="true" [castShadow]="true" #mesh>
 			<ngt-sphere-geometry *args="[size(), 48, 48]">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
@@ -94,9 +91,9 @@ export class Boxes extends InstancesInput {
 			<ngt-mesh-lambert-material [vertexColors]="true" />
 		</ngt-instanced-mesh>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Spheres extends InstancesInput {
 	protected args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
@@ -109,8 +106,7 @@ export class Spheres extends InstancesInput {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color attach="background" *args="['lightblue']" />
 		<ngt-hemisphere-light [intensity]="0.35 * Math.PI" />
 		<ngt-spot-light
@@ -131,10 +127,10 @@ export class Spheres extends InstancesInput {
 			}
 		</ngtc-physics>
 	`,
-	imports: [NgtArgs, NgtcPhysics, Plane, Boxes, Spheres],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'cube-heap-experience' },
+    imports: [NgtArgs, NgtcPhysics, Plane, Boxes, Spheres],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'cube-heap-experience' }
 })
 export class Experience {
 	protected Math = Math;

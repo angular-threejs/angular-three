@@ -18,14 +18,13 @@ type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 };
 
 @Component({
-	selector: 'ngtp-god-rays',
-	standalone: true,
-	template: `
+    selector: 'ngtp-god-rays',
+    template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-	imports: [NgtArgs],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [NgtArgs],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NgtpGodRays {
 	options = input({} as GodRaysOptions);

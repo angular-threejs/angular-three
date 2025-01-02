@@ -4,8 +4,7 @@ import { ToggleButton } from '../toggle-button';
 import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-default';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" [shadows]="true" [dpr]="1" />
 		<div class="absolute top-2 right-2 font-mono flex gap-4">
 			<button [(toggleButton)]="debug">debug</button>
@@ -13,8 +12,8 @@ import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-defa
 			<button [(toggleButton)]="paused">paused</button>
 		</div>
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, ToggleButton],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtCanvas, ToggleButton]
 })
 export default class RapierWrapper {
 	protected sceneGraph = RapierWrapperDefault;

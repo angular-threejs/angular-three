@@ -5,14 +5,13 @@ import { EffectAttribute, ToneMappingEffect } from 'postprocessing';
 export type NgtpToneMappingOptions = Partial<NonNullable<ConstructorParameters<typeof ToneMappingEffect>[0]>>;
 
 @Component({
-	selector: 'ngtp-tone-mapping',
-	standalone: true,
-	template: `
+    selector: 'ngtp-tone-mapping',
+    template: `
 		<ngt-primitive *args="[effect()]" [parameters]="parameters()" />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtpToneMapping {
 	options = input({} as NgtpToneMappingOptions);

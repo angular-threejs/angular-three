@@ -35,19 +35,18 @@ function provideParent<THandle extends object>(handle: Type<THandle>, factory: (
 }
 
 @Component({
-	selector: 'app-chain-link',
-	standalone: true,
-	template: `
+    selector: 'app-chain-link',
+    template: `
 		<ngt-mesh #mesh>
 			<ngt-cylinder-geometry *args="args()" />
 			<ngt-mesh-standard-material [roughness]="0.3" [color]="color()" />
 		</ngt-mesh>
 		<ng-content />
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideParent(ChainLink, (chainLink) => ({ ref: chainLink.mesh, position: chainLink.position }))],
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [provideParent(ChainLink, (chainLink) => ({ ref: chainLink.mesh, position: chainLink.position }))]
 })
 export class ChainLink {
 	private parent = inject(Parent, { skipSelf: true });
@@ -93,17 +92,16 @@ function notUndefined<T>(value: T | undefined): value is T {
 const maxMultiplierExamples = [0, 500, 1000, 1500, undefined] as const;
 
 @Component({
-	selector: 'app-chain',
-	standalone: true,
-	template: `
+    selector: 'app-chain',
+    template: `
 		@if (length() > 0) {
 			<app-chain-link [color]="color()" [maxMultiplier]="maxMultiplier()">
 				<app-chain [length]="length() - 1" [maxMultiplier]="maxMultiplier()" />
 			</app-chain-link>
 		}
 	`,
-	imports: [ChainLink],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [ChainLink],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class Chain {
 	length = input.required<number>();
@@ -121,9 +119,8 @@ export class Chain {
 }
 
 @Component({
-	selector: 'app-pointer-handle',
-	standalone: true,
-	template: `
+    selector: 'app-pointer-handle',
+    template: `
 		<ngt-group>
 			<ngt-mesh #mesh>
 				<ngt-box-geometry *args="args" />
@@ -132,10 +129,10 @@ export class Chain {
 			<ng-content />
 		</ngt-group>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideParent(PointerHandle, (handle) => ({ ref: handle.mesh, position: () => handle.position }))],
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [provideParent(PointerHandle, (handle) => ({ ref: handle.mesh, position: () => handle.position }))]
 })
 export class PointerHandle {
 	protected args = [1.5, 1.5, 1.5 * 2] as Triplet;
@@ -153,9 +150,8 @@ export class PointerHandle {
 }
 
 @Component({
-	selector: 'app-static-handle',
-	standalone: true,
-	template: `
+    selector: 'app-static-handle',
+    template: `
 		<ngt-group>
 			<ngt-mesh #mesh>
 				<ngt-sphere-geometry *args="[1.5, 64, 64]" />
@@ -164,10 +160,10 @@ export class PointerHandle {
 			<ng-content />
 		</ngt-group>
 	`,
-	imports: [NgtArgs],
-	providers: [provideParent(StaticHandle, (handle) => ({ ref: handle.mesh, position: handle.position }))],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    providers: [provideParent(StaticHandle, (handle) => ({ ref: handle.mesh, position: handle.position }))],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StaticHandle {
 	position = input.required<Triplet>();
@@ -180,8 +176,7 @@ export class StaticHandle {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color *args="['#171720']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
 		<ngt-point-light [position]="[-10, -10, -10]" [intensity]="Math.PI" [decay]="0" />
@@ -206,10 +201,10 @@ export class StaticHandle {
 			}
 		</ngtc-physics>
 	`,
-	imports: [NgtcPhysics, NgtcDebug, NgtArgs, PointerHandle, Chain, StaticHandle],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	host: { class: 'chain-experience' },
+    imports: [NgtcPhysics, NgtcDebug, NgtArgs, PointerHandle, Chain, StaticHandle],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    host: { class: 'chain-experience' }
 })
 export class Experience {
 	protected Math = Math;

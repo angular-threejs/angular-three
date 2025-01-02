@@ -68,9 +68,8 @@ const ray = new Ray();
 const intersection = new Vector3();
 
 @Component({
-	selector: 'ngts-axis-rotator',
-	standalone: true,
-	template: `
+    selector: 'ngts-axis-rotator',
+    template: `
 		<ngt-group
 			#group
 			[matrix]="matrixL()"
@@ -113,9 +112,9 @@ const intersection = new Vector3();
 			/>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsLine, NgtsHTML, NgtsHTMLContent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsLine, NgtsHTML, NgtsHTMLContent]
 })
 export class NgtsAxisRotator {
 	protected readonly DoubleSide = DoubleSide;

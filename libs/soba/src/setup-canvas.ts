@@ -73,8 +73,7 @@ const STORY_COMPONENT_MIRROR = new InjectionToken<ComponentMirror<Type<unknown>>
 const STORY_OPTIONS = new InjectionToken<Signal<Record<string, unknown>>>('story inputs');
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color *args="[canvasOptions.background]" attach="background" />
 
 		<ng-container #anchor />
@@ -88,10 +87,10 @@ const STORY_OPTIONS = new InjectionToken<Signal<Record<string, unknown>>>('story
 			<ngts-orbit-controls [options]="{ makeDefault: canvasOptions.controls['makeDefault'] ?? true }" />
 		}
 	`,
-	imports: [NgtsOrbitControls, NgtArgs],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	host: { class: 'storybook-scene' },
+    imports: [NgtsOrbitControls, NgtArgs],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    host: { class: 'storybook-scene' }
 })
 export class StorybookScene {
 	protected Math = Math;
@@ -145,16 +144,15 @@ export class StorybookScene {
 }
 
 @Component({
-	selector: 'storybook-setup',
-	standalone: true,
-	template: `
+    selector: 'storybook-setup',
+    template: `
 		<ng-container #anchor />
 		@if (withLoader()) {
 			<ngts-loader />
 		}
 	`,
-	imports: [NgtsLoader],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsLoader],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StorybookSetup {
 	story = input.required<Type<unknown>>();

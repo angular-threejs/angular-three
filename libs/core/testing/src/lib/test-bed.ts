@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ENVIRONMENT_INITIALIZER, Type } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Type, provideEnvironmentInitializer } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	getLocalState,
@@ -44,9 +44,8 @@ export class NgtTestBed {
 		const fixture = TestBed.configureTestingModule({
 			providers: [
 				provideStore(),
-				{
-					provide: ENVIRONMENT_INITIALIZER,
-					useFactory: () => {
+				provideEnvironmentInitializer(() => {
+        const initializerFn = (() => {
 						const initRoot = injectCanvasRootInitializer();
 
 						return () => {
@@ -63,9 +62,9 @@ export class NgtTestBed {
 								events: undefined,
 							});
 						};
-					},
-					multi: true,
-				},
+					})();
+        return initializerFn();
+      }),
 				...(providers ?? []),
 			],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA],

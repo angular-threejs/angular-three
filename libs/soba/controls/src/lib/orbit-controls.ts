@@ -22,15 +22,14 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 };
 
 @Component({
-	selector: 'ngts-orbit-controls',
-	standalone: true,
-	template: `
+    selector: 'ngts-orbit-controls',
+    template: `
 		<ngt-primitive *args="[controls()]" [parameters]="parameters()" [enableDamping]="enableDamping()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NgtsOrbitControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

@@ -29,9 +29,8 @@ const defaultOptions: NgtsGradientTextureOptions = {
 };
 
 @Component({
-	selector: 'ngts-gradient-texture',
-	standalone: true,
-	template: `
+    selector: 'ngts-gradient-texture',
+    template: `
 		<ngt-canvas-texture
 			*args="[canvas()]"
 			[attach]="attach()"
@@ -41,9 +40,9 @@ const defaultOptions: NgtsGradientTextureOptions = {
 			<ng-content />
 		</ngt-canvas-texture>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsGradientTexture {
 	attach = input<NgtAttachable>('map');

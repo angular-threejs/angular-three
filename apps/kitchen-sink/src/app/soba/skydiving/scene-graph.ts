@@ -11,8 +11,7 @@ import { World } from './world';
 extend(THREE);
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngts-environment [options]="{ frames: 1, path: './env/skydiving', resolution: 256 }" />
 
 		<app-world />
@@ -31,19 +30,19 @@ extend(THREE);
 			<ngtp-vignette [options]="{ offset: 0.5, darkness: 0.5 }" />
 		</ngtp-effect-composer>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		NgtsEnvironment,
-		NgtsCameraShake,
-		NgtsOrbitControls,
-		NgtpEffectComposer,
-		NgtpBloom,
-		NgtpVignette,
-		Skydiver,
-		World,
-		Winds,
-	],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgtsEnvironment,
+        NgtsCameraShake,
+        NgtsOrbitControls,
+        NgtpEffectComposer,
+        NgtpBloom,
+        NgtpVignette,
+        Skydiver,
+        World,
+        Winds,
+    ]
 })
 export class SceneGraph {
 	protected readonly Math = Math;

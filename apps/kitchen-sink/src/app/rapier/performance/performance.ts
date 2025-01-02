@@ -17,9 +17,8 @@ import { GLTF } from 'three-stdlib';
 import { injectSuzanne } from '../suzanne';
 
 @Component({
-	selector: 'app-monkey',
-	standalone: true,
-	template: `
+    selector: 'app-monkey',
+    template: `
 		@if (gltf(); as gltf) {
 			<ngt-object3D ngtrRigidBody [position]="position()">
 				<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry" [castShadow]="true" [receiveShadow]="true">
@@ -28,9 +27,9 @@ import { injectSuzanne } from '../suzanne';
 			</ngt-object3D>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody]
 })
 export class Monkey {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);
@@ -52,18 +51,17 @@ export class Monkey {
 }
 
 @Component({
-	selector: 'app-monkey-swarm',
-	standalone: true,
-	template: `
+    selector: 'app-monkey-swarm',
+    template: `
 		<ngt-group [position]="[0, 4, 0]" [scale]="0.3">
 			@for (monkey of monkeys(); track monkey.key) {
 				<app-monkey [position]="monkey.position" (dead)="onDead(monkey.key)" />
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [Monkey],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [Monkey]
 })
 export class MonkeySwarm {
 	protected monkeys = signal<Array<{ key: number; position: [number, number, number] }>>([]);
@@ -95,9 +93,8 @@ type BendyGLTF = GLTF & {
 };
 
 @Component({
-	selector: 'app-bendy',
-	standalone: true,
-	template: `
+    selector: 'app-bendy',
+    template: `
 		<ngt-group [position]="position()" [scale]="scale()">
 			@if (gltf(); as gltf) {
 				<ngt-object3D ngtrRigidBody="fixed" [options]="{ colliders: 'trimesh' }">
@@ -108,9 +105,9 @@ type BendyGLTF = GLTF & {
 			}
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody]
 })
 export class Bendy {
 	position = input<NgtVector3>([0, 0, 0]);
@@ -120,8 +117,7 @@ export class Bendy {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-group>
 			<app-bendy />
 			<app-bendy [position]="[0, 0, 4]" [scale]="0.5" />
@@ -130,10 +126,10 @@ export class Bendy {
 			<app-monkey-swarm />
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'performance-rapier' },
-	imports: [Bendy, MonkeySwarm],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'performance-rapier' },
+    imports: [Bendy, MonkeySwarm]
 })
 export class PerformanceExample {
 	static [NON_ROOT] = true;

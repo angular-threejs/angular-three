@@ -394,10 +394,9 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 };
 
 @Component({
-	selector: 'ngt-object3D[ngtrRigidBody]',
-	exportAs: 'rigidBody',
-	standalone: true,
-	template: `
+    selector: 'ngt-object3D[ngtrRigidBody]',
+    exportAs: 'rigidBody',
+    template: `
 		<ng-content />
 		@for (childColliderOption of childColliderOptions(); track $index) {
 			<ngt-object3D
@@ -411,9 +410,9 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 			/>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrAnyCollider],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrAnyCollider]
 })
 export class NgtrRigidBody {
 	type = input('dynamic', {

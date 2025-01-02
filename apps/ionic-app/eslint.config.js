@@ -55,4 +55,10 @@ module.exports = [
 				...config.rules,
 			},
 		})),
+	{
+		files: ['**/*.ts'],
+		rules: {
+			'@angular-eslint/prefer-standalone': 'off',
+		},
+	},
 ];

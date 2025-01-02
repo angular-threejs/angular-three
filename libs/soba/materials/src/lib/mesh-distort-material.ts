@@ -15,16 +15,15 @@ const defaultOptions: NgtsMeshDistortMaterialOptions = {
 };
 
 @Component({
-	selector: 'ngts-mesh-distort-material',
-	standalone: true,
-	template: `
+    selector: 'ngts-mesh-distort-material',
+    template: `
 		<ngt-primitive *args="[material]" [attach]="attach()" [parameters]="parameters()">
 			<ng-content />
 		</ngt-primitive>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsMeshDistortMaterial {
 	attach = input<NgtAttachable>('material');

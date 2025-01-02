@@ -66,8 +66,7 @@ export class ChartContainer extends NgtHTML {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color attach="background" *args="['#f78b3d']" />
 
 		<ngt-ambient-light />
@@ -86,9 +85,9 @@ export class ChartContainer extends NgtHTML {
 
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsOrbitControls, NgtsHTML, NgtsHTMLContent, ChartContainer],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtsOrbitControls, NgtsHTML, NgtsHTMLContent, ChartContainer]
 })
 export class Experience {
 	protected Math = Math;

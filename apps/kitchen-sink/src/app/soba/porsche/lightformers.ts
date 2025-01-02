@@ -4,9 +4,8 @@ import { NgtsFloat, NgtsLightformer } from 'angular-three-soba/staging';
 import { BackSide, Group } from 'three';
 
 @Component({
-	selector: 'app-lightformers',
-	standalone: true,
-	template: `
+    selector: 'app-lightformers',
+    template: `
 		<!--		ceiling-->
 		<ngts-lightformer
 			[options]="{ intensity: 0.75, rotation: [Math.PI / 2, 0, 0], position: [0, 5, -9], scale: [10, 10, 1] }"
@@ -48,9 +47,9 @@ import { BackSide, Group } from 'three';
 			<ngt-mesh-standard-material color="#444" [side]="BackSide" />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsLightformer, NgtsFloat, NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsLightformer, NgtsFloat, NgtArgs]
 })
 export class Lightformers {
 	protected Math = Math;

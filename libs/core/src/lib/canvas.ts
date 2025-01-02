@@ -33,27 +33,26 @@ import { NgtCanvasOptions, NgtDomEvent, NgtDpr, NgtGLOptions, NgtPerformance, Ng
 import { is } from './utils/is';
 
 @Component({
-	selector: 'ngt-canvas',
-	standalone: true,
-	template: `
+    selector: 'ngt-canvas',
+    template: `
 		<div (ngxResize)="resizeResult.set($event)" style="height: 100%; width: 100%;">
 			<canvas #glCanvas style="display: block;"></canvas>
 		</div>
 	`,
-	imports: [NgxResize],
-	providers: [
-		provideResizeOptions({
-			emitInZone: false,
-			emitInitialResult: true,
-			debounce: { scroll: 50, resize: 0 },
-		} as ResizeOptions),
-		provideStore(),
-	],
-	host: {
-		style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
-		'[style.pointerEvents]': 'hbPointerEvents()',
-	},
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgxResize],
+    providers: [
+        provideResizeOptions({
+            emitInZone: false,
+            emitInitialResult: true,
+            debounce: { scroll: 50, resize: 0 },
+        } as ResizeOptions),
+        provideStore(),
+    ],
+    host: {
+        style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
+        '[style.pointerEvents]': 'hbPointerEvents()',
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtCanvas {
 	private store = injectStore();

@@ -25,14 +25,13 @@ const defaultOptions: NgtpOutlineOptions = {
 };
 
 @Component({
-	selector: 'ngtp-outline',
-	standalone: true,
-	template: `
+    selector: 'ngtp-outline',
+    template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtpOutline {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

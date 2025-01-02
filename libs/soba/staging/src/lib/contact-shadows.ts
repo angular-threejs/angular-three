@@ -54,9 +54,8 @@ const defaultOptions: NgtsContactShadowsOptions = {
 };
 
 @Component({
-	selector: 'ngts-contact-shadows',
-	standalone: true,
-	template: `
+    selector: 'ngts-contact-shadows',
+    template: `
 		<ngt-group #contactShadows [rotation]="[Math.PI / 2, 0, 0]" [parameters]="parameters()">
 			<ngt-mesh
 				[scale]="[1, -1, 1]"
@@ -74,9 +73,9 @@ const defaultOptions: NgtsContactShadowsOptions = {
 			<ngt-orthographic-camera *args="cameraArgs()" #shadowsCamera />
 		</ngt-group>
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtsContactShadows {
 	Math = Math;

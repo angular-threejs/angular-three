@@ -26,8 +26,7 @@ import { KernelSize } from 'postprocessing';
  */
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color attach="background" *args="['black']" />
 
 		<ngts-orbit-controls />
@@ -57,11 +56,11 @@ import { KernelSize } from 'postprocessing';
 			<ngtp-smaa />
 		</ngtp-effect-composer>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'postprocessing-sample' },
-	hostDirectives: [NgtSelection],
-	imports: [NgtsOrbitControls, NgtSelect, NgtpEffectComposer, NgtpOutline, NgtArgs, NgtpSMAA],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'postprocessing-sample' },
+    hostDirectives: [NgtSelection],
+    imports: [NgtsOrbitControls, NgtSelect, NgtpEffectComposer, NgtpOutline, NgtArgs, NgtpSMAA]
 })
 export class Experience {
 	protected KernelSize = KernelSize;

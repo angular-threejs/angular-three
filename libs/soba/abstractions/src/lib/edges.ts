@@ -21,15 +21,14 @@ const defaultOptions: NgtsEdgesOptions = {
 };
 
 @Component({
-	selector: 'ngts-edges',
-	standalone: true,
-	template: `
+    selector: 'ngts-edges',
+    template: `
 		<ngts-line [points]="tmpPoints" [options]="lineOptions()">
 			<ng-content />
 		</ngts-line>
 	`,
-	imports: [NgtsLine],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsLine],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtsEdges {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

@@ -6,9 +6,8 @@ import { NgtsPointsBuffer } from 'angular-three-soba/performances';
 import { random } from 'maath';
 
 @Component({
-	selector: 'app-stars-experience',
-	standalone: true,
-	template: `
+    selector: 'app-stars-experience',
+    template: `
 		<ngt-group [rotation]="[0, 0, Math.PI / 4]">
 			<ngts-points-buffer [positions]="sphere" [stride]="3" [options]="{ frustumCulled: false }">
 				<ngts-point-material
@@ -21,9 +20,9 @@ import { random } from 'maath';
 			<ngts-orbit-controls [options]="{ enableZoom: false, enablePan: false }" />
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsPointsBuffer, NgtsPointMaterial, NgtsOrbitControls],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsPointsBuffer, NgtsPointMaterial, NgtsOrbitControls]
 })
 export class Experience {
 	protected readonly Math = Math;

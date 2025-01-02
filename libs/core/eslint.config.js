@@ -16,13 +16,12 @@ module.exports = [
 		.map((config) => ({
 			...config,
 			files: ['**/*.ts'],
+			files: ['**/*.ts'],
 			rules: {
-				...config.rules,
 				'@angular-eslint/directive-selector': 'off',
 				'@angular-eslint/component-selector': 'off',
 				'@angular-eslint/component-class-suffix': 'off',
 				'@angular-eslint/directive-class-suffix': 'off',
-				'@angular-eslint/no-host-metadata-property': 'off',
 				'@angular-eslint/no-input-rename': 'off',
 				'@typescript-eslint/no-explicit-any': 'off',
 				'@typescript-eslint/no-empty-function': 'off',
@@ -83,6 +82,12 @@ module.exports = [
 		},
 		languageOptions: {
 			parser: require('jsonc-eslint-parser'),
+		},
+	},
+	{
+		files: ['**/*.ts'],
+		rules: {
+			'@angular-eslint/prefer-standalone': 'off',
 		},
 	},
 ];

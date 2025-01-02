@@ -63,14 +63,13 @@ const defaultOptions: NgtpN8AOOptions = {
 };
 
 @Component({
-	selector: 'ngtp-n8ao',
-	standalone: true,
-	template: `
+    selector: 'ngtp-n8ao',
+    template: `
 		<ngt-primitive *args="[effect()]" />
 	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgtpN8AO {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

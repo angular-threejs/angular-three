@@ -24,9 +24,8 @@ const powerUpGeometry = new SphereGeometry(1, 32, 32);
 const background = new Color('white');
 
 @Component({
-	selector: 'app-collectible-power-up',
-	standalone: true,
-	template: `
+    selector: 'app-collectible-power-up',
+    template: `
 		<ngt-mesh
 			#power
 			[geometry]="powerUpGeometry"
@@ -55,14 +54,14 @@ const background = new Color('white');
 			}
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsMeshTransmissionMaterial, NgtArgs, NgtsText3D],
-	hostDirectives: [{ directive: Collectible, inputs: ['state'], outputs: ['stateChange'] }],
-	providers: [
-		{ provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: POWER_UP_DISTANCE_TOLERANCE },
-		{ provide: SPAWNABLE_PARTICLE_COLOR, useValue: COLOR_POWER_UPS },
-	],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsMeshTransmissionMaterial, NgtArgs, NgtsText3D],
+    hostDirectives: [{ directive: Collectible, inputs: ['state'], outputs: ['stateChange'] }],
+    providers: [
+        { provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: POWER_UP_DISTANCE_TOLERANCE },
+        { provide: SPAWNABLE_PARTICLE_COLOR, useValue: COLOR_POWER_UPS },
+    ]
 })
 export class CollectiblePowerUp {
 	powerUp = input.required<PowerUpType>();

@@ -24,9 +24,8 @@ import {
 import { Mesh } from 'three';
 
 @Component({
-	selector: 'app-dodecahedron',
-	standalone: true,
-	template: `
+    selector: 'app-dodecahedron',
+    template: `
 		<ngt-group [scale]="scale()" [position]="position()">
 			<ngt-mesh
 				#mesh
@@ -41,9 +40,9 @@ import { Mesh } from 'three';
 			</ngt-mesh>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsDecal],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, NgtsDecal]
 })
 export class Dodecahedron {
 	protected Math = Math;
@@ -68,9 +67,8 @@ export class Dodecahedron {
 }
 
 @Component({
-	selector: 'app-bunny',
-	standalone: true,
-	template: `
+    selector: 'app-bunny',
+    template: `
 		@if (gltf(); as gltf) {
 			<ngt-mesh [castShadow]="true" [receiveShadow]="true" [geometry]="gltf.nodes.bunny.geometry" [dispose]="null">
 				<ngt-mesh-standard-material color="black" />
@@ -101,17 +99,17 @@ export class Dodecahedron {
 			</ngt-mesh>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		NgtsDecal,
-		NgtsRenderTexture,
-		NgtsRenderTextureContent,
-		NgtsPerspectiveCamera,
-		NgtArgs,
-		NgtsText,
-		Dodecahedron,
-	],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgtsDecal,
+        NgtsRenderTexture,
+        NgtsRenderTextureContent,
+        NgtsPerspectiveCamera,
+        NgtArgs,
+        NgtsText,
+        Dodecahedron,
+    ]
 })
 export class Bunny {
 	protected readonly Math = Math;
@@ -131,8 +129,7 @@ export class Bunny {
 }
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-color attach="background" *args="['#f0f0f0']" />
 		<ngt-ambient-light [intensity]="0.25 * Math.PI" />
 		<ngt-spot-light [decay]="0" [position]="[10, 10, 10]" [angle]="0.15" [penumbra]="1" />
@@ -155,18 +152,18 @@ export class Bunny {
 		/>
 		<ngts-orbit-controls [options]="{ makeDefault: true }" />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'decal-soba-experience' },
-	imports: [
-		NgtArgs,
-		Bunny,
-		Dodecahedron,
-		NgtsAccumulativeShadows,
-		NgtsRandomizedLights,
-		NgtsEnvironment,
-		NgtsOrbitControls,
-	],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'decal-soba-experience' },
+    imports: [
+        NgtArgs,
+        Bunny,
+        Dodecahedron,
+        NgtsAccumulativeShadows,
+        NgtsRandomizedLights,
+        NgtsEnvironment,
+        NgtsOrbitControls,
+    ]
 })
 export class Experience {
 	protected Math = Math;

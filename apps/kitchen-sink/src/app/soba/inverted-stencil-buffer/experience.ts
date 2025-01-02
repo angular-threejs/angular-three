@@ -12,26 +12,24 @@ export const invert = signal(false);
 export const logo = signal<'angular' | 'nx' | 'nx-cloud'>('nx');
 
 @Component({
-	selector: 'app-frame',
-	standalone: true,
-	template: `
+    selector: 'app-frame',
+    template: `
 		<ngt-mesh [position]="position()">
 			<ngt-ring-geometry *args="[1.095, 1.155, 64]" />
 			<ngt-mesh-phong-material color="black" />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Frame {
 	position = input<NgtVector3>([0, 0, 0]);
 }
 
 @Component({
-	selector: 'app-circular-mask',
-	standalone: true,
-	template: `
+    selector: 'app-circular-mask',
+    template: `
 		<ngt-group [position]="position()">
 			<ngts-pivot-controls
 				[options]="{ offset: [0, 0, 1], activeAxes: [true, true, false], disableRotations: true, depthTest: false }"
@@ -43,18 +41,17 @@ export class Frame {
 			</ngts-pivot-controls>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsPivotControls, Frame, NgtsMask, NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsPivotControls, Frame, NgtsMask, NgtArgs]
 })
 export class CircularMask {
 	position = input<NgtVector3>([0, 0, 0]);
 }
 
 @Component({
-	selector: 'app-box',
-	standalone: true,
-	template: `
+    selector: 'app-box',
+    template: `
 		<ngts-rounded-box
 			[options]="{
 				width: width(),
@@ -69,9 +66,9 @@ export class CircularMask {
 			<ngt-mesh-phong-material [color]="color()" />
 		</ngts-rounded-box>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsRoundedBox],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsRoundedBox]
 })
 export class Box {
 	width = input.required<number>();
@@ -83,9 +80,8 @@ export class Box {
 }
 
 @Component({
-	selector: 'app-inverted-stencil-buffer-experience',
-	standalone: true,
-	template: `
+    selector: 'app-inverted-stencil-buffer-experience',
+    template: `
 		<ngt-color attach="background" *args="['#e0e0e0']" />
 
 		<ngt-directional-light [position]="[1, 2, 1.5]" [intensity]="Math.PI * 0.5" [castShadow]="true" />
@@ -123,21 +119,21 @@ export class Box {
 			<ngts-orbit-controls [options]="{ makeDefault: true }" />
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'inverted-stencil-buffer-soba-experience' },
-	imports: [
-		CircularMask,
-		NgtsBounds,
-		NgtsFloat,
-		Box,
-		NgtsEnvironment,
-		NgtsOrbitControls,
-		NgtArgs,
-		Nx,
-		Angular,
-		NxCloud,
-	],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'inverted-stencil-buffer-soba-experience' },
+    imports: [
+        CircularMask,
+        NgtsBounds,
+        NgtsFloat,
+        Box,
+        NgtsEnvironment,
+        NgtsOrbitControls,
+        NgtArgs,
+        Nx,
+        Angular,
+        NxCloud,
+    ]
 })
 export class Experience {
 	protected readonly Math = Math;

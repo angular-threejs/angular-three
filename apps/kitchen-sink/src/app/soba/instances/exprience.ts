@@ -38,9 +38,8 @@ const MeshEdgesMaterial = shaderMaterial(
 );
 
 @Component({
-	selector: 'app-boxes',
-	standalone: true,
-	template: `
+    selector: 'app-boxes',
+    template: `
 		<ngt-group>
 			<ngt-instanced-mesh #instances *args="[undefined, undefined, length]">
 				<ngt-box-geometry #boxGeometry *args="[0.15, 0.15, 0.15]">
@@ -61,9 +60,9 @@ const MeshEdgesMaterial = shaderMaterial(
 			</ngt-instanced-mesh>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Boxes {
 	protected length = 100_000;
@@ -111,9 +110,8 @@ export class Boxes {
 }
 
 @Component({
-	selector: 'app-instances-experience',
-	standalone: true,
-	template: `
+    selector: 'app-instances-experience',
+    template: `
 		<ngt-color attach="background" *args="['#e0e0e0']" />
 
 		<ngt-ambient-light [intensity]="0.85" />
@@ -125,10 +123,10 @@ export class Boxes {
 			<ngts-camera-controls />
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'instances-soba-experience' },
-	imports: [NgtsCameraControls, Boxes, NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'instances-soba-experience' },
+    imports: [NgtsCameraControls, Boxes, NgtArgs]
 })
 export class Experience {
 	withEffect = input(true);

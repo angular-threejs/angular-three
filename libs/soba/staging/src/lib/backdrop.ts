@@ -27,9 +27,8 @@ const defaultOptions: NgtsBackdropOptions = {
 };
 
 @Component({
-	selector: 'ngts-backdrop',
-	standalone: true,
-	template: `
+    selector: 'ngts-backdrop',
+    template: `
 		<ngt-group #group [parameters]="parameters()">
 			<ngt-mesh [receiveShadow]="receiveShadow()" [rotation]="[-Math.PI / 2, 0, Math.PI / 2]">
 				<ngt-plane-geometry #plane *args="[1, 1, segments(), segments()]" />
@@ -37,9 +36,9 @@ const defaultOptions: NgtsBackdropOptions = {
 			</ngt-mesh>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class NgtsBackdrop {
 	protected readonly Math = Math;

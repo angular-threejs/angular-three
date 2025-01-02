@@ -42,10 +42,9 @@ export interface NgtrInstancedRigidBodyOptions {
 const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 
 @Component({
-	selector: 'ngt-object3D[ngtrInstancedRigidBodies]',
-	exportAs: 'instancedRigidBodies',
-	standalone: true,
-	template: `
+    selector: 'ngt-object3D[ngtrInstancedRigidBodies]',
+    exportAs: 'instancedRigidBodies',
+    template: `
 		<ngt-object3D #instanceWrapper>
 			<ng-content />
 		</ngt-object3D>
@@ -77,9 +76,9 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 			</ngt-object3D>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrRigidBody, NgtrAnyCollider],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtrRigidBody, NgtrAnyCollider]
 })
 export class NgtrInstancedRigidBodies {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);

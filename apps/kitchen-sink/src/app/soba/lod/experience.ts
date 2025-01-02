@@ -19,9 +19,8 @@ interface BustGLTF extends GLTF {
 }
 
 @Component({
-	selector: 'app-bust',
-	standalone: true,
-	template: `
+    selector: 'app-bust',
+    template: `
 		<ngts-detailed [distances]="[0, 15, 25, 35, 100]" [options]="{ position: position(), rotation: rotation() }">
 			@for (level of gltfs() || []; track $index) {
 				<ngt-mesh
@@ -35,9 +34,9 @@ interface BustGLTF extends GLTF {
 			}
 		</ngts-detailed>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsDetailed],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsDetailed]
 })
 export class LODBust {
 	position = input<NgtVector3>([0, 0, 0]);
@@ -53,9 +52,8 @@ export class LODBust {
 }
 
 @Component({
-	selector: 'app-lod-experience',
-	standalone: true,
-	template: `
+    selector: 'app-lod-experience',
+    template: `
 		@for (p of positions; track $index) {
 			<app-bust [position]="p.position" [rotation]="p.rotation" />
 		}
@@ -65,10 +63,10 @@ export class LODBust {
 		<ngts-environment [options]="{ preset: 'city' }" />
 		<ngts-bake-shadows />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsBakeShadows, NgtsEnvironment, NgtsOrbitControls, LODBust],
-	host: { class: 'lod-soba-experience' },
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsBakeShadows, NgtsEnvironment, NgtsOrbitControls, LODBust],
+    host: { class: 'lod-soba-experience' }
 })
 export class Experience {
 	protected Math = Math;

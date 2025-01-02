@@ -21,9 +21,8 @@ const tempColor = new Color();
 const data = Array.from({ length: 1000 }, () => ({ color: niceColors[Math.floor(Math.random() * 5)], scale: 1 }));
 
 @Component({
-	selector: 'app-boxes',
-	standalone: true,
-	template: `
+    selector: 'app-boxes',
+    template: `
 		<ngt-instanced-mesh
 			#mesh
 			*args="[undefined, undefined, 1000]"
@@ -36,9 +35,9 @@ const data = Array.from({ length: 1000 }, () => ({ color: niceColors[Math.floor(
 			<ngt-mesh-basic-material [vertexColors]="true" [toneMapped]="false" />
 		</ngt-instanced-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Boxes {
 	private meshRef = viewChild<ElementRef<InstancedMesh>>('mesh');
@@ -102,9 +101,8 @@ export class Boxes {
 }
 
 @Component({
-	selector: 'app-instanced-vertex-colors-experience',
-	standalone: true,
-	template: `
+    selector: 'app-instanced-vertex-colors-experience',
+    template: `
 		<ngt-color attach="background" *args="['#282828']" />
 		<app-boxes />
 		@if (withEffect()) {
@@ -114,10 +112,10 @@ export class Boxes {
 			</ngtp-effect-composer>
 		}
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'instanced-vertex-colors-soba-experience' },
-	imports: [NgtArgs, Boxes, NgtpEffectComposer, NgtpN8AO, NgtpBloom],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'instanced-vertex-colors-soba-experience' },
+    imports: [NgtArgs, Boxes, NgtpEffectComposer, NgtpN8AO, NgtpBloom]
 })
 export class Experience {
 	protected readonly Math = Math;

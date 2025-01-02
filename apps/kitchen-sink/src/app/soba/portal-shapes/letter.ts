@@ -27,9 +27,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import boldFont from './bold.blob';
 
 @Component({
-	selector: 'app-letter',
-	standalone: true,
-	template: `
+    selector: 'app-letter',
+    template: `
 		<ngt-object3D
 			ngtrRigidBody
 			[options]="{ restitution: 0.1, colliders: 'cuboid' }"
@@ -78,19 +77,19 @@ import boldFont from './bold.blob';
 			</ngts-center>
 		</ngt-object3D>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		NgtrRigidBody,
-		NgtsCenter,
-		NgtsText3D,
-		NgtsMeshTransmissionMaterial,
-		NgtsRenderTexture,
-		NgtsRenderTextureContent,
-		NgtArgs,
-		NgTemplateOutlet,
-		NgtObjectEvents,
-	],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgtrRigidBody,
+        NgtsCenter,
+        NgtsText3D,
+        NgtsMeshTransmissionMaterial,
+        NgtsRenderTexture,
+        NgtsRenderTextureContent,
+        NgtArgs,
+        NgTemplateOutlet,
+        NgtObjectEvents,
+    ]
 })
 export class Letter {
 	protected readonly boldFont: string = boldFont;

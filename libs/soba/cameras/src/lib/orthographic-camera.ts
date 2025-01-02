@@ -39,9 +39,8 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 };
 
 @Component({
-	selector: 'ngts-orthographic-camera',
-	standalone: true,
-	template: `
+    selector: 'ngts-orthographic-camera',
+    template: `
 		<ngt-orthographic-camera
 			#camera
 			[left]="left()"
@@ -57,9 +56,9 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: texture }" />
 		</ngt-group>
 	`,
-	imports: [NgTemplateOutlet],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [NgTemplateOutlet],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NgtsOrthographicCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

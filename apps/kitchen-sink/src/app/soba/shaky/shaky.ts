@@ -4,8 +4,7 @@ import { NgtsStats } from 'angular-three-soba/stats';
 import { Experience } from './experience';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-canvas
 			[stats]="{ minimal: true }"
 			[sceneGraph]="scene"
@@ -14,10 +13,10 @@ import { Experience } from './experience';
 			[dpr]="[1, 2]"
 		/>
 	`,
-	imports: [NgtCanvas, NgtsStats],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'shaky-soba' },
-	styles: `
+    imports: [NgtCanvas, NgtsStats],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'shaky-soba' },
+    styles: `
 		:host {
 			display: block;
 			height: 100%;
@@ -40,7 +39,7 @@ import { Experience } from './experience';
 			background-size: contain;
 			pointer-events: none;
 		}
-	`,
+	`
 })
 export default class RenderTexture {
 	protected scene = Experience;

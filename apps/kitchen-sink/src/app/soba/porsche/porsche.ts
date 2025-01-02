@@ -10,8 +10,7 @@ import { Model } from './model';
 injectGLTF.preload(() => './911-transformed.glb');
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-spot-light
 			[position]="[0, 15, 0]"
 			[angle]="0.3"
@@ -40,9 +39,9 @@ injectGLTF.preload(() => './911-transformed.glb');
 			</ng-template>
 		</ngts-environment>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsAccumulativeShadows, NgtsRandomizedLights, Model, NgtsEnvironment, Lightformers],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsAccumulativeShadows, NgtsRandomizedLights, Model, NgtsEnvironment, Lightformers]
 })
 export class Scene {
 	protected Math = Math;
@@ -60,15 +59,14 @@ export class Scene {
 }
 
 @Component({
-	selector: 'app-experience',
-	standalone: true,
-	template: `
+    selector: 'app-experience',
+    template: `
 		<ngt-canvas [sceneGraph]="scene" [camera]="{ position: [5, 0, 15], fov: 30 }" [shadows]="true" />
 		<input class="absolute top-0 right-0" type="color" [value]="colorAsHex()" (change)="onChange($event)" />
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas],
-	host: { class: 'porsche-soba' },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtCanvas],
+    host: { class: 'porsche-soba' }
 })
 export default class Porsche {
 	protected scene = Scene;

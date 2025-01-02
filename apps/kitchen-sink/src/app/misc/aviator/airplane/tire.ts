@@ -3,9 +3,8 @@ import { NgtArgs, NgtVector3 } from 'angular-three';
 import { COLORS } from '../constants';
 
 @Component({
-	selector: 'app-tire',
-	standalone: true,
-	template: `
+    selector: 'app-tire',
+    template: `
 		<ngt-mesh [position]="position()" [scale]="scale()">
 			<ngt-box-geometry *args="[24, 24, 4]" />
 			<ngt-mesh-phong-material [color]="COLORS.brownDark" [flatShading]="true" />
@@ -16,9 +15,9 @@ import { COLORS } from '../constants';
 			</ngt-mesh>
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs]
 })
 export class Tire {
 	protected readonly COLORS = COLORS;

@@ -45,9 +45,8 @@ const scaleV = new Vector3();
 const scaleMatrix = new Matrix4();
 
 @Component({
-	selector: 'ngts-scaling-sphere',
-	standalone: true,
-	template: `
+    selector: 'ngts-scaling-sphere',
+    template: `
 		<ngt-group #group>
 			<ngt-group
 				[matrix]="matrixL()"
@@ -81,9 +80,9 @@ const scaleMatrix = new Matrix4();
 			</ngt-group>
 		</ngt-group>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsHTML, NgtsHTMLContent, NgtArgs],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtsHTML, NgtsHTMLContent, NgtArgs]
 })
 export class NgtsScalingSphere {
 	direction = input.required<Vector3>();

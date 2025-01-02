@@ -13,8 +13,7 @@ import { Sea } from './sea/sea';
 import { Sky } from './sky/sky';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-fog *args="['#f7d9aa', 100, 950]" attach="fog" />
 
 		<app-lights />
@@ -59,9 +58,9 @@ import { Sky } from './sky/sky';
 
 		<ngts-orbit-controls />
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, Lights, Sea, NgtsOrbitControls, Sky, Airplane, CollectibleCoin, CollectiblePowerUp],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, Lights, Sea, NgtsOrbitControls, Sky, Airplane, CollectibleCoin, CollectiblePowerUp]
 })
 export class Experience {
 	private gameStore = inject(GameStore);

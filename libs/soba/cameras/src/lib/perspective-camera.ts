@@ -38,9 +38,8 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 };
 
 @Component({
-	selector: 'ngts-perspective-camera',
-	standalone: true,
-	template: `
+    selector: 'ngts-perspective-camera',
+    template: `
 		<ngt-perspective-camera #camera [parameters]="parameters()">
 			<ng-container [ngTemplateOutlet]="content() ?? null" />
 		</ngt-perspective-camera>
@@ -49,9 +48,9 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: texture }" />
 		</ngt-group>
 	`,
-	imports: [NgTemplateOutlet],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [NgTemplateOutlet],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });

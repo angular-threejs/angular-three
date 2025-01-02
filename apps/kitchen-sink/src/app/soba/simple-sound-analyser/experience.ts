@@ -5,8 +5,7 @@ import { tracks, zoomIndex } from './tracks';
 import { Zoom } from './zoom';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-spot-light [position]="[-4, 4, -4]" [angle]="0.06" [penumbra]="1" [castShadow]="true">
 			<ngt-vector2 *args="[2048, 2048]" attach="shadow.mapSize" />
 		</ngt-spot-light>
@@ -20,10 +19,10 @@ import { Zoom } from './zoom';
 			<ngt-shadow-material [transparent]="true" [opacity]="0.15" />
 		</ngt-mesh>
 	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, Track, Zoom],
-	host: { class: 'simple-sound-analyser-soba-experience' },
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgtArgs, Track, Zoom],
+    host: { class: 'simple-sound-analyser-soba-experience' }
 })
 export class Experience {
 	protected readonly Math = Math;

@@ -3,13 +3,12 @@ import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
 
 @Component({
-	standalone: true,
-	template: `
+    template: `
 		<ngt-canvas [sceneGraph]="scene" />
 	`,
-	imports: [NgtCanvas],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'hud-soba' },
+    imports: [NgtCanvas],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'hud-soba' }
 })
 export default class RenderTexture {
 	protected scene = Experience;
