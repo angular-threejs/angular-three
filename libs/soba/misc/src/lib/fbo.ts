@@ -5,7 +5,6 @@ import {
 	Injector,
 	TemplateRef,
 	ViewContainerRef,
-	afterNextRender,
 	computed,
 	effect,
 	inject,
@@ -127,7 +126,7 @@ export class NgtsFBO {
 			return { width, height, settings };
 		});
 
-		afterNextRender(() => {
+		effect(() => {
 			// TODO: double check if we need untracked
 			untracked(() => {
 				ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });

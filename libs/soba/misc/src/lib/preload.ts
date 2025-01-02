@@ -1,4 +1,4 @@
-import { afterNextRender, computed, Directive, ElementRef, model } from '@angular/core';
+import { computed, Directive, effect, ElementRef, model } from '@angular/core';
 import { injectStore, resolveRef } from 'angular-three';
 import { Camera, CubeCamera, Object3D, WebGLCubeRenderTarget } from 'three';
 
@@ -25,7 +25,7 @@ export class NgtsPreload {
 	});
 
 	constructor() {
-		afterNextRender(() => {
+		effect(() => {
 			const invisible: Object3D[] = [];
 
 			const [all, scene, camera, gl] = [this.all(), this.trueScene(), this.trueCamera(), this.gl()];

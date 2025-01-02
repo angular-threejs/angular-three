@@ -27,11 +27,7 @@ export function injectDepthBuffer(
 			return { depthTexture };
 		});
 
-		const depthFBO = injectFBO(() => ({
-			width: w(),
-			height: h(),
-			settings: depthConfig(),
-		}));
+		const depthFBO = injectFBO(() => ({ width: w(), height: h(), settings: depthConfig() }));
 
 		let count = 0;
 		injectBeforeRender(({ gl, scene, camera }) => {
