@@ -115,19 +115,13 @@ export class NgtsOrbitControls {
 			const startCallback = this.started.emit.bind(this.started);
 			const endCallback = this.ended.emit.bind(this.ended);
 
-			// @ts-expect-error - type error from three-stdlib
 			controls.addEventListener('change', changeCallback);
-			// @ts-expect-error - type error from three-stdlib
 			controls.addEventListener('start', startCallback);
-			// @ts-expect-error - type error from three-stdlib
 			controls.addEventListener('end', endCallback);
 
 			onCleanup(() => {
-				// @ts-expect-error - type error from three-stdlib
 				controls.removeEventListener('change', changeCallback);
-				// @ts-expect-error - type error from three-stdlib
 				controls.removeEventListener('start', startCallback);
-				// @ts-expect-error - type error from three-stdlib
 				controls.removeEventListener('end', endCallback);
 			});
 		});

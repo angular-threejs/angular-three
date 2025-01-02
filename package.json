@@ -177,5 +177,10 @@
 				}
 			}
 		}
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"@nx/angular@20.1.4": "patches/@nx__angular@20.1.4.patch"
+		}
 	}
 }
