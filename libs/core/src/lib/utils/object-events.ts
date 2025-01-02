@@ -67,56 +67,6 @@ export class NgtObjectEvents {
 	}
 }
 
-/**
- * @deprecated this has never worked. Use `NgtObjectEvents` and explicit value for inputs and outputs instead
- * @since 2.12.0 Will be removed in 3.0.0
- */
-export const NgtObjectEventsInputs = ['ngtObjectEvents'];
-
-/**
- * @deprecated this has never worked. Use `NgtObjectEvents` and explicit value for inputs and outputs instead
- * @since 2.12.0 Will be removed in 3.0.0
- */
-export const NgtObjectEventsOutputs = [
-	'click',
-	'dblclick',
-	'contextmenu',
-	'pointerup',
-	'pointerdown',
-	'pointerover',
-	'pointerout',
-	'pointerenter',
-	'pointerleave',
-	'pointermove',
-	'pointermissed',
-	'pointercancel',
-	'wheel',
-];
-
-/**
- * @deprecated Use NgtObjectEventsInputs and NgtObjectEventsOutputs instead along with NgtObjectEvents
- * @since 2.6.0 Will be removed in 3.0.0
- */
-export const NgtObjectEventsHostDirective = {
-	directive: NgtObjectEvents,
-	inputs: ['ngtObjectEvents'],
-	outputs: [
-		'click',
-		'dblclick',
-		'contextmenu',
-		'pointerup',
-		'pointerdown',
-		'pointerover',
-		'pointerout',
-		'pointerenter',
-		'pointerleave',
-		'pointermove',
-		'pointermissed',
-		'pointercancel',
-		'wheel',
-	],
-};
-
 export function injectObjectEvents(
 	target: () => ElementRef<Object3D> | Object3D | null | undefined,
 	events: NgtEventHandlers,
