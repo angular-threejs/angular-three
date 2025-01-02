@@ -1,3 +1,29 @@
+## 2.13.0 (2025-01-02)
+
+### 🚀 Features
+
+- **cannon:** clean up cannon usages ([23f00ca](https://github.com/angular-threejs/angular-three/commit/23f00ca))
+- **postprocessing:** adjust postprocessing usages ([da5de36](https://github.com/angular-threejs/angular-three/commit/da5de36))
+- **postprocessing:** make sure effect w/ ngt-primitive are disposed ([e8510b9](https://github.com/angular-threejs/angular-three/commit/e8510b9))
+- **rapier:** adjust rapier effect usages ([3fcd150](https://github.com/angular-threejs/angular-three/commit/3fcd150))
+- **soba:** adjust abstractions ([5aa1b0c](https://github.com/angular-threejs/angular-three/commit/5aa1b0c))
+- **soba:** adjust cameras ([6b61706](https://github.com/angular-threejs/angular-three/commit/6b61706))
+- **soba:** controls ([a88606b](https://github.com/angular-threejs/angular-three/commit/a88606b))
+- **soba:** gizmos ([03dcfb8](https://github.com/angular-threejs/angular-three/commit/03dcfb8))
+- **soba:** loaders ([b4690fc](https://github.com/angular-threejs/angular-three/commit/b4690fc))
+- **soba:** materials ([affed6c](https://github.com/angular-threejs/angular-three/commit/affed6c))
+- **soba:** misc ([bf543ca](https://github.com/angular-threejs/angular-three/commit/bf543ca))
+- **soba:** staging ([3c18936](https://github.com/angular-threejs/angular-three/commit/3c18936))
+
+### 🩹 Fixes
+
+- **core:** warn about 'routed' scenegraph ([59db3ae](https://github.com/angular-threejs/angular-three/commit/59db3ae))
+- **core:** adjust effect usage in core canvas ([5e45354](https://github.com/angular-threejs/angular-three/commit/5e45354))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.12.0 (2024-12-02)
 
 ### 🚀 Features
