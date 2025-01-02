@@ -79,11 +79,6 @@ export class NgtsLoader {
 	shown = signal(this.initialState()(this.active()));
 
 	constructor() {
-		this.setShown();
-		this.updateProgress();
-	}
-
-	private setShown() {
 		effect((onCleanup) => {
 			const [active, lastShown] = [this.active(), untracked(this.shown)];
 			if (lastShown !== active) {
@@ -93,12 +88,9 @@ export class NgtsLoader {
 				onCleanup(() => clearTimeout(timeoutId));
 			}
 		});
-	}
 
-	private updateProgress() {
 		let progressRef = 0;
 		let rafId: ReturnType<typeof requestAnimationFrame>;
-
 		effect((onCleanup) => {
 			const [dataInterpolation, progress] = [this.dataInterpolation(), this.progress()];
 			const updateProgress = () => {
