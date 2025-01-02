@@ -116,12 +116,10 @@ export class NgtsCameraControls {
 		});
 
 		effect((onCleanup) => {
-			const [controls, regress, performanceRegress, invalidate] = [
-				this.controls(),
-				this.regress(),
-				this.performanceRegress(),
-				this.invalidate(),
-			];
+			const controls = this.controls();
+			if (!controls) return;
+
+			const [regress, performanceRegress, invalidate] = [this.regress(), this.performanceRegress(), this.invalidate()];
 
 			const callback = (e: any) => {
 				invalidate();
@@ -150,13 +148,13 @@ export class NgtsCameraControls {
 		});
 
 		effect((onCleanup) => {
-			const [controls, makeDefault] = [this.controls(), this.makeDefault()];
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
 
-			if (makeDefault) {
-				const oldControls = this.store.snapshot.controls;
-				this.store.update({ controls: controls as unknown as EventDispatcher });
-				onCleanup(() => void this.store.update({ controls: oldControls }));
-			}
+			const controls = this.controls();
+			const oldControls = this.store.snapshot.controls;
+			this.store.update({ controls: controls as unknown as EventDispatcher });
+			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 	}
 }

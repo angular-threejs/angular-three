@@ -70,12 +70,7 @@ export class NgtsOrbitControls {
 			},
 			{ priority: -1 },
 		);
-		this.connectElement();
-		this.makeControlsDefault();
-		this.setEvents();
-	}
 
-	private connectElement() {
 		effect((onCleanup) => {
 			const [keyEvents, domElement, controls] = [
 				this.keyEvents(),
@@ -92,29 +87,25 @@ export class NgtsOrbitControls {
 			}
 			onCleanup(() => void controls.dispose());
 		});
-	}
 
-	private makeControlsDefault() {
 		effect((onCleanup) => {
-			const [controls, makeDefault] = [this.controls(), this.makeDefault()];
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const controls = this.controls();
 			if (!controls) return;
-			if (makeDefault) {
-				const oldControls = this.store.get('controls');
-				this.store.update({ controls });
-				onCleanup(() => void this.store.update({ controls: oldControls }));
-			}
+
+			const oldControls = this.store.get('controls');
+			this.store.update({ controls });
+			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
-	}
 
-	private setEvents() {
 		effect((onCleanup) => {
-			const [controls, invalidate, performanceRegress, regress] = [
-				this.controls(),
-				this.invalidate(),
-				this.performanceRegress(),
-				this.regress(),
-			];
+			const controls = this.controls();
 			if (!controls) return;
+
+			const [invalidate, performanceRegress, regress] = [this.invalidate(), this.performanceRegress(), this.regress()];
+
 			const changeCallback: (e: Event) => void = (e) => {
 				invalidate();
 				if (regress) performanceRegress();

@@ -166,17 +166,16 @@ export class NgtsScrollControls {
 		});
 
 		effect((onCleanup) => {
-			const [el, events, size, infinite, invalidate, horizontal, enabled] = [
-				this.el,
-				this.events(),
+			const [el, events] = [this.el, this.events()];
+			if (!events.connected || events.connected !== el) return;
+
+			const [size, infinite, invalidate, horizontal, enabled] = [
 				this.size(),
 				this.infinite(),
 				this.invalidate(),
 				this.horizontal(),
 				this.enabled(),
 			];
-
-			if (events.connected !== el) return;
 
 			const containerLength = size[horizontal ? 'width' : 'height'];
 			const scrollLength = el[horizontal ? 'scrollWidth' : 'scrollHeight'];

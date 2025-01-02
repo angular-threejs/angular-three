@@ -17,6 +17,7 @@ import { NgtAnyRecord } from './types';
 const NGT_HTML_DOM_ELEMENT = new InjectionToken<'gl' | HTMLElement>('NGT_HTML_DOM_ELEMENT');
 
 export function provideHTMLDomElement(): Provider;
+export function provideHTMLDomElement(factory: () => HTMLElement): Provider;
 export function provideHTMLDomElement<
 	TDeps extends Array<ProviderToken<any>>,
 	TValues extends {
@@ -26,6 +27,10 @@ export function provideHTMLDomElement<
 export function provideHTMLDomElement(...args: any[]) {
 	if (args.length === 0) {
 		return { provide: NGT_HTML_DOM_ELEMENT, useFactory: () => 'gl' };
+	}
+
+	if (args.length === 1) {
+		return { provide: NGT_HTML_DOM_ELEMENT, useFactory: args[0] };
 	}
 
 	return { provide: NGT_HTML_DOM_ELEMENT, useFactory: args.pop(), deps: args };
