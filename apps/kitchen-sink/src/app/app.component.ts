@@ -15,6 +15,7 @@ import { filter } from 'rxjs';
 				<option value="postprocessing">/postprocessing</option>
 				<option value="rapier">/rapier</option>
 				<option value="misc">/misc</option>
+				<option value="routed">/routed</option>
 			</select>
 
 			<div class="bg-white rounded-full p-2 text-black border border-white border-dashed">

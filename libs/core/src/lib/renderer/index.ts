@@ -296,6 +296,11 @@ export class NgtRenderer implements Renderer2 {
 				if (cRS[NgtRendererClassId.type] === 'three') {
 					removeThreeChild(oldChild, undefined, true);
 				}
+
+				// if the child is the root scene, we don't want to destroy it
+				if (is.scene(oldChild) && oldChild.name === '__ngt_root_scene__') return;
+
+				// otherwise, we'll destroy it
 				this.destroyInternal(oldChild, undefined);
 			}
 

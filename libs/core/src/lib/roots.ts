@@ -162,6 +162,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						}
 
 						applyProps(scene, {
+							name: '__ngt_root_scene__',
 							setAttribute: (name: string, value: string) => {
 								if (canvas instanceof HTMLCanvasElement) {
 									if (canvas.parentElement) {

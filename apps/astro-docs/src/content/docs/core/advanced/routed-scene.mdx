@@ -5,10 +5,10 @@ description: Details about the Angular Three `NgtRoutedScene`
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-:::danger
+:::caution
 
-This is no longer working due to [a fix in Angular Router](https://github.com/angular/angular/commit/3839cfbb18fcc70cae5a6ba4ba7676b1c4acf7a0).
-We will re-enable this feature once a workaround is found or a new fix is released.
+Due to [a fix in Angular Router](https://github.com/angular/angular/commit/3839cfbb18fcc70cae5a6ba4ba7676b1c4acf7a0), Angular Three
+implements a custom `RouterOutlet` to enable this feature. Use with caution. File an issue if you encounter any problems.
 
 :::
 
@@ -95,17 +95,42 @@ import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
-	providers: [
-		provideRouter([
-			{
-				path: '',
-				loadComponent: () => import('./app/red-scene.component'),
-			},
-			{
-				path: 'blue',
-				loadComponent: () => import('./app/blue-scene.component'),
-			},
-		]),
-	],
+ providers: [
+  provideRouter([
+   {
+    path: '',
+    loadComponent: () => import('./app/red-scene.component'),
+   },
+   {
+    path: 'blue',
+    loadComponent: () => import('./app/blue-scene.component'),
+   },
+  ]),
+ ],
 }).catch((err) => console.error(err));
+```
+
+## Custom routed scene
+
+Using `'routed'` will use the default `NgtRoutedScene` component provided by Angular Three. It is also possible to have your own routed scene component.
+
+```html
+<ngt-canvas [sceneGraph]="CustomRoutedScene" />
+```
+
+```angular-ts
+@Component({
+  template: `
+    <ngt-router-outlet />
+    <!-- All routed scenes will have a CameraControls instead of each routed rendering their own camera controls -->
+    <ngts-camara-controls />
+  `,
+  imports: [
+    NgtRouterOutlet, // a custom router-outlet
+    NgtsCameraControls,
+  ],
+})
+export class CustomRoutedScene {
+  static [ROUTED_SCENE] = true; // flag for `NgtRenderer`
+}
 ```

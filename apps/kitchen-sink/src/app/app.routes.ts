@@ -32,6 +32,12 @@ export const appRoutes: Route[] = [
 		title: 'Misc - Angular Three Demo',
 	},
 	{
+		path: 'routed',
+		loadComponent: () => import('./routed/routed'),
+		loadChildren: () => import('./routed/routed.routes'),
+		title: 'Routed - Angular Three Demo',
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',
