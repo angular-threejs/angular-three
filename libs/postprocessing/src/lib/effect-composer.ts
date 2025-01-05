@@ -54,7 +54,6 @@ function isConvolution(effect: Effect) {
 
 @Component({
 	selector: 'ngtp-effect-composer',
-	standalone: true,
 	template: `
 		<ngt-group #group>
 			<ng-content />

@@ -10,7 +10,6 @@ export const [injectDefaultEffectOptions, provideDefaultEffectOptions] = createN
 
 @Component({
 	selector: 'ngtp-effect-blend-mode',
-	standalone: true,
 	template: `
 		@if (effect) {
 			<ngt-value [rawValue]="effect.blendFunction()" attach="blendMode.blendFunction" />
@@ -24,7 +23,7 @@ export class NgtpEffectBlendMode {
 	effect = inject(NgtpEffect, { optional: true });
 }
 
-@Directive({ standalone: true })
+@Directive()
 export class NgtpEffect {
 	defaultEffectOptions = injectDefaultEffectOptions({ optional: true });
 
