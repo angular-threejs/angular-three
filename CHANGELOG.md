@@ -1,3 +1,13 @@
+## 3.2.2 (2025-01-05)
+
+### 🩹 Fixes
+
+- **core:** null check remove call ([065efff](https://github.com/angular-threejs/angular-three/commit/065efff))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.2.1 (2025-01-05)
 
 ### 🩹 Fixes
