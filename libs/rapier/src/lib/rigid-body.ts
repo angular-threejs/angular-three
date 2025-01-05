@@ -48,7 +48,7 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 	contactSkin: 0,
 };
 
-@Directive({ selector: 'ngt-object3D[ngtrCollider]', standalone: true })
+@Directive({ selector: 'ngt-object3D[ngtrCollider]' })
 export class NgtrAnyCollider {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);
 	rotation = input<NgtEuler | undefined>([0, 0, 0]);

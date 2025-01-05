@@ -50,7 +50,7 @@ const defaultOptions: NgtrPhysicsOptions = {
 	debug: false,
 };
 
-@Directive({ selector: 'ng-template[rapierFallback]', standalone: true })
+@Directive({ selector: 'ng-template[rapierFallback]' })
 export class NgtrPhysicsFallback {
 	static ngTemplateContextGuard(_: NgtrPhysicsFallback, ctx: unknown): ctx is { error: string } {
 		return true;

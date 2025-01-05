@@ -2,7 +2,7 @@ import { Directive, effect, input } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { NgtrPhysicsOptions } from './types';
 
-@Directive({ standalone: true, selector: 'ngtr-frame-stepper' })
+@Directive({ selector: 'ngtr-frame-stepper' })
 export class NgtrFrameStepper {
 	ready = input(false);
 	updatePriority = input<number | undefined>(0);

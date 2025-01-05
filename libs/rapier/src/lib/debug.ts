@@ -12,7 +12,6 @@ import { BufferAttribute, Group, LineBasicMaterial, LineSegments } from 'three';
 
 @Component({
 	selector: 'ngtr-debug',
-	standalone: true,
 	template: `
 		<ngt-group>
 			<ngt-line-segments #lineSegments [frustumCulled]="false">
