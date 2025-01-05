@@ -8,16 +8,7 @@ import {
 	output,
 	viewChild,
 } from '@angular/core';
-import {
-	applyProps,
-	extend,
-	getLocalState,
-	injectBeforeRender,
-	injectStore,
-	NgtAnyRecord,
-	omit,
-	pick,
-} from 'angular-three';
+import { extend, getLocalState, injectBeforeRender, injectStore, NgtAnyRecord, omit, pick } from 'angular-three';
 import { calculateScaleFactor } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Box3, Group, Matrix4, Mesh, Vector3 } from 'three';
@@ -137,7 +128,7 @@ const defaultOptions: NgtsPivotControlsOptions = {
 	template: `
 		<ngt-group #parent>
 			<ngt-group #group [matrix]="matrix()" [matrixAutoUpdate]="false" [parameters]="parameters()">
-				<ngt-group #gizmo [visible]="visible()" [rotation]="rotation()">
+				<ngt-group #gizmo [visible]="visible()" [position]="offset()" [rotation]="rotation()">
 					@if (enabled()) {
 						@let _disableAxes = disableAxes();
 						@let _disableSliders = disableSliders();
@@ -276,17 +267,6 @@ export class NgtsPivotControls {
 
 	constructor() {
 		extend({ Group });
-
-		effect(() => {
-			const [anchor, offset] = [this.anchor(), this.offset()];
-			// if there is anchor, then the below effect will handle the position
-			if (anchor) return;
-			// if not, then we'll use the offset to set the position for gizmo
-			const gizmo = this.gizmoRef().nativeElement;
-			if (!gizmo) return;
-
-			applyProps(gizmo, { position: offset });
-		});
 
 		effect(() => {
 			const anchor = this.anchor();
