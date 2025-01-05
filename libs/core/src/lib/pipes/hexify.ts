@@ -4,7 +4,7 @@ import { inject, Pipe } from '@angular/core';
 const RGBA_REGEX = /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d*\.?\d+)?\)/;
 const DEFAULT_COLOR = 0x000000;
 
-@Pipe({ name: 'hexify', pure: true, standalone: true })
+@Pipe({ name: 'hexify', pure: true })
 export class NgtHexify {
 	private document = inject(DOCUMENT, { optional: true });
 	private ctx?: CanvasRenderingContext2D | null;

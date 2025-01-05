@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
 
-@Directive({ selector: 'ng-template[args]', standalone: true })
+@Directive({ selector: 'ng-template[args]' })
 export class NgtArgs {
 	args = input.required<any[] | null>();
 

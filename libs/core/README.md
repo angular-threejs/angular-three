@@ -23,10 +23,10 @@ import { extend } from 'angular-three';
 import { Mesh, BoxGeometry } from 'three';
 
 extend({
-	Mesh, // makes ngt-mesh available
-	BoxGeometry, // makes ngt-box-geometry available
-	/* ... */
-	MyMesh: Mesh, // makes ngt-my-mesh available
+ Mesh, // makes ngt-mesh available
+ BoxGeometry, // makes ngt-box-geometry available
+ /* ... */
+ MyMesh: Mesh, // makes ngt-my-mesh available
 });
 
 // alternatively for demo purposes, you can use the following
@@ -34,29 +34,27 @@ extend({
 // This includes the entire THREE.js namespace
 
 @Component({
-	// This Component is rendered in the Custom Renderer
-	standalone: true,
-	template: `
-		<ngt-mesh>
-			<ngt-box-geometry />
-		</ngt-mesh>
-	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA], // required
-	changeDetection: ChangeDetectionStrategy.OnPush,
+ // This Component is rendered in the Custom Renderer
+ template: `
+  <ngt-mesh>
+   <ngt-box-geometry />
+  </ngt-mesh>
+ `,
+ schemas: [CUSTOM_ELEMENTS_SCHEMA], // required
+ changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {}
 
 @Component({
-	// This Component is rendered normally in Angular.
-	selector: 'app-my-experience',
-	standalone: true,
-	template: `
-		<ngt-canvas [sceneGraph]="SceneGraph" />
-	`,
-	imports: [NgtCanvas],
+ // This Component is rendered normally in Angular.
+ selector: 'app-my-experience',
+ template: `
+  <ngt-canvas [sceneGraph]="SceneGraph" />
+ `,
+ imports: [NgtCanvas],
 })
 export class MyExperience {
-	SceneGraph = SceneGraph;
+ SceneGraph = SceneGraph;
 }
 ```
 
@@ -98,7 +96,7 @@ The consumers can add `web-types` property to the workspace's `package.json` and
 
 ```json
 {
-	"web-types": "node_modules/angular-three/web-types.json"
+ "web-types": "node_modules/angular-three/web-types.json"
 }
 ```
 
@@ -110,7 +108,7 @@ The consumers can enable it via `html.customData` in their `settings.json` file.
 
 ```json
 {
-	"html.customData": ["node_modules/angular-three/metadata.json"]
+ "html.customData": ["node_modules/angular-three/metadata.json"]
 }
 ```
 
@@ -122,7 +120,7 @@ Input bindings for `ngt-*` elements work the same way as they do in Angular.
 
 ```html
 <ngt-mesh [position]="[x, y, z]" [rotation]="[x, y, z]">
-	<ngt-mesh-basic-material color="hotpink" />
+ <ngt-mesh-basic-material color="hotpink" />
 </ngt-mesh>
 ```
 
@@ -179,13 +177,13 @@ The consumers can query for the THREE.js entities like they would do in normal H
 
 ```ts
 @Component({
-	template: `
-		<ngt-mesh #mesh></ngt-mesh>
-	`,
+ template: `
+  <ngt-mesh #mesh></ngt-mesh>
+ `,
 })
 export class Box {
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	//  notice that it is an ElementRef of THREE.Mesh instead of an HTMLElement
+ mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+ //  notice that it is an ElementRef of THREE.Mesh instead of an HTMLElement
 }
 ```
 
@@ -195,18 +193,18 @@ In order to participate in the animation loop, use `injectBeforeRender` inject f
 
 ```ts
 @Component({
-	/*...*/
+ /*...*/
 })
 export class Box {
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+ mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
-	constructor() {
-		injectBeforeRender(() => {
-			// runs every frame
-			const mesh = this.mesh().nativeElement;
-			mesh.rotation.x += 0.01;
-		});
-	}
+ constructor() {
+  injectBeforeRender(() => {
+   // runs every frame
+   const mesh = this.mesh().nativeElement;
+   mesh.rotation.x += 0.01;
+  });
+ }
 }
 ```
 
@@ -216,9 +214,9 @@ Angular Three keeps track of its state via an internal store. The consumers can 
 
 ```ts
 export class Box {
-	store = injectStore();
-	viewport = this.store.select('viewport'); // Signal<NgtViewport>
-	camera = this.store.select('camera'); // Signal<NgtCamera> - the default camera
-	/* many more properties */
+ store = injectStore();
+ viewport = this.store.select('viewport'); // Signal<NgtViewport>
+ camera = this.store.select('camera'); // Signal<NgtCamera> - the default camera
+ /* many more properties */
 }
 ```

@@ -125,8 +125,9 @@ export async function initGenerator(
 			return warnExperienceWasNotGenerated(tree, `AppComponent was not found`);
 		}
 
-		// TODO (chau): revisit if standalone:true becomes the default
-		const isStandalone = appComponentContent.includes(`standalone: true`);
+		// standalone is true or not exist
+		const isStandalone =
+			appComponentContent.includes(`standalone: true`) || !appComponentContent.includes('standalone');
 		if (!isStandalone) {
 			return warnExperienceWasNotGenerated(tree, `AppComponent is not a Standalone Component`);
 		}

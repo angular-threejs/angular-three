@@ -2,7 +2,7 @@ import { booleanAttribute, Directive, effect, ElementRef, inject, input, signal,
 import { Group, Mesh, Object3D } from 'three';
 import { getLocalState } from '../instance';
 
-@Directive({ standalone: true, selector: '[ngtSelection]' })
+@Directive({ selector: '[ngtSelection]' })
 export class NgtSelection {
 	enabled = input(true, { alias: 'ngtSelection', transform: booleanAttribute });
 
@@ -15,7 +15,7 @@ export class NgtSelection {
 	}
 }
 
-@Directive({ standalone: true, selector: 'ngt-group[ngtSelect], ngt-mesh[ngtSelect]' })
+@Directive({ selector: 'ngt-group[ngtSelect], ngt-mesh[ngtSelect]' })
 export class NgtSelect {
 	enabled = input(false, { transform: booleanAttribute, alias: 'ngtSelect' });
 

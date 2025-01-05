@@ -29,7 +29,6 @@ import { updateCamera } from './utils/update';
 
 @Component({
 	selector: 'ngt-portal-before-render',
-	standalone: true,
 	template: `
 		<!-- Without an element that receives pointer events state.pointer will always be 0/0 -->
 		<ngt-group (pointerover)="onPointerOver()" attach="none" />
@@ -80,7 +79,7 @@ export class NgtPortalBeforeRender {
 	}
 }
 
-@Directive({ selector: 'ng-template[portalContent]', standalone: true })
+@Directive({ selector: 'ng-template[portalContent]' })
 export class NgtPortalContent {
 	constructor() {
 		const { element: comment } = inject(ViewContainerRef);
@@ -140,7 +139,7 @@ export type NgtPortalInjectableState = Partial<
 	imports: [NgtPortalBeforeRender],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideStore(() => signalStore({}))],
+	providers: [provideStore(() => signalStore<NgtState>({}))],
 })
 export class NgtPortal {
 	container = input.required<Object3D>();

@@ -4,7 +4,7 @@ import { Object3D } from 'three';
 import { NgtEventHandlers, NgtThreeEvent } from '../types';
 import { resolveRef } from './resolve-ref';
 
-@Directive({ standalone: true, selector: '[ngtObjectEvents]' })
+@Directive({ selector: '[ngtObjectEvents]' })
 /**
  * As host directive:
  * - outputs: [
