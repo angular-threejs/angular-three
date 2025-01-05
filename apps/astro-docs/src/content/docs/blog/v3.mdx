@@ -24,9 +24,13 @@ Angular Three v3 is here with Angular 19 support! 🎉
 
 Angular Three v3 drops support for Angular 18 and below. This is because Angular 19 comes with a huge change
 to the Effect API (Learn more [here](https://riegler.fr/blog/2024-10-15-effect-context/)). While nothing really changes much to consumers,
-the way Angular Three utilizes the Effect API changes.
+the way Angular Three utilizes the Effect API changes. From the library perspective, this update also allows for Angular Three components to go `standalone` by default.
 
-From the library perspective, this update also allows for Angular Three components to go `standalone` by default.
+That said, there are several benefits of Angular 19 to Angular Three, and its consumers:
+
+- Lighter effects with less microtasks; One of the changes to the new Effect API is that a certain type of effects is scheduled in a smarter way instead of _microtask-ing_ everything.
+- Faster execution in some areas; Another change to the new Effect API is that setting signals inside of effects is now allowed. Hence, `untracked` trick or `allowSignalWrites` is no longer needed.
+- Decreased library size; With default `standalone: true` and static analysis on `imports` array, Angular Three v3 is able to shed some of its bundle size.
 
 ### Stable Testing API
 
