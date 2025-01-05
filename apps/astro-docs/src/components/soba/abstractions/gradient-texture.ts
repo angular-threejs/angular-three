@@ -7,7 +7,6 @@ import { DoubleSide } from 'three';
 
 @Component({
 	selector: 'gradient-texture-scene',
-	standalone: true,
 	template: `
 		<ngts-float>
 			<ngt-mesh [scale]="[2, 4, 1]">

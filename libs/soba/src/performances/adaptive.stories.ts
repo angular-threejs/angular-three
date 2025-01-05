@@ -15,7 +15,6 @@ interface ArcherGLTF extends GLTF {
 
 @Component({
 	selector: 'adaptive-archer',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [dispose]="null">
@@ -54,7 +53,6 @@ class Archer {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<adaptive-archer />
 		<ngt-directional-light [intensity]="0.2 * Math.PI" [position]="[10, 10, 5]" [castShadow]="true">

@@ -7,7 +7,6 @@ import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas'
 
 @Component({
 	selector: 'text-container',
-	standalone: true,
 	template: `
 		<ngts-text [text]="text" [options]="options()" />
 	`,
@@ -34,7 +33,6 @@ class TextContainer {
 
 @Component({
 	selector: 'text-container',
-	standalone: true,
 	template: `
 		<ngts-text [text]="text" [options]="options">
 			<ngt-mesh-basic-material [side]="DoubleSide" [color]="color()" [transparent]="true" [opacity]="opacity()" />

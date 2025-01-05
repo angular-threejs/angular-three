@@ -4,7 +4,6 @@ import { tracks, zoomIndex, zoomTrack } from './tracks';
 
 @Component({
 	selector: 'app-overlay',
-	standalone: true,
 	template: `
 		<div
 			[class.cursor-pointer]="audioStore.loaded()"

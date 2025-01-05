@@ -13,7 +13,6 @@ import { NgtTestBed } from './test-bed';
 describe('test canvas', () => {
 	@Component({
 		selector: 'app-sphere',
-		standalone: true,
 		template: `
 			<ngt-mesh>
 				<ngt-sphere-geometry />
@@ -25,7 +24,6 @@ describe('test canvas', () => {
 	class Sphere {}
 
 	@Component({
-		standalone: true,
 		template: `
 			<ngt-mesh
 				#mesh

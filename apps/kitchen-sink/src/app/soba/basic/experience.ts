@@ -30,7 +30,7 @@ type BotGLTF = GLTF & {
 	materials: { YB_Body: MeshStandardMaterial; YB_Joints: MeshStandardMaterial };
 };
 
-@Directive({ selector: '[animations]', standalone: true })
+@Directive({ selector: '[animations]' })
 export class BotAnimations {
 	animations = input.required<NgtsAnimation>();
 	referenceRef = input.required<ElementRef<Object3D> | undefined>();

@@ -16,7 +16,7 @@ import { type Mesh, Object3D } from 'three';
 
 extend(THREE);
 
-@Directive({ selector: '[cursor]', standalone: true })
+@Directive({ selector: '[cursor]' })
 export class Cursor {
 	constructor() {
 		const elementRef = inject<ElementRef<Object3D>>(ElementRef);
@@ -41,7 +41,6 @@ export class Cursor {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-spot-light [position]="[5, 5, 5]" [intensity]="Math.PI" [decay]="0" />
 		<ngt-point-light [position]="[-10, -10, -10]" [decay]="0" />
@@ -72,7 +71,6 @@ export class SceneGraph {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" [camera]="{ position: [0, 0, 2] }" />
 	`,

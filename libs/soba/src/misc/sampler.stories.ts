@@ -41,7 +41,6 @@ function computeUpness(geometry: BufferGeometry) {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-sampler [options]="mergedOptions()">
 			<ngt-mesh>
@@ -70,7 +69,6 @@ class WeightSamplerStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-sampler [options]="mergedOptions()">
 			<ngt-mesh>
@@ -94,7 +92,6 @@ class TransformSamplerStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-sampler [options]="options()" [mesh]="meshRef()" [instances]="instancedMeshRef()" />
 
@@ -120,7 +117,6 @@ class RefSamplerStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-sampler [options]="options()">
 			<ngt-mesh>

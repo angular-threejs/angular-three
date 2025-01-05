@@ -32,7 +32,6 @@ function toConvexProps(bufferGeometry: BufferGeometry): [vertices: Triplet[], fa
 // A cone is a convex shape by definition...
 @Component({
 	selector: 'app-cone',
-	standalone: true,
 	template: `
 		<ngt-mesh
 			#mesh
@@ -74,7 +73,6 @@ export class Cone {
 // ...And so is a cube!
 @Component({
 	selector: 'app-cube',
-	standalone: true,
 	template: `
 		<ngt-mesh
 			#mesh
@@ -120,7 +118,6 @@ type DiamondGLTF = GLTF & {
 
 @Component({
 	selector: 'app-diamond',
-	standalone: true,
 	template: `
 		@if (geometry(); as geometry) {
 			<ngt-mesh

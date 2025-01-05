@@ -6,7 +6,6 @@ import { DoubleSide } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-float [options]="options()">
 			<ngt-mesh>

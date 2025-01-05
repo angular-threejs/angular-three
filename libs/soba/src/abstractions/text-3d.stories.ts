@@ -5,7 +5,6 @@ import { NgtsCenter, NgtsFloat } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-center>
 			<ngts-float>
@@ -38,7 +37,6 @@ world"
 class FloatText3DStory {}
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-center>
 			<ngts-text-3d

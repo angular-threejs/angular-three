@@ -8,7 +8,6 @@ const environments = Object.keys(ENVIRONMENT_PRESETS) as Array<NgtsEnvironmentPr
 const presets = ['rembrandt', 'portrait', 'upfront', 'soft'];
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-stage [options]="options()">
 			<ngt-mesh>

@@ -13,7 +13,6 @@ const rotations = {
 } as const;
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-box-geometry />

@@ -4,7 +4,6 @@ import { NgtsPivotControls, NgtsPivotControlsOptions } from 'angular-three-soba/
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-pivot-controls [options]="options()">
 			<ngt-mesh>

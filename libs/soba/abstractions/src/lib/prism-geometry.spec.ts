@@ -5,7 +5,6 @@ import { NgtsPrismGeometry } from './prism-geometry';
 
 describe(NgtsPrismGeometry.name, () => {
 	@Component({
-		standalone: true,
 		template: `
 			<ngt-mesh>
 				<ngts-prism-geometry

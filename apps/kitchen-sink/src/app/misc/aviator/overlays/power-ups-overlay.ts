@@ -4,7 +4,6 @@ import { GameStore } from '../game.store';
 
 @Component({
 	selector: 'app-power-up',
-	standalone: true,
 	template: `
 		<div
 			class="absolute inset-x-0 bottom-0 bg-yellow-300 transition-all duration-1000 ease-linear"

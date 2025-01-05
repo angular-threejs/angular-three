@@ -6,7 +6,6 @@ import { scenes } from './scenes';
 extend(THREE);
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph()" />
 	`,

@@ -3,7 +3,7 @@ import { injectBeforeRender } from 'angular-three';
 import { PerspectiveCamera } from 'three';
 import { Track } from './track';
 
-@Directive({ standalone: true, selector: 'app-track[zoom]' })
+@Directive({ selector: 'app-track[zoom]' })
 export class Zoom {
 	enabled = input(false, { alias: 'zoom' });
 

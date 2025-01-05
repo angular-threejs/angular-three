@@ -16,7 +16,6 @@ import { CANVAS_OPTIONS } from './canvas-options';
 import { SOBA_CONTENT } from './soba-content';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color *args="[background()]" attach="background" />
 

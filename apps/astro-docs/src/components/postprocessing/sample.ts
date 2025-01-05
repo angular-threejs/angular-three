@@ -21,7 +21,6 @@ extend(THREE);
 
 @Component({
 	selector: 'app-main-sphere',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [material]="material()">
 			<ngt-icosahedron-geometry *args="[1, 4]" />
@@ -48,7 +47,6 @@ export class MainSphere {
 
 @Component({
 	selector: 'app-sphere-instances',
-	standalone: true,
 	template: `
 		<!-- we render the material with attach="none" so we can share it between instances -->
 		<ngts-mesh-distort-material #distortMaterial attach="none" [options]="materialOptions()" />
@@ -116,7 +114,6 @@ export class SphereInstances {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['#050505']" />
 		<ngt-fog attach="fog" *args="['#161616', 8, 30]" />
@@ -136,7 +133,6 @@ export class SphereInstances {
 export class SceneGraph {}
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" [camera]="{ position: [0, 0, 3] }" />
 		<ngts-loader />

@@ -6,7 +6,6 @@ import { NgtsSegment, NgtsSegments } from 'angular-three-soba/performances';
 import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-segments [options]="{ limit: limit(), lineWidth: lineWidth() }">
 			@for (index of count; track $index) {
@@ -46,7 +45,6 @@ class PerformanceSegmentsStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-segments [options]="{ limit: limit(), lineWidth: lineWidth() }">
 			<ngts-segment [start]="[0, 0, 0]" [end]="[10, 0, 0]" [color]="'red'" />

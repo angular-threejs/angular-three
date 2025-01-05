@@ -3,7 +3,6 @@ import { GameStore } from '../game.store';
 
 @Component({
 	selector: 'app-coin-overlay',
-	standalone: true,
 	template: `
 		<span class="font-mono text-lg text-[#ffd700] font-bold">{{ coinDisplay() }}</span>
 	`,

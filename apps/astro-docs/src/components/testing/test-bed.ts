@@ -13,7 +13,6 @@ import * as THREE from 'three';
 extend(THREE);
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh
 			#mesh
@@ -44,7 +43,6 @@ class SceneGraph {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="sceneGraph" />
 	`,

@@ -16,7 +16,6 @@ import { NgtcPhysics } from 'angular-three-cannon';
 
 ```angular-ts
 @Component({
-  standalone: true,
   imports: [NgtcPhysics],
   template: `
     <ngtc-physics>
@@ -36,20 +35,19 @@ export class SceneGraph {}
 import { injectBox } from 'angular-three-cannon/body';
 
 @Component({
-	selector: 'app-box',
-	standalone: true,
-	template: `
-		<ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
-			<ngt-box-geometry />
-		</ngt-mesh>
-	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+ selector: 'app-box',
+ template: `
+  <ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
+   <ngt-box-geometry />
+  </ngt-mesh>
+ `,
+ imports: [NgtArgs],
+ schemas: [CUSTOM_ELEMENTS_SCHEMA],
+ changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	box = injectBox(() => ({ mass: 1 }), this.mesh);
+ mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+ box = injectBox(() => ({ mass: 1 }), this.mesh);
 }
 ```
 
@@ -57,44 +55,43 @@ export class Box {
 
 The returned value is a `Signal<NgtcBodyPublicApi | null>` that can be used to control the body, set position, rotation, and subscribe to changes.
 
-```angular-ts {20-24}
+```angular-ts {19-23}
 import { injectBox } from 'angular-three-cannon/body';
 
 @Component({
-	selector: 'app-box',
-	standalone: true,
-	template: `
-		<ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
-			<ngt-box-geometry />
-		</ngt-mesh>
-	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+ selector: 'app-box',
+ template: `
+  <ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
+   <ngt-box-geometry />
+  </ngt-mesh>
+ `,
+ imports: [NgtArgs],
+ schemas: [CUSTOM_ELEMENTS_SCHEMA],
+ changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Box {
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-	box = injectBox(() => ({ mass: 1 }), this.mesh);
+ mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+ box = injectBox(() => ({ mass: 1 }), this.mesh);
 
-	constructor() {
-	  injectBeforeRender(({ clock }) => {
-	    const api = this.box();
-	    if (!api) return;
-	    api.position.set(Math.sin(clock.getElapsedTime()) * 5, 0, 0);
-	  })
-	}
+ constructor() {
+   injectBeforeRender(({ clock }) => {
+     const api = this.box();
+     if (!api) return;
+     api.position.set(Math.sin(clock.getElapsedTime()) * 5, 0, 0);
+   })
+ }
 }
 ```
 
 ### Example
 
 <Tabs>
-	<TabItem label="Preview">
-		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-			<CannonSample client:only />
-		</div>
-	</TabItem>
-	<TabItem label="Code">
-		<Code code={content} lang="angular-ts" />
-	</TabItem>
+ <TabItem label="Preview">
+  <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+   <CannonSample client:only />
+  </div>
+ </TabItem>
+ <TabItem label="Code">
+  <Code code={content} lang="angular-ts" />
+ </TabItem>
 </Tabs>

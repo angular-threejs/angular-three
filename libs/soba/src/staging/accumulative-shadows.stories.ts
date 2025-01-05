@@ -15,7 +15,6 @@ import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
 	selector: 'accumulative-shadows-suzi',
-	standalone: true,
 	template: `
 		<ngt-primitive *args="[scene()]" [parameters]="{ rotation: [-0.63, 0, 0], scale: 2, position: [0, -1.175, 0] }" />
 	`,
@@ -46,7 +45,6 @@ class Suzi {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color *args="['goldenrod']" attach="background" />
 		<accumulative-shadows-suzi />

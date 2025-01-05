@@ -11,7 +11,6 @@ type NxGLTF = GLTF & {
 
 @Component({
 	selector: 'app-nx',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-3, -3, 0]" [rotation]="[Math.PI / 2, 0, 0]">

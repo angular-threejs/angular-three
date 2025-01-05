@@ -24,7 +24,7 @@ export const SPAWNABLE_DISTANCE_TOLERANCE = new InjectionToken<number>('SPAWNABL
 export const SPAWNABLE_PARTICLE_COLOR = new InjectionToken<ColorRepresentation>('SPAWNABLE_PARTICLE_COLOR');
 export const SPAWNABLE_ATTRACTABLE = new InjectionToken<boolean>('SPAWNABLE_ATTRACTABLE', { factory: () => false });
 
-@Directive({ standalone: true })
+@Directive()
 export class Spawnable {
 	initialAngle = input(0);
 	initialDistance = input(0);

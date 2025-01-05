@@ -25,7 +25,6 @@ type SuzanneGLTF = GLTF & {
 
 @Component({
 	selector: 'grid-suzi',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-mesh
@@ -61,7 +60,6 @@ class Suzi {
 
 @Component({
 	selector: 'grid-shadows',
-	standalone: true,
 	template: `
 		<ngts-accumulative-shadows
 			[options]="{ temporal: true, frames: 100, color: '#9d4b4b', colorBlend: 0.5, alphaTest: 0.75, scale: 20 }"
@@ -76,7 +74,6 @@ class Suzi {
 class Shadows {}
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-group [position]="[0, -0.5, 0]">
 			<ngts-center [options]="{ top: true }">

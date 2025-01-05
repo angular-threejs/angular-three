@@ -5,7 +5,6 @@ import { NgtsSky, NgtsSkyOptions } from 'angular-three-soba/staging';
 import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-sky [options]="options()" />
 		<ngt-mesh [rotation]="[Math.PI / 2, 0, 0]">

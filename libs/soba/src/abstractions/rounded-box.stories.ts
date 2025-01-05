@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 
 @Component({
-	standalone: true,
 	template: `
 		@if (solid()) {
 			<ngt-spot-light [position]="35" [intensity]="2 * Math.PI" [decay]="0" />

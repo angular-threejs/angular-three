@@ -24,7 +24,7 @@ type BotGLTF = GLTF & {
 	materials: { YB_Body: MeshStandardMaterial; YB_Joints: MeshStandardMaterial };
 };
 
-@Directive({ selector: '[animations]', standalone: true })
+@Directive({ selector: '[animations]' })
 export class BotAnimations {
 	animations = input.required<NgtsAnimation>();
 	animation = input('Strut');
@@ -51,7 +51,6 @@ export class BotAnimations {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />

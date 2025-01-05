@@ -8,7 +8,6 @@ import { NgtsHelper } from '../../abstractions/src/lib/helper';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-perspective-camera [options]="{ makeDefault: false, position: [0, 3, 3], near: 1, far: 4 }">
 			<ng-template>
@@ -40,7 +39,6 @@ class CameraHelperStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-sphere-geometry />

@@ -14,7 +14,6 @@ import { makeDecorators, makeStoryObject, select } from '../setup-canvas';
 
 @Component({
 	selector: 'gizmo-helper-tokyo',
-	standalone: true,
 	template: `
 		<ngt-primitive *args="[scene()]" [parameters]="{ scale: 0.01 }" />
 	`,
@@ -32,7 +31,6 @@ class Tokyo {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<gizmo-helper-tokyo />
 
@@ -51,7 +49,6 @@ class ViewportStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<gizmo-helper-tokyo />
 

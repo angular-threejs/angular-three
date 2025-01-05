@@ -38,7 +38,6 @@ The `CUSTOM_ELEMENTS_SCHEMA` is required to use Angular Three elements as Angula
 
 ```angular-ts
 @Component({
-  standalone: true,
   template: `<!-- contains custom ngt elements -->`,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -242,9 +241,9 @@ mesh.material = [];
 const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
 
 for (let i = 0; i < colors.length; i++) {
-	const material = new THREE.MeshLambertMaterial();
-	material.color.set(colors[i]);
-	mesh.material[i] = material;
+ const material = new THREE.MeshLambertMaterial();
+ material.color.set(colors[i]);
+ mesh.material[i] = material;
 }
 ```
 

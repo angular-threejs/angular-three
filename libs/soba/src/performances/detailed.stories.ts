@@ -6,7 +6,6 @@ import { NgtsDetailed } from 'angular-three-soba/performances';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-detailed [distances]="[0, 50, 150]">
 			<ngt-mesh>

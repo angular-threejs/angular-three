@@ -30,7 +30,6 @@ const catPoints = [
 ];
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-catmull-rom-line [points]="points" [options]="options()" />
 		<ngts-orbit-controls [options]="{ zoomSpeed: 0.5 }" />
@@ -45,7 +44,6 @@ class CatmullRomLineStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-cubic-bezier-line [start]="start()" [end]="end()" [midA]="midA()" [midB]="midB()" [options]="options()" />
 		<ngts-orbit-controls [options]="{ zoomSpeed: 0.5 }" />
@@ -64,7 +62,6 @@ class CubicLineStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-quadratic-bezier-line [start]="start()" [end]="end()" [options]="options()" />
 		<ngts-orbit-controls [options]="{ zoomSpeed: 0.5 }" />
@@ -80,7 +77,6 @@ class QuadraticLineStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-line [points]="points" [options]="options()" />
 		<ngts-orbit-controls [options]="{ zoomSpeed: 0.5 }" />

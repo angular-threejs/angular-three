@@ -12,7 +12,6 @@ interface SuzyGLTF extends GLTF {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry">

@@ -25,7 +25,6 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
 	selector: 'caustics-scene',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [dispose]="null">
@@ -95,7 +94,6 @@ class Scene {
 
 @Component({
 	selector: 'caustics-env',
-	standalone: true,
 	template: `
 		<ngts-environment [options]="{ frames: Infinity, preset: 'city', resolution: 256, background: true, blur: 0.8 }">
 			<ng-template>
@@ -172,7 +170,6 @@ class Env {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-group [position]="[0, -0.5, 0]" [rotation]="[0, -0.75, 0]">
 			<caustics-scene [debug]="debug()" />

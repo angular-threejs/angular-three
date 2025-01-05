@@ -10,7 +10,6 @@ import { MathUtils, RepeatWrapping } from 'three';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-orbit-controls
 			[options]="{ makeDefault: true, autoRotate: true, autoRotateSpeed: 0.5, minDistance: 2, maxDistance: 10 }"
@@ -87,7 +86,6 @@ class SpotLightShadowStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-spot-light [options]="spotLightOneOptions()" />
 		<ngts-spot-light [options]="spotLightTwoOptions()" />

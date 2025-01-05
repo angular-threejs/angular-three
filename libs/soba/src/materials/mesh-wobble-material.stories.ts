@@ -5,7 +5,6 @@ import { NgtsMeshWobbleMaterial, NgtsMeshWobbleMaterialOptions } from 'angular-t
 import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-torus-geometry *args="[1, 0.25, 16, 100]" />

@@ -24,7 +24,6 @@ type AOBoxGLTF = GLTF & {
 
 @Component({
 	selector: 'portal-material-side',
-	standalone: true,
 	template: `
 		<ngts-mesh-portal-material [attach]="attach()">
 			<ng-template>
@@ -89,7 +88,6 @@ class Side {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh [castShadow]="true" [receiveShadow]="true">
 			<ngt-box-geometry *args="[2, 2, 2]" />

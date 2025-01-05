@@ -15,7 +15,6 @@ extend({ OrbitControls });
 
 @Component({
 	selector: 'app-cube',
-	standalone: true,
 	template: `
 		<ngt-mesh
 			#mesh
@@ -50,7 +49,6 @@ class Cube {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-ambient-light [intensity]="0.5" />
 		<ngt-spot-light [position]="10" [intensity]="0.5 * Math.PI" [angle]="0.15" [penumbra]="1" [decay]="0" />

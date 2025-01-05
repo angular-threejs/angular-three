@@ -12,7 +12,6 @@ import { NgtcPhysics } from 'angular-three-cannon';
 import { Component, signal } from '@angular/core';
 
 @Component({
-  standalone: true,
   imports: [NgtcPhysics],
   template: `
     <ngtc-physics [options]="{ gravity: [0, -9.81, 0], iterations: 5 }">
@@ -55,7 +54,6 @@ import { Component, signal } from '@angular/core';
 import { NgtcPhysics } from 'angular-three-cannon';
 
 @Component({
-  standalone: true,
   imports: [NgtcPhysics],
   template: `
     <ngtc-physics [options]="{ gravity: gravity() }">

@@ -16,7 +16,6 @@ import { NgtpEffectComposer } from 'angular-three-postprocessing';
 
 ```angular-ts
 @Component({
-  standalone: true,
   imports: [NgtpEffectComposer],
   template: `
     <ngtp-effect-composer>
@@ -35,7 +34,6 @@ export class SceneGraph {}
 +import { NgtpEffectComposer, NgtpBloom, NgtpNoise } from 'angular-three-postprocessing';
 
 @Component({
-  standalone: true,
   imports: [NgtpEffectComposer, NgtpBloom, NgtpNoise],
   template: `
     <ngtp-effect-composer>
@@ -51,12 +49,12 @@ export class SceneGraph {}
 ### Example
 
 <Tabs>
-	<TabItem label="Preview">
-		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-			<PostprocessingSample client:only />
-		</div>
-	</TabItem>
-	<TabItem label="Code">
-		<Code code={content} lang="angular-ts" />
-	</TabItem>
+ <TabItem label="Preview">
+  <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+   <PostprocessingSample client:only />
+  </div>
+ </TabItem>
+ <TabItem label="Code">
+  <Code code={content} lang="angular-ts" />
+ </TabItem>
 </Tabs>

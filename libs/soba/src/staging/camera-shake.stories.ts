@@ -15,7 +15,6 @@ import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
 	selector: 'camera-shake-objects',
-	standalone: true,
 	template: `
 		<ngt-mesh #cube>
 			<ngt-box-geometry *args="[2, 2, 2]" />
@@ -45,7 +44,6 @@ class Objects {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-camera-shake [options]="options()" />
 		<camera-shake-objects />
@@ -59,7 +57,6 @@ class DefaultCameraShakeStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-orbit-controls [options]="{ makeDefault: true }" />
 		<ngts-camera-shake [options]="options()" />

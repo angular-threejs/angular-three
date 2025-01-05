@@ -6,7 +6,6 @@ import { NgtsTransformControls, NgtsTransformControlsOptions } from 'angular-thr
 import { makeDecorators, makeStoryFunction, makeStoryObject, select } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh #meshOne [position]="[-1, 0, 0]" (click)="selected.set(meshOne)">
 			<ngt-box-geometry />
@@ -39,7 +38,6 @@ class WithSelectionStory {
 }
 
 @Component({
-	standalone: true,
 	imports: [NgtsTransformControls, NgtsOrbitControls],
 	template: `
 		<ngts-transform-controls>
@@ -57,7 +55,6 @@ class WithSelectionStory {
 class LockControlsStory {}
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-transform-controls [options]="{ mode: mode() }">
 			<ngt-mesh>

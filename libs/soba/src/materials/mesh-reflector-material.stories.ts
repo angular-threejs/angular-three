@@ -35,7 +35,6 @@ const defaultOptions: Partial<NgtsMeshReflectorMaterialOptions> = {
 };
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh [rotation]="[-Math.PI / 2, 0, Math.PI / 2]">
 			<ngt-plane-geometry *args="[10, 10]" />

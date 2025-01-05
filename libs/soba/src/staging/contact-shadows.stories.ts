@@ -14,7 +14,6 @@ import { Mesh } from 'three';
 import { color, makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh #sphere [position]="[0, 2, 0]">
 			<ngt-sphere-geometry *args="[1, 32, 32]" />

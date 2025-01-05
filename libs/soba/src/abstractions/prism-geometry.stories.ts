@@ -33,7 +33,6 @@ const pentagon = [
 ];
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-stage>
 			<!-- left triangle -->

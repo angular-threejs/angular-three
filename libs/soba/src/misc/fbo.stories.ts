@@ -15,7 +15,6 @@ import { makeDecorators, makeStoryFunction, makeStoryObject, number } from '../s
 
 @Component({
 	selector: 'fbo-spinning-thing',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh>
 			<ngt-torus-knot-geometry *args="[1, 0.4, 100, 64]" />
@@ -51,7 +50,6 @@ class SpinningThing {
 			<ngt-mesh-standard-material [map]="target().texture" />
 		</ngt-mesh>
 	`,
-	standalone: true,
 	imports: [NgtsPerspectiveCamera, SpinningThing, NgtPortal, NgtPortalContent, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,7 +77,6 @@ class TargetWrapper {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<fbo-target-wrapper *fbo="options(); let target" [target]="target()" />
 	`,

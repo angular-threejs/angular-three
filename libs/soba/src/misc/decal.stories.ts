@@ -21,7 +21,6 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
 	selector: 'decal-loop-over-instanced-buffer-attribute',
-	standalone: true,
 	template: `
 		@for (attribute of attributes(); track $index) {
 			<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletContext]="{ $implicit: attribute }" />
@@ -55,7 +54,6 @@ class LoopOverInstancedBufferAttribute {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true, autoRotateSpeed: 0.75 }" />
 		<ngts-perspective-camera [options]="{ makeDefault: true, position: [6, 6, 6] }" />

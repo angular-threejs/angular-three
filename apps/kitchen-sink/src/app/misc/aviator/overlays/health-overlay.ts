@@ -3,7 +3,6 @@ import { GameStore } from '../game.store';
 
 @Component({
 	selector: 'app-health-overlay',
-	standalone: true,
 	template: `
 		@for (heart of [0, 1, 2]; track heart) {
 			@if (heart < gameStore.health()) {

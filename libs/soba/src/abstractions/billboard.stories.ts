@@ -6,7 +6,6 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-billboard
 			[options]="{ follow: follow(), lockZ: lockZ(), lockY: lockY(), lockX: lockX(), position: [0.5, 2.05, 0.5] }"
@@ -58,7 +57,6 @@ class TextBillboardStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-billboard
 			[options]="{ follow: follow(), lockZ: lockZ(), lockY: lockY(), lockX: lockX(), position: [-4, -2, 0] }"

@@ -27,7 +27,6 @@ import { NgtcDebug } from 'angular-three-cannon/debug';
 
 ```angular-ts
 @Component({
-  standalone: true,
   imports: [NgtcDebug, NgtcPhysics],
   template: `
     <ngtc-physics debug>
@@ -44,7 +43,6 @@ We can pass options to `NgtcDebug` by passing in an object to the `debug` input
 
 ```angular-ts
 @Component({
-  standalone: true,
   imports: [NgtcDebug, NgtcPhysics],
   template: `
     <ngtc-physics
@@ -76,12 +74,12 @@ injectBox(
 ### Example
 
 <Tabs>
-	<TabItem label="Preview">
-		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-			<CannonSampleDebug client:only />
-		</div>
-	</TabItem>
-	<TabItem label="Code">
-		<Code code={content} lang="angular-ts" />
-	</TabItem>
+ <TabItem label="Preview">
+  <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+   <CannonSampleDebug client:only />
+  </div>
+ </TabItem>
+ <TabItem label="Code">
+  <Code code={content} lang="angular-ts" />
+ </TabItem>
 </Tabs>

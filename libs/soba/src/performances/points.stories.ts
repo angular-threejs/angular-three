@@ -55,7 +55,6 @@ const n = 10_000;
 
 @Component({
 	selector: 'point-with-events',
-	standalone: true,
 	template: `
 		<ngts-point [options]="{ position: position(), size: finalSize(), color: $any(finalColor()) }" />
 	`,
@@ -94,7 +93,6 @@ class PointWithEvents {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-points-instances>
 			@for (point of points; track $index) {
@@ -137,7 +135,6 @@ class BasicPointsInstancesStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-points-buffer [positions]="positionFinal" [colors]="color" [sizes]="size">
 			<ngt-my-points-material />

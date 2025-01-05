@@ -8,7 +8,6 @@ import { Mesh } from 'three';
 extend(THREE);
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-environment [options]="{ background: true, preset: 'sunset' }">
 			<ng-template>
@@ -56,7 +55,6 @@ export class Experience {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="scene" [camera]="{ position: [-3, 3, 3] }" />
 	`,

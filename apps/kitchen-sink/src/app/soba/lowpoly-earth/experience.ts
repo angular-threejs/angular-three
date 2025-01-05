@@ -61,7 +61,6 @@ export class Marker {
 
 @Component({
 	selector: 'app-marker-icon',
-	standalone: true,
 	template: `
 		@if (withText()) {
 			<div style="position: absolute; font-size: 10px; letter-spacing: -0.5px; left: 17.5px">north</div>

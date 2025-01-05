@@ -3,7 +3,6 @@ import { injectBeforeRender } from 'angular-three';
 import type { Mesh } from 'three';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh>
 			<ngt-box-geometry />

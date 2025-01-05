@@ -19,7 +19,6 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
 	selector: 'render-texture-dodecahedron',
-	standalone: true,
 	template: `
 		<ngt-group [position]="position()" [scale]="scale()">
 			<ngt-mesh
@@ -59,7 +58,6 @@ class Dodecahedron {
 
 @Component({
 	selector: 'render-texture-cube',
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-box-geometry />
@@ -109,7 +107,6 @@ class Cube {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<render-texture-cube />
 		<render-texture-dodecahedron [position]="[0, 1, 0]" [scale]="0.2" />

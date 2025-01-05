@@ -5,7 +5,6 @@ import { NgtsHelper } from './helper';
 
 describe(NgtsHelper.name, () => {
 	@Component({
-		standalone: true,
 		template: `
 			<ngt-mesh>
 				<ngt-box-geometry />

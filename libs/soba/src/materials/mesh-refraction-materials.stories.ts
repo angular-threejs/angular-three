@@ -26,7 +26,6 @@ injectLoader.preload(
 
 @Component({
 	selector: 'diamond-flat',
-	standalone: true,
 	template: `
 		@if (texture(); as envMap) {
 			<ngts-cube-camera [options]="{ envMap, frames: 1, resolution: 256 }">
@@ -76,7 +75,6 @@ class Diamond {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-ambient-light [intensity]="0.5" />
 		<ngt-spot-light #spotLight [position]="[5, 5, -10]" [angle]="0.15" [penumbra]="1" />

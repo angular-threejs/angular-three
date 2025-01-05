@@ -18,28 +18,28 @@ return the actual THREE.js entity instance as the host instance so that we can a
 Let's build a `cursor` directive that will change the cursor to a `pointer` when the element is hovered.
 
 ```angular-ts {'inject ElementRef<Object3D>': 4-5} {'Get localState': 9-10} {'Attach pointer events to host element': 14-15}
-@Directive({selector: '[cursor]', standalone: true})
+@Directive({selector: '[cursor]'})
 export class Cursor {
   constructor() {
 
-		const elementRef = inject<ElementRef<Object3D>>(ElementRef);
-		const nativeElement = elementRef.nativeElement;
+  const elementRef = inject<ElementRef<Object3D>>(ElementRef);
+  const nativeElement = elementRef.nativeElement;
 
-		if (!nativeElement.isObject3D) return;
+  if (!nativeElement.isObject3D) return;
 
-		const localState = getLocalState(nativeElement);
-		if (!localState) return;
+  const localState = getLocalState(nativeElement);
+  if (!localState) return;
 
-		const document = inject(DOCUMENT);
+  const document = inject(DOCUMENT);
 
-		injectObjectEvents(() => nativeElement, {
-			pointerover: () => {
-				document.body.style.cursor = 'pointer';
-			},
-			pointerout: () => {
-				document.body.style.cursor = 'default';
-			},
-		});
+  injectObjectEvents(() => nativeElement, {
+   pointerover: () => {
+    document.body.style.cursor = 'pointer';
+   },
+   pointerout: () => {
+    document.body.style.cursor = 'default';
+   },
+  });
   }
 }
 ```
@@ -55,11 +55,11 @@ are subjected to the events system like `Mesh` etc...
 
 ```angular-html 'cursor'
 <ngt-mesh cursor (pointerover)="hovered.set(true)" (pointerout)="hovered.set(false)">
-	<ngt-box-geometry />
-	<ngt-mesh-standard-material [color]="hovered() ? 'mediumpurple' : 'maroon'" />
+ <ngt-box-geometry />
+ <ngt-mesh-standard-material [color]="hovered() ? 'mediumpurple' : 'maroon'" />
 </ngt-mesh>
 ```
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<CursorScene client:only />
+ <CursorScene client:only />
 </div>

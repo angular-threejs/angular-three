@@ -17,7 +17,6 @@ RectAreaLightUniformsLib.init();
 
 @Component({
 	selector: 'app-light',
-	standalone: true,
 	template: `
 		<ngt-group #group>
 			<ngt-rect-area-light

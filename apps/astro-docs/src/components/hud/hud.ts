@@ -29,7 +29,6 @@ extend(THREE);
 
 @Component({
 	selector: 'app-torus',
-	standalone: true,
 	template: `
 		<ngt-mesh [scale]="scale()" (pointerover)="hovered.set(true)" (pointerout)="hovered.set(false)">
 			<ngt-torus-geometry *args="[1, 0.25, 32, 100]" />
@@ -48,7 +47,6 @@ export class Torus {
 
 @Component({
 	selector: 'app-face-material',
-	standalone: true,
 	template: `
 		<ngt-mesh-standard-material [attach]="['material', index()]" [color]="color()">
 			<ngts-render-texture [options]="{ frames: 6, anisotropy: 16 }">
@@ -80,7 +78,6 @@ export class FaceMaterial {
 
 @Component({
 	selector: 'app-box',
-	standalone: true,
 	template: `
 		<ngt-mesh
 			#mesh
@@ -115,7 +112,6 @@ export class Box {
 
 @Component({
 	selector: 'app-view-cube',
-	standalone: true,
 	template: `
 		<ngt-portal [container]="scene()" [autoRender]="true">
 			<ng-template portalContent>
@@ -163,7 +159,6 @@ export class ViewCube {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color *args="['#dcdcdc']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
@@ -184,7 +179,6 @@ export class Experience {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas [sceneGraph]="scene" />
 	`,

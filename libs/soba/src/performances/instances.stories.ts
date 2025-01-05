@@ -27,7 +27,6 @@ type Data = (typeof data)[number];
 
 @Component({
 	selector: 'instances-shoe',
-	standalone: true,
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngts-instance />
@@ -101,7 +100,6 @@ type ShoeGLTF = GLTF & {
 
 @Component({
 	selector: 'instances-shoes',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngts-instances
@@ -125,7 +123,6 @@ class Shoes {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
 		<ngt-directional-light [intensity]="0.3" [position]="[5, 25, 20]" />

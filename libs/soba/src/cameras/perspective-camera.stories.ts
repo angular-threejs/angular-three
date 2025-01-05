@@ -5,7 +5,6 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 import { positions } from './positions';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-perspective-camera [options]="{ makeDefault: true, position: [0, 0, 10] }" />
 

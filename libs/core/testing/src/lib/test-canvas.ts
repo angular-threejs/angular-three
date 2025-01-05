@@ -19,7 +19,6 @@ import * as THREE from 'three';
 @Component({
 	selector: 'ngt-test-canvas',
 	template: '',
-	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtTestCanvas {

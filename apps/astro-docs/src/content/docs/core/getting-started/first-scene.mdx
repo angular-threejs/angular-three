@@ -23,7 +23,6 @@ This component will be the root of our scene graph.
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  standalone: true,
   template: `
     <!-- we'll fill this in later -->
   `,
@@ -40,14 +39,13 @@ export class SceneGraph {}
 
 The `SceneGraph` component will be rendered by the `NgtCanvas` component.
 
-```angular-ts title="src/app/app.component.ts" {9,11,14}
+```angular-ts title="src/app/app.component.ts" {8,10,13}
 import { Component } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
 import { SceneGraph } from './scene-graph.component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   template: `
     <ngt-canvas [sceneGraph]="sceneGraph" />
   `,
@@ -73,9 +71,9 @@ We'll set up some basic styles in `styles.css`
 ```css title="src/styles.css"
 html,
 body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
+ height: 100%;
+ width: 100%;
+ margin: 0;
 }
 ```
 
@@ -88,7 +86,6 @@ import { SceneGraph } from './scene-graph.component';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   template: `
     <ngt-canvas [sceneGraph]="sceneGraph" />
   `,
@@ -111,7 +108,7 @@ export class AppComponent {
 
 ```html
 <div class="canvas-container">
-	<ngt-canvas [sceneGraph]="sceneGraph" />
+ <ngt-canvas [sceneGraph]="sceneGraph" />
 </div>
 ```
 
@@ -146,7 +143,7 @@ The catalogue isn't limited to THREE.js core entities. We can extend the catalog
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 extend({
-	OrbitControls, // makes ngt-orbit-controls available
+ OrbitControls, // makes ngt-orbit-controls available
 });
 ```
 
@@ -185,7 +182,6 @@ Now that we have extended the THREE.js namespace, we can render a THREE.js entit
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  standalone: true,
   template: `
 +   <ngt-mesh>
 +     <ngt-box-geometry />
@@ -200,21 +196,20 @@ export class SceneGraph {}
 And here's the result:
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<FirstScene client:only step="stepOne" />
+ <FirstScene client:only step="stepOne" />
 </div>
 
 ## Animation
 
 The best way to animate a THREE.js entity is to participate in the animation loop with `injectBeforeRender`. Let's animate the cube by rotating it on the X and Y axes.
 
-```angular-ts title="src/app/scene-graph.component.ts" {"Import injectBeforeRender": 2-3} {"Use template variable": 9-10} {"Get the reference with viewChild": 18-19} {"Animate the cube": 22-27}
+```angular-ts title="src/app/scene-graph.component.ts" {"Import injectBeforeRender": 2-3} {"Use template variable": 8-9} {"Get the reference with viewChild": 17-18} {"Animate the cube": 21-26}
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ElementRef, viewChild } from '@angular/core';
 
 import { injectBeforeRender } from 'angular-three';
 import { Mesh } from 'three';
 
 @Component({
-  standalone: true,
   template: `
 
     <ngt-mesh #mesh>
@@ -240,7 +235,7 @@ export class SceneGraph {
 ```
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<FirstScene client:only step="stepTwo" />
+ <FirstScene client:only step="stepTwo" />
 </div>
 
 ## Make a Component
@@ -256,7 +251,6 @@ Using Angular means we can make components out of our template. Let's do that fo
 
     @Component({
       selector: 'app-cube',
-      standalone: true,
       template: `
         <ngt-mesh #mesh>
           <ngt-box-geometry />
@@ -285,7 +279,6 @@ Using Angular means we can make components out of our template. Let's do that fo
     +import { Cube } from './cube.component';
 
     @Component({
-      standalone: true,
       template: `
     -   <ngt-mesh>
     -     <ngt-box-geometry />
@@ -318,7 +311,6 @@ import { Mesh } from 'three';
 
 @Component({
   selector: 'app-cube',
-  standalone: true,
   template: `
     <ngt-mesh
       #mesh
@@ -352,7 +344,7 @@ export class Cube {
 Our cube is now _interactive_!
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<FirstScene client:only step="stepThree" />
+ <FirstScene client:only step="stepThree" />
 </div>
 
 ### Render another Cube
@@ -372,7 +364,6 @@ import { Mesh } from 'three';
 
 @Component({
   selector: 'app-cube',
-  standalone: true,
   template: `
     <ngt-mesh
       #mesh
@@ -417,7 +408,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@ang
 import { Cube } from './cube.component';
 
 @Component({
-  standalone: true,
   template: `
 -   <app-cube />
 +   <app-cube [position]="[1.5, 0, 0]" />
@@ -433,7 +423,7 @@ export class SceneGraph {}
 and now we have 2 cubes that have their own states, and react to events independently.
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<FirstScene client:only step="stepFour" />
+ <FirstScene client:only step="stepFour" />
 </div>
 
 ## Lighting
@@ -445,7 +435,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@ang
 import { Cube } from './cube.component';
 
 @Component({
-  standalone: true,
   template: `
 +    <ngt-ambient-light [intensity]="0.5" />
 +    <ngt-spot-light [position]="10" [intensity]="0.5 * Math.PI" [angle]="0.15" [penumbra]="1" [decay]="0" />
@@ -472,7 +461,6 @@ import { Mesh } from 'three';
 
 @Component({
   selector: 'app-cube',
-  standalone: true,
   template: `
     <ngt-mesh
       #mesh
@@ -510,7 +498,7 @@ export class Cube {
 Our cubes look better now, with dimensionality, showing that they are 3D objects.
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<FirstScene client:only step="stepFive" />
+ <FirstScene client:only step="stepFive" />
 </div>
 
 ## Bonus: Take control of the camera
@@ -534,7 +522,6 @@ import { Cube } from './cube.component';
 +extend({ OrbitControls }); // makes ngt-orbit-controls available
 
 @Component({
-  standalone: true,
   template: `
     <ngt-ambient-light [intensity]="0.5" />
     <ngt-spot-light [position]="10" [intensity]="0.5 * Math.PI" [angle]="0.15" [penumbra]="1" [decay]="0" />
@@ -568,7 +555,7 @@ With Angular Three, we use `NgtArgs` structural directive to pass _Constructor A
 To access the `camera` and `glDomElement`, we use `injectStore` to access the state of the canvas.
 
 <div class="h-96 w-full border border-dashed border-accent-500 rounded">
-	<FirstScene client:only step="stepSix" />
+ <FirstScene client:only step="stepSix" />
 </div>
 
 And that concludes our guide. We have learned how to create a basic scene, add some lights, and make our cubes interactive.

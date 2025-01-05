@@ -14,7 +14,7 @@ featured: true
 import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
 import HudScene, { content as hudContent } from '../../../components/hud/hud?includeContent';
 import LightformerScene, {
-	content as lightformerContent,
+ content as lightformerContent,
 } from '../../../components/lightformer/lightformer?includeContent';
 
 After almost a year of development, we're thrilled to announce the release of Angular Three v2! 🎉 Through countless examples and tutorials from other [THREE.js](https://threejs.org) ecosystems, we've identified the shortcomings of the previous version of Angular Three. Since then, we've been working tirelessly to enhance the library, making it more stable, performant, and predictable when working with THREE.js scene graphs.
@@ -103,38 +103,38 @@ export class MyModel {
 
 ```angular-ts {'Signal Queries in action': 14-15} {'Integrating seamlessly with Signals': 17-21} {'Using Signals result to control the physics body': 29-31}
 @Component({
-	template: `
-		<ngt-mesh #mesh [castShadow]="true" [receiveShadow]="true">
-			<ngt-box-geometry *args="[4, 4, 4]" />
-			<ngt-mesh-lambert-material color="white" />
-		</ngt-mesh>
-	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
+ template: `
+  <ngt-mesh #mesh [castShadow]="true" [receiveShadow]="true">
+   <ngt-box-geometry *args="[4, 4, 4]" />
+   <ngt-mesh-lambert-material color="white" />
+  </ngt-mesh>
+ `,
+ schemas: [CUSTOM_ELEMENTS_SCHEMA],
+ changeDetection: ChangeDetectionStrategy.OnPush,
+ imports: [NgtArgs],
 })
 export class Box {
 
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+ meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 
-	boxApi = injectBox(
-	  () => ({ args: [4, 4, 4], mass: 1, type: 'Kinematic' }),
-	  this.meshRef
+ boxApi = injectBox(
+   () => ({ args: [4, 4, 4], mass: 1, type: 'Kinematic' }),
+   this.meshRef
   );
 
-	constructor() {
-		injectBeforeRender(({ clock }) => {
-			const api = this.boxApi();
-			if (!api) return;
-			const t = clock.getElapsedTime();
+ constructor() {
+  injectBeforeRender(({ clock }) => {
+   const api = this.boxApi();
+   if (!api) return;
+   const t = clock.getElapsedTime();
 
 
-			api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
-			api.rotation.set(Math.sin(t * 6), Math.cos(t * 6), 0);
-		});
-	}
+   api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
+   api.rotation.set(Math.sin(t * 6), Math.cos(t * 6), 0);
+  });
+ }
 }
 ```
 
@@ -212,7 +212,7 @@ If you are feeling good about Zoneless, you can even enable it with `withExperim
 
 ```ts
 bootstrapApplication(AppComponent, {
-	providers: [provideExperimentalZonelessChangeDetection()],
+ providers: [provideExperimentalZonelessChangeDetection()],
 });
 ```
 
@@ -340,14 +340,14 @@ The main scene contains the torus (donut). The view cube (HUD) is rendered in a 
 You can check out the code here: [HudScene](https://github.com/angular-threejs/angular-three/blob/main/apps/kitchen-sink/src/app/soba/hud/experience.ts)
 
 <Tabs>
-	<TabItem label="Preview">
-		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-			<HudScene client:only />
-		</div>
-	</TabItem>
-	<TabItem label="Code">
-		<Code code={hudContent} lang="angular-ts" />
-	</TabItem>
+ <TabItem label="Preview">
+  <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+   <HudScene client:only />
+  </div>
+ </TabItem>
+ <TabItem label="Code">
+  <Code code={hudContent} lang="angular-ts" />
+ </TabItem>
 </Tabs>
 
 #### Environment with Lightformers
@@ -355,14 +355,14 @@ You can check out the code here: [HudScene](https://github.com/angular-threejs/a
 `NgtsEnvironment` with content projection has never worked correctly. Now with v2 `NgtPortal`, we can finally have proper `NgtsEnvironment` content with `NgtsLightformer` to control the lighting of the environment.
 
 <Tabs>
-	<TabItem label="Preview">
-		<div class="h-96 w-full border border-dashed border-accent-500 rounded">
-			<LightformerScene client:only />
-		</div>
-	</TabItem>
-	<TabItem label="Code">
-		<Code code={lightformerContent} lang="angular-ts" />
-	</TabItem>
+ <TabItem label="Preview">
+  <div class="h-96 w-full border border-dashed border-accent-500 rounded">
+   <LightformerScene client:only />
+  </div>
+ </TabItem>
+ <TabItem label="Code">
+  <Code code={lightformerContent} lang="angular-ts" />
+ </TabItem>
 </Tabs>
 
 ### Improved documentation 📖
@@ -399,7 +399,6 @@ Here's a simple example of how you might use the testing utilities:
 import { NgtTestBed } from 'angular-three/testing';
 
 @Component({
-  standalone: true,
   template: `
     <ngt-mesh #mesh (click)="clicked.set(!clicked())">
       <ngt-box-geometry />

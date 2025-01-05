@@ -9,7 +9,6 @@ import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
 	selector: 'gelatinous-cube',
-	standalone: true,
 	template: `
 		<ngt-group [dispose]="null">
 			@if (gltf(); as gltf) {
@@ -57,7 +56,6 @@ class GelatinousCube {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-ambient-light />
 

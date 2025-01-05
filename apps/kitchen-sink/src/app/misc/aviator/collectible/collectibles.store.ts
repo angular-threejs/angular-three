@@ -25,7 +25,6 @@ export interface CollectiblePowerUp extends CollectibleItem {
 }
 
 @Directive({
-	standalone: true,
 	hostDirectives: [{ directive: Spawnable, inputs: ['initialAngle', 'initialDistance', 'positionX', 'positionY'] }],
 })
 export class Collectible {

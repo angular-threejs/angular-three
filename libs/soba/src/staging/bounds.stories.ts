@@ -8,8 +8,6 @@ import { Mesh, MeshStandardMaterial } from 'three';
 import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
-	selector: 'bounds-model',
-	standalone: true,
 	template: `
 		@if (geometry() && material()) {
 			<ngt-mesh
@@ -54,7 +52,6 @@ class Model {
 
 @Component({
 	selector: 'bounds-select-to-zoom',
-	standalone: true,
 	template: `
 		<ngt-group (click)="onClick($any($event))" (pointermissed)="onPointerMissed($any($event))">
 			<ng-content />
@@ -81,7 +78,6 @@ class SelectToZoom {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color *args="['#ff5f40']" attach="background" />
 

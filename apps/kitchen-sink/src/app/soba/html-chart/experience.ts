@@ -18,7 +18,6 @@ declare const Chart: any;
 
 @Component({
 	selector: 'app-chart-container',
-	standalone: true,
 	template: `
 		<canvas #chartContainer></canvas>
 	`,

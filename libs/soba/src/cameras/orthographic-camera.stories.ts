@@ -5,7 +5,6 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 import { positions } from './positions';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-orthographic-camera [options]="{ makeDefault: true, zoom: 40, position: [0, 0, 10] }" />
 

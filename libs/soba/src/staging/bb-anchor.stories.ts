@@ -10,7 +10,6 @@ import { makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
 	selector: 'bb-anchor-mesh-object',
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-sphere-geometry *args="[0.25]" />
@@ -25,7 +24,6 @@ class MeshObject {}
 
 @Component({
 	selector: 'bb-anchor-wrapper',
-	standalone: true,
 	template: `
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 		<ngt-mesh #mesh>
@@ -51,7 +49,6 @@ class BBAnchorWrapper {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<bb-anchor-wrapper [options]="options()" [drawBoundingBox]="drawBoundingBox()">
 			<ngts-html>
@@ -71,7 +68,6 @@ class WithHTMLBBAnchorStory {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<bb-anchor-wrapper [options]="options()" [drawBoundingBox]="drawBoundingBox()">
 			<bb-anchor-mesh-object />

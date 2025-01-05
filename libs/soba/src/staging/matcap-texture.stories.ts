@@ -13,7 +13,6 @@ interface SuzyGLTF extends GLTF {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['#291203']" />
 

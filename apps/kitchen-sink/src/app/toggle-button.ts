@@ -2,7 +2,6 @@ import { computed, Directive, model } from '@angular/core';
 
 @Directive({
 	selector: 'button[toggleButton]',
-	standalone: true,
 	host: {
 		class: 'border rounded px-2 py-1',
 		'(click)': 'onClick()',

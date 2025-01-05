@@ -14,7 +14,6 @@ import { makeDecorators, makeStoryFunction } from '../setup-canvas';
 
 @Component({
 	selector: 'cube-camera-sphere',
-	standalone: true,
 	template: `
 		<ngts-cube-camera [options]="options()">
 			<ngt-mesh *cameraContent="let texture" #mesh>
@@ -43,7 +42,6 @@ class Sphere {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-fog *args="['#f0f0f0', 100, 200]" attach="fog" />
 

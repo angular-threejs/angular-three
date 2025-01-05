@@ -14,7 +14,6 @@ import { Mesh } from 'three';
 import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<!-- NOTE: we need to set frames to Infinity if we want to change the color of the lightformer -->
 		<ngts-environment [options]="{ background: true, preset: 'sunset', frames: Infinity }">

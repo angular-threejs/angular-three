@@ -12,7 +12,6 @@ import type { Mesh } from 'three';
 
 @Component({
 	selector: 'app-cube',
-	standalone: true,
 	template: `
 		<ngt-mesh
 			#mesh
@@ -47,7 +46,6 @@ class Cube {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<app-cube [position]="[1.5, 0, 0]" />
 		<app-cube [position]="[-1.5, 0, 0]" />

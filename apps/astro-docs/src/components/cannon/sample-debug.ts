@@ -20,7 +20,6 @@ extend(THREE);
 
 @Component({
 	selector: 'app-plane',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [receiveShadow]="true">
 			<ngt-plane-geometry *args="[1000, 1000]" />
@@ -40,7 +39,6 @@ export class Plane {
 
 @Component({
 	selector: 'app-cube',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
 			<ngt-box-geometry />
@@ -62,7 +60,6 @@ export class Cube {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-color attach="background" *args="['lightblue']" />
 		<ngt-ambient-light />
@@ -108,7 +105,6 @@ export class SceneGraph {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-canvas
 			[sceneGraph]="sceneGraph"

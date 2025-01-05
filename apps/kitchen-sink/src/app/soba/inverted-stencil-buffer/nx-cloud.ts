@@ -19,7 +19,6 @@ type NxCloudGLTF = GLTF & {
 };
 @Component({
 	selector: 'app-nx-cloud',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-3, -0.5, 0]" [rotation]="[Math.PI / 2, 0, 0]">

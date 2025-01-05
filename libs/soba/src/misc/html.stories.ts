@@ -7,7 +7,6 @@ import { makeDecorators, makeStoryFunction, makeStoryObject, Turnable } from '..
 
 @Component({
 	selector: 'html-scene',
-	standalone: true,
 	template: `
 		<ngt-group turnable>
 			<ngt-mesh [position]="[3, 6, 4]">
@@ -56,7 +55,6 @@ class HtmlScene {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<html-scene color="palegreen" [transform]="true">
 			<ngts-html [options]="htmlOptions()">

@@ -10,7 +10,6 @@ extend(THREE);
 
 @Component({
 	selector: 'soba-wrapper',
-	standalone: true,
 	template: `
 		<ngt-canvas
 			[sceneGraph]="sceneGraph"

@@ -11,7 +11,6 @@ type AngularGLTF = GLTF & {
 
 @Component({
 	selector: 'app-angular',
-	standalone: true,
 	template: `
 		@if (gltf(); as gltf) {
 			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-2.75, -3, 0]" [rotation]="[Math.PI / 2, 0, 0]">

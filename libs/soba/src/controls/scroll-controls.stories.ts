@@ -26,7 +26,6 @@ import { makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-can
 
 @Component({
 	selector: 'scroll-littlest-tokyo',
-	standalone: true,
 	template: `
 		<ngt-primitive *args="[scene()]" [parameters]="{ position: [0, 2.5, 0], scale: 0.02 }" />
 	`,
@@ -76,7 +75,6 @@ class LittlestTokyo {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-fog *args="['#ff5020', 5, 18]" attach="fog" />
 		<ngt-ambient-light [intensity]="0.03" />
@@ -108,7 +106,6 @@ class LittlestTokyoStory {
 
 @Component({
 	selector: 'scroll-suzanne',
-	standalone: true,
 	template: `
 		<ngt-group [position]="position()" [scale]="scale()">
 			@if (gltf(); as gltf) {
@@ -151,7 +148,6 @@ class Suzanne {
 
 @Component({
 	selector: 'scroll-html-content',
-	standalone: true,
 	template: `
 		<h1
 			[style]="{ position: 'absolute', top: canvasSize().height * 0.1 + 'px', right: canvasSize().width * 0.2 + 'px' }"
@@ -199,7 +195,6 @@ class HtmlContent extends NgtHTML {
 }
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-scroll-controls [(progress)]="progress" [options]="options()">
 			<ngt-group ngtsScrollCanvas>

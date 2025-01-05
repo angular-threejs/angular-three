@@ -46,7 +46,6 @@ const shader = {
 };
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-environment
 			[options]="{ files: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/venice_sunset_1k.hdr' }"

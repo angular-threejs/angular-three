@@ -13,7 +13,6 @@ import { makeDecorators, makeStoryObject, number, select } from '../setup-canvas
 
 @Component({
 	selector: 'environment-torus',
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-torus-knot-geometry *args="[1, 0.5, 128, 32]" />
@@ -27,7 +26,6 @@ import { makeDecorators, makeStoryObject, number, select } from '../setup-canvas
 class Torus {}
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-environment [options]="options()" />
 		<environment-torus />
@@ -79,7 +77,6 @@ export const GainMap = makeStoryObject(DefaultEnvironmentStory, {
 });
 
 @Component({
-	standalone: true,
 	template: `
 		<ngts-environment [options]="options()" />
 		<ngt-mesh [position]="[0, 5, 0]">

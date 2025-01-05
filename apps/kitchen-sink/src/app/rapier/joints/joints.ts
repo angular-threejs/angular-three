@@ -30,7 +30,7 @@ export class RopeSegment {
 	rigidBodyRef = viewChild.required(NgtrRigidBody);
 }
 
-@Directive({ selector: 'ng-container[ropeJoint]', standalone: true })
+@Directive({ selector: 'ng-container[ropeJoint]' })
 export class RopeJoint {
 	bodyA = input.required<NgtrRigidBody>();
 	bodyB = input.required<NgtrRigidBody>();

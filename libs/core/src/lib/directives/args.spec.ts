@@ -44,7 +44,6 @@ describe('args', () => {
 });
 
 @Component({
-	standalone: true,
 	template: '',
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [NgtArgs],
