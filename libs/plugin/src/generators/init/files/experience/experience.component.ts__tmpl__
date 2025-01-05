@@ -5,7 +5,6 @@ import { Mesh, BoxGeometry, MeshBasicMaterial } from 'three';
 extend({ Mesh, BoxGeometry, MeshBasicMaterial });
 
 @Component({
-  standalone: true,
   template: `
     <ngt-mesh #mesh>
       <ngt-box-geometry />
