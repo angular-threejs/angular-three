@@ -35,35 +35,34 @@ The function also has static methods for preloading and setting the decoder path
 
 ```ts
 @Component({
-	selector: 'app-suzi',
-	standalone: true,
-	template: `
-		<ngt-primitive *args="[scene()]" [rotation]="[-0.63, 0, 0]" [scale]="2" [position]="[0, -1.175, 0]" />
-	`,
-	imports: [NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+ selector: 'app-suzi',
+ template: `
+  <ngt-primitive *args="[scene()]" [rotation]="[-0.63, 0, 0]" [scale]="2" [position]="[0, -1.175, 0]" />
+ `,
+ imports: [NgtArgs],
+ schemas: [CUSTOM_ELEMENTS_SCHEMA],
+ changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Suzi {
-	gltf = injectGLTF(() => './suzanne-high-poly.gltf');
+ gltf = injectGLTF(() => './suzanne-high-poly.gltf');
 
-	scene = computed(() => {
-		const gltf = this.gltf();
-		if (!gltf) return null;
-		const { scene, materials } = gltf;
-		scene.traverse((obj) => (obj as any).isMesh && (obj.receiveShadow = obj.castShadow = true));
+ scene = computed(() => {
+  const gltf = this.gltf();
+  if (!gltf) return null;
+  const { scene, materials } = gltf;
+  scene.traverse((obj) => (obj as any).isMesh && (obj.receiveShadow = obj.castShadow = true));
 
-		const material = materials['default'] as MeshStandardMaterial;
+  const material = materials['default'] as MeshStandardMaterial;
 
-		material.color.set('orange');
-		material.roughness = 0;
-		material.normalMap = new CanvasTexture(new FlakesTexture(), UVMapping, RepeatWrapping, RepeatWrapping);
-		material.normalMap.flipY = false;
-		material.normalMap.repeat.set(40, 40);
-		material.normalScale.set(0.05, 0.05);
+  material.color.set('orange');
+  material.roughness = 0;
+  material.normalMap = new CanvasTexture(new FlakesTexture(), UVMapping, RepeatWrapping, RepeatWrapping);
+  material.normalMap.flipY = false;
+  material.normalMap.repeat.set(40, 40);
+  material.normalScale.set(0.05, 0.05);
 
-		return scene;
-	});
+  return scene;
+ });
 }
 ```
 
@@ -77,19 +76,19 @@ The function also has a static method for preloading textures:
 
 ```ts
 @Component({
-	template: `
-		<ngt-mesh>
-			<ngt-mesh-physical-material [normalMap]="normalMap()" [roughnessMap]="roughnessMap()" />
-		</ngt-mesh>
-	`,
+ template: `
+  <ngt-mesh>
+   <ngt-mesh-physical-material [normalMap]="normalMap()" [roughnessMap]="roughnessMap()" />
+  </ngt-mesh>
+ `,
 })
 export class MyCmp {
-	private textures = injectTexture(() => ({
-		roughnessMap: 'roughness_floor.jpeg',
-		normalMap: 'NORM.jpg',
-	}));
-	roughnessMap = computed(() => this.textures()?.roughnessMap || null);
-	normalMap = computed(() => this.textures()?.normalMap || null);
+ private textures = injectTexture(() => ({
+  roughnessMap: 'roughness_floor.jpeg',
+  normalMap: 'NORM.jpg',
+ }));
+ roughnessMap = computed(() => this.textures()?.roughnessMap || null);
+ normalMap = computed(() => this.textures()?.normalMap || null);
 }
 ```
 
@@ -97,12 +96,12 @@ export class MyCmp {
 
 ```ts
 function injectProgress(injector?: Injector): Signal<{
-	errors: string[];
-	active: boolean;
-	progress: number;
-	item: string;
-	loaded: number;
-	total: number;
+ errors: string[];
+ active: boolean;
+ progress: number;
+ item: string;
+ loaded: number;
+ total: number;
 }>;
 ```
 

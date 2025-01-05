@@ -34,7 +34,7 @@ const defaultOptions: NgtsCameraShakeOptions = {
 	rollFrequency: 0.1,
 };
 
-@Directive({ selector: 'ngts-camera-shake', standalone: true })
+@Directive({ selector: 'ngts-camera-shake' })
 export class NgtsCameraShake {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 

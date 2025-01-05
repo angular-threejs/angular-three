@@ -54,7 +54,7 @@ export interface NgtsRenderTextureOptions extends Partial<Omit<NgtTexture, 'atta
 	compute?: (event: any, state: any, previous: any) => false | undefined;
 }
 
-@Directive({ standalone: true, selector: '[ngtsRenderTextureContainer]' })
+@Directive({ selector: '[ngtsRenderTextureContainer]' })
 export class NgtsRenderTextureContainer {
 	fbo = input.required<WebGLRenderTarget>();
 	renderPriority = input.required<number>();
@@ -116,7 +116,7 @@ const defaultOptions: NgtsRenderTextureOptions = {
 	generateMipmaps: false,
 };
 
-@Directive({ selector: 'ng-template[renderTextureContent]', standalone: true })
+@Directive({ selector: 'ng-template[renderTextureContent]' })
 export class NgtsRenderTextureContent {
 	static ngTemplateContextGuard(
 		_: NgtsRenderTextureContent,

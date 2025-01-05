@@ -1,7 +1,7 @@
 import { Directive, effect } from '@angular/core';
 import { injectStore } from 'angular-three';
 
-@Directive({ standalone: true, selector: 'ngts-bake-shadows' })
+@Directive({ selector: 'ngts-bake-shadows' })
 export class NgtsBakeShadows {
 	constructor() {
 		const store = injectStore();

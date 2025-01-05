@@ -1,7 +1,7 @@
 import { DestroyRef, Directive, effect, inject, input, untracked } from '@angular/core';
 import { injectStore } from 'angular-three';
 
-@Directive({ selector: 'ngts-adaptive-dpr', standalone: true })
+@Directive({ selector: 'ngts-adaptive-dpr' })
 export class NgtsAdaptiveDpr {
 	pixelated = input(false);
 

@@ -40,7 +40,7 @@ import { FullScreenQuad } from 'three-stdlib';
 /**
  * This directive is used inside of the render texture, hence has access to the render texture store (a portal store)
  */
-@Directive({ selector: 'ngts-manage-portal-scene', standalone: true })
+@Directive({ selector: 'ngts-manage-portal-scene' })
 export class ManagePortalScene {
 	events = input<boolean>();
 	rootScene = input.required<Scene>();

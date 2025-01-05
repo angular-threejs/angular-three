@@ -36,7 +36,6 @@ const defaultOptions: NgtsMaskOptions = {
 
 @Component({
 	selector: 'ngts-mask',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [renderOrder]="-id()" [parameters]="parameters()">
 			<ng-content />

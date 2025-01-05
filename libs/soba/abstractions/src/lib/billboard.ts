@@ -26,7 +26,6 @@ const defaultOptions: NgtsBillboardOptions = {
 
 @Component({
 	selector: 'ngts-billboard',
-	standalone: true,
 	template: `
 		<ngt-group #group [parameters]="parameters()">
 			<ngt-group #inner>

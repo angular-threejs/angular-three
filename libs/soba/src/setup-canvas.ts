@@ -323,7 +323,7 @@ export function makeDecorators(providers: Provider[] = [], ...decoratorFns: Deco
 	return [moduleMetadata({ imports: [StorybookSetup], providers }), ...decoratorFns];
 }
 
-@Directive({ selector: '[turnable]', standalone: true })
+@Directive({ selector: '[turnable]' })
 export class Turnable {
 	constructor() {
 		const element = inject<ElementRef<Object3D>>(ElementRef);

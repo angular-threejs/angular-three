@@ -100,7 +100,7 @@ const defaultBackground: NgtsEnvironmentOptions = {
 	background: false,
 };
 
-@Directive({ standalone: true, selector: 'ngts-environment-map' })
+@Directive({ selector: 'ngts-environment-map' })
 export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 	envSet = output<void>();
@@ -145,7 +145,7 @@ export class NgtsEnvironmentMap {
 	}
 }
 
-@Directive({ standalone: true, selector: 'ngts-environment-cube' })
+@Directive({ selector: 'ngts-environment-cube' })
 export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
 	envSet = output<void>();

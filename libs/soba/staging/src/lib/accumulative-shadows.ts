@@ -57,7 +57,6 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 
 @Component({
 	selector: 'ngts-accumulative-shadows',
-	standalone: true,
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-group #lights [traverse]="nullTraversal">

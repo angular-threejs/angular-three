@@ -42,7 +42,7 @@ export function injectIntersect<TObject extends Object3D>(
 	});
 }
 
-@Directive({ standalone: true, selector: '[intersect]' })
+@Directive({ selector: '[intersect]' })
 export class NgtsIntersect {
 	intersect = model(false);
 

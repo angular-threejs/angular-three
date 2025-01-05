@@ -35,7 +35,6 @@ const defaultOptions: NgtsLoaderOptions = {
 
 @Component({
 	selector: 'ngts-loader',
-	standalone: true,
 	template: `
 		@if (shown()) {
 			<div

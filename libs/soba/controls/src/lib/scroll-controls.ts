@@ -54,7 +54,6 @@ const defaultOptions: NgtsScrollControlsOptions = {
 
 @Component({
 	selector: 'ngts-scroll-controls',
-	standalone: true,
 	template: `
 		<ng-content />
 	`,
@@ -271,7 +270,7 @@ export class NgtsScrollControls {
 	}
 }
 
-@Directive({ selector: 'ngt-group[ngtsScrollCanvas]', standalone: true })
+@Directive({ selector: 'ngt-group[ngtsScrollCanvas]' })
 export class NgtsScrollCanvas {
 	private host = inject<ElementRef<Group>>(ElementRef);
 	private scrollControls = inject(NgtsScrollControls);
@@ -294,7 +293,6 @@ export class NgtsScrollCanvas {
 
 @Directive({
 	selector: 'div[ngtsScrollHTML]',
-	standalone: true,
 	host: { style: 'position: absolute; top: 0; left: 0; will-change: transform;' },
 	providers: [provideHTMLDomElement([NgtsScrollControls], (scrollControls) => scrollControls.fixed)],
 })

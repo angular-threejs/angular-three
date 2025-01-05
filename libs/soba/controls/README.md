@@ -38,37 +38,36 @@ Other options are available in the `camera-controls` library. For more informati
 
 ```ts
 @Component({
-	standalone: true,
-	template: `
-		<ngt-mesh>
-			<ngt-box-geometry />
-			<ngt-mesh-basic-material color="red" [wireframe]="true" />
-		</ngt-mesh>
+ template: `
+  <ngt-mesh>
+   <ngt-box-geometry />
+   <ngt-mesh-basic-material color="red" [wireframe]="true" />
+  </ngt-mesh>
 
-		<ngt-grid-helper *args="[50, 50]" [position]="[0, -1, 0]" />
+  <ngt-grid-helper *args="[50, 50]" [position]="[0, -1, 0]" />
 
-		<ngts-camera-controls />
-	`,
-	imports: [NgtsCameraControls, NgtArgs],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  <ngts-camera-controls />
+ `,
+ imports: [NgtsCameraControls, NgtArgs],
+ schemas: [CUSTOM_ELEMENTS_SCHEMA],
+ changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DefaultCameraControlsStory {
-	rotate = input<keyof typeof rotations | 'none'>('none');
+ rotate = input<keyof typeof rotations | 'none'>('none');
 
-	cameraControlsRef = viewChild.required(NgtsCameraControls);
+ cameraControlsRef = viewChild.required(NgtsCameraControls);
 
-	constructor() {
-		effect(() => {
-			const [rotate, controls] = [this.rotate(), this.cameraControlsRef().controls()];
-			if (rotate !== 'none') {
-				const [theta, phi, animate] = rotations[rotate];
-				void controls.rotate(theta, phi, animate);
-			} else {
-				void controls.reset(true);
-			}
-		});
-	}
+ constructor() {
+  effect(() => {
+   const [rotate, controls] = [this.rotate(), this.cameraControlsRef().controls()];
+   if (rotate !== 'none') {
+    const [theta, phi, animate] = rotations[rotate];
+    void controls.rotate(theta, phi, animate);
+   } else {
+    void controls.reset(true);
+   }
+  });
+ }
 }
 ```
 

@@ -57,7 +57,6 @@ const defaultOptions: NgtsBoundsOptions = {
 
 @Component({
 	selector: 'ngts-bounds',
-	standalone: true,
 	template: `
 		<ngt-group #group>
 			<ng-content />

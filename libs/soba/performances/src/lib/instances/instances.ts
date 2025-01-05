@@ -24,7 +24,6 @@ const scale = new Vector3();
 
 @Component({
 	selector: 'ngts-instance',
-	standalone: true,
 	template: `
 		<ngt-position-mesh #positionMesh [instance]="instances.instancedMeshRef()" [parameters]="options()">
 			<ng-content />

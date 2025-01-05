@@ -27,7 +27,6 @@ const defaultHtmlOptions: NgtsHTMLOptions = {
 
 @Component({
 	selector: 'ngts-html',
-	standalone: true,
 	template: `
 		<ngt-group #group [parameters]="parameters()">
 			@if (occlude() && !isRaycastOcclusion()) {

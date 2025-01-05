@@ -20,7 +20,6 @@ export interface NgtsBBAnchorOptions extends Partial<NgtGroup> {
 
 @Component({
 	selector: 'ngts-bb-anchor',
-	standalone: true,
 	template: `
 		<ngt-group #bbAnchor [parameters]="parameters()">
 			<ng-content />

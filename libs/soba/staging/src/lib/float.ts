@@ -30,7 +30,6 @@ const defaultOptions: NgtsFloatOptions = {
 
 @Component({
 	selector: 'ngts-float',
-	standalone: true,
 	template: `
 		<ngt-group [parameters]="parameters()">
 			<ngt-group #float [matrixAutoUpdate]="false">

@@ -111,7 +111,7 @@ export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }
 	});
 }
 
-@Directive({ selector: 'ng-template[fbo]', standalone: true })
+@Directive({ selector: 'ng-template[fbo]' })
 export class NgtsFBO {
 	fbo = input({} as { width: NgtsFBOParams['width']; height: NgtsFBOParams['height'] } & FBOSettings);
 

@@ -84,7 +84,7 @@ export interface NgtsNormalTextureOptions extends NgtsNormalTextureSettings {
 	id?: number | string;
 }
 
-@Directive({ selector: 'ng-template[normalTexture]', standalone: true })
+@Directive({ selector: 'ng-template[normalTexture]' })
 export class NgtsNormalTexture {
 	normalTexture = input<NgtsNormalTextureOptions>();
 	normalTextureLoaded = output<Texture[]>();

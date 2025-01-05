@@ -27,7 +27,6 @@ const defaultOptions: NgtsDecalOptions = {
 
 @Component({
 	selector: 'ngts-decal',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
 			<ngt-value [rawValue]="true" attach="material.transparent" />

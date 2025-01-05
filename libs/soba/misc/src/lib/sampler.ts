@@ -155,7 +155,6 @@ const defaultOptions: NgtsSamplerOptions = {
 
 @Component({
 	selector: 'ngts-sampler',
-	standalone: true,
 	template: `
 		<ngt-group #group [parameters]="parameters()">
 			<ng-content />

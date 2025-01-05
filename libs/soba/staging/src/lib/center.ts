@@ -57,7 +57,6 @@ const defaultOptions: Partial<NgtGroup> & NgtsCenterOptions = {
 
 @Component({
 	selector: 'ngts-center',
-	standalone: true,
 	template: `
 		<ngt-group #group [parameters]="parameters()">
 			<ngt-group #outer>

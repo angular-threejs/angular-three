@@ -21,7 +21,6 @@ const defaultOptions: NgtsDetailedOptions = {
 
 @Component({
 	selector: 'ngts-detailed',
-	standalone: true,
 	template: `
 		<ngt-lOD #lod [parameters]="parameters()">
 			<ng-content />

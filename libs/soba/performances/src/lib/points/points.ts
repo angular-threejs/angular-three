@@ -16,7 +16,6 @@ import { NgtPositionPoint, PositionPoint } from './position-point';
 
 @Component({
 	selector: 'ngts-point',
-	standalone: true,
 	template: `
 		<ngt-position-point #positionPoint [parameters]="options()" [instance]="points.pointsRef()">
 			<ng-content />
@@ -44,7 +43,6 @@ export class NgtsPoint {
 
 @Component({
 	selector: 'ngts-points-buffer',
-	standalone: true,
 	template: `
 		<ngt-points #points [parameters]="options()">
 			<ngt-buffer-geometry>
@@ -118,7 +116,6 @@ const defaultInstancesOptions: NgtsPointsInstancesOptions = { limit: 1000 };
 
 @Component({
 	selector: 'ngts-points-instances',
-	standalone: true,
 	template: `
 		<ngt-points
 			#points

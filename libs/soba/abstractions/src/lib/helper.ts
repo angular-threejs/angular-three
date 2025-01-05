@@ -66,7 +66,6 @@ export function injectHelper<
 }
 
 @Component({
-	standalone: true,
 	selector: 'ngts-helper',
 	template: `
 		<ngt-object3D #helper />

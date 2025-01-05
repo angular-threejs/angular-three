@@ -17,7 +17,6 @@ import { SegmentObject } from './segment-object';
 
 @Component({
 	selector: 'ngts-segment',
-	standalone: true,
 	template: `
 		<ngt-segment-object #segment [color]="color()" [start]="normalizedStart()" [end]="normalizedEnd()" />
 	`,

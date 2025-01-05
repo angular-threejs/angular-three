@@ -50,7 +50,6 @@ const defaultFaceMaterialOptions: NgtsViewcubeCommonOptions = {
 
 @Component({
 	selector: 'viewcube-face-material',
-	standalone: true,
 	template: `
 		<ngt-mesh-basic-material
 			[attach]="['material', index()]"

@@ -83,7 +83,7 @@ export interface NgtsMatcapTextureOptions {
 	format?: number;
 }
 
-@Directive({ selector: 'ng-template[matcapTexture]', standalone: true })
+@Directive({ selector: 'ng-template[matcapTexture]' })
 export class NgtsMatcapTexture {
 	matcapTexture = input<NgtsMatcapTextureOptions>();
 	matcapTextureLoaded = output<Texture[]>();

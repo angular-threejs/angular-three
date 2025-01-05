@@ -28,7 +28,7 @@ const [q1, q2] = [new Quaternion(), new Quaternion()];
 const target = new Vector3();
 const targetPosition = new Vector3();
 
-@Directive({ selector: 'ng-template[gizmoHelperContent]', standalone: true })
+@Directive({ selector: 'ng-template[gizmoHelperContent]' })
 export class NgtsGizmoHelperContent {
 	static ngTemplateContextGuard(_: NgtsGizmoHelperContent, ctx: unknown): ctx is { container: Object3D } {
 		return true;

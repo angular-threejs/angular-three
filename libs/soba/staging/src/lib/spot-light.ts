@@ -208,7 +208,6 @@ const defaultSpotLightShadowOptions: NgtsShadowMeshOptions = {
 
 @Component({
 	selector: 'ngts-spot-light-shadow-shader',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [scale]="scale()" [castShadow]="true">
 			<ngt-plane-geometry />
@@ -317,7 +316,6 @@ export class NgtsSpotLightShadowShader {
 
 @Component({
 	selector: 'ngts-spot-light-shadow-no-shader',
-	standalone: true,
 	template: `
 		<ngt-mesh #mesh [scale]="scale()" [castShadow]="true">
 			<ngt-plane-geometry />

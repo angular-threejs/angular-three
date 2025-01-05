@@ -2,7 +2,7 @@ import { computed, Directive, effect, ElementRef, model } from '@angular/core';
 import { injectStore, resolveRef } from 'angular-three';
 import { Camera, CubeCamera, Object3D, WebGLCubeRenderTarget } from 'three';
 
-@Directive({ selector: 'ngts-preload', standalone: true })
+@Directive({ selector: 'ngts-preload' })
 export class NgtsPreload {
 	all = model<boolean>();
 	scene = model<Object3D | ElementRef<Object3D>>();

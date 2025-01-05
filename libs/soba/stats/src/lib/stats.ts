@@ -15,10 +15,7 @@ const defaultOptions: NgtsStatsOptions = {
 	parent: null,
 };
 
-@Directive({
-	selector: 'ngt-canvas[stats]',
-	standalone: true,
-})
+@Directive({ selector: 'ngt-canvas[stats]' })
 export class NgtsStats {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions), alias: 'stats' });
 

@@ -66,7 +66,6 @@ export class Axis {
 
 @Component({
 	selector: 'viewport-axis-head',
-	standalone: true,
 	template: `
 		<ngt-sprite
 			[scale]="scale()"

@@ -82,7 +82,7 @@ const defaultOptions: NgtsStageOptions = {
 	intensity: 0.5,
 };
 
-@Directive({ standalone: true, selector: 'ngts-stage-refit' })
+@Directive({ selector: 'ngts-stage-refit' })
 export class NgtsStageRefit {
 	radius = input.required<number>();
 	adjustCamera = input.required<boolean>();

@@ -5,7 +5,6 @@ import { NgtsMeshDistortMaterial, NgtsMeshDistortMaterialOptions } from 'angular
 import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
 
 @Component({
-	standalone: true,
 	template: `
 		<ngt-mesh>
 			<ngt-icosahedron-geometry *args="[1, 4]" />

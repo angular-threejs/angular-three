@@ -1,7 +1,7 @@
 import { DestroyRef, Directive, effect, inject } from '@angular/core';
 import { injectStore } from 'angular-three';
 
-@Directive({ standalone: true, selector: 'ngts-adaptive-events' })
+@Directive({ selector: 'ngts-adaptive-events' })
 export class NgtsAdaptiveEvents {
 	constructor() {
 		const store = injectStore();
