@@ -175,6 +175,17 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'backdrop-cable',
+		loadComponent: () => import('./backdrop-cable/backdrop-cable'),
+		data: {
+			credits: {
+				title: 'Backdrop Cable',
+				link: 'https://pmndrs.github.io/examples/demos/backdrop-and-cables',
+				class: 'text-white',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',

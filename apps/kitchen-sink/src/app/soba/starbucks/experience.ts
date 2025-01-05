@@ -26,22 +26,17 @@ type CupGLTF = GLTF & {
 				[scale]="2"
 			>
 				<ngt-value [rawValue]="1" attach="material.aoMapIntensity" />
-				<!--				<ngt-group [position]="[0, 0.75, 0.5]">-->
-				<!--					&lt;!&ndash; TODO: not sure why Pivot Controls is not working within the gltf &ndash;&gt;-->
-				<!--					<ngts-pivot-controls-->
-				<!--						[options]="{ activeAxes: [true, true, false], scale: 0.55 }"-->
-				<!--						(dragged)="onDrag($event)"-->
-				<!--					/>-->
-				<!--				</ngt-group>-->
+				<ngt-group [position]="[0, 0.75, 0.5]">
+					<ngts-pivot-controls
+						[options]="{ activeAxes: [true, true, false], scale: 0.55 }"
+						(dragged)="onDrag($event)"
+					/>
+				</ngt-group>
 				<ngts-decal
 					[options]="{ map: texture(), position: position(), rotation: rotation(), scale: scale(), depthTest: true }"
 				/>
 			</ngt-mesh>
 		}
-
-		<ngt-group [position]="[0, 0.5, 1]">
-			<ngts-pivot-controls [options]="{ activeAxes: [true, true, false], scale: 0.55 }" (dragged)="onDrag($event)" />
-		</ngt-group>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
