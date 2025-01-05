@@ -1,3 +1,13 @@
+## 3.1.0 (2025-01-05)
+
+### 🩹 Fixes
+
+- **core:** adjust versions for generator ([746039b](https://github.com/angular-threejs/angular-three/commit/746039b))
+
+### ❤️ Thank You
+
+- nartc
+
 # 3.0.0 (2025-01-05)
 
 ### 🚀 Features
