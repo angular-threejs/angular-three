@@ -198,7 +198,7 @@ export function processThreeEvent(
 
 	if (eventName === SPECIAL_EVENTS.ATTACHED) {
 		lS.onAttach = callback;
-		if (untracked(lS.parent)) {
+		if (lS.parent && untracked(lS.parent)) {
 			lS.onAttach({ parent: untracked(lS.parent), node: instance });
 		}
 
