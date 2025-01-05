@@ -145,8 +145,8 @@ export function removeThreeChild(child: NgtInstanceNode, parent?: NgtInstanceNod
 	cLS?.setParent(null);
 
 	// remove child from parent
-	pLS?.remove(child, 'objects');
-	pLS?.remove(child, 'nonObjects');
+	pLS?.remove?.(child, 'objects');
+	pLS?.remove?.(child, 'nonObjects');
 
 	if (parent) {
 		if (cLS?.attach) {
