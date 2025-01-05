@@ -1,3 +1,15 @@
+## 3.2.1 (2025-01-05)
+
+### 🩹 Fixes
+
+- **core:** check for lS.parent before calling untracked on it ([b4bf14d](https://github.com/angular-threejs/angular-three/commit/b4bf14d))
+- **soba:** setPoints should receive optional mid in quadratic bezier line ([909b27c](https://github.com/angular-threejs/angular-three/commit/909b27c))
+- **soba:** bind offset to position on pivot controls instead of effect ([c4128ed](https://github.com/angular-threejs/angular-three/commit/c4128ed))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.2.0 (2025-01-05)
 
 ### 🩹 Fixes
