@@ -130,7 +130,6 @@ export default defineConfig({
 						{
 							label: 'Testing',
 							collapsed: true,
-							badge: { text: 'Preview', variant: 'caution' },
 							items: [
 								{ label: 'Introduction', slug: 'core/testing/introduction' },
 								{ label: 'NgtTestBed', slug: 'core/testing/test-bed' },
@@ -156,7 +155,6 @@ export default defineConfig({
 								{
 									label: 'Routed Scene',
 									slug: 'core/advanced/routed-scene',
-									badge: { text: 'Bug', variant: 'danger' },
 								},
 								{ label: 'Performance', slug: 'core/advanced/performance' },
 							],

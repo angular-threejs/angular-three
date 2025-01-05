@@ -53,8 +53,8 @@ export class NgtTestBed {
 							configurator.configure({
 								frameloop: 'never',
 								size: {
-									width: mockCanvasOptions.width ?? 1280,
-									height: mockCanvasOptions.height ?? 800,
+									width: mockCanvasOptions.width ?? mockedCanvas.width ?? 1280,
+									height: mockCanvasOptions.height ?? mockedCanvas.height ?? 800,
 									top: 0,
 									left: 0,
 								},

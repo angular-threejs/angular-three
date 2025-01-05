@@ -54,8 +54,7 @@ export class NgtTestCanvas {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			this.environmentInjector?.destroy();
-			this.ref?.destroy();
+			this.destroy();
 		});
 	}
 
