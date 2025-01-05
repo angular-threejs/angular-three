@@ -8,7 +8,6 @@ import {
 	inject,
 	isSignal,
 	signal,
-	untracked,
 } from '@angular/core';
 import { BodyShapeType } from '@pmndrs/cannon-worker-api';
 import { resolveRef } from 'angular-three';
@@ -70,10 +69,7 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 			const object = body();
 
 			if (!isRefSignal && !object) {
-				// TODO (signal): remove untracked in v19
-				untracked(() => {
-					bodyRef.set(resolveRef(ref));
-				});
+				bodyRef.set(resolveRef(ref));
 				return;
 			}
 
