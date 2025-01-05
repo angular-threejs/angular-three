@@ -33,7 +33,7 @@ const defaultOptions: NgtcDebugInputs = {
 	impl: CannonDebugger,
 };
 
-@Directive({ selector: 'ngtc-physics[debug]', standalone: true })
+@Directive({ selector: 'ngtc-physics[debug]' })
 export class NgtcDebug {
 	private store = injectStore();
 	private physics = inject(NgtcPhysics);

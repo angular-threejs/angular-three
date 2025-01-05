@@ -99,7 +99,7 @@ type NgtsPhysicsUpdatableOptions = Extract<
 	'gravity' | 'iterations' | 'tolerance' | 'broadphase' | 'axisIndex'
 >;
 
-@Directive({ selector: 'ngtc-physics', standalone: true })
+@Directive({ selector: 'ngtc-physics' })
 export class NgtcPhysics {
 	private store = injectStore();
 
