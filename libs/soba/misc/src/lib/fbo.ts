@@ -127,11 +127,8 @@ export class NgtsFBO {
 		});
 
 		effect(() => {
-			// TODO: double check if we need untracked
-			untracked(() => {
-				ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });
-				ref.detectChanges();
-			});
+			ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });
+			ref.detectChanges();
 		});
 
 		inject(DestroyRef).onDestroy(() => {

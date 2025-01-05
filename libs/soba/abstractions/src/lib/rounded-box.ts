@@ -135,13 +135,10 @@ export class NgtsRoundedBox {
 
 		const objectEvents = inject(NgtObjectEvents, { host: true });
 
-		effect(
-			() => {
-				const mesh = this.meshRef().nativeElement;
-				objectEvents.ngtObjectEvents.set(mesh);
-			},
-			{ allowSignalWrites: true },
-		);
+		effect(() => {
+			const mesh = this.meshRef().nativeElement;
+			objectEvents.ngtObjectEvents.set(mesh);
+		});
 
 		effect(() => {
 			const geometry = this.geometryRef()?.nativeElement;

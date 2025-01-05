@@ -106,11 +106,9 @@ export class StorybookScene {
 
 	constructor() {
 		afterNextRender(() => {
-			untracked(() => {
-				this.ref = this.anchor().createComponent(this.story);
-				this.setStoryOptions(this.storyOptions());
-				this.ref.changeDetectorRef.detectChanges();
-			});
+			this.ref = this.anchor().createComponent(this.story);
+			this.setStoryOptions(this.storyOptions());
+			this.ref.changeDetectorRef.detectChanges();
 		});
 
 		effect(() => {
@@ -168,25 +166,23 @@ export class StorybookSetup {
 		let refEnvInjector: EnvironmentInjector;
 
 		afterNextRender(() => {
-			untracked(() => {
-				refEnvInjector = createEnvironmentInjector(
-					[
-						{ provide: CANVAS_OPTIONS, useValue: this.canvasOptions() },
-						{ provide: STORY_COMPONENT, useValue: this.story() },
-						{ provide: STORY_COMPONENT_MIRROR, useValue: reflectComponentType(this.story()) },
-						{ provide: STORY_OPTIONS, useValue: this.storyOptions },
-					],
-					envInjector,
-				);
+			refEnvInjector = createEnvironmentInjector(
+				[
+					{ provide: CANVAS_OPTIONS, useValue: this.canvasOptions() },
+					{ provide: STORY_COMPONENT, useValue: this.story() },
+					{ provide: STORY_COMPONENT_MIRROR, useValue: reflectComponentType(this.story()) },
+					{ provide: STORY_OPTIONS, useValue: this.storyOptions },
+				],
+				envInjector,
+			);
 
-				ref = this.anchor().createComponent(NgtCanvas, { environmentInjector: refEnvInjector });
-				ref.setInput('shadows', true);
-				ref.setInput('performance', this.canvasOptions().performance);
-				ref.setInput('camera', this.canvasOptions().camera);
-				ref.setInput('sceneGraph', StorybookScene);
-				ref.setInput('orthographic', this.canvasOptions().orthographic);
-				ref.changeDetectorRef.detectChanges();
-			});
+			ref = this.anchor().createComponent(NgtCanvas, { environmentInjector: refEnvInjector });
+			ref.setInput('shadows', true);
+			ref.setInput('performance', this.canvasOptions().performance);
+			ref.setInput('camera', this.canvasOptions().camera);
+			ref.setInput('sceneGraph', StorybookScene);
+			ref.setInput('orthographic', this.canvasOptions().orthographic);
+			ref.changeDetectorRef.detectChanges();
 		});
 
 		inject(DestroyRef).onDestroy(() => {

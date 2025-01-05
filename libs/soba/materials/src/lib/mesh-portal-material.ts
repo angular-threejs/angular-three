@@ -284,22 +284,19 @@ export class NgtsMeshPortalMaterial {
 	constructor() {
 		extend({ MeshPortalMaterial });
 
-		effect(
-			() => {
-				const material = this.materialRef().nativeElement;
+		effect(() => {
+			const material = this.materialRef().nativeElement;
 
-				const localState = getLocalState(material);
-				if (!localState) return;
+			const localState = getLocalState(material);
+			if (!localState) return;
 
-				const materialParent = localState.parent();
-				if (!materialParent || !(materialParent instanceof Mesh)) return;
+			const materialParent = localState.parent();
+			if (!materialParent || !(materialParent instanceof Mesh)) return;
 
-				// Since the ref above is not tied to a mesh directly (we're inside a material),
-				// it has to be tied to the parent mesh here
-				this.parent.set(materialParent);
-			},
-			{ allowSignalWrites: true },
-		);
+			// Since the ref above is not tied to a mesh directly (we're inside a material),
+			// it has to be tied to the parent mesh here
+			this.parent.set(materialParent);
+		});
 
 		effect(() => {
 			const events = this.events();

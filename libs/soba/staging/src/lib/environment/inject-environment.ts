@@ -118,35 +118,33 @@ export function injectEnvironment(
 			const loaderResult = result();
 			if (!loaderResult) return;
 
-			untracked(() => {
-				const { extension, isCubeMap } = resultOptions();
-				const _multiFile = multiFile();
-				const { encoding } = adjustedOptions();
+			const { extension, isCubeMap } = untracked(resultOptions);
+			const _multiFile = untracked(multiFile);
+			const { encoding } = untracked(adjustedOptions);
 
-				// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
-				let textureResult = (_multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
+			// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
+			let textureResult = (_multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
 
-				// NOTE: racing condition, we can skip this
-				//  we just said above that if multiFile is false, it is a single Texture
-				if (!_multiFile && Array.isArray(textureResult) && textureResult[0] instanceof CubeTexture) {
-					return;
-				}
+			// NOTE: racing condition, we can skip this
+			//  we just said above that if multiFile is false, it is a single Texture
+			if (!_multiFile && Array.isArray(textureResult) && textureResult[0] instanceof CubeTexture) {
+				return;
+			}
 
-				if (
-					!(textureResult instanceof CubeTexture) &&
-					(extension === 'jpg' || extension === 'jpeg' || extension === 'webp')
-				) {
-					textureResult = (textureResult as any).renderTarget?.texture;
-				}
+			if (
+				!(textureResult instanceof CubeTexture) &&
+				(extension === 'jpg' || extension === 'jpeg' || extension === 'webp')
+			) {
+				textureResult = (textureResult as any).renderTarget?.texture;
+			}
 
-				textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
+			textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
 
-				if ('colorSpace' in textureResult)
-					(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
-				else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
+			if ('colorSpace' in textureResult)
+				(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
+			else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
 
-				texture.set(textureResult);
-			});
+			texture.set(textureResult);
 		});
 
 		return texture.asReadonly();

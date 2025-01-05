@@ -1,4 +1,4 @@
-import { effect, Injector, signal, untracked } from '@angular/core';
+import { effect, Injector, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Font, FontLoader } from 'three-stdlib';
 
@@ -46,9 +46,7 @@ export function injectFont(input: () => NgtsFontInput, { injector }: { injector?
 			const fontInput = input();
 
 			if (cache.has(fontInput)) {
-				untracked(() => {
-					font.set(cache.get(fontInput) as Font);
-				});
+				font.set(cache.get(fontInput) as Font);
 				return;
 			}
 

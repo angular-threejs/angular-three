@@ -6,7 +6,6 @@ import {
 	ElementRef,
 	input,
 	output,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { extend, getLocalState, NgtGroup, omit, pick } from 'angular-three';
@@ -143,20 +142,18 @@ export class NgtsCenter {
 				disable || disableZ ? 0 : -center.z + dAlign,
 			);
 
-			untracked(() => {
-				this.centered.emit({
-					parent: group.parent!,
-					container: group,
-					width,
-					height,
-					depth,
-					boundingBox: box3,
-					boundingSphere: sphere,
-					center,
-					verticalAlignment: vAlign,
-					horizontalAlignment: hAlign,
-					depthAlignment: dAlign,
-				});
+			this.centered.emit({
+				parent: group.parent!,
+				container: group,
+				width,
+				height,
+				depth,
+				boundingBox: box3,
+				boundingSphere: sphere,
+				center,
+				verticalAlignment: vAlign,
+				horizontalAlignment: hAlign,
+				depthAlignment: dAlign,
 			});
 		});
 	}

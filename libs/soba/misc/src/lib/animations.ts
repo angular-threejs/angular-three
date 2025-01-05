@@ -83,11 +83,9 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 				}
 			}
 
-			untracked(() => {
-				if (!ready()) {
-					ready.set(true);
-				}
-			});
+			if (!untracked(ready)) {
+				ready.set(true);
+			}
 
 			onCleanup(() => {
 				// clear cached

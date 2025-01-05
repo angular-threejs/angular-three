@@ -43,17 +43,14 @@ export class NgtsBBAnchor {
 		// Reattach group created by this component to the parent's parent,
 		// so it becomes a sibling of its initial parent.
 		// We do that so the children have no impact on a bounding box of a parent.
-		effect(
-			() => {
-				const bbAnchorLS = getLocalState(this.bbAnchorRef().nativeElement);
-				const bbAnchorParent = bbAnchorLS?.parent();
-				if (bbAnchorParent?.parent) {
-					this.parent.set(bbAnchorParent);
-					bbAnchorParent.parent.add(this.bbAnchorRef().nativeElement);
-				}
-			},
-			{ allowSignalWrites: true },
-		);
+		effect(() => {
+			const bbAnchorLS = getLocalState(this.bbAnchorRef().nativeElement);
+			const bbAnchorParent = bbAnchorLS?.parent();
+			if (bbAnchorParent?.parent) {
+				this.parent.set(bbAnchorParent);
+				bbAnchorParent.parent.add(this.bbAnchorRef().nativeElement);
+			}
+		});
 
 		injectBeforeRender(() => {
 			const parent = this.parent();
