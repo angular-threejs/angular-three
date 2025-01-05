@@ -23,43 +23,40 @@ export class NgtSelect {
 		const elementRef = inject<ElementRef<Group | Mesh>>(ElementRef);
 		const selection = inject(NgtSelection);
 
-		effect(
-			(onCleanup) => {
-				const selectionEnabled = selection.enabled();
-				if (!selectionEnabled) return;
+		effect((onCleanup) => {
+			const selectionEnabled = selection.enabled();
+			if (!selectionEnabled) return;
 
-				const enabled = this.enabled();
-				if (!enabled) return;
+			const enabled = this.enabled();
+			if (!enabled) return;
 
-				const host = elementRef.nativeElement;
-				if (!host) return;
+			const host = elementRef.nativeElement;
+			if (!host) return;
 
-				const localState = getLocalState(host);
-				if (!localState) return;
+			const localState = getLocalState(host);
+			if (!localState) return;
 
-				// ngt-mesh[ngtSelect]
-				if (host.type === 'Mesh') {
-					selection.update((prev) => [...prev, host]);
-					onCleanup(() => selection.update((prev) => prev.filter((el) => el !== host)));
-					return;
-				}
+			// ngt-mesh[ngtSelect]
+			if (host.type === 'Mesh') {
+				selection.update((prev) => [...prev, host]);
+				onCleanup(() => selection.update((prev) => prev.filter((el) => el !== host)));
+				return;
+			}
 
-				const [collection] = [untracked(selection.selected), localState.objects()];
-				let changed = false;
-				const current: Object3D[] = [];
-				host.traverse((child) => {
-					child.type === 'Mesh' && current.push(child);
-					if (collection.indexOf(child) === -1) changed = true;
-				});
+			const [collection] = [untracked(selection.selected), localState.objects()];
+			let changed = false;
+			const current: Object3D[] = [];
+			host.traverse((child) => {
+				child.type === 'Mesh' && current.push(child);
+				if (collection.indexOf(child) === -1) changed = true;
+			});
 
-				if (!changed) return;
+			if (!changed) return;
 
-				selection.update((prev) => [...prev, ...current]);
-				onCleanup(() => {
-					selection.update((prev) => prev.filter((el) => !current.includes(el as Object3D)));
-				});
-			},
-			{ allowSignalWrites: true },
-		);
+			selection.update((prev) => [...prev, ...current]);
+			onCleanup(() => {
+				selection.update((prev) => prev.filter((el) => !current.includes(el as Object3D)));
+			});
+		});
 	}
 }

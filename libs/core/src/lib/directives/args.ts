@@ -6,7 +6,6 @@ import {
 	inject,
 	input,
 	TemplateRef,
-	untracked,
 	ViewContainerRef,
 } from '@angular/core';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
@@ -34,9 +33,7 @@ export class NgtArgs {
 			if (value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null)) return;
 			this.injected = false;
 			this.injectedArgs = value;
-			untracked(() => {
-				this.createView();
-			});
+			this.createView();
 		});
 
 		inject(DestroyRef).onDestroy(() => {

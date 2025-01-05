@@ -147,13 +147,11 @@ export class NgtCanvas {
 					this.zone.runOutsideAngular(() => {
 						configurator.configure(canvasOptions);
 
-						untracked(() => {
-							if (this.glRef) {
-								this.glRef.changeDetectorRef.detectChanges();
-							} else {
-								this.noZoneRender();
-							}
-						});
+						if (this.glRef) {
+							this.glRef.changeDetectorRef.detectChanges();
+						} else {
+							this.noZoneRender();
+						}
 					});
 				},
 				{ injector: this.injector },

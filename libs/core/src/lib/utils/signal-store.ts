@@ -89,6 +89,7 @@ function reducer<State extends object>(state: State | ((previous: State) => Stat
 function updater<State extends object>(_source: WritableSignal<State>) {
 	return (state: State | ((previous: State) => State)) => {
 		const updater = reducer(state);
+		// TODO: (chau) I'm keeping this one around for now.
 		untracked(() => {
 			_source.update((previous) => ({ ...previous, ...updater(previous) }));
 		});

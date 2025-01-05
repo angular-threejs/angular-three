@@ -204,21 +204,20 @@ export class NgtPortal {
 				() => {
 					const state = this.state();
 					const _parentState = parentState();
-					this.portalStore.update((prev) => this.inject(_parentState, prev, state, untracked(this.container)));
-					untracked(() => {
-						if (this.portalView) {
-							this.portalView.detectChanges();
-							return;
-						}
 
-						this.portalView = this.portalAnchor().createEmbeddedView(
-							this.portalContent(),
-							{ container: this.container(), injector: this.injector },
-							{ injector: this.injector },
-						);
+					this.portalStore.update((prev) => this.inject(_parentState, prev, state, untracked(this.container)));
+					if (this.portalView) {
 						this.portalView.detectChanges();
-						this.portalRendered.set(true);
-					});
+						return;
+					}
+
+					this.portalView = untracked(this.portalAnchor).createEmbeddedView(
+						untracked(this.portalContent),
+						{ container: untracked(this.container), injector: this.injector },
+						{ injector: this.injector },
+					);
+					this.portalView.detectChanges();
+					this.portalRendered.set(true);
 				},
 				{ injector: this.injector },
 			);
