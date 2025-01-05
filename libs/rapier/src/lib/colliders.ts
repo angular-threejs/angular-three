@@ -1,4 +1,4 @@
-import { Directive, effect, inject, input, untracked } from '@angular/core';
+import { Directive, effect, inject, input } from '@angular/core';
 import { NgtrAnyCollider } from './rigid-body';
 import {
 	NgtrBallArgs,
@@ -33,10 +33,7 @@ export class NgtrCuboidCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('cuboid');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -49,10 +46,7 @@ export class NgtrCapsuleCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('capsule');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -65,10 +59,7 @@ export class NgtrBallCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('ball');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -81,10 +72,7 @@ export class NgtrConvexHullCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('roundConvexHull');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -97,10 +85,7 @@ export class NgtrHeightfieldCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('heightfield');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -113,10 +98,7 @@ export class NgtrTrimeshCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('trimesh');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -129,10 +111,7 @@ export class NgtrPolylineCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('polyline');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -145,10 +124,7 @@ export class NgtrRoundCuboidCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('roundCuboid');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -161,10 +137,7 @@ export class NgtrCylinderCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('cylinder');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -177,10 +150,7 @@ export class NgtrRoundCylinderCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('roundCylinder');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -193,10 +163,7 @@ export class NgtrConeCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('cone');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -209,10 +176,7 @@ export class NgtrRoundConeCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('roundCone');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -225,10 +189,7 @@ export class NgtrConvexMeshCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('convexMesh');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -241,10 +202,7 @@ export class NgtrRoundConvexHullCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('roundConvexHull');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
@@ -257,10 +215,7 @@ export class NgtrRoundConvexMeshCollider {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
 		anyCollider.setShape('roundConvexMesh');
 		effect(() => {
-			const args = this.args();
-			untracked(() => {
-				anyCollider.setArgs(args);
-			});
+			anyCollider.setArgs(this.args());
 		});
 	}
 }
