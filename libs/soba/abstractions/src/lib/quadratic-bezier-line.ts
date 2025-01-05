@@ -41,7 +41,7 @@ export class NgtsQuadraticBezierLine {
 	setPoints(
 		start: Vector3 | [number, number, number],
 		end: Vector3 | [number, number, number],
-		mid: Vector3 | [number, number, number],
+		mid?: Vector3 | [number, number, number],
 	) {
 		const points = this.getPoints(start, end, mid);
 		const geometry = this.line().lineGeometry();
