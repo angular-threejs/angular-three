@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtrCuboidCollider, NgtrPhysics } from 'angular-three-rapier';
-import { NgtsCameraControls, NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsCameraControls } from 'angular-three-soba/controls';
 import { NgtsPreload } from 'angular-three-soba/misc';
-import { NgtsBounds, NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
+import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
 import { Experience as BasicExperience } from '../basic/experience';
 import { Experience as InstancedVertexColorsExperience } from '../instanced-vertex-colors/experience';
 import { Experience as InstancesExperience } from '../instances/exprience';
@@ -158,8 +158,6 @@ import { Letter } from './letter';
 		ShakyExperience,
 		InvertedStencilBufferExperience,
 		InstancesExperience,
-		NgtsBounds,
-		NgtsOrbitControls,
 	],
 	hostDirectives: [NgtsPreload],
 })

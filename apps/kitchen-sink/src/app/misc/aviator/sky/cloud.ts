@@ -7,7 +7,7 @@ import {
 	viewChild,
 	viewChildren,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { injectBeforeRender } from 'angular-three';
 import { BoxGeometry, Mesh, MeshPhongMaterial, Object3D } from 'three';
 import { COLORS } from '../constants';
 
@@ -22,7 +22,6 @@ import { COLORS } from '../constants';
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
 })
 export class Cloud {
 	protected material = new MeshPhongMaterial({ color: COLORS.white });

@@ -20,7 +20,6 @@ import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectCylinder, injectSphere } from 'angular-three-cannon/body';
 import { injectConeTwist } from 'angular-three-cannon/constraint';
-import { NgtcDebug } from 'angular-three-cannon/debug';
 import { Color, ColorRepresentation, Mesh, Object3D } from 'three';
 
 interface Handle {
@@ -201,7 +200,7 @@ export class StaticHandle {
 			}
 		</ngtc-physics>
 	`,
-	imports: [NgtcPhysics, NgtcDebug, NgtArgs, PointerHandle, Chain, StaticHandle],
+	imports: [NgtcPhysics, NgtArgs, PointerHandle, Chain, StaticHandle],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: { class: 'chain-experience' },

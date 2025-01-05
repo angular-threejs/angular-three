@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input } from '@angular/core';
 import { applyProps, NgtArgs } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -12,7 +11,7 @@ import { color } from './color';
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgTemplateOutlet],
+	imports: [NgtArgs],
 })
 export class Model {
 	position = input([0, 0, 0]);

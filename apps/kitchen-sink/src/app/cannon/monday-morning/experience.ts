@@ -1,4 +1,3 @@
-import { NgTemplateOutlet } from '@angular/common';
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
@@ -72,7 +71,7 @@ function injectDragConstraint(ref: Signal<ElementRef<Object3D> | undefined>) {
 			<ng-content />
 		</ngts-rounded-box>
 	`,
-	imports: [NgtArgs, NgtsRoundedBox],
+	imports: [NgtsRoundedBox],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -126,7 +125,7 @@ function double([x, y, z]: Readonly<Triplet>): Triplet {
 
 		<ng-content />
 	`,
-	imports: [Box, NgTemplateOutlet],
+	imports: [Box],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -324,7 +323,6 @@ interface CupGLTF extends GLTF {
 			</ngt-group>
 		</ngt-group>
 	`,
-	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -352,7 +350,7 @@ export class Mug {
 		<app-box #leg4 [scale]="[0.5, 4, 0.5]" />
 		<app-mug />
 	`,
-	imports: [NgtArgs, Mug, Box],
+	imports: [Mug, Box],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

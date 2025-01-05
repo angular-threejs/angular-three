@@ -6,7 +6,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
 	inject,
-	untracked,
 	viewChild,
 	ViewContainerRef,
 } from '@angular/core';
@@ -50,10 +49,8 @@ export class SceneGraph {
 		let ref: ComponentRef<unknown>;
 
 		afterNextRender(() => {
-			untracked(() => {
-				ref = this.anchor().createComponent(this.sobaContent());
-				ref.changeDetectorRef.detectChanges();
-			});
+			ref = this.anchor().createComponent(this.sobaContent());
+			ref.changeDetectorRef.detectChanges();
 		});
 
 		inject(DestroyRef).onDestroy(() => {

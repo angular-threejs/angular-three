@@ -6,7 +6,7 @@ import {
 	inject,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { injectBeforeRender } from 'angular-three';
 import { CylinderGeometry, Mesh, MeshPhongMaterial } from 'three';
 import { COIN_DISTANCE_TOLERANCE, COLOR_COINS } from '../constants';
 import { GameStore } from '../game.store';
@@ -39,7 +39,6 @@ const coinMaterial = new MeshPhongMaterial({
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs],
 	hostDirectives: [{ directive: Collectible, inputs: ['state'], outputs: ['stateChange'] }],
 	providers: [
 		{ provide: SPAWNABLE_DISTANCE_TOLERANCE, useValue: COIN_DISTANCE_TOLERANCE },

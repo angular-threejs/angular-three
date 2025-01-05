@@ -11,7 +11,6 @@ import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
-import { NgtcDebug } from 'angular-three-cannon/debug';
 import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../../colors';
 
@@ -141,7 +140,7 @@ export class InstancedSpheres {
 			<app-instanced-spheres />
 		</ngtc-physics>
 	`,
-	imports: [InstancedSpheres, Box, Plane, NgtcPhysics, NgtArgs, NgtcDebug],
+	imports: [InstancedSpheres, Box, Plane, NgtcPhysics, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'kimenatic-experience' },

@@ -36,18 +36,15 @@ export class SobaWrapper {
 	performance = this.canvasOptionsStore.select('performance');
 
 	constructor() {
-		effect(
-			() => {
-				const sceneKey = this.scene();
+		effect(() => {
+			const sceneKey = this.scene();
 
-				const { scene, canvasOptions } = sceneKey.split('.').reduce((acc, cur) => {
-					return acc[cur];
-				}, scenes) as SceneOptions;
+			const { scene, canvasOptions } = sceneKey.split('.').reduce((acc, cur) => {
+				return acc[cur];
+			}, scenes) as SceneOptions;
 
-				this.sobaContent.set(scene);
-				if (canvasOptions) this.canvasOptionsStore.update(canvasOptions);
-			},
-			{ allowSignalWrites: true },
-		);
+			this.sobaContent.set(scene);
+			if (canvasOptions) this.canvasOptionsStore.update(canvasOptions);
+		});
 	}
 }

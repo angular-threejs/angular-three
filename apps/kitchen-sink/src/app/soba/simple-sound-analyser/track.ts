@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
-import { NgtsPivotControls } from 'angular-three-soba/gizmos';
 import { InstancedMesh, MeshBasicMaterial, Object3D, PlaneGeometry } from 'three';
 import { AudioStore } from './audio.store';
 
@@ -29,7 +28,7 @@ import { AudioStore } from './audio.store';
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsText, NgtsPivotControls],
+	imports: [NgtArgs, NgtsText],
 })
 export class Track {
 	sound = input.required<'drums' | 'synth' | 'snare'>();

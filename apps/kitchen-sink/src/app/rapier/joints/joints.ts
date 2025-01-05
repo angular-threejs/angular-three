@@ -8,7 +8,7 @@ import {
 	viewChild,
 	viewChildren,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtVector3, NON_ROOT } from 'angular-three';
+import { injectBeforeRender, NgtVector3, NON_ROOT } from 'angular-three';
 import { injectPrismaticJoint, injectSphericalJoint, NgtrRigidBody, NgtrRigidBodyType } from 'angular-three-rapier';
 import { Quaternion, Vector3 } from 'three';
 
@@ -69,7 +69,7 @@ export class RopeJoint {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [RopeSegment, NgtArgs, RopeJoint, NgtrRigidBody],
+	imports: [RopeSegment, RopeJoint],
 })
 export class Rope {
 	length = input.required<number>();

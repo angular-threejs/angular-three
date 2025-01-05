@@ -9,7 +9,6 @@ import { CollectiblesStore } from './collectible/collectibles.store';
 import { DISTANCE_FOR_COINS_SPAWN, PLANE_DEFAULT_HEIGHT, RATIO_SPEED_DISTANCE, SEA_RADIUS } from './constants';
 import { GameStore } from './game.store';
 import { Lights } from './lights/lights';
-import { Sea } from './sea/sea';
 import { Sky } from './sky/sky';
 
 @Component({
@@ -60,7 +59,7 @@ import { Sky } from './sky/sky';
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, Lights, Sea, NgtsOrbitControls, Sky, Airplane, CollectibleCoin, CollectiblePowerUp],
+	imports: [NgtArgs, Lights, /* Sea, */ NgtsOrbitControls, Sky, Airplane, CollectibleCoin, CollectiblePowerUp],
 })
 export class Experience {
 	private gameStore = inject(GameStore);
