@@ -1,3 +1,29 @@
+# 3.0.0 (2025-01-05)
+
+### 🚀 Features
+
+- ⚠️  **core:** remove NgtObjectEventsHostDirective short-cut ([0ab2a6e](https://github.com/angular-threejs/angular-three/commit/0ab2a6e))
+- **core:** promote core/testing to stable ([d6c5421](https://github.com/angular-threejs/angular-three/commit/d6c5421))
+- ⚠️  **rapier:** remove deprecated properties ([be09add](https://github.com/angular-threejs/angular-three/commit/be09add))
+- **repo:** migrate nx and angular ([f91595c](https://github.com/angular-threejs/angular-three/commit/f91595c))
+- **repo:** bump peer deps ([21a5f61](https://github.com/angular-threejs/angular-three/commit/21a5f61))
+- ⚠️  **soba:** remove ngtspivotcontrols export from controls entry point ([0db0b1e](https://github.com/angular-threejs/angular-three/commit/0db0b1e))
+
+### 🩹 Fixes
+
+- **core:** routed scene should work ([6e76304](https://github.com/angular-threejs/angular-three/commit/6e76304))
+- **soba:** set up an effect for setting position of gizmo instead ([05ad6dc](https://github.com/angular-threejs/angular-three/commit/05ad6dc))
+
+### ⚠️  Breaking Changes
+
+- **rapier:** remove `erp` from physics options
+- **core:** use host directive `NgtObjectEvents` explicitly
+- **soba:** use `NgtsPivotControls` from `gizmos` entry point
+
+### ❤️ Thank You
+
+- nartc
+
 ## 2.14.0 (2025-01-02)
 
 ### 🚀 Features
