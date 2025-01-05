@@ -1,3 +1,21 @@
+## 3.2.0 (2025-01-05)
+
+### 🩹 Fixes
+
+- **cannon:** remove standalone: true ([b5e56e7](https://github.com/angular-threejs/angular-three/commit/b5e56e7))
+- **cannon:** remove unnecessary untracked ([de8a3e9](https://github.com/angular-threejs/angular-three/commit/de8a3e9))
+- **core:** remove standalone true ([0a38f33](https://github.com/angular-threejs/angular-three/commit/0a38f33))
+- **core:** remove unnecessary untracked ([a837583](https://github.com/angular-threejs/angular-three/commit/a837583))
+- **postprocessing:** remove standalone true ([195ea58](https://github.com/angular-threejs/angular-three/commit/195ea58))
+- **rapier:** remove standalone true ([fa304b9](https://github.com/angular-threejs/angular-three/commit/fa304b9))
+- **rapier:** remove unnecessary untracked ([f994937](https://github.com/angular-threejs/angular-three/commit/f994937))
+- **soba:** remove standalone true ([f894178](https://github.com/angular-threejs/angular-three/commit/f894178))
+- **soba:** remove unnecessary untracked ([5a976ef](https://github.com/angular-threejs/angular-three/commit/5a976ef))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.1.0 (2025-01-05)
 
 ### 🩹 Fixes
