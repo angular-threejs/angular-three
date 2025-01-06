@@ -105,7 +105,7 @@ export class Boxes {
 	template: `
 		<ngt-color attach="background" *args="['#282828']" />
 		<app-boxes />
-		@if (withEffect()) {
+		@if (!asRenderTexture()) {
 			<ngtp-effect-composer [options]="{ enableNormalPass: false }">
 				<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: Math.PI }" />
 				<ngtp-bloom [options]="{ luminanceThreshold: 1, intensity: 0.5 * Math.PI, levels: 9, mipmapBlur: true }" />
@@ -120,5 +120,5 @@ export class Boxes {
 export class Experience {
 	protected readonly Math = Math;
 
-	withEffect = input(true);
+	asRenderTexture = input(false);
 }

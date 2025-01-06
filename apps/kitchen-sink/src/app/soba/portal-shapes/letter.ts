@@ -24,6 +24,7 @@ import { NgtsCenter, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular
 import { Group } from 'three';
 
 import { NgTemplateOutlet } from '@angular/common';
+import CameraControls from 'camera-controls';
 import boldFont from './bold.blob';
 
 @Component({
@@ -118,20 +119,19 @@ export class Letter {
 	}
 
 	onDblClick(event: NgtThreeEvent<MouseEvent>) {
-		// event.stopPropagation();
-		// const controls = this.controls() as CameraControls;
-		// if (!controls) return;
-		//
-		// // TODO: not sure why this is not working as expected.
-		// //  This is supposed to zoom to the center of the letter, but it's always zooming to the center of the scene
-		// void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
+		event.stopPropagation();
+		const controls = this.controls() as CameraControls;
+		if (!controls) return;
+
+		// NOTE: if any of the render-texture scene has other controls, it messes this up
+		void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
 	}
 
 	onPointerMissed(event: NgtThreeEvent<MouseEvent>) {
-		// event.stopPropagation();
-		// const controls = this.controls() as CameraControls;
-		// if (!controls) return;
-		//
-		// void controls.reset(true);
+		event.stopPropagation();
+		const controls = this.controls() as CameraControls;
+		if (!controls) return;
+
+		void controls.reset(true);
 	}
 }

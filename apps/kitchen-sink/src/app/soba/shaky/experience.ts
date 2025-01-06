@@ -89,7 +89,7 @@ export class Rig {
 
 		<ngts-environment [options]="{ preset: 'warehouse' }" />
 
-		@if (withEffect()) {
+		@if (!asRenderTexture()) {
 			<app-rig />
 			<ngts-orbit-controls [options]="{ makeDefault: true, minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }" />
 		}
@@ -102,5 +102,5 @@ export class Rig {
 export class Experience {
 	protected readonly Math = Math;
 
-	withEffect = input(true);
+	asRenderTexture = input(false);
 }

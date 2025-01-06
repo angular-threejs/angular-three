@@ -99,7 +99,7 @@ export class Bot {
 
 		<app-bot />
 
-		@if (withEffect()) {
+		@if (!asRenderTexture()) {
 			<ngtp-effect-composer>
 				@if (bloom()) {
 					<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
@@ -109,9 +109,9 @@ export class Bot {
 					<ngtp-glitch />
 				}
 			</ngtp-effect-composer>
-		}
 
-		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
+			<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
+		}
 	`,
 	imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpBloom, NgtpGlitch],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,5 +123,5 @@ export class Experience {
 	protected bloom = bloom;
 	protected glitch = glitch;
 
-	withEffect = input(true);
+	asRenderTexture = input(false);
 }

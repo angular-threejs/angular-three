@@ -25,7 +25,7 @@ import { Letter } from './letter';
 				<app-letter char="A" [position]="[1, 50, -1]">
 					<ng-template>
 						<ngt-group [scale]="10">
-							<app-basic-experience [withEffect]="false" />
+							<app-basic-experience [asRenderTexture]="true" />
 						</ngt-group>
 					</ng-template>
 				</app-letter>
@@ -33,41 +33,41 @@ import { Letter } from './letter';
 				<app-letter char="N" [position]="[2, 60, -2]" [rotation]="[4, 5, 6]">
 					<ng-template>
 						<ngt-group [scale]="10">
-							<app-instances-experience [withEffect]="false" />
+							<app-instances-experience [asRenderTexture]="true" />
 						</ngt-group>
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="G" [position]="[3, 70, 2]" [rotation]="[7, 8, 9]">
 					<ng-template>
-						<app-instanced-vertex-colors-experience [withEffect]="false" />
+						<app-instanced-vertex-colors-experience [asRenderTexture]="true" />
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="U" [position]="[-1, 80, 3]" [rotation]="[10, 11, 12]">
 					<ng-template>
-						<app-lod-experience />
+						<app-lod-experience [asRenderTexture]="true" />
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="L" [position]="[-2, 90, 2]" [rotation]="[13, 14, 15]">
 					<ng-template>
 						<ngt-group [scale]="10">
-							<app-lowpoly-earth-experience />
+							<app-lowpoly-earth-experience [asRenderTexture]="true" />
 						</ngt-group>
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="A" [position]="[-3, 100, -3]" [rotation]="[16, 17, 18]">
 					<ng-template>
-						<app-shaky-experience [withEffect]="false" />
+						<app-shaky-experience [asRenderTexture]="true" />
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="R" [position]="[-4, 110, 1]" [rotation]="[19, 20, 21]" [stencilBuffer]="true">
 					<ng-template>
 						<ngt-group [scale]="5">
-							<app-inverted-stencil-buffer-experience [withEffect]="false" />
+							<app-inverted-stencil-buffer-experience [asRenderTexture]="true" />
 						</ngt-group>
 					</ng-template>
 				</app-letter>

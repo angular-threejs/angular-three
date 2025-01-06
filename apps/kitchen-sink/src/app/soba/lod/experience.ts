@@ -57,7 +57,11 @@ export class LODBust {
 		@for (p of positions; track $index) {
 			<app-bust [position]="p.position" [rotation]="p.rotation" />
 		}
-		<ngts-orbit-controls [options]="{ autoRotate: true, autoRotateSpeed: 0.5, zoomSpeed: 0.075 }" />
+
+		@if (!asRenderTexture()) {
+			<ngts-orbit-controls [options]="{ autoRotate: true, autoRotateSpeed: 0.5, zoomSpeed: 0.075 }" />
+		}
+
 		<ngt-point-light [intensity]="0.5 * Math.PI" [decay]="0" />
 		<ngt-spot-light [position]="50" [intensity]="1.5 * Math.PI" [castShadow]="true" [decay]="0" />
 		<ngts-environment [options]="{ preset: 'city' }" />
@@ -71,4 +75,6 @@ export class LODBust {
 export class Experience {
 	protected Math = Math;
 	protected positions = positions;
+
+	asRenderTexture = input(false);
 }

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
@@ -89,20 +90,39 @@ export class Box {
 		<ngt-hemisphere-light [intensity]="Math.PI * 1.5" groundColor="red" />
 
 		<app-circular-mask />
-		<ngts-bounds [options]="{ fit: withEffect(), clip: withEffect(), observe: withEffect() }">
-			<ngts-float [options]="{ floatIntensity: 4, rotationIntensity: 0, speed: 4 }">
-				@switch (logo()) {
-					@case ('angular') {
-						<app-angular [invert]="invert()" [scale]="20" />
-					}
-					@case ('nx') {
-						<app-nx [invert]="invert()" [scale]="20" />
-					}
-					@case ('nx-cloud') {
-						<app-nx-cloud [invert]="invert()" [scale]="160" />
-					}
+
+		@if (!asRenderTexture()) {
+			<ngts-bounds [options]="{ fit: true, clip: true, observe: true }">
+				<ngts-float [options]="{ floatIntensity: 4, rotationIntensity: 0, speed: 4 }">
+					<ng-container [ngTemplateOutlet]="logos" />
+				</ngts-float>
+				<ng-container [ngTemplateOutlet]="boxes" />
+			</ngts-bounds>
+		} @else {
+			<ng-container [ngTemplateOutlet]="logos" />
+			<ng-container [ngTemplateOutlet]="boxes" />
+		}
+
+		<ngts-environment [options]="{ preset: 'city' }" />
+		@if (!asRenderTexture()) {
+			<ngts-orbit-controls [options]="{ makeDefault: true }" />
+		}
+
+		<ng-template #logos>
+			@switch (logo()) {
+				@case ('angular') {
+					<app-angular [invert]="invert()" [scale]="20" />
 				}
-			</ngts-float>
+				@case ('nx') {
+					<app-nx [invert]="invert()" [scale]="20" />
+				}
+				@case ('nx-cloud') {
+					<app-nx-cloud [invert]="invert()" [scale]="160" />
+				}
+			}
+		</ng-template>
+
+		<ng-template #boxes>
 			<app-box
 				color="#EAC435"
 				[width]="1"
@@ -113,17 +133,13 @@ export class Box {
 			/>
 			<app-box color="#03CEA4" [width]="2" [height]="2" [depth]="2" [position]="[-2, 0, -2]" />
 			<app-box color="#FB4D3D" [width]="2" [height]="2" [depth]="2" [position]="[2, 0, -2]" />
-		</ngts-bounds>
-
-		<ngts-environment [options]="{ preset: 'city' }" />
-		@if (withEffect()) {
-			<ngts-orbit-controls [options]="{ makeDefault: true }" />
-		}
+		</ng-template>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'inverted-stencil-buffer-soba-experience' },
 	imports: [
+		NgTemplateOutlet,
 		CircularMask,
 		NgtsBounds,
 		NgtsFloat,
@@ -141,5 +157,5 @@ export class Experience {
 	protected invert = invert;
 	protected logo = logo;
 
-	withEffect = input(true);
+	asRenderTexture = input(false);
 }

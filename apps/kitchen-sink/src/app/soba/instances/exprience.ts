@@ -119,7 +119,7 @@ export class Boxes {
 
 		<app-boxes />
 
-		@if (withEffect()) {
+		@if (!asRenderTexture()) {
 			<ngts-camera-controls />
 		}
 	`,
@@ -129,5 +129,5 @@ export class Boxes {
 	imports: [NgtsCameraControls, Boxes, NgtArgs],
 })
 export class Experience {
-	withEffect = input(true);
+	asRenderTexture = input(false);
 }

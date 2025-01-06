@@ -133,7 +133,9 @@ export class Model {
 			/>
 		</app-model>
 		<ngts-environment [options]="{ preset: 'city' }" />
-		<ngts-orbit-controls [options]="{ autoRotate: true }" />
+		@if (!asRenderTexture()) {
+			<ngts-orbit-controls [options]="{ autoRotate: true }" />
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -141,6 +143,8 @@ export class Model {
 })
 export class Experience {
 	protected Math = Math;
+
+	asRenderTexture = input(false);
 }
 
 injectGLTF.preload(() => './earth.gltf');
