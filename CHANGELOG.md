@@ -1,3 +1,14 @@
+## 3.2.3 (2025-01-06)
+
+### 🩹 Fixes
+
+- **core:** check against previous args and do nothing if they're the same references ([d24c136](https://github.com/angular-threejs/angular-three/commit/d24c136))
+- **core:** use custom equality fn for parameters ([3c0cdfe](https://github.com/angular-threejs/angular-three/commit/3c0cdfe))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.2.2 (2025-01-05)
 
 ### 🩹 Fixes
