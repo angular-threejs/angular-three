@@ -5,6 +5,7 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
+	signal,
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
@@ -54,7 +55,6 @@ import boldFont from './bold.blob';
 						bevelOffset: 0,
 					}"
 					(dblclick)="onDblClick($any($event))"
-					(pointermissed)="onPointerMissed($any($event))"
 				>
 					<ngts-mesh-transmission-material
 						[options]="$any({ clearcoat: 1, samples: 3, thickness: 40, chromaticAberration: 0.25, anisotropy: 0.4 })"
@@ -109,6 +109,8 @@ export class Letter {
 	private controls = this.store.select('controls');
 	protected eventsCompute = this.store.select('events', 'compute');
 
+	private focused = signal(false);
+
 	constructor() {
 		injectBeforeRender(() => {
 			const contents = this.contentsRef()?.nativeElement;
@@ -123,15 +125,13 @@ export class Letter {
 		const controls = this.controls() as CameraControls;
 		if (!controls) return;
 
-		// NOTE: if any of the render-texture scene has other controls, it messes this up
-		void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
-	}
+		if (this.focused()) {
+			void controls.reset(true);
+		} else {
+			// NOTE: if any of the render-texture scene has other controls, it messes this up
+			void controls.fitToBox(this.centerRef().groupRef().nativeElement, true);
+		}
 
-	onPointerMissed(event: NgtThreeEvent<MouseEvent>) {
-		event.stopPropagation();
-		const controls = this.controls() as CameraControls;
-		if (!controls) return;
-
-		void controls.reset(true);
+		this.focused.update((v) => !v);
 	}
 }
