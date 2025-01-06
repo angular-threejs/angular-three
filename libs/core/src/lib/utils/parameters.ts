@@ -2,6 +2,7 @@ import { computed, Signal, Type } from '@angular/core';
 import { Vector2, Vector3, Vector4 } from 'three';
 import { NgtVector2, NgtVector3, NgtVector4 } from '../three-types';
 import { NgtAnyRecord } from '../types';
+import { is } from './is';
 
 type KeysOfType<TObject extends object, TType> = Exclude<
 	{
@@ -15,17 +16,20 @@ export function omit<TObject extends object, TKeys extends (keyof TObject)[]>(
 	keysToOmit: TKeys,
 ): Signal<Omit<TObject, TKeys[number]>>;
 export function omit(objFn: () => NgtAnyRecord, keysToOmit: string[]) {
-	return computed(() => {
-		const obj = objFn();
-		const result = {} as NgtAnyRecord;
+	return computed(
+		() => {
+			const obj = objFn();
+			const result = {} as NgtAnyRecord;
 
-		for (const key of Object.keys(obj)) {
-			if (keysToOmit.includes(key)) continue;
-			Object.assign(result, { [key]: obj[key] });
-		}
+			for (const key of Object.keys(obj)) {
+				if (keysToOmit.includes(key)) continue;
+				Object.assign(result, { [key]: obj[key] });
+			}
 
-		return result;
-	});
+			return result;
+		},
+		{ equal: (a, b) => is.equ(a, b, { objects: 'shallow', arrays: 'shallow' }) },
+	);
 }
 
 export function pick<TObject extends object, TKey extends keyof TObject>(
