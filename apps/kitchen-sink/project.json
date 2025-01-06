@@ -7,7 +7,7 @@
 	"tags": [],
 	"targets": {
 		"build": {
-			"executor": "@angular-devkit/build-angular:application",
+			"executor": "@angular/build:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/apps/kitchen-sink",
@@ -55,7 +55,7 @@
 			"defaultConfiguration": "production"
 		},
 		"serve": {
-			"executor": "@angular-devkit/build-angular:dev-server",
+			"executor": "@angular/build:dev-server",
 			"configurations": {
 				"production": {
 					"buildTarget": "kitchen-sink:build:production"
