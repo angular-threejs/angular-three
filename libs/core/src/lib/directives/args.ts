@@ -9,6 +9,7 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { SPECIAL_INTERNAL_ADD_COMMENT } from '../renderer/constants';
+import { is } from '../utils/is';
 
 @Directive({ selector: 'ng-template[args]' })
 export class NgtArgs {
@@ -31,6 +32,12 @@ export class NgtArgs {
 		effect(() => {
 			const value = this.args();
 			if (value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null)) return;
+
+			if (is.equ(value, this.injectedArgs)) {
+				// we have the same value as before, no need to update
+				return;
+			}
+
 			this.injected = false;
 			this.injectedArgs = value;
 			this.createView();
