@@ -1,3 +1,14 @@
+## 3.2.4 (2025-01-07)
+
+### 🩹 Fixes
+
+- **core:** get parent in removeChild from parentNode; do not remove children if oldChild is scene ([2807f68](https://github.com/angular-threejs/angular-three/commit/2807f68))
+- **soba:** move makeDefault up for controls ([9d05d0c](https://github.com/angular-threejs/angular-three/commit/9d05d0c))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.2.3 (2025-01-06)
 
 ### 🩹 Fixes
