@@ -1,3 +1,13 @@
+## 3.3.0 (2025-01-07)
+
+### 🩹 Fixes
+
+- **soba:** adjust injectGLTF generics ([41b95c4](https://github.com/angular-threejs/angular-three/commit/41b95c4))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.2.4 (2025-01-07)
 
 ### 🩹 Fixes
