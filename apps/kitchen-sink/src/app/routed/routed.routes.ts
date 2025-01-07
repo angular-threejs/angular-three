@@ -2,16 +2,20 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
 	{
-		path: 'red',
-		loadComponent: () => import('./red-cube'),
+		path: 'knot',
+		loadComponent: () => import('./knot'),
 	},
 	{
-		path: 'blue',
-		loadComponent: () => import('./blue-cube'),
+		path: 'torus',
+		loadComponent: () => import('./torus'),
+	},
+	{
+		path: 'bomb',
+		loadComponent: () => import('./bomb'),
 	},
 	{
 		path: '',
-		redirectTo: 'red',
+		redirectTo: 'knot',
 		pathMatch: 'full',
 	},
 ];

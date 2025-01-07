@@ -9,28 +9,38 @@ extend(THREE);
 @Component({
 	template: `
 		<div class="h-svh">
-			<ngt-canvas [sceneGraph]="routedScene" />
+			<ngt-canvas [sceneGraph]="routedScene" shadows [camera]="{ position: [0, 0, 20], fov: 50 }" />
 		</div>
 
 		<ul class="absolute bottom-0 left-0 flex items-center gap-2">
 			<li>
 				<a
-					routerLink="red"
+					routerLink="knot"
 					class="underline"
 					routerLinkActive="text-blue-500"
 					[routerLinkActiveOptions]="{ exact: true }"
 				>
-					Red Cube
+					knot
 				</a>
 			</li>
 			<li>
 				<a
-					routerLink="blue"
+					routerLink="torus"
 					class="underline"
 					routerLinkActive="text-blue-500"
 					[routerLinkActiveOptions]="{ exact: true }"
 				>
-					Blue Cube
+					torus
+				</a>
+			</li>
+			<li>
+				<a
+					routerLink="bomb"
+					class="underline"
+					routerLinkActive="text-blue-500"
+					[routerLinkActiveOptions]="{ exact: true }"
+				>
+					bomb
 				</a>
 			</li>
 		</ul>
@@ -40,5 +50,5 @@ extend(THREE);
 	host: { class: 'routed' },
 })
 export default class Routed {
-	routedScene = CustomRoutedScene;
+	protected routedScene = CustomRoutedScene;
 }

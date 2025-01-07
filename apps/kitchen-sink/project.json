@@ -23,7 +23,8 @@
 				"styles": ["apps/kitchen-sink/src/styles.css"],
 				"scripts": [],
 				"loader": {
-					".blob": "file"
+					".blob": "file",
+					".glb": "file"
 				}
 			},
 			"configurations": {

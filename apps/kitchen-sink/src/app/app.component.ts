@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, ActivationEnd, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ActivationEnd, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 
 @Component({
@@ -52,7 +52,6 @@ export class AppComponent {
 
 	private navigationEnd = toSignal(this.router.events.pipe(filter((event) => event instanceof NavigationEnd)));
 	private activationEnd = toSignal(this.router.events.pipe(filter((event) => event instanceof ActivationEnd)));
-	private route = inject(ActivatedRoute);
 
 	currentRoute = computed(() => {
 		const navigationEnd = this.navigationEnd();
