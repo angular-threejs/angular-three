@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { injectMask } from 'angular-three-soba/staging';
 import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
@@ -13,43 +13,17 @@ type NxGLTF = GLTF & {
 	selector: 'app-nx',
 	template: `
 		@if (gltf(); as gltf) {
+			@let nodes = gltf.nodes;
+			@let _material = material();
+			@let meshParameters = { castShadow: true, receiveShadow: true };
+
 			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-3, -3, 0]" [rotation]="[Math.PI / 2, 0, 0]">
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve004.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve005.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve006.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve007.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve008.geometry"
-					[material]="material()"
-				/>
-				<ngt-mesh
-					[castShadow]="true"
-					[receiveShadow]="true"
-					[geometry]="gltf.nodes.Curve009.geometry"
-					[material]="material()"
-				/>
+				<ngt-mesh [parameters]="meshParameters" [geometry]="nodes.Curve004.geometry" [material]="_material" />
+				<ngt-mesh [parameters]="meshParameters" [geometry]="nodes.Curve005.geometry" [material]="_material" />
+				<ngt-mesh [parameters]="meshParameters" [geometry]="nodes.Curve006.geometry" [material]="_material" />
+				<ngt-mesh [parameters]="meshParameters" [geometry]="nodes.Curve007.geometry" [material]="_material" />
+				<ngt-mesh [parameters]="meshParameters" [geometry]="nodes.Curve008.geometry" [material]="_material" />
+				<ngt-mesh [parameters]="meshParameters" [geometry]="nodes.Curve009.geometry" [material]="_material" />
 			</ngt-group>
 		}
 	`,
@@ -62,7 +36,7 @@ export class Nx {
 	invert = input(false);
 	scale = input(1);
 
-	protected gltf = injectGLTF(() => './nx.glb') as Signal<NxGLTF | null>;
+	protected gltf = injectGLTF<NxGLTF>(() => './nx.glb');
 	protected stencilParameters = injectMask(() => 1, this.invert);
 
 	protected material = computed(() => {

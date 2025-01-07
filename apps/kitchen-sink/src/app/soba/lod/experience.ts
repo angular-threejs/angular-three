@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -42,13 +42,13 @@ export class LODBust {
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtEuler>([0, 0, 0]);
 
-	protected gltfs = injectGLTF(() => [
+	protected gltfs = injectGLTF<BustGLTF[]>(() => [
 		'./bust-1-d.glb',
 		'./bust-2-d.glb',
 		'./bust-3-d.glb',
 		'./bust-4-d.glb',
 		'./bust-5-d.glb',
-	]) as Signal<BustGLTF[] | null>;
+	]);
 }
 
 @Component({

@@ -10,7 +10,6 @@ import {
 	ElementRef,
 	inject,
 	input,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { extend, NgtGroup, NgtObjectEvents } from 'angular-three';
@@ -74,7 +73,7 @@ export class Astronaut {
 
 	modelRef = viewChild<ElementRef<Group>>('model');
 
-	protected gltf = injectGLTF(() => '/Astronaut-transformed.glb') as unknown as Signal<AstronautGLTFResult | null>;
+	protected gltf = injectGLTF<AstronautGLTFResult>(() => '/Astronaut-transformed.glb');
 
 	constructor() {
 		extend({ Group, Mesh });

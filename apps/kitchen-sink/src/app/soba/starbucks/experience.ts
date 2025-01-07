@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -47,7 +47,7 @@ export class Cup {
 	protected rotation = signal<NgtEuler>([0, 0, 0]);
 	protected scale = signal<NgtVector3>([0.6, 0.6, 0.6]);
 
-	protected gltf = injectGLTF(() => './coffee-transformed.glb') as Signal<CupGLTF | null>;
+	protected gltf = injectGLTF<CupGLTF>(() => './coffee-transformed.glb');
 	protected texture = injectTexture(() => './1200px-Starbucks_Logo_ab_2011.svg.png');
 
 	private p = new Vector3();

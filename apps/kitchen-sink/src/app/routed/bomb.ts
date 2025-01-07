@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import { Mesh } from 'three';
@@ -31,5 +31,5 @@ interface BombGLTF extends GLTF {
 	imports: [NgtsMeshTransmissionMaterial],
 })
 export default class Bomb {
-	protected gltf = injectGLTF(() => bombUrl) as Signal<BombGLTF | null>;
+	protected gltf = injectGLTF<BombGLTF>(() => bombUrl);
 }

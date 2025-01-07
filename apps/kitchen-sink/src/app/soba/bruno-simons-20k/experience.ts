@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtpDepthOfField, NgtpEffectComposer, NgtpToneMapping } from 'angular-three-postprocessing';
 import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
@@ -40,7 +40,7 @@ type HatGLTF = GLTF & {
 	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
 export class Hats {
-	protected gltf = injectGLTF(() => './blender-threejs-journey-20k-hat-transformed.glb') as Signal<HatGLTF | null>;
+	protected gltf = injectGLTF<HatGLTF>(() => './blender-threejs-journey-20k-hat-transformed.glb');
 
 	protected instances = Array.from({ length: 80 }, (_, index) => ({
 		key: index,
@@ -96,7 +96,7 @@ type ModelGLTF = GLTF & {
 export class Model {
 	position = input<NgtVector3>([0, 0, 0]);
 
-	protected gltf = injectGLTF(() => './blender-threejs-journey-20k-transformed.glb') as Signal<ModelGLTF | null>;
+	protected gltf = injectGLTF<ModelGLTF>(() => './blender-threejs-journey-20k-transformed.glb');
 }
 
 @Component({

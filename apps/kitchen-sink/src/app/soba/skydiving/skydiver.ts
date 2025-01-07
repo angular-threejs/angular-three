@@ -4,7 +4,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
@@ -57,7 +56,7 @@ type SkydiverGLTF = GLTF & {
 export class Skydiver {
 	protected DoubleSide = DoubleSide;
 
-	protected gltf = injectGLTF(() => './skydiver.glb') as Signal<SkydiverGLTF | null>;
+	protected gltf = injectGLTF<SkydiverGLTF>(() => './skydiver.glb');
 	protected textures = injectTexture(
 		() => ({
 			baseColor: './texture/skydiver_BaseColor.webp',

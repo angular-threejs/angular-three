@@ -4,7 +4,6 @@ import {
 	Component,
 	Directive,
 	ElementRef,
-	Signal,
 	computed,
 	effect,
 	inject,
@@ -83,7 +82,7 @@ export class BotAnimations {
 export class Bot {
 	protected Math = Math;
 
-	protected gltf = injectGLTF(() => './ybot.glb') as Signal<BotGLTF | null>;
+	protected gltf = injectGLTF<BotGLTF>(() => './ybot.glb');
 	protected matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
 	protected matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
 

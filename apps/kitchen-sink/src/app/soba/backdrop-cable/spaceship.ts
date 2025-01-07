@@ -10,7 +10,6 @@ import {
 	ElementRef,
 	inject,
 	input,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { extend, NgtGroup, NgtObjectEvents } from 'angular-three';
@@ -90,9 +89,9 @@ export class Spaceship {
 
 	modelRef = viewChild<ElementRef<Group>>('model');
 
-	protected gltf = injectGLTF(() => '/spaceship-transformed.glb', {
+	protected gltf = injectGLTF<SpaceshipGLTFResult>(() => '/spaceship-transformed.glb', {
 		useDraco: true,
-	}) as unknown as Signal<SpaceshipGLTFResult | null>;
+	});
 
 	constructor() {
 		extend({ Group, Mesh });

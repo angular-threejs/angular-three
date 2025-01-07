@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { injectMask } from 'angular-three-soba/staging';
 import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
@@ -82,7 +82,7 @@ export class NxCloud {
 	invert = input(false);
 	scale = input(1);
 
-	protected gltf = injectGLTF(() => './nx-cloud.glb') as Signal<NxCloudGLTF | null>;
+	protected gltf = injectGLTF<NxCloudGLTF>(() => './nx-cloud.glb');
 	protected stencilParameters = injectMask(() => 1, this.invert);
 
 	protected material = computed(() => {

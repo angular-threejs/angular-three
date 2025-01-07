@@ -3,7 +3,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	Signal,
 	computed,
 	inject,
 	input,
@@ -138,7 +137,7 @@ type DiamondGLTF = GLTF & {
 export class Diamond {
 	protected positionRotationInputs = inject(PositionRotationInput, { host: true });
 
-	private gltf = injectGLTF(() => './diamond.glb') as Signal<DiamondGLTF | null>;
+	private gltf = injectGLTF<DiamondGLTF>(() => './diamond.glb');
 	protected geometry = computed(() => {
 		const gltf = this.gltf();
 		if (!gltf) return null;

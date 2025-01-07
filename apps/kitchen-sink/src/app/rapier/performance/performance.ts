@@ -6,7 +6,6 @@ import {
 	input,
 	output,
 	signal,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender, NgtVector3, NON_ROOT } from 'angular-three';
@@ -113,7 +112,7 @@ export class Bendy {
 	position = input<NgtVector3>([0, 0, 0]);
 	scale = input<NgtVector3>([1, 1, 1]);
 
-	protected gltf = injectGLTF(() => './bendy.glb') as Signal<BendyGLTF | null>;
+	protected gltf = injectGLTF<BendyGLTF>(() => './bendy.glb');
 }
 
 @Component({

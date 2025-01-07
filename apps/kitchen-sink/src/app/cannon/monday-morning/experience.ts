@@ -327,7 +327,7 @@ interface CupGLTF extends GLTF {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Mug {
-	protected gltf = injectGLTF(() => './cup.glb') as Signal<CupGLTF | null>;
+	protected gltf = injectGLTF<CupGLTF>(() => './cup.glb');
 	private group = viewChild.required<ElementRef<Group>>('group');
 
 	protected dragConstraint = injectDragConstraint(this.group);

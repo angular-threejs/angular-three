@@ -186,6 +186,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'aquarium',
+		loadComponent: () => import('./aquarium/aquarium'),
+		data: {
+			credits: {
+				title: 'Aquarium',
+				link: 'https://pmndrs.github.io/examples/demos/aquarium',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
