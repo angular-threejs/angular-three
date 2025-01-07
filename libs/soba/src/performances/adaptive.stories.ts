@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -49,7 +49,7 @@ interface ArcherGLTF extends GLTF {
 class Archer {
 	protected readonly Math = Math;
 
-	gltf = injectGLTF(() => './archer.glb') as Signal<ArcherGLTF | null>;
+	gltf = injectGLTF<ArcherGLTF>(() => './archer.glb');
 }
 
 @Component({

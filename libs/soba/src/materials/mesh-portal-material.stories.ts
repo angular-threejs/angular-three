@@ -5,7 +5,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
@@ -75,7 +74,7 @@ class Side {
 	index = input.required<number>();
 	attach = computed(() => ['material', this.index()]);
 
-	gltf = injectGLTF(() => './aobox-transformed.glb') as Signal<AOBoxGLTF | null>;
+	gltf = injectGLTF<AOBoxGLTF>(() => './aobox-transformed.glb');
 	shapeRef = viewChild<ElementRef<Mesh>>('shape');
 
 	constructor() {

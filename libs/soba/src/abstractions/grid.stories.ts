@@ -6,7 +6,6 @@ import {
 	input,
 	output,
 	signal,
-	Signal,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtAnyRecord, NgtArgs } from 'angular-three';
@@ -42,9 +41,9 @@ type SuzanneGLTF = GLTF & {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Suzi {
-	gltf = injectGLTF(
+	gltf = injectGLTF<SuzanneGLTF>(
 		() => 'https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/suzanne-high-poly/model.gltf',
-	) as Signal<SuzanneGLTF | null>;
+	);
 
 	rotation = input([0, 0, 0]);
 	scale = input(1);

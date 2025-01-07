@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { injectBeforeRender, injectObjectEvents, omit, pick } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -119,7 +119,7 @@ class Shoes {
 	data = data;
 	range = input(100);
 
-	gltf = injectGLTF(() => './shoe.glb') as Signal<ShoeGLTF | null>;
+	gltf = injectGLTF<ShoeGLTF>(() => './shoe.glb');
 }
 
 @Component({

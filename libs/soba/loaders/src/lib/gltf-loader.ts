@@ -29,7 +29,25 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 	};
 }
 
-function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
+type InjectGLTFUrl<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = TGltf extends GLTF
+	? string
+	: TGltf extends GLTF[]
+		? string[]
+		: TGltf extends Record<string, GLTF>
+			? Record<string, string>
+			: never;
+type InjectGLTFObjectMap<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = TGltf extends GLTF
+	? TGltf & NgtObjectMap
+	: TGltf extends Array<infer _GLTF extends GLTF>
+		? Array<_GLTF & NgtObjectMap>
+		: TGltf extends Record<string, infer _GLTF extends GLTF>
+			? Record<string, _GLTF & NgtObjectMap>
+			: never;
+
+function _injectGLTF<
+	TGltf extends GLTF | GLTF[] | Record<string, GLTF> = GLTF,
+	TUrl extends string | string[] | Record<string, string> = InjectGLTFUrl<TGltf>,
+>(
 	path: () => TUrl,
 	{
 		useDraco = true,
@@ -42,9 +60,9 @@ function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 		useMeshOpt?: boolean;
 		injector?: Injector;
 		extensions?: (loader: GLTFLoader) => void;
-		onLoad?: (data: NgtLoaderResults<TUrl, GLTF & NgtObjectMap>) => void;
+		onLoad?: (data: InjectGLTFObjectMap<TGltf>) => void;
 	} = {},
-): Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> & { scene: Signal<GLTF['scene'] | null> } {
+): Signal<InjectGLTFObjectMap<TGltf> | null> & { scene: Signal<GLTF['scene'] | null> } {
 	return assertInjector(_injectGLTF, injector, () => {
 		const result = injectLoader(() => GLTFLoader, path, {
 			extensions: _extensions(useDraco, useMeshOpt, extensions),
@@ -61,7 +79,7 @@ function _injectGLTF<TUrl extends string | string[] | Record<string, string>>(
 		});
 
 		return result;
-	}) as Signal<NgtLoaderResults<TUrl, GLTF & NgtObjectMap> | null> & { scene: Signal<GLTF['scene'] | null> };
+	}) as Signal<InjectGLTFObjectMap<TGltf> | null> & { scene: Signal<GLTF['scene'] | null> };
 }
 
 _injectGLTF.preload = <TUrl extends string | string[] | Record<string, string>>(
