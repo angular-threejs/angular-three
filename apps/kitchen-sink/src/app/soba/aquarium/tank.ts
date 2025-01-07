@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtVector3 } from 'angular-three';
+import { getLocalState, NgtVector3 } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import { injectMask } from 'angular-three-soba/staging';
@@ -67,9 +67,15 @@ export class Tank {
 			const group = this.groupRef()?.nativeElement;
 			if (!group) return;
 
+			const localState = getLocalState(group);
+			if (!localState) return;
+
+			// track all children
+			localState.objects();
+
 			// Apply stencil to all contents
 			group.traverse((child) => {
-				if (child instanceof Mesh && child.material) {
+				if (child instanceof Mesh) {
 					Object.assign(child.material, { ...this.stencilParameters() });
 				}
 			});
