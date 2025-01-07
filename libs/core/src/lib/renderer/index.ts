@@ -281,7 +281,17 @@ export class NgtRenderer implements Renderer2 {
 		this.appendChild(parent, newChild);
 	}
 
-	removeChild(parent: NgtRendererNode | null, oldChild: NgtRendererNode, isHostElement?: boolean | undefined): void {
+	removeChild(
+		parent: NgtRendererNode | null,
+		oldChild: NgtRendererNode,
+		isHostElement?: boolean | undefined,
+		calledByNgt = false,
+	): void {
+		if (!calledByNgt && parent == null) {
+			parent = this.parentNode(oldChild);
+			return this.removeChild(parent, oldChild, isHostElement, true);
+		}
+
 		if (parent == null) {
 			parent = (untracked(() => getLocalState(oldChild)?.parent?.()) ||
 				oldChild.__ngt_renderer__?.[NgtRendererClassId.parent]) as NgtRendererNode;
@@ -293,12 +303,12 @@ export class NgtRenderer implements Renderer2 {
 		// we'll just remove the child and destroy it
 		if (parent == null) {
 			if (cRS) {
+				// if the child is the root scene, we don't want to destroy it
+				if (is.scene(oldChild) && oldChild.name === '__ngt_root_scene__') return;
+
 				if (cRS[NgtRendererClassId.type] === 'three') {
 					removeThreeChild(oldChild, undefined, true);
 				}
-
-				// if the child is the root scene, we don't want to destroy it
-				if (is.scene(oldChild) && oldChild.name === '__ngt_root_scene__') return;
 
 				// otherwise, we'll destroy it
 				this.destroyInternal(oldChild, undefined);
