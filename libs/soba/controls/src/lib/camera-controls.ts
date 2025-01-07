@@ -7,7 +7,7 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, NgtArgs, NgtCamera, omit, pick } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtArgs, NgtCamera, omit, pick } from 'angular-three';
 import CameraControls from 'camera-controls';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
@@ -91,7 +91,16 @@ export class NgtsCameraControls {
 				Vector4,
 			},
 		});
-		extend({ CameraControls });
+
+		effect((onCleanup) => {
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const controls = this.controls();
+			const oldControls = this.store.snapshot.controls;
+			this.store.update({ controls: controls as unknown as EventDispatcher });
+			onCleanup(() => void this.store.update({ controls: oldControls }));
+		});
 
 		injectBeforeRender(
 			({ delta }) => {
@@ -144,16 +153,6 @@ export class NgtsCameraControls {
 				controls.removeEventListener('transitionstart', callback);
 				controls.removeEventListener('wake', callback);
 			});
-		});
-
-		effect((onCleanup) => {
-			const makeDefault = this.makeDefault();
-			if (!makeDefault) return;
-
-			const controls = this.controls();
-			const oldControls = this.store.snapshot.controls;
-			this.store.update({ controls: controls as unknown as EventDispatcher });
-			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 	}
 }

@@ -106,7 +106,7 @@ export class NgtsBounds {
 			if (!controls) return;
 
 			const callback = () => {
-				if (controls && this.goal.target && this.animationState !== AnimationState.NONE) {
+				if (this.goal.target && this.animationState !== AnimationState.NONE) {
 					const front = new Vector3().setFromMatrixColumn(camera.matrix, 2);
 					const d0 = this.origin.camPos.distanceTo(controls.target);
 					const d1 = (this.goal.camPos || this.origin.camPos).distanceTo(this.goal.target);
@@ -131,8 +131,10 @@ export class NgtsBounds {
 				this.observe(),
 				this.size(),
 				this.camera(),
+				// TODO: (chau) for some reason, if this effect tracks controls changes, the initial bounds doesn't target properly
 				this.controls(),
 			];
+
 			if (observe || count++ === 0) {
 				this.refresh();
 				if (fit) this.reset().fit();

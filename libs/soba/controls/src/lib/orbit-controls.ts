@@ -71,6 +71,18 @@ export class NgtsOrbitControls {
 		);
 
 		effect((onCleanup) => {
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const controls = this.controls();
+			if (!controls) return;
+
+			const oldControls = this.store.get('controls');
+			this.store.update({ controls });
+			onCleanup(() => void this.store.update({ controls: oldControls }));
+		});
+
+		effect((onCleanup) => {
 			const [keyEvents, domElement, controls] = [
 				this.keyEvents(),
 				this.domElement() || this.store.get('events', 'connected') || this.glDomElement(),
@@ -85,18 +97,6 @@ export class NgtsOrbitControls {
 				controls.connect(domElement);
 			}
 			onCleanup(() => void controls.dispose());
-		});
-
-		effect((onCleanup) => {
-			const makeDefault = this.makeDefault();
-			if (!makeDefault) return;
-
-			const controls = this.controls();
-			if (!controls) return;
-
-			const oldControls = this.store.get('controls');
-			this.store.update({ controls });
-			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 
 		effect((onCleanup) => {
