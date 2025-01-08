@@ -1,3 +1,21 @@
+## 3.4.0 (2025-01-08)
+
+### 🚀 Features
+
+- **core:** add parent directive for special attach case ([7f78a4c](https://github.com/angular-threejs/angular-three/commit/7f78a4c))
+
+### 🩹 Fixes
+
+- **core:** make sure previousAttach exists before invoking ([b5d3ae6](https://github.com/angular-threejs/angular-three/commit/b5d3ae6))
+- **core:** adjust NgtRouterOutlet to make a new env injector with parent ([ae16c92](https://github.com/angular-threejs/angular-three/commit/ae16c92))
+- **core:** move resolve parent to the directive itself ([0ec724a](https://github.com/angular-threejs/angular-three/commit/0ec724a))
+- **postprocessing:** update tonemapping to not use CONVOLUTION ([a6a7567](https://github.com/angular-threejs/angular-three/commit/a6a7567))
+- **postprocessing:** export name for tone mapping ([abe0100](https://github.com/angular-threejs/angular-three/commit/abe0100))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.3.0 (2025-01-07)
 
 ### 🩹 Fixes
