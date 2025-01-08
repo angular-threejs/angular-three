@@ -20,7 +20,7 @@ export function detach(parent: NgtAnyRecord, child: NgtAnyRecord, attachProp: st
 	const childLocalState = getLocalState(child);
 	if (childLocalState) {
 		if (Array.isArray(attachProp)) attach(parent, childLocalState.previousAttach, attachProp, childLocalState.isRaw);
-		else (childLocalState.previousAttach as () => void)();
+		else (childLocalState.previousAttach as () => void)?.();
 	}
 }
 
