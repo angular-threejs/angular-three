@@ -20,7 +20,7 @@ export type ToneMappingEffectOptions = NonNullable<ConstructorParameters<typeof 
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
-export class NgtpBrightnessContrast {
+export class NgtpToneMapping {
 	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<ToneMappingEffectOptions, 'blendFunction'>);
 }
