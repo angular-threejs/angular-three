@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { Object3D } from 'three';
 import { SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_INTERNAL_SET_PARENT_COMMENT } from '../renderer/constants';
+import { injectStore } from '../store';
 import { NgtNullish } from '../types';
 
 @Directive({ selector: 'ng-template[parent]' })
@@ -22,17 +23,28 @@ export class NgtParent {
 
 	private vcr = inject(ViewContainerRef);
 	private template = inject(TemplateRef);
+	private store = injectStore();
+	private scene = this.store.select('scene');
 
 	protected injected = false;
-	protected injectedParent: NgtNullish<ElementRef<Object3D> | Object3D | string> = null;
+	protected injectedParent: NgtNullish<Object3D> = null;
 	private view?: EmbeddedViewRef<unknown>;
 
 	private _parent = computed(() => {
 		const parent = this.parent();
-		if (typeof parent === 'function') {
-			return parent();
+		const rawParent = typeof parent === 'function' ? parent() : parent;
+		if (!rawParent) return null;
+
+		const scene = this.scene();
+		if (typeof rawParent === 'string') {
+			return scene.getObjectByName(rawParent);
 		}
-		return parent;
+
+		if ('nativeElement' in rawParent) {
+			return rawParent.nativeElement;
+		}
+
+		return rawParent;
 	});
 
 	constructor() {

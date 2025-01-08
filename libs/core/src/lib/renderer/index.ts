@@ -1,7 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import {
 	DebugNode,
-	ElementRef,
 	Injectable,
 	Renderer2,
 	RendererFactory2,
@@ -11,7 +10,6 @@ import {
 	makeEnvironmentProviders,
 	untracked,
 } from '@angular/core';
-import { Object3D } from 'three';
 import { NgtArgs } from '../directives/args';
 import { NgtParent } from '../directives/parent';
 import { getLocalState, prepare } from '../instance';
@@ -154,10 +152,7 @@ export class NgtRenderer implements Renderer2 {
 			const primitiveNode = createNode('three', object, this.document);
 
 			if (injectedParent) {
-				const resolvedParent = this.getParentFromNgtParent(injectedParent, this.rootStore);
-				if (resolvedParent) {
-					primitiveNode.__ngt_renderer__[NgtRendererClassId.parent] = resolvedParent as unknown as NgtRendererNode;
-				}
+				primitiveNode.__ngt_renderer__[NgtRendererClassId.parent] = injectedParent as unknown as NgtRendererNode;
 			}
 
 			return primitiveNode;
@@ -180,10 +175,7 @@ export class NgtRenderer implements Renderer2 {
 			}
 
 			if (injectedParent) {
-				const resolvedParent = this.getParentFromNgtParent(injectedParent, this.rootStore);
-				if (resolvedParent) {
-					node.__ngt_renderer__[NgtRendererClassId.parent] = resolvedParent as unknown as NgtRendererNode;
-				}
+				node.__ngt_renderer__[NgtRendererClassId.parent] = injectedParent as unknown as NgtRendererNode;
 			}
 
 			return node;
@@ -204,11 +196,8 @@ export class NgtRenderer implements Renderer2 {
 				this.argsCommentNodes.push(comment);
 			} else if (node === 'parent') {
 				this.parentCommentNodes.push(comment);
-				comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT] = (ngtParent: Object3D | ElementRef<Object3D> | string) => {
-					commentNode.__ngt_renderer__[NgtRendererClassId.parent] = this.getParentFromNgtParent(
-						ngtParent,
-						this.rootStore,
-					) as unknown as NgtRendererNode;
+				comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT] = (ngtParent: NgtRendererNode) => {
+					commentNode.__ngt_renderer__[NgtRendererClassId.parent] = ngtParent;
 				};
 			} else if (typeof node === 'object') {
 				this.portalCommentsNodes.push(node);
@@ -698,94 +687,6 @@ export class NgtRenderer implements Renderer2 {
 			commentNodes.splice(index, 1);
 		});
 		return directiveInstance;
-	}
-
-	private getParentFromNgtParent(ngtParent: Object3D | ElementRef<Object3D> | string, store: NgtSignalStore<NgtState>) {
-		let topMostStore = store;
-
-		while (topMostStore.snapshot.previousRoot) {
-			topMostStore = topMostStore.snapshot.previousRoot;
-		}
-
-		const scene = topMostStore.snapshot.scene;
-
-		if (typeof ngtParent === 'string') {
-			return scene.getObjectByName(ngtParent);
-		}
-
-		if ('nativeElement' in ngtParent) {
-			return ngtParent.nativeElement;
-		}
-
-		return ngtParent;
-	}
-
-	private getNgtParent() {
-		let directive: NgtParent | undefined;
-
-		const destroyed = [];
-
-		let i = this.parentCommentNodes.length - 1;
-		while (i >= 0) {
-			const comment = this.parentCommentNodes[i];
-			if (comment.__ngt_renderer__[NgtRendererClassId.destroyed]) {
-				destroyed.push(i);
-				i--;
-				continue;
-			}
-			const injector = comment.__ngt_renderer__[NgtRendererClassId.debugNodeFactory]?.()?.injector;
-			if (!injector) {
-				i--;
-				continue;
-			}
-			const instance = injector.get(NgtParent, null);
-			if (instance && instance.validate()) {
-				directive = instance;
-				break;
-			}
-
-			i--;
-		}
-
-		destroyed.forEach((index) => {
-			this.parentCommentNodes.splice(index, 1);
-		});
-
-		return directive;
-	}
-
-	private getNgtArgs() {
-		let directive: NgtArgs | undefined;
-
-		const destroyed = [];
-
-		let i = this.argsCommentNodes.length - 1;
-		while (i >= 0) {
-			const comment = this.argsCommentNodes[i];
-			if (comment.__ngt_renderer__[NgtRendererClassId.destroyed]) {
-				destroyed.push(i);
-				i--;
-				continue;
-			}
-			const injector = comment.__ngt_renderer__[NgtRendererClassId.debugNodeFactory]?.()?.injector;
-			if (!injector) {
-				i--;
-				continue;
-			}
-			const instance = injector.get(NgtArgs, null);
-			if (instance && instance.validate()) {
-				directive = instance;
-				break;
-			}
-
-			i--;
-		}
-
-		destroyed.forEach((index) => {
-			this.argsCommentNodes.splice(index, 1);
-		});
-
-		return directive;
 	}
 
 	createText = this.delegate.createText.bind(this.delegate);
