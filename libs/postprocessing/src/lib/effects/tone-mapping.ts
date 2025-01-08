@@ -8,7 +8,7 @@ extend({ ToneMappingEffect });
 export type ToneMappingEffectOptions = NonNullable<ConstructorParameters<typeof ToneMappingEffect>[0]>;
 
 @Component({
-	selector: 'ngtp-brightness-contrast',
+	selector: 'ngtp-tone-mapping',
 	template: `
 		<ngt-tone-mapping-effect *args="[options()]" [camera]="effect.camera()">
 			<ngtp-effect-blend-mode />
