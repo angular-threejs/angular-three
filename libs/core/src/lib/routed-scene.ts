@@ -1,6 +1,7 @@
 import {
 	ChangeDetectorRef,
 	Component,
+	createEnvironmentInjector,
 	Directive,
 	effect,
 	EnvironmentInjector,
@@ -76,10 +77,15 @@ export class NgtRouterOutlet extends RouterOutlet {
 	private environmentInjector = inject(EnvironmentInjector);
 
 	override activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector): void {
-		return super.activateWith(
-			activatedRoute,
-			new NgtOutletEnvironmentInjector(environmentInjector, this.environmentInjector),
-		);
+		const activateWithEnvInjector =
+			this.environmentInjector === environmentInjector
+				? environmentInjector
+				: createEnvironmentInjector(
+						[],
+						new NgtOutletEnvironmentInjector(environmentInjector, this.environmentInjector),
+					);
+
+		return super.activateWith(activatedRoute, activateWithEnvInjector);
 	}
 }
 
