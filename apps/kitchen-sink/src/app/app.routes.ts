@@ -38,6 +38,12 @@ export const appRoutes: Route[] = [
 		title: 'Routed - Angular Three Demo',
 	},
 	{
+		path: 'routed-rocks',
+		loadComponent: () => import('./routed-rocks/routed-rocks'),
+		loadChildren: () => import('./routed-rocks/routed-rocks.routes'),
+		title: 'Routed Rocks - Angular Three Demo',
+	},
+	{
 		path: '',
 		// redirectTo: 'cannon',
 		// redirectTo: 'postprocessing',
