@@ -67,6 +67,14 @@ interface RockGLTF extends GLTF {
 					(click)="router.navigate([menu.path])"
 				>
 					<ngt-mesh-phong-material [color]="menu.color" [side]="FrontSide" />
+
+					<!-- NOTE: we can use ng-template for this use-case as well. -->
+					<!-- @let templateRefs = coloredRockTemplateRefs(); -->
+					<!-- @let template = templateRefs[menu.slug]; -->
+					<!---->
+					<!-- @if (template) { -->
+					<!-- 	<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: menu }" /> -->
+					<!-- } -->
 				</ngt-mesh>
 			</ngt-group>
 		}

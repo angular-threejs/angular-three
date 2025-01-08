@@ -58,4 +58,23 @@ export default class ColoredRock {
 
 	private rockStore = inject(RockStore);
 	protected readonly selectedRock = this.rockStore.selectedRock;
+
+	constructor() {
+		// NOTE: we can use ng-template for this use-case as well.
+		//  Just a little more involved than `NgtParent`
+		//
+		// effect(() => {
+		// 	const colorId = this.colorId();
+		// 	if (!colorId) return;
+		//
+		// 	const templateRef = this.templateRef();
+		// 	this.rockStore.coloredRockTemplateRefs.set({
+		// 		[colorId]: templateRef,
+		// 	});
+		// });
+		//
+		// inject(DestroyRef).onDestroy(() => {
+		// 	this.rockStore.coloredRockTemplateRefs.set({});
+		// });
+	}
 }

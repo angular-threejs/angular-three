@@ -28,6 +28,7 @@ const colors = [
 
 export const menus = colors.map((color, index) => ({
 	id: index + 1,
+	slug: color.slug,
 	label: color.label,
 	name: `rock-${color.slug}`,
 	path: `/routed-rocks/rocks/${color.slug}`,
