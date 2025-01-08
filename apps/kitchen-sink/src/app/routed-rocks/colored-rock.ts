@@ -1,22 +1,13 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	effect,
-	ElementRef,
-	inject,
-	viewChild,
-} from '@angular/core';
-import { injectStore, NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { NgtArgs, NgtEuler, NgtParent, NgtVector3 } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
-import { FrontSide, Group } from 'three';
+import { FrontSide } from 'three';
 import { RockStore } from './store';
 
 @Component({
 	template: `
-		<ngt-group #group attach="none">
-			@if (selectedRock(); as rock) {
+		@if (selectedRock(); as rock) {
+			<ngt-group *parent="rock.name">
 				<ngt-mesh
 					[castShadow]="true"
 					[receiveShadow]="true"
@@ -43,10 +34,10 @@ import { RockStore } from './store';
 						/>
 					}
 				</ngt-group>
-			}
-		</ngt-group>
+			</ngt-group>
+		}
 	`,
-	imports: [NgtArgs, NgtsText],
+	imports: [NgtArgs, NgtsText, NgtParent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'colored-rock' },
@@ -64,35 +55,6 @@ export default class ColoredRock {
 		] as NgtVector3,
 	}));
 
-	private groupRef = viewChild.required<ElementRef<Group>>('group');
-
 	private rockStore = inject(RockStore);
 	protected readonly selectedRock = this.rockStore.selectedRock;
-
-	private store = injectStore();
-	private scene = this.store.select('scene');
-
-	private parent = computed(() => {
-		const selected = this.selectedRock();
-		if (!selected) return null;
-
-		const parent = this.scene().getObjectByName(selected.name);
-		if (!parent) return null;
-
-		return parent;
-	});
-
-	constructor() {
-		effect((onCleanup) => {
-			const parent = this.parent();
-			if (!parent) return;
-
-			const group = this.groupRef().nativeElement;
-
-			parent.add(group);
-			onCleanup(() => {
-				parent.remove(group);
-			});
-		});
-	}
 }
