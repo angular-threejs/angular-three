@@ -1,3 +1,13 @@
+## 3.4.1 (2025-01-08)
+
+### 🩹 Fixes
+
+- **postprocessing:** ngtp tone mapping selector ([e816059](https://github.com/angular-threejs/angular-three/commit/e816059))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.4.0 (2025-01-08)
 
 ### 🚀 Features
