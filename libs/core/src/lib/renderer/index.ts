@@ -1,15 +1,19 @@
 import { DOCUMENT } from '@angular/common';
 import {
 	DebugNode,
+	ElementRef,
 	Injectable,
 	Renderer2,
 	RendererFactory2,
 	RendererType2,
+	Type,
 	inject,
 	makeEnvironmentProviders,
 	untracked,
 } from '@angular/core';
+import { Object3D } from 'three';
 import { NgtArgs } from '../directives/args';
+import { NgtParent } from '../directives/parent';
 import { getLocalState, prepare } from '../instance';
 import { NGT_STORE, injectStore, provideStore } from '../store';
 import { NgtAnyRecord, NgtLocalState, NgtState } from '../types';
@@ -24,6 +28,7 @@ import {
 	ROUTED_SCENE,
 	SPECIAL_DOM_TAG,
 	SPECIAL_INTERNAL_ADD_COMMENT,
+	SPECIAL_INTERNAL_SET_PARENT_COMMENT,
 	SPECIAL_PROPERTIES,
 } from './constants';
 import {
@@ -87,6 +92,7 @@ export class NgtRendererFactory implements RendererFactory2 {
 
 export class NgtRenderer implements Renderer2 {
 	private argsCommentNodes: Array<NgtRendererNode> = [];
+	private parentCommentNodes: Array<NgtRendererNode> = [];
 
 	constructor(
 		private delegate: Renderer2,
@@ -130,17 +136,31 @@ export class NgtRenderer implements Renderer2 {
 			);
 		}
 
-		const [injectedArgs] = [this.getNgtArgs()?.value || []];
+		const [injectedArgs, injectedParent] = [
+			this.getNgtDirective(NgtArgs, this.argsCommentNodes)?.value || [],
+			this.getNgtDirective(NgtParent, this.parentCommentNodes)?.value,
+		];
 
 		if (name === SPECIAL_DOM_TAG.NGT_PRIMITIVE) {
 			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
 			const object = injectedArgs[0];
-			const localState = getLocalState(object);
+			let localState = getLocalState(object);
 			if (!localState) {
 				// NOTE: if an object isn't already "prepared", we prepare it
 				prepare(object, { store: this.rootStore, primitive: true });
+				localState = getLocalState(object);
 			}
-			return createNode('three', object, this.document);
+
+			const primitiveNode = createNode('three', object, this.document);
+
+			if (injectedParent) {
+				const resolvedParent = this.getParentFromNgtParent(injectedParent, this.rootStore);
+				if (resolvedParent) {
+					primitiveNode.__ngt_renderer__[NgtRendererClassId.parent] = resolvedParent as unknown as NgtRendererNode;
+				}
+			}
+
+			return primitiveNode;
 		}
 
 		const threeName = kebabToPascal(name.startsWith('ngt-') ? name.slice(4) : name);
@@ -159,6 +179,13 @@ export class NgtRenderer implements Renderer2 {
 				localState.attach = ['material'];
 			}
 
+			if (injectedParent) {
+				const resolvedParent = this.getParentFromNgtParent(injectedParent, this.rootStore);
+				if (resolvedParent) {
+					node.__ngt_renderer__[NgtRendererClassId.parent] = resolvedParent as unknown as NgtRendererNode;
+				}
+			}
+
 			return node;
 		}
 
@@ -167,19 +194,28 @@ export class NgtRenderer implements Renderer2 {
 
 	createComment(value: string) {
 		const comment = this.delegate.createComment(value);
+		const commentNode = createNode('comment', comment, this.document);
 
 		// NOTE: we attach an arrow function to the Comment node
 		//  In our directives, we can call this function to then start tracking the RendererNode
 		//  this is done to limit the amount of Nodes we need to process for getCreationState
-		comment[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args') => {
+		comment[SPECIAL_INTERNAL_ADD_COMMENT] = (node: NgtRendererNode | 'args' | 'parent') => {
 			if (node === 'args') {
 				this.argsCommentNodes.push(comment);
+			} else if (node === 'parent') {
+				this.parentCommentNodes.push(comment);
+				comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT] = (ngtParent: Object3D | ElementRef<Object3D> | string) => {
+					commentNode.__ngt_renderer__[NgtRendererClassId.parent] = this.getParentFromNgtParent(
+						ngtParent,
+						this.rootStore,
+					) as unknown as NgtRendererNode;
+				};
 			} else if (typeof node === 'object') {
 				this.portalCommentsNodes.push(node);
 			}
 		};
 
-		return createNode('comment', comment, this.document);
+		return commentNode;
 	}
 
 	appendChild(parent: NgtRendererNode, newChild: NgtRendererNode): void {
@@ -625,6 +661,97 @@ export class NgtRenderer implements Renderer2 {
 		const isChildStillDOM = cType === 'dom';
 
 		return isDanglingThreeChild || (isParentStillDOM && isChildStillDOM) || isParentStillDOM;
+	}
+
+	private getNgtDirective<TDirective>(directive: Type<TDirective>, commentNodes: Array<NgtRendererNode>) {
+		let directiveInstance: TDirective | undefined;
+
+		const destroyed = [];
+
+		let i = commentNodes.length - 1;
+		while (i >= 0) {
+			const comment = commentNodes[i];
+			if (comment.__ngt_renderer__[NgtRendererClassId.destroyed]) {
+				destroyed.push(i);
+				i--;
+				continue;
+			}
+			const injector = comment.__ngt_renderer__[NgtRendererClassId.debugNodeFactory]?.()?.injector;
+			if (!injector) {
+				i--;
+				continue;
+			}
+			const instance = injector.get(directive, null);
+			if (
+				instance &&
+				typeof instance === 'object' &&
+				'validate' in instance &&
+				typeof instance.validate === 'function' &&
+				instance.validate()
+			) {
+				directiveInstance = instance;
+				break;
+			}
+			i--;
+		}
+		destroyed.forEach((index) => {
+			commentNodes.splice(index, 1);
+		});
+		return directiveInstance;
+	}
+
+	private getParentFromNgtParent(ngtParent: Object3D | ElementRef<Object3D> | string, store: NgtSignalStore<NgtState>) {
+		let topMostStore = store;
+
+		while (topMostStore.snapshot.previousRoot) {
+			topMostStore = topMostStore.snapshot.previousRoot;
+		}
+
+		const scene = topMostStore.snapshot.scene;
+
+		if (typeof ngtParent === 'string') {
+			return scene.getObjectByName(ngtParent);
+		}
+
+		if ('nativeElement' in ngtParent) {
+			return ngtParent.nativeElement;
+		}
+
+		return ngtParent;
+	}
+
+	private getNgtParent() {
+		let directive: NgtParent | undefined;
+
+		const destroyed = [];
+
+		let i = this.parentCommentNodes.length - 1;
+		while (i >= 0) {
+			const comment = this.parentCommentNodes[i];
+			if (comment.__ngt_renderer__[NgtRendererClassId.destroyed]) {
+				destroyed.push(i);
+				i--;
+				continue;
+			}
+			const injector = comment.__ngt_renderer__[NgtRendererClassId.debugNodeFactory]?.()?.injector;
+			if (!injector) {
+				i--;
+				continue;
+			}
+			const instance = injector.get(NgtParent, null);
+			if (instance && instance.validate()) {
+				directive = instance;
+				break;
+			}
+
+			i--;
+		}
+
+		destroyed.forEach((index) => {
+			this.parentCommentNodes.splice(index, 1);
+		});
+
+		return directive;
 	}
 
 	private getNgtArgs() {

@@ -22,6 +22,7 @@ import { NgtSignalStore } from './utils/signal-store';
 
 export type NgtProperties<T> = { [K in keyof T as T[K] extends (...args: Array<any>) => any ? never : K]: T[K] };
 export type NgtAnyRecord = Record<string, any>;
+export type NgtNullish<T> = T | null | undefined;
 
 export type NgtEquConfig = {
 	/** Compare arrays by reference equality a === b (default), or by shallow equality */

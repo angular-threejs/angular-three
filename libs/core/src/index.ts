@@ -1,5 +1,6 @@
 export * from './lib/canvas';
 export * from './lib/directives/args';
+export * from './lib/directives/parent';
 export * from './lib/directives/selection';
 export * from './lib/html';
 export * from './lib/instance';
