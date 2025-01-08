@@ -1,4 +1,4 @@
-import { inject, Injectable, linkedSignal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
@@ -8,7 +8,7 @@ import { menus } from './constants';
 export class RockStore {
 	private router = inject(Router);
 
-	private initialRock = toSignal(
+	selectedRock = toSignal(
 		this.router.events.pipe(
 			filter((ev): ev is NavigationEnd => ev instanceof NavigationEnd),
 			map((ev) => ev.urlAfterRedirects),
@@ -17,6 +17,4 @@ export class RockStore {
 		),
 		{ initialValue: null },
 	);
-
-	selectedRock = linkedSignal(this.initialRock);
 }

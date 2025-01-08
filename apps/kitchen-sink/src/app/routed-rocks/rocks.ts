@@ -40,12 +40,11 @@ interface RockGLTF extends GLTF {
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]">
 						<ngt-mesh
 							cursor
-							name="theRock"
 							[castShadow]="true"
 							[receiveShadow]="true"
 							[geometry]="gltf.nodes.defaultMaterial.geometry"
 							[material]="gltf.materials['08___Default']"
-							(click)="onRockClicked()"
+							(click)="router.navigate(['/routed-rocks/rocks'])"
 						/>
 					</ngt-group>
 				</ngt-group>
@@ -58,15 +57,14 @@ interface RockGLTF extends GLTF {
 
 		<ngt-icosahedron-geometry #geometry attach="none" />
 		@for (menu of menus; track menu.id) {
-			<ngt-group [position]="[15 * Math.cos(menu.angle), 0, 15 * Math.sin(menu.angle)]" [name]="'group-' + menu.id">
+			<ngt-group [name]="menu.name" [position]="[15 * Math.cos(menu.angle), 0, 15 * Math.sin(menu.angle)]">
 				<ngt-mesh
 					cursor
-					[name]="menu.name"
 					[position]="[0, 5, 0]"
 					[castShadow]="true"
 					[receiveShadow]="true"
 					[geometry]="geometry"
-					(click)="onColoredRockClicked(menu)"
+					(click)="router.navigate([menu.path])"
 				>
 					<ngt-mesh-phong-material [color]="menu.color" [side]="FrontSide" />
 				</ngt-mesh>
@@ -87,7 +85,7 @@ export default class Rocks {
 
 	protected readonly menus = menus;
 
-	private router = inject(Router);
+	protected router = inject(Router);
 	private rockStore = inject(RockStore);
 	private store = injectStore();
 
@@ -109,20 +107,8 @@ export default class Rocks {
 
 			const obj = rock ? scene.getObjectByName(rock.name) : gltf.scene;
 			if (obj) {
-				void controls.fitToBox(obj, true, {
-					paddingTop: 5,
-				});
+				void controls.fitToBox(obj, true, { paddingTop: 5 });
 			}
 		});
-	}
-
-	onColoredRockClicked(menu: (typeof menus)[number]) {
-		this.rockStore.selectedRock.set(menu);
-		this.router.navigate([menu.path]);
-	}
-
-	onRockClicked() {
-		this.rockStore.selectedRock.set(null);
-		this.router.navigate(['/routed-rocks/rocks']);
 	}
 }

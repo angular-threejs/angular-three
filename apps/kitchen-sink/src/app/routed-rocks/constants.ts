@@ -31,7 +31,6 @@ export const menus = colors.map((color, index) => ({
 	label: color.label,
 	name: `rock-${color.slug}`,
 	path: `/routed-rocks/rocks/${color.slug}`,
-	contentId: index + 1,
 	color: color.color,
 	angle: ((360 / colors.length) * index * Math.PI) / 180,
 }));
