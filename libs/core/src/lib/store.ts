@@ -32,8 +32,8 @@ function storeFactory(previousStore: NgtSignalStore<NgtState> | null) {
 			const { width, height, top, left } = size;
 			const aspect = width / height;
 
-			if (target instanceof Vector3) tempTarget.copy(target);
-			else tempTarget.set(...target);
+			if ((target as Vector3).isVector3) tempTarget.copy(target as Vector3);
+			else tempTarget.set(...(target as [number, number, number]));
 
 			const distance = camera.getWorldPosition(position).distanceTo(tempTarget);
 

@@ -1,4 +1,4 @@
-import { Color, ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
+import { ColorManagement, Layers, RGBAFormat, Texture, UnsignedByteType } from 'three';
 import { getLocalState, invalidateInstance } from '../instance';
 import { NgtAnyRecord, NgtInstanceNode, NgtState } from '../types';
 import { is } from './is';
@@ -63,7 +63,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 
 		// special treatmen for objects with support for set/copy, and layers
 		if (targetProp && targetProp['set'] && (targetProp['copy'] || targetProp instanceof Layers)) {
-			const isColor = targetProp instanceof Color;
+			const isColor = targetProp.isColor;
 			// if value is an array
 			if (Array.isArray(value)) {
 				if (targetProp['fromArray']) targetProp['fromArray'](value);
@@ -79,7 +79,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 				if (!ColorManagement && !rootState.linear && isColor) targetProp['convertSRGBToLinear']();
 			} // if nothing else fits, just set the single value, ignore undefined
 			else if (value !== undefined) {
-				const isColor = targetProp instanceof Color;
+				const isColor = targetProp.isColor;
 				// allow setting array scalars
 				if (!isColor && targetProp['setScalar']) targetProp['setScalar'](value);
 				// layers have no copy function, copy the mask
@@ -95,7 +95,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 			currentInstance[key] = value;
 			// auto-convert srgb textures
 			if (
-				currentInstance[key] instanceof Texture &&
+				currentInstance[key].isTexture &&
 				currentInstance[key].format === RGBAFormat &&
 				currentInstance[key].type === UnsignedByteType
 			) {

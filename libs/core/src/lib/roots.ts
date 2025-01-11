@@ -10,7 +10,6 @@ import {
 	Raycaster,
 	Scene,
 	VSMShadowMap,
-	Vector3,
 } from 'three';
 import { prepare } from './instance';
 import { injectLoop, roots } from './loop';
@@ -133,7 +132,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							// always look at center or passed-in lookAt by default
 							if (!state.camera && !cameraOptions?.rotation && !cameraOptions?.quaternion) {
 								if (Array.isArray(lookAt)) camera.lookAt(lookAt[0], lookAt[1], lookAt[2]);
-								else if (lookAt instanceof Vector3) camera.lookAt(lookAt);
+								else if (lookAt?.isVector3) camera.lookAt(lookAt);
 								else camera.lookAt(0, 0, 0);
 							}
 
@@ -154,7 +153,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (!state.scene) {
 						let scene: Scene;
 
-						if (sceneOptions instanceof Scene) {
+						if (is.scene(sceneOptions)) {
 							scene = sceneOptions;
 						} else {
 							scene = new Scene();
