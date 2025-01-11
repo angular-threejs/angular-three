@@ -33,10 +33,10 @@ export class Turtle {
 
 	constructor() {
 		effect(() => {
-			if (!this.animations.ready()) return;
+			if (!this.animations.isReady) return;
 
 			this.animations.mixer.timeScale = 0.5;
-			this.animations.actions['Swim Cycle']?.play();
+			this.animations.actions['Swim Cycle'].play();
 		});
 
 		injectBeforeRender(({ clock }) => {

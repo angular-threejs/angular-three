@@ -196,6 +196,17 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'camera-scroll',
+		loadComponent: () => import('./camera-scroll/camera-scroll'),
+		data: {
+			credits: {
+				title: 'Camera Scroll',
+				link: 'https://pmndrs.github.io/examples/demos/camera-scroll',
+				class: 'text-white',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',

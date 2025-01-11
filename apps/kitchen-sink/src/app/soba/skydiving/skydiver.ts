@@ -104,8 +104,7 @@ export class Skydiver {
 
 	constructor() {
 		effect((onCleanup) => {
-			const ready = this.animations.ready();
-			if (!ready) return;
+			if (!this.animations.isReady) return;
 			const { actions } = this.animations;
 			actions['animation_0']?.reset().play();
 			onCleanup(() => actions['animation_0']?.stop());
