@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, InjectionToken } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
 import { Overlay } from './overlay';
@@ -33,4 +33,11 @@ export const SCROLL = new InjectionToken('scroll', {
 export default class CameraScroll {
 	protected sceneGraph = Experience;
 	protected host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+	constructor() {
+		const scroll = inject(SCROLL);
+		inject(DestroyRef).onDestroy(() => {
+			scroll.value = 0;
+		});
+	}
 }
