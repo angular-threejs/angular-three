@@ -1,3 +1,23 @@
+## 3.6.0 (2025-01-11)
+
+### 🚀 Features
+
+- **cannon:** bump three 172 ([126b126](https://github.com/angular-threejs/angular-three/commit/126b126))
+- **core:** bump three 172 ([fbb1531](https://github.com/angular-threejs/angular-three/commit/fbb1531))
+- **postprocessing:** bump three 172 ([28de882](https://github.com/angular-threejs/angular-three/commit/28de882))
+- **rapier:** bump three 172 ([580972f](https://github.com/angular-threejs/angular-three/commit/580972f))
+- **soba:** bump three 172 ([ef5655a](https://github.com/angular-threejs/angular-three/commit/ef5655a))
+
+### 🩹 Fixes
+
+- **core:** loosen instanceof check ([b7650b2](https://github.com/angular-threejs/angular-three/commit/b7650b2))
+- **core:** null check first before isTexture ([ebd3c3a](https://github.com/angular-threejs/angular-three/commit/ebd3c3a))
+- **soba:** dispose texture on environment cube destroyed ([4a23c73](https://github.com/angular-threejs/angular-three/commit/4a23c73))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.5.0 (2025-01-11)
 
 ### 🚀 Features
