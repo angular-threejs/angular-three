@@ -15,6 +15,7 @@ import { MathUtils, Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
 
 export const debug = signal(false);
+export const withN8ao = signal(true);
 
 type HatGLTF = GLTF & {
 	nodes: { Plane006: Mesh; Plane006_1: Mesh };
@@ -146,7 +147,10 @@ export class Model {
 
 		@if (withEffect()) {
 			<ngtp-effect-composer>
-				<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: 1 }" />
+				@if (withN8ao()) {
+					<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: 1 }" />
+				}
+
 				<ngtp-depth-of-field [options]="{ target: [0, 0, -2.5], focusRange: 0.1, bokehScale: 10 }" />
 				<ngtp-tone-mapping />
 			</ngtp-effect-composer>
@@ -189,6 +193,7 @@ export class Experience {
 	protected readonly Math = Math;
 
 	protected debug = debug;
+	protected withN8ao = withN8ao;
 
 	withEffect = input(true);
 }

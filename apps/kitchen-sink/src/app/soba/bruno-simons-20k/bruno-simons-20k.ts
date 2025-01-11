@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
 import { ToggleButton } from '../../toggle-button';
-import { debug, Experience } from './experience';
+import { debug, Experience, withN8ao } from './experience';
 
 @Component({
 	template: `
@@ -13,8 +13,9 @@ import { debug, Experience } from './experience';
 			[camera]="{ position: [-30, 35, -15], near: 30, far: 55, fov: 12 }"
 		/>
 
-		<div class="absolute top-10 right-2">
+		<div class="absolute top-10 right-2 flex gap-2 items-center">
 			<button [(toggleButton)]="debug">Toggle debug</button>
+			<button [(toggleButton)]="withN8ao">Toggle N8ao</button>
 		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,4 +25,5 @@ import { debug, Experience } from './experience';
 export default class BrunoSimons20k {
 	protected sceneGraph = Experience;
 	protected debug = debug;
+	protected withN8ao = withN8ao;
 }
