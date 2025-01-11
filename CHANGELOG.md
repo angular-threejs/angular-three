@@ -1,3 +1,13 @@
+## 3.5.0 (2025-01-11)
+
+### 🚀 Features
+
+- **soba:** add isReady getter for animation api to help with type-narrow ([3ca940d](https://github.com/angular-threejs/angular-three/commit/3ca940d))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.4.1 (2025-01-08)
 
 ### 🩹 Fixes
