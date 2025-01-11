@@ -38,11 +38,11 @@ export class BotAnimations {
 		//  that the animations are referring to.
 		const animationsApi = injectAnimations(this.animations, host);
 		effect((onCleanup) => {
-			if (animationsApi.ready()) {
+			if (animationsApi.isReady) {
 				const actionName = this.animation();
-				animationsApi.actions[actionName]?.reset().fadeIn(0.5).play();
+				animationsApi.actions[actionName].reset().fadeIn(0.5).play();
 				onCleanup(() => {
-					animationsApi.actions[actionName]?.fadeOut(0.5);
+					animationsApi.actions[actionName].fadeOut(0.5);
 				});
 			}
 		});

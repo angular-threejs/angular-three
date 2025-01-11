@@ -12,12 +12,16 @@ export type NgtsAnimationClips<TAnimationNames extends string> = {
 	[Name in TAnimationNames]: Omit<NgtsAnimationClip, 'name'> & { name: Name };
 }[TAnimationNames];
 export type NgtsAnimationApi<T extends NgtsAnimationClip> = {
+	/**
+	 * Whether or not the animations finishes initialized
+	 *
+	 * @deprecated 3.5.0 - use `isReady` getter for better type-narrow instead. Will be removed in 4.0.0
+	 */
 	ready: Signal<boolean>;
 	clips: T[];
 	mixer: AnimationMixer;
 	names: T['name'][];
-	actions: { [key in T['name']]: AnimationAction | null };
-};
+} & ({ get isReady(): true; actions: { [key in T['name']]: AnimationAction } } | { get isReady(): false });
 
 export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationClip> =
 	| TAnimation[]
@@ -30,7 +34,7 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 	animations: () => NgtsAnimation<TAnimation> | undefined | null,
 	object: ElementRef<Object3D> | Object3D | (() => ElementRef<Object3D> | Object3D | undefined | null),
 	{ injector }: { injector?: Injector } = {},
-) {
+): NgtsAnimationApi<TAnimation> {
 	return assertInjector(injectAnimations, injector, () => {
 		const mixer = new AnimationMixer(null!);
 		injectBeforeRender(({ delta }) => {
@@ -39,7 +43,7 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 		});
 
 		let cached = {} as Record<string, AnimationAction>;
-		const actions = {} as NgtsAnimationApi<TAnimation>['actions'];
+		const actions = {} as { [key in TAnimation['name']]: AnimationAction };
 		const clips = [] as NgtsAnimationApi<TAnimation>['clips'];
 		const names = [] as NgtsAnimationApi<TAnimation>['names'];
 
@@ -99,6 +103,10 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 			});
 		});
 
-		return { clips, mixer, actions, names, ready };
+		const result = { ready, clips, mixer, actions, names } as unknown as NgtsAnimationApi<TAnimation>;
+
+		Object.defineProperty(result, 'isReady', { get: ready });
+
+		return result;
 	});
 }
