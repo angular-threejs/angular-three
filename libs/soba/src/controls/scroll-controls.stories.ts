@@ -55,8 +55,9 @@ class LittlestTokyo {
 		const animations = injectAnimations(this.gltf, this.scene);
 
 		injectBeforeRender(({ delta, camera }) => {
+			if (!animations.isReady) return;
+
 			const action = animations.actions['Take 001'];
-			if (!action) return;
 
 			if (!action.paused) {
 				action.play().paused = true;
