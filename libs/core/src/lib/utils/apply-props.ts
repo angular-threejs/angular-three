@@ -95,7 +95,7 @@ export function applyProps(instance: NgtInstanceNode, props: NgtAnyRecord) {
 			currentInstance[key] = value;
 			// auto-convert srgb textures
 			if (
-				currentInstance[key].isTexture &&
+				currentInstance[key]?.isTexture &&
 				currentInstance[key].format === RGBAFormat &&
 				currentInstance[key].type === UnsignedByteType
 			) {
