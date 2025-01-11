@@ -188,6 +188,10 @@ export class NgtsEnvironmentCube {
 			this.envSet.emit();
 			onCleanup(() => cleanup());
 		});
+
+		inject(DestroyRef).onDestroy(() => {
+			_texture()?.dispose();
+		});
 	}
 }
 
