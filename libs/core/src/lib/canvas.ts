@@ -3,40 +3,65 @@ import {
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
-	ComponentRef,
 	computed,
-	createEnvironmentInjector,
+	contentChild,
 	DestroyRef,
+	Directive,
 	effect,
 	ElementRef,
-	EnvironmentInjector,
+	EmbeddedViewRef,
 	inject,
 	Injector,
 	input,
 	NgZone,
 	output,
 	signal,
-	Type,
+	TemplateRef,
 	untracked,
 	viewChild,
 	ViewContainerRef,
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
-import { Raycaster, Scene, Vector3 } from 'three';
+import * as THREE from 'three';
 import { createPointerEvents } from './dom/events';
-import { provideNgtRenderer } from './renderer';
+import { CANVAS_CONTENT_FLAG } from './renderer/constants';
 import { injectCanvasRootInitializer, NgtCanvasConfigurator } from './roots';
-import { NgtRoutedScene } from './routed-scene';
 import { injectStore, provideStore } from './store';
-import { NgtCanvasOptions, NgtDomEvent, NgtDpr, NgtGLOptions, NgtPerformance, NgtSize, NgtState } from './types';
+import type { NgtVector3 } from './three-types';
+import type {
+	NgtCamera,
+	NgtCameraParameters,
+	NgtDomEvent,
+	NgtDpr,
+	NgtEventPrefix,
+	NgtFrameloop,
+	NgtGLOptions,
+	NgtPerformance,
+	NgtShadows,
+	NgtSize,
+	NgtState,
+} from './types';
 import { is } from './utils/is';
+
+@Directive({ selector: 'ng-template[canvasContent]' })
+export class NgtCanvasContent {
+	constructor() {
+		const vcr = inject(ViewContainerRef);
+		const commentNode = vcr.element.nativeElement;
+
+		// NOTE: flag this canvasContent ng-template comment node as the start
+		commentNode.data = CANVAS_CONTENT_FLAG;
+		commentNode[CANVAS_CONTENT_FLAG] = true;
+	}
+}
 
 @Component({
 	selector: 'ngt-canvas',
 	template: `
 		<div (ngxResize)="resizeResult.set($event)" style="height: 100%; width: 100%;">
 			<canvas #glCanvas style="display: block;"></canvas>
+			<ng-content />
 		</div>
 	`,
 	imports: [NgxResize],
@@ -60,42 +85,37 @@ export class NgtCanvas {
 
 	private host = inject<ElementRef<HTMLElement>>(ElementRef);
 	private zone = inject(NgZone);
-	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
 
-	sceneGraph = input.required<Type<any>, Type<any> | 'routed'>({
-		transform: (value) => {
-			if (value === 'routed') return NgtRoutedScene;
-			return value;
-		},
-	});
 	gl = input<NgtGLOptions>();
 	size = input<NgtSize>();
 	shadows = input(false, {
 		transform: (value) => {
 			if (value === '') return booleanAttribute(value);
-			return value as NonNullable<NgtCanvasOptions['shadows']>;
+			return value as NgtShadows;
 		},
 	});
 	legacy = input(false, { transform: booleanAttribute });
 	linear = input(false, { transform: booleanAttribute });
 	flat = input(false, { transform: booleanAttribute });
 	orthographic = input(false, { transform: booleanAttribute });
-	frameloop = input<NonNullable<NgtCanvasOptions['frameloop']>>('always');
+	frameloop = input<NgtFrameloop>('always');
 	performance = input<Partial<Omit<NgtPerformance, 'regress'>>>();
 	dpr = input<NgtDpr>([1, 2]);
-	raycaster = input<Partial<Raycaster>>();
-	scene = input<Scene | Partial<Scene>>();
-	camera = input<NonNullable<NgtCanvasOptions['camera']>>();
+	raycaster = input<Partial<THREE.Raycaster>>();
+	scene = input<THREE.Scene | Partial<THREE.Scene>>();
+	camera = input<NgtCamera | NgtCameraParameters>();
 	events = input(createPointerEvents);
 	eventSource = input<HTMLElement | ElementRef<HTMLElement>>();
-	eventPrefix = input<NonNullable<NgtCanvasOptions['eventPrefix']>>('offset');
-	lookAt = input<Vector3 | Parameters<Vector3['set']>>();
+	eventPrefix = input<NgtEventPrefix>('offset');
+	lookAt = input<NgtVector3>();
+
 	created = output<NgtState>();
-	pointerMissed = outputFromObservable(this.store.get('pointerMissed$'));
+	pointerMissed = outputFromObservable(this.store.snapshot.pointerMissed$);
 
 	private glCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('glCanvas');
 	private glCanvasViewContainerRef = viewChild.required('glCanvas', { read: ViewContainerRef });
+	private canvasContentRef = contentChild.required(NgtCanvasContent, { read: TemplateRef });
 
 	protected hbPointerEvents = computed(() => (this.eventSource() ? 'none' : 'auto'));
 
@@ -103,8 +123,7 @@ export class NgtCanvas {
 	protected resizeResult = signal<ResizeResult>({} as ResizeResult, { equal: Object.is });
 	private configurator = signal<NgtCanvasConfigurator | null>(null);
 
-	private glEnvironmentInjector?: EnvironmentInjector;
-	private glRef?: ComponentRef<unknown>;
+	private glRef?: EmbeddedViewRef<unknown>;
 
 	constructor() {
 		// NOTE: this means that everything in NgtCanvas will be in afterNextRender.
@@ -148,9 +167,9 @@ export class NgtCanvas {
 						configurator.configure(canvasOptions);
 
 						if (this.glRef) {
-							this.glRef.changeDetectorRef.detectChanges();
+							this.glRef.detectChanges();
 						} else {
-							this.noZoneRender();
+							this.noZoneRender(canvasElement);
 						}
 					});
 				},
@@ -160,14 +179,12 @@ export class NgtCanvas {
 
 		inject(DestroyRef).onDestroy(() => {
 			this.glRef?.destroy();
-			this.glEnvironmentInjector?.destroy();
 			this.configurator()?.destroy();
 		});
 	}
 
-	private noZoneRender() {
+	private noZoneRender(canvasElement: HTMLCanvasElement) {
 		// NOTE: destroy previous instances if existed
-		this.glEnvironmentInjector?.destroy();
 		this.glRef?.destroy();
 
 		// NOTE: Flag the canvas active, rendering will now begin
@@ -197,19 +214,20 @@ export class NgtCanvas {
 			});
 		}
 
-		// emit created event if observed
 		this.created.emit(this.store.snapshot);
 
-		if (!this.store.get('events', 'connected')) {
-			this.store.get('events').connect?.(untracked(this.glCanvas).nativeElement);
+		if (!this.store.snapshot.events.connected) {
+			this.store.snapshot.events.connect?.(canvasElement);
 		}
 
-		this.glEnvironmentInjector = createEnvironmentInjector([provideNgtRenderer(this.store)], this.environmentInjector);
-		this.glRef = untracked(this.glCanvasViewContainerRef).createComponent(untracked(this.sceneGraph), {
-			environmentInjector: this.glEnvironmentInjector,
-			injector: this.injector,
-		});
+		this.glRef = untracked(this.glCanvasViewContainerRef).createEmbeddedView(
+			untracked(this.canvasContentRef),
+			{},
+			{ injector: this.injector },
+		);
 
-		this.glRef.changeDetectorRef.detectChanges();
+		this.glRef.detectChanges();
 	}
 }
+
+export const NgtCanvasDeclarations = [NgtCanvas, NgtCanvasContent] as const;

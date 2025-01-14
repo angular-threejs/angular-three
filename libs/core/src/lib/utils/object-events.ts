@@ -1,7 +1,7 @@
 import { DestroyRef, Directive, effect, ElementRef, inject, Injector, model, output, Renderer2 } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Object3D } from 'three';
-import { NgtEventHandlers, NgtThreeEvent } from '../types';
+import type * as THREE from 'three';
+import type { NgtEventHandlers, NgtThreeEvent } from '../types';
 import { resolveRef } from './resolve-ref';
 
 @Directive({ selector: '[ngtObjectEvents]' })
@@ -42,7 +42,7 @@ export class NgtObjectEvents {
 	wheel = output<NgtThreeEvent<WheelEvent>>();
 
 	// NOTE: we use model here to allow for the hostDirective host to set this value
-	ngtObjectEvents = model<ElementRef<Object3D> | Object3D | null | undefined>();
+	ngtObjectEvents = model<ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined>();
 
 	constructor() {
 		injectObjectEvents(this.ngtObjectEvents, {
@@ -68,7 +68,7 @@ export class NgtObjectEvents {
 }
 
 export function injectObjectEvents(
-	target: () => ElementRef<Object3D> | Object3D | null | undefined,
+	target: () => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined,
 	events: NgtEventHandlers,
 	{ injector }: { injector?: Injector } = {},
 ) {

@@ -1,9 +1,9 @@
-import { getLocalState } from '../instance';
-import { NgtAnyRecord, NgtAttachFunction, NgtState } from '../types';
+import { getInstanceState } from '../instance';
+import type { NgtAttachFunction, NgtInstanceNode, NgtState } from '../types';
 import { applyProps, NGT_APPLY_PROPS } from './apply-props';
-import { NgtSignalStore } from './signal-store';
+import { SignalState } from './signal-state';
 
-export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = [], useApplyProps = false): void {
+export function attach(object: NgtInstanceNode, value: unknown, paths: string[] = [], useApplyProps = false): void {
 	const [base, ...remaining] = paths;
 	if (!base) return;
 
@@ -16,34 +16,35 @@ export function attach(object: NgtAnyRecord, value: unknown, paths: string[] = [
 	}
 }
 
-export function detach(parent: NgtAnyRecord, child: NgtAnyRecord, attachProp: string[] | NgtAttachFunction) {
-	const childLocalState = getLocalState(child);
-	if (childLocalState) {
-		if (Array.isArray(attachProp)) attach(parent, childLocalState.previousAttach, attachProp, childLocalState.isRaw);
-		else (childLocalState.previousAttach as () => void)?.();
+export function detach(parent: NgtInstanceNode, child: NgtInstanceNode, attachProp: string[] | NgtAttachFunction) {
+	const childInstanceState = getInstanceState(child);
+	if (childInstanceState) {
+		if (Array.isArray(attachProp))
+			attach(parent, childInstanceState.previousAttach, attachProp, childInstanceState.type === 'ngt-value');
+		else (childInstanceState.previousAttach as () => void)?.();
 	}
 }
 
-function assignEmpty(obj: NgtAnyRecord, base: string, shouldAssignStoreForApplyProps = false) {
+function assignEmpty(obj: NgtInstanceNode, base: string, shouldAssignStoreForApplyProps = false) {
 	if ((!Object.hasOwn(obj, base) && Reflect && !!Reflect.has && !Reflect.has(obj, base)) || obj[base] === undefined) {
 		obj[base] = {};
 	}
 
 	if (shouldAssignStoreForApplyProps) {
-		const localState = getLocalState(obj[base]);
-		// if we already have local state, bail out
-		if (localState) return;
+		const instanceState = getInstanceState(obj[base]);
+		// if we already have instance state, bail out
+		if (instanceState) return;
 
-		const parentLocalState = getLocalState(obj);
-		// if parent doesn't have local state, bail out
-		if (!parentLocalState) return;
+		const parentInstanceState = getInstanceState(obj);
+		// if parent doesn't have instance state, bail out
+		if (!parentInstanceState) return;
 
-		Object.assign(obj[base], { [NGT_APPLY_PROPS]: parentLocalState.store });
+		Object.assign(obj[base], { [NGT_APPLY_PROPS]: parentInstanceState.store });
 	}
 }
 
 export function createAttachFunction<TChild = any, TParent = any>(
-	cb: (params: { parent: TParent; child: TChild; store: NgtSignalStore<NgtState> }) => (() => void) | void,
+	cb: (params: { parent: TParent; child: TChild; store: SignalState<NgtState> }) => (() => void) | void,
 ): NgtAttachFunction<TChild, TParent> {
 	return (parent, child, store) => cb({ parent, child, store });
 }

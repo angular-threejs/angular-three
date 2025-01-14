@@ -1,0 +1,80 @@
+{
+	"name": "kitchen-sink-new",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"prefix": "app",
+	"sourceRoot": "apps/kitchen-sink-new/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@angular/build:application",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/apps/kitchen-sink-new",
+				"index": "apps/kitchen-sink-new/src/index.html",
+				"browser": "apps/kitchen-sink-new/src/main.ts",
+				"tsConfig": "apps/kitchen-sink-new/tsconfig.app.json",
+				"assets": [
+					{
+						"glob": "**/*",
+						"input": "apps/kitchen-sink-new/public"
+					}
+				],
+				"styles": ["apps/kitchen-sink-new/src/styles.css"],
+				"scripts": [],
+				"loader": {
+					".blob": "file",
+					".glb": "file"
+				}
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "500kb",
+							"maximumError": "1mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "2kb",
+							"maximumError": "4kb"
+						}
+					],
+					"externalDependencies": [
+						"three/examples/jsm/utils/BufferGeometryUtils",
+						"three/examples/jsm/postprocessing/Pass"
+					],
+					"outputHashing": "all"
+				},
+				"development": {
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"serve": {
+			"executor": "@angular/build:dev-server",
+			"configurations": {
+				"production": {
+					"buildTarget": "kitchen-sink-new:build:production"
+				},
+				"development": {
+					"buildTarget": "kitchen-sink-new:build:development"
+				}
+			},
+			"defaultConfiguration": "development"
+		},
+		"extract-i18n": {
+			"executor": "@angular-devkit/build-angular:extract-i18n",
+			"options": {
+				"buildTarget": "kitchen-sink-new:build"
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		}
+	}
+}

@@ -1,9 +1,11 @@
 import { DebugNode } from '@angular/core';
-import { NgtAnyRecord } from '../types';
+import type { NgtAnyRecord, NgtState } from '../types';
+import { SignalState } from '../utils/signal-state';
+import { NGT_RENDERER_NODE_FLAG } from './constants';
 import { NgtRendererClassId } from './utils';
 
 export type NgtRendererState = [
-	type: 'three' | 'portal' | 'comment' | 'dom',
+	type: 'three' | 'portal' | 'comment' | 'platform',
 	parent: NgtRendererNode | null,
 	children: NgtRendererNode[],
 	destroyed: boolean,
@@ -11,17 +13,26 @@ export type NgtRendererState = [
 	portalContainer: NgtRendererNode,
 	debugNode: DebugNode | undefined,
 	debugNodeFactory: () => DebugNode | undefined,
+	store: SignalState<NgtState>,
 ];
 
 export interface NgtRendererNode {
-	__ngt_renderer__: NgtRendererState;
+	[NGT_RENDERER_NODE_FLAG]: NgtRendererState;
 	__ngt_dom_parent__?: HTMLElement;
 }
 
-export function createNode(type: NgtRendererState[NgtRendererClassId.type], node: NgtAnyRecord, document: Document) {
-	const state = [type, null, [], false, undefined!, undefined!, undefined!, undefined!] as NgtRendererState;
+export function isRendererNode(node: unknown): node is NgtRendererNode {
+	return !!node && typeof node === 'object' && NGT_RENDERER_NODE_FLAG in node;
+}
 
-	const rendererNode = Object.assign(node, { __ngt_renderer__: state });
+export function createRendererNode(
+	type: NgtRendererState[NgtRendererClassId.type],
+	store: SignalState<NgtState>,
+	node: NgtAnyRecord,
+	document: Document,
+) {
+	const state = [type, null, [], false, undefined!, undefined!, undefined!, undefined!, store] as NgtRendererState;
+	const rendererNode = Object.assign(node, { [NGT_RENDERER_NODE_FLAG]: state });
 
 	// NOTE: assign ownerDocument to node so we can use HostListener in Component
 	if (!rendererNode['ownerDocument']) rendererNode['ownerDocument'] = document;
@@ -40,46 +51,14 @@ export function createNode(type: NgtRendererState[NgtRendererClassId.type], node
 	return rendererNode;
 }
 
-export function isDOM(node: NgtAnyRecord) {
-	const rS = node['__ngt_renderer__'];
-	return !rS || node instanceof Element || node instanceof Document || node instanceof Window;
-}
-
-export function getClosestParentWithInstance(node: NgtRendererNode): NgtRendererNode | null {
-	let parent = node.__ngt_renderer__[NgtRendererClassId.parent];
-
-	if (
-		parent &&
-		parent.__ngt_renderer__[NgtRendererClassId.type] === 'portal' &&
-		parent.__ngt_renderer__[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
-	) {
-		return parent.__ngt_renderer__[NgtRendererClassId.portalContainer];
-	}
-
-	while (parent && parent.__ngt_renderer__[NgtRendererClassId.type] !== 'three') {
-		parent = parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
-			? parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
-			: parent.__ngt_renderer__[NgtRendererClassId.parent];
-	}
-
-	return parent;
-}
-
-export function setParent(node: NgtRendererNode, parent: NgtRendererNode) {
+export function setRendererParentNode(node: NgtRendererNode, parent: NgtRendererNode) {
 	if (!node.__ngt_renderer__[NgtRendererClassId.parent]) {
 		node.__ngt_renderer__[NgtRendererClassId.parent] = parent;
 	}
 }
 
-export function addChild(node: NgtRendererNode, child: NgtRendererNode) {
+export function addRendererChildNode(node: NgtRendererNode, child: NgtRendererNode) {
 	if (!node.__ngt_renderer__[NgtRendererClassId.children].includes(child)) {
 		node.__ngt_renderer__[NgtRendererClassId.children].push(child);
-	}
-}
-
-export function removeChild(node: NgtRendererNode, child: NgtRendererNode) {
-	const index = node.__ngt_renderer__?.[NgtRendererClassId.children].findIndex((c) => child === c);
-	if (index >= 0) {
-		node.__ngt_renderer__[NgtRendererClassId.children].splice(index, 1);
 	}
 }

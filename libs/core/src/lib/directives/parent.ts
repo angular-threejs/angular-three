@@ -10,24 +10,26 @@ import {
 	TemplateRef,
 	ViewContainerRef,
 } from '@angular/core';
-import { Object3D } from 'three';
-import { SPECIAL_INTERNAL_ADD_COMMENT, SPECIAL_INTERNAL_SET_PARENT_COMMENT } from '../renderer/constants';
+import type * as THREE from 'three';
+import { SPECIAL_INTERNAL_ADD_COMMENT_FLAG, SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG } from '../renderer/constants';
 import { injectStore } from '../store';
 import { NgtNullish } from '../types';
 
 @Directive({ selector: 'ng-template[parent]' })
 export class NgtParent {
 	parent = input.required<
-		string | Object3D | ElementRef<Object3D> | (() => NgtNullish<ElementRef<Object3D> | Object3D | string>)
+		| string
+		| THREE.Object3D
+		| ElementRef<THREE.Object3D>
+		| (() => NgtNullish<ElementRef<THREE.Object3D> | THREE.Object3D | string>)
 	>();
 
 	private vcr = inject(ViewContainerRef);
 	private template = inject(TemplateRef);
 	private store = injectStore();
-	private scene = this.store.select('scene');
 
 	protected injected = false;
-	protected injectedParent: NgtNullish<Object3D> = null;
+	protected injectedParent: NgtNullish<THREE.Object3D> = null;
 	private view?: EmbeddedViewRef<unknown>;
 
 	private _parent = computed(() => {
@@ -35,7 +37,7 @@ export class NgtParent {
 		const rawParent = typeof parent === 'function' ? parent() : parent;
 		if (!rawParent) return null;
 
-		const scene = this.scene();
+		const scene = this.store.scene();
 		if (typeof rawParent === 'string') {
 			return scene.getObjectByName(rawParent);
 		}
@@ -49,9 +51,9 @@ export class NgtParent {
 
 	constructor() {
 		const commentNode = this.vcr.element.nativeElement;
-		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT]('parent');
-			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT];
+		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
+			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]('parent');
+			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];
 		}
 
 		effect(() => {
@@ -84,8 +86,8 @@ export class NgtParent {
 		if (this.view && !this.view.destroyed) this.view.destroy();
 
 		const comment = this.vcr.element.nativeElement;
-		if (comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT]) {
-			comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT](this.injectedParent);
+		if (comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG]) {
+			comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG](this.injectedParent);
 		}
 
 		this.view = this.vcr.createEmbeddedView(this.template);

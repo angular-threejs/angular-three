@@ -1,6 +1,6 @@
 import { createEvents } from '../events';
-import { NgtAnyRecord, NgtDomEvent, NgtEventManager, NgtEvents, NgtState } from '../types';
-import { NgtSignalStore } from '../utils/signal-store';
+import type { NgtAnyRecord, NgtDomEvent, NgtEventManager, NgtEvents, NgtState } from '../types';
+import { SignalState } from '../utils/signal-state';
 
 const DOM_EVENTS = {
 	click: false,
@@ -31,14 +31,14 @@ export const supportedEvents = [
 	'wheel',
 ] as const;
 
-export function createPointerEvents(store: NgtSignalStore<NgtState>): NgtEventManager<HTMLElement> {
+export function createPointerEvents(store: SignalState<NgtState>): NgtEventManager<HTMLElement> {
 	const { handlePointer } = createEvents(store);
 
 	return {
 		priority: 1,
 		enabled: true,
-		compute: (event: NgtDomEvent, root: NgtSignalStore<NgtState>) => {
-			const state = root.get();
+		compute: (event: NgtDomEvent, root: SignalState<NgtState>) => {
+			const state = root.snapshot;
 			// https://github.com/pmndrs/react-three-fiber/pull/782
 			// Events trigger outside of canvas when moved, use offsetX/Y by default and allow overrides
 			state.pointer.set((event.offsetX / state.size.width) * 2 - 1, -(event.offsetY / state.size.height) * 2 + 1);
@@ -50,12 +50,12 @@ export function createPointerEvents(store: NgtSignalStore<NgtState>): NgtEventMa
 			return handlers;
 		}, {}) as NgtEvents,
 		update: () => {
-			const { events, internal } = store.get();
+			const { events, internal } = store.snapshot;
 			if (internal.lastEvent?.nativeElement && events.handlers)
 				events.handlers.pointermove(internal.lastEvent.nativeElement);
 		},
 		connect: (target: HTMLElement) => {
-			const state = store.get();
+			const state = store.snapshot;
 			state.events.disconnect?.();
 
 			state.setEvents({ connected: target });
@@ -66,7 +66,7 @@ export function createPointerEvents(store: NgtSignalStore<NgtState>): NgtEventMa
 			});
 		},
 		disconnect: () => {
-			const { events, setEvents } = store.get();
+			const { events, setEvents } = store.snapshot;
 			if (events.connected) {
 				Object.entries(events.handlers ?? {}).forEach(([eventName, eventHandler]: [string, EventListener]) => {
 					if (events.connected instanceof HTMLElement) {

@@ -1,5 +1,5 @@
-import { CubeTexture } from 'three';
-import { NgtCameraManual, NgtSize } from '../types';
+import type * as THREE from 'three';
+import type { NgtCamera, NgtSize } from '../types';
 import { is } from './is';
 
 export function checkNeedsUpdate(value: unknown) {
@@ -19,12 +19,12 @@ export function checkUpdate(value: unknown) {
 	}
 
 	// NOTE: skip checkNeedsUpdate for CubeTexture
-	if (value && (value as CubeTexture).isCubeTexture) return;
+	if (value && (value as THREE.CubeTexture).isCubeTexture) return;
 
 	checkNeedsUpdate(value);
 }
 
-export function updateCamera(camera: NgtCameraManual, size: NgtSize) {
+export function updateCamera(camera: NgtCamera, size: NgtSize) {
 	if (!camera.manual) {
 		if (is.orthographicCamera(camera)) {
 			camera.left = size.width / -2;

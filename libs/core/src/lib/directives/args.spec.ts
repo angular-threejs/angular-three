@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NgtArgs } from 'angular-three';
+import { NgtArgs } from './args';
 
 describe('args', () => {
 	it('should not render if first item is null', () => {

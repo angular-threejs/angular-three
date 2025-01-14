@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { ROUTED_SCENE } from './renderer/constants';
+import { ROUTED_SCENE } from './renderer-old/constants';
 
 /**
  * This is a custom EnvironmentInjector that returns the RendererFactory2 from the `ngtEnvironmentInjector`

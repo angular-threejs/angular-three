@@ -1,7 +1,7 @@
 import { Injector, Signal, effect, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { Loader, Object3D } from 'three';
-import { NgtAnyRecord } from './types';
+import type { NgtAnyRecord } from './types';
 import { NgtObjectMap, makeObjectGraph } from './utils/make';
 
 export type NgtGLTFLike = { scene: Object3D };

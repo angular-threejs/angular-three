@@ -1,6 +1,6 @@
 import { booleanAttribute, Directive, effect, ElementRef, inject, input, signal, untracked } from '@angular/core';
 import { Group, Mesh, Object3D } from 'three';
-import { getLocalState } from '../instance';
+import { getInstanceState } from '../instance';
 
 @Directive({ selector: '[ngtSelection]' })
 export class NgtSelection {
@@ -33,7 +33,7 @@ export class NgtSelect {
 			const host = elementRef.nativeElement;
 			if (!host) return;
 
-			const localState = getLocalState(host);
+			const localState = getInstanceState(host);
 			if (!localState) return;
 
 			// ngt-mesh[ngtSelect]

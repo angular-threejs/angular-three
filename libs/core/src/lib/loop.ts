@@ -1,8 +1,8 @@
-import { createInjectionToken } from 'ngxtension/create-injection-token';
-import { NgtCanvasElement, NgtGlobalRenderCallback, NgtState } from './types';
-import { NgtSignalStore } from './utils/signal-store';
+import { inject, InjectionToken } from '@angular/core';
+import type { NgtCanvasElement, NgtGlobalRenderCallback, NgtState } from './types';
+import type { SignalState } from './utils/signal-state';
 
-export const roots = new Map<NgtCanvasElement, NgtSignalStore<NgtState>>();
+export const roots = new Map<NgtCanvasElement, SignalState<NgtState>>();
 
 type SubItem = { callback: NgtGlobalRenderCallback };
 
@@ -54,7 +54,7 @@ export function flushGlobalEffects(type: NgtGlobalEffectType, timestamp: number)
 	}
 }
 
-function render(timestamp: number, store: NgtSignalStore<NgtState>, frame?: XRFrame) {
+function update(timestamp: number, store: SignalState<NgtState>, frame?: XRFrame) {
 	const state = store.snapshot;
 	// Run local effects
 	let delta = state.clock.getDelta();
@@ -77,7 +77,7 @@ function render(timestamp: number, store: NgtSignalStore<NgtState>, frame?: XRFr
 	return state.frameloop === 'always' ? 1 : state.internal.frames;
 }
 
-function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
+function createLoop<TCanvas>(roots: Map<TCanvas, SignalState<NgtState>>) {
 	let running = false;
 	let repeat: number;
 	let frame: number;
@@ -101,7 +101,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 				(state.frameloop === 'always' || state.internal.frames > 0) &&
 				!state.gl.xr?.isPresenting
 			) {
-				repeat += render(timestamp, root);
+				repeat += update(timestamp, root);
 			}
 		}
 		beforeRenderInProgress = false;
@@ -120,7 +120,7 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 		}
 	}
 
-	function invalidate(store?: NgtSignalStore<NgtState>, frames = 1): void {
+	function invalidate(store?: SignalState<NgtState>, frames = 1): void {
 		const state = store?.snapshot;
 		if (!state) return roots.forEach((root) => invalidate(root, frames));
 		if (state.gl.xr?.isPresenting || !state.internal.active || state.frameloop === 'never') return;
@@ -145,19 +145,20 @@ function createLoop<TCanvas>(roots: Map<TCanvas, NgtSignalStore<NgtState>>) {
 		}
 	}
 
-	function advance(
-		timestamp: number,
-		runGlobalEffects = true,
-		store?: NgtSignalStore<NgtState>,
-		frame?: XRFrame,
-	): void {
+	function advance(timestamp: number, runGlobalEffects = true, store?: SignalState<NgtState>, frame?: XRFrame): void {
 		if (runGlobalEffects) flushGlobalEffects('before', timestamp);
-		if (!store) for (const root of roots.values()) render(timestamp, root);
-		else render(timestamp, store, frame);
+		if (!store) for (const root of roots.values()) update(timestamp, root);
+		else update(timestamp, store, frame);
 		if (runGlobalEffects) flushGlobalEffects('after', timestamp);
 	}
 
 	return { loop, invalidate, advance };
 }
 
-export const [injectLoop] = createInjectionToken(() => createLoop(roots));
+export const NGT_LOOP = new InjectionToken<ReturnType<typeof createLoop>>('NGT_LOOP', {
+	factory: () => createLoop(roots),
+});
+
+export function injectLoop() {
+	return inject(NGT_LOOP);
+}

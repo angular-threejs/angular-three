@@ -1,7 +1,7 @@
 import { DestroyRef, Injector, inject } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { injectStore } from '../store';
-import { NgtBeforeRenderRecord } from '../types';
+import type { NgtBeforeRenderRecord } from '../types';
 
 /**
  * `injectBeforeRender` invokes its callback on every frame. Hence, the notion of tracking
@@ -38,7 +38,7 @@ export function injectBeforeRender(
 ) {
 	return assertInjector(injectBeforeRender, injector, () => {
 		const store = injectStore();
-		const sub = store.get('internal').subscribe(cb, priority, store);
+		const sub = store.snapshot.internal.subscribe(cb, priority, store);
 		inject(DestroyRef).onDestroy(() => void sub());
 		return sub;
 	});

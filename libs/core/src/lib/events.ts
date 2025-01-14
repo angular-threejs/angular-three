@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
-import { Intersection, Object3D, Vector3 } from 'three';
-import { getLocalState } from './instance';
-import {
+import * as THREE from 'three';
+import { getInstanceState } from './instance';
+import type {
 	NgtAnyRecord,
 	NgtDomEvent,
 	NgtEventHandlers,
@@ -11,16 +11,16 @@ import {
 	NgtThreeEvent,
 } from './types';
 import { makeId } from './utils/make';
-import { NgtSignalStore } from './utils/signal-store';
+import { SignalState } from './utils/signal-state';
 
 /**
  * Release pointer captures.
  * This is called by releasePointerCapture in the API, and when an object is removed.
  */
 function releaseInternalPointerCapture(
-	capturedMap: Map<number, Map<Object3D, NgtPointerCaptureTarget>>,
-	obj: Object3D,
-	captures: Map<Object3D, NgtPointerCaptureTarget>,
+	capturedMap: Map<number, Map<THREE.Object3D, NgtPointerCaptureTarget>>,
+	obj: THREE.Object3D,
+	captures: Map<THREE.Object3D, NgtPointerCaptureTarget>,
 	pointerId: number,
 ): void {
 	const captureData: NgtPointerCaptureTarget | undefined = captures.get(obj);
@@ -34,7 +34,7 @@ function releaseInternalPointerCapture(
 	}
 }
 
-export function removeInteractivity(store: NgtSignalStore<NgtState>, object: Object3D) {
+export function removeInteractivity(store: SignalState<NgtState>, object: THREE.Object3D) {
 	const { internal } = store.snapshot;
 	// Removes every trace of an object from the data store
 	internal.interaction = internal.interaction.filter((o) => o !== object);
@@ -50,34 +50,34 @@ export function removeInteractivity(store: NgtSignalStore<NgtState>, object: Obj
 	});
 }
 
-export function createEvents(store: NgtSignalStore<NgtState>) {
+export function createEvents(store: SignalState<NgtState>) {
 	/** Calculates delta */
 	function calculateDistance(event: NgtDomEvent) {
-		const internal = store.get('internal');
+		const internal = store.snapshot.internal;
 		const dx = event.offsetX - internal.initialClick[0];
 		const dy = event.offsetY - internal.initialClick[1];
 		return Math.round(Math.sqrt(dx * dx + dy * dy));
 	}
 
 	/** Returns true if an instance has a valid pointer-event registered, this excludes scroll, clicks etc */
-	function filterPointerEvents(objects: Object3D[]) {
+	function filterPointerEvents(objects: THREE.Object3D[]) {
 		return objects.filter((obj) =>
 			['move', 'over', 'enter', 'out', 'leave'].some((name) => {
 				const eventName = `pointer${name}` as keyof NgtEventHandlers;
-				return getLocalState(obj)?.handlers?.[eventName];
+				return getInstanceState(obj)?.handlers?.[eventName];
 			}),
 		);
 	}
 
-	function intersect(event: NgtDomEvent, filter?: (objects: Object3D[]) => Object3D[]) {
-		const state = store.get();
+	function intersect(event: NgtDomEvent, filter?: (objects: THREE.Object3D[]) => THREE.Object3D[]) {
+		const state = store.snapshot;
 		const duplicates = new Set<string>();
 		const intersections: NgtIntersection[] = [];
 		// Allow callers to eliminate event objects
 		const eventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
 		// Reset all raycaster cameras to undefined
 		for (let i = 0; i < eventsObjects.length; i++) {
-			const objectRootState = getLocalState(eventsObjects[i])?.store.snapshot;
+			const objectRootState = getInstanceState(eventsObjects[i])?.store.snapshot;
 			if (objectRootState) {
 				objectRootState.raycaster.camera = undefined!;
 			}
@@ -88,8 +88,8 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 			state.events.compute?.(event, store, null);
 		}
 
-		function handleRaycast(obj: Object3D) {
-			const objStore = getLocalState(obj)?.store;
+		function handleRaycast(obj: THREE.Object3D) {
+			const objStore = getInstanceState(obj)?.store;
 			const objState = objStore?.snapshot;
 			// Skip event handling when noEvents is set, or when the raycasters camera is null
 			if (!objState || !objState.events.enabled || objState.raycaster.camera === null) return [];
@@ -106,13 +106,13 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		}
 
 		// Collect events
-		let hits: Intersection<Object3D>[] = eventsObjects
+		let hits: THREE.Intersection<THREE.Object3D>[] = eventsObjects
 			// Intersect objects
 			.flatMap(handleRaycast)
 			// Sort by event priority and distance
 			.sort((a, b) => {
-				const aState = getLocalState(a.object)?.store.snapshot;
-				const bState = getLocalState(b.object)?.store.snapshot;
+				const aState = getInstanceState(a.object)?.store.snapshot;
+				const bState = getInstanceState(b.object)?.store.snapshot;
 				if (!aState || !bState) return a.distance - b.distance;
 				return bState.events.priority - aState.events.priority || a.distance - b.distance;
 			})
@@ -130,10 +130,10 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 
 		// Bubble up the events, find the event source (eventObject)
 		for (const hit of hits) {
-			let eventObject: Object3D | null = hit.object;
+			let eventObject: THREE.Object3D | null = hit.object;
 			// bubble event up
 			while (eventObject) {
-				if (getLocalState(eventObject)?.eventCount) intersections.push({ ...hit, eventObject });
+				if (getInstanceState(eventObject)?.eventCount) intersections.push({ ...hit, eventObject });
 				eventObject = eventObject.parent;
 			}
 		}
@@ -160,8 +160,8 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		if (intersections.length) {
 			const localState = { stopped: false };
 			for (const hit of intersections) {
-				const { raycaster, pointer, camera, internal } = getLocalState(hit.object)?.store.snapshot || rootState;
-				const unprojectedPoint = new Vector3(pointer.x, pointer.y, 0).unproject(camera);
+				const { raycaster, pointer, camera, internal } = getInstanceState(hit.object)?.store.snapshot || rootState;
+				const unprojectedPoint = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
 				const hasPointerCapture = (id: number) => internal.capturedMap.get(id)?.has(hit.eventObject) ?? false;
 
 				const setPointerCapture = (id: number) => {
@@ -249,7 +249,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 	}
 
 	function cancelPointer(intersections: NgtIntersection[]) {
-		const internal = store.get('internal');
+		const internal = store.snapshot.internal;
 		for (const hoveredObj of internal.hovered.values()) {
 			// When no objects were hit or the the hovered object wasn't found underneath the cursor
 			// we call onPointerOut and delete the object from the hovered-elements map
@@ -263,7 +263,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 				)
 			) {
 				const eventObject = hoveredObj.eventObject;
-				const instance = getLocalState(eventObject);
+				const instance = getInstanceState(eventObject);
 				const handlers = instance?.handlers;
 				internal.hovered.delete(makeId(hoveredObj));
 				if (instance?.eventCount) {
@@ -276,9 +276,9 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 		}
 	}
 
-	function pointerMissed(event: MouseEvent, objects: Object3D[]) {
+	function pointerMissed(event: MouseEvent, objects: THREE.Object3D[]) {
 		for (let i = 0; i < objects.length; i++) {
-			const instance = getLocalState(objects[i]);
+			const instance = getInstanceState(objects[i]);
 			instance?.handlers.pointermissed?.(event);
 		}
 	}
@@ -310,9 +310,9 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 
 		// Any other pointer goes here ...
 		return function handleEvent(event: NgtDomEvent) {
-			// NOTE: pointerMissed$ on NgtStore is private
-			const pointerMissed$: Subject<MouseEvent> = (store as NgtAnyRecord)['pointerMissed$'];
-			const internal = store.get('internal');
+			// NOTE: __pointerMissed$ on NgtStore is private subject since we only expose the Observable
+			const pointerMissed$: Subject<MouseEvent> = (store as NgtAnyRecord)['__pointerMissed$'];
+			const internal = store.snapshot.internal;
 
 			// prepareRay(event)
 			internal.lastEvent.nativeElement = event;
@@ -345,7 +345,7 @@ export function createEvents(store: NgtSignalStore<NgtState>) {
 
 			function onIntersect(data: NgtThreeEvent<NgtDomEvent>) {
 				const eventObject = data.eventObject;
-				const instance = getLocalState(eventObject);
+				const instance = getInstanceState(eventObject);
 				const handlers = instance?.handlers;
 
 				// Check presence of handlers

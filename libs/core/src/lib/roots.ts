@@ -1,24 +1,13 @@
 import { Injector } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import {
-	ACESFilmicToneMapping,
-	BasicShadowMap,
-	ColorManagement,
-	NoToneMapping,
-	PCFShadowMap,
-	PCFSoftShadowMap,
-	Raycaster,
-	Scene,
-	VSMShadowMap,
-} from 'three';
+import * as THREE from 'three';
 import { prepare } from './instance';
 import { injectLoop, roots } from './loop';
 import { injectStore } from './store';
-import { NgtAnyRecord, NgtCanvasElement, NgtCanvasOptions, NgtEquConfig, NgtSize, NgtState } from './types';
+import type { NgtCanvasElement, NgtCanvasOptions, NgtDisposable, NgtEquConfig, NgtSize, NgtState } from './types';
 import { applyProps } from './utils/apply-props';
 import { is } from './utils/is';
 import { makeCameraInstance, makeDpr, makeRendererInstance } from './utils/make';
-import { NgtSignalStore } from './utils/signal-store';
 import { checkNeedsUpdate } from './utils/update';
 
 const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
@@ -30,7 +19,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 		return (canvas: NgtCanvasElement) => {
 			const exist = roots.has(canvas);
-			let store = roots.get(canvas) as NgtSignalStore<NgtState>;
+			let store = roots.get(canvas);
 
 			if (store) {
 				console.warn('[NGT] Same canvas root is being created twice');
@@ -57,12 +46,12 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						root.update((state) => ({ internal: { ...state.internal, active: false } }));
 						setTimeout(() => {
 							try {
-								const state = root.get();
+								const state = root.snapshot;
 								state.events.disconnect?.();
 								state.gl?.renderLists?.dispose?.();
 								state.gl?.forceContextLoss?.();
 								if (state.gl?.xr) state.xr.disconnect();
-								dispose(state);
+								dispose(state.scene);
 								roots.delete(canvas);
 							} catch (e) {
 								console.error('[NGT] Unexpected error while destroying Canvas Root', e);
@@ -98,7 +87,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 					// setup raycaster
 					let raycaster = state.raycaster;
-					if (!raycaster) stateToUpdate.raycaster = raycaster = new Raycaster();
+					if (!raycaster) stateToUpdate.raycaster = raycaster = new THREE.Raycaster();
 
 					// set raycaster options
 					const { params, ...options } = raycasterOptions || {};
@@ -132,6 +121,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							// always look at center or passed-in lookAt by default
 							if (!state.camera && !cameraOptions?.rotation && !cameraOptions?.quaternion) {
 								if (Array.isArray(lookAt)) camera.lookAt(lookAt[0], lookAt[1], lookAt[2]);
+								else if (typeof lookAt === 'number') camera.lookAt(lookAt, lookAt, lookAt);
 								else if (lookAt?.isVector3) camera.lookAt(lookAt);
 								else camera.lookAt(0, 0, 0);
 							}
@@ -140,7 +130,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							camera.updateProjectionMatrix?.();
 						}
 
-						if (!is.instance(camera)) camera = prepare(camera, { store });
+						if (!is.instance(camera)) camera = prepare(camera, store, '');
 
 						stateToUpdate.camera = camera;
 
@@ -151,12 +141,12 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 
 					// Set up scene (one time only!)
 					if (!state.scene) {
-						let scene: Scene;
+						let scene: THREE.Scene;
 
 						if (is.scene(sceneOptions)) {
 							scene = sceneOptions;
 						} else {
-							scene = new Scene();
+							scene = new THREE.Scene();
 							if (sceneOptions) applyProps(scene, sceneOptions);
 						}
 
@@ -173,7 +163,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							},
 						});
 
-						stateToUpdate.scene = prepare(scene, { store });
+						stateToUpdate.scene = prepare(scene, store, 'ngt-scene');
 					}
 
 					// Set up XR (one time only!)
@@ -217,15 +207,15 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						gl.shadowMap.enabled = !!shadows;
 
 						if (typeof shadows === 'boolean') {
-							gl.shadowMap.type = PCFSoftShadowMap;
+							gl.shadowMap.type = THREE.PCFSoftShadowMap;
 						} else if (typeof shadows === 'string') {
 							const types = {
-								basic: BasicShadowMap,
-								percentage: PCFShadowMap,
-								soft: PCFSoftShadowMap,
-								variance: VSMShadowMap,
+								basic: THREE.BasicShadowMap,
+								percentage: THREE.PCFShadowMap,
+								soft: THREE.PCFSoftShadowMap,
+								variance: THREE.VSMShadowMap,
 							};
-							gl.shadowMap.type = types[shadows] ?? PCFSoftShadowMap;
+							gl.shadowMap.type = types[shadows] ?? THREE.PCFSoftShadowMap;
 						} else if (is.obj(shadows)) {
 							Object.assign(gl.shadowMap, shadows);
 						}
@@ -233,21 +223,13 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 						if (oldEnabled !== gl.shadowMap.enabled || oldType !== gl.shadowMap.type) checkNeedsUpdate(gl.shadowMap);
 					}
 
-					// Safely set color management if available.
-					// Avoid accessing ColorManagement to play nice with older versions
-					if (ColorManagement) {
-						const colorManagement = ColorManagement as NgtAnyRecord;
-						if ('enabled' in colorManagement) colorManagement['enabled'] = !legacy;
-						else if ('legacyMode' in colorManagement) colorManagement['legacyMode'] = legacy;
-					}
+					THREE.ColorManagement.enabled = !legacy;
 
 					if (!isConfigured) {
 						// set color space and tonemapping preferences once
-						const LinearEncoding = 3000;
-						const sRGBEncoding = 3001;
 						applyProps(gl, {
-							outputEncoding: linear ? LinearEncoding : sRGBEncoding,
-							toneMapping: flat ? NoToneMapping : ACESFilmicToneMapping,
+							outputColorSpace: linear ? THREE.LinearSRGBColorSpace : THREE.SRGBColorSpace,
+							toneMapping: flat ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping,
 						});
 					}
 
@@ -319,10 +301,10 @@ function computeInitialSize(canvas: NgtCanvasElement, defaultSize?: NgtSize): Ng
 }
 
 // Disposes an object and all its properties
-export function dispose<TObj extends { dispose?: () => void; type?: string; [key: string]: any }>(obj: TObj) {
-	if (obj.dispose && obj.type !== 'Scene') obj.dispose();
+export function dispose<T extends NgtDisposable>(obj: T): void {
+	if (obj.type !== 'Scene') obj.dispose?.();
 	for (const p in obj) {
-		(p as any).dispose?.();
-		delete obj[p];
+		const prop = obj[p] as NgtDisposable | undefined;
+		if (prop?.type !== 'Scene') prop?.dispose?.();
 	}
 }
