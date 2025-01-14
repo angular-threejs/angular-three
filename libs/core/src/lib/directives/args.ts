@@ -24,6 +24,7 @@ export class NgtArgs {
 
 	constructor() {
 		const commentNode = this.vcr.element.nativeElement;
+		commentNode.data = 'args-container';
 		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
 			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]('args');
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];
@@ -44,6 +45,7 @@ export class NgtArgs {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
+			console.log('destroy args');
 			this.view?.destroy();
 		});
 	}

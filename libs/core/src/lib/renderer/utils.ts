@@ -1,7 +1,8 @@
 import { untracked } from '@angular/core';
+import { removeInteractivity } from '../events';
 import { getInstanceState, invalidateInstance } from '../instance';
 import { NgtInstanceNode } from '../types';
-import { attach } from '../utils/attach';
+import { attach, detach } from '../utils/attach';
 import { is } from '../utils/is';
 import { NgtRendererNode } from './state';
 
@@ -106,6 +107,9 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 			}
 
 			// attach
+			// save prev value
+			cIS.previousAttach = attachProp.reduce((value, key) => value[key], parent);
+
 			if (cIS.type === 'ngt-value') {
 				if (cIS.hierarchyStore.snapshot.parent !== parent) {
 					cIS.setParent(parent);
@@ -118,14 +122,8 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 					attachProp,
 					true,
 				);
-
-				// save value
-				cIS.previousAttach = (child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue];
 			} else {
 				attach(parent, child, attachProp);
-
-				// save value
-				cIS.previousAttach = child;
 			}
 		}
 	} else if (is.object3D(parent) && is.object3D(child)) {
@@ -146,5 +144,35 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 	if (cIS.onAttach) cIS.onAttach({ parent, node: child });
 
 	invalidateInstance(child);
+	invalidateInstance(parent);
+}
+
+export function removeThreeChild(child: NgtInstanceNode, parent: NgtInstanceNode, dispose?: boolean) {
+	const pIS = getInstanceState(parent);
+	const cIS = getInstanceState(child);
+
+	console.log('true remove child', { pIS, cIS, parent, child });
+
+	// clear parent ref
+	cIS?.setParent(null);
+
+	// remove child from parent
+	pIS?.remove?.(child, 'objects');
+	pIS?.remove?.(child, 'nonObjects');
+
+	if (cIS?.attach) {
+		detach(parent, child, cIS.attach);
+	} else if (is.object3D(parent) && is.object3D(child)) {
+		parent.remove(child);
+		const store = cIS?.store || pIS?.store;
+		if (store) removeInteractivity(store, child);
+	}
+
+	// dispose
+	const isPrimitive = cIS?.type && cIS.type !== 'ngt-primitive';
+	if (!isPrimitive && child['dispose'] && !is.scene(child)) {
+		queueMicrotask(() => child['dispose']());
+	}
+
 	invalidateInstance(parent);
 }

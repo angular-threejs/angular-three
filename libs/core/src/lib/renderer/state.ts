@@ -5,14 +5,14 @@ import { NGT_RENDERER_NODE_FLAG } from './constants';
 import { NgtRendererClassId } from './utils';
 
 export type NgtRendererState = [
-	type: 'three' | 'portal' | 'comment' | 'platform',
+	type: 'three' | 'portal' | 'comment' | 'platform' | 'text',
 	parent: NgtRendererNode | null,
 	children: NgtRendererNode[],
 	destroyed: boolean,
 	rawValue: any,
 	portalContainer: NgtRendererNode,
 	debugNode: DebugNode | undefined,
-	debugNodeFactory: () => DebugNode | undefined,
+	debugNodeFactory: (() => DebugNode | undefined) | undefined,
 	store: SignalState<NgtState>,
 ];
 

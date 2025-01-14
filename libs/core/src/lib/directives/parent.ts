@@ -51,6 +51,7 @@ export class NgtParent {
 
 	constructor() {
 		const commentNode = this.vcr.element.nativeElement;
+		commentNode.data = 'parent-container';
 		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
 			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]('parent');
 			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];

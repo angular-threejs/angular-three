@@ -4,7 +4,6 @@ import type {
 	NgtAnyRecord,
 	NgtArguments,
 	NgtAttachFunction,
-	NgtBeforeRenderEvent,
 	NgtConstructorRepresentation,
 	NgtEventHandlers,
 } from './types';
@@ -57,7 +56,6 @@ export type ThreeChildRemovedEvent = { type: 'childremoved'; target: any; child:
 export interface NgtNodeEventMap<TInstance = NgtAnyRecord> {
 	attached: NgtAfterAttach<any, TInstance>;
 	updated: TInstance;
-	beforeRender: NgtBeforeRenderEvent<TInstance>;
 	// NOTE: this is named "disposed" to differentiate it from [dispose] property.
 	disposed: ThreeDisposeEvent;
 }

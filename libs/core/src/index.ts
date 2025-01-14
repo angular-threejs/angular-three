@@ -7,7 +7,7 @@ export * from './lib/instance';
 export * from './lib/loader';
 export * from './lib/loop';
 export * from './lib/pipes/hexify';
-// export * from './lib/portal';
+export * from './lib/portal';
 // export * from './lib/renderer-old';
 export * from './lib/renderer/catalogue';
 export * from './lib/renderer/renderer';

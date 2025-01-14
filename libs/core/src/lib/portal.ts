@@ -1,3 +1,183 @@
+import {
+	ChangeDetectionStrategy,
+	Component,
+	contentChild,
+	Directive,
+	effect,
+	EmbeddedViewRef,
+	inject,
+	Injector,
+	input,
+	signal,
+	SkipSelf,
+	TemplateRef,
+	untracked,
+	viewChild,
+	ViewContainerRef,
+} from '@angular/core';
+import * as THREE from 'three';
+import { getInstanceState, prepare } from './instance';
+import { SPECIAL_INTERNAL_ADD_COMMENT_FLAG } from './renderer/constants';
+import { injectStore, NGT_STORE } from './store';
+import type { NgtComputeFunction, NgtEventManager, NgtSize, NgtState, NgtViewport } from './types';
+import { is } from './utils/is';
+import { omit, pick } from './utils/parameters';
+import { signalState, SignalState } from './utils/signal-state';
+import { updateCamera } from './utils/update';
+
+@Directive({ selector: 'ng-template[portalContent]' })
+export class NgtPortalContent {
+	static ngTemplateContextGuard(_: NgtPortalContent, ctx: unknown): ctx is { injector: Injector } {
+		return true;
+	}
+
+	constructor() {
+		const { element } = inject(ViewContainerRef);
+		const { element: parentComment } = inject(ViewContainerRef, { skipSelf: true });
+		const commentNode = element.nativeElement;
+
+		commentNode.data = 'portal-content-container';
+
+		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
+			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG](parentComment.nativeElement);
+			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];
+		}
+	}
+}
+
+export interface NgtPortalState extends Omit<NgtState, 'events'> {
+	events: {
+		enabled?: boolean;
+		priority?: number;
+		compute?: NgtComputeFunction;
+		connected?: any;
+	};
+}
+
+function mergeState(
+	previousRoot: SignalState<NgtState>,
+	store: SignalState<NgtState>,
+	container: THREE.Object3D,
+	pointer: THREE.Vector2,
+	raycaster: THREE.Raycaster,
+	events?: NgtPortalState['events'],
+	size?: NgtSize,
+) {
+	const previousState = previousRoot.snapshot;
+	const state = store.snapshot;
+
+	let viewport: Omit<NgtViewport, 'dpr' | 'initialDpr'> | undefined = undefined;
+
+	if (state.camera && size) {
+		const camera = state.camera;
+		// calculate the override viewport, if present
+		viewport = previousState.viewport.getCurrentViewport(camera, new THREE.Vector3(), size);
+		// update the portal camera, if it differs from the previous layer
+		if (camera !== previousState.camera) updateCamera(camera, size);
+	}
+
+	return {
+		// the intersect consists of the previous root state
+		...previousState,
+		...state,
+		// portals have their own scene, which forms the root, a raycaster and a pointer
+		scene: container as THREE.Scene,
+		pointer,
+		raycaster,
+		// their previous root is the layer before it
+		previousRoot,
+		events: { ...previousState.events, ...state.events, ...events },
+		size: { ...previousState.size, ...size },
+		viewport: { ...previousState.viewport, ...viewport },
+		// layers are allowed to override events
+		setEvents: (events: Partial<NgtEventManager<any>>) =>
+			store.update((state) => ({ ...state, events: { ...state.events, ...events } })),
+	} as NgtState;
+}
+
+@Component({
+	selector: 'ngt-portal',
+	template: `
+		<ng-container #anchor />
+	`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [
+		{
+			provide: NGT_STORE,
+			useFactory: (previousStore: SignalState<NgtState>) => {
+				const store = signalState({} as NgtState);
+				store.update(mergeState(previousStore, store, null!, new THREE.Vector2(), new THREE.Raycaster()));
+				return store;
+			},
+			deps: [[new SkipSelf(), NGT_STORE]],
+		},
+	],
+})
+export class NgtPortal {
+	container = input.required<THREE.Object3D>();
+	state = input<Partial<NgtPortalState>>({});
+
+	private contentRef = contentChild.required(NgtPortalContent, { read: TemplateRef });
+	private anchorRef = viewChild.required('anchor', { read: ViewContainerRef });
+
+	private previousStore = injectStore({ skipSelf: true });
+	private portalStore = injectStore();
+	private injector = inject(Injector);
+
+	private size = pick(this.state, 'size');
+	private events = pick(this.state, 'events');
+	private restState = omit(this.state, ['size', 'events']);
+
+	protected portalContentRendered = signal(false);
+
+	private portalViewRef?: EmbeddedViewRef<unknown>;
+
+	constructor() {
+		effect(() => {
+			let [container, prevState] = [this.container(), this.previousStore()];
+
+			const [size, events, restState] = [untracked(this.size), untracked(this.events), untracked(this.restState)];
+
+			if (!is.instance(container)) {
+				container = prepare(container, this.portalStore, 'ngt-portal');
+			}
+
+			const instanceState = getInstanceState(container);
+			if (instanceState && instanceState.store !== this.portalStore) {
+				instanceState.store = this.portalStore;
+			}
+
+			this.portalStore.update(
+				restState,
+				mergeState(
+					this.previousStore,
+					this.portalStore,
+					container,
+					this.portalStore.snapshot.pointer,
+					this.portalStore.snapshot.raycaster,
+					events,
+					size,
+				),
+			);
+
+			if (this.portalViewRef) {
+				this.portalViewRef.detectChanges();
+				return;
+			}
+
+			this.portalViewRef = untracked(this.anchorRef).createEmbeddedView(
+				untracked(this.contentRef),
+				{ injector: this.injector },
+				{ injector: this.injector },
+			);
+			this.portalViewRef.detectChanges();
+			this.portalContentRendered.set(true);
+		});
+	}
+}
+
+export const NgtPortalDeclarations = [NgtPortal, NgtPortalContent] as const;
+
 // import {
 // 	afterNextRender,
 // 	ChangeDetectionStrategy,
