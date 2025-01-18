@@ -36,6 +36,7 @@
 			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts"],
 			"angular-three-soba/stats": ["libs/soba/stats/src/index.ts"],
 			"angular-three-soba/vanilla-exports": ["libs/soba/vanilla-exports/src/index.ts"],
+			"angular-three/dom": ["libs/core/dom/src/index.ts"],
 			"angular-three/nativescript": ["libs/core/nativescript/src/index.ts"],
 			"angular-three/testing": ["libs/core/testing/src/index.ts"],
 			"plugin": ["libs/plugin/src/index.ts"]

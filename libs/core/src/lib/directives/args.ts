@@ -45,7 +45,6 @@ export class NgtArgs {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			console.log('destroy args');
 			this.view?.destroy();
 		});
 	}

@@ -3,14 +3,12 @@ import {
 	DebugNode,
 	inject,
 	Injectable,
-	makeEnvironmentProviders,
 	Renderer2,
 	RendererFactory2,
 	RendererType2,
 	Type,
 	untracked,
 } from '@angular/core';
-import { ɵDomRendererFactory2 as DomRendererFactory2 } from '@angular/platform-browser';
 import * as THREE from 'three';
 import { NgtArgs } from '../directives/args';
 import { NgtParent } from '../directives/parent';
@@ -23,6 +21,7 @@ import { SignalState } from '../utils/signal-state';
 import { injectCatalogue } from './catalogue';
 import {
 	CANVAS_CONTENT_FLAG,
+	NGT_MANUAL_INJECTED_STORE,
 	NGT_RENDERER_NODE_FLAG,
 	SPECIAL_INTERNAL_ADD_COMMENT_FLAG,
 	SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG,
@@ -51,14 +50,15 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 
 	createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
 		const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
-
-		console.log('createRenderer', hostElement, type);
-
 		if (!type) return delegateRenderer;
 
 		const isPortal = isRendererNode(hostElement) && hostElement.__ngt_renderer__[NgtRendererClassId.type] === 'portal';
 
 		let renderer = !isPortal ? this.rendererMap.get(type.id) : null;
+
+		if (!isRendererNode(hostElement)) {
+			renderer = null;
+		}
 
 		if (!renderer) {
 			const debugNode = hostElement ? new DebugNode(hostElement) : null;
@@ -67,6 +67,11 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 			// if the host element is already a renderer node, it should hav a store
 			if (!store && isRendererNode(hostElement) && hostElement.__ngt_renderer__[NgtRendererClassId.store]) {
 				store = hostElement.__ngt_renderer__[NgtRendererClassId.store];
+			}
+
+			// if there's still no store but there's NGT_MANUAL_INJECTED_STORE (i.e: from NgtRouterOutlet)
+			if (!store && 'type' in type && typeof type.type === 'function' && NGT_MANUAL_INJECTED_STORE in type.type) {
+				store = type.type[NGT_MANUAL_INJECTED_STORE] as SignalState<NgtState> | null;
 			}
 
 			const hasCanvasContent = (type as any)['consts']?.some((constArr: unknown[]) =>
@@ -155,14 +160,11 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	createElement(name: string, namespace?: string | null) {
-		console.log('createElement', name, namespace);
-
 		const platformElement = this.delagateRenderer.createElement(name, namespace);
 
 		if (!this.store) return platformElement;
 
 		if (name === 'ngt-portal') {
-			console.log('case ngt-portal', { name, platformElement });
 			return createRendererNode('portal', this.store, platformElement, this.document);
 		}
 
@@ -226,15 +228,12 @@ export class NgtRenderer2 implements Renderer2 {
 
 		if (!this.store) return textNode;
 
-		console.log('true createText', value);
 		return createRendererNode('text', this.store, textNode, this.document);
 	}
 
 	destroyNode: (node: any) => void = (node) => {
 		if (!this.store) return this.delagateRenderer.destroyNode?.(node);
 		const rS = (node as NgtRendererNode).__ngt_renderer__;
-
-		console.log('true destroy node', { node, rS });
 
 		if (!rS || rS[NgtRendererClassId.destroyed]) return;
 
@@ -301,8 +300,6 @@ export class NgtRenderer2 implements Renderer2 {
 		if (!cRS) {
 			console.log('case cRS undefined', { parent, newChild, pRS });
 		}
-
-		console.log('true appendChlid', { parent, newChild, pRS, cRS });
 
 		//  if the child is a comment, we'll set the parent then bail
 		if (cRS?.[NgtRendererClassId.type] === 'comment') {
@@ -394,7 +391,6 @@ export class NgtRenderer2 implements Renderer2 {
 			if (cRS?.[NgtRendererClassId.type] === 'platform') {
 				this.setNodeRelationship(parent, newChild);
 				this.delagateRenderer.appendChild(parent, newChild);
-				console.log('case both platforms', { pRS: [...pRS], cRS: [...cRS], parent, newChild });
 
 				const closestAncestorThreeNode = this.findClosestAncestorThreeNode(parent);
 				if (closestAncestorThreeNode) this.appendChild(closestAncestorThreeNode, newChild);
@@ -405,7 +401,6 @@ export class NgtRenderer2 implements Renderer2 {
 			if (cRS?.[NgtRendererClassId.type] === 'portal') {
 				this.setNodeRelationship(parent, newChild);
 				this.delagateRenderer.appendChild(parent, newChild);
-				console.log('case both platforms and portal', { pRS: [...pRS], cRS: [...cRS], parent, newChild });
 				return;
 			}
 		}
@@ -414,8 +409,6 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	insertBefore(parent: any, newChild: any, refChild: any, isMove?: boolean): void {
-		console.log('insertBefore', { parent, newChild, refChild, isMove, renderer: this });
-
 		// if both are comments and the reference child is NgtCanvasContent, we'll assign the same flag to the newChild
 		// this means that the NgtCanvas component is embedding. This flag allows the Renderer to get the root scene
 		// when it tries to attach the template under `ng-template[canvasContent]`
@@ -441,8 +434,6 @@ export class NgtRenderer2 implements Renderer2 {
 		if (parent === null) {
 			parent = this.parentNode(oldChild);
 		}
-
-		console.log('true removeChild', parent, oldChild, isHostElement);
 
 		const cRS = (oldChild as NgtRendererNode).__ngt_renderer__;
 
@@ -493,14 +484,10 @@ export class NgtRenderer2 implements Renderer2 {
 			}
 		}
 
-		try {
-			return this.delagateRenderer.removeChild(parent, oldChild, isHostElement);
-		} catch {}
+		return this.delagateRenderer.removeChild(parent, oldChild, isHostElement);
 	}
 
 	parentNode(node: any) {
-		console.log('parentNode', node, this);
-
 		// NOTE: if we don't have both the store and the node is not a renderer node, delegate
 		if (!this.store && !(NGT_RENDERER_NODE_FLAG in node)) {
 			return this.delagateRenderer.parentNode(node);
@@ -531,15 +518,9 @@ export class NgtRenderer2 implements Renderer2 {
 		return this.delagateRenderer.parentNode(node);
 	}
 
-	nextSibling(node: any) {
-		console.log('nextSibling', node);
-		return this.delagateRenderer.nextSibling(node);
-	}
-
 	setAttribute(el: any, name: string, value: string, namespace?: string | null): void {
 		if (!this.store) return this.delagateRenderer.setAttribute(el, name, value, namespace);
 
-		console.log('true setAttribute', el, name, value, namespace);
 		const rS = (el as NgtRendererNode).__ngt_renderer__;
 		if (!rS || rS[NgtRendererClassId.destroyed]) {
 			console.log('case setAttribute but renderer state is undefined or destroyed', { el, name, value });
@@ -584,8 +565,6 @@ export class NgtRenderer2 implements Renderer2 {
 
 	setProperty(el: any, name: string, value: any): void {
 		if (!this.store) return this.delagateRenderer.setProperty(el, name, value);
-
-		console.log('setProperty', el, name, value);
 
 		const rS = (el as NgtRendererNode).__ngt_renderer__;
 		if (!rS || rS[NgtRendererClassId.destroyed]) {
@@ -651,18 +630,12 @@ export class NgtRenderer2 implements Renderer2 {
 		return this.delagateRenderer.setProperty(el, name, value);
 	}
 
-	setValue(node: any, value: string): void {
-		console.log('setValue', node, value);
-		return this.delagateRenderer.setValue(node, value);
-	}
-
 	listen(
 		target: 'window' | 'document' | 'body' | any,
 		eventName: string,
 		callback: (event: any) => boolean | void,
 	): () => void {
 		if (!this.store) return this.delagateRenderer.listen(target, eventName, callback);
-		console.log('listen', target, eventName, callback);
 
 		if (typeof target === 'string') {
 			return this.delagateRenderer.listen(target, eventName, callback);
@@ -775,29 +748,21 @@ export class NgtRenderer2 implements Renderer2 {
 
 		let parent = rS[NgtRendererClassId.parent];
 
+		if (
+			parent &&
+			parent.__ngt_renderer__[NgtRendererClassId.type] === 'portal' &&
+			parent.__ngt_renderer__[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
+		) {
+			return parent.__ngt_renderer__[NgtRendererClassId.portalContainer];
+		}
+
 		while (parent && parent.__ngt_renderer__ && parent.__ngt_renderer__[NgtRendererClassId.type] !== 'three') {
-			parent = parent.__ngt_renderer__[NgtRendererClassId.parent];
+			parent =
+				parent.__ngt_renderer__[NgtRendererClassId.portalContainer] ??
+				parent.__ngt_renderer__[NgtRendererClassId.parent];
 		}
 
 		return parent;
-
-		// let parent = node.__ngt_renderer__[NgtRendererClassId.parent];
-		//
-		// if (
-		// 	parent &&
-		// 	parent.__ngt_renderer__[NgtRendererClassId.type] === 'portal' &&
-		// 	parent.__ngt_renderer__[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
-		// ) {
-		// 	return parent.__ngt_renderer__[NgtRendererClassId.portalContainer];
-		// }
-		//
-		// while (parent && parent.__ngt_renderer__[NgtRendererClassId.type] !== 'three') {
-		// 	parent = parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
-		// 		? parent.__ngt_renderer__[NgtRendererClassId.portalContainer]
-		// 		: parent.__ngt_renderer__[NgtRendererClassId.parent];
-		// }
-		//
-		// return parent;
 	}
 
 	private appendThreeRendererNodes(parent: any, child: any) {
@@ -870,14 +835,6 @@ export class NgtRenderer2 implements Renderer2 {
 	setStyle = this.delagateRenderer.setStyle.bind(this.delagateRenderer);
 	removeStyle = this.delagateRenderer.removeStyle.bind(this.delagateRenderer);
 	selectRootElement = this.delagateRenderer.selectRootElement.bind(this.delagateRenderer);
-}
-
-export function provideNgtRenderer() {
-	return makeEnvironmentProviders([
-		{
-			provide: RendererFactory2,
-			useFactory: (domRendererFactory: RendererFactory2) => new NgtRendererFactory2(domRendererFactory),
-			deps: [DomRendererFactory2],
-		},
-	]);
+	nextSibling = this.delagateRenderer.nextSibling.bind(this.delagateRenderer);
+	setValue = this.delagateRenderer.setValue.bind(this.delagateRenderer);
 }

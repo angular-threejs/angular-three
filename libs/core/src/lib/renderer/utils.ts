@@ -151,8 +151,6 @@ export function removeThreeChild(child: NgtInstanceNode, parent: NgtInstanceNode
 	const pIS = getInstanceState(parent);
 	const cIS = getInstanceState(child);
 
-	console.log('true remove child', { pIS, cIS, parent, child });
-
 	// clear parent ref
 	cIS?.setParent(null);
 

@@ -22,16 +22,14 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
-import * as THREE from 'three';
-import { createPointerEvents } from './dom/events';
-import { CANVAS_CONTENT_FLAG } from './renderer/constants';
-import { injectCanvasRootInitializer, NgtCanvasConfigurator } from './roots';
-import { injectStore, provideStore } from './store';
-import type { NgtVector3 } from './three-types';
-import type {
+import {
+	CANVAS_CONTENT_FLAG,
+	injectCanvasRootInitializer,
+	injectStore,
+	is,
 	NgtCamera,
 	NgtCameraParameters,
+	NgtCanvasConfigurator,
 	NgtDomEvent,
 	NgtDpr,
 	NgtEventPrefix,
@@ -41,8 +39,12 @@ import type {
 	NgtShadows,
 	NgtSize,
 	NgtState,
-} from './types';
-import { is } from './utils/is';
+	NgtVector3,
+	provideStore,
+} from 'angular-three';
+import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
+import * as THREE from 'three';
+import { createPointerEvents } from './events';
 
 @Directive({ selector: 'ng-template[canvasContent]' })
 export class NgtCanvasContent {

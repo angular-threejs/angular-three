@@ -31,12 +31,12 @@ export const appRoutes: Route[] = [
 		loadChildren: () => import('./misc/misc.routes'),
 		title: 'Misc - Angular Three Demo',
 	},
-	// {
-	// 	path: 'routed',
-	// 	loadComponent: () => import('./routed/routed'),
-	// 	loadChildren: () => import('./routed/routed.routes'),
-	// 	title: 'Routed - Angular Three Demo',
-	// },
+	{
+		path: 'routed',
+		loadComponent: () => import('./routed/routed'),
+		loadChildren: () => import('./routed/routed.routes'),
+		title: 'Routed - Angular Three Demo',
+	},
 	// {
 	// 	path: 'routed-rocks',
 	// 	loadComponent: () => import('./routed-rocks/routed-rocks'),

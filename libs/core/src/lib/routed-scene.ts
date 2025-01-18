@@ -1,91 +1,25 @@
-import {
-	ChangeDetectorRef,
-	Component,
-	createEnvironmentInjector,
-	Directive,
-	effect,
-	EnvironmentInjector,
-	inject,
-	InjectFlags,
-	InjectOptions,
-	ProviderToken,
-	RendererFactory2,
-	runInInjectionContext,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Directive, effect, EnvironmentInjector } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { ROUTED_SCENE } from './renderer-old/constants';
-
-/**
- * This is a custom EnvironmentInjector that returns the RendererFactory2 from the `ngtEnvironmentInjector`
- * for `NgtRendererFactory`
- */
-class NgtOutletEnvironmentInjector extends EnvironmentInjector {
-	constructor(
-		private readonly routeEnvInjector: EnvironmentInjector,
-		private readonly ngtEnvInjector: EnvironmentInjector,
-	) {
-		super();
-	}
-
-	override get<T>(
-		token: ProviderToken<T>,
-		notFoundValue?: unknown,
-		flags: InjectFlags | InjectOptions = InjectFlags.Default,
-	): any {
-		const options: InjectOptions = {};
-
-		if (typeof flags === 'object') {
-			Object.assign(options, flags);
-		} else {
-			Object.assign(options, {
-				optional: !!(flags & InjectFlags.Optional),
-				host: !!(flags & InjectFlags.Host),
-				self: !!(flags & InjectFlags.Self),
-				skipSelf: !!(flags & InjectFlags.SkipSelf),
-			});
-		}
-
-		if (token === RendererFactory2) {
-			return this.ngtEnvInjector.get(token, notFoundValue, options);
-		}
-
-		return this.routeEnvInjector.get(token, notFoundValue, options);
-	}
-
-	override runInContext<ReturnT>(fn: () => ReturnT): ReturnT {
-		try {
-			return runInInjectionContext(this.routeEnvInjector, fn);
-		} catch {}
-
-		return runInInjectionContext(this.ngtEnvInjector, fn);
-	}
-
-	override destroy(): void {
-		this.routeEnvInjector.destroy();
-	}
-}
+import { NGT_MANUAL_INJECTED_STORE } from './renderer/constants';
+import { injectStore } from './store';
 
 @Directive({ selector: 'ngt-router-outlet' })
 /**
- * This is a custom RouterOutlet that modifies `activateWith` to inherit the `EnvironmentInjector`
- * that contains the custom `NgtRendererFactory`.
- *
+ * More hax
  * Use this with extreme caution.
+ *
+ * Basically, we grab the store and try to assign it on the activated class
  */
 export class NgtRouterOutlet extends RouterOutlet {
-	private environmentInjector = inject(EnvironmentInjector);
+	private store = injectStore({ optional: true });
 
 	override activateWith(activatedRoute: ActivatedRoute, environmentInjector: EnvironmentInjector): void {
-		const activateWithEnvInjector =
-			this.environmentInjector === environmentInjector
-				? environmentInjector
-				: createEnvironmentInjector(
-						[],
-						new NgtOutletEnvironmentInjector(environmentInjector, this.environmentInjector),
-					);
+		if (this.store && activatedRoute.component) {
+			Object.assign(activatedRoute.component, { [NGT_MANUAL_INJECTED_STORE]: this.store });
+		}
 
-		return super.activateWith(activatedRoute, activateWithEnvInjector);
+		return super.activateWith(activatedRoute, environmentInjector);
 	}
 }
 
@@ -97,8 +31,6 @@ export class NgtRouterOutlet extends RouterOutlet {
 	imports: [NgtRouterOutlet],
 })
 export class NgtRoutedScene {
-	static [ROUTED_SCENE] = true;
-
 	constructor(router: Router, cdr: ChangeDetectorRef) {
 		effect((onCleanup) => {
 			const sub = router.events

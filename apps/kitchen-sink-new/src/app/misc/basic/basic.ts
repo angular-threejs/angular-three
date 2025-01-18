@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvasDeclarations } from 'angular-three';
+import { NgtCanvasDeclarations } from 'angular-three/dom';
 import { Scene } from './scene';
 
 @Component({

@@ -1,4 +1,3 @@
-export * from './lib/canvas';
 export * from './lib/directives/args';
 export * from './lib/directives/parent';
 export * from './lib/directives/selection';
@@ -9,7 +8,9 @@ export * from './lib/loop';
 export * from './lib/pipes/hexify';
 export * from './lib/portal';
 // export * from './lib/renderer-old';
+export * from './lib/events';
 export * from './lib/renderer/catalogue';
+export * from './lib/renderer/constants';
 export * from './lib/renderer/renderer';
 export * from './lib/roots';
 export * from './lib/routed-scene';

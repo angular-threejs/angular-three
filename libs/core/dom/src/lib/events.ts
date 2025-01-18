@@ -1,6 +1,12 @@
-import { createEvents } from '../events';
-import type { NgtAnyRecord, NgtDomEvent, NgtEventManager, NgtEvents, NgtState } from '../types';
-import { SignalState } from '../utils/signal-state';
+import {
+	createEvents,
+	NgtAnyRecord,
+	NgtDomEvent,
+	NgtEventManager,
+	NgtEvents,
+	NgtState,
+	SignalState,
+} from 'angular-three';
 
 const DOM_EVENTS = {
 	click: false,
