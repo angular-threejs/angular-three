@@ -287,6 +287,8 @@ export interface NgtInternalState {
 }
 
 export interface NgtState {
+	/** id **/
+	id: string;
 	/** The instance of the renderer */
 	gl: THREE.WebGLRenderer;
 	/** Default camera */

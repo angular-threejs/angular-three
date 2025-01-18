@@ -14,11 +14,11 @@ import type {
 	NgtXRManager,
 } from './types';
 import { is } from './utils/is';
-import { makeDpr } from './utils/make';
+import { makeDpr, makeId } from './utils/make';
 import { SignalState, signalState } from './utils/signal-state';
 import { updateCamera } from './utils/update';
 
-function storeFactory() {
+export function storeFactory() {
 	const { invalidate, advance } = injectLoop();
 	const document = inject(DOCUMENT);
 	const window = document.defaultView || undefined;
@@ -35,6 +35,7 @@ function storeFactory() {
 	const pointer = new THREE.Vector2();
 
 	const store: SignalState<NgtState> = signalState<NgtState>({
+		id: makeId(),
 		pointerMissed$: pointerMissed$.asObservable(),
 		events: { priority: 1, enabled: true, connected: false },
 
@@ -226,13 +227,6 @@ function storeFactory() {
 }
 
 export const NGT_STORE = new InjectionToken<SignalState<NgtState>>('NgtStore Token');
-
-export function provideStore(store?: () => SignalState<NgtState>) {
-	if (store) {
-		return { provide: NGT_STORE, useFactory: store };
-	}
-	return { provide: NGT_STORE, useFactory: storeFactory };
-}
 
 export function injectStore(options: InjectOptions & { optional?: false }): SignalState<NgtState>;
 export function injectStore(options: InjectOptions): SignalState<NgtState> | null;

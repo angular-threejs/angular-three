@@ -15,7 +15,7 @@ import * as THREE from 'three';
 	template: `
 		@if (true) {
 			<ngt-mesh [position]="position()">
-				<ngt-box-geometry *args="[0.5, 0.5, 0.5]" />
+				<ngt-box-geometry *args="[0.5, 0.5, 0.5]" (attached)="onAttach($event)" />
 
 				<ng-content>
 					<ngt-mesh-normal-material />
@@ -51,17 +51,10 @@ export class ConditionBox {
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: {
-		'(document:dblclick)': 'onDocumentDblClick($event)',
-	},
 })
 export class Box {
 	position = input<NgtVector3>(0);
 	color = input('turquoise');
-
-	onDocumentDblClick(event: MouseEvent) {
-		console.log('in box document dbl click', event);
-	}
 
 	onAttach(event: any) {
 		console.log('in box', event);

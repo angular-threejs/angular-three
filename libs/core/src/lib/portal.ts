@@ -21,6 +21,7 @@ import { SPECIAL_INTERNAL_ADD_COMMENT_FLAG } from './renderer/constants';
 import { injectStore, NGT_STORE } from './store';
 import type { NgtComputeFunction, NgtEventManager, NgtSize, NgtState, NgtViewport } from './types';
 import { is } from './utils/is';
+import { makeId } from './utils/make';
 import { omit, pick } from './utils/parameters';
 import { signalState, SignalState } from './utils/signal-state';
 import { updateCamera } from './utils/update';
@@ -63,7 +64,8 @@ function mergeState(
 	events?: NgtPortalState['events'],
 	size?: NgtSize,
 ) {
-	const previousState = previousRoot.snapshot;
+	// we never want to spread the id
+	const { id: _, ...previousState } = previousRoot.snapshot;
 	const state = store.snapshot;
 
 	let viewport: Omit<NgtViewport, 'dpr' | 'initialDpr'> | undefined = undefined;
@@ -105,7 +107,7 @@ function mergeState(
 		{
 			provide: NGT_STORE,
 			useFactory: (previousStore: SignalState<NgtState>) => {
-				const store = signalState({} as NgtState);
+				const store = signalState({ id: makeId() } as NgtState);
 				store.update(mergeState(previousStore, store, null!, new THREE.Vector2(), new THREE.Raycaster()));
 				return store;
 			},
@@ -134,7 +136,7 @@ export class NgtPortal {
 
 	constructor() {
 		effect(() => {
-			let [container, prevState] = [this.container(), this.previousStore()];
+			let [container] = [this.container(), this.previousStore()];
 
 			const [size, events, restState] = [untracked(this.size), untracked(this.events), untracked(this.restState)];
 

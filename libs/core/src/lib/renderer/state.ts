@@ -1,7 +1,7 @@
 import { DebugNode } from '@angular/core';
 import type { NgtAnyRecord, NgtState } from '../types';
 import { SignalState } from '../utils/signal-state';
-import { NGT_RENDERER_NODE_FLAG } from './constants';
+import { NGT_GET_NODE_ATTRIBUTE_FLAG, NGT_RENDERER_NODE_FLAG } from './constants';
 import { NgtRendererClassId } from './utils';
 
 export type NgtRendererState = [
@@ -46,6 +46,13 @@ export function createRendererNode(
 			}
 			return state[NgtRendererClassId.debugNode];
 		};
+	}
+
+	// NOTE: Angular SSR calls `node.getAttribute()` to retrieve hydration info on a node
+	if (!('getAttribute' in rendererNode) || typeof rendererNode['getAttribute'] !== 'function') {
+		const getNodeAttribute = (name: string) => rendererNode[name];
+		getNodeAttribute[NGT_GET_NODE_ATTRIBUTE_FLAG] = true;
+		Object.defineProperty(rendererNode, 'getAttribute', { value: getNodeAttribute, configurable: true });
 	}
 
 	return rendererNode;

@@ -27,6 +27,7 @@ import {
 	injectCanvasRootInitializer,
 	injectStore,
 	is,
+	NGT_STORE,
 	NgtCamera,
 	NgtCameraParameters,
 	NgtCanvasConfigurator,
@@ -40,7 +41,7 @@ import {
 	NgtSize,
 	NgtState,
 	NgtVector3,
-	provideStore,
+	storeFactory,
 } from 'angular-three';
 import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
 import * as THREE from 'three';
@@ -73,7 +74,7 @@ export class NgtCanvasContent {
 			emitInitialResult: true,
 			debounce: { scroll: 50, resize: 0 },
 		} as ResizeOptions),
-		provideStore(),
+		{ provide: NGT_STORE, useFactory: storeFactory },
 	],
 	host: {
 		style: 'display: block;position: relative;width: 100%;height: 100%;overflow: hidden;',
