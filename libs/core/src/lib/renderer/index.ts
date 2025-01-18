@@ -119,6 +119,7 @@ export class NgtRenderer implements Renderer2 {
 				}
 				return node.__ngt_renderer__[NgtRendererClassId.debugNode];
 			};
+
 			return node;
 		}
 
@@ -607,6 +608,15 @@ export class NgtRenderer implements Renderer2 {
 
 		rS[NgtRendererClassId.children] = [];
 		rS[NgtRendererClassId.destroyed] = true;
+
+		if (
+			'getAttribute' in node &&
+			typeof node['getAttribute'] === 'function' &&
+			!!Reflect.get(node['getAttribute'], '__ngt_renderer__')
+		) {
+			delete node['getAttribute'];
+		}
+
 		if (parent) {
 			removeChild(parent, node);
 		}

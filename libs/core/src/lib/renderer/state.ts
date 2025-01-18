@@ -37,6 +37,12 @@ export function createNode(type: NgtRendererState[NgtRendererClassId.type], node
 		};
 	}
 
+	if (!('getAttribute' in rendererNode) || typeof rendererNode['getAttribute'] !== 'function') {
+		const nodeGetAttribute = (name: string) => rendererNode[name];
+		nodeGetAttribute['__ngt_renderer__'] = true;
+		Object.defineProperty(rendererNode, 'getAttribute', { value: nodeGetAttribute });
+	}
+
 	return rendererNode;
 }
 
