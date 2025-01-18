@@ -1,3 +1,13 @@
+## 3.6.1 (2025-01-18)
+
+### 🩹 Fixes
+
+- **core:** add dummy getAttribute fn to rendererNode for ssr ([1a37c1a](https://github.com/angular-threejs/angular-three/commit/1a37c1a))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.6.0 (2025-01-11)
 
 ### 🚀 Features
