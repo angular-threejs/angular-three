@@ -1,3 +1,13 @@
+## 3.7.0 (2025-01-18)
+
+### 🚀 Features
+
+- **core:** expose rendered output with the component ref ([f4bc584](https://github.com/angular-threejs/angular-three/commit/f4bc584))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.6.1 (2025-01-18)
 
 ### 🩹 Fixes
