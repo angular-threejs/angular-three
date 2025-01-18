@@ -54,7 +54,10 @@ import { is } from './utils/is';
 	},
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtCanvas {
+export class NgtCanvas<
+	TSceneGraph extends Type<any> | 'routed',
+	TSceneCmp = TSceneGraph extends Type<infer Cmp> ? Cmp : NgtRoutedScene,
+> {
 	private store = injectStore();
 	private initRoot = injectCanvasRootInitializer();
 
@@ -63,7 +66,7 @@ export class NgtCanvas {
 	private environmentInjector = inject(EnvironmentInjector);
 	private injector = inject(Injector);
 
-	sceneGraph = input.required<Type<any>, Type<any> | 'routed'>({
+	sceneGraph = input.required<Type<TSceneCmp>, TSceneGraph>({
 		transform: (value) => {
 			if (value === 'routed') return NgtRoutedScene;
 			return value;
@@ -91,7 +94,9 @@ export class NgtCanvas {
 	eventSource = input<HTMLElement | ElementRef<HTMLElement>>();
 	eventPrefix = input<NonNullable<NgtCanvasOptions['eventPrefix']>>('offset');
 	lookAt = input<Vector3 | Parameters<Vector3['set']>>();
+
 	created = output<NgtState>();
+	rendered = output<ComponentRef<TSceneCmp>>();
 	pointerMissed = outputFromObservable(this.store.get('pointerMissed$'));
 
 	private glCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('glCanvas');
@@ -104,7 +109,7 @@ export class NgtCanvas {
 	private configurator = signal<NgtCanvasConfigurator | null>(null);
 
 	private glEnvironmentInjector?: EnvironmentInjector;
-	private glRef?: ComponentRef<unknown>;
+	private glRef?: ComponentRef<TSceneCmp>;
 
 	constructor() {
 		// NOTE: this means that everything in NgtCanvas will be in afterNextRender.
@@ -211,5 +216,6 @@ export class NgtCanvas {
 		});
 
 		this.glRef.changeDetectorRef.detectChanges();
+		this.rendered.emit(this.glRef);
 	}
 }
