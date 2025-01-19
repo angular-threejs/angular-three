@@ -67,19 +67,22 @@ export class Box {
 		<ngt-ambient-light [intensity]="Math.PI" />
 
 		<ngt-group #group>
-			<ngt-mesh>
+			<ngt-mesh (pointerover)="color.set('orange')" (pointerout)="color.set('hotpink')">
 				<ngt-sphere-geometry *args="[0.5, 32, 32]" />
 				<ngt-mesh-toon-material [color]="color()" (attached)="onAttach($event)" />
 			</ngt-mesh>
 
+			<!--
 			@if (show()) {
 				<ngt-mesh [position]="[3, 0, 0]">
 					<ngt-icosahedron-geometry />
 					<ngt-mesh-normal-material />
 				</ngt-mesh>
 			}
+      -->
 
-			<app-box [position]="[1, 0, 0]" />
+			<!--
+<app-box [position]="[1, 0, 0]" />
 			<app-box [position]="[-1, 0, 0]" color="red" />
 			<app-box [position]="[0, 1, 0]">
 				<ngt-mesh-standard-material color="green" />
@@ -113,11 +116,14 @@ export class Box {
 					<app-box data-children [position]="[0.5, -0.5, 0]" color="black" />
 				}
 			</app-box>
+-->
 
+			<!--
 			<app-condition-box [position]="[0, 2, 0]" />
 			@if (show()) {
 				<app-condition-box [position]="[0, -2, 0]" />
 			}
+      -->
 		</ngt-group>
 
 		<ngt-portal [container]="virtualScene">

@@ -47,7 +47,9 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 	/**
 	 * NOTE: We use `useFactory` to instantiate `NgtRendererFactory2`
 	 */
-	constructor(private delegateRendererFactory: RendererFactory2) {}
+	constructor(private delegateRendererFactory: RendererFactory2) {
+		console.log('this', this);
+	}
 
 	createRenderer(hostElement: any, type: RendererType2 | null): Renderer2 {
 		const delegateRenderer = this.delegateRendererFactory.createRenderer(hostElement, type);
@@ -68,7 +70,7 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 			store = type.type[NGT_MANUAL_INJECTED_STORE] as SignalState<NgtState> | null;
 		}
 
-		const cacheKey = store ? `${type.id}-${store.snapshot.id}` : type.id;
+		let cacheKey = store ? `${type.id}-${store.snapshot.id}` : type.id;
 		let renderer = !isPortal ? this.rendererMap.get(cacheKey) : null;
 
 		if (!isRendererNode(hostElement)) {
@@ -94,10 +96,31 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 					}
 
 					const rS = (hostElement as NgtRendererNode).__ngt_renderer__;
-					// reassign store if it's different
-					if (rS[NgtRendererClassId.store] !== store) {
+
+					if (!rS[NgtRendererClassId.store]) {
 						rS[NgtRendererClassId.store] = store;
+					} else if (rS[NgtRendererClassId.store] !== store) {
+						// reassign store if it's different
+						let resolvedStore = store;
+						let shouldReassign = false;
+
+						// check if resolved store has renderer state store as an ancestor
+						while (resolvedStore.snapshot.previousRoot) {
+							// if it is, then we reassign
+							if (resolvedStore.snapshot.previousRoot.snapshot.id === rS[NgtRendererClassId.store].snapshot.id) {
+								shouldReassign = true;
+								break;
+							}
+							resolvedStore = resolvedStore.snapshot.previousRoot;
+						}
+
+						if (shouldReassign) {
+							rS[NgtRendererClassId.store] = store;
+						}
 					}
+
+					// reassign cache key
+					cacheKey = `${type.id}-${rS[NgtRendererClassId.store].snapshot.id}`;
 				}
 
 				const removeRenderer = (renderer: Renderer2) => {
@@ -117,7 +140,7 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 			if (isPortal) {
 				this.portals.add(renderer);
 			} else {
-				this.rendererMap.set(type.id, renderer);
+				this.rendererMap.set(cacheKey, renderer);
 			}
 		}
 
@@ -139,7 +162,7 @@ export class NgtRenderer2 implements Renderer2 {
 		private document: Document,
 		private store: SignalState<NgtState> | null,
 		private removeRenderer: (renderer: Renderer2) => void,
-		private count = 1,
+		private count = 0,
 	) {}
 
 	get data(): { [key: string]: any } {
