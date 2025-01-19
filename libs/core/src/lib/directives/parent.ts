@@ -1,22 +1,16 @@
-import {
-	computed,
-	DestroyRef,
-	Directive,
-	effect,
-	ElementRef,
-	EmbeddedViewRef,
-	inject,
-	input,
-	TemplateRef,
-	ViewContainerRef,
-} from '@angular/core';
+import { computed, Directive, ElementRef, input, linkedSignal } from '@angular/core';
 import type * as THREE from 'three';
-import { SPECIAL_INTERNAL_ADD_COMMENT_FLAG, SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG } from '../renderer/constants';
+import {
+	NGT_INTERNAL_ADD_COMMENT_FLAG,
+	NGT_INTERNAL_SET_PARENT_COMMENT_FLAG,
+	NGT_PARENT_FLAG,
+} from '../renderer/constants';
 import { injectStore } from '../store';
 import { NgtNullish } from '../types';
+import { NgtCommonDirective } from './common';
 
 @Directive({ selector: 'ng-template[parent]' })
-export class NgtParent {
+export class NgtParent extends NgtCommonDirective<THREE.Object3D | null | undefined> {
 	parent = input.required<
 		| string
 		| THREE.Object3D
@@ -24,13 +18,7 @@ export class NgtParent {
 		| (() => NgtNullish<ElementRef<THREE.Object3D> | THREE.Object3D | string>)
 	>();
 
-	private vcr = inject(ViewContainerRef);
-	private template = inject(TemplateRef);
 	private store = injectStore();
-
-	protected injected = false;
-	protected injectedParent: NgtNullish<THREE.Object3D> = null;
-	private view?: EmbeddedViewRef<unknown>;
 
 	private _parent = computed(() => {
 		const parent = this.parent();
@@ -49,49 +37,30 @@ export class NgtParent {
 		return rawParent;
 	});
 
+	protected linkedValue = linkedSignal(this._parent);
+	protected shouldSkipRender = computed(() => !this._parent());
+
 	constructor() {
-		const commentNode = this.vcr.element.nativeElement;
-		commentNode.data = 'parent-container';
-		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]('parent');
-			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];
+		super();
+
+		const commentNode = this.commentNode;
+		commentNode.data = NGT_PARENT_FLAG;
+		commentNode[NGT_PARENT_FLAG] = true;
+
+		if (commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]) {
+			commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]('parent', this.injector);
+			delete commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG];
 		}
-
-		effect(() => {
-			const parent = this._parent();
-			if (!parent) return;
-
-			this.injected = false;
-			this.injectedParent = parent;
-			this.createView();
-		});
-
-		inject(DestroyRef).onDestroy(() => {
-			this.view?.destroy();
-		});
-	}
-
-	get value() {
-		if (this.validate()) {
-			this.injected = true;
-			return this.injectedParent;
-		}
-		return null;
 	}
 
 	validate() {
-		return !this.injected && !!this.injectedParent;
+		return !this.injected && !!this.injectedValue;
 	}
 
-	private createView() {
-		if (this.view && !this.view.destroyed) this.view.destroy();
-
-		const comment = this.vcr.element.nativeElement;
-		if (comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG]) {
-			comment[SPECIAL_INTERNAL_SET_PARENT_COMMENT_FLAG](this.injectedParent);
+	protected override beforeCreateView() {
+		const commentNode = this.commentNode;
+		if (commentNode[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG]) {
+			commentNode[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG](this.injectedValue);
 		}
-
-		this.view = this.vcr.createEmbeddedView(this.template);
-		this.view.detectChanges();
 	}
 }

@@ -1,6 +1,6 @@
 import { computed } from '@angular/core';
-import type { NgtAnyRecord, NgtInstanceHierarchyState, NgtInstanceNode, NgtInstanceState, NgtState } from './types';
-import { SignalState, signalState } from './utils/signal-state';
+import type { NgtAnyRecord, NgtInstanceHierarchyState, NgtInstanceNode, NgtInstanceState } from './types';
+import { signalState } from './utils/signal-state';
 import { checkUpdate } from './utils/update';
 
 /**
@@ -35,7 +35,6 @@ export function invalidateInstance<TInstance extends NgtAnyRecord>(instance: Ngt
 
 export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 	object: TInstance,
-	store: SignalState<NgtState>,
 	type: string,
 	instanceState?: Partial<NgtInstanceState>,
 ) {
@@ -49,6 +48,7 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 				nonObjects: [],
 				geometryStamp: Date.now(),
 			}),
+			store = null,
 			...rest
 		} = instanceState || {};
 
@@ -62,7 +62,6 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 
 		instance.__ngt__ = {
 			previousAttach: null,
-			store,
 			type,
 			eventCount: 0,
 			handlers: {},
@@ -96,6 +95,7 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			updateGeometryStamp() {
 				instance.__ngt__.hierarchyStore.update({ geometryStamp: Date.now() });
 			},
+			store,
 			...rest,
 		};
 	}

@@ -130,7 +130,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							camera.updateProjectionMatrix?.();
 						}
 
-						if (!is.instance(camera)) camera = prepare(camera, store, '');
+						if (!is.instance(camera)) camera = prepare(camera, '', { store });
 
 						stateToUpdate.camera = camera;
 
@@ -163,7 +163,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							},
 						});
 
-						stateToUpdate.scene = prepare(scene, store, 'ngt-scene');
+						stateToUpdate.scene = prepare(scene, 'ngt-scene', { store });
 					}
 
 					// Set up XR (one time only!)

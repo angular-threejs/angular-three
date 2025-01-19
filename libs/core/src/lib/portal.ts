@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import * as THREE from 'three';
 import { getInstanceState, prepare } from './instance';
-import { SPECIAL_INTERNAL_ADD_COMMENT_FLAG } from './renderer/constants';
+import { NGT_INTERNAL_ADD_COMMENT_FLAG, NGT_PORTAL_CONTENT_FLAG } from './renderer/constants';
 import { injectStore, NGT_STORE } from './store';
 import type { NgtComputeFunction, NgtEventManager, NgtSize, NgtState, NgtViewport } from './types';
 import { is } from './utils/is';
@@ -34,14 +34,15 @@ export class NgtPortalContent {
 
 	constructor() {
 		const { element } = inject(ViewContainerRef);
-		const { element: parentComment } = inject(ViewContainerRef, { skipSelf: true });
+		const injector = inject(Injector);
 		const commentNode = element.nativeElement;
 
-		commentNode.data = 'portal-content-container';
+		commentNode.data = NGT_PORTAL_CONTENT_FLAG;
+		commentNode[NGT_PORTAL_CONTENT_FLAG] = true;
 
-		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG](parentComment.nativeElement);
-			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];
+		if (commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]) {
+			commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]('portal', injector);
+			delete commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG];
 		}
 	}
 }
@@ -141,7 +142,7 @@ export class NgtPortal {
 			const [size, events, restState] = [untracked(this.size), untracked(this.events), untracked(this.restState)];
 
 			if (!is.instance(container)) {
-				container = prepare(container, this.portalStore, 'ngt-portal');
+				container = prepare(container, 'ngt-portal', { store: this.portalStore });
 			}
 
 			const instanceState = getInstanceState(container);

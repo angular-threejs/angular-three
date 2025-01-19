@@ -9,14 +9,12 @@ import { NgtRendererNode } from './state';
 // @internal
 export const enum NgtRendererClassId {
 	type,
-	parent,
-	children,
 	destroyed,
 	rawValue,
 	portalContainer,
-	debugNode,
-	debugNodeFactory,
-	store,
+	injector,
+	parent,
+	children,
 }
 
 export function kebabToPascal(str: string): string {
@@ -81,10 +79,10 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 				attachCleanUp = attachProp(
 					parent,
 					(child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue],
-					cIS.store,
+					cIS.store!,
 				);
 			} else {
-				attachCleanUp = attachProp(parent, child, cIS.store);
+				attachCleanUp = attachProp(parent, child, cIS.store!);
 			}
 
 			if (attachCleanUp) cIS.previousAttach = attachCleanUp;

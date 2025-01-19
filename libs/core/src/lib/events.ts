@@ -77,7 +77,7 @@ export function createEvents(store: SignalState<NgtState>) {
 		const eventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
 		// Reset all raycaster cameras to undefined
 		for (let i = 0; i < eventsObjects.length; i++) {
-			const objectRootState = getInstanceState(eventsObjects[i])?.store.snapshot;
+			const objectRootState = getInstanceState(eventsObjects[i])?.store?.snapshot;
 			if (objectRootState) {
 				objectRootState.raycaster.camera = undefined!;
 			}
@@ -111,8 +111,8 @@ export function createEvents(store: SignalState<NgtState>) {
 			.flatMap(handleRaycast)
 			// Sort by event priority and distance
 			.sort((a, b) => {
-				const aState = getInstanceState(a.object)?.store.snapshot;
-				const bState = getInstanceState(b.object)?.store.snapshot;
+				const aState = getInstanceState(a.object)?.store?.snapshot;
+				const bState = getInstanceState(b.object)?.store?.snapshot;
 				if (!aState || !bState) return a.distance - b.distance;
 				return bState.events.priority - aState.events.priority || a.distance - b.distance;
 			})
@@ -160,7 +160,7 @@ export function createEvents(store: SignalState<NgtState>) {
 		if (intersections.length) {
 			const localState = { stopped: false };
 			for (const hit of intersections) {
-				const { raycaster, pointer, camera, internal } = getInstanceState(hit.object)?.store.snapshot || rootState;
+				const { raycaster, pointer, camera, internal } = getInstanceState(hit.object)?.store?.snapshot || rootState;
 				const unprojectedPoint = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
 				const hasPointerCapture = (id: number) => internal.capturedMap.get(id)?.has(hit.eventObject) ?? false;
 

@@ -1,69 +1,31 @@
-import {
-	DestroyRef,
-	Directive,
-	effect,
-	EmbeddedViewRef,
-	inject,
-	input,
-	TemplateRef,
-	ViewContainerRef,
-} from '@angular/core';
-import { SPECIAL_INTERNAL_ADD_COMMENT_FLAG } from '../renderer/constants';
-import { is } from '../utils/is';
+import { computed, Directive, input, linkedSignal } from '@angular/core';
+import { NGT_ARGS_FLAG, NGT_INTERNAL_ADD_COMMENT_FLAG } from '../renderer/constants';
+import { NgtCommonDirective } from './common';
 
 @Directive({ selector: 'ng-template[args]' })
-export class NgtArgs {
+export class NgtArgs extends NgtCommonDirective<any[]> {
 	args = input.required<any[] | null>();
 
-	private vcr = inject(ViewContainerRef);
-	private template = inject(TemplateRef);
-
-	protected injected = false;
-	protected injectedArgs: any[] | null = null;
-	private view?: EmbeddedViewRef<unknown>;
+	protected linkedValue = linkedSignal(this.args);
+	protected shouldSkipRender = computed(() => {
+		const args = this.args();
+		return args == null || !Array.isArray(args) || (args.length === 1 && args[0] === null);
+	});
 
 	constructor() {
-		const commentNode = this.vcr.element.nativeElement;
-		commentNode.data = 'args-container';
-		if (commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]) {
-			commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG]('args');
-			delete commentNode[SPECIAL_INTERNAL_ADD_COMMENT_FLAG];
+		super();
+
+		const commentNode = this.commentNode;
+		commentNode.data = NGT_ARGS_FLAG;
+		commentNode[NGT_ARGS_FLAG] = true;
+
+		if (commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]) {
+			commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]('args', this.injector);
+			delete commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG];
 		}
-
-		effect(() => {
-			const value = this.args();
-			if (value == null || !Array.isArray(value) || (value.length === 1 && value[0] === null)) return;
-
-			if (is.equ(value, this.injectedArgs)) {
-				// we have the same value as before, no need to update
-				return;
-			}
-
-			this.injected = false;
-			this.injectedArgs = value;
-			this.createView();
-		});
-
-		inject(DestroyRef).onDestroy(() => {
-			this.view?.destroy();
-		});
-	}
-
-	get value() {
-		if (this.validate()) {
-			this.injected = true;
-			return this.injectedArgs;
-		}
-		return null;
 	}
 
 	validate() {
-		return !this.injected && !!this.injectedArgs?.length;
-	}
-
-	private createView() {
-		if (this.view && !this.view.destroyed) this.view.destroy();
-		this.view = this.vcr.createEmbeddedView(this.template);
-		this.view.detectChanges();
+		return !this.injected && !!this.injectedValue?.length;
 	}
 }

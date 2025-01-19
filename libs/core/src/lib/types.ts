@@ -180,7 +180,7 @@ export interface NgtInstanceState<TObject extends NgtAnyRecord = NgtAnyRecord> {
 	/**
 	 * The store that the intsance is being rendered with
 	 */
-	store: SignalState<NgtState>;
+	store: SignalState<NgtState> | null;
 	/**
 	 * hierachy store for the instance
 	 */

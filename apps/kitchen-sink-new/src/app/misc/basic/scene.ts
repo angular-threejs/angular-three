@@ -7,7 +7,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtPortalDeclarations, NgtVector3 } from 'angular-three';
+import { NgtArgs, NgtPortalDeclarations, NgtVector3 } from 'angular-three';
 import * as THREE from 'three';
 
 @Component({
@@ -125,13 +125,14 @@ export class Box {
 			}
       -->
 		</ngt-group>
-
+		<!--
 		<ngt-portal [container]="virtualScene">
 			<ngt-group *portalContent>
 				<app-box />
 				<app-condition-box />
 			</ngt-group>
 		</ngt-portal>
+    -->
 	`,
 	imports: [NgtArgs, Box, ConditionBox, NgtPortalDeclarations],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -152,16 +153,16 @@ export class Scene {
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	constructor() {
-		setInterval(() => {
-			this.show.update((v) => !v);
-			this.sphereArgs.update((v) => [v[0] === 0.5 ? 1 : 0.5, v[1], v[2]]);
-		}, 2500);
-
-		injectBeforeRender(() => {
-			const group = this.groupRef().nativeElement;
-			group.rotation.x += 0.01;
-			group.rotation.y += 0.01;
-		});
+		// setInterval(() => {
+		// 	this.show.update((v) => !v);
+		// 	this.sphereArgs.update((v) => [v[0] === 0.5 ? 1 : 0.5, v[1], v[2]]);
+		// }, 2500);
+		//
+		// injectBeforeRender(() => {
+		// 	const group = this.groupRef().nativeElement;
+		// 	group.rotation.x += 0.01;
+		// 	group.rotation.y += 0.01;
+		// });
 	}
 
 	onDocumentClick(event: MouseEvent) {

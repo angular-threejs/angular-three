@@ -23,10 +23,10 @@ import {
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import {
-	CANVAS_CONTENT_FLAG,
 	injectCanvasRootInitializer,
 	injectStore,
 	is,
+	NGT_CANVAS_CONTENT_FLAG,
 	NGT_STORE,
 	NgtCamera,
 	NgtCameraParameters,
@@ -50,12 +50,13 @@ import { createPointerEvents } from './events';
 @Directive({ selector: 'ng-template[canvasContent]' })
 export class NgtCanvasContent {
 	constructor() {
+		const store = injectStore();
 		const vcr = inject(ViewContainerRef);
 		const commentNode = vcr.element.nativeElement;
 
 		// NOTE: flag this canvasContent ng-template comment node as the start
-		commentNode.data = CANVAS_CONTENT_FLAG;
-		commentNode[CANVAS_CONTENT_FLAG] = true;
+		commentNode.data = NGT_CANVAS_CONTENT_FLAG;
+		commentNode[NGT_CANVAS_CONTENT_FLAG] = store;
 	}
 }
 
@@ -132,7 +133,12 @@ export class NgtCanvas {
 		// NOTE: this means that everything in NgtCanvas will be in afterNextRender.
 		// this allows the content of NgtCanvas to use effect instead of afterNextRender
 		afterNextRender(() => {
-			const canvasElement = this.glCanvas().nativeElement;
+			const [canvasVcr, canvasElement, canvasContent] = [
+				this.glCanvasViewContainerRef(),
+				this.glCanvas().nativeElement,
+				this.canvasContentRef(),
+			];
+
 			this.zone.runOutsideAngular(() => {
 				this.configurator.set(this.initRoot(canvasElement));
 			});
@@ -172,7 +178,7 @@ export class NgtCanvas {
 						if (this.glRef) {
 							this.glRef.detectChanges();
 						} else {
-							this.noZoneRender(canvasElement);
+							this.noZoneRender(canvasElement, canvasVcr, canvasContent);
 						}
 					});
 				},
@@ -186,7 +192,11 @@ export class NgtCanvas {
 		});
 	}
 
-	private noZoneRender(canvasElement: HTMLCanvasElement) {
+	private noZoneRender(
+		canvasElement: HTMLCanvasElement,
+		canvasVcr: ViewContainerRef,
+		canvasContent: TemplateRef<unknown>,
+	) {
 		// NOTE: destroy previous instances if existed
 		this.glRef?.destroy();
 
@@ -223,12 +233,7 @@ export class NgtCanvas {
 			this.store.snapshot.events.connect?.(canvasElement);
 		}
 
-		this.glRef = untracked(this.glCanvasViewContainerRef).createEmbeddedView(
-			untracked(this.canvasContentRef),
-			{},
-			{ injector: this.injector },
-		);
-
+		this.glRef = canvasVcr.createEmbeddedView(canvasContent, {}, { injector: this.injector });
 		this.glRef.detectChanges();
 	}
 }
