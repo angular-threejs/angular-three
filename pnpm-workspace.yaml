@@ -1,2 +1,7 @@
 packages:
   - apps/astro-docs
+  - libs/core
+  - libs/cannon
+  - libs/postprocessing
+  - libs/soba
+  - libs/rapier
