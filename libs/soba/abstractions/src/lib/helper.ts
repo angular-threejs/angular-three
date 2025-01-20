@@ -9,17 +9,18 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, injectBeforeRender, injectStore, resolveRef } from 'angular-three';
+import { extend, getInstanceState, injectBeforeRender, injectStore, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
+import * as THREE from 'three';
 import { Object3D } from 'three';
 
 type HelperArgs<T> = T extends [infer _, ...infer R] ? R : never;
 
 export function injectHelper<
-	TConstructor extends new (...args: any[]) => Object3D,
+	TConstructor extends new (...args: any[]) => THREE.Object3D,
 	THelperInstance extends InstanceType<TConstructor> & { update: () => void; dispose: () => void },
 >(
-	object: () => ElementRef<Object3D> | Object3D | undefined | null,
+	object: () => ElementRef<THREE.Object3D> | THREE.Object3D | undefined | null,
 	helperConstructor: () => TConstructor,
 	{
 		injector,
@@ -28,7 +29,6 @@ export function injectHelper<
 ) {
 	return assertInjector(injectHelper, injector, () => {
 		const store = injectStore();
-		const scene = store.select('scene');
 
 		const helper = computed(() => {
 			const maybeObject3D = object();
@@ -46,12 +46,12 @@ export function injectHelper<
 			const currentHelper = helper();
 			if (!currentHelper) return;
 
-			const _scene = scene();
+			const scene = store.scene();
 
-			_scene.add(currentHelper);
+			scene.add(currentHelper);
 
 			onCleanup(() => {
-				_scene.remove(currentHelper);
+				scene.remove(currentHelper);
 				currentHelper.dispose?.();
 			});
 		});
@@ -73,20 +73,20 @@ export function injectHelper<
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtsHelper<TConstructor extends new (...args: any[]) => Object3D> {
+export class NgtsHelper<TConstructor extends new (...args: any[]) => THREE.Object3D> {
 	type = input.required<TConstructor>();
 	options = input<HelperArgs<ConstructorParameters<TConstructor>>>(
 		[] as unknown as HelperArgs<ConstructorParameters<TConstructor>>,
 	);
 
-	helperRef = viewChild.required<ElementRef<Object3D>>('helper');
+	helperRef = viewChild.required<ElementRef<THREE.Object3D>>('helper');
 
 	private parent = computed(() => {
 		const helper = this.helperRef().nativeElement;
 		if (!helper) return;
-		const localState = getLocalState(helper);
+		const localState = getInstanceState(helper);
 		if (!localState) return;
-		return localState.parent();
+		return localState.parent() as unknown as THREE.Object3D;
 	});
 
 	helper = injectHelper(this.parent, this.type, { args: this.options });

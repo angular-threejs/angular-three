@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, untracked, viewChild } from '@angular/core';
 import { omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { CatmullRomCurve3, Color, Vector3 } from 'three';
+import * as THREE from 'three';
 import { NgtsLine, NgtsLineOptions } from './line';
 
 export interface NgtsCatmullRomLineOptions extends Omit<NgtsLineOptions, 'segments'> {
@@ -30,7 +30,7 @@ const defaultOptions: NgtsCatmullRomLineOptions = {
 	imports: [NgtsLine],
 })
 export class NgtsCatmullRomLine {
-	points = input.required<Array<Vector3 | [number, number, number]>>();
+	points = input.required<Array<THREE.Vector3 | [number, number, number]>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['curveType', 'tension', 'segments', 'closed', 'vertexColors']);
 
@@ -46,10 +46,10 @@ export class NgtsCatmullRomLine {
 		const [points, closed, curveType, tension] = [this.points(), this.closed(), this.curveType(), this.tension()];
 
 		const mappedPoints = points.map((pt) =>
-			pt instanceof Vector3 ? pt : new Vector3(...(pt as [number, number, number])),
+			(pt as THREE.Vector3).isVector3 ? (pt as THREE.Vector3) : new THREE.Vector3(...(pt as [number, number, number])),
 		);
 
-		return new CatmullRomCurve3(mappedPoints, closed, curveType, tension);
+		return new THREE.CatmullRomCurve3(mappedPoints, closed, curveType, tension);
 	});
 
 	segmentedPoints = computed(() => {
@@ -64,11 +64,11 @@ export class NgtsCatmullRomLine {
 		if (vertexColors.length === segments + 1) return vertexColors;
 
 		const mappedColors = vertexColors.map((color) =>
-			color instanceof Color ? color : new Color(...(color as [number, number, number])),
+			(color as THREE.Color).isColor ? (color as THREE.Color) : new THREE.Color(...(color as [number, number, number])),
 		);
 		if (untracked(this.closed)) mappedColors.push(mappedColors[0].clone());
 
-		const iColors: Color[] = [mappedColors[0]];
+		const iColors: THREE.Color[] = [mappedColors[0]];
 		const divisions = segments / (mappedColors.length - 1);
 		for (let i = 1; i < segments; i++) {
 			const alpha = (i % divisions) / divisions;

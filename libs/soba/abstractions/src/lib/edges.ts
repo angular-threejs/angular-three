@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, effect, input, viewChild } from '@angular/core';
-import { checkNeedsUpdate, getLocalState, NgtMesh, omit } from 'angular-three';
+import { checkNeedsUpdate, getInstanceState, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BufferAttribute, BufferGeometry, ColorRepresentation, EdgesGeometry, Mesh } from 'three';
+import * as THREE from 'three';
 import { LineMaterialParameters } from 'three-stdlib';
 import { NgtLine2, NgtLineMaterial, NgtsLine } from './line';
 
-export type NgtsEdgesOptions = Partial<NgtMesh> & {
+export type NgtsEdgesOptions = Partial<NgtThreeElements['ngt-mesh']> & {
 	threshold?: number;
 	lineWidth?: number;
 } & Omit<LineMaterialParameters, 'vertexColors' | 'color'> &
 	Omit<Partial<NgtLine2>, 'geometry'> &
 	Omit<Partial<NgtLineMaterial>, 'color' | 'vertexColors'> & {
-		geometry?: BufferGeometry;
-		color?: ColorRepresentation;
+		geometry?: THREE.BufferGeometry;
+		color?: THREE.ColorRepresentation;
 	};
 
 const defaultOptions: NgtsEdgesOptions = {
@@ -39,7 +39,7 @@ export class NgtsEdges {
 
 	line = viewChild.required(NgtsLine);
 
-	private memoizedGeometry?: BufferGeometry;
+	private memoizedGeometry?: THREE.BufferGeometry;
 	private memoizedThreshold?: number;
 
 	constructor() {
@@ -47,10 +47,10 @@ export class NgtsEdges {
 			const line = this.line().lineRef()?.nativeElement;
 			if (!line) return;
 
-			const lS = getLocalState(line);
+			const lS = getInstanceState(line);
 			if (!lS) return;
 
-			const parent = lS.parent() as Mesh;
+			const parent = lS.parent() as unknown as THREE.Mesh;
 			if (!parent) return;
 
 			const { geometry: explicitGeometry, threshold } = this.options();
@@ -63,7 +63,7 @@ export class NgtsEdges {
 			this.memoizedGeometry = geometry;
 			this.memoizedThreshold = threshold;
 
-			const points = (new EdgesGeometry(geometry, threshold).attributes['position'] as BufferAttribute)
+			const points = (new THREE.EdgesGeometry(geometry, threshold).attributes['position'] as THREE.BufferAttribute)
 				.array as Float32Array;
 			line.geometry.setPositions(points);
 			checkNeedsUpdate(line.geometry.attributes['instanceStart']);

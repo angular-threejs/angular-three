@@ -7,11 +7,12 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs, NgtAttachable } from 'angular-three';
+import { extend, is, NgtArgs, NgtAttachable } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { ExtrudeGeometry, ExtrudeGeometryOptions, Shape, Vector2 } from 'three';
+import * as THREE from 'three';
+import { ExtrudeGeometry } from 'three';
 
-export interface NgtsPrismGeometryOptions extends Omit<ExtrudeGeometryOptions, 'depth'> {
+export interface NgtsPrismGeometryOptions extends Omit<THREE.ExtrudeGeometryOptions, 'depth'> {
 	/** Height */
 	height: number;
 }
@@ -34,17 +35,19 @@ const defaultOptions: NgtsPrismGeometryOptions = {
 })
 export class NgtsPrismGeometry {
 	attach = input<NgtAttachable>('geometry');
-	vertices = input.required<Array<Vector2 | [number, number]>>();
+	vertices = input.required<Array<THREE.Vector2 | [number, number]>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	parameters = computed(() => ({ ...this.options(), depth: this.options().height }));
 	shape = computed(() => {
 		const vertices = this.vertices();
-		const interpolatedVertices = vertices.map((v) => (v instanceof Vector2 ? v : new Vector2(...v)));
-		return new Shape(interpolatedVertices);
+		const interpolatedVertices = vertices.map((v) =>
+			is.three<THREE.Vector2>(v, 'isVector2') ? v : new THREE.Vector2(...v),
+		);
+		return new THREE.Shape(interpolatedVertices);
 	});
 
-	geometryRef = viewChild<ElementRef<ExtrudeGeometry>>('geometry');
+	geometryRef = viewChild<ElementRef<THREE.ExtrudeGeometry>>('geometry');
 
 	constructor() {
 		extend({ ExtrudeGeometry });

@@ -8,9 +8,10 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs, NgtGeometry, NgtMesh, omit, pick } from 'angular-three';
+import { extend, NgtArgs, NgtThreeElement, NgtThreeElements, omit, pick } from 'angular-three';
 import { injectFont, NgtsFontInput } from 'angular-three-soba/loaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
+import * as THREE from 'three';
 import { Mesh } from 'three';
 import { mergeVertices, TextGeometry, TextGeometryParameters } from 'three-stdlib';
 
@@ -19,7 +20,7 @@ export interface NgtsText3DOptions extends Omit<TextGeometryParameters, 'font'> 
 	smooth?: number;
 }
 
-const defaultOptions: Partial<NgtMesh> & NgtsText3DOptions = {
+const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> & NgtsText3DOptions = {
 	letterSpacing: 0,
 	lineHeight: 1,
 	size: 1,
@@ -62,10 +63,10 @@ export class NgtsText3D {
 		'smooth',
 	]);
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 	private textGeometryRef = viewChild<ElementRef<TextGeometry>>('textGeometry');
 
-	loadedFont = injectFont(this.font);
+	private loadedFont = injectFont(this.font);
 	private smooth = pick(this.options, 'smooth');
 	private textOptions = pick(this.options, [
 		'letterSpacing',
@@ -81,8 +82,10 @@ export class NgtsText3D {
 	]);
 
 	textArgs = computed(() => {
-		const [text, font, textOptions] = [this.text(), this.loadedFont(), this.textOptions()];
+		const font = this.loadedFont();
 		if (!font) return null;
+
+		const [text, textOptions] = [this.text(), this.textOptions()];
 		return [text, { font, ...textOptions }];
 	});
 
@@ -106,7 +109,7 @@ export class NgtsText3D {
 	}
 }
 
-export type NgtTextGeometry = NgtGeometry<TextGeometry & TextGeometryParameters, typeof TextGeometry>;
+export type NgtTextGeometry = NgtThreeElement<typeof TextGeometry>;
 
 declare global {
 	interface HTMLElementTagNameMap {

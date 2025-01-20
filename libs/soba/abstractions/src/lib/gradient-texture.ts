@@ -8,11 +8,12 @@ import {
 	input,
 	untracked,
 } from '@angular/core';
-import { extend, injectStore, NgtArgs, NgtAttachable, NgtTexture, omit } from 'angular-three';
+import { extend, injectStore, NgtArgs, NgtAttachable, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { CanvasTexture, Color, ColorRepresentation } from 'three';
+import * as THREE from 'three';
+import { CanvasTexture } from 'three';
 
-export interface NgtsGradientTextureOptions extends Partial<Omit<NgtTexture, 'type'>> {
+export interface NgtsGradientTextureOptions extends Partial<Omit<NgtThreeElements['ngt-texture'], 'type'>> {
 	size: number;
 	width: number;
 	type: 'linear' | 'radial';
@@ -47,12 +48,12 @@ const defaultOptions: NgtsGradientTextureOptions = {
 export class NgtsGradientTexture {
 	attach = input<NgtAttachable>('map');
 	stops = input.required<Array<number>>();
-	colors = input.required<Array<ColorRepresentation>>();
+	colors = input.required<Array<THREE.ColorRepresentation>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['size', 'width', 'type', 'innerCircleRadius', 'outerCircleRadius']);
 
 	private store = injectStore();
-	outputColorSpace = this.store.select('gl', 'outputColorSpace');
+	outputColorSpace = this.store.gl.outputColorSpace;
 	private document = inject(DOCUMENT);
 
 	canvas = computed(() => {
@@ -87,7 +88,7 @@ export class NgtsGradientTexture {
 			);
 		}
 
-		const tempColor = new Color(); // reuse instance for performance
+		const tempColor = new THREE.Color(); // reuse instance for performance
 
 		let i = stops.length;
 		while (i--) {

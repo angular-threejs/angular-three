@@ -6,11 +6,11 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtGroup, omit } from 'angular-three';
+import { extend, injectBeforeRender, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Group, Quaternion } from 'three';
 
-export interface NgtsBillboardOptions extends Partial<NgtGroup> {
+export interface NgtsBillboardOptions extends Partial<NgtThreeElements['ngt-group']> {
 	follow?: boolean;
 	lockX?: boolean;
 	lockY?: boolean;

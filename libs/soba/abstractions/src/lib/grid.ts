@@ -7,13 +7,14 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, NgtMesh, omit, pick } from 'angular-three';
+import { extend, injectBeforeRender, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { GridMaterial, GridMaterialOptions } from 'angular-three-soba/shaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BackSide, Mesh, Plane, PlaneGeometry, ShaderMaterial, Uniform, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Mesh, PlaneGeometry } from 'three';
 
-const defaultOptions: Partial<NgtMesh> &
-	GridMaterialOptions & { planeArgs: ConstructorParameters<typeof PlaneGeometry> } = {
+const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> &
+	GridMaterialOptions & { planeArgs: ConstructorParameters<typeof THREE.PlaneGeometry> } = {
 	planeArgs: [],
 	cellSize: 0.5,
 	cellThickness: 0.5,
@@ -26,7 +27,7 @@ const defaultOptions: Partial<NgtMesh> &
 	fadeDistance: 100,
 	fadeStrength: 1,
 	fadeFrom: 1,
-	side: BackSide,
+	side: THREE.BackSide,
 };
 
 @Component({
@@ -62,11 +63,11 @@ export class NgtsGrid {
 		'side',
 	]);
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
-	private plane = new Plane();
-	private upVector = new Vector3(0, 1, 0);
-	private zeroVector = new Vector3(0, 0, 0);
+	private plane = new THREE.Plane();
+	private upVector = new THREE.Vector3(0, 1, 0);
+	private zeroVector = new THREE.Vector3(0, 0, 0);
 
 	planeArgs = pick(this.options, 'planeArgs');
 	side = pick(this.options, 'side');
@@ -107,9 +108,9 @@ export class NgtsGrid {
 
 			this.plane.setFromNormalAndCoplanarPoint(this.upVector, this.zeroVector).applyMatrix4(mesh.matrixWorld);
 
-			const gridMaterial = mesh.material as ShaderMaterial;
-			const worldCamProjPosition = gridMaterial.uniforms['worldCamProjPosition'] as Uniform<Vector3>;
-			const worldPlanePosition = gridMaterial.uniforms['worldPlanePosition'] as Uniform<Vector3>;
+			const gridMaterial = mesh.material as THREE.ShaderMaterial;
+			const worldCamProjPosition = gridMaterial.uniforms['worldCamProjPosition'] as THREE.Uniform<THREE.Vector3>;
+			const worldPlanePosition = gridMaterial.uniforms['worldPlanePosition'] as THREE.Uniform<THREE.Vector3>;
 
 			this.plane.projectPoint(camera.position, worldCamProjPosition.value);
 			worldPlanePosition.value.set(0, 0, 0).applyMatrix4(mesh.matrixWorld);

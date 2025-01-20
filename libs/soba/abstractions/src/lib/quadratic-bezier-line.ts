@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, viewChild } from '@angular/core';
-import { omit, pick } from 'angular-three';
+import { is, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { QuadraticBezierCurve3, Vector3 } from 'three';
+import * as THREE from 'three';
 import { NgtsLine, NgtsLineOptions } from './line';
 
 export interface NgtsQuadraticBezierLineOptions extends Omit<NgtsLineOptions, 'segments'> {
@@ -24,9 +24,9 @@ const defaultOptions: NgtsQuadraticBezierLineOptions = {
 	imports: [NgtsLine],
 })
 export class NgtsQuadraticBezierLine {
-	start = input<Vector3 | [number, number, number]>([0, 0, 0]);
-	end = input<Vector3 | [number, number, number]>([0, 0, 0]);
-	mid = input<Vector3 | [number, number, number]>();
+	start = input<THREE.Vector3 | [number, number, number]>([0, 0, 0]);
+	end = input<THREE.Vector3 | [number, number, number]>([0, 0, 0]);
+	mid = input<THREE.Vector3 | [number, number, number]>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['segments']);
 
@@ -36,12 +36,12 @@ export class NgtsQuadraticBezierLine {
 
 	points = computed(() => this.getPoints(this.start(), this.end(), this.mid(), this.segments()));
 
-	private curve = new QuadraticBezierCurve3();
+	private curve = new THREE.QuadraticBezierCurve3();
 
 	setPoints(
-		start: Vector3 | [number, number, number],
-		end: Vector3 | [number, number, number],
-		mid?: Vector3 | [number, number, number],
+		start: THREE.Vector3 | [number, number, number],
+		end: THREE.Vector3 | [number, number, number],
+		mid?: THREE.Vector3 | [number, number, number],
 	) {
 		const points = this.getPoints(start, end, mid);
 		const geometry = this.line().lineGeometry();
@@ -49,16 +49,16 @@ export class NgtsQuadraticBezierLine {
 	}
 
 	private getPoints(
-		start: Vector3 | [number, number, number],
-		end: Vector3 | [number, number, number],
-		mid?: Vector3 | [number, number, number],
+		start: THREE.Vector3 | [number, number, number],
+		end: THREE.Vector3 | [number, number, number],
+		mid?: THREE.Vector3 | [number, number, number],
 		segments = 20,
 	) {
-		if (start instanceof Vector3) this.curve.v0.copy(start);
+		if (is.three<THREE.Vector3>(start, 'isVector3')) this.curve.v0.copy(start);
 		else this.curve.v0.set(...(start as [number, number, number]));
-		if (end instanceof Vector3) this.curve.v2.copy(end);
+		if (is.three<THREE.Vector3>(end, 'isVector3')) this.curve.v2.copy(end);
 		else this.curve.v2.set(...(end as [number, number, number]));
-		if (mid instanceof Vector3) {
+		if (is.three<THREE.Vector3>(mid, 'isVector3')) {
 			this.curve.v1.copy(mid);
 		} else if (Array.isArray(mid)) {
 			this.curve.v1.set(...(mid as [number, number, number]));
@@ -67,7 +67,7 @@ export class NgtsQuadraticBezierLine {
 				this.curve.v0
 					.clone()
 					.add(this.curve.v2.clone().sub(this.curve.v0))
-					.add(new Vector3(0, this.curve.v0.y - this.curve.v2.y, 0)),
+					.add(new THREE.Vector3(0, this.curve.v0.y - this.curve.v2.y, 0)),
 			);
 		}
 		return this.curve.getPoints(segments);

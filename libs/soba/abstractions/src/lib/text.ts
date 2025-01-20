@@ -8,15 +8,15 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { NgtArgs, NgtMesh, injectStore, omit, pick } from 'angular-three';
+import { NgtArgs, NgtThreeElements, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { ColorRepresentation } from 'three';
+import * as THREE from 'three';
 // @ts-expect-error - no type def
 import { Text, preloadFont } from 'troika-three-text';
 
-export interface NgtsTextOptions extends Partial<NgtMesh> {
+export interface NgtsTextOptions extends Partial<NgtThreeElements['ngt-mesh']> {
 	characters?: string;
-	color?: ColorRepresentation;
+	color?: THREE.ColorRepresentation;
 	/** Font size, default: 1 */
 	fontSize: number;
 	fontWeight?: number | string;
@@ -37,10 +37,10 @@ export interface NgtsTextOptions extends Partial<NgtMesh> {
 	outlineOffsetX?: number | string;
 	outlineOffsetY?: number | string;
 	outlineBlur?: number | string;
-	outlineColor?: ColorRepresentation;
+	outlineColor?: THREE.ColorRepresentation;
 	outlineOpacity?: number;
 	strokeWidth?: number | string;
-	strokeColor?: ColorRepresentation;
+	strokeColor?: THREE.ColorRepresentation;
 	strokeOpacity?: number;
 	fillOpacity?: number;
 	sdfGlyphSize: number;
@@ -82,7 +82,7 @@ export class NgtsText {
 	synced = output<Text>();
 
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
+	private invalidate = this.store.invalidate;
 
 	private characters = pick(this.options, 'characters');
 

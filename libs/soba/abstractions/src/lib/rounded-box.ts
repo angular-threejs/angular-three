@@ -10,15 +10,16 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtArgs, NgtMesh, NgtObjectEvents, omit, pick } from 'angular-three';
+import { extend, NgtArgs, NgtObjectEvents, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { ExtrudeGeometry, Mesh, Shape } from 'three';
+import * as THREE from 'three';
+import { ExtrudeGeometry, Mesh } from 'three';
 import { toCreasedNormals } from 'three-stdlib';
 
 const eps = 0.00001;
 
 function createShape(width: number, height: number, radius0: number) {
-	const shape = new Shape();
+	const shape = new THREE.Shape();
 	const radius = radius0 - eps;
 	shape.absarc(eps, eps, eps, -Math.PI / 2, -Math.PI, true);
 	shape.absarc(eps, height - radius * 2, eps, Math.PI, Math.PI / 2, true);
@@ -27,7 +28,7 @@ function createShape(width: number, height: number, radius0: number) {
 	return shape;
 }
 
-export interface NgtsRoundedBoxOptions extends Partial<NgtMesh> {
+export interface NgtsRoundedBoxOptions extends Partial<NgtThreeElements['ngt-mesh']> {
 	width: number;
 	height: number;
 	depth: number;
@@ -103,8 +104,8 @@ export class NgtsRoundedBox {
 	private steps = pick(this.options, 'steps');
 	private creaseAngle = pick(this.options, 'creaseAngle');
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
-	geometryRef = viewChild<ElementRef<ExtrudeGeometry>>('geometry');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+	geometryRef = viewChild<ElementRef<THREE.ExtrudeGeometry>>('geometry');
 
 	protected shape = computed(() => {
 		const [width, height, radius] = [this.width(), this.height(), this.radius()];

@@ -8,9 +8,9 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkNeedsUpdate, injectStore, NgtAfterAttach, NgtArgs, NgtObject3DNode, omit, pick } from 'angular-three';
+import { checkNeedsUpdate, injectStore, is, NgtAfterAttach, NgtArgs, NgtThreeElement, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Color, ColorRepresentation, Vector2, Vector3, Vector4 } from 'three';
+import * as THREE from 'three';
 import {
 	Line2,
 	LineGeometry,
@@ -20,20 +20,20 @@ import {
 	LineSegmentsGeometry,
 } from 'three-stdlib';
 
-export type NgtLine2 = NgtObject3DNode<Line2, typeof Line2>;
-export type NgtLineMaterial = NgtObject3DNode<LineMaterial, [LineMaterialParameters]>;
+export type NgtLine2 = NgtThreeElement<typeof Line2>;
+export type NgtLineMaterial = NgtThreeElement<typeof LineMaterial>;
 
 export type NgtsLineOptions = Omit<LineMaterialParameters, 'vertexColors' | 'color'> &
 	Omit<Partial<NgtLine2>, '__ngt_args__'> &
 	Omit<Partial<NgtLineMaterial>, 'color' | 'vertexColors' | '__ngt_args__'> & {
 		/** Array of colors, [0, 0, 0] */
-		vertexColors?: Array<ColorRepresentation | [number, number, number] | [number, number, number, number]>;
+		vertexColors?: Array<THREE.ColorRepresentation | [number, number, number] | [number, number, number, number]>;
 		/** Line width, 1 */
 		lineWidth: number;
 		/** Segments, false */
 		segments: boolean;
 		/** Color */
-		color?: ColorRepresentation;
+		color?: THREE.ColorRepresentation;
 	};
 
 const defaultOptions: NgtsLineOptions = {
@@ -66,14 +66,15 @@ const defaultOptions: NgtsLineOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsLine {
-	points = input.required<Array<Vector3 | Vector2 | [number, number, number] | [number, number] | number>>();
+	points =
+		input.required<Array<THREE.Vector3 | THREE.Vector2 | [number, number, number] | [number, number] | number>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, ['color', 'vertexColors', 'lineWidth', 'segments', 'linewidth', 'dashed']);
 
 	lineRef = viewChild<ElementRef<Line2 | LineSegments2>>('line');
 
 	private store = injectStore();
-	private size = this.store.select('size');
+	private size = this.store.size;
 
 	private segments = pick(this.options, 'segments');
 	private vertexColors = pick(this.options, 'vertexColors');
@@ -96,9 +97,14 @@ export class NgtsLine {
 		const geom = this.segments() ? new LineSegmentsGeometry() : new LineGeometry();
 		const pValues = this.points().map((p) => {
 			const isArray = Array.isArray(p);
-			return p instanceof Vector3 || p instanceof Vector4
+
+			if (is.three<THREE.Vector3>(p, 'isVector3')) {
+				return [p.x, p.y, p.z];
+			}
+
+			return is.three<THREE.Vector3>(p, 'isVector3') || is.three<THREE.Vector4>(p, 'isVector4')
 				? [p.x, p.y, p.z]
-				: p instanceof Vector2
+				: is.three<THREE.Vector2>(p, 'isVector2')
 					? [p.x, p.y, 0]
 					: isArray && p.length === 3
 						? [p[0], p[1], p[2]]
@@ -112,7 +118,7 @@ export class NgtsLine {
 		const vertexColors = this.vertexColors();
 
 		if (vertexColors) {
-			const cValues = vertexColors.map((c) => (c instanceof Color ? c.toArray() : c));
+			const cValues = vertexColors.map((c) => (is.three<THREE.Color>(c, 'isColor') ? c.toArray() : c));
 			// @ts-expect-error - flat() isn't defined
 			geom.setColors(cValues.flat(), this.itemSize());
 		}
