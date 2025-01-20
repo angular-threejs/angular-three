@@ -11,9 +11,10 @@
 	},
 	"private": true,
 	"devDependencies": {
-		"@analogjs/platform": "1.12.0",
-		"@analogjs/vite-plugin-angular": "1.12.0",
-		"@analogjs/vitest-angular": "1.12.0",
+		"@analogjs/astro-angular": "1.12.0",
+		"@analogjs/platform": "1.12.1",
+		"@analogjs/vite-plugin-angular": "1.12.1",
+		"@analogjs/vitest-angular": "1.12.1",
 		"@angular-devkit/build-angular": "19.0.7",
 		"@angular-devkit/core": "19.0.7",
 		"@angular-devkit/schematics": "19.0.7",
@@ -100,8 +101,8 @@
 		"vitest-webgl-canvas-mock": "^1.1.0"
 	},
 	"dependencies": {
-		"@analogjs/content": "1.12.0",
-		"@analogjs/router": "1.12.0",
+		"@analogjs/content": "1.12.1",
+		"@analogjs/router": "1.12.1",
 		"@angular/animations": "19.0.6",
 		"@angular/common": "19.0.6",
 		"@angular/compiler": "19.0.6",
