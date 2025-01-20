@@ -1,4 +1,5 @@
 import {
+	Attribute,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
@@ -7,7 +8,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortalDeclarations, NgtVector3 } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtArgs, NgtPortalDeclarations, NgtVector3 } from 'angular-three';
 import * as THREE from 'three';
 
 @Component({
@@ -56,8 +57,40 @@ export class Box {
 	position = input<NgtVector3>(0);
 	color = input('turquoise');
 
+	constructor(@Attribute('context') context: string) {
+		const store = injectStore();
+		console.log({ context, store: store.snapshot.id, previous: store.snapshot.previousRoot });
+	}
+
 	onAttach(event: any) {
 		console.log('in box', event);
+	}
+}
+
+@Component({
+	selector: 'app-nested-box',
+	template: `
+		<ngt-mesh [position]="position()">
+			<ngt-box-geometry *args="[0.5, 0.5, 0.5]" />
+			<ngt-mesh-basic-material [color]="color()" (attached)="onAttach($event)" />
+
+			<ng-content>
+				<app-box context="in nested box in root" [position]="position()" />
+			</ng-content>
+
+			<ng-content select="[data-children]" />
+		</ngt-mesh>
+	`,
+	imports: [NgtArgs, Box],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class NestedBox {
+	position = input<NgtVector3>(0);
+	color = input('turquoise');
+
+	onAttach(event: any) {
+		console.log('in nested box', event);
 	}
 }
 
@@ -65,76 +98,92 @@ export class Box {
 	selector: 'app-scene',
 	template: `
 		<ngt-ambient-light [intensity]="Math.PI" />
+		<ngt-directional-light [position]="5" [intensity]="Math.PI" />
 
 		<ngt-group #group>
+			<!-- regular old three element -->
 			<ngt-mesh (pointerover)="color.set('orange')" (pointerout)="color.set('hotpink')">
 				<ngt-sphere-geometry *args="[0.5, 32, 32]" />
 				<ngt-mesh-toon-material [color]="color()" (attached)="onAttach($event)" />
 			</ngt-mesh>
 
-			<!--
-			@if (show()) {
-				<ngt-mesh [position]="[3, 0, 0]">
-					<ngt-icosahedron-geometry />
-					<ngt-mesh-normal-material />
-				</ngt-mesh>
-			}
-      -->
+			<!--			<app-nested-box [position]="[-3, 0, 0]" />-->
 
-			<!--
-<app-box [position]="[1, 0, 0]" />
-			<app-box [position]="[-1, 0, 0]" color="red" />
-			<app-box [position]="[0, 1, 0]">
-				<ngt-mesh-standard-material color="green" />
-			</app-box>
+			<!--			&lt;!&ndash; three element under condition &ndash;&gt;-->
+			<!--			@if (show()) {-->
+			<!--				<ngt-mesh [position]="[3, 0, 0]">-->
+			<!--					<ngt-icosahedron-geometry />-->
+			<!--					<ngt-mesh-normal-material />-->
+			<!--				</ngt-mesh>-->
+			<!--			}-->
 
-			<app-box [position]="[0, -1, 0]" color="purple" />
+			<!--			&lt;!&ndash; component wrapping three elemnent &ndash;&gt;-->
+			<!--			<app-box [position]="[1, 0, 0]" />-->
 
-			@if (show()) {
-				<app-box [position]="[1, 1, 0]">
-					@if (show()) {
-						<ngt-mesh-phong-material color="yellow" />
-					}
-				</app-box>
-			}
+			<!--			&lt;!&ndash; with input for default content &ndash;&gt;-->
+			<!--			<app-box [position]="[-1, 0, 0]" color="red" />-->
 
-			<app-box [position]="[-1, -1, 0]" color="brown">
-				<app-box data-children [position]="[-0.5, -0.5, 0]" color="pink" />
-			</app-box>
+			<!--			&lt;!&ndash; with custom ng content &ndash;&gt;-->
+			<!--			<app-box [position]="[0, 1, 0]">-->
+			<!--				<ngt-mesh-standard-material color="green" />-->
+			<!--			</app-box>-->
 
-			<app-box [position]="[-1, 1, 0]">
-				<ngt-mesh-lambert-material color="orange" />
-				<app-box data-children [position]="[-0.5, 0.5, 0]" color="skyblue" />
-			</app-box>
+			<!--			&lt;!&ndash; with property binding for input for default content &ndash;&gt;-->
+			<!--			<app-box [position]="[0, -1, 0]" [color]="color()" />-->
 
-			<app-box [position]="[1, -1, 0]">
-				@if (true) {
-					<ngt-mesh-normal-material />
-				}
+			<!--			&lt;!&ndash; component under condition &ndash;&gt;-->
+			<!--			@if (show()) {-->
+			<!--				<app-box [position]="[1, 1, 0]">-->
+			<!--					@if (show()) {-->
+			<!--						<ngt-mesh-phong-material color="yellow" />-->
+			<!--					}-->
+			<!--				</app-box>-->
+			<!--			}-->
 
-				@if (show()) {
-					<app-box data-children [position]="[0.5, -0.5, 0]" color="black" />
-				}
-			</app-box>
--->
+			<!--			&lt;!&ndash; component with component as content &ndash;&gt;-->
+			<!--			<app-box [position]="[-1, -1, 0]" color="brown" context="in root">-->
+			<!--				<app-box data-children [position]="[-0.5, -0.5, 0]" color="pink" context="in box content in root" />-->
+			<!--			</app-box>-->
 
-			<!--
-			<app-condition-box [position]="[0, 2, 0]" />
-			@if (show()) {
-				<app-condition-box [position]="[0, -2, 0]" />
-			}
-      -->
+			<!--			&lt;!&ndash; component with both content projection slots &ndash;&gt;-->
+			<!--			<app-box [position]="[-1, 1, 0]">-->
+			<!--				<ngt-mesh-lambert-material color="orange" />-->
+			<!--				<app-box data-children [position]="[-0.5, 0.5, 0]" color="skyblue" />-->
+			<!--			</app-box>-->
+
+			<!--			&lt;!&ndash; component with conditional content slots &ndash;&gt;-->
+			<!--			<app-box [position]="[1, -1, 0]">-->
+			<!--				@if (true) {-->
+			<!--					<ngt-mesh-normal-material />-->
+			<!--				}-->
+
+			<!--				@if (show()) {-->
+			<!--					<app-box data-children [position]="[0.5, -0.5, 0]" color="black" />-->
+			<!--				}-->
+			<!--			</app-box>-->
+
+			<!--			&lt;!&ndash; component with conditional template &ndash;&gt;-->
+			<!--			<app-condition-box [position]="[0, 2, 0]" />-->
+
+			<!--			&lt;!&ndash; component with conditional template under condition &ndash;&gt;-->
+			<!--			@if (show()) {-->
+			<!--				<app-condition-box [position]="[0, -2, 0]" />-->
+			<!--			}-->
 		</ngt-group>
-		<!--
+
+		<!-- portal -->
 		<ngt-portal [container]="virtualScene">
 			<ngt-group *portalContent>
-				<app-box />
-				<app-condition-box />
+				<!-- component inside portal -->
+				<app-box context="in portal" />
+
+				@if (show()) {
+					<app-box context="in portal in condition" />
+				}
 			</ngt-group>
 		</ngt-portal>
-    -->
 	`,
-	imports: [NgtArgs, Box, ConditionBox, NgtPortalDeclarations],
+	imports: [NgtArgs, Box, ConditionBox, NgtPortalDeclarations, NestedBox],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: {
@@ -153,16 +202,16 @@ export class Scene {
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	constructor() {
-		// setInterval(() => {
-		// 	this.show.update((v) => !v);
-		// 	this.sphereArgs.update((v) => [v[0] === 0.5 ? 1 : 0.5, v[1], v[2]]);
-		// }, 2500);
-		//
-		// injectBeforeRender(() => {
-		// 	const group = this.groupRef().nativeElement;
-		// 	group.rotation.x += 0.01;
-		// 	group.rotation.y += 0.01;
-		// });
+		setInterval(() => {
+			this.show.update((v) => !v);
+			this.sphereArgs.update((v) => [v[0] === 0.5 ? 1 : 0.5, v[1], v[2]]);
+		}, 2500);
+
+		injectBeforeRender(({ delta }) => {
+			const group = this.groupRef().nativeElement;
+			group.rotation.x += delta;
+			group.rotation.y += delta;
+		});
 	}
 
 	onDocumentClick(event: MouseEvent) {

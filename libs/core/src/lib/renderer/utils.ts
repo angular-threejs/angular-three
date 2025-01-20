@@ -1,4 +1,5 @@
 import { untracked } from '@angular/core';
+import * as THREE from 'three';
 import { removeInteractivity } from '../events';
 import { getInstanceState, invalidateInstance } from '../instance';
 import { NgtInstanceNode } from '../types';
@@ -53,6 +54,9 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 	// or child store is the parent of parent store
 	if (!cIS.store || cIS.store !== pIS.store || cIS.store === pIS.store.snapshot.previousRoot) {
 		cIS.store = pIS.store;
+
+		cIS.addInteraction?.(cIS.store);
+
 		const grandChildren = [
 			...(cIS.objects ? untracked(cIS.objects) : []),
 			...(cIS.nonObjects ? untracked(cIS.nonObjects) : []),
@@ -61,6 +65,7 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 			const grandChildIS = getInstanceState(grandChild);
 			if (!grandChildIS) continue;
 			grandChildIS.store = cIS.store;
+			grandChildIS.addInteraction?.(cIS.store);
 		}
 	}
 
@@ -98,7 +103,7 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 				attachProp[0] === 'material' &&
 				attachProp[1] &&
 				typeof Number(attachProp[1]) === 'number' &&
-				is.material(child) &&
+				is.three<THREE.Material>(child, 'isMaterial') &&
 				!Array.isArray(parent['material'])
 			) {
 				parent['material'] = [];
@@ -124,9 +129,10 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 				attach(parent, child, attachProp);
 			}
 		}
-	} else if (is.object3D(parent) && is.object3D(child)) {
+	} else if (is.three<THREE.Object3D>(parent, 'isObject3D') && is.three<THREE.Object3D>(child, 'isObject3D')) {
 		parent.add(child);
 		added = true;
+		cIS.addInteraction?.(cIS.store || pIS.store);
 	}
 
 	if (pIS.add) {
@@ -158,15 +164,16 @@ export function removeThreeChild(child: NgtInstanceNode, parent: NgtInstanceNode
 
 	if (cIS?.attach) {
 		detach(parent, child, cIS.attach);
-	} else if (is.object3D(parent) && is.object3D(child)) {
+	} else if (is.three<THREE.Object3D>(parent, 'isObject3D') && is.three<THREE.Object3D>(child, 'isObject3D')) {
 		parent.remove(child);
 		const store = cIS?.store || pIS?.store;
+		cIS?.removeInteraction?.(store);
 		if (store) removeInteractivity(store, child);
 	}
 
 	// dispose
 	const isPrimitive = cIS?.type && cIS.type !== 'ngt-primitive';
-	if (!isPrimitive && child['dispose'] && !is.scene(child)) {
+	if (!isPrimitive && child['dispose'] && !is.three<THREE.Scene>(child, 'isScene')) {
 		queueMicrotask(() => child['dispose']());
 	}
 

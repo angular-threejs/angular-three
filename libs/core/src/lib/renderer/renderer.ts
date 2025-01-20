@@ -14,15 +14,23 @@ import { NgtArgs } from '../directives/args';
 import { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
 import { getInstanceState, prepare } from '../instance';
-import { NgtAnyRecord, NgtConstructorRepresentation, NgtInstanceNode, NgtInstanceState } from '../types';
+import {
+	NgtAnyRecord,
+	NgtConstructorRepresentation,
+	NgtEventHandlers,
+	NgtInstanceNode,
+	NgtInstanceState,
+} from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { injectCatalogue } from './catalogue';
 import {
 	NGT_CANVAS_CONTENT_FLAG,
+	NGT_DOM_PARENT_FLAG,
 	NGT_GET_NODE_ATTRIBUTE_FLAG,
 	NGT_INTERNAL_ADD_COMMENT_FLAG,
 	NGT_INTERNAL_SET_PARENT_COMMENT_FLAG,
+	NGT_PORTAL_CONTENT_FLAG,
 	NGT_RENDERER_NODE_FLAG,
 	THREE_NATIVE_EVENTS,
 } from './constants';
@@ -33,7 +41,7 @@ import {
 	NgtRendererNode,
 	setRendererParentNode,
 } from './state';
-import { attachThreeNodes, kebabToPascal, NgtRendererClassId } from './utils';
+import { attachThreeNodes, kebabToPascal, NgtRendererClassId, removeThreeChild } from './utils';
 
 @Injectable()
 export class NgtRendererFactory2 implements RendererFactory2 {
@@ -190,12 +198,10 @@ export class NgtRenderer2 implements Renderer2 {
 	createElement(name: string, namespace?: string | null) {
 		const platformElement = this.delegateRenderer.createElement(name, namespace);
 
-		// if (!this.store) return platformElement;
-		//
-		// if (name === 'ngt-portal') {
-		// 	return createRendererNode('portal', this.store, platformElement, this.document);
-		// }
-		//
+		if (name === 'ngt-portal') {
+			return createRendererNode('portal', platformElement, this.document);
+		}
+
 		const [injectedArgs, injectedParent] = [
 			this.getNgtDirective(NgtArgs, this.argsInjectors)?.value || [],
 			this.getNgtDirective(NgtParent, this.parentInjectors)?.value,
@@ -211,9 +217,9 @@ export class NgtRenderer2 implements Renderer2 {
 			const instanceState = getInstanceState(threeInstance) as NgtInstanceState;
 
 			// auto-attach for geometry and material
-			if (is.geometry(threeInstance)) {
+			if (is.three<THREE.BufferGeometry>(threeInstance, 'isBufferGeometry')) {
 				Object.assign(instanceState, { attach: ['geometry'] });
-			} else if (is.material(threeInstance)) {
+			} else if (is.three<THREE.Material>(threeInstance, 'isMaterial')) {
 				instanceState.attach = ['material'];
 			}
 
@@ -281,6 +287,9 @@ export class NgtRenderer2 implements Renderer2 {
 		const iS = getInstanceState(node);
 		if (iS) {
 			const temp = iS as NgtAnyRecord;
+
+			iS.removeInteraction?.(iS.store);
+
 			delete temp['onAttach'];
 			delete temp['onUpdate'];
 			delete temp['object'];
@@ -295,6 +304,9 @@ export class NgtRenderer2 implements Renderer2 {
 			delete temp['handlers'];
 			delete temp['hierarchyStore'];
 			delete temp['previousAttach'];
+			delete temp['setPointerEvent'];
+			delete temp['addInteraction'];
+			delete temp['removeInteraction'];
 
 			if (iS.type !== 'ngt-primitive') {
 				delete node['__ngt__'];
@@ -307,6 +319,9 @@ export class NgtRenderer2 implements Renderer2 {
 		if (rS[NgtRendererClassId.type] === 'comment') {
 			delete node[NGT_INTERNAL_ADD_COMMENT_FLAG];
 			delete node[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG];
+			delete node[NGT_CANVAS_CONTENT_FLAG];
+			delete node[NGT_PORTAL_CONTENT_FLAG];
+			delete node[NGT_DOM_PARENT_FLAG];
 		}
 
 		// clear getAttribute if exist
@@ -353,19 +368,20 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'three') {
-			console.log('both are three', { parent, newChild });
 			return this.appendThreeRendererNodes(parent, newChild);
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'three') {
-			console.log('platform and three', { parent, newChild });
-
 			// if platform has parent, delegate to that parent
 			if (pRS[NgtRendererClassId.parent]) {
 				return this.appendChild(pRS[NgtRendererClassId.parent], newChild);
 			}
 
 			// platform can also have normal parentNode
+			const platformParentNode = this.delegateRenderer.parentNode(parent);
+			if (platformParentNode) {
+				return this.appendChild(platformParentNode, newChild);
+			}
 
 			// if not, set up parent and child relationship for this pair then bail
 			this.setNodeRelationship(parent, newChild);
@@ -382,6 +398,15 @@ export class NgtRenderer2 implements Renderer2 {
 			}
 
 			return;
+		}
+
+		if (pRS[NgtRendererClassId.type] === 'portal' && cRS[NgtRendererClassId.type] === 'three') {
+			console.log('portal child three', { parent, newChild });
+			return;
+		}
+
+		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'portal') {
+			return this.delegateRenderer.appendChild(parent, newChild);
 		}
 
 		// //  if the child is a comment, we'll set the parent then bail
@@ -507,32 +532,54 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	removeChild(parent: NgtRendererNode, oldChild: NgtRendererNode, isHostElement?: boolean): void {
-		// if (parent === null) {
-		// 	parent = this.parentNode(oldChild);
-		// }
-		//
-		// const cRS = (oldChild as NgtRendererNode).__ngt_renderer__;
-		//
-		// // disassociate things from oldChild
-		// cRS[NgtRendererClassId.parent] = null;
-		//
-		// // if parent is still undefined
-		// if (parent == null) {
-		// 	if (cRS[NgtRendererClassId.destroyed]) {
-		// 		// if the child is already destroyed, just skip
-		// 		return;
-		// 	}
-		// 	console.warn('[NGT] parent is not found when remove child', { parent, oldChild });
-		// 	return;
-		// }
-		//
-		// const pRS = (parent as NgtRendererNode).__ngt_renderer__;
-		// const childIndex = pRS[NgtRendererClassId.children].indexOf(oldChild);
-		// if (childIndex >= 0) {
-		// 	// disassociate oldChild from parent children
-		// 	pRS[NgtRendererClassId.children].splice(childIndex, 1);
-		// }
-		//
+		if (parent === null) {
+			parent = this.parentNode(oldChild);
+		}
+
+		const cRS = oldChild.__ngt_renderer__;
+
+		// disassociate things from oldChild
+		cRS[NgtRendererClassId.parent] = null;
+
+		// if parent is still undefined
+		if (parent == null) {
+			if (cRS[NgtRendererClassId.destroyed]) {
+				// if the child is already destroyed, just skip
+				return;
+			}
+			console.warn('[NGT] parent is not found when remove child', { parent, oldChild });
+			return;
+		}
+
+		const pRS = parent.__ngt_renderer__;
+		const childIndex = pRS[NgtRendererClassId.children].indexOf(oldChild);
+		if (childIndex >= 0) {
+			// disassociate oldChild from parent children
+			pRS[NgtRendererClassId.children].splice(childIndex, 1);
+		}
+
+		if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'three') {
+			return removeThreeChild(oldChild as unknown as NgtInstanceNode, parent as unknown as NgtInstanceNode, true);
+		}
+
+		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'platform') {
+			return this.delegateRenderer.removeChild(parent, oldChild, isHostElement);
+		}
+
+		if (pRS[NgtRendererClassId.type] === 'three' && cRS[NgtRendererClassId.type] === 'platform') {
+			return;
+		}
+
+		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'three') {
+			const childLS = getInstanceState(oldChild);
+			if (!childLS) return;
+
+			const threeParent = childLS.parent ? untracked(childLS.parent) : null;
+			if (!threeParent) return;
+
+			return this.removeChild(threeParent as unknown as NgtRendererNode, oldChild);
+		}
+
 		// if (pRS[NgtRendererClassId.type] === 'three') {
 		// 	if (cRS[NgtRendererClassId.type] === 'three') {
 		// 		return removeThreeChild(oldChild, parent, true);
@@ -564,8 +611,13 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	parentNode(node: NgtRendererNode) {
-		if (node && node[NGT_CANVAS_CONTENT_FLAG] && node instanceof Comment && isRendererNode(node)) {
-			const store = node[NGT_CANVAS_CONTENT_FLAG];
+		if (
+			node &&
+			(node[NGT_CANVAS_CONTENT_FLAG] || node[NGT_PORTAL_CONTENT_FLAG]) &&
+			node instanceof Comment &&
+			isRendererNode(node)
+		) {
+			const store = node[NGT_CANVAS_CONTENT_FLAG] || node[NGT_PORTAL_CONTENT_FLAG];
 
 			// this should not happen but if it does, we'll delegate to the renderer
 			if (!store) {
@@ -586,6 +638,14 @@ export class NgtRenderer2 implements Renderer2 {
 				setRendererParentNode(node, sceneRendererNode);
 			}
 
+			if (node[NGT_PORTAL_CONTENT_FLAG] && node[NGT_DOM_PARENT_FLAG] && isRendererNode(node[NGT_DOM_PARENT_FLAG])) {
+				const portalContentParent = node[NGT_DOM_PARENT_FLAG] as NgtRendererNode<'portal'>;
+				const portalContentParentRS = portalContentParent.__ngt_renderer__;
+				if (!portalContentParentRS[NgtRendererClassId.portalContainer]) {
+					portalContentParentRS[NgtRendererClassId.portalContainer] = rootScene;
+				}
+			}
+
 			return rootScene;
 		}
 
@@ -595,41 +655,41 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	setAttribute(el: NgtRendererNode, name: string, value: string, namespace?: string | null): void {
-		// const rS = (el as NgtRendererNode).__ngt_renderer__;
-		// if (!rS) return this.delegateRenderer.setAttribute(el, name, value, namespace);
-		//
-		// if (rS[NgtRendererClassId.destroyed]) {
-		// 	console.warn(`[NGT] setAttribute is invoked on destroyed renderer node.`, { el, name, value });
-		// 	return;
-		// }
-		//
-		// if (rS[NgtRendererClassId.type] === 'three') {
-		// 	if (name === 'attach') {
-		// 		const paths = value.split('.');
-		// 		if (paths.length) {
-		// 			const instanceState = getInstanceState(el);
-		// 			if (instanceState) instanceState.attach = paths;
-		// 		}
-		// 	} else {
-		// 		// coercion for primitive values
-		// 		let maybeCoerced: string | number | boolean = value;
-		//
-		// 		if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
-		// 			maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
-		// 		} else {
-		// 			const maybeNumber = Number(maybeCoerced);
-		// 			if (!isNaN(maybeNumber)) maybeCoerced = maybeNumber;
-		// 		}
-		//
-		// 		if (name === 'rawValue') {
-		// 			rS[NgtRendererClassId.rawValue] = maybeCoerced;
-		// 		} else {
-		// 			applyProps(el, { [name]: maybeCoerced });
-		// 		}
-		// 	}
-		//
-		// 	return;
-		// }
+		const rS = el.__ngt_renderer__;
+		if (!rS) return this.delegateRenderer.setAttribute(el, name, value, namespace);
+
+		if (rS[NgtRendererClassId.destroyed]) {
+			console.warn(`[NGT] setAttribute is invoked on destroyed renderer node.`, { el, name, value });
+			return;
+		}
+
+		if (rS[NgtRendererClassId.type] === 'three') {
+			if (name === 'attach') {
+				const paths = value.split('.');
+				if (paths.length) {
+					const instanceState = getInstanceState(el);
+					if (instanceState) instanceState.attach = paths;
+				}
+			} else {
+				// coercion for primitive values
+				let maybeCoerced: string | number | boolean = value;
+
+				if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
+					maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
+				} else {
+					const maybeNumber = Number(maybeCoerced);
+					if (!isNaN(maybeNumber)) maybeCoerced = maybeNumber;
+				}
+
+				if (name === 'rawValue') {
+					rS[NgtRendererClassId.rawValue] = maybeCoerced;
+				} else {
+					applyProps(el, { [name]: maybeCoerced });
+				}
+			}
+
+			return;
+		}
 
 		return this.delegateRenderer.setAttribute(el, name, value, namespace);
 	}
@@ -755,52 +815,7 @@ export class NgtRenderer2 implements Renderer2 {
 				};
 			}
 
-			if (!iS.handlers) iS.handlers = {};
-
-			// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
-			const previousHandler = iS.handlers[eventName as keyof typeof iS.handlers];
-			// readjust the callback
-			const updatedCallback: typeof callback = (event) => {
-				if (previousHandler) previousHandler(event);
-				callback(event);
-			};
-
-			Object.assign(iS.handlers, { [eventName]: updatedCallback });
-
-			// increment the count everytime
-			iS.eventCount += 1;
-
-			// but only add the instance (target) to the interaction array (so that it is handled by the EventManager with Raycast)
-			// the first time eventCount is incremented
-			if (iS.eventCount === 1 && 'raycast' in target && !!target['raycast']) {
-				// get the top-most root store
-				let root = iS.store!;
-				while (root.snapshot.previousRoot) {
-					root = root.snapshot.previousRoot;
-				}
-
-				if (root.snapshot.internal) {
-					root.snapshot.internal.interaction.push(target as unknown as THREE.Object3D);
-				}
-			}
-
-			// clean up the event listener by removing the target from the interaction array
-			return () => {
-				const iS = getInstanceState(target);
-				if (iS) {
-					iS.eventCount -= 1;
-					let root = iS.store!;
-					while (root.snapshot.previousRoot) {
-						root = root.snapshot.previousRoot;
-					}
-
-					if (root.snapshot.internal) {
-						const interactions = root.snapshot.internal.interaction;
-						const index = interactions.findIndex((obj) => obj.uuid === (target as unknown as THREE.Object3D).uuid);
-						if (index >= 0) interactions.splice(index, 1);
-					}
-				}
-			};
+			return iS.setPointerEvent?.(eventName as keyof NgtEventHandlers, callback) || (() => {});
 		}
 
 		return this.delegateRenderer.listen(target, eventName, callback);

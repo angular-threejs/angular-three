@@ -225,6 +225,12 @@ export interface NgtInstanceState<TObject extends NgtAnyRecord = NgtAnyRecord> {
 
 	onUpdate?: (node: NgtInstanceNode) => void;
 	onAttach?: (afterAttach: NgtAfterAttach) => void;
+	setPointerEvent?: <TEvent extends keyof NgtEventHandlers>(
+		eventName: TEvent,
+		callback: NgtEventHandlers[TEvent],
+	) => () => void;
+	addInteraction?: (store?: SignalState<NgtState> | null) => void;
+	removeInteraction?: (store?: SignalState<NgtState> | null) => void;
 }
 
 export type NgtInstanceNode<TObject extends NgtAnyRecord = NgtAnyRecord> = TObject & {

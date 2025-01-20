@@ -43,12 +43,12 @@ function patchState<State extends object>(
 
 // An extended Signal type that enables the correct typing
 // of nested signals with the `name` or `length` key.
-interface Signal<T> extends NgSignal<T> {
+export interface Signal<T> extends NgSignal<T> {
 	name: unknown;
 	length: unknown;
 }
 
-type DeepSignal<T> = Signal<T> &
+export type DeepSignal<T> = Signal<T> &
 	(IsKnownRecord<T> extends true
 		? Readonly<{
 				[K in keyof T]: IsKnownRecord<T[K]> extends true ? DeepSignal<T[K]> : Signal<T[K]>;

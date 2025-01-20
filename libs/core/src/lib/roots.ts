@@ -99,7 +99,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					// Create default camera, don't overwrite any user-set state
 					if (!state.camera || (state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose))) {
 						lastCamera = cameraOptions;
-						const isCamera = is.camera(cameraOptions);
+						const isCamera = is.three<THREE.Camera>(cameraOptions, 'isCamera');
 						let camera = isCamera ? cameraOptions : makeCameraInstance(orthographic, sizeOptions ?? state.size);
 
 						if (!isCamera) {
@@ -143,7 +143,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					if (!state.scene) {
 						let scene: THREE.Scene;
 
-						if (is.scene(sceneOptions)) {
+						if (is.three<THREE.Scene>(sceneOptions, 'isScene')) {
 							scene = sceneOptions;
 						} else {
 							scene = new THREE.Scene();

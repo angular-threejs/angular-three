@@ -106,7 +106,7 @@ export function storeFactory() {
 
 				const distance = camera.getWorldPosition(position).distanceTo(tempTarget);
 
-				if (is.orthographicCamera(camera)) {
+				if (is.three<THREE.OrthographicCamera>(camera, 'isOrthographicCamera')) {
 					return { width: width / camera.zoom, height: height / camera.zoom, top, left, factor: 1, distance, aspect };
 				}
 

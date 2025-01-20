@@ -1,6 +1,14 @@
 import { computed } from '@angular/core';
-import type { NgtAnyRecord, NgtInstanceHierarchyState, NgtInstanceNode, NgtInstanceState } from './types';
-import { signalState } from './utils/signal-state';
+import type * as THREE from 'three';
+import type {
+	NgtAnyRecord,
+	NgtEventHandlers,
+	NgtInstanceHierarchyState,
+	NgtInstanceNode,
+	NgtInstanceState,
+	NgtState,
+} from './types';
+import { SignalState, signalState } from './utils/signal-state';
 import { checkUpdate } from './utils/update';
 
 /**
@@ -99,6 +107,83 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			...rest,
 		};
 	}
+
+	Object.defineProperty(instance.__ngt__, 'setPointerEvent', {
+		value: <TEvent extends keyof NgtEventHandlers>(
+			eventName: TEvent,
+			callback: NonNullable<NgtEventHandlers[TEvent]>,
+		) => {
+			const iS = getInstanceState(instance) as NgtInstanceState;
+			if (!iS.handlers) iS.handlers = {};
+
+			// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
+			const previousHandler = iS.handlers[eventName];
+			// readjust the callback
+			const updatedCallback: typeof callback = (event: any) => {
+				if (previousHandler) previousHandler(event);
+				callback(event);
+			};
+
+			Object.assign(iS.handlers, { [eventName]: updatedCallback });
+
+			// increment the count everytime
+			iS.eventCount += 1;
+
+			// clean up the event listener by removing the target from the interaction array
+			return () => {
+				const iS = getInstanceState(instance) as NgtInstanceState;
+				if (iS) {
+					delete iS.handlers[eventName];
+					iS.eventCount -= 1;
+				}
+			};
+		},
+		configurable: true,
+	});
+
+	Object.defineProperties(instance.__ngt__, {
+		addInteraction: {
+			value: (store?: SignalState<NgtState>) => {
+				if (!store) return;
+
+				const iS = getInstanceState(instance) as NgtInstanceState;
+
+				if (iS.eventCount < 1 || !('raycast' in instance) || !instance['raycast']) return;
+
+				let root = store;
+				while (root.snapshot.previousRoot) {
+					root = root.snapshot.previousRoot;
+				}
+
+				if (root.snapshot.internal) {
+					const interactions = root.snapshot.internal.interaction;
+					const index = interactions.findIndex((obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid);
+					// if already exists, do not add to interactions
+					if (index < 0) {
+						root.snapshot.internal.interaction.push(instance as unknown as THREE.Object3D);
+					}
+				}
+			},
+			configurable: true,
+		},
+		removeInteraction: {
+			value: (store?: SignalState<NgtState>) => {
+				if (!store) return;
+
+				let root = store;
+				while (root.snapshot.previousRoot) {
+					root = root.snapshot.previousRoot;
+				}
+
+				if (root.snapshot.internal) {
+					const interactions = root.snapshot.internal.interaction;
+					const index = interactions.findIndex((obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid);
+					if (index >= 0) interactions.splice(index, 1);
+				}
+			},
+			configurable: true,
+		},
+	});
 
 	return instance;
 }

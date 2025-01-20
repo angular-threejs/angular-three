@@ -16,6 +16,10 @@ export const is = {
 	ref: (a: unknown): a is ElementRef => !!a && typeof a === 'object' && 'nativeElement' in a,
 	instance: (a: unknown): a is NgtInstanceNode => !!a && !!(a as NgtAnyRecord)['__ngt__'],
 	object3D: (a: unknown): a is THREE.Object3D => !!a && (a as THREE.Object3D).isObject3D,
+	three: <TThreeEntity extends object, TKey extends keyof TThreeEntity = keyof TThreeEntity>(
+		a: unknown,
+		isKey: TKey extends `is${infer K}` ? TKey : never,
+	): a is TThreeEntity => !!a && (a as any)[isKey],
 	colorSpaceExist: <
 		T extends NgtRendererLike | THREE.Texture | object,
 		P = T extends NgtRendererLike ? { outputColorSpace: string } : { colorSpace: string },
