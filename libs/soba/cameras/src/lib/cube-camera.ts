@@ -13,10 +13,11 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, merge, NgtArgs, NgtGroup, omit, pick } from 'angular-three';
+import { extend, injectBeforeRender, injectStore, merge, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { CubeCamera, Fog, FogExp2, Group, HalfFloatType, Texture, WebGLCubeRenderTarget } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
 export interface CubeCameraOptions {
@@ -27,16 +28,14 @@ export interface CubeCameraOptions {
 	/** Camera far, 1000 */
 	far?: number;
 	/** Custom environment map that is temporarily set as the scenes background */
-	envMap?: Texture;
+	envMap?: THREE.Texture;
 	/** Custom fog that is temporarily set as the scenes fog */
-	fog?: Fog | FogExp2;
+	fog?: THREE.Fog | THREE.FogExp2;
 }
 
 export function injectCubeCamera(options: () => CubeCameraOptions, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectCubeCamera, injector, () => {
 		const store = injectStore();
-		const gl = store.select('gl');
-		const scene = store.select('scene');
 
 		// backfill the options with default values
 		const mergedOptions = merge(options, { resolution: 256, near: 0.1, far: 1000 }, 'backfill');
@@ -45,8 +44,8 @@ export function injectCubeCamera(options: () => CubeCameraOptions, { injector }:
 		const far = pick(mergedOptions, 'far');
 
 		const fbo = computed(() => {
-			const fbo = new WebGLCubeRenderTarget(resolution());
-			fbo.texture.type = HalfFloatType;
+			const fbo = new THREE.WebGLCubeRenderTarget(resolution());
+			fbo.texture.type = THREE.HalfFloatType;
 			return fbo;
 		});
 
@@ -55,26 +54,26 @@ export function injectCubeCamera(options: () => CubeCameraOptions, { injector }:
 			onCleanup(() => _fbo.dispose());
 		});
 
-		const camera = computed(() => new CubeCamera(near()!, far()!, fbo()));
+		const cubeCamera = computed(() => new THREE.CubeCamera(near()!, far()!, fbo()));
 		const update = () => {
-			const [_scene, _gl, _camera, { envMap, fog }] = [scene(), gl(), camera(), untracked(mergedOptions)];
-			let originalFog: Fog | FogExp2;
-			let originalBackground: Texture;
+			const [scene, gl, camera, { envMap, fog }] = [store.scene(), store.gl(), cubeCamera(), untracked(mergedOptions)];
+			let originalFog: THREE.Fog | THREE.FogExp2;
+			let originalBackground: THREE.Texture;
 
-			originalFog = _scene.fog as Fog | FogExp2;
-			originalBackground = _scene.background as Texture;
-			_scene.background = envMap || originalBackground;
-			_scene.fog = fog || originalFog;
-			_camera.update(_gl, _scene);
-			_scene.fog = originalFog;
-			_scene.background = originalBackground;
+			originalFog = scene.fog as THREE.Fog | THREE.FogExp2;
+			originalBackground = scene.background as THREE.Texture;
+			scene.background = envMap || originalBackground;
+			scene.fog = fog || originalFog;
+			camera.update(gl, scene);
+			scene.fog = originalFog;
+			scene.background = originalBackground;
 		};
 
-		return { fbo, camera, update };
+		return { fbo, camera: cubeCamera, update };
 	});
 }
 
-export interface NgtsCubeCameraOptions extends Partial<NgtGroup>, CubeCameraOptions {
+export interface NgtsCubeCameraOptions extends Partial<NgtThreeElements['ngt-group']>, CubeCameraOptions {
 	frames: number;
 }
 
@@ -101,15 +100,15 @@ const defaultOptions: NgtsCubeCameraOptions = {
 })
 export class NgtsCubeCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['fog', 'near', 'far', 'envMap', 'resolution', 'frames']);
+	protected parameters = omit(this.options, ['fog', 'near', 'far', 'envMap', 'resolution', 'frames']);
 
 	private cubeCamera = injectCubeCamera(pick(this.options, ['near', 'far', 'envMap', 'fog', 'resolution']));
 
-	camera = this.cubeCamera.camera;
-	texture = pick(this.cubeCamera.fbo, 'texture');
+	protected camera = this.cubeCamera.camera;
+	protected texture = pick(this.cubeCamera.fbo, 'texture');
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
 	constructor() {
 		extend({ Group });

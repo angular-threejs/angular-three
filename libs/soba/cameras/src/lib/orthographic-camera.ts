@@ -12,13 +12,14 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { NgtOrthographicCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Color, Group, OrthographicCamera, Texture } from 'three';
+import * as THREE from 'three';
+import { Group, OrthographicCamera } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
-export interface NgtsOrthographicCameraOptions extends Partial<NgtOrthographicCamera> {
+export interface NgtsOrthographicCameraOptions extends Partial<NgtThreeElements['ngt-orthographic-camera']> {
 	/** Registers the camera as the system default, fiber will start rendering with it */
 	makeDefault?: boolean;
 	/** Making it manual will stop responsiveness and you have to calculate aspect ratio yourself. */
@@ -28,7 +29,7 @@ export interface NgtsOrthographicCameraOptions extends Partial<NgtOrthographicCa
 	/** Resolution of the FBO, 256 */
 	resolution: number;
 	/** Optional environment map for functional use */
-	envMap?: Texture;
+	envMap?: THREE.Texture;
 }
 
 const defaultOptions: NgtsOrthographicCameraOptions = {
@@ -74,16 +75,16 @@ export class NgtsOrthographicCamera {
 		'right',
 	]);
 
-	content = contentChild(TemplateRef);
-	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
+	protected content = contentChild(TemplateRef);
+	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
-	cameraRef = viewChild.required<ElementRef<OrthographicCamera>>('camera');
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	cameraRef = viewChild.required<ElementRef<THREE.OrthographicCamera>>('camera');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private store = injectStore();
 
-	private camera = this.store.select('camera');
-	protected size = this.store.select('size');
+	private camera = this.store.camera;
+	private size = this.store.size;
 
 	protected left = computed(() => this.options().left ?? this.size().width / -2);
 	protected right = computed(() => this.options().right ?? this.size().width / 2);
@@ -122,7 +123,7 @@ export class NgtsOrthographicCamera {
 		});
 
 		let count = 0;
-		let oldEnvMap: Color | Texture | null = null;
+		let oldEnvMap: THREE.Color | THREE.Texture | null = null;
 		injectBeforeRender(({ gl, scene }) => {
 			const [{ frames, envMap }, group, camera, fbo] = [
 				this.options(),

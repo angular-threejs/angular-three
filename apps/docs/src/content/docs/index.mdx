@@ -23,30 +23,30 @@ import FloatingCodeBlock from '../../components/ui/floating-code-block.astro';
 import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
 
 <section class="min-h-screen w-full flex justify-center items-center">
- <div class="relative h-full w-full grid grid-cols-8 gap-4">
+ <div class="h-full w-full grid grid-cols-8 gap-4">
   <div class="col-span-3">
-    <h1>
-      Declarative <span class="text-accent-600 dark:text-accent-200">scene graphs</span>
-    </h1>
-
-    <p>
-      Angular Three allows the users to declaratively build a scene graph using the familiar Angular template syntax. This
-      approach enables Angular developers to leverage familiar skills and tools of Angular template to build 3D scenes.
-    </p>
-
-    <div class="h-[200px] w-full">
-      <SimpleScene client:only />
-    </div>
-
+   <h1>
+    Declarative <span class="text-accent-600 dark:text-accent-200">scene graphs</span>
+   </h1>
+   <p>
+    Angular Three allows the users to use every feature of THREE.js in a declarative way via Angular{' '}
+    <strong>template syntax</strong>. Scale your 3D experiences with ease by leveraging Angular's batteries-included
+    APIs like <strong>Signal</strong>, and more
+   </p>
+   <div class="h-[200px] w-full">
+    <SimpleScene client:only />
+   </div>
   </div>
   <FloatingCodeBlock
-    class="col-span-5"
-    snippets={[
-      { title: 'scene-graph.ts', name: 'simple-scene' },
-      { title: 'canvas.ts', name: 'simple-scene-canvas' },
-    ]}
+   class="col-span-5"
+   snippets={[
+    { title: 'scene-graph.ts', name: 'simple-scene' },
+    { title: 'canvas.ts', name: 'simple-scene-canvas' },
+   ]}
   />
-
  </div>
+</section>
 
+<section class="min-h-screen w-full flex justify-center items-center">
+ <div class="h-full w-full grid grid-cols-8 gap-4"></div>
 </section>

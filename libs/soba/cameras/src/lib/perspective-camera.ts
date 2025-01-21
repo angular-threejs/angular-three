@@ -11,13 +11,14 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { NgtPerspectiveCamera, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Color, Group, PerspectiveCamera, Texture } from 'three';
+import * as THREE from 'three';
+import { Group, PerspectiveCamera } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
-export interface NgtsPerspectiveCameraOptions extends Partial<NgtPerspectiveCamera> {
+export interface NgtsPerspectiveCameraOptions extends Partial<NgtThreeElements['ngt-perspective-camera']> {
 	/** Registers the camera as the system default, fiber will start rendering with it */
 	makeDefault?: boolean;
 	/** Making it manual will stop responsiveness and you have to calculate aspect ratio yourself. */
@@ -27,7 +28,7 @@ export interface NgtsPerspectiveCameraOptions extends Partial<NgtPerspectiveCame
 	/** Resolution of the FBO, 256 */
 	resolution: number;
 	/** Optional environment map for functional use */
-	envMap?: Texture;
+	envMap?: THREE.Texture;
 }
 
 const defaultOptions: NgtsPerspectiveCameraOptions = {
@@ -56,16 +57,16 @@ export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
 
-	content = contentChild(TemplateRef);
-	cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
+	protected content = contentChild(TemplateRef);
+	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
-	cameraRef = viewChild.required<ElementRef<PerspectiveCamera>>('camera');
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	cameraRef = viewChild.required<ElementRef<THREE.PerspectiveCamera>>('camera');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private store = injectStore();
 
-	private camera = this.store.select('camera');
-	private size = this.store.select('size');
+	private camera = this.store.camera;
+	private size = this.store.size;
 
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');
@@ -96,9 +97,9 @@ export class NgtsPerspectiveCamera {
 			this.store.update({ camera: this.cameraRef().nativeElement });
 			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
-		/**/
+
 		let count = 0;
-		let oldEnvMap: Color | Texture | null = null;
+		let oldEnvMap: THREE.Color | THREE.Texture | null = null;
 		injectBeforeRender(({ gl, scene }) => {
 			const [{ frames, envMap }, group, camera, fbo] = [
 				this.options(),
