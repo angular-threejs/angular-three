@@ -202,10 +202,33 @@ export class NgtRenderer2 implements Renderer2 {
 			return createRendererNode('portal', platformElement, this.document);
 		}
 
+		if (name === 'ngt-value') {
+			return createRendererNode('three', prepare(platformElement, 'ngt-value'), this.document);
+		}
+
 		const [injectedArgs, injectedParent] = [
 			this.getNgtDirective(NgtArgs, this.argsInjectors)?.value || [],
 			this.getNgtDirective(NgtParent, this.parentInjectors)?.value,
 		];
+
+		if (name === 'ngt-primitive') {
+			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
+			const object = injectedArgs[0];
+			let instanceState = getInstanceState(object);
+			if (!instanceState || instanceState.type === 'ngt-primitive') {
+				// if an object isn't already "prepared", we'll prepare it
+				prepare(object, 'ngt-primitive', instanceState);
+				instanceState = getInstanceState(object);
+			}
+
+			const primitiveRendererNode = createRendererNode('three', object, this.document);
+			if (injectedParent) {
+				primitiveRendererNode.__ngt_renderer__[NgtRendererClassId.parent] =
+					injectedParent as unknown as NgtRendererNode<'three'>;
+			}
+
+			return primitiveRendererNode;
+		}
 
 		const threeName = kebabToPascal(name.startsWith('ngt-') ? name.slice(4) : name);
 		const threeTarget = this.catalogue[threeName];
@@ -725,7 +748,11 @@ export class NgtRenderer2 implements Renderer2 {
 			// [rawValue]
 			if (instanceState?.type === 'ngt-value' && name === 'rawValue') {
 				rS[NgtRendererClassId.rawValue] = value;
-				if (parent) this.appendChild(parent, el);
+				if (parent) {
+					// untrack this attach because this is during setProperty which is a reactive context
+					// attaching potentially updates signals which is not allowed
+					untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
+				}
 				return;
 			}
 

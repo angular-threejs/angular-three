@@ -109,16 +109,15 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 				parent['material'] = [];
 			}
 
-			// attach
-			// save prev value
-			cIS.previousAttach = attachProp.reduce((value, key) => value[key], parent);
-
 			if (cIS.type === 'ngt-value') {
 				if (cIS.hierarchyStore.snapshot.parent !== parent) {
 					cIS.setParent(parent);
 				}
 				// at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
 				if ((child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
+
+				// save prev value
+				cIS.previousAttach = attachProp.reduce((value, key) => value[key], parent);
 				attach(
 					parent,
 					(child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue],
@@ -126,6 +125,8 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 					true,
 				);
 			} else {
+				// save prev value
+				cIS.previousAttach = attachProp.reduce((value, key) => value[key], parent);
 				attach(parent, child, attachProp);
 			}
 		}

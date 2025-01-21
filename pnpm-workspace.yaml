@@ -1,5 +1,6 @@
 packages:
   - apps/astro-docs
+  - apps/docs
   - libs/core
   - libs/cannon
   - libs/postprocessing

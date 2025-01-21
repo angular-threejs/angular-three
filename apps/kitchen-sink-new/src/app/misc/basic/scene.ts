@@ -107,6 +107,8 @@ export class NestedBox {
 				<ngt-mesh-toon-material [color]="color()" (attached)="onAttach($event)" />
 			</ngt-mesh>
 
+			<ngt-primitive *args="[mesh]" [parameters]="{ position: [2, 0, 0] }" />
+
 			<!--			<app-nested-box [position]="[-3, 0, 0]" />-->
 
 			<!--			&lt;!&ndash; three element under condition &ndash;&gt;-->
@@ -172,16 +174,16 @@ export class NestedBox {
 		</ngt-group>
 
 		<!-- portal -->
-		<ngt-portal [container]="virtualScene">
-			<ngt-group *portalContent>
-				<!-- component inside portal -->
-				<app-box context="in portal" />
+		<!--		<ngt-portal [container]="virtualScene">-->
+		<!--			<ngt-group *portalContent>-->
+		<!--				&lt;!&ndash; component inside portal &ndash;&gt;-->
+		<!--				<app-box context="in portal" />-->
 
-				@if (show()) {
-					<app-box context="in portal in condition" />
-				}
-			</ngt-group>
-		</ngt-portal>
+		<!--				@if (show()) {-->
+		<!--					<app-box context="in portal in condition" />-->
+		<!--				}-->
+		<!--			</ngt-group>-->
+		<!--		</ngt-portal>-->
 	`,
 	imports: [NgtArgs, Box, ConditionBox, NgtPortalDeclarations, NestedBox],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -200,6 +202,8 @@ export class Scene {
 	protected virtualScene = new THREE.Scene();
 
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+
+	protected mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(), new THREE.MeshNormalMaterial());
 
 	constructor() {
 		setInterval(() => {
