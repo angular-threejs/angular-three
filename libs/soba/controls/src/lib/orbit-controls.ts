@@ -1,11 +1,11 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
 import { injectBeforeRender, injectStore, NgtArgs, NgtCamera, NgtVector3, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Camera, Event } from 'three';
+import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 
 export interface NgtsOrbitControlsOptions {
-	camera?: Camera;
+	camera?: THREE.Camera;
 	domElement?: HTMLElement;
 	target?: NgtVector3;
 	makeDefault: boolean;
@@ -33,17 +33,20 @@ const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
 })
 export class NgtsOrbitControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['makeDefault', 'camera', 'regress', 'domElement', 'keyEvents', 'enableDamping']);
+	protected parameters = omit(this.options, [
+		'makeDefault',
+		'camera',
+		'regress',
+		'domElement',
+		'keyEvents',
+		'enableDamping',
+	]);
 
-	changed = output<Event>();
-	started = output<Event>();
-	ended = output<Event>();
+	changed = output<THREE.Event>();
+	started = output<THREE.Event>();
+	ended = output<THREE.Event>();
 
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
-	private performanceRegress = this.store.select('performance', 'regress');
-	private defaultCamera = this.store.select('camera');
-	private glDomElement = this.store.select('gl', 'domElement');
 
 	private camera = pick(this.options, 'camera');
 	private regress = pick(this.options, 'regress');
@@ -52,7 +55,7 @@ export class NgtsOrbitControls {
 	private makeDefault = pick(this.options, 'makeDefault');
 
 	controls = computed(() => {
-		const [camera, defaultCamera] = [this.camera(), this.defaultCamera()];
+		const [camera, defaultCamera] = [this.camera(), this.store.camera()];
 		const controlsCamera = camera || defaultCamera;
 		return new OrbitControls(controlsCamera as NgtCamera);
 	});
@@ -77,20 +80,22 @@ export class NgtsOrbitControls {
 			const controls = this.controls();
 			if (!controls) return;
 
-			const oldControls = this.store.get('controls');
+			const oldControls = this.store.snapshot.controls;
 			this.store.update({ controls });
 			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 
 		effect((onCleanup) => {
-			const [keyEvents, domElement, controls] = [
+			const controls = this.controls();
+			if (!controls) return;
+
+			const [keyEvents, domElement] = [
 				this.keyEvents(),
-				this.domElement() || this.store.get('events', 'connected') || this.glDomElement(),
-				this.controls(),
-				this.invalidate(),
+				this.domElement() || this.store.snapshot.events.connected || this.store.gl.domElement(),
+				this.store.invalidate(),
 				this.regress(),
 			];
-			if (!controls) return;
+
 			if (keyEvents) {
 				controls.connect(keyEvents === true ? domElement : keyEvents);
 			} else {
@@ -103,9 +108,13 @@ export class NgtsOrbitControls {
 			const controls = this.controls();
 			if (!controls) return;
 
-			const [invalidate, performanceRegress, regress] = [this.invalidate(), this.performanceRegress(), this.regress()];
+			const [invalidate, performanceRegress, regress] = [
+				this.store.invalidate(),
+				this.store.performance.regress(),
+				this.regress(),
+			];
 
-			const changeCallback: (e: Event) => void = (e) => {
+			const changeCallback: (e: THREE.Event) => void = (e) => {
 				invalidate();
 				if (regress) performanceRegress();
 				this.changed.emit(e);

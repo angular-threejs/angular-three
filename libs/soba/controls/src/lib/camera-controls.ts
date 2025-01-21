@@ -10,19 +10,7 @@ import {
 import { injectBeforeRender, injectStore, NgtArgs, NgtCamera, omit, pick } from 'angular-three';
 import CameraControls from 'camera-controls';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	Box3,
-	EventDispatcher,
-	MathUtils,
-	Matrix4,
-	Quaternion,
-	Raycaster,
-	Sphere,
-	Spherical,
-	Vector2,
-	Vector3,
-	Vector4,
-} from 'three';
+import * as THREE from 'three';
 
 export interface NgtsCameraControlsOptions {
 	camera?: NgtCamera;
@@ -51,18 +39,13 @@ const defaultOptions: Partial<CameraControls> & NgtsCameraControlsOptions = {
 })
 export class NgtsCameraControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['makeDefault', 'camera', 'regress', 'domElement']);
+	protected parameters = omit(this.options, ['makeDefault', 'camera', 'regress', 'domElement']);
 
 	changed = output<any>();
 	started = output<any>();
 	ended = output<any>();
 
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
-	private performanceRegress = this.store.select('performance', 'regress');
-	private defaultCamera = this.store.select('camera');
-	private glDomElement = this.store.select('gl', 'domElement');
-	private eventsElement = this.store.select('events', 'connected');
 
 	private camera = pick(this.options, 'camera');
 	private regress = pick(this.options, 'regress');
@@ -70,7 +53,7 @@ export class NgtsCameraControls {
 	private makeDefault = pick(this.options, 'makeDefault');
 
 	controls = computed(() => {
-		const [camera, defaultCamera] = [this.camera(), this.defaultCamera()];
+		const [camera, defaultCamera] = [this.camera(), this.store.camera()];
 		return new CameraControls(camera || defaultCamera);
 	});
 
@@ -79,16 +62,16 @@ export class NgtsCameraControls {
 		// see https://github.com/yomotsu/camera-controls#important
 		CameraControls.install({
 			THREE: {
-				Box3,
-				MathUtils: { clamp: MathUtils.clamp },
-				Matrix4,
-				Quaternion,
-				Raycaster,
-				Sphere,
-				Spherical,
-				Vector2,
-				Vector3,
-				Vector4,
+				Box3: THREE.Box3,
+				MathUtils: { clamp: THREE.MathUtils.clamp },
+				Matrix4: THREE.Matrix4,
+				Quaternion: THREE.Quaternion,
+				Raycaster: THREE.Raycaster,
+				Sphere: THREE.Sphere,
+				Spherical: THREE.Spherical,
+				Vector2: THREE.Vector2,
+				Vector3: THREE.Vector3,
+				Vector4: THREE.Vector4,
 			},
 		});
 
@@ -98,7 +81,7 @@ export class NgtsCameraControls {
 
 			const controls = this.controls();
 			const oldControls = this.store.snapshot.controls;
-			this.store.update({ controls: controls as unknown as EventDispatcher });
+			this.store.update({ controls: controls as unknown as THREE.EventDispatcher });
 			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 
@@ -115,8 +98,8 @@ export class NgtsCameraControls {
 		effect((onCleanup) => {
 			const [domElement, eventsElement, glDomElement, controls] = [
 				this.domElement(),
-				this.eventsElement(),
-				this.glDomElement(),
+				this.store.events.connected?.(),
+				this.store.gl.domElement(),
 				this.controls(),
 			];
 			controls.connect(domElement || eventsElement || glDomElement);
@@ -127,7 +110,11 @@ export class NgtsCameraControls {
 			const controls = this.controls();
 			if (!controls) return;
 
-			const [regress, performanceRegress, invalidate] = [this.regress(), this.performanceRegress(), this.invalidate()];
+			const [regress, performanceRegress, invalidate] = [
+				this.regress(),
+				this.store.performance.regress(),
+				this.store.invalidate(),
+			];
 
 			const callback = (e: any) => {
 				invalidate();
