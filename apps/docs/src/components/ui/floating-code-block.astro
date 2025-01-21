@@ -1,0 +1,55 @@
+---
+import {  Tabs, TabItem } from '@astrojs/starlight/components';
+import { getEntry, render } from 'astro:content';
+
+interface Props {
+  class?: string;
+  snippets: {
+    name: string;
+    title?: string;
+  }[]
+}
+
+const { snippets, class: className = '' } = Astro.props;
+
+const settledResults = await Promise.allSettled(
+  snippets.map(async (snippet) => {
+    const entryPromise = getEntry('snippets', snippet.name);
+    if (!entryPromise) {
+      return Promise.reject(new Error(`Snippet ${snippet.name} not found`));
+    }
+
+    const entry = await entryPromise;
+    return ({ entry, tabTitle: snippet.title });
+  })
+);
+
+const results = [];
+
+for (const settledResult of settledResults) {
+  if (settledResult.status === 'rejected') {
+    throw settledResult.reason;
+  }
+
+  results.push(settledResult.value);
+}
+
+
+
+const rendered = await Promise.all(
+  results.map(async resultEntry => {
+    const {Content} = await render(resultEntry.entry);
+    return {Content, tabTitle: resultEntry.tabTitle}
+  })
+);
+---
+
+<div class:list={["p-4 rounded border border-dashed border-accent-600 dark:border-accent-200 shadow-2xl h-fit", className]}>
+  <Tabs>
+    {rendered.map(({Content, tabTitle}) => (
+      <TabItem label={tabTitle || ''}>
+        <Content />
+      </TabItem>
+    ))}
+  </Tabs>
+</div>

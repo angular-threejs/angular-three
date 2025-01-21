@@ -1,46 +1,52 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Welcome to Angular Three
+description: Get started building your 3D scene graphs with Angular Three
 template: splash
 hero:
   title: |
-    Welcome to Starlight with
-    <span
-      class="font-black text-transparent
-        bg-clip-text bg-gradient-to-b
-        from-accent-700 to-accent-400
-        dark:from-accent-500 dark:to-accent-200"
-    >
-      Tailwind
-    </span>
-  tagline: Congrats on setting up a new Starlight project!
+    Declarative 3D experiences with
+    <code class="text-accent-600 dark:text-accent-200">Angular</code>
   image:
-    file: ../../assets/houston.webp
+    dark: ../../assets/angular-three-dark.svg
+    light: ../../assets/angular-three.svg
   actions:
-    - text: Example Guide
+    - text: Getting started
       link: /guides/example/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: Check out the demo
+      link: https://demo.angularthree.org
       icon: external
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import FloatingCodeBlock from '../../components/ui/floating-code-block.astro';
+import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
 
-## Next steps
+<section class="min-h-screen w-full flex justify-center items-center">
+ <div class="relative h-full w-full grid grid-cols-8 gap-4">
+  <div class="col-span-3">
+    <h1>
+      Declarative <span class="text-accent-600 dark:text-accent-200">scene graphs</span>
+    </h1>
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+    <p>
+      Angular Three allows the users to declaratively build a scene graph using the familiar Angular template syntax. This
+      approach enables Angular developers to leverage familiar skills and tools of Angular template to build 3D scenes.
+    </p>
+
+    <div class="h-[200px] w-full">
+      <SimpleScene client:only />
+    </div>
+
+  </div>
+  <FloatingCodeBlock
+    class="col-span-5"
+    snippets={[
+      { title: 'scene-graph.ts', name: 'simple-scene' },
+      { title: 'canvas.ts', name: 'simple-scene-canvas' },
+    ]}
+  />
+
+ </div>
+
+</section>

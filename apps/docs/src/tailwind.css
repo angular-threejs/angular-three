@@ -1,8 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+	--sl-hero-color: hsla(290, 100%, 32%, 0.25); /* using accent-600 with lower opacity */
+}
+
+:root[data-theme='light'] {
+	--sl-hero-color: hsla(288, 56%, 82%, 0.6); /* using accent-200 with lower opacity */
+}
 
 /*
 Add additional Tailwind styles to this file, for example with @layer:
 https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer
 */
+
+/* Hero style */
+.hero {
+	min-height: 100vh;
+}
+
+[data-has-hero] .page {
+	height: 100%;
+	background:
+		linear-gradient(215deg, var(--sl-hero-color), transparent 40%),
+		radial-gradient(var(--sl-hero-color), transparent 40%) no-repeat -60vw -40vh / 150vw 200vh,
+		radial-gradient(var(--sl-hero-color), transparent 65%) no-repeat 50% calc(100% + 20rem) / 150rem 30rem;
+}
+
+[data-has-hero] header {
+	border-bottom: 1px solid transparent;
+	background-color: transparent;
+	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(16px);
+}
+
+[data-has-hero] .hero > img {
+	filter: drop-shadow(0 0 3rem var(--sl-hero-color));
+}

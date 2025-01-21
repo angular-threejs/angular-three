@@ -3,7 +3,6 @@ import starlight from '@astrojs/starlight';
 import tailwind from '@astrojs/tailwind';
 import { defineConfig } from 'astro/config';
 import { readFileSync } from 'node:fs';
-import starlightBlog from 'starlight-blog';
 
 function includeContentPlugin() {
 	const map = new Map();
@@ -47,11 +46,11 @@ export default defineConfig({
 		ssr: {
 			noExternal: [
 				'angular-three',
-				'angular-three/**',
 				'angular-three-soba/**',
 				'angular-three-cannon',
 				'angular-three-cannon/**',
 				'angular-three-rapier',
+				'angular-three-rapier/**',
 				'angular-three-postprocessing',
 				'angular-three-postprocessing/**',
 				'@angular/common',
@@ -73,21 +72,28 @@ export default defineConfig({
 		starlight({
 			title: 'Angular Three',
 			plugins: [
-				starlightBlog({
-					authors: {
-						chau: {
-							name: 'Chau Tran',
-							url: 'https://nartc.me',
-							picture: 'https://avatars.githubusercontent.com/u/25516557?v=4',
-						},
-					},
-				}),
+				// starlightBlog({
+				// 	authors: {
+				// 		chau: {
+				// 			name: 'Chau Tran',
+				// 			url: 'https://nartc.me',
+				// 			picture: 'https://avatars.githubusercontent.com/u/25516557?v=4',
+				// 		},
+				// 	},
+				// }),
 			],
 			favicon: './src/assets/angular-three-dark.svg',
-			tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
-			logo: { light: './src/assets/angular-three.svg', dark: './src/assets/angular-three-dark.svg' },
-			social: { github: 'https://github.com/angular-threejs/angular-three' },
-			credits: true,
+			tableOfContents: {
+				minHeadingLevel: 2,
+				maxHeadingLevel: 4,
+			},
+			logo: {
+				light: './src/assets/angular-three.svg',
+				dark: './src/assets/angular-three-dark.svg',
+			},
+			social: {
+				github: 'https://github.com/angular-threejs/angular-three',
+			},
 			customCss: ['./src/tailwind.css'],
 			sidebar: [
 				{

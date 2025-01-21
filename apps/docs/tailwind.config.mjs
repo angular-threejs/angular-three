@@ -1,16 +1,17 @@
 import starlightPlugin from '@astrojs/starlight-tailwind';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
-// Generated color palettes - oxide
-const accent = { 200: '#feb3a6', 600: '#a60a00', 900: '#640300', 950: '#460b05' };
+// Generated color palettes - nebula
+const accent = { 200: '#e3b6ed', 600: '#8b00a3', 900: '#4e0e5b', 950: '#36113e' };
 const gray = {
-	100: '#f9f5f5',
-	200: '#f3ecea',
-	300: '#c8c0be',
-	400: '#978784',
-	500: '#635451',
-	700: '#423432',
-	800: '#302321',
-	900: '#1d1715',
+	100: '#f8f4fe',
+	200: '#f2e9fd',
+	300: '#c7bdd5',
+	400: '#9581ae',
+	500: '#614e78',
+	700: '#412e55',
+	800: '#2f1c42',
+	900: '#1c1425',
 };
 
 /** @type {import('tailwindcss').Config} */
@@ -19,6 +20,10 @@ export default {
 	theme: {
 		extend: {
 			colors: { accent, gray },
+			fontFamily: {
+				sans: ['Inter', ...defaultTheme.fontFamily.sans],
+				mono: ['DM Mono', ...defaultTheme.fontFamily.mono],
+			},
 		},
 	},
 	plugins: [starlightPlugin()],
