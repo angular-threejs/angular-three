@@ -4,10 +4,7 @@ import { getEntry, render } from 'astro:content';
 
 interface Props {
   class?: string;
-  snippets: {
-    name: string;
-    title?: string;
-  }[]
+  snippets: { name: string; title?: string; }[]
 }
 
 const { snippets, class: className = '' } = Astro.props;
