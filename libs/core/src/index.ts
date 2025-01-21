@@ -1,7 +1,7 @@
 export * from './lib/directives/args';
 export * from './lib/directives/parent';
 export * from './lib/directives/selection';
-// export * from './lib/html';
+export * from './lib/html';
 export * from './lib/instance';
 export * from './lib/loader';
 export * from './lib/loop';
