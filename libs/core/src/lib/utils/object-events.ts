@@ -1,4 +1,15 @@
-import { DestroyRef, Directive, effect, ElementRef, inject, Injector, model, output, Renderer2 } from '@angular/core';
+import {
+	computed,
+	DestroyRef,
+	Directive,
+	effect,
+	ElementRef,
+	inject,
+	Injector,
+	model,
+	output,
+	Renderer2,
+} from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import type * as THREE from 'three';
 import type { NgtEventHandlers, NgtThreeEvent } from '../types';
@@ -42,10 +53,22 @@ export class NgtObjectEvents {
 	wheel = output<NgtThreeEvent<WheelEvent>>();
 
 	// NOTE: we use model here to allow for the hostDirective host to set this value
-	ngtObjectEvents = model<ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined>();
+	ngtObjectEvents = model<
+		| ElementRef<THREE.Object3D>
+		| THREE.Object3D
+		| null
+		| undefined
+		| (() => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined)
+	>();
 
 	constructor() {
-		injectObjectEvents(this.ngtObjectEvents, {
+		const obj = computed(() => {
+			const ngtObject = this.ngtObjectEvents();
+			if (typeof ngtObject === 'function') return ngtObject();
+			return ngtObject;
+		});
+
+		injectObjectEvents(obj, {
 			click: this.emitEvent('click'),
 			dblclick: this.emitEvent('dblclick'),
 			contextmenu: this.emitEvent('contextmenu'),
