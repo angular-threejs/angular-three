@@ -38,8 +38,8 @@ export class NgtsPrismGeometry {
 	vertices = input.required<Array<THREE.Vector2 | [number, number]>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	parameters = computed(() => ({ ...this.options(), depth: this.options().height }));
-	shape = computed(() => {
+	protected parameters = computed(() => ({ ...this.options(), depth: this.options().height }));
+	protected shape = computed(() => {
 		const vertices = this.vertices();
 		const interpolatedVertices = vertices.map((v) =>
 			is.three<THREE.Vector2>(v, 'isVector2') ? v : new THREE.Vector2(...v),

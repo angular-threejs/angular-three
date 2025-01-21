@@ -47,7 +47,7 @@ const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> &
 })
 export class NgtsGrid {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'planeArgs',
 		'cellSize',
 		'cellThickness',
@@ -69,10 +69,23 @@ export class NgtsGrid {
 	private upVector = new THREE.Vector3(0, 1, 0);
 	private zeroVector = new THREE.Vector3(0, 0, 0);
 
-	planeArgs = pick(this.options, 'planeArgs');
-	side = pick(this.options, 'side');
-	uniforms = computed(() => {
-		const {
+	protected planeArgs = pick(this.options, 'planeArgs');
+	protected side = pick(this.options, 'side');
+
+	private cellSize = pick(this.options, 'cellSize');
+	private sectionSize = pick(this.options, 'sectionSize');
+	private cellColor = pick(this.options, 'cellColor');
+	private sectionColor = pick(this.options, 'sectionColor');
+	private cellThickness = pick(this.options, 'cellThickness');
+	private sectionThickness = pick(this.options, 'sectionThickness');
+	private fadeDistance = pick(this.options, 'fadeDistance');
+	private fadeStrength = pick(this.options, 'fadeStrength');
+	private fadeFrom = pick(this.options, 'fadeFrom');
+	private infiniteGrid = pick(this.options, 'infiniteGrid');
+	private followCamera = pick(this.options, 'followCamera');
+
+	protected uniforms = computed(() => {
+		const [
 			cellSize,
 			sectionSize,
 			cellColor,
@@ -84,7 +97,20 @@ export class NgtsGrid {
 			fadeFrom,
 			infiniteGrid,
 			followCamera,
-		} = this.options();
+		] = [
+			this.cellSize(),
+			this.sectionSize(),
+			this.cellColor(),
+			this.sectionColor(),
+			this.cellThickness(),
+			this.sectionThickness(),
+			this.fadeDistance(),
+			this.fadeStrength(),
+			this.fadeFrom(),
+			this.infiniteGrid(),
+			this.followCamera(),
+		];
+
 		return {
 			cellSize,
 			sectionSize,

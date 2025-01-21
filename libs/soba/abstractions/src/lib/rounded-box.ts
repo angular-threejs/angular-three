@@ -54,7 +54,7 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 	selector: 'ngts-rounded-box',
 	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
-			<ngt-extrude-geometry #geometry *args="[shape(), params()]" />
+			<ngt-extrude-geometry #geometry *args="[shape(), geometryParameters()]" />
 			<ng-content />
 		</ngt-mesh>
 	`,
@@ -84,7 +84,7 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 })
 export class NgtsRoundedBox {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'width',
 		'height',
 		'depth',
@@ -111,7 +111,7 @@ export class NgtsRoundedBox {
 		const [width, height, radius] = [this.width(), this.height(), this.radius()];
 		return createShape(width, height, radius);
 	});
-	protected params = computed(() => {
+	protected geometryParameters = computed(() => {
 		const [depth, radius, smoothness, bevelSegments, steps] = [
 			this.depth(),
 			this.radius(),
@@ -135,11 +135,7 @@ export class NgtsRoundedBox {
 		extend({ ExtrudeGeometry, Mesh });
 
 		const objectEvents = inject(NgtObjectEvents, { host: true });
-
-		effect(() => {
-			const mesh = this.meshRef().nativeElement;
-			objectEvents.ngtObjectEvents.set(mesh);
-		});
+		objectEvents.ngtObjectEvents.set(this.meshRef);
 
 		effect(() => {
 			const geometry = this.geometryRef()?.nativeElement;

@@ -69,12 +69,11 @@ export class NgtsLine {
 	points =
 		input.required<Array<THREE.Vector3 | THREE.Vector2 | [number, number, number] | [number, number] | number>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['color', 'vertexColors', 'lineWidth', 'segments', 'linewidth', 'dashed']);
+	protected parameters = omit(this.options, ['color', 'vertexColors', 'lineWidth', 'segments', 'linewidth', 'dashed']);
 
 	lineRef = viewChild<ElementRef<Line2 | LineSegments2>>('line');
 
 	private store = injectStore();
-	private size = this.store.size;
 
 	private segments = pick(this.options, 'segments');
 	private vertexColors = pick(this.options, 'vertexColors');
@@ -82,17 +81,18 @@ export class NgtsLine {
 	protected dashed = pick(this.options, 'dashed');
 	protected color = pick(this.options, 'color');
 	protected vertex = computed(() => Boolean(this.vertexColors()));
-	protected resolution = computed(() => [this.size().width, this.size().height]);
+	protected resolution = computed(() => [this.store.size.width(), this.store.size.height()]);
 
 	private lineWidth = pick(this.options, 'lineWidth');
 	private linewidth = pick(this.options, 'linewidth');
 
-	line2 = computed(() => (this.segments() ? new LineSegments2() : new Line2()));
-	lineMaterial = new LineMaterial();
+	protected line2 = computed(() => (this.segments() ? new LineSegments2() : new Line2()));
+	protected lineMaterial = new LineMaterial();
 
 	protected actualLineWidth = computed(() => this.linewidth() ?? this.lineWidth() ?? 1);
 	protected itemSize = computed(() => ((this.vertexColors()?.[0] as number[] | undefined)?.length === 4 ? 4 : 3));
 
+	// other Line components access this
 	lineGeometry = computed(() => {
 		const geom = this.segments() ? new LineSegmentsGeometry() : new LineGeometry();
 		const pValues = this.points().map((p) => {

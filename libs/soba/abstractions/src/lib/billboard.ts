@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { extend, injectBeforeRender, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Group, Quaternion } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 
 export interface NgtsBillboardOptions extends Partial<NgtThreeElements['ngt-group']> {
 	follow?: boolean;
@@ -38,7 +39,7 @@ const defaultOptions: NgtsBillboardOptions = {
 })
 export class NgtsBillboard {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['follow', 'lockX', 'lockY', 'lockZ']);
+	protected parameters = omit(this.options, ['follow', 'lockX', 'lockY', 'lockZ']);
 
 	groupRef = viewChild.required<ElementRef<Group>>('group');
 	innerRef = viewChild.required<ElementRef<Group>>('inner');
@@ -46,7 +47,7 @@ export class NgtsBillboard {
 	constructor() {
 		extend({ Group });
 
-		const q = new Quaternion();
+		const q = new THREE.Quaternion();
 		injectBeforeRender(({ camera }) => {
 			const [{ follow, lockX, lockY, lockZ }, group, inner] = [
 				this.options(),

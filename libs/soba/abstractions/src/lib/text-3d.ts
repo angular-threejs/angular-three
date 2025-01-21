@@ -81,7 +81,7 @@ export class NgtsText3D {
 		'curveSegments',
 	]);
 
-	textArgs = computed(() => {
+	protected textArgs = computed(() => {
 		const font = this.loadedFont();
 		if (!font) return null;
 

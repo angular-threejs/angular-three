@@ -77,20 +77,19 @@ const defaultOptions: NgtsTextOptions = {
 export class NgtsText {
 	text = input.required<string>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['font', 'fontSize', 'sdfGlyphSize', 'anchorX', 'anchorY', 'characters']);
+	protected parameters = omit(this.options, ['font', 'fontSize', 'sdfGlyphSize', 'anchorX', 'anchorY', 'characters']);
 
 	synced = output<Text>();
 
 	private store = injectStore();
-	private invalidate = this.store.invalidate;
 
 	private characters = pick(this.options, 'characters');
 
-	font = pick(this.options, 'font');
-	anchorX = pick(this.options, 'anchorX');
-	anchorY = pick(this.options, 'anchorY');
-	sdfGlyphSize = pick(this.options, 'sdfGlyphSize');
-	fontSize = pick(this.options, 'fontSize');
+	protected font = pick(this.options, 'font');
+	protected anchorX = pick(this.options, 'anchorX');
+	protected anchorY = pick(this.options, 'anchorY');
+	protected sdfGlyphSize = pick(this.options, 'sdfGlyphSize');
+	protected fontSize = pick(this.options, 'fontSize');
 
 	troikaMesh = new Text();
 
@@ -100,14 +99,14 @@ export class NgtsText {
 		});
 
 		effect(() => {
-			const [font, characters, invalidate] = [this.font(), this.characters(), this.invalidate()];
+			const [font, characters, invalidate] = [this.font(), this.characters(), this.store.invalidate()];
 			if (font) {
 				preloadFont({ font, characters }, () => invalidate());
 			}
 		});
 
 		effect(() => {
-			const [invalidate] = [this.invalidate(), this.text(), this.options()];
+			const [invalidate] = [this.store.invalidate(), this.text(), this.options()];
 			this.troikaMesh.sync(() => {
 				invalidate();
 				this.synced.emit(this.troikaMesh);

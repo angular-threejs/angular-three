@@ -50,13 +50,13 @@ export class NgtsGradientTexture {
 	stops = input.required<Array<number>>();
 	colors = input.required<Array<THREE.ColorRepresentation>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['size', 'width', 'type', 'innerCircleRadius', 'outerCircleRadius']);
+	protected parameters = omit(this.options, ['size', 'width', 'type', 'innerCircleRadius', 'outerCircleRadius']);
 
-	private store = injectStore();
-	outputColorSpace = this.store.gl.outputColorSpace;
 	private document = inject(DOCUMENT);
+	private store = injectStore();
+	protected outputColorSpace = this.store.gl.outputColorSpace;
 
-	canvas = computed(() => {
+	protected canvas = computed(() => {
 		const canvas = this.document.createElement('canvas');
 		const context = canvas.getContext('2d')!;
 		const [{ width, size, type, outerCircleRadius, innerCircleRadius }, stops, colors] = [

@@ -29,13 +29,13 @@ export class NgtsCubicBezierLine {
 	midA = input.required<THREE.Vector3 | [number, number, number]>();
 	midB = input.required<THREE.Vector3 | [number, number, number]>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['segments']);
+	protected parameters = omit(this.options, ['segments']);
 
 	line = viewChild.required(NgtsLine);
 
 	private segments = pick(this.options, 'segments');
 
-	points = computed(() => {
+	protected points = computed(() => {
 		const [start, end, midA, midB, segments] = [this.start(), this.end(), this.midA(), this.midB(), this.segments()];
 		const startV = is.three<THREE.Vector3>(start, 'isVector3') ? start : new THREE.Vector3(...start);
 		const endV = is.three<THREE.Vector3>(end, 'isVector3') ? end : new THREE.Vector3(...end);

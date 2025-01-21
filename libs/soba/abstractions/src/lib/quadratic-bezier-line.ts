@@ -28,13 +28,13 @@ export class NgtsQuadraticBezierLine {
 	end = input<THREE.Vector3 | [number, number, number]>([0, 0, 0]);
 	mid = input<THREE.Vector3 | [number, number, number]>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['segments']);
+	protected parameters = omit(this.options, ['segments']);
 
 	private segments = pick(this.options, 'segments');
 
 	line = viewChild.required(NgtsLine);
 
-	points = computed(() => this.getPoints(this.start(), this.end(), this.mid(), this.segments()));
+	protected points = computed(() => this.getPoints(this.start(), this.end(), this.mid(), this.segments()));
 
 	private curve = new THREE.QuadraticBezierCurve3();
 

@@ -68,7 +68,14 @@ export default defineConfig({
 		plugins: [includeContentPlugin()],
 	},
 	integrations: [
-		analogjsangular(),
+		analogjsangular({
+			vite: {
+				transformFilter: (_, id) => {
+					// we only transform files in components/scenes
+					return id.includes('components/scenes');
+				},
+			},
+		}),
 		starlight({
 			title: 'Angular Three',
 			plugins: [
