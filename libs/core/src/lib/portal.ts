@@ -39,7 +39,7 @@ import { updateCamera } from './utils/update';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtPortalBeforeRender {
+export class NgtPortalAutoRender {
 	private portalStore = injectStore({ host: true });
 	private parentStore = injectStore({ skipSelf: true });
 	private portal = inject(NgtPortal, { host: true });

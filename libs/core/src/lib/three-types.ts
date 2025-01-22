@@ -33,6 +33,10 @@ export type NgtMathProperties<P> = {
 	[K in keyof P as P[K] extends NgtMathTypes ? K : never]: P[K] extends NgtMathTypes ? NgtMathType<P[K]> : never;
 };
 
+export type NgtNullableRaycast<P> = {
+	[K in keyof P as K extends 'raycast' ? K : never]: K extends 'raycast' ? P[K] | null : never;
+};
+
 export type NgtVector2 = NgtMathType<THREE.Vector2>;
 export type NgtVector3 = NgtMathType<THREE.Vector3>;
 export type NgtVector4 = NgtMathType<THREE.Vector4>;
@@ -100,7 +104,8 @@ export interface NgtNodeEventListener<
 export type NgtElementProperties<
 	TConstructor extends NgtConstructorRepresentation,
 	TInstance = InstanceType<TConstructor>,
-> = Partial<NgtOverwrite<TInstance, NgtMathProperties<TInstance>>> & NgtNodeElement<TConstructor, TInstance>;
+> = Partial<NgtOverwrite<TInstance, NgtMathProperties<TInstance> & NgtNullableRaycast<TInstance>>> &
+	NgtNodeElement<TConstructor, TInstance>;
 
 export type NgtThreeElement<TConstructor extends NgtConstructorRepresentation> = NgtMutable<
 	NgtElementProperties<TConstructor>
