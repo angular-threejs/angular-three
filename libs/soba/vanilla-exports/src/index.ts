@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import {
 	BlurPass,
 	CausticsMaterial,
@@ -18,15 +19,12 @@ import {
 	SoftShadowMaterial,
 	SpotLightMaterial,
 } from '@pmndrs/vanilla';
-import { NgtMaterial } from 'angular-three';
+import { NgtThreeElement } from 'angular-three';
 
-export type NgtSpotLightMaterial = NgtMaterial<InstanceType<typeof SpotLightMaterial>, typeof SpotLightMaterial>;
-export type NgtSoftShadowMaterial = NgtMaterial<InstanceType<typeof SoftShadowMaterial>, typeof SoftShadowMaterial>;
-export type NgtCausticsProjectionMaterial = NgtMaterial<
-	CausticsProjectionMaterialType,
-	[CausticsProjectionMaterialType]
->;
-export type NgtMeshPortalMaterial = NgtMaterial<InstanceType<typeof MeshPortalMaterial>, typeof MeshPortalMaterial>;
+export type NgtSpotLightMaterial = NgtThreeElement<typeof SpotLightMaterial>;
+export type NgtSoftShadowMaterial = NgtThreeElement<typeof SoftShadowMaterial>;
+export type NgtCausticsProjectionMaterial = NgtThreeElement<Type<CausticsProjectionMaterialType>>;
+export type NgtMeshPortalMaterial = NgtThreeElement<typeof MeshPortalMaterial>;
 
 declare global {
 	interface HTMLElementTagNameMap {

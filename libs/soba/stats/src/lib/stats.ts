@@ -26,14 +26,13 @@ export class NgtsStats {
 
 		const document = inject(DOCUMENT);
 		const store = injectStore();
-		const gl = store.select('gl');
 
 		const stats = computed(() => {
-			const _gl = gl();
-			if (!_gl) return null;
+			const gl = store.gl();
+			if (!gl) return null;
 
 			const stats = new Stats({ ...untracked(statsOptions) });
-			void stats.init(_gl);
+			void stats.init(gl);
 			return stats;
 		});
 
