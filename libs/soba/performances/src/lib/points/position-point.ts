@@ -1,23 +1,23 @@
 import { ElementRef } from '@angular/core';
-import { NgtObject3DNode, resolveRef } from 'angular-three';
-import { Color, Group, Intersection, Matrix4, Points, Ray, Raycaster, Sphere, Vector3 } from 'three';
+import { NgtThreeElement, resolveRef } from 'angular-three';
+import * as THREE from 'three';
 
-export type NgtPositionPoint = NgtObject3DNode<PositionPoint, typeof PositionPoint>;
+export type NgtPositionPoint = NgtThreeElement<typeof PositionPoint>;
 
-const _inverseMatrix = new Matrix4();
-const _ray = new Ray();
-const _sphere = new Sphere();
-const _position = new Vector3();
+const _inverseMatrix = new THREE.Matrix4();
+const _ray = new THREE.Ray();
+const _sphere = new THREE.Sphere();
+const _position = new THREE.Vector3();
 
-export class PositionPoint extends Group {
+export class PositionPoint extends THREE.Group {
 	size: number;
-	color: Color;
-	instance: ElementRef<Points> | Points | null | undefined;
+	color: THREE.Color;
+	instance: ElementRef<THREE.Points> | THREE.Points | null | undefined;
 
 	constructor() {
 		super();
 		this.size = 0;
-		this.color = new Color('white');
+		this.color = new THREE.Color('white');
 		this.instance = undefined;
 	}
 
@@ -26,7 +26,7 @@ export class PositionPoint extends Group {
 		return resolveRef(this.instance)?.geometry;
 	}
 
-	override raycast(raycaster: Raycaster, intersects: Intersection[]) {
+	override raycast(raycaster: THREE.Raycaster, intersects: THREE.Intersection[]) {
 		const parent = resolveRef(this.instance);
 		if (!parent || !parent.geometry) return;
 		const instanceId = parent.userData['instances'].indexOf(this);
@@ -45,13 +45,13 @@ export class PositionPoint extends Group {
 		const rayPointDistanceSq = _ray.distanceSqToPoint(this.position);
 
 		if (rayPointDistanceSq < localThresholdSq) {
-			const intersectPoint = new Vector3();
+			const intersectPoint = new THREE.Vector3();
 			_ray.closestPointToPoint(this.position, intersectPoint);
 			intersectPoint.applyMatrix4(this.matrixWorld);
 			const distance = raycaster.ray.origin.distanceTo(intersectPoint);
 			if (distance < raycaster.near || distance > raycaster.far) return;
 			intersects.push({
-				distance: distance,
+				distance,
 				distanceToRay: Math.sqrt(rayPointDistanceSq),
 				point: intersectPoint,
 				index: instanceId,

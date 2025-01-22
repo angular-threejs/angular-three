@@ -9,9 +9,10 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, injectBeforeRender, NgtPoints, omit, pick, resolveRef } from 'angular-three';
+import { checkUpdate, extend, injectBeforeRender, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BufferAttribute, BufferGeometry, DynamicDrawUsage, Matrix4, Points, Vector3 } from 'three';
+import * as THREE from 'three';
+import { BufferAttribute, BufferGeometry, Points } from 'three';
 import { NgtPositionPoint, PositionPoint } from './position-point';
 
 @Component({
@@ -29,7 +30,7 @@ export class NgtsPoint {
 
 	positionPointRef = viewChild.required<ElementRef<PositionPoint>>('positionPoint');
 
-	points = inject(NgtsPointsInstances);
+	protected points = inject(NgtsPointsInstances);
 
 	constructor() {
 		extend({ PositionPoint });
@@ -85,7 +86,7 @@ export class NgtsPointsBuffer {
 	stride = input<2 | 3>(3);
 	options = input({} as Partial<NgtPositionPoint>);
 
-	pointsRef = viewChild.required<ElementRef<Points>>('points');
+	pointsRef = viewChild.required<ElementRef<THREE.Points>>('points');
 
 	constructor() {
 		extend({ Points, BufferAttribute, BufferGeometry });
@@ -101,13 +102,13 @@ export class NgtsPointsBuffer {
 		});
 	}
 
-	protected readonly DynamicDrawUsage = DynamicDrawUsage;
+	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 }
 
-const parentMatrix = new Matrix4();
-const position = new Vector3();
+const parentMatrix = new THREE.Matrix4();
+const position = new THREE.Vector3();
 
-export interface NgtsPointsInstancesOptions extends Partial<NgtPoints> {
+export interface NgtsPointsInstancesOptions extends Partial<NgtThreeElements['ngt-points']> {
 	range?: number;
 	limit: number;
 }
@@ -157,7 +158,7 @@ export class NgtsPointsInstances {
 	options = input(defaultInstancesOptions, { transform: mergeInputs(defaultInstancesOptions) });
 	parameters = omit(this.options, ['limit', 'range']);
 
-	pointsRef = viewChild.required<ElementRef<Points>>('points');
+	pointsRef = viewChild.required<ElementRef<THREE.Points>>('points');
 
 	private limit = pick(this.options, 'limit');
 
@@ -224,5 +225,5 @@ export class NgtsPointsInstances {
 		};
 	}
 
-	protected readonly DynamicDrawUsage = DynamicDrawUsage;
+	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 }

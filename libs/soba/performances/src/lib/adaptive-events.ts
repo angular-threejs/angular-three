@@ -5,12 +5,11 @@ import { injectStore } from 'angular-three';
 export class NgtsAdaptiveEvents {
 	constructor() {
 		const store = injectStore();
-		const current = store.select('performance', 'current');
 		const currentEnabled = store.snapshot.events.enabled;
 
 		effect((onCleanup) => {
-			const _current = current();
-			onCleanup(() => store.snapshot.setEvents({ enabled: _current === 1 }));
+			const current = store.performance.current();
+			onCleanup(() => store.snapshot.setEvents({ enabled: current === 1 }));
 		});
 
 		inject(DestroyRef).onDestroy(() => {

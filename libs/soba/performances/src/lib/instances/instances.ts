@@ -9,18 +9,19 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, injectBeforeRender, NgtInstancedMesh, omit, pick, resolveRef } from 'angular-three';
+import { checkUpdate, extend, injectBeforeRender, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { setUpdateRange } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { DynamicDrawUsage, InstancedBufferAttribute, InstancedMesh, Matrix4, Quaternion, Vector3 } from 'three';
+import * as THREE from 'three';
+import { InstancedBufferAttribute, InstancedMesh } from 'three';
 import { NgtPositionMesh, PositionMesh } from './position-mesh';
 
-const parentMatrix = new Matrix4();
-const instanceMatrix = new Matrix4();
-const tempMatrix = new Matrix4();
-const translation = new Vector3();
-const rotation = new Quaternion();
-const scale = new Vector3();
+const parentMatrix = new THREE.Matrix4();
+const instanceMatrix = new THREE.Matrix4();
+const tempMatrix = new THREE.Matrix4();
+const translation = new THREE.Vector3();
+const rotation = new THREE.Quaternion();
+const scale = new THREE.Vector3();
 
 @Component({
 	selector: 'ngts-instance',
@@ -35,7 +36,7 @@ const scale = new Vector3();
 export class NgtsInstance {
 	options = input({} as Partial<NgtPositionMesh>);
 
-	instances = inject(NgtsInstances);
+	protected instances = inject(NgtsInstances);
 
 	positionMeshRef = viewChild.required<ElementRef<PositionMesh>>('positionMesh');
 
@@ -49,7 +50,7 @@ export class NgtsInstance {
 	}
 }
 
-export interface NgtsInstancesOptions extends Partial<NgtInstancedMesh> {
+export interface NgtsInstancesOptions extends Partial<NgtThreeElements['ngt-instanced-mesh']> {
 	range?: number;
 	limit: number;
 	frames: number;
@@ -91,12 +92,12 @@ const defaultOptions: NgtsInstancesOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsInstances {
-	protected readonly DynamicDrawUsage = DynamicDrawUsage;
+	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['limit', 'frames', 'range']);
 
-	instancedMeshRef = viewChild.required<ElementRef<InstancedMesh>>('instancedMesh');
+	instancedMeshRef = viewChild.required<ElementRef<THREE.InstancedMesh>>('instancedMesh');
 
 	private limit = pick(this.options, 'limit');
 

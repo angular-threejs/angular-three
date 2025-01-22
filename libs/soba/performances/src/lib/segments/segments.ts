@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, NgtVector3, omit, pick, resolveRef, vector3 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { ColorRepresentation, Vector2 } from 'three';
+import * as THREE from 'three';
 import { Line2, LineMaterial, LineMaterialParameters, LineSegmentsGeometry } from 'three-stdlib';
 import { SegmentObject } from './segment-object';
 
@@ -26,14 +26,14 @@ import { SegmentObject } from './segment-object';
 export class NgtsSegment {
 	start = input.required<NgtVector3>();
 	end = input.required<NgtVector3>();
-	color = input<ColorRepresentation>();
+	color = input<THREE.ColorRepresentation>();
 
-	normalizedStart = vector3(this.start);
-	normalizedEnd = vector3(this.end);
+	protected normalizedStart = vector3(this.start);
+	protected normalizedEnd = vector3(this.end);
 
 	segmentRef = viewChild.required<ElementRef<SegmentObject>>('segment');
 
-	segments = inject(NgtsSegments);
+	private segments = inject(NgtsSegments);
 
 	constructor() {
 		extend({ SegmentObject });
@@ -70,7 +70,7 @@ const defaultSegmentsOptions: NgtsSegmentsOptions = {
 })
 export class NgtsSegments {
 	options = input(defaultSegmentsOptions, { transform: mergeInputs(defaultSegmentsOptions) });
-	parameters = omit(this.options, ['limit', 'lineWidth']);
+	private parameters = omit(this.options, ['limit', 'lineWidth']);
 
 	private lineWidth = pick(this.options, 'lineWidth');
 	private limit = pick(this.options, 'limit');
@@ -79,23 +79,24 @@ export class NgtsSegments {
 
 	segments: Array<ElementRef<SegmentObject> | SegmentObject> = [];
 
-	line = new Line2();
-	material = new LineMaterial();
-	geometry = new LineSegmentsGeometry();
-	resolution = new Vector2(512, 512);
+	protected line = new Line2();
+	protected material = new LineMaterial();
+	protected geometry = new LineSegmentsGeometry();
+	private resolution = new THREE.Vector2(512, 512);
 
-	materialParameters = computed(() => ({
+	protected materialParameters = computed(() => ({
 		vertexColors: true,
 		resolution: this.resolution,
 		linewidth: this.lineWidth(),
 		...this.parameters(),
 	}));
 
-	positions = computed(() => {
+	private positions = computed(() => {
 		const limit = this.limit();
 		return Array.from({ length: limit * 6 }, () => 0);
 	});
-	colors = computed(() => {
+
+	private colors = computed(() => {
 		const limit = this.limit();
 		return Array.from({ length: limit * 6 }, () => 0);
 	});

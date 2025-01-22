@@ -125,6 +125,10 @@ export type NgtThreeElementsMap = {
 	 */
 	'ngt-object3D': Extract<keyof ThreeExports, 'Object3D'>;
 	/**
+	 * @from node_modules/@types/three/src/objects/LOD.d.ts
+	 */
+	'ngt-lOD': Extract<keyof ThreeExports, 'LOD'>;
+	/**
 	 * @from node_modules/@types/three/src/objects/Mesh.d.ts
 	 */
 	'ngt-mesh': Extract<keyof ThreeExports, 'Mesh'>;

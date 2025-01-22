@@ -1,32 +1,21 @@
 import { ElementRef } from '@angular/core';
-import { NgtObject3DNode, resolveRef } from 'angular-three';
-import {
-	BufferGeometry,
-	Color,
-	Group,
-	InstancedMesh,
-	Intersection,
-	Material,
-	Matrix4,
-	Mesh,
-	MeshBasicMaterial,
-	Raycaster,
-} from 'three';
+import { NgtThreeElement, resolveRef } from 'angular-three';
+import * as THREE from 'three';
 
-export type NgtPositionMesh = NgtObject3DNode<PositionMesh, typeof PositionMesh>;
+export type NgtPositionMesh = NgtThreeElement<typeof PositionMesh>;
 
-const _instanceLocalMatrix = new Matrix4();
-const _instanceWorldMatrix = new Matrix4();
-const _instanceIntersects: Intersection[] = [];
-const _mesh = new Mesh<BufferGeometry, MeshBasicMaterial>();
+const _instanceLocalMatrix = new THREE.Matrix4();
+const _instanceWorldMatrix = new THREE.Matrix4();
+const _instanceIntersects: THREE.Intersection[] = [];
+const _mesh = new THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>();
 
-export class PositionMesh extends Group {
-	color: Color;
-	instance: ElementRef<InstancedMesh> | InstancedMesh | null | undefined;
+export class PositionMesh extends THREE.Group {
+	color: THREE.Color;
+	instance: ElementRef<THREE.InstancedMesh> | THREE.InstancedMesh | null | undefined;
 
 	constructor() {
 		super();
-		this.color = new Color('white');
+		this.color = new THREE.Color('white');
 		this.instance = undefined;
 	}
 
@@ -36,7 +25,7 @@ export class PositionMesh extends Group {
 	}
 
 	// And this will allow the virtual instance to receive events
-	override raycast(raycaster: Raycaster, intersects: Intersection[]) {
+	override raycast(raycaster: THREE.Raycaster, intersects: THREE.Intersection[]) {
 		const parent = resolveRef(this.instance);
 		if (!parent) return;
 		if (!parent.geometry || !parent.material) return;
@@ -51,7 +40,7 @@ export class PositionMesh extends Group {
 		// the mesh represents this single instance
 		_mesh.matrixWorld = _instanceWorldMatrix;
 		// raycast side according to instance material
-		if (parent.material instanceof Material) _mesh.material.side = parent.material.side;
+		if (parent.material instanceof THREE.Material) _mesh.material.side = parent.material.side;
 		else _mesh.material.side = parent.material[0].side;
 		_mesh.raycast(raycaster, _instanceIntersects);
 		// process the result of raycast

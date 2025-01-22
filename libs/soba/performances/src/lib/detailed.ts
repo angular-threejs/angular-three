@@ -7,11 +7,12 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, injectBeforeRender, NgtLOD, omit, pick } from 'angular-three';
+import { extend, getInstanceState, injectBeforeRender, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
+import * as THREE from 'three';
 import { LOD } from 'three';
 
-export interface NgtsDetailedOptions extends Partial<NgtLOD> {
+export interface NgtsDetailedOptions extends Partial<NgtThreeElements['ngt-lOD']> {
 	hysteresis: number;
 }
 
@@ -32,9 +33,9 @@ const defaultOptions: NgtsDetailedOptions = {
 export class NgtsDetailed {
 	distances = input.required<number[]>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['hysteresis']);
+	protected parameters = omit(this.options, ['hysteresis']);
 
-	lodRef = viewChild.required<ElementRef<LOD>>('lod');
+	lodRef = viewChild.required<ElementRef<THREE.LOD>>('lod');
 	private hysteresis = pick(this.options, 'hysteresis');
 
 	constructor() {
@@ -42,9 +43,9 @@ export class NgtsDetailed {
 
 		effect(() => {
 			const lod = this.lodRef().nativeElement;
-			const localState = getLocalState(lod);
-			if (!localState) return;
-			const [, distances, hysteresis] = [localState.objects(), this.distances(), this.hysteresis()];
+			const instanceState = getInstanceState(lod);
+			if (!instanceState) return;
+			const [, distances, hysteresis] = [instanceState.objects(), this.distances(), this.hysteresis()];
 			lod.levels.length = 0;
 			lod.children.forEach((object, index) => {
 				lod.levels.push({ object, distance: distances[index], hysteresis });

@@ -7,35 +7,30 @@ export class NgtsAdaptiveDpr {
 
 	constructor() {
 		const store = injectStore();
-		const gl = store.select('gl');
-		const active = store.select('internal', 'active');
-		const current = store.select('performance', 'current');
-		const initialDpr = store.select('viewport', 'initialDpr');
-		const setDpr = store.select('setDpr');
 
 		effect(() => {
-			const [_current, pixelated, domElement, _setDpr, _initialDpr] = [
-				current(),
+			const [current, pixelated, domElement, setDpr, initialDpr] = [
+				store.performance.current(),
 				untracked(this.pixelated),
-				untracked(gl).domElement,
-				untracked(setDpr),
-				untracked(initialDpr),
+				store.snapshot.gl.domElement,
+				store.snapshot.setDpr,
+				store.snapshot.viewport.initialDpr,
 			];
 
-			_setDpr(_current * _initialDpr);
-			if (pixelated && domElement) domElement.style.imageRendering = _current === 1 ? 'auto' : 'pixelated';
+			setDpr(current * initialDpr);
+			if (pixelated && domElement) domElement.style.imageRendering = current === 1 ? 'auto' : 'pixelated';
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			const [domElement, _active, _setDpr, _initialDpr, pixelated] = [
-				untracked(gl).domElement,
-				untracked(active),
-				untracked(setDpr),
-				untracked(initialDpr),
+			const [domElement, active, setDpr, initialDpr, pixelated] = [
+				store.snapshot.gl.domElement,
+				store.snapshot.internal.active,
+				store.snapshot.setDpr,
+				store.snapshot.viewport.initialDpr,
 				untracked(this.pixelated),
 			];
 
-			if (_active) _setDpr(_initialDpr);
+			if (active) setDpr(initialDpr);
 			if (pixelated && domElement) domElement.style.imageRendering = 'auto';
 		});
 	}

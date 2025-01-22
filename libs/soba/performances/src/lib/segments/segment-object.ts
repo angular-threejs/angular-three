@@ -1,17 +1,17 @@
-import { NgtNode } from 'angular-three';
-import { Color, Vector3 } from 'three';
+import { NgtThreeElement } from 'angular-three';
+import * as THREE from 'three';
 
-export type NgtSegmentObject = NgtNode<SegmentObject, typeof SegmentObject>;
+export type NgtSegmentObject = NgtThreeElement<typeof SegmentObject>;
 
 export class SegmentObject {
-	color: Color;
-	start: Vector3;
-	end: Vector3;
+	color: THREE.Color;
+	start: THREE.Vector3;
+	end: THREE.Vector3;
 
 	constructor() {
-		this.color = new Color('white');
-		this.start = new Vector3(0, 0, 0);
-		this.end = new Vector3(0, 0, 0);
+		this.color = new THREE.Color('white');
+		this.start = new THREE.Vector3(0, 0, 0);
+		this.end = new THREE.Vector3(0, 0, 0);
 	}
 }
 
