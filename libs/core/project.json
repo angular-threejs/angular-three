@@ -22,6 +22,14 @@
 			},
 			"defaultConfiguration": "production"
 		},
+		"build-docs": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/apps/docs/node_modules/angular-three"],
+			"options": {
+				"project": "libs/core/ng-package-docs.json",
+				"tsConfig": "libs/core/tsconfig.lib.prod.json"
+			}
+		},
 		"test": {
 			"executor": "@analogjs/vitest-angular:test"
 		},

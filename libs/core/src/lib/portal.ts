@@ -30,27 +30,17 @@ import { omit, pick } from './utils/parameters';
 import { signalState, SignalState } from './utils/signal-state';
 import { updateCamera } from './utils/update';
 
-@Component({
-	selector: 'ngt-portal[autoRender]',
-	template: `
-		<!-- Without an element that receives pointer events state.pointer will always be 0/0 -->
-		<ngt-group (pointerover)="(undefined)" attach="none" />
-	`,
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+@Directive({ selector: 'ngt-portal[autoRender]' })
 export class NgtPortalAutoRender {
 	private portalStore = injectStore({ host: true });
 	private parentStore = injectStore({ skipSelf: true });
 	private portal = inject(NgtPortal, { host: true });
 
-	renderPriority = input(1, { alias: 'autoRender', transform: numberAttribute });
+	renderPriority = input(1, { alias: 'autoRender', transform: (value) => numberAttribute(value, 1) });
 
 	constructor() {
-		extend({ Group });
-
 		effect(() => {
-			this.portalStore.update((state) => ({ events: { ...state.events, priority: this.renderPriority() + 1 } }));
+			// this.portalStore.update((state) => ({ events: { ...state.events, priority: this.renderPriority() + 1 } }));
 		});
 
 		effect((onCleanup) => {
@@ -165,14 +155,32 @@ function mergeState(
 
 @Component({
 	selector: 'ngt-portal',
-	template: ``,
+	template: `
+		@if (portalRendered()) {
+			<!-- Without an element that receives pointer events state.pointer will always be 0/0 -->
+			<ngt-group (pointerover)="(undefined)" attach="none" />
+		}
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NGT_STORE,
 			useFactory: (previousStore: SignalState<NgtState>) => {
-				const store = signalState({ id: makeId() } as NgtState);
-				store.update(mergeState(previousStore, store, null!, new THREE.Vector2(), new THREE.Raycaster()));
+				const pointer = new THREE.Vector2();
+				const raycaster = new THREE.Raycaster();
+
+				const { id: _skipId, ...previousState } = previousStore.snapshot;
+
+				const store = signalState<NgtState>({
+					id: makeId(),
+					...previousState,
+					scene: null as unknown as THREE.Scene,
+					previousRoot: previousStore,
+					pointer,
+					raycaster,
+				});
+				store.update(mergeState(previousStore, store, null!, pointer, raycaster));
 				return store;
 			},
 			deps: [[new SkipSelf(), NGT_STORE]],
@@ -200,6 +208,8 @@ export class NgtPortal {
 	private portalViewRef?: EmbeddedViewRef<unknown>;
 
 	constructor() {
+		extend({ Group });
+
 		effect(() => {
 			let [container, anchor, content] = [this.container(), this.anchorRef(), this.contentRef(), this.previousStore()];
 

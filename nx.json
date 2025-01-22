@@ -5,6 +5,11 @@
 			"inputs": ["production", "^production"],
 			"cache": true
 		},
+		"build-docs": {
+			"dependsOn": ["^build-docs"],
+			"inputs": ["production", "^production"],
+			"cache": true
+		},
 		"generate-json": {
 			"inputs": [
 				"production-core",

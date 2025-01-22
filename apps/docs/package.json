@@ -13,7 +13,6 @@
 		"@astrojs/starlight": "^0.31.1",
 		"@astrojs/starlight-tailwind": "^3.0.0",
 		"@astrojs/tailwind": "^5.1.4",
-		"angular-three": "file:../../dist/libs/core",
 		"astro": "^5.1.5",
 		"sharp": "^0.33.5",
 		"starlight-blog": "^0.16.1",
@@ -28,9 +27,10 @@
 				"dependsOn": [
 					{
 						"projects": [
-							"core"
+							"core",
+							"soba"
 						],
-						"target": "build"
+						"target": "build-docs"
 					}
 				]
 			}

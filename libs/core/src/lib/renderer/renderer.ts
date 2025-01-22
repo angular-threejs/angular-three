@@ -766,7 +766,12 @@ export class NgtRenderer2 implements Renderer2 {
 							: typeof value === 'string'
 								? value.split('.')
 								: [value];
-				if (parent) this.appendChild(parent, el);
+				if (parent) {
+					// untrack this attach because this is during setProperty which is a reactive context
+					// attaching potentially updates signals which is not allowed
+					untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
+				}
+
 				return;
 			}
 

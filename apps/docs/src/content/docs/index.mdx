@@ -20,7 +20,7 @@ hero:
 ---
 
 import FloatingCodeBlock from '../../components/ui/floating-code-block.astro';
-import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
+import HudScene from '../../components/scenes/hud/hud';
 
 <section class="min-h-screen w-full flex justify-center items-center">
  <div class="h-full w-full grid grid-cols-8 gap-4">
@@ -34,7 +34,7 @@ import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
     APIs like <strong>Signal</strong>, and more
    </p>
    <div class="h-[200px] w-full">
-    <SimpleScene client:only />
+    <HudScene client:only />
    </div>
   </div>
   <FloatingCodeBlock
