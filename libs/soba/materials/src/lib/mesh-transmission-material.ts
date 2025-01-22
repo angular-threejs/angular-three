@@ -11,26 +11,26 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
-	getLocalState,
+	getInstanceState,
 	injectBeforeRender,
 	NgtAnyRecord,
 	NgtArgs,
 	NgtAttachable,
-	NgtMeshPhysicalMaterial,
+	NgtThreeElements,
 	omit,
 	pick,
 } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BackSide, Color, FrontSide, Mesh, NoToneMapping, Texture, ToneMapping } from 'three';
+import * as THREE from 'three';
 
 export type MeshTransmissionMaterialOptions = ConstructorParameters<typeof MeshTransmissionMaterial>[0];
 
-export type NgtsMeshTransmissionMaterialOptions = Partial<NgtMeshPhysicalMaterial> &
+export type NgtsMeshTransmissionMaterialOptions = Partial<NgtThreeElements['ngt-mesh-physical-material']> &
 	Omit<MeshTransmissionMaterialOptions, 'buffer' | 'anisotropicBlur' | 'samples' | 'transmissionSampler'> & {
 		anisotropicBlur?: number;
-		buffer?: Texture;
+		buffer?: THREE.Texture;
 		/** transmissionSampler, you can use the threejs transmission sampler texture that is
 		 *  generated once for all transmissive materials. The upside is that it can be faster if you
 		 *  use multiple MeshPhysical and Transmission materials, the downside is that transmissive materials
@@ -48,13 +48,13 @@ export type NgtsMeshTransmissionMaterialOptions = Partial<NgtMeshPhysicalMateria
 		/** Refraction samples, default: 6 */
 		samples: number;
 		/** Buffer scene background (can be a texture, a cubetexture or a color), default: null */
-		background?: Texture | Color;
+		background?: THREE.Texture | THREE.Color;
 	};
 
 const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 	transmissionSampler: false,
 	backside: false,
-	side: FrontSide,
+	side: THREE.FrontSide,
 	transmission: 1,
 	thickness: 0,
 	backsideThickness: 0,
@@ -87,7 +87,7 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 export class NgtsMeshTransmissionMaterial {
 	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'buffer',
 		'transmissionSampler',
 		'backside',
@@ -115,10 +115,10 @@ export class NgtsMeshTransmissionMaterial {
 	private backsideThickness = pick(this.options, 'backsideThickness');
 	private backsideEnvMapIntensity = pick(this.options, 'backsideEnvMapIntensity');
 
-	transmissionSampler = pick(this.options, 'transmissionSampler');
-	transmission = pick(this.options, 'transmission');
-	thickness = pick(this.options, 'thickness');
-	side = pick(this.options, 'side');
+	protected transmissionSampler = pick(this.options, 'transmissionSampler');
+	protected transmission = pick(this.options, 'transmission');
+	protected thickness = pick(this.options, 'thickness');
+	protected side = pick(this.options, 'side');
 
 	materialRef = viewChild<ElementRef<MeshTransmissionMaterial & MeshTransmissionMaterialOptions>>('material');
 
@@ -127,12 +127,12 @@ export class NgtsMeshTransmissionMaterial {
 	private fboBack = injectFBO(() => ({ width: this.backResolution() }));
 	private fboMain = injectFBO(() => ({ width: this.resolution() }));
 
-	bufferTexture = computed(() => this.buffer() || this.fboMain().texture);
-	anisotropicBlurOption = computed(() => this.anisotropicBlur() || this.anisotropy());
+	protected bufferTexture = computed(() => this.buffer() || this.fboMain().texture);
+	protected anisotropicBlurOption = computed(() => this.anisotropicBlur() || this.anisotropy());
 
 	private discardMaterial = new MeshDiscardMaterial();
 
-	material = computed(() => {
+	protected material = computed(() => {
 		const previousMaterial = untracked(this.materialRef)?.nativeElement;
 
 		if (previousMaterial) {
@@ -155,10 +155,10 @@ export class NgtsMeshTransmissionMaterial {
 			}
 		});
 
-		let oldBg: Texture | Color | null;
+		let oldBg: THREE.Texture | THREE.Color | null;
 		let oldEnvMapIntensity: number | undefined;
-		let oldTone: ToneMapping | undefined;
-		let parent: Mesh | undefined;
+		let oldTone: THREE.ToneMapping | undefined;
+		let parent: THREE.Mesh | undefined;
 		injectBeforeRender(({ clock, gl, scene, camera }) => {
 			const material = this.materialRef()?.nativeElement;
 			if (!material) return;
@@ -189,7 +189,7 @@ export class NgtsMeshTransmissionMaterial {
 			// Render only if the buffer matches the built-in and no transmission sampler is set
 			// @ts-expect-error - we know material.buffer is not just undefined | null
 			if (material.buffer === fboMain.texture && !transmissionSampler) {
-				parent = getLocalState(material)?.parent() as Mesh;
+				parent = getInstanceState(material)?.parent() as unknown as THREE.Mesh;
 
 				if (parent) {
 					// Save defaults
@@ -200,7 +200,7 @@ export class NgtsMeshTransmissionMaterial {
 					// Switch off tonemapping lest it double tone maps
 					// Save the current background and set the HDR as the new BG
 					// Use discardmaterial, the parent will be invisible, but it's shadows will still be cast
-					gl.toneMapping = NoToneMapping;
+					gl.toneMapping = THREE.NoToneMapping;
 					if (background) scene.background = background;
 					parent.material = this.discardMaterial;
 
@@ -213,7 +213,7 @@ export class NgtsMeshTransmissionMaterial {
 						Object.assign(parent.material, {
 							buffer: fboBack.texture,
 							thickness: backsideThickness,
-							side: BackSide,
+							side: THREE.BackSide,
 							envMapIntensity: backsideEnvMapIntensity,
 						});
 					}

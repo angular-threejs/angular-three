@@ -13,34 +13,21 @@ import {
 } from '@angular/core';
 import {
 	applyProps,
-	getLocalState,
+	getInstanceState,
 	injectBeforeRender,
 	injectStore,
 	NgtAnyRecord,
 	NgtArgs,
 	NgtAttachable,
-	NgtMeshStandardMaterial,
+	NgtThreeElements,
 	omit,
 	pick,
 } from 'angular-three';
 import { BlurPass, MeshReflectorMaterial } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	DepthFormat,
-	DepthTexture,
-	HalfFloatType,
-	LinearFilter,
-	Matrix4,
-	PerspectiveCamera,
-	Plane,
-	Texture,
-	UnsignedShortType,
-	Vector3,
-	Vector4,
-	WebGLRenderTarget,
-} from 'three';
+import * as THREE from 'three';
 
-export interface NgtsMeshReflectorMaterialOptions extends Partial<NgtMeshStandardMaterial> {
+export interface NgtsMeshReflectorMaterialOptions extends Partial<NgtThreeElements['ngt-mesh-standard-material']> {
 	resolution: number;
 	mixBlur: number;
 	mixStrength: number;
@@ -53,7 +40,7 @@ export interface NgtsMeshReflectorMaterialOptions extends Partial<NgtMeshStandar
 	distortion: number;
 	mixContrast: number;
 	reflectorOffset: number;
-	distortionMap?: Texture;
+	distortionMap?: THREE.Texture;
 }
 
 const defaultOptions: NgtsMeshReflectorMaterialOptions = {
@@ -102,7 +89,6 @@ export class NgtsMeshReflectorMaterial {
 	]);
 
 	private store = injectStore();
-	private gl = this.store.select('gl');
 
 	materialRef = viewChild<ElementRef<MeshReflectorMaterial>>('material');
 
@@ -130,18 +116,18 @@ export class NgtsMeshReflectorMaterial {
 	});
 	private hasBlur = computed(() => this.normalizedBlur()[0] + this.normalizedBlur()[1] > 0);
 
-	private reflectorPlane = new Plane();
-	private normal = new Vector3();
-	private reflectorWorldPosition = new Vector3();
-	private cameraWorldPosition = new Vector3();
-	private rotationMatrix = new Matrix4();
-	private lookAtPosition = new Vector3(0, 0, -1);
-	private clipPlane = new Vector4();
-	private view = new Vector3();
-	private target = new Vector3();
-	private q = new Vector4();
-	private textureMatrix = new Matrix4();
-	private virtualCamera = new PerspectiveCamera();
+	private reflectorPlane = new THREE.Plane();
+	private normal = new THREE.Vector3();
+	private reflectorWorldPosition = new THREE.Vector3();
+	private cameraWorldPosition = new THREE.Vector3();
+	private rotationMatrix = new THREE.Matrix4();
+	private lookAtPosition = new THREE.Vector3(0, 0, -1);
+	private clipPlane = new THREE.Vector4();
+	private view = new THREE.Vector3();
+	private target = new THREE.Vector3();
+	private q = new THREE.Vector4();
+	private textureMatrix = new THREE.Matrix4();
+	private virtualCamera = new THREE.PerspectiveCamera();
 
 	private reflectState = computed(() => {
 		const [
@@ -161,20 +147,20 @@ export class NgtsMeshReflectorMaterial {
 			},
 			blur,
 			hasBlur,
-		] = [this.gl(), this.reflectOptions(), this.normalizedBlur(), this.hasBlur()];
+		] = [this.store.gl(), this.reflectOptions(), this.normalizedBlur(), this.hasBlur()];
 
 		const renderTargetParameters = {
-			minFilter: LinearFilter,
-			magFilter: LinearFilter,
-			type: HalfFloatType,
+			minFilter: THREE.LinearFilter,
+			magFilter: THREE.LinearFilter,
+			type: THREE.HalfFloatType,
 		};
 
-		const fbo1 = new WebGLRenderTarget(resolution, resolution, renderTargetParameters);
+		const fbo1 = new THREE.WebGLRenderTarget(resolution, resolution, renderTargetParameters);
 		fbo1.depthBuffer = true;
-		fbo1.depthTexture = new DepthTexture(resolution, resolution);
-		fbo1.depthTexture.format = DepthFormat;
-		fbo1.depthTexture.type = UnsignedShortType;
-		const fbo2 = new WebGLRenderTarget(resolution, resolution, renderTargetParameters);
+		fbo1.depthTexture = new THREE.DepthTexture(resolution, resolution);
+		fbo1.depthTexture.format = THREE.DepthFormat;
+		fbo1.depthTexture.type = THREE.UnsignedShortType;
+		const fbo2 = new THREE.WebGLRenderTarget(resolution, resolution, renderTargetParameters);
 
 		const blurPass = new BlurPass({
 			gl,
@@ -263,10 +249,10 @@ export class NgtsMeshReflectorMaterial {
 			const material = this.materialRef()?.nativeElement;
 			if (!material) return;
 
-			const localState = getLocalState(material);
-			if (!localState) return;
+			const instanceState = getInstanceState(material);
+			if (!instanceState) return;
 
-			const parent = Reflect.get(material, 'parent') ?? untracked(localState.parent);
+			const parent = Reflect.get(material, 'parent') ?? untracked(instanceState.parent);
 			if (!parent) return;
 
 			const { fbo1, fbo2, blurPass } = this.reflectState();
@@ -294,10 +280,10 @@ export class NgtsMeshReflectorMaterial {
 		const material = this.materialRef()?.nativeElement;
 		if (!material) return;
 
-		const localState = getLocalState(material);
-		if (!localState) return;
+		const instanceState = getInstanceState(material);
+		if (!instanceState) return;
 
-		const parent = Reflect.get(material, 'parent') ?? untracked(localState.parent);
+		const parent = Reflect.get(material, 'parent') ?? untracked(instanceState.parent);
 		if (!parent) return;
 
 		const { camera } = this.store.snapshot;

@@ -1,24 +1,24 @@
 import { effect, Injector, Signal } from '@angular/core';
-import { injectLoader, injectStore, NgtLoaderResults } from 'angular-three';
+import { injectLoader, injectStore, is, NgtLoaderResults } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Texture, TextureLoader } from 'three';
+import * as THREE from 'three';
 
 function _injectTexture<TInput extends string[] | string | Record<string, string>>(
 	input: () => TInput,
-	{ onLoad, injector }: { onLoad?: (texture: Texture[]) => void; injector?: Injector } = {},
-): Signal<NgtLoaderResults<TInput, Texture> | null> {
+	{ onLoad, injector }: { onLoad?: (texture: THREE.Texture[]) => void; injector?: Injector } = {},
+): Signal<NgtLoaderResults<TInput, THREE.Texture> | null> {
 	return assertInjector(_injectTexture, injector, () => {
 		const store = injectStore();
-		const result = injectLoader(() => TextureLoader, input);
+		const result = injectLoader(() => THREE.TextureLoader, input);
 
 		effect(() => {
 			const textures = result();
 			if (!textures) return;
-			const gl = store.get('gl');
+			const gl = store.snapshot.gl;
 			if ('initTexture' in gl) {
 				const array = Array.isArray(textures)
 					? textures
-					: textures instanceof Texture
+					: is.three<THREE.Texture>(textures, 'isTexture')
 						? [textures]
 						: Object.values(textures);
 				if (onLoad) onLoad(array);
@@ -31,7 +31,7 @@ function _injectTexture<TInput extends string[] | string | Record<string, string
 }
 
 _injectTexture.preload = <TInput extends string[] | string | Record<string, string>>(input: () => TInput) => {
-	injectLoader.preload(() => TextureLoader, input);
+	injectLoader.preload(() => THREE.TextureLoader, input);
 };
 
 export type NgtsTextureLoader = typeof _injectTexture;

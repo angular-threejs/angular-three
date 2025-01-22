@@ -8,7 +8,7 @@ import {
 	input,
 } from '@angular/core';
 import { is, NgtAnyRecord, NgtArgs, NgtAttachable, omit, pick } from 'angular-three';
-import { Material } from 'three';
+import * as THREE from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 
 @Component({
@@ -23,7 +23,7 @@ import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 	imports: [NgtArgs],
 })
 export class NgtsCustomShaderMaterial {
-	baseMaterial = input.required<Material | typeof Material | ElementRef<Material>>();
+	baseMaterial = input.required<THREE.Material | typeof THREE.Material | ElementRef<THREE.Material>>();
 	attach = input<NgtAttachable>('material');
 	options = input({} as Omit<ConstructorParameters<typeof CustomShaderMaterial>[0], 'baseMaterial'>);
 	parameters = omit(this.options, ['fragmentShader', 'vertexShader', 'uniforms', 'cacheKey']);

@@ -1,14 +1,14 @@
 import { computed, Injector, Signal } from '@angular/core';
 import { injectLoader, NgtLoaderResults, NgtObjectMap } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Loader } from 'three';
+import * as THREE from 'three';
 import { DRACOLoader, GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
 
 let dracoLoader: DRACOLoader | null = null;
 let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
 
 function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions?: (loader: GLTFLoader) => void) {
-	return (loader: Loader) => {
+	return (loader: THREE.Loader) => {
 		if (extensions) {
 			extensions(loader as GLTFLoader);
 		}

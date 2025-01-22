@@ -1,11 +1,9 @@
-import { ChangeDetectorRef, Injector, inject, signal } from '@angular/core';
+import { DestroyRef, inject, Injector, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { DefaultLoadingManager } from 'three';
+import * as THREE from 'three';
 
 export function injectProgress(injector?: Injector) {
 	return assertInjector(injectProgress, injector, () => {
-		const cdr = inject(ChangeDetectorRef);
-
 		const progress = signal<{
 			errors: string[];
 			active: boolean;
@@ -15,9 +13,14 @@ export function injectProgress(injector?: Injector) {
 			total: number;
 		}>({ errors: [], active: false, progress: 0, item: '', loaded: 0, total: 0 });
 
+		const defaultOnStart = THREE.DefaultLoadingManager.onStart?.bind(THREE.DefaultLoadingManager);
+		const defaultOnLoad = THREE.DefaultLoadingManager.onLoad.bind(THREE.DefaultLoadingManager);
+		const defaultOnError = THREE.DefaultLoadingManager.onError.bind(THREE.DefaultLoadingManager);
+		const defaultOnProgress = THREE.DefaultLoadingManager.onProgress.bind(THREE.DefaultLoadingManager);
+
 		let saveLastTotalLoaded = 0;
 
-		DefaultLoadingManager.onStart = (item, loaded, total) => {
+		THREE.DefaultLoadingManager.onStart = (item, loaded, total) => {
 			progress.update((prev) => ({
 				...prev,
 				active: true,
@@ -26,21 +29,17 @@ export function injectProgress(injector?: Injector) {
 				total,
 				progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100,
 			}));
-
-			cdr.detectChanges();
 		};
 
-		DefaultLoadingManager.onLoad = () => {
+		THREE.DefaultLoadingManager.onLoad = () => {
 			progress.update((prev) => ({ ...prev, active: false }));
-			cdr.detectChanges();
 		};
 
-		DefaultLoadingManager.onError = (url) => {
+		THREE.DefaultLoadingManager.onError = (url) => {
 			progress.update((prev) => ({ ...prev, errors: [...prev.errors, url] }));
-			cdr.detectChanges();
 		};
 
-		DefaultLoadingManager.onProgress = (item, loaded, total) => {
+		THREE.DefaultLoadingManager.onProgress = (item, loaded, total) => {
 			if (loaded === total) saveLastTotalLoaded = total;
 
 			progress.update((prev) => ({
@@ -50,9 +49,14 @@ export function injectProgress(injector?: Injector) {
 				total,
 				progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100 || 100,
 			}));
-
-			cdr.detectChanges();
 		};
+
+		inject(DestroyRef).onDestroy(() => {
+			THREE.DefaultLoadingManager.onStart = defaultOnStart;
+			THREE.DefaultLoadingManager.onLoad = defaultOnLoad;
+			THREE.DefaultLoadingManager.onError = defaultOnError;
+			THREE.DefaultLoadingManager.onProgress = defaultOnProgress;
+		});
 
 		return progress.asReadonly();
 	});

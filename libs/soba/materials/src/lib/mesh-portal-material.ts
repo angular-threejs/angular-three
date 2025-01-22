@@ -17,12 +17,13 @@ import {
 } from '@angular/core';
 import {
 	extend,
-	getLocalState,
+	getInstanceState,
 	injectBeforeRender,
 	injectStore,
+	is,
 	NgtAttachable,
 	NgtComputeFunction,
-	NgtShaderMaterial,
+	NgtThreeElements,
 	omit,
 	pick,
 } from 'angular-three';
@@ -34,7 +35,7 @@ import {
 	NgtMeshPortalMaterial,
 } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Mesh, Scene, ShaderMaterial } from 'three';
+import * as THREE from 'three';
 import { FullScreenQuad } from 'three-stdlib';
 
 /**
@@ -43,7 +44,7 @@ import { FullScreenQuad } from 'three-stdlib';
 @Directive({ selector: 'ngts-manage-portal-scene' })
 export class ManagePortalScene {
 	events = input<boolean>();
-	rootScene = input.required<Scene>();
+	rootScene = input.required<THREE.Scene>();
 	material = input.required<NgtMeshPortalMaterial>();
 	priority = input.required<number>();
 	worldUnits = input.required<boolean>();
@@ -51,8 +52,6 @@ export class ManagePortalScene {
 	constructor() {
 		const injector = inject(Injector);
 		const renderTextureStore = injectStore();
-		const portalScene = renderTextureStore.select('scene');
-		const portalSetEvents = renderTextureStore.select('setEvents');
 
 		const buffer1 = injectFBO();
 		const buffer2 = injectFBO();
@@ -61,7 +60,7 @@ export class ManagePortalScene {
 			// This fullscreen-quad is used to blend the two textures
 			const blend = { value: 0 };
 			const quad = new FullScreenQuad(
-				new ShaderMaterial({
+				new THREE.ShaderMaterial({
 					uniforms: {
 						a: { value: buffer1().texture },
 						b: { value: buffer2().texture },
@@ -92,11 +91,11 @@ export class ManagePortalScene {
 		});
 
 		effect(() => {
-			portalScene().matrixAutoUpdate = false;
+			renderTextureStore.scene().matrixAutoUpdate = false;
 		});
 
 		effect(() => {
-			const [events, setEvents] = [this.events(), portalSetEvents()];
+			const [events, setEvents] = [this.events(), renderTextureStore.setEvents()];
 			if (!events) return;
 			setEvents({ enabled: events });
 		});
@@ -109,24 +108,24 @@ export class ManagePortalScene {
 				({ gl, camera }) => {
 					const material = this.material();
 
-					const localState = getLocalState(material);
-					if (!localState) return;
+					const instanceState = getInstanceState(material);
+					if (!instanceState) return;
 
-					const parent = localState.parent();
+					const parent = instanceState.parent();
 					if (!parent) return;
 
 					const materialBlend = 'blend' in material && typeof material.blend === 'number' ? material.blend : 0;
 					const [worldUnits, rootScene, scene, [quad, blend]] = [
 						this.worldUnits(),
 						this.rootScene(),
-						portalScene(),
+						renderTextureStore.snapshot.scene,
 						fullScreenQuad(),
 					];
 					// Move portal contents along with the parent if worldUnits is true
 					if (!worldUnits) {
 						// If the portal renders exclusively the original scene needs to be updated
-						if (priority && materialBlend === 1) parent.updateWorldMatrix(true, false);
-						scene.matrixWorld.copy(parent.matrixWorld);
+						if (priority && materialBlend === 1) parent['updateWorldMatrix'](true, false);
+						scene.matrixWorld.copy(parent['matrixWorld']);
 					} else {
 						scene.matrixWorld.identity();
 					}
@@ -157,7 +156,7 @@ export class ManagePortalScene {
 	}
 }
 
-export interface NgtsMeshPortalMaterialOptions extends Partial<NgtShaderMaterial> {
+export interface NgtsMeshPortalMaterialOptions extends Partial<NgtThreeElements['ngt-shader-material']> {
 	/** Mix the portals own scene with the world scene, 0 = world scene render,
 	 *  0.5 = both scenes render, 1 = portal scene renders, defaults to 0.   */
 	blend: number;
@@ -201,11 +200,11 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 					frames: renderTextureFrames(),
 					eventPriority: eventPriority(),
 					renderPriority: renderPriority(),
-					compute: renderTextureCompute(),
+					compute: renderTextureCompute,
 				}"
 			>
 				<ng-template renderTextureContent let-injector="injector">
-					<ng-container *ngTemplateOutlet="content(); injector: injector" />
+					<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
 					<ngts-manage-portal-scene
 						[events]="events()"
 						[rootScene]="rootScene()"
@@ -224,62 +223,66 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 export class NgtsMeshPortalMaterial {
 	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['blur', 'resolution', 'worldUnits', 'eventPriority', 'renderPriority', 'events']);
+	protected parameters = omit(this.options, [
+		'blur',
+		'resolution',
+		'worldUnits',
+		'eventPriority',
+		'renderPriority',
+		'events',
+	]);
 
-	blur = pick(this.options, 'blur');
-	eventPriority = pick(this.options, 'eventPriority');
-	renderPriority = pick(this.options, 'renderPriority');
-	events = pick(this.options, 'events');
-	worldUnits = pick(this.options, 'worldUnits');
+	protected blur = pick(this.options, 'blur');
+	protected eventPriority = pick(this.options, 'eventPriority');
+	protected renderPriority = pick(this.options, 'renderPriority');
+	protected events = pick(this.options, 'events');
+	protected worldUnits = pick(this.options, 'worldUnits');
 
 	materialRef = viewChild.required<ElementRef<InstanceType<typeof MeshPortalMaterial>>>('material');
-	content = contentChild.required(TemplateRef);
+	protected content = contentChild.required(TemplateRef);
 
 	private store = injectStore();
-	private size = this.store.select('size');
-	private viewport = this.store.select('viewport');
-	private gl = this.store.select('gl');
-	private setEvents = this.store.select('setEvents');
-	rootScene = this.store.select('scene');
+	// private size = this.store.select('size');
+	// private viewport = this.store.select('viewport');
+	// private gl = this.store.select('gl');
+	// private setEvents = this.store.select('setEvents');
+	protected rootScene = this.store.scene;
 
-	materialResolution = computed(() => [
-		this.size().width * this.viewport().dpr,
-		this.size().height * this.viewport().dpr,
+	protected materialResolution = computed(() => [
+		this.store.size.width() * this.store.viewport.dpr(),
+		this.store.size.height() * this.store.viewport.dpr(),
 	]);
 	private resolution = pick(this.options, 'resolution');
 
-	private parent = signal<Mesh | null>(null);
+	private parent = signal<THREE.Mesh | null>(null);
 	private visible = injectIntersect(this.parent, { source: signal(true) });
 
-	renderTextureFrames = computed(() => (this.visible() ? Infinity : 0));
-	renderTextureCompute = computed(() => {
+	protected renderTextureFrames = computed(() => (this.visible() ? Infinity : 0));
+
+	protected renderTextureCompute = ([event, state]: Parameters<NgtComputeFunction>) => {
 		const [parent, material] = [this.parent(), this.materialRef().nativeElement];
+		if (!parent) return false;
 
-		const computeFn: (...args: Parameters<NgtComputeFunction>) => false | undefined = (event, state) => {
-			if (!parent) return false;
-			state.snapshot.pointer.set(
-				(event.offsetX / state.snapshot.size.width) * 2 - 1,
-				-(event.offsetY / state.snapshot.size.height) * 2 + 1,
-			);
-			state.snapshot.raycaster.setFromCamera(state.snapshot.pointer, state.snapshot.camera);
+		state.snapshot.pointer.set(
+			(event.offsetX / state.snapshot.size.width) * 2 - 1,
+			-(event.offsetY / state.snapshot.size.height) * 2 + 1,
+		);
+		state.snapshot.raycaster.setFromCamera(state.snapshot.pointer, state.snapshot.camera);
 
-			if ('blend' in material && material.blend === 0) {
-				// We run a quick check against the parent, if it isn't hit there's no need to raycast at all
-				const [intersection] = state.snapshot.raycaster.intersectObject(parent);
-				if (!intersection) {
-					// Cancel out the raycast camera if the parent mesh isn't hit
-					Object.assign(state.snapshot.raycaster, { camera: undefined });
-					return false;
-				}
+		if ('blend' in material && material.blend === 0) {
+			// We run a quick check against the parent, if it isn't hit there's no need to raycast at all
+			const [intersection] = state.snapshot.raycaster.intersectObject(parent);
+			if (!intersection) {
+				// Cancel out the raycast camera if the parent mesh isn't hit
+				Object.assign(state.snapshot.raycaster, { camera: undefined });
+				return false;
 			}
+		}
 
-			return;
-		};
+		return;
+	};
 
-		return computeFn;
-	});
-
-	priority = signal(0);
+	protected priority = signal(0);
 
 	constructor() {
 		extend({ MeshPortalMaterial });
@@ -287,11 +290,11 @@ export class NgtsMeshPortalMaterial {
 		effect(() => {
 			const material = this.materialRef().nativeElement;
 
-			const localState = getLocalState(material);
-			if (!localState) return;
+			const instanceState = getInstanceState(material);
+			if (!instanceState) return;
 
-			const materialParent = localState.parent();
-			if (!materialParent || !(materialParent instanceof Mesh)) return;
+			const materialParent = instanceState.parent();
+			if (!materialParent || !is.three<THREE.Mesh>(materialParent, 'isMesh')) return;
 
 			// Since the ref above is not tied to a mesh directly (we're inside a material),
 			// it has to be tied to the parent mesh here
@@ -302,7 +305,7 @@ export class NgtsMeshPortalMaterial {
 			const events = this.events();
 			if (!events) return;
 
-			const setEvents = this.setEvents();
+			const setEvents = this.store.setEvents();
 			setEvents({ enabled: !events });
 		});
 
@@ -310,7 +313,7 @@ export class NgtsMeshPortalMaterial {
 			const [material, parent] = [this.materialRef().nativeElement, this.parent()];
 			if (!parent) return;
 
-			const [resolution, blur, gl] = [this.resolution(), this.blur(), this.gl()];
+			const [resolution, blur, gl] = [this.resolution(), this.blur(), this.store.gl()];
 
 			// apply the SDF mask once
 			if (blur && material.sdf == null) {

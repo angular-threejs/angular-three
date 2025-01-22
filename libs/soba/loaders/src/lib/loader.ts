@@ -61,21 +61,21 @@ const defaultOptions: NgtsLoaderOptions = {
 export class NgtsLoader {
 	private progressState = injectProgress();
 
-	active = computed(() => this.progressState().active);
-	progress = computed(() => this.progressState().progress);
+	protected active = computed(() => this.progressState().active);
+	protected progress = computed(() => this.progressState().progress);
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	containerClass = pick(this.options, 'containerClass');
-	innerClass = pick(this.options, 'innerClass');
-	barClass = pick(this.options, 'barClass');
-	dataClass = pick(this.options, 'dataClass');
-	initialState = pick(this.options, 'initialState');
-	dataInterpolation = pick(this.options, 'dataInterpolation');
+	protected containerClass = pick(this.options, 'containerClass');
+	protected innerClass = pick(this.options, 'innerClass');
+	protected barClass = pick(this.options, 'barClass');
+	protected dataClass = pick(this.options, 'dataClass');
+	private initialState = pick(this.options, 'initialState');
+	private dataInterpolation = pick(this.options, 'dataInterpolation');
 
-	progressSpanRef = viewChild<ElementRef<HTMLSpanElement>>('progressSpanRef');
+	private progressSpanRef = viewChild<ElementRef<HTMLSpanElement>>('progressSpanRef');
 
-	shown = signal(this.initialState()(this.active()));
+	protected shown = signal(this.initialState()(this.active()));
 
 	constructor() {
 		effect((onCleanup) => {

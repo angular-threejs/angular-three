@@ -137,6 +137,78 @@ export type NgtThreeElementsMap = {
 	 */
 	'ngt-instanced-mesh': Extract<keyof ThreeExports, 'InstancedMesh'>;
 	/**
+	 * @from node_modules/@types/three/src/materials/Material.d.ts
+	 */
+	'ngt-material': Extract<keyof ThreeExports, 'Material'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshBasicMaterial.d.ts
+	 */
+	'ngt-mesh-basic-material': Extract<keyof ThreeExports, 'MeshBasicMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshPhysicalMaterial.d.ts
+	 */
+	'ngt-mesh-physical-material': Extract<keyof ThreeExports, 'MeshPhysicalMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshStandardMaterial.d.ts
+	 */
+	'ngt-mesh-standard-material': Extract<keyof ThreeExports, 'MeshStandardMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshToonMaterial.d.ts
+	 */
+	'ngt-mesh-toon-material': Extract<keyof ThreeExports, 'MeshToonMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshNormalMaterial.d.ts
+	 */
+	'ngt-mesh-normal-material': Extract<keyof ThreeExports, 'MeshNormalMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshDepthMaterial.d.ts
+	 */
+	'ngt-mesh-depth-material': Extract<keyof ThreeExports, 'MeshDepthMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshDistanceMaterial.d.ts
+	 */
+	'ngt-mesh-distance-material': Extract<keyof ThreeExports, 'MeshDistanceMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshMatcapMaterial.d.ts
+	 */
+	'ngt-mesh-matcap-material': Extract<keyof ThreeExports, 'MeshMatcapMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshPhongMaterial.d.ts
+	 */
+	'ngt-mesh-phong-material': Extract<keyof ThreeExports, 'MeshPhongMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/LineBasicMaterial.d.ts
+	 */
+	'ngt-line-basic-material': Extract<keyof ThreeExports, 'LineBasicMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/LineDashedMaterial.d.ts
+	 */
+	'ngt-line-dashed-material': Extract<keyof ThreeExports, 'LineDashedMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/MeshLambertMaterial.d.ts
+	 */
+	'ngt-mesh-lambert-material': Extract<keyof ThreeExports, 'MeshLambertMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/PointsMaterial.d.ts
+	 */
+	'ngt-points-material': Extract<keyof ThreeExports, 'PointsMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/RawShaderMaterial.d.ts
+	 */
+	'ngt-raw-shader-material': Extract<keyof ThreeExports, 'RawShaderMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/ShaderMaterial.d.ts
+	 */
+	'ngt-shader-material': Extract<keyof ThreeExports, 'ShaderMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/ShadowMaterial.d.ts
+	 */
+	'ngt-shadow-material': Extract<keyof ThreeExports, 'ShadowMaterial'>;
+	/**
+	 * @from node_modules/@types/three/src/materials/SpriteMaterial.d.ts
+	 */
+	'ngt-sprite-material': Extract<keyof ThreeExports, 'SpriteMaterial'>;
+	/**
 	 * @from node_modules/@types/three/src/core/InstancedBufferGeometry.d.ts
 	 */
 	'ngt-instanced-buffer-geometry': Extract<keyof ThreeExports, 'InstancedBufferGeometry'>;

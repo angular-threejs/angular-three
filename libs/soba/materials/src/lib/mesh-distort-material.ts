@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject, input } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtAttachable, NgtMeshPhysicalMaterial, omit, pick } from 'angular-three';
+import { injectBeforeRender, NgtArgs, NgtAttachable, NgtThreeElements, omit, pick } from 'angular-three';
 import { MeshDistortMaterial, MeshDistortMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
 export interface NgtsMeshDistortMaterialOptions
 	extends Partial<MeshDistortMaterialParameters>,
-		Partial<NgtMeshPhysicalMaterial> {
+		Partial<NgtThreeElements['ngt-mesh-physical-material']> {
 	speed: number;
 	factor?: number;
 }
@@ -28,7 +28,7 @@ const defaultOptions: NgtsMeshDistortMaterialOptions = {
 export class NgtsMeshDistortMaterial {
 	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['speed']);
+	protected parameters = omit(this.options, ['speed']);
 
 	material = new MeshDistortMaterial();
 

@@ -12,22 +12,23 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
-	getLocalState,
+	getInstanceState,
 	injectBeforeRender,
 	injectStore,
+	is,
 	NgtAnyRecord,
 	NgtArgs,
 	NgtAttachable,
-	NgtShaderMaterial,
+	NgtThreeElements,
 	omit,
 	pick,
 } from 'angular-three';
 import { MeshRefractionMaterial } from 'angular-three-soba/shaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { ColorRepresentation, CubeTexture, Mesh, Texture } from 'three';
+import * as THREE from 'three';
 import { MeshBVH, MeshBVHUniformStruct, SAH } from 'three-mesh-bvh';
 
-export interface NgtsMeshRefractionMaterialOptions extends Partial<NgtShaderMaterial> {
+export interface NgtsMeshRefractionMaterialOptions extends Partial<NgtThreeElements['ngt-shader-material']> {
 	/** Number of ray-cast bounces, it can be expensive to have too many, 2 */
 	bounces: number;
 	/** Refraction index, 2.4 */
@@ -37,7 +38,7 @@ export interface NgtsMeshRefractionMaterialOptions extends Partial<NgtShaderMate
 	/** RGB shift intensity, can be expensive, 0 */
 	aberrationStrength: number;
 	/** Color, white */
-	color: ColorRepresentation;
+	color: THREE.ColorRepresentation;
 	/** If this is on it uses fewer ray casts for the RGB shift sacrificing physical accuracy, true */
 	fastChroma: boolean;
 }
@@ -50,10 +51,6 @@ const defaultOptions: NgtsMeshRefractionMaterialOptions = {
 	color: 'white',
 	fastChroma: true,
 };
-
-function isCubeTexture(def: CubeTexture | Texture): def is CubeTexture {
-	return def && (def as CubeTexture).isCubeTexture;
-}
 
 @Component({
 	selector: 'ngts-mesh-refraction-material',
@@ -76,28 +73,27 @@ function isCubeTexture(def: CubeTexture | Texture): def is CubeTexture {
 	imports: [NgtArgs],
 })
 export class NgtsMeshRefractionMaterial {
-	envMap = input.required<CubeTexture | Texture>();
+	envMap = input.required<THREE.CubeTexture | THREE.Texture>();
 	attach = input<NgtAttachable>('material');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['fastChroma', 'aberrationStrength']);
+	protected parameters = omit(this.options, ['fastChroma', 'aberrationStrength']);
 
 	private fastChroma = pick(this.options, 'fastChroma');
-	aberrationStrength = pick(this.options, 'aberrationStrength');
+	protected aberrationStrength = pick(this.options, 'aberrationStrength');
 
 	materialRef = viewChild<ElementRef<InstanceType<typeof MeshRefractionMaterial>>>('material');
 
 	private store = injectStore();
-	private size = this.store.select('size');
 
-	resolution = computed(() => [this.size().width, this.size().height]);
-	defines = computed(() => {
+	protected resolution = computed(() => [this.store.size.width(), this.store.size.height()]);
+	protected defines = computed(() => {
 		const _defines = {} as { [key: string]: string };
 		const [envMap, aberrationStrength, fastChroma] = [
 			untracked(this.envMap),
 			this.aberrationStrength(),
 			this.fastChroma(),
 		];
-		const isCubeMap = isCubeTexture(envMap);
+		const isCubeMap = is.three<THREE.CubeTexture>(envMap, 'isCubeTexture');
 
 		const w = (isCubeMap ? envMap.image[0]?.width : envMap.image.width) ?? 1024;
 		const cubeSize = w / 4;
@@ -122,7 +118,7 @@ export class NgtsMeshRefractionMaterial {
 		return Object.keys(this.defines()).join(' ');
 	});
 
-	material = computed(() => {
+	protected material = computed(() => {
 		const prevMaterial = untracked(this.materialRef)?.nativeElement;
 
 		if (prevMaterial) {
@@ -141,22 +137,25 @@ export class NgtsMeshRefractionMaterial {
 			const material = this.materialRef()?.nativeElement;
 			if (!material) return;
 
-			const localState = getLocalState(material);
-			if (!localState) return;
+			const instanceState = getInstanceState(material);
+			if (!instanceState) return;
 
-			const parent = untracked(localState.parent);
-			const geometry = (parent as Mesh).geometry;
+			const parent = untracked(instanceState.parent);
+			const geometry = (parent as unknown as THREE.Mesh).geometry;
 			if (geometry) {
-				(material as any).bvh = new MeshBVHUniformStruct();
-				(material as any).bvh.updateFrom(new MeshBVH(geometry.clone().toNonIndexed(), { strategy: SAH }));
+				const bvh = new MeshBVHUniformStruct();
+				bvh.updateFrom(new MeshBVH(geometry.clone().toNonIndexed(), { strategy: SAH }));
+				Object.assign(material, { bvh });
 			}
 		});
 
 		injectBeforeRender(({ camera }) => {
 			const material = this.materialRef()?.nativeElement;
 			if (material) {
-				(material as any).viewMatrixInverse = camera.matrixWorld;
-				(material as any).projectionMatrixInverse = camera.projectionMatrixInverse;
+				Object.assign(material, {
+					viewMatrixInverse: camera.matrixWorld,
+					projectionMatrixInverse: camera.projectionMatrixInverse,
+				});
 			}
 		});
 
