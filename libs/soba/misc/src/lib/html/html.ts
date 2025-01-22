@@ -7,12 +7,14 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, is, NgtGroup, omit, pick } from 'angular-three';
+import { extend, is, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { DoubleSide, Group, Mesh, Object3D, PlaneGeometry, ShaderMaterial } from 'three';
+import * as THREE from 'three';
+import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
+import { NgtsHTMLContent } from './html-content';
 
-export interface NgtsHTMLOptions extends Partial<NgtGroup> {
-	occlude: ElementRef<Object3D>[] | Object3D[] | boolean | 'raycast' | 'blending';
+export interface NgtsHTMLOptions extends Partial<NgtThreeElements['ngt-group']> {
+	occlude: ElementRef<THREE.Object3D>[] | THREE.Object3D[] | boolean | 'raycast' | 'blending';
 	transform: boolean;
 	castShadow: boolean;
 	receiveShadow: boolean;
@@ -52,17 +54,16 @@ const defaultHtmlOptions: NgtsHTMLOptions = {
 })
 export class NgtsHTML {
 	options = input(defaultHtmlOptions, { transform: mergeInputs(defaultHtmlOptions) });
-	parameters = omit(this.options, ['occlude', 'castShadow', 'receiveShadow', 'transform']);
+	protected parameters = omit(this.options, ['occlude', 'castShadow', 'receiveShadow', 'transform']);
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	occlusionMeshRef = viewChild<ElementRef<Mesh>>('occlusionMesh');
-	occlusionGeometryRef = viewChild<ElementRef<PlaneGeometry>>('occlusionGeometry');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	occlusionMeshRef = viewChild<ElementRef<THREE.Mesh>>('occlusionMesh');
+	occlusionGeometryRef = viewChild<ElementRef<THREE.PlaneGeometry>>('occlusionGeometry');
 
+	protected castShadow = pick(this.options, 'castShadow');
+	protected receiveShadow = pick(this.options, 'receiveShadow');
 	occlude = pick(this.options, 'occlude');
 	transform = pick(this.options, 'transform');
-	castShadow = pick(this.options, 'castShadow');
-	receiveShadow = pick(this.options, 'receiveShadow');
-	scale = pick(this.options, 'scale');
 
 	isRaycastOcclusion = computed(() => {
 		const occlude = this.occlude();
@@ -117,12 +118,14 @@ export class NgtsHTML {
 		return { vertexShader, fragmentShader };
 	});
 
-	vertexShader = pick(this.shaders, 'vertexShader');
-	fragmentShader = pick(this.shaders, 'fragmentShader');
+	protected vertexShader = pick(this.shaders, 'vertexShader');
+	protected fragmentShader = pick(this.shaders, 'fragmentShader');
 
 	constructor() {
 		extend({ Group, Mesh, PlaneGeometry, ShaderMaterial });
 	}
 
-	protected readonly DoubleSide = DoubleSide;
+	protected readonly DoubleSide = THREE.DoubleSide;
 }
+
+export const NgtsHTMLDeclarations = [NgtsHTML, NgtsHTMLContent] as const;

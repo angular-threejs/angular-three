@@ -12,9 +12,9 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtHTML, pick, resolveRef } from 'angular-three';
+import { injectBeforeRender, injectStore, is, NgtHTML, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Object3D, OrthographicCamera, Vector3 } from 'three';
+import * as THREE from 'three';
 import { NgtsHTML } from './html';
 import {
 	CalculatePosition,
@@ -70,7 +70,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 };
 
 @Component({
-	selector: '[ngtsHTMLContent]',
+	selector: '[htmlContent]',
 	template: `
 		@if (html.transform()) {
 			<div
@@ -90,10 +90,10 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 				#container
 				style="position:absolute"
 				[style.transform]="center() ? 'translate3d(-50%,-50%,0)' : 'none'"
-				[style.top]="fullscreen() ? -size().height / 2 + 'px' : 'unset'"
-				[style.left]="fullscreen() ? -size().width / 2 + 'px' : 'unset'"
-				[style.width]="fullscreen() ? size().width : 'unset'"
-				[style.height]="fullscreen() ? size().height : 'unset'"
+				[style.top]="fullscreen() ? -size.height() / 2 + 'px' : 'unset'"
+				[style.left]="fullscreen() ? -size.width() / 2 + 'px' : 'unset'"
+				[style.width]="fullscreen() ? size.width() : 'unset'"
+				[style.height]="fullscreen() ? size.height() : 'unset'"
 				[class]="containerClass()"
 				[style]="containerStyle()"
 			>
@@ -112,21 +112,18 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 export class NgtsHTMLContent extends NgtHTML {
 	options = input(defaultHtmlContentOptions, {
 		transform: mergeInputs(defaultHtmlContentOptions),
-		alias: 'ngtsHTMLContent',
+		alias: 'htmlContent',
 	});
 	occluded = output<boolean>();
-
-	html = inject(NgtsHTML);
 
 	transformOuterRef = viewChild<ElementRef<HTMLDivElement>>('transformOuter');
 	transformInnerRef = viewChild<ElementRef<HTMLDivElement>>('transformInner');
 	containerRef = viewChild<ElementRef<HTMLDivElement>>('container');
 
-	private gl = this.store.select('gl');
-	private events = this.store.select('events');
-	private camera = this.store.select('camera');
-	private scene = this.store.select('scene');
-	protected size = this.store.select('size');
+	protected html = inject(NgtsHTML);
+	private host = inject<ElementRef<HTMLElement>>(ElementRef);
+	private store = injectStore();
+	protected size = this.store.size;
 
 	private parent = pick(this.options, 'parent');
 	private zIndexRange = pick(this.options, 'zIndexRange');
@@ -141,7 +138,7 @@ export class NgtsHTMLContent extends NgtHTML {
 	private target = computed(() => {
 		const parent = resolveRef(this.parent());
 		if (parent) return parent;
-		return (this.events().connected || this.gl().domElement.parentNode) as HTMLElement;
+		return (this.store.events.connected?.() || this.store.gl.domElement.parentNode()) as HTMLElement;
 	});
 
 	constructor() {
@@ -154,7 +151,7 @@ export class NgtsHTMLContent extends NgtHTML {
 		effect(() => {
 			const [occlude, canvasEl, zIndexRange] = [
 				this.html.occlude(),
-				untracked(this.gl).domElement,
+				this.store.snapshot.gl.domElement,
 				untracked(this.zIndexRange),
 			];
 
@@ -175,11 +172,11 @@ export class NgtsHTMLContent extends NgtHTML {
 				this.target(),
 				this.host.nativeElement,
 				untracked(this.prepend),
-				untracked(this.scene),
+				this.store.snapshot.scene,
 				untracked(this.calculatePosition),
 				untracked(this.html.groupRef).nativeElement,
-				untracked(this.size),
-				untracked(this.camera),
+				this.store.snapshot.size,
+				this.store.snapshot.camera,
 			];
 
 			scene.updateMatrixWorld();
@@ -254,11 +251,11 @@ export class NgtsHTMLContent extends NgtHTML {
 					Math.abs(oldPosition[1] - vec[1]) > eps
 				) {
 					const isBehindCamera = isObjectBehindCamera(group, camera);
-					let raytraceTarget: null | undefined | boolean | Object3D[] = false;
+					let raytraceTarget: null | undefined | boolean | THREE.Object3D[] = false;
 
 					if (isRaycastOcclusion) {
 						if (Array.isArray(occlude)) {
-							raytraceTarget = occlude.map((item) => resolveRef(item)) as Object3D[];
+							raytraceTarget = occlude.map((item) => resolveRef(item)) as THREE.Object3D[];
 						} else if (occlude !== 'blending') {
 							raytraceTarget = [scene];
 						}
@@ -289,7 +286,7 @@ export class NgtsHTMLContent extends NgtHTML {
 					if (transform) {
 						const [widthHalf, heightHalf] = [size.width / 2, size.height / 2];
 						const fov = camera.projectionMatrix.elements[5] * heightHalf;
-						const { isOrthographicCamera, top, left, bottom, right } = camera as OrthographicCamera;
+						const { isOrthographicCamera, top, left, bottom, right } = camera as THREE.OrthographicCamera;
 						const cameraMatrix = getCameraCSSMatrix(camera.matrixWorldInverse);
 						const cameraTransform = isOrthographicCamera
 							? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
@@ -332,13 +329,13 @@ export class NgtsHTMLContent extends NgtHTML {
 						const el = transformOuterEl.children[0];
 
 						if (el?.clientWidth && el?.clientHeight) {
-							const { isOrthographicCamera } = camera as OrthographicCamera;
+							const { isOrthographicCamera } = camera as THREE.OrthographicCamera;
 
 							if (isOrthographicCamera || occlusionGeometry) {
 								if (scale) {
 									if (!Array.isArray(scale)) {
 										occlusionMesh.scale.setScalar(1 / (scale as number));
-									} else if (scale instanceof Vector3) {
+									} else if (is.three<THREE.Vector3>(scale, 'isVector3')) {
 										occlusionMesh.scale.copy(scale.clone().divideScalar(1));
 									} else {
 										occlusionMesh.scale.set(1 / scale[0], 1 / scale[1], 1 / scale[2]);
