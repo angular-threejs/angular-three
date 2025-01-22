@@ -7,18 +7,23 @@ import {
 	inject,
 	input,
 	signal,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { extend, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
-import { calculateScaleFactor, NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
-import { Group, Matrix4, Mesh, MeshBasicMaterial, Quaternion, SphereGeometry, Vector3 } from 'three';
+import { calculateScaleFactor, NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import * as THREE from 'three';
+import { Group, Mesh, MeshBasicMaterial, SphereGeometry } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
 
-const vec1 = new Vector3();
-const vec2 = new Vector3();
+const vec1 = new THREE.Vector3();
+const vec2 = new THREE.Vector3();
 
-export function calculateOffset(clickPoint: Vector3, normal: Vector3, rayStart: Vector3, rayDir: Vector3) {
+export function calculateOffset(
+	clickPoint: THREE.Vector3,
+	normal: THREE.Vector3,
+	rayStart: THREE.Vector3,
+	rayDir: THREE.Vector3,
+) {
 	const e1 = normal.dot(normal);
 	const e2 = normal.dot(clickPoint) - normal.dot(rayStart);
 	const e3 = normal.dot(rayDir);
@@ -40,9 +45,9 @@ export function calculateOffset(clickPoint: Vector3, normal: Vector3, rayStart: 
 	return -vec1.dot(vec2) / vec1.dot(vec1);
 }
 
-const upV = new Vector3(0, 1, 0);
-const scaleV = new Vector3();
-const scaleMatrix = new Matrix4();
+const upV = new THREE.Vector3(0, 1, 0);
+const scaleV = new THREE.Vector3();
+const scaleMatrix = new THREE.Matrix4();
 
 @Component({
 	selector: 'ngts-scaling-sphere',
@@ -60,7 +65,7 @@ const scaleMatrix = new Matrix4();
 					<ngts-html [options]="{ position: [0, position() / 2, 0] }">
 						<div
 							#annotation
-							ngtsHTMLContent
+							htmlContent
 							style="display: none; background: #151520; color: white; padding: 6px 8px; border-radius: 7px; white-space: nowrap;"
 							[class]="pivotControls.annotationsClass()"
 						></div>
@@ -82,41 +87,39 @@ const scaleMatrix = new Matrix4();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsHTML, NgtsHTMLContent, NgtArgs],
+	imports: [NgtsHTMLDeclarations, NgtArgs],
 })
 export class NgtsScalingSphere {
-	direction = input.required<Vector3>();
+	direction = input.required<THREE.Vector3>();
 	axis = input.required<0 | 1 | 2>();
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	annotationRef = viewChild<unknown, ElementRef<HTMLDivElement>>('annotation', { read: ElementRef });
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	annotationRef = viewChild<string, ElementRef<HTMLDivElement>>('annotation', { read: ElementRef });
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
-	pivotControls = inject(NgtsPivotControls);
+	protected pivotControls = inject(NgtsPivotControls);
 	private store = injectStore();
-	private controls = this.store.select('controls') as unknown as Signal<{ enabled: boolean }>;
-	private size = this.store.select('size');
 
 	private hovered = signal(false);
 	private scale0 = 1;
 	private scaleCurrent = 1;
 	private clickInfo: {
-		clickPoint: Vector3;
-		dir: Vector3;
-		mPLG: Matrix4;
-		mPLGInv: Matrix4;
+		clickPoint: THREE.Vector3;
+		dir: THREE.Vector3;
+		mPLG: THREE.Matrix4;
+		mPLGInv: THREE.Matrix4;
 		offsetMultiplier: number;
 	} | null = null;
 
-	position = computed(() => (this.pivotControls.fixed() ? 1.2 : 1.2 * this.pivotControls.scale()));
-	radius = computed(() =>
+	protected position = computed(() => (this.pivotControls.fixed() ? 1.2 : 1.2 * this.pivotControls.scale()));
+	protected radius = computed(() =>
 		this.pivotControls.fixed()
 			? (this.pivotControls.lineWidth() / this.pivotControls.scale()) * 1.8
 			: this.pivotControls.scale() / 22.5,
 	);
 	matrixL = computed(() => {
-		const quaternion = new Quaternion().setFromUnitVectors(upV, this.direction().clone().normalize());
-		return new Matrix4().makeRotationFromQuaternion(quaternion);
+		const quaternion = new THREE.Quaternion().setFromUnitVectors(upV, this.direction().clone().normalize());
+		return new THREE.Matrix4().makeRotationFromQuaternion(quaternion);
 	});
 	color = computed(() =>
 		this.hovered() ? this.pivotControls.hoveredColor() : this.pivotControls.axisColors()[this.axis()],
@@ -129,12 +132,12 @@ export class NgtsScalingSphere {
 	onPointerDown(event: NgtThreeEvent<PointerEvent>) {
 		const [annotation, controls, fixed, scale, direction, axis, size, group] = [
 			this.annotationRef()?.nativeElement,
-			this.controls(),
+			this.store.controls() as unknown as { enabled: boolean },
 			this.pivotControls.fixed(),
 			this.pivotControls.scale(),
 			this.direction(),
 			this.axis(),
-			this.size(),
+			this.store.size(),
 			this.groupRef().nativeElement,
 		];
 
@@ -144,9 +147,9 @@ export class NgtsScalingSphere {
 		}
 
 		event.stopPropagation();
-		const rotation = new Matrix4().extractRotation(group.matrixWorld);
+		const rotation = new THREE.Matrix4().extractRotation(group.matrixWorld);
 		const clickPoint = event.point.clone();
-		const origin = new Vector3().setFromMatrixPosition(group.matrixWorld);
+		const origin = new THREE.Vector3().setFromMatrixPosition(group.matrixWorld);
 		const dir = direction.clone().applyMatrix4(rotation).normalize();
 		const mPLG = group.matrixWorld.clone();
 		const mPLGInv = mPLG.clone().invert();
@@ -156,9 +159,8 @@ export class NgtsScalingSphere {
 		this.clickInfo = { clickPoint, dir, mPLG, mPLGInv, offsetMultiplier };
 		this.pivotControls.onDragStart({ component: 'Sphere', axis, origin, directions: [dir] });
 
-		if (controls) {
-			controls.enabled = false;
-		}
+		if (controls) controls.enabled = false;
+
 		// @ts-expect-error - setPointerCapture is not in the type definition
 		event.target.setPointerCapture(event.pointerId);
 	}
@@ -212,7 +214,7 @@ export class NgtsScalingSphere {
 	onPointerUp(event: NgtThreeEvent<PointerEvent>) {
 		const [annotation, controls, position, mesh] = [
 			this.annotationRef()?.nativeElement,
-			this.controls(),
+			this.store.controls() as unknown as { enabled: boolean },
 			this.position(),
 			this.meshRef().nativeElement,
 		];
@@ -226,9 +228,9 @@ export class NgtsScalingSphere {
 		this.clickInfo = null;
 		mesh.position.set(0, position, 0);
 		this.pivotControls.onDragEnd();
-		if (controls) {
-			controls.enabled = true;
-		}
+
+		if (controls) controls.enabled = true;
+
 		// @ts-expect-error - releasePointerCapture is not in the type definition
 		event.target.releasePointerCapture(event.pointerId);
 	}

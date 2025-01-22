@@ -6,18 +6,18 @@ import {
 	ElementRef,
 	inject,
 	input,
-	Signal,
 	signal,
 	viewChild,
 } from '@angular/core';
 import { extend, injectStore, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
-import { NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
-import { DoubleSide, Group, Matrix4, Plane, Ray, Vector3 } from 'three';
+import { NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
 
-const clickDir = new Vector3();
-const intersectionDir = new Vector3();
+const clickDir = new THREE.Vector3();
+const intersectionDir = new THREE.Vector3();
 
 function toDegrees(radians: number) {
 	return (radians * 180) / Math.PI;
@@ -27,7 +27,13 @@ function toRadians(degrees: number) {
 	return (degrees * Math.PI) / 180;
 }
 
-function calculateAngle(clickPoint: Vector3, intersectionPoint: Vector3, origin: Vector3, e1: Vector3, e2: Vector3) {
+function calculateAngle(
+	clickPoint: THREE.Vector3,
+	intersectionPoint: THREE.Vector3,
+	origin: THREE.Vector3,
+	e1: THREE.Vector3,
+	e2: THREE.Vector3,
+) {
 	clickDir.copy(clickPoint).sub(origin);
 	intersectionDir.copy(intersectionPoint).sub(origin);
 	const dote1e1 = e1.dot(e1);
@@ -62,10 +68,10 @@ function minimizeAngle(angle: number) {
 	return result;
 }
 
-const rotMatrix = new Matrix4();
-const posNew = new Vector3();
-const ray = new Ray();
-const intersection = new Vector3();
+const rotMatrix = new THREE.Matrix4();
+const posNew = new THREE.Vector3();
+const ray = new THREE.Ray();
+const intersection = new THREE.Vector3();
 
 @Component({
 	selector: 'ngts-axis-rotator',
@@ -83,7 +89,7 @@ const intersection = new Vector3();
 				<ngts-html [options]="{ position: [r(), r(), 0] }">
 					<div
 						#annotation
-						ngtsHTMLContent
+						htmlContent
 						style="display: none; background: #151520; color: white; padding: 6px 8px; border-radius: 7px; white-space: nowrap"
 						[class]="pivotControls.annotationsClass()"
 					></div>
@@ -114,46 +120,45 @@ const intersection = new Vector3();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsLine, NgtsHTML, NgtsHTMLContent],
+	imports: [NgtsLine, NgtsHTMLDeclarations],
 })
 export class NgtsAxisRotator {
-	protected readonly DoubleSide = DoubleSide;
+	protected readonly DoubleSide = THREE.DoubleSide;
 
-	dir1 = input.required<Vector3>();
-	dir2 = input.required<Vector3>();
+	dir1 = input.required<THREE.Vector3>();
+	dir2 = input.required<THREE.Vector3>();
 	axis = input.required<0 | 1 | 2>();
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	annotationRef = viewChild<unknown, ElementRef<HTMLDivElement>>('annotation', { read: ElementRef });
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	annotationRef = viewChild<string, ElementRef<HTMLDivElement>>('annotation', { read: ElementRef });
 
-	pivotControls = inject(NgtsPivotControls);
+	protected pivotControls = inject(NgtsPivotControls);
 	private store = injectStore();
-	private controls = this.store.select('controls') as unknown as Signal<{ enabled: boolean }>;
 
-	hovered = signal(false);
+	protected hovered = signal(false);
 	private angle = 0;
 	private angle0 = 0;
 	private clickInfo: {
-		clickPoint: Vector3;
-		origin: Vector3;
-		e1: Vector3;
-		e2: Vector3;
-		normal: Vector3;
-		plane: Plane;
+		clickPoint: THREE.Vector3;
+		origin: THREE.Vector3;
+		e1: THREE.Vector3;
+		e2: THREE.Vector3;
+		normal: THREE.Vector3;
+		plane: THREE.Plane;
 	} | null = null;
 
-	matrixL = computed(() => {
+	protected matrixL = computed(() => {
 		const dir1N = this.dir1().clone().normalize();
 		const dir2N = this.dir2().clone().normalize();
-		return new Matrix4().makeBasis(dir1N, dir2N, dir1N.clone().cross(dir2N));
+		return new THREE.Matrix4().makeBasis(dir1N, dir2N, dir1N.clone().cross(dir2N));
 	});
-	r = computed(() => (this.pivotControls.fixed() ? 0.65 : this.pivotControls.scale() * 0.65));
-	arc = computed(() => {
+	protected r = computed(() => (this.pivotControls.fixed() ? 0.65 : this.pivotControls.scale() * 0.65));
+	protected arc = computed(() => {
 		const segments = 32;
-		const points: Vector3[] = [];
+		const points: THREE.Vector3[] = [];
 		for (let j = 0; j <= segments; j++) {
 			const angle = (j * (Math.PI / 2)) / segments;
-			points.push(new Vector3(Math.cos(angle) * this.r(), Math.sin(angle) * this.r(), 0));
+			points.push(new THREE.Vector3(Math.cos(angle) * this.r(), Math.sin(angle) * this.r(), 0));
 		}
 		return points;
 	});
@@ -167,7 +172,7 @@ export class NgtsAxisRotator {
 			this.annotationRef()?.nativeElement,
 			this.groupRef().nativeElement,
 			this.axis(),
-			this.controls(),
+			this.store.controls() as unknown as { enabled: boolean },
 		];
 
 		if (annotation) {
@@ -177,17 +182,15 @@ export class NgtsAxisRotator {
 
 		event.stopPropagation();
 		const clickPoint = event.point.clone();
-		const origin = new Vector3().setFromMatrixPosition(group.matrixWorld);
-		const e1 = new Vector3().setFromMatrixColumn(group.matrixWorld, 0).normalize();
-		const e2 = new Vector3().setFromMatrixColumn(group.matrixWorld, 1).normalize();
-		const normal = new Vector3().setFromMatrixColumn(group.matrixWorld, 2).normalize();
-		const plane = new Plane().setFromNormalAndCoplanarPoint(normal, origin);
+		const origin = new THREE.Vector3().setFromMatrixPosition(group.matrixWorld);
+		const e1 = new THREE.Vector3().setFromMatrixColumn(group.matrixWorld, 0).normalize();
+		const e2 = new THREE.Vector3().setFromMatrixColumn(group.matrixWorld, 1).normalize();
+		const normal = new THREE.Vector3().setFromMatrixColumn(group.matrixWorld, 2).normalize();
+		const plane = new THREE.Plane().setFromNormalAndCoplanarPoint(normal, origin);
 		this.clickInfo = { clickPoint, origin, e1, e2, normal, plane };
 		this.pivotControls.onDragStart({ component: 'Rotator', axis, origin, directions: [e1, e2, normal] });
 
-		if (controls) {
-			controls.enabled = false;
-		}
+		if (controls) controls.enabled = false;
 
 		// @ts-expect-error - setPointerCapture is not a function on PointerEvent
 		event.target.setPointerCapture(event.pointerId);
@@ -241,16 +244,19 @@ export class NgtsAxisRotator {
 	}
 
 	onPointerUp(event: NgtThreeEvent<PointerEvent>) {
-		const [annotation, controls] = [this.annotationRef()?.nativeElement, this.controls()];
+		const [annotation, controls] = [
+			this.annotationRef()?.nativeElement,
+			this.store.controls() as unknown as { enabled: boolean },
+		];
 		if (annotation) {
 			annotation.style.display = 'none';
 		}
 		event.stopPropagation();
 		this.clickInfo = null;
 		this.pivotControls.onDragEnd();
-		if (controls) {
-			controls.enabled = true;
-		}
+
+		if (controls) controls.enabled = true;
+
 		// @ts-expect-error - releasePointerCapture is not a function on PointerEvent
 		event.target.releasePointerCapture(event.pointerId);
 	}

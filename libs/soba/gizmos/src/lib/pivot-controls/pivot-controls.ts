@@ -8,10 +8,11 @@ import {
 	output,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, injectBeforeRender, injectStore, NgtAnyRecord, omit, pick } from 'angular-three';
+import { extend, getInstanceState, injectBeforeRender, injectStore, is, NgtAnyRecord, omit, pick } from 'angular-three';
 import { calculateScaleFactor } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Box3, Group, Matrix4, Mesh, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { NgtsAxisArrow } from './axis-arrow';
 import { NgtsAxisRotator } from './axis-rotator';
 import { NgtsPlaneSlider } from './plane-slider';
@@ -20,38 +21,38 @@ import { NgtsScalingSphere } from './scaling-sphere';
 export interface OnDragStartParameters {
 	component: 'Arrow' | 'Slider' | 'Rotator' | 'Sphere';
 	axis: 0 | 1 | 2;
-	origin: Vector3;
-	directions: Vector3[];
+	origin: THREE.Vector3;
+	directions: THREE.Vector3[];
 }
 
 export interface OnDragParameters {
-	l: Matrix4;
-	deltaL: Matrix4;
-	w: Matrix4;
-	deltaW: Matrix4;
+	l: THREE.Matrix4;
+	deltaL: THREE.Matrix4;
+	w: THREE.Matrix4;
+	deltaW: THREE.Matrix4;
 }
 
-const mL0 = new Matrix4();
-const mW0 = new Matrix4();
-const mP = new Matrix4();
-const mPInv = new Matrix4();
-const mW = new Matrix4();
-const mL = new Matrix4();
-const mL0Inv = new Matrix4();
-const mdL = new Matrix4();
-const mG = new Matrix4();
+const mL0 = new THREE.Matrix4();
+const mW0 = new THREE.Matrix4();
+const mP = new THREE.Matrix4();
+const mPInv = new THREE.Matrix4();
+const mW = new THREE.Matrix4();
+const mL = new THREE.Matrix4();
+const mL0Inv = new THREE.Matrix4();
+const mdL = new THREE.Matrix4();
+const mG = new THREE.Matrix4();
 
-const bb = new Box3();
-const bbObj = new Box3();
-const vCenter = new Vector3();
-const vSize = new Vector3();
-const vAnchorOffset = new Vector3();
-const vPosition = new Vector3();
-const vScale = new Vector3();
+const bb = new THREE.Box3();
+const bbObj = new THREE.Box3();
+const vCenter = new THREE.Vector3();
+const vSize = new THREE.Vector3();
+const vAnchorOffset = new THREE.Vector3();
+const vPosition = new THREE.Vector3();
+const vScale = new THREE.Vector3();
 
-const xDir = new Vector3(1, 0, 0);
-const yDir = new Vector3(0, 1, 0);
-const zDir = new Vector3(0, 0, 1);
+const xDir = new THREE.Vector3(1, 0, 0);
+const yDir = new THREE.Vector3(0, 1, 0);
+const zDir = new THREE.Vector3(0, 0, 1);
 
 export interface NgtsPivotControlsOptions {
 	/** Enables/disables the control, true */
@@ -68,7 +69,7 @@ export interface NgtsPivotControlsOptions {
 	rotation: [number, number, number];
 
 	/** Starting matrix */
-	matrix?: Matrix4;
+	matrix?: THREE.Matrix4;
 	/** BBAnchor, each axis can be between -1/0/+1 */
 	anchor?: [number, number, number];
 	/** If autoTransform is true, automatically apply the local transform on drag, true */
@@ -187,10 +188,9 @@ const defaultOptions: NgtsPivotControlsOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtsAxisArrow, NgtsPlaneSlider, NgtsAxisRotator, NgtsScalingSphere],
 })
-// TODO: PivotControls is not working properly with control flow
 export class NgtsPivotControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'enabled',
 		'matrix',
 		'autoTransform',
@@ -222,13 +222,23 @@ export class NgtsPivotControls {
 	dragEnded = output<void>();
 	dragged = output<OnDragParameters>();
 
-	matrix = pick(this.options, 'matrix');
+	private autoTransform = pick(this.options, 'autoTransform');
+	protected matrix = pick(this.options, 'matrix');
+	protected offset = pick(this.options, 'offset');
+	protected rotation = pick(this.options, 'rotation');
+	protected visible = pick(this.options, 'visible');
+	protected enabled = pick(this.options, 'enabled');
+	protected disableAxes = pick(this.options, 'disableAxes');
+	protected disableSliders = pick(this.options, 'disableSliders');
+	protected disableRotations = pick(this.options, 'disableRotations');
+	protected disableScaling = pick(this.options, 'disableScaling');
+	protected activeAxes = pick(this.options, 'activeAxes');
+
 	annotations = pick(this.options, 'annotations');
 	annotationsClass = pick(this.options, 'annotationsClass');
 	translationLimits = pick(this.options, 'translationLimits');
 	rotationLimits = pick(this.options, 'rotationLimits');
 	scaleLimits = pick(this.options, 'scaleLimits');
-	autoTransform = pick(this.options, 'autoTransform');
 	fixed = pick(this.options, 'fixed');
 	hoveredColor = pick(this.options, 'hoveredColor');
 	axisColors = pick(this.options, 'axisColors');
@@ -237,33 +247,23 @@ export class NgtsPivotControls {
 	userData = pick(this.options, 'userData');
 	opacity = pick(this.options, 'opacity');
 	depthTest = pick(this.options, 'depthTest');
-	offset = pick(this.options, 'offset');
-	rotation = pick(this.options, 'rotation');
-	visible = pick(this.options, 'visible');
-	enabled = pick(this.options, 'enabled');
-	disableAxes = pick(this.options, 'disableAxes');
-	disableSliders = pick(this.options, 'disableSliders');
-	disableRotations = pick(this.options, 'disableRotations');
-	disableScaling = pick(this.options, 'disableScaling');
-	activeAxes = pick(this.options, 'activeAxes');
 
-	xDir = xDir;
-	yDir = yDir;
-	zDir = zDir;
+	protected xDir = xDir;
+	protected yDir = yDir;
+	protected zDir = zDir;
 
-	parentRef = viewChild.required<ElementRef<Group>>('parent');
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	gizmoRef = viewChild.required<ElementRef<Group>>('gizmo');
-	childrenRef = viewChild.required<ElementRef<Group>>('children');
+	parentRef = viewChild.required<ElementRef<THREE.Group>>('parent');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	gizmoRef = viewChild.required<ElementRef<THREE.Group>>('gizmo');
+	childrenRef = viewChild.required<ElementRef<THREE.Group>>('children');
 
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
 
 	translation: [number, number, number] = [0, 0, 0];
 
 	private anchor = pick(this.options, 'anchor');
-	private cameraScale = new Vector3(1, 1, 1);
-	private gizmoScale = new Vector3(1, 1, 1);
+	private cameraScale = new THREE.Vector3(1, 1, 1);
+	private gizmoScale = new THREE.Vector3(1, 1, 1);
 
 	constructor() {
 		extend({ Group });
@@ -273,15 +273,15 @@ export class NgtsPivotControls {
 			if (!anchor) return;
 
 			const childrenContainer = this.childrenRef().nativeElement;
-			const localState = getLocalState(childrenContainer);
-			if (!localState) return;
+			const instanceState = getInstanceState(childrenContainer);
+			if (!instanceState) return;
 
 			const [gizmo, offset, invalidate] = [
 				this.gizmoRef().nativeElement,
 				this.offset(),
-				this.invalidate(),
+				this.store.invalidate(),
 				this.options(),
-				[localState.objects(), localState.nonObjects()],
+				[instanceState.objects(), instanceState.nonObjects()],
 			];
 			childrenContainer.updateWorldMatrix(true, true);
 
@@ -289,10 +289,10 @@ export class NgtsPivotControls {
 			bb.makeEmpty();
 
 			childrenContainer.traverse((obj) => {
-				if (!(obj as Mesh).geometry) return;
-				if (!(obj as Mesh).geometry.boundingBox) (obj as Mesh).geometry.computeBoundingBox();
+				if (!(obj as THREE.Mesh).geometry) return;
+				if (!(obj as THREE.Mesh).geometry.boundingBox) (obj as THREE.Mesh).geometry.computeBoundingBox();
 				mL.copy(obj.matrixWorld).premultiply(mPInv);
-				const boundingBox = (obj as Mesh).geometry.boundingBox;
+				const boundingBox = (obj as THREE.Mesh).geometry.boundingBox;
 				if (boundingBox) {
 					bbObj.copy(boundingBox);
 					bbObj.applyMatrix4(mL);
@@ -304,14 +304,14 @@ export class NgtsPivotControls {
 			vSize.copy(bb.max).sub(bb.min).multiplyScalar(0.5);
 			vAnchorOffset
 				.copy(vSize)
-				.multiply(new Vector3(...anchor))
+				.multiply(new THREE.Vector3(...anchor))
 				.add(vCenter);
 			vPosition.set(...offset).add(vAnchorOffset);
 			gizmo.position.copy(vPosition);
 			invalidate();
 		});
 
-		const vec = new Vector3();
+		const vec = new THREE.Vector3();
 		injectBeforeRender(({ camera, size, invalidate }) => {
 			const [{ fixed, scale, matrix }, gizmo, group] = [
 				this.options(),
@@ -324,7 +324,7 @@ export class NgtsPivotControls {
 				this.cameraScale.setScalar(sf);
 			}
 
-			if (matrix && matrix instanceof Matrix4) {
+			if (is.three<THREE.Matrix4>(matrix, 'isMatrix4')) {
 				group.matrix = matrix;
 			}
 
@@ -356,7 +356,7 @@ export class NgtsPivotControls {
 		this.store.snapshot.invalidate();
 	}
 
-	onDrag(mdW: Matrix4) {
+	onDrag(mdW: THREE.Matrix4) {
 		const [parent, group, autoTransform] = [
 			this.parentRef().nativeElement,
 			this.groupRef().nativeElement,

@@ -7,31 +7,31 @@ import {
 	ElementRef,
 	input,
 	output,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import {
 	extend,
-	getLocalState,
+	getInstanceState,
 	injectStore,
 	NgtArgs,
-	NgtGroup,
-	NgtObject3DNode,
+	NgtThreeElement,
+	NgtThreeElements,
 	omit,
 	pick,
 	resolveRef,
 } from 'angular-three';
-import { Camera, Group, Object3D, Event as ThreeEvent } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { TransformControls } from 'three-stdlib';
 
 interface ControlsProto {
 	enabled: boolean;
 }
 
-export type NgtsTransformControlsObject = NgtObject3DNode<TransformControls, typeof TransformControls>;
+export type NgtsTransformControlsObject = NgtThreeElement<typeof TransformControls>;
 
 export type NgtsTransformControlsOptions = Partial<NgtsTransformControlsObject> &
-	Partial<NgtGroup> & {
+	Partial<NgtThreeElements['ngt-group']> & {
 		enabled?: boolean;
 		axis?: string | null;
 		domElement?: HTMLElement;
@@ -44,7 +44,7 @@ export type NgtsTransformControlsOptions = Partial<NgtsTransformControlsObject> 
 		showX?: boolean;
 		showY?: boolean;
 		showZ?: boolean;
-		camera?: Camera;
+		camera?: THREE.Camera;
 		makeDefault?: boolean;
 	};
 
@@ -62,9 +62,9 @@ export type NgtsTransformControlsOptions = Partial<NgtsTransformControlsObject> 
 	imports: [NgtArgs],
 })
 export class NgtsTransformControls {
-	object = input<Object3D | ElementRef<Object3D> | undefined | null>(null);
+	object = input<THREE.Object3D | ElementRef<THREE.Object3D> | undefined | null>(null);
 	options = input({} as Partial<NgtsTransformControlsOptions>);
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'enabled',
 		'axis',
 		'mode',
@@ -99,29 +99,24 @@ export class NgtsTransformControls {
 	private domElement = pick(this.options, 'domElement');
 	private makeDefault = pick(this.options, 'makeDefault');
 
-	change = output<ThreeEvent>();
-	mouseDown = output<ThreeEvent>();
-	mouseUp = output<ThreeEvent>();
-	objectChange = output<ThreeEvent>();
+	change = output<THREE.Event>();
+	mouseDown = output<THREE.Event>();
+	mouseUp = output<THREE.Event>();
+	objectChange = output<THREE.Event>();
 
-	private groupRef = viewChild.required<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private store = injectStore();
-	private glDomElement = this.store.select('gl', 'domElement');
-	private defaultCamera = this.store.select('camera');
-	private events = this.store.select('events');
-	private defaultControls = this.store.select('controls') as unknown as Signal<ControlsProto>;
-	private invalidate = this.store.select('invalidate');
 
-	controls = computed(() => {
+	protected controls = computed(() => {
 		let camera = this.camera();
 		if (!camera) {
-			camera = this.defaultCamera();
+			camera = this.store.camera();
 		}
 
 		let domElement = this.domElement();
 		if (!domElement) {
-			domElement = this.events().connected || this.glDomElement();
+			domElement = this.store.events().connected || this.store.gl.domElement();
 		}
 
 		return new TransformControls(camera, domElement);
@@ -151,10 +146,10 @@ export class NgtsTransformControls {
 		const group = this.groupRef().nativeElement;
 		if (!group) return;
 
-		const localState = getLocalState(group);
-		if (!localState) return;
+		const instanceState = getInstanceState(group);
+		if (!instanceState) return;
 
-		const [object, controls] = [resolveRef(this.object()), this.controls(), localState.objects()];
+		const [object, controls] = [resolveRef(this.object()), this.controls(), instanceState.objects()];
 		if (object) {
 			controls.attach(object);
 		} else {
@@ -165,7 +160,7 @@ export class NgtsTransformControls {
 	}
 
 	private disableDefaultControlsEffect() {
-		const defaultControls = this.defaultControls();
+		const defaultControls = this.store.controls() as unknown as ControlsProto;
 		if (!defaultControls) return;
 
 		const controls = this.controls();
@@ -182,8 +177,8 @@ export class NgtsTransformControls {
 	}
 
 	private setupControlsEventsEffect() {
-		const [controls, invalidate] = [this.controls(), this.invalidate()];
-		const onChange = (event: ThreeEvent) => {
+		const [controls, invalidate] = [this.controls(), this.store.invalidate()];
+		const onChange = (event: THREE.Event) => {
 			invalidate();
 			if (!this.change['destroyed']) {
 				this.change.emit(event);

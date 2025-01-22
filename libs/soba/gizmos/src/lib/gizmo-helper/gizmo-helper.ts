@@ -8,34 +8,47 @@ import {
 	Directive,
 	effect,
 	ElementRef,
+	Injector,
 	input,
 	output,
-	Signal,
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import { extend, hasListener, injectBeforeRender, injectStore, NgtPortal, NgtPortalContent, pick } from 'angular-three';
+import {
+	extend,
+	hasListener,
+	injectBeforeRender,
+	injectStore,
+	NgtPortal,
+	NgtPortalAutoRender,
+	NgtPortalContent,
+	pick,
+} from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import CameraControls from 'camera-controls';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Group, Matrix4, Object3D, Quaternion, Scene, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { OrbitControls } from 'three-stdlib';
 
 const turnRate = 2 * Math.PI; // turn rate in angles per second
-const dummy = new Object3D();
-const matrix = new Matrix4();
-const [q1, q2] = [new Quaternion(), new Quaternion()];
-const target = new Vector3();
-const targetPosition = new Vector3();
+const dummy = new THREE.Object3D();
+const matrix = new THREE.Matrix4();
+const [q1, q2] = [new THREE.Quaternion(), new THREE.Quaternion()];
+const target = new THREE.Vector3();
+const targetPosition = new THREE.Vector3();
 
 @Directive({ selector: 'ng-template[gizmoHelperContent]' })
 export class NgtsGizmoHelperContent {
-	static ngTemplateContextGuard(_: NgtsGizmoHelperContent, ctx: unknown): ctx is { container: Object3D } {
+	static ngTemplateContextGuard(
+		_: NgtsGizmoHelperContent,
+		ctx: unknown,
+	): ctx is { container: THREE.Object3D; injector: Injector } {
 		return true;
 	}
 }
 
-type ControlsProto = { update(delta?: number): void; target: Vector3 };
+type ControlsProto = { update(delta?: number): void; target: THREE.Vector3 };
 
 export interface NgtsGizmoHelperOptions {
 	alignment:
@@ -66,16 +79,15 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 
 		<ngt-portal
 			[container]="scene"
-			[autoRender]="true"
-			[autoRenderPriority]="_renderPriority"
+			[autoRender]="_renderPriority"
 			[state]="{ events: { priority: _renderPriority + 1 } }"
 		>
-			<ng-template portalContent let-injector="injector" let-container="container">
+			<ng-template portalContent let-injector="injector">
 				<ngts-orthographic-camera [options]="{ makeDefault: true, position: [0, 0, 200] }" />
 				<ngt-group #gizmo [position]="[x(), y(), 0]">
 					<ng-container
 						[ngTemplateOutlet]="content()"
-						[ngTemplateOutletContext]="{ container, injector }"
+						[ngTemplateOutletContext]="{ container: scene, injector }"
 						[ngTemplateOutletInjector]="injector"
 					/>
 				</ngt-group>
@@ -84,7 +96,7 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtPortal, NgtPortalContent, NgtsOrthographicCamera, NgTemplateOutlet],
+	imports: [NgtPortal, NgtPortalAutoRender, NgtPortalContent, NgtsOrthographicCamera, NgTemplateOutlet],
 })
 export class NgtsGizmoHelper {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
@@ -94,41 +106,38 @@ export class NgtsGizmoHelper {
 	protected margin = pick(this.options, 'margin');
 	protected alignment = pick(this.options, 'alignment');
 
-	protected scene = new Scene();
+	protected scene = new THREE.Scene();
 
 	protected content = contentChild.required(NgtsGizmoHelperContent, { read: TemplateRef });
 
-	private gizmoRef = viewChild<ElementRef<Group>>('gizmo');
+	private gizmoRef = viewChild<ElementRef<THREE.Group>>('gizmo');
 	private virtualCameraRef = viewChild(NgtsOrthographicCamera);
 
 	private store = injectStore();
-	private size = this.store.select('size');
-	private mainCamera = this.store.select('camera');
-	private defaultControls = this.store.select('controls') as unknown as Signal<ControlsProto>;
-	private invalidate = this.store.select('invalidate');
 
 	protected x = computed(() => {
 		const alignment = this.alignment();
 		if (alignment.endsWith('-center')) return 0;
 
-		const [{ width }, [marginX]] = [this.size(), this.margin()];
+		const [width, [marginX]] = [this.store.size.width(), this.margin()];
 		return alignment.endsWith('-left') ? -width / 2 + marginX : width / 2 - marginX;
 	});
 	protected y = computed(() => {
 		const alignment = this.alignment();
 		if (alignment.startsWith('center-')) return 0;
 
-		const [{ height }, [marginY]] = [this.size(), this.margin()];
+		const [height, [marginY]] = [this.store.size.height(), this.margin()];
 		return alignment.startsWith('top-') ? height / 2 - marginY : -height / 2 + marginY;
 	});
 
 	private animating = false;
 	private radius = 0;
-	private focusPoint = new Vector3(0, 0, 0);
-	private defaultUp = new Vector3(0, 0, 0);
+	private focusPoint = new THREE.Vector3(0, 0, 0);
+	private defaultUp = new THREE.Vector3(0, 0, 0);
 
 	constructor() {
 		extend({ Group });
+
 		effect(() => {
 			this.updateDefaultUpEffect();
 		});
@@ -141,7 +150,11 @@ export class NgtsGizmoHelper {
 
 			if (!virtualCamera || !gizmo) return;
 
-			const [defaultControls, mainCamera, invalidate] = [this.defaultControls(), this.mainCamera(), this.invalidate()];
+			const [defaultControls, mainCamera, invalidate] = [
+				this.store.snapshot.controls as unknown as ControlsProto,
+				this.store.snapshot.camera,
+				this.store.snapshot.invalidate,
+			];
 
 			// Animate step
 			if (this.animating) {
@@ -179,8 +192,12 @@ export class NgtsGizmoHelper {
 		});
 	}
 
-	tweenCamera(direction: Vector3) {
-		const [defaultControls, invalidate, mainCamera] = [this.defaultControls(), this.invalidate(), this.mainCamera()];
+	tweenCamera(direction: THREE.Vector3) {
+		const [defaultControls, invalidate, mainCamera] = [
+			this.store.snapshot.controls as unknown as ControlsProto,
+			this.store.snapshot.invalidate,
+			this.store.snapshot.camera,
+		];
 
 		this.animating = true;
 		if (defaultControls) {
@@ -202,7 +219,7 @@ export class NgtsGizmoHelper {
 	}
 
 	private updateDefaultUpEffect() {
-		const mainCamera = this.mainCamera();
+		const mainCamera = this.store.camera();
 		this.defaultUp.copy(mainCamera.up);
 	}
 

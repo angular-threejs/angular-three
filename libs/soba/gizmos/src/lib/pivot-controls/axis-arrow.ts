@@ -7,29 +7,24 @@ import {
 	inject,
 	input,
 	signal,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { extend, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
-import { NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
-import {
-	ConeGeometry,
-	CylinderGeometry,
-	DoubleSide,
-	Group,
-	Matrix4,
-	Mesh,
-	MeshBasicMaterial,
-	Quaternion,
-	Vector3,
-} from 'three';
+import { NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import * as THREE from 'three';
+import { ConeGeometry, CylinderGeometry, Group, Mesh, MeshBasicMaterial } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
 
-const vec1 = new Vector3();
-const vec2 = new Vector3();
+const vec1 = new THREE.Vector3();
+const vec2 = new THREE.Vector3();
 
-export function calculateOffset(clickPoint: Vector3, normal: Vector3, rayStart: Vector3, rayDir: Vector3) {
+export function calculateOffset(
+	clickPoint: THREE.Vector3,
+	normal: THREE.Vector3,
+	rayStart: THREE.Vector3,
+	rayDir: THREE.Vector3,
+) {
 	const e1 = normal.dot(normal);
 	const e2 = normal.dot(clickPoint) - normal.dot(rayStart);
 	const e3 = normal.dot(rayDir);
@@ -51,8 +46,8 @@ export function calculateOffset(clickPoint: Vector3, normal: Vector3, rayStart: 
 	return -vec1.dot(vec2) / vec1.dot(vec1);
 }
 
-const upV = new Vector3(0, 1, 0);
-const offsetMatrix = new Matrix4();
+const upV = new THREE.Vector3(0, 1, 0);
+const offsetMatrix = new THREE.Matrix4();
 
 @Component({
 	selector: 'ngts-axis-arrow',
@@ -70,7 +65,7 @@ const offsetMatrix = new Matrix4();
 					<ngts-html [options]="{ position: [0, -coneLength(), 0] }">
 						<div
 							#annotation
-							ngtsHTMLContent
+							htmlContent
 							style="display: none; background: #151520; color: white; padding: 6px 8px; border-radius: 7px; white-space: nowrap;"
 							[class]="pivotControls.annotationsClass()"
 						></div>
@@ -107,11 +102,11 @@ const offsetMatrix = new Matrix4();
 				<ngt-mesh [raycast]="null" [position]="[0, cylinderLength() + coneLength() / 2.0, 0]" [renderOrder]="500">
 					<ngt-cone-geometry *args="[coneWidth(), coneLength(), 24, 1]" />
 					<ngt-mesh-basic-material
-						[transparent]="true"
+						transparent
+						polygonOffset
 						[depthTest]="pivotControls.depthTest()"
 						[color]="color()"
 						[opacity]="pivotControls.opacity()"
-						[polygonOffset]="true"
 						[polygonOffsetFactor]="-10"
 						[fog]="false"
 					/>
@@ -121,41 +116,40 @@ const offsetMatrix = new Matrix4();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsLine, NgtsHTML, NgtsHTMLContent],
+	imports: [NgtArgs, NgtsLine, NgtsHTMLDeclarations],
 })
 export class NgtsAxisArrow {
-	protected readonly DoubleSide = DoubleSide;
+	protected readonly DoubleSide = THREE.DoubleSide;
 
-	direction = input.required<Vector3>();
+	direction = input.required<THREE.Vector3>();
 	axis = input.required<0 | 1 | 2>();
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	annotationRef = viewChild<unknown, ElementRef<HTMLDivElement>>('annotation', { read: ElementRef });
+	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	private annotationRef = viewChild<'string', ElementRef<HTMLElement>>('annotation', { read: ElementRef });
 
-	pivotControls = inject(NgtsPivotControls);
+	protected pivotControls = inject(NgtsPivotControls);
 	private store = injectStore();
-	private controls = this.store.select('controls') as unknown as Signal<{ enabled: boolean }>;
 
 	private hovered = signal(false);
-	private clickInfo: { clickPoint: Vector3; dir: Vector3 } | null = null;
+	private clickInfo: { clickPoint: THREE.Vector3; dir: THREE.Vector3 } | null = null;
 	private offset0 = 0;
 
-	color = computed(() =>
+	protected color = computed(() =>
 		this.hovered() ? this.pivotControls.hoveredColor() : this.pivotControls.axisColors()[this.axis()],
 	);
 
-	coneWidth = computed(() =>
+	protected coneWidth = computed(() =>
 		this.pivotControls.fixed()
 			? (this.pivotControls.lineWidth() / this.pivotControls.scale()) * 1.6
 			: this.pivotControls.scale() / 20,
 	);
-	coneLength = computed(() => (this.pivotControls.fixed() ? 0.2 : this.pivotControls.scale() / 5));
-	cylinderLength = computed(() =>
+	protected coneLength = computed(() => (this.pivotControls.fixed() ? 0.2 : this.pivotControls.scale() / 5));
+	protected cylinderLength = computed(() =>
 		this.pivotControls.fixed() ? 1 - this.coneLength() : this.pivotControls.scale() - this.coneLength(),
 	);
-	matrixL = computed(() => {
-		const quaternion = new Quaternion().setFromUnitVectors(upV, this.direction().clone().normalize());
-		return new Matrix4().makeRotationFromQuaternion(quaternion);
+	protected matrixL = computed(() => {
+		const quaternion = new THREE.Quaternion().setFromUnitVectors(upV, this.direction().clone().normalize());
+		return new THREE.Matrix4().makeRotationFromQuaternion(quaternion);
 	});
 
 	constructor() {
@@ -167,7 +161,7 @@ export class NgtsAxisArrow {
 			this.groupRef().nativeElement,
 			this.direction(),
 			this.axis(),
-			this.controls(),
+			this.store.controls() as unknown as { enabled: boolean },
 			this.annotationRef()?.nativeElement,
 		];
 
@@ -178,23 +172,25 @@ export class NgtsAxisArrow {
 
 		event.stopPropagation();
 
-		const rotation = new Matrix4().extractRotation(group.matrixWorld);
-		const origin = new Vector3().setFromMatrixPosition(group.matrixWorld);
+		const rotation = new THREE.Matrix4().extractRotation(group.matrixWorld);
+		const origin = new THREE.Vector3().setFromMatrixPosition(group.matrixWorld);
 		const clickPoint = event.point.clone();
 		const dir = direction.clone().applyMatrix4(rotation).normalize();
 		this.clickInfo = { clickPoint, dir };
 		this.offset0 = this.pivotControls.translation[axis];
 		this.pivotControls.onDragStart({ component: 'Arrow', axis, origin, directions: [dir] });
-		if (controls) {
-			controls.enabled = false;
-		}
+
+		if (controls) controls.enabled = false;
 
 		// @ts-expect-error - setPointerCapture is not in the type definition
 		event.target.setPointerCapture(event.pointerId);
 	}
 
 	onPointerUp(event: NgtThreeEvent<PointerEvent>) {
-		const [annotation, controls] = [this.annotationRef()?.nativeElement, this.controls()];
+		const [annotation, controls] = [
+			this.annotationRef()?.nativeElement,
+			this.store.controls() as unknown as { enabled: boolean },
+		];
 
 		if (annotation) {
 			annotation.style.display = 'none';
@@ -203,9 +199,8 @@ export class NgtsAxisArrow {
 		event.stopPropagation();
 		this.clickInfo = null;
 		this.pivotControls.onDragEnd();
-		if (controls) {
-			controls.enabled = true;
-		}
+
+		if (controls) controls.enabled = true;
 
 		// @ts-expect-error - setPointerCapture is not in the type definition
 		event.target.releasePointerCapture(event.pointerId);

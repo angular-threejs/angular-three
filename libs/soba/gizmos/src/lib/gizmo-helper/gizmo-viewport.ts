@@ -15,24 +15,17 @@ import {
 	hasListener,
 	injectStore,
 	NgtArgs,
+	NgtEuler,
 	NgtEventHandlers,
-	NgtGroup,
+	NgtThreeElements,
 	NgtThreeEvent,
 	NgtVector3,
 	omit,
 	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	BoxGeometry,
-	CanvasTexture,
-	ColorRepresentation,
-	Group,
-	Mesh,
-	MeshBasicMaterial,
-	Sprite,
-	SpriteMaterial,
-} from 'three';
+import * as THREE from 'three';
+import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three';
 import { NgtsGizmoHelper } from './gizmo-helper';
 
 @Component({
@@ -56,8 +49,8 @@ export class Axis {
 			return value;
 		},
 	});
-	color = input<ColorRepresentation>();
-	rotation = input<NgtVector3>([0, 0, 0]);
+	color = input<THREE.ColorRepresentation>();
+	rotation = input<NgtEuler>([0, 0, 0]);
 
 	constructor() {
 		extend({ Group, Mesh, BoxGeometry, MeshBasicMaterial });
@@ -94,7 +87,6 @@ export class AxisHead {
 	private document = inject(DOCUMENT);
 	private gizmoHelper = inject(NgtsGizmoHelper);
 	private store = injectStore();
-	private gl = this.store.select('gl');
 
 	protected texture = computed(() => {
 		const [arcStyle, label, labelColor, font, gl] = [
@@ -102,7 +94,7 @@ export class AxisHead {
 			this.label(),
 			this.labelColor(),
 			this.font(),
-			this.gl(),
+			this.store.gl(),
 		];
 
 		const canvas = this.document.createElement('canvas');
@@ -123,7 +115,7 @@ export class AxisHead {
 			context.fillText(label, 32, 41);
 		}
 
-		const texture = new CanvasTexture(canvas);
+		const texture = new THREE.CanvasTexture(canvas);
 		texture.anisotropy = gl.capabilities.getMaxAnisotropy() || 1;
 		return texture;
 	});
@@ -160,7 +152,7 @@ export class AxisHead {
 	}
 }
 
-export interface NgtsGizmoViewportOptions extends Partial<NgtGroup> {
+export interface NgtsGizmoViewportOptions extends Partial<NgtThreeElements['ngt-group']> {
 	axisColors: [string, string, string];
 	axisScale?: [number, number, number];
 	labels: [string, string, string];
@@ -265,7 +257,7 @@ export class NgtsGizmoViewport {
 	protected readonly Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'axisColors',
 		'axisScale',
 		'labels',

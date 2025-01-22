@@ -20,7 +20,8 @@ import {
 	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BoxGeometry, CanvasTexture, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
+import * as THREE from 'three';
+import { BoxGeometry, Group, Mesh, MeshBasicMaterial } from 'three';
 import { NgtsGizmoHelper } from './gizmo-helper';
 
 type XYZ = [number, number, number];
@@ -55,7 +56,7 @@ const defaultFaceMaterialOptions: NgtsViewcubeCommonOptions = {
 			[attach]="['material', index()]"
 			[map]="texture()"
 			[color]="materialColor()"
-			[transparent]="true"
+			transparent
 			[opacity]="opacity()"
 		/>
 	`,
@@ -76,7 +77,6 @@ export class FaceMaterial {
 
 	private document = inject(DOCUMENT);
 	private store = injectStore();
-	private gl = this.store.select('gl');
 
 	protected opacity = pick(this.options, 'opacity');
 	protected materialColor = computed(() => (this.hover() ? this.hoverColor() : 'white'));
@@ -88,7 +88,7 @@ export class FaceMaterial {
 			this.color(),
 			this.textColor(),
 			this.strokeColor(),
-			this.gl(),
+			this.store.gl(),
 		];
 
 		const canvas = this.document.createElement('canvas');
@@ -105,7 +105,7 @@ export class FaceMaterial {
 		context.fillStyle = textColor;
 		context.fillText(faces[index].toUpperCase(), 64, 76);
 
-		const texture = new CanvasTexture(canvas);
+		const texture = new THREE.CanvasTexture(canvas);
 		texture.anisotropy = gl.capabilities.getMaxAnisotropy() || 1;
 
 		return texture;
@@ -179,7 +179,7 @@ export class FaceCube {
 })
 export class EdgeCube {
 	dimensions = input.required<XYZ>();
-	position = input.required<Vector3>();
+	position = input.required<THREE.Vector3>();
 	hoverColor = input(colors.hover, {
 		transform: (value: string | undefined) => {
 			if (value === undefined) return colors.hover;
@@ -242,7 +242,7 @@ export class NgtsGizmoViewcube {
 
 	protected hoverColor = pick(this.options, 'hoverColor');
 
-	protected corners: Vector3[] = [
+	protected corners: THREE.Vector3[] = [
 		[1, 1, 1],
 		[1, 1, -1],
 		[1, -1, 1],
@@ -253,7 +253,7 @@ export class NgtsGizmoViewcube {
 		[-1, -1, -1],
 	].map(this.makePositionVector);
 	protected cornerDimensions: XYZ = [0.25, 0.25, 0.25];
-	protected edges: Vector3[] = [
+	protected edges: THREE.Vector3[] = [
 		[1, 1, 0],
 		[1, 0, 1],
 		[1, 0, -1],
@@ -281,6 +281,6 @@ export class NgtsGizmoViewcube {
 	}
 
 	private makePositionVector(xyz: number[]) {
-		return new Vector3(...xyz).multiplyScalar(0.38);
+		return new THREE.Vector3(...xyz).multiplyScalar(0.38);
 	}
 }
