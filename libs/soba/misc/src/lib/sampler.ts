@@ -5,29 +5,28 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
-	Injector,
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, getLocalState, NgtGroup, omit, pick, resolveRef } from 'angular-three';
-import { assertInjector } from 'ngxtension/assert-injector';
+import { checkUpdate, extend, getInstanceState, is, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BufferGeometry, Color, Group, InstancedBufferAttribute, InstancedMesh, Mesh, Object3D, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { MeshSurfaceSampler } from 'three-stdlib';
 
 interface SamplePayload {
 	/**
 	 * The position of the sample.
 	 */
-	position: Vector3;
+	position: THREE.Vector3;
 	/**
 	 * The normal of the mesh at the sampled position.
 	 */
-	normal: Vector3;
+	normal: THREE.Vector3;
 	/**
 	 * The vertex color of the mesh at the sampled position.
 	 */
-	color: Color;
+	color: THREE.Color;
 }
 
 export type TransformFn = (payload: TransformPayload, i: number) => void;
@@ -38,98 +37,100 @@ interface TransformPayload extends SamplePayload {
 	 * This object's matrix will be updated after transforming & it will be used
 	 * to set the instance's matrix.
 	 */
-	dummy: Object3D;
+	dummy: THREE.Object3D;
 	/**
 	 * The mesh that's initially passed to the sampler.
 	 * Use this if you need to apply transforms from your mesh to your instances
 	 * or if you need to grab attributes from the geometry.
 	 */
-	sampledMesh: Mesh;
+	sampledMesh: THREE.Mesh;
 }
 
-export function injectSurfaceSampler(
-	mesh: () => ElementRef<Mesh> | Mesh | null | undefined,
-	options: () => {
-		count?: number;
-		transform?: TransformFn;
-		weight?: string;
-		instanceMesh?: ElementRef<InstancedMesh> | InstancedMesh | null;
-	} = () => ({}),
-	{ injector }: { injector?: Injector } = {},
+export function surfaceSampler(
+	mesh: () => ElementRef<THREE.Mesh> | THREE.Mesh | null | undefined,
+	{
+		count,
+		transform,
+		weight,
+		instancedMesh,
+	}: {
+		count?: () => number;
+		transform?: () => TransformFn | undefined;
+		weight?: () => string | undefined;
+		instancedMesh?: () => ElementRef<THREE.InstancedMesh> | THREE.InstancedMesh | null | undefined;
+	} = {},
 ) {
-	return assertInjector(injectSurfaceSampler, injector, () => {
-		const initialBufferAttribute = (() => {
-			const arr = Array.from({ length: options().count ?? 16 }, () => [
-				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-			]).flat();
-			return new InstancedBufferAttribute(Float32Array.from(arr), 16);
-		})();
+	const initialBufferAttribute = (() => {
+		const arr = Array.from({ length: count?.() ?? 16 }, () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]).flat();
+		return new THREE.InstancedBufferAttribute(Float32Array.from(arr), 16);
+	})();
 
-		return computed(() => {
-			const currentMesh = resolveRef(mesh());
-			if (!currentMesh) return initialBufferAttribute;
+	return computed(() => {
+		const currentMesh = resolveRef(mesh());
+		if (!currentMesh) return initialBufferAttribute;
 
-			const localState = getLocalState(currentMesh);
-			if (!localState) return initialBufferAttribute;
+		const instanceState = getInstanceState(currentMesh);
+		if (!instanceState) return initialBufferAttribute;
 
-			const nonObjects = localState.nonObjects();
-			if (
-				!nonObjects ||
-				!nonObjects.length ||
-				nonObjects.every((nonObject) => !(nonObject as BufferGeometry).isBufferGeometry)
-			) {
-				return initialBufferAttribute;
+		const nonObjects = instanceState.nonObjects();
+		if (
+			!nonObjects ||
+			!nonObjects.length ||
+			nonObjects.every((nonObject) => !is.three<THREE.BufferGeometry>(nonObject, 'isBufferGeometry'))
+		) {
+			return initialBufferAttribute;
+		}
+
+		const sampler = new MeshSurfaceSampler(currentMesh);
+		const _count = count?.() ?? 16;
+		const _transform = transform?.();
+		const _weight = weight?.();
+
+		if (_weight) {
+			sampler.setWeightAttribute(_weight);
+		}
+
+		sampler.build();
+
+		const position = new THREE.Vector3();
+		const normal = new THREE.Vector3();
+		const color = new THREE.Color();
+		const dummy = new THREE.Object3D();
+		const instance = resolveRef(instancedMesh?.());
+
+		currentMesh.updateMatrixWorld(true);
+
+		for (let i = 0; i < _count; i++) {
+			sampler.sample(position, normal, color);
+
+			if (typeof _transform === 'function') {
+				_transform({ dummy, sampledMesh: currentMesh, position, normal, color }, i);
+			} else {
+				dummy.position.copy(position);
 			}
 
-			const sampler = new MeshSurfaceSampler(currentMesh);
-			const { weight, count = 16, transform, instanceMesh } = options();
-
-			if (weight) {
-				sampler.setWeightAttribute(weight);
-			}
-
-			sampler.build();
-
-			const position = new Vector3();
-			const normal = new Vector3();
-			const color = new Color();
-			const dummy = new Object3D();
-			const instance = resolveRef(instanceMesh);
-
-			currentMesh.updateMatrixWorld(true);
-
-			for (let i = 0; i < count; i++) {
-				sampler.sample(position, normal, color);
-
-				if (typeof transform === 'function') {
-					transform({ dummy, sampledMesh: currentMesh, position, normal, color }, i);
-				} else {
-					dummy.position.copy(position);
-				}
-
-				dummy.updateMatrix();
-
-				if (instance) {
-					instance.setMatrixAt(i, dummy.matrix);
-				}
-
-				dummy.matrix.toArray(initialBufferAttribute.array, i * 16);
-			}
+			dummy.updateMatrix();
 
 			if (instance) {
-				checkUpdate(instance.instanceMatrix);
+				instance.setMatrixAt(i, dummy.matrix);
 			}
 
-			checkUpdate(initialBufferAttribute);
+			dummy.matrix.toArray(initialBufferAttribute.array, i * 16);
+		}
 
-			return new InstancedBufferAttribute(initialBufferAttribute.array, initialBufferAttribute.itemSize).copy(
-				initialBufferAttribute,
-			);
-		});
+		if (instance) {
+			checkUpdate(instance.instanceMatrix);
+		}
+
+		checkUpdate(initialBufferAttribute);
+
+		return new THREE.InstancedBufferAttribute(initialBufferAttribute.array, initialBufferAttribute.itemSize).copy(
+			initialBufferAttribute,
+		);
 	});
 }
 
-export interface NgtsSamplerOptions extends Partial<NgtGroup> {
+export interface NgtsSamplerOptions extends Partial<NgtThreeElements['ngt-group']> {
 	/**
 	 * The NAME of the weight attribute to use when sampling.
 	 *
@@ -164,45 +165,57 @@ const defaultOptions: NgtsSamplerOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsSampler {
-	mesh = input<ElementRef<Mesh> | Mesh | null>(null);
-	instances = input<ElementRef<InstancedMesh> | InstancedMesh | null>(null);
+	mesh = input<ElementRef<THREE.Mesh> | THREE.Mesh | null>(null);
+	instances = input<ElementRef<THREE.InstancedMesh> | THREE.InstancedMesh | null>(null);
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['weight', 'transform', 'count']);
+	protected parameters = omit(this.options, ['weight', 'transform', 'count']);
 
 	// NOTE: this could have been a viewChild.required, but we need to _try_ to consume
 	//  this Signal earlier than when a viewChild.required would resolve.
-	groupRef = viewChild<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+
+	private count = pick(this.options, 'count');
+	private weight = pick(this.options, 'weight');
+	private transform = pick(this.options, 'transform');
 
 	constructor() {
 		extend({ Group });
 
-		const sampleState = computed(() => {
-			const group = this.groupRef()?.nativeElement;
-			const localState = getLocalState(group);
-			if (!localState) return { mesh: null, instanced: null };
+		const meshToSample = computed(() => {
+			const group = this.groupRef().nativeElement;
+			const instanceState = getInstanceState(group);
+			if (!instanceState) return null;
 
-			const [mesh, instances] = [resolveRef(this.mesh()), resolveRef(this.instances())];
-			const objects = localState.objects();
+			const mesh = resolveRef(this.mesh());
+			if (mesh) return mesh;
 
-			return {
-				mesh: mesh ?? (objects.find((c) => c.type === 'Mesh') as Mesh),
-				instanced:
-					instances ?? (objects.find((c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix')) as InstancedMesh),
-			};
+			const objects = instanceState.objects();
+			return objects.find((c) => is.three<THREE.Mesh>(c, 'isMesh'));
 		});
 
-		const meshToSample = pick(sampleState, 'mesh');
-		const instancedToSample = pick(sampleState, 'instanced');
+		const instancedMeshToSample = computed(() => {
+			const group = this.groupRef().nativeElement;
+			const instanceState = getInstanceState(group);
+			if (!instanceState) return null;
+
+			const instances = resolveRef(this.instances());
+			if (instances) return instances;
+
+			const objects = instanceState.objects();
+			return objects.find(
+				(c) => !!Object.getOwnPropertyDescriptor(c, 'instanceMatrix'),
+			) as unknown as THREE.InstancedMesh;
+		});
 
 		// NOTE: because injectSurfaceSampler returns a computed, we need to consume
 		//  this computed in a Reactive Context (an effect) to ensure the inner logic of
 		//  injectSurfaceSampler is run properly.
-		const sampler = injectSurfaceSampler(meshToSample, () => ({
-			count: this.options().count,
-			transform: this.options().transform,
-			weight: this.options().weight,
-			instanceMesh: instancedToSample(),
-		}));
+		const sampler = surfaceSampler(meshToSample, {
+			count: this.count,
+			transform: this.transform,
+			weight: this.weight,
+			instancedMesh: instancedMeshToSample,
+		});
 		effect(sampler);
 	}
 }

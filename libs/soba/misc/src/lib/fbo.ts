@@ -13,18 +13,7 @@ import {
 } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import {
-	ColorSpace,
-	DepthTexture,
-	FloatType,
-	HalfFloatType,
-	LinearFilter,
-	MagnificationTextureFilter,
-	MinificationTextureFilter,
-	TextureDataType,
-	WebGLRenderTarget,
-	Wrapping,
-} from 'three';
+import * as THREE from 'three';
 import { TextureEncoding } from './deprecated';
 
 interface FBOSettings {
@@ -34,19 +23,19 @@ interface FBOSettings {
 	depth?: boolean;
 
 	// WebGLRenderTargetOptions => RenderTargetOptions
-	wrapS?: Wrapping | undefined;
-	wrapT?: Wrapping | undefined;
-	magFilter?: MagnificationTextureFilter | undefined;
-	minFilter?: MinificationTextureFilter | undefined;
+	wrapS?: THREE.Wrapping | undefined;
+	wrapT?: THREE.Wrapping | undefined;
+	magFilter?: THREE.MagnificationTextureFilter | undefined;
+	minFilter?: THREE.MinificationTextureFilter | undefined;
 	format?: number | undefined; // RGBAFormat;
-	type?: TextureDataType | undefined; // UnsignedByteType;
+	type?: THREE.TextureDataType | undefined; // UnsignedByteType;
 	anisotropy?: number | undefined; // 1;
 	depthBuffer?: boolean | undefined; // true;
 	stencilBuffer?: boolean | undefined; // false;
 	generateMipmaps?: boolean | undefined; // true;
-	depthTexture?: DepthTexture | undefined;
+	depthTexture?: THREE.DepthTexture | undefined;
 	encoding?: TextureEncoding | undefined;
-	colorSpace?: ColorSpace | undefined;
+	colorSpace?: THREE.ColorSpace | undefined;
 }
 
 export interface NgtsFBOParams {
@@ -58,17 +47,17 @@ export interface NgtsFBOParams {
 export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectFBO, injector, () => {
 		const store = injectStore();
-		const size = store.select('size');
-		const viewport = store.select('viewport');
 
 		const width = computed(() => {
 			const { width } = params();
-			return typeof width === 'number' ? width : size().width * viewport().dpr;
+			return typeof width === 'number' ? width : store.size.width() * store.viewport.dpr();
 		});
+
 		const height = computed(() => {
 			const { height } = params();
-			return typeof height === 'number' ? height : size().height * viewport().dpr;
+			return typeof height === 'number' ? height : store.size.height() * store.viewport.dpr();
 		});
+
 		const settings = computed(() => {
 			const { width, settings } = params();
 			const _settings = (typeof width === 'number' ? settings : (width as FBOSettings)) || {};
@@ -84,15 +73,16 @@ export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }
 				untracked(width),
 				untracked(height),
 			];
-			const target = new WebGLRenderTarget(_width, _height, {
-				minFilter: LinearFilter,
-				magFilter: LinearFilter,
-				type: HalfFloatType,
+
+			const target = new THREE.WebGLRenderTarget(_width, _height, {
+				minFilter: THREE.LinearFilter,
+				magFilter: THREE.LinearFilter,
+				type: THREE.HalfFloatType,
 				...targetSettings,
 			});
 
 			if (depth) {
-				target.depthTexture = new DepthTexture(_width, _height, FloatType);
+				target.depthTexture = new THREE.DepthTexture(_width, _height, THREE.FloatType);
 			}
 
 			target.samples = samples;

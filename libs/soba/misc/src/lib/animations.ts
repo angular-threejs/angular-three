@@ -1,27 +1,35 @@
-import { computed, effect, ElementRef, Injector, isSignal, Signal, signal, untracked } from '@angular/core';
+import { computed, effect, ElementRef, Injector, isSignal, signal, untracked } from '@angular/core';
 import { injectBeforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { AnimationAction, AnimationClip, AnimationMixer, Object3D } from 'three';
+import * as THREE from 'three';
 
 /**
  * name: any to allow consumers to pass in type-safe animation clips
  */
-type NgtsAnimationClipWithoutName = Omit<AnimationClip, 'name'> & { name: any };
+type NgtsAnimationClipWithoutName = Omit<THREE.AnimationClip, 'name'> & { name: any };
 export type NgtsAnimationClip = Omit<NgtsAnimationClipWithoutName, 'clone'> & { clone: () => NgtsAnimationClip };
 export type NgtsAnimationClips<TAnimationNames extends string> = {
 	[Name in TAnimationNames]: Omit<NgtsAnimationClip, 'name'> & { name: Name };
 }[TAnimationNames];
 export type NgtsAnimationApi<T extends NgtsAnimationClip> = {
-	/**
-	 * Whether or not the animations finishes initialized
-	 *
-	 * @deprecated 3.5.0 - use `isReady` getter for better type-narrow instead. Will be removed in 4.0.0
-	 */
-	ready: Signal<boolean>;
 	clips: T[];
-	mixer: AnimationMixer;
+	mixer: THREE.AnimationMixer;
 	names: T['name'][];
-} & ({ get isReady(): true; actions: { [key in T['name']]: AnimationAction } } | { get isReady(): false });
+} & (
+	| {
+			/**
+			 * Whether or not the animations finishes initialized
+			 */
+			get isReady(): true;
+			actions: { [key in T['name']]: THREE.AnimationAction };
+	  }
+	| {
+			/**
+			 * Whether or not the animations finishes initialized
+			 */
+			get isReady(): false;
+	  }
+);
 
 export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationClip> =
 	| TAnimation[]
@@ -32,18 +40,21 @@ export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationCl
  */
 export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 	animations: () => NgtsAnimation<TAnimation> | undefined | null,
-	object: ElementRef<Object3D> | Object3D | (() => ElementRef<Object3D> | Object3D | undefined | null),
+	object:
+		| ElementRef<THREE.Object3D>
+		| THREE.Object3D
+		| (() => ElementRef<THREE.Object3D> | THREE.Object3D | undefined | null),
 	{ injector }: { injector?: Injector } = {},
 ): NgtsAnimationApi<TAnimation> {
 	return assertInjector(injectAnimations, injector, () => {
-		const mixer = new AnimationMixer(null!);
+		const mixer = new THREE.AnimationMixer(null!);
 		injectBeforeRender(({ delta }) => {
 			if (!mixer.getRoot()) return;
 			mixer.update(delta);
 		});
 
-		let cached = {} as Record<string, AnimationAction>;
-		const actions = {} as { [key in TAnimation['name']]: AnimationAction };
+		let cached = {} as Record<string, THREE.AnimationAction>;
+		const actions = {} as { [key in TAnimation['name']]: THREE.AnimationAction };
 		const clips = [] as NgtsAnimationApi<TAnimation>['clips'];
 		const names = [] as NgtsAnimationApi<TAnimation>['names'];
 
@@ -58,8 +69,9 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 		const ready = signal(false);
 
 		effect((onCleanup) => {
-			const obj = actualObject() as Object3D | undefined;
+			const obj = actualObject() as THREE.Object3D | undefined;
 			if (!obj) return;
+
 			Object.assign(mixer, { _root: obj });
 
 			const maybeAnimationClips = animations();
@@ -98,7 +110,7 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 				mixer.stopAllAction();
 				// uncache actions
 				Object.values(actions).forEach((action) => {
-					mixer.uncacheAction(action as AnimationClip, obj);
+					mixer.uncacheAction(action as THREE.AnimationClip, obj);
 				});
 			});
 		});

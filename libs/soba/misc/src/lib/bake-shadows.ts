@@ -5,13 +5,12 @@ import { injectStore } from 'angular-three';
 export class NgtsBakeShadows {
 	constructor() {
 		const store = injectStore();
-		const gl = store.select('gl');
 		effect((onCleanup) => {
-			const _gl = gl();
-			_gl.shadowMap.autoUpdate = false;
-			_gl.shadowMap.needsUpdate = true;
+			const gl = store.gl();
+			gl.shadowMap.autoUpdate = false;
+			gl.shadowMap.needsUpdate = true;
 			onCleanup(() => {
-				_gl.shadowMap.autoUpdate = _gl.shadowMap.needsUpdate = true;
+				gl.shadowMap.autoUpdate = gl.shadowMap.needsUpdate = true;
 			});
 		});
 	}

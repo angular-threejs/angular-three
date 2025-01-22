@@ -1,7 +1,7 @@
 import { computed, Injector } from '@angular/core';
 import { injectBeforeRender, injectStore, pick } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { DepthFormat, DepthTexture, UnsignedShortType } from 'three';
+import * as THREE from 'three';
 import { injectFBO } from './fbo';
 
 export function injectDepthBuffer(
@@ -13,17 +13,17 @@ export function injectDepthBuffer(
 		const frames = computed(() => params().frames || Infinity);
 
 		const store = injectStore();
-		const width = store.select('size', 'width');
-		const height = store.select('size', 'height');
-		const dpr = store.select('viewport', 'dpr');
+		// const width = store.select('size', 'width');
+		// const height = store.select('size', 'height');
+		// const dpr = store.select('viewport', 'dpr');
 
-		const w = computed(() => size() || width() * dpr());
-		const h = computed(() => size() || height() * dpr());
+		const w = computed(() => size() || store.size.width() * store.viewport.dpr());
+		const h = computed(() => size() || store.size.height() * store.viewport.dpr());
 
 		const depthConfig = computed(() => {
-			const depthTexture = new DepthTexture(w(), h());
-			depthTexture.format = DepthFormat;
-			depthTexture.type = UnsignedShortType;
+			const depthTexture = new THREE.DepthTexture(w(), h());
+			depthTexture.format = THREE.DepthFormat;
+			depthTexture.type = THREE.UnsignedShortType;
 			return { depthTexture };
 		});
 

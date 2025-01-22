@@ -7,16 +7,17 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { applyProps, extend, getLocalState, NgtMesh, omit, pick, resolveRef } from 'angular-three';
+import { applyProps, extend, getInstanceState, is, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { AxesHelper, BoxGeometry, Euler, Mesh, MeshNormalMaterial, Object3D, Texture, Vector3 } from 'three';
+import * as THREE from 'three';
+import { AxesHelper, BoxGeometry, Mesh, MeshNormalMaterial } from 'three';
 import { DecalGeometry } from 'three-stdlib';
 
-export interface NgtsDecalOptions extends Partial<NgtMesh> {
+export interface NgtsDecalOptions extends Partial<NgtThreeElements['ngt-mesh']> {
 	polygonOffsetFactor: number;
 	depthTest: boolean;
 	debug: boolean;
-	map?: Texture | null;
+	map?: THREE.Texture | null;
 }
 
 const defaultOptions: NgtsDecalOptions = {
@@ -42,7 +43,7 @@ const defaultOptions: NgtsDecalOptions = {
 			@if (debug()) {
 				<ngt-mesh #helper>
 					<ngt-box-geometry />
-					<ngt-mesh-normal-material [wireframe]="true" />
+					<ngt-mesh-normal-material wireframe />
 					<ngt-axes-helper />
 				</ngt-mesh>
 			}
@@ -52,9 +53,9 @@ const defaultOptions: NgtsDecalOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsDecal {
-	mesh = input<ElementRef<Mesh> | Mesh | null>();
+	mesh = input<ElementRef<THREE.Mesh> | THREE.Mesh | null>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'debug',
 		'map',
 		'depthTest',
@@ -64,8 +65,8 @@ export class NgtsDecal {
 		'rotation',
 	]);
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
-	helperRef = viewChild<ElementRef<Mesh>>('helper');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+	private helperRef = viewChild<ElementRef<THREE.Mesh>>('helper');
 
 	protected map = pick(this.options, 'map');
 	protected depthTest = pick(this.options, 'depthTest');
@@ -80,22 +81,22 @@ export class NgtsDecal {
 
 		effect((onCleanup) => {
 			const thisMesh = this.meshRef().nativeElement;
-			const localState = getLocalState(thisMesh);
-			if (!localState) return;
+			const instanceState = getInstanceState(thisMesh);
+			if (!instanceState) return;
 
-			const parent = resolveRef(this.mesh()) || localState.parent();
+			const parent = resolveRef(this.mesh()) || instanceState.parent();
 
-			if (parent && !(parent as Mesh).isMesh) {
+			if (parent && !is.three<THREE.Mesh>(parent, 'isMesh')) {
 				throw new Error('<ngts-decal> must have a Mesh as parent or specify its "mesh" input');
 			}
 
 			if (!parent) return;
 
-			const parentLocalState = getLocalState(parent);
-			if (!parentLocalState) return;
+			const parentInstanceState = getInstanceState(parent);
+			if (!parentInstanceState) return;
 
 			// track parent's children
-			const parentNonObjects = parentLocalState.nonObjects();
+			const parentNonObjects = parentInstanceState.nonObjects();
 			if (!parentNonObjects || !parentNonObjects.length) {
 				return;
 			}
@@ -106,7 +107,7 @@ export class NgtsDecal {
 			}
 
 			const [position, rotation, scale] = [this.position(), this.rotation(), this.scale()];
-			const state = { position: new Vector3(), rotation: new Euler(), scale: new Vector3(1, 1, 1) };
+			const state = { position: new THREE.Vector3(), rotation: new THREE.Euler(), scale: new THREE.Vector3(1, 1, 1) };
 
 			applyProps(state, { position, scale });
 
@@ -115,11 +116,11 @@ export class NgtsDecal {
 			parent.matrixWorld.identity();
 
 			if (!rotation || typeof rotation === 'number') {
-				const o = new Object3D();
-				o.position.copy(state.position);
-				o.lookAt(parent.position);
-				if (typeof rotation === 'number') o.rotateZ(rotation);
-				applyProps(state, { rotation: o.rotation });
+				const obj = new THREE.Object3D();
+				obj.position.copy(state.position);
+				obj.lookAt(parent.position);
+				if (typeof rotation === 'number') obj.rotateZ(rotation);
+				applyProps(state, { rotation: obj.rotation });
 			} else {
 				applyProps(state, { rotation });
 			}

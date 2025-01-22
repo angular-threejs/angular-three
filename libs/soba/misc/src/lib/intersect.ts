@@ -1,9 +1,9 @@
 import { Directive, effect, ElementRef, inject, Injector, model, signal, WritableSignal } from '@angular/core';
 import { addAfterEffect, addEffect, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Object3D } from 'three';
+import * as THREE from 'three';
 
-export function injectIntersect<TObject extends Object3D>(
+export function injectIntersect<TObject extends THREE.Object3D>(
 	object: () => ElementRef<TObject> | TObject | undefined | null,
 	{ injector, source = signal(false) }: { injector?: Injector; source?: WritableSignal<boolean> } = {},
 ) {
@@ -47,7 +47,7 @@ export class NgtsIntersect {
 	intersect = model(false);
 
 	constructor() {
-		const host = inject<ElementRef<Object3D>>(ElementRef);
+		const host = inject<ElementRef<THREE.Object3D>>(ElementRef);
 		injectIntersect(() => host, { source: this.intersect });
 	}
 }

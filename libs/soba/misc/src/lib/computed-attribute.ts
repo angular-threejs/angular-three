@@ -7,8 +7,8 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtBufferAttribute, getLocalState } from 'angular-three';
-import { BufferAttribute, BufferGeometry } from 'three';
+import { NgtArgs, NgtThreeElements, getInstanceState } from 'angular-three';
+import * as THREE from 'three';
 
 @Component({
 	selector: 'ngts-computed-attribute',
@@ -27,22 +27,22 @@ import { BufferAttribute, BufferGeometry } from 'three';
  * and attaches the attribute to the geometry.
  */
 export class NgtsComputedAttribute {
-	compute = input.required<(geometry: BufferGeometry) => BufferAttribute>();
+	compute = input.required<(geometry: THREE.BufferGeometry) => THREE.BufferAttribute>();
 	name = input.required<string>();
-	options = input({} as Partial<NgtBufferAttribute>);
+	options = input({} as Partial<NgtThreeElements['ngt-buffer-geometry']>);
 
-	bufferAttribute = new BufferAttribute(new Float32Array(0), 1);
-	attributeRef = viewChild<ElementRef<BufferAttribute>>('attribute');
+	protected bufferAttribute = new THREE.BufferAttribute(new Float32Array(0), 1);
+	attributeRef = viewChild<ElementRef<THREE.BufferAttribute>>('attribute');
 
 	constructor() {
 		effect(() => {
 			const bufferAttribute = this.attributeRef()?.nativeElement;
 			if (!bufferAttribute) return;
 
-			const localState = getLocalState(bufferAttribute);
-			if (!localState) return;
+			const instanceState = getInstanceState(bufferAttribute);
+			if (!instanceState) return;
 
-			const geometry = ((bufferAttribute as any).parent as BufferGeometry) ?? localState.parent();
+			const geometry = ((bufferAttribute as any).parent as THREE.BufferGeometry) ?? instanceState.parent();
 
 			const attribute = this.compute()(geometry);
 			bufferAttribute.copy(attribute);
