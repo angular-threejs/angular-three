@@ -1,11 +1,11 @@
-import { NgtMaterial } from 'angular-three';
+import { NgtThreeElement } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
-import { PointsMaterial, PointsMaterialParameters } from 'three';
+import * as THREE from 'three';
 
 const opaque_fragment = getVersion() >= 154 ? 'opaque_fragment' : 'output_fragment';
 
-export class PointMaterial extends PointsMaterial {
-	constructor(props: PointsMaterialParameters) {
+export class PointMaterial extends THREE.PointsMaterial {
+	constructor(props: THREE.PointsMaterialParameters) {
 		super(props);
 		this.onBeforeCompile = (shader, renderer) => {
 			const { isWebGL2 } = renderer.capabilities;
@@ -30,7 +30,7 @@ export class PointMaterial extends PointsMaterial {
 	}
 }
 
-export type NgtPointMaterial = NgtMaterial<PointMaterial, [PointsMaterialParameters]>;
+export type NgtPointMaterial = NgtThreeElement<typeof PointMaterial>;
 
 declare global {
 	interface HTMLElementTagNameMap {

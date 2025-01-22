@@ -1,7 +1,7 @@
-import { NgtMaterial } from 'angular-three';
+import { NgtThreeElement } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
-import { Color, ColorRepresentation, Side, Vector3 } from 'three';
+import * as THREE from 'three';
 
 export interface GridMaterialOptions {
 	/** Cell size, default: 0.5 */
@@ -9,13 +9,13 @@ export interface GridMaterialOptions {
 	/** Cell thickness, default: 0.5 */
 	cellThickness: number;
 	/** Cell color, default: black */
-	cellColor: ColorRepresentation;
+	cellColor: THREE.ColorRepresentation;
 	/** Section size, default: 1 */
 	sectionSize: number;
 	/** Section thickness, default: 1 */
 	sectionThickness: number;
 	/** Section color, default: #2080ff */
-	sectionColor: ColorRepresentation;
+	sectionColor: THREE.ColorRepresentation;
 	/** Follow camera, default: false */
 	followCamera: boolean;
 	/** Display the grid infinitely, default: false */
@@ -27,7 +27,7 @@ export interface GridMaterialOptions {
 	/** Fade from camera (1) or origin (0), or somewhere in between, default: camera */
 	fadeFrom: number;
 	/** Material side, default: THREE.BackSide */
-	side: Side;
+	side: THREE.Side;
 }
 
 export const GridMaterial = shaderMaterial(
@@ -39,12 +39,12 @@ export const GridMaterial = shaderMaterial(
 		fadeFrom: 1,
 		cellThickness: 0.5,
 		sectionThickness: 1,
-		cellColor: new Color(),
-		sectionColor: new Color(),
+		cellColor: new THREE.Color(),
+		sectionColor: new THREE.Color(),
 		infiniteGrid: false,
 		followCamera: false,
-		worldCamProjPosition: new Vector3(),
-		worldPlanePosition: new Vector3(),
+		worldCamProjPosition: new THREE.Vector3(),
+		worldPlanePosition: new THREE.Vector3(),
 	},
 	/* language=glsl glsl */ `
     varying vec3 localPosition;
@@ -110,7 +110,7 @@ export const GridMaterial = shaderMaterial(
   `,
 );
 
-export type NgtGridMaterial = NgtMaterial<InstanceType<typeof GridMaterial>, [GridMaterialOptions]>;
+export type NgtGridMaterial = NgtThreeElement<typeof GridMaterial>;
 
 declare global {
 	interface HTMLElementTagNameMap {
