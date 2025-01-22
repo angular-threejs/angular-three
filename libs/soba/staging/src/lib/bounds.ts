@@ -5,18 +5,18 @@ import {
 	effect,
 	ElementRef,
 	input,
-	Signal,
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, is, NgtGroup, pick } from 'angular-three';
+import { extend, injectBeforeRender, injectStore, is, NgtThreeElements, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Box3, Group, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 
 interface ControlsProto {
 	update(): void;
 
-	target: Vector3;
+	target: THREE.Vector3;
 	maxDistance: number;
 	addEventListener: (event: string, callback: (event: any) => void) => void;
 	removeEventListener: (event: string, callback: (event: any) => void) => void;
@@ -28,16 +28,12 @@ enum AnimationState {
 	ACTIVE = 2,
 }
 
-function isBox3(def: unknown): def is Box3 {
-	return !!def && (def as Box3).isBox3;
-}
-
 function interpolateFuncDefault(t: number) {
 	// Imitates the previously used THREE.MathUtils.damp
 	return 1 - Math.exp(-5 * t) + 0.007 * t;
 }
 
-export interface NgtsBoundsOptions extends Partial<NgtGroup> {
+export interface NgtsBoundsOptions extends Partial<NgtThreeElements['ngt-group']> {
 	maxDuration: number;
 	margin: number;
 	observe: boolean;
@@ -68,46 +64,46 @@ const defaultOptions: NgtsBoundsOptions = {
 export class NgtsBounds {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private store = injectStore();
-	private camera = this.store.select('camera');
-	private invalidate = this.store.select('invalidate');
-	private size = this.store.select('size');
-	private controls = this.store.select('controls') as unknown as Signal<ControlsProto>;
+	// private camera = this.store.select('camera');
+	// private invalidate = this.store.select('invalidate');
+	// private size = this.store.select('size');
+	// private controls = this.store.select('controls') as unknown as Signal<ControlsProto>;
 
 	private clipOption = pick(this.options, 'clip');
 	private fitOption = pick(this.options, 'fit');
 	private observe = pick(this.options, 'observe');
 
 	private origin = {
-		camPos: new Vector3(),
-		camRot: new Quaternion(),
+		camPos: new THREE.Vector3(),
+		camRot: new THREE.Quaternion(),
 		camZoom: 1,
 	};
 	private goal = {
-		camPos: undefined as Vector3 | undefined,
-		camRot: undefined as Quaternion | undefined,
+		camPos: undefined as THREE.Vector3 | undefined,
+		camRot: undefined as THREE.Quaternion | undefined,
 		camZoom: undefined as number | undefined,
-		camUp: undefined as Vector3 | undefined,
-		target: undefined as Vector3 | undefined,
+		camUp: undefined as THREE.Vector3 | undefined,
+		target: undefined as THREE.Vector3 | undefined,
 	};
 	private animationState = AnimationState.NONE;
 
 	// represent animation state from 0 to 1
 	private t = 0;
-	private box = new Box3();
+	private box = new THREE.Box3();
 
 	constructor() {
 		extend({ Group });
 
 		effect((onCleanup) => {
-			const [controls, camera] = [this.controls(), untracked(this.camera)];
+			const [controls, camera] = [this.store.controls() as unknown as ControlsProto, this.store.snapshot.camera];
 			if (!controls) return;
 
 			const callback = () => {
 				if (this.goal.target && this.animationState !== AnimationState.NONE) {
-					const front = new Vector3().setFromMatrixColumn(camera.matrix, 2);
+					const front = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 2);
 					const d0 = this.origin.camPos.distanceTo(controls.target);
 					const d1 = (this.goal.camPos || this.origin.camPos).distanceTo(this.goal.target);
 					const d = (1 - this.t) * d0 + this.t * d1;
@@ -129,10 +125,10 @@ export class NgtsBounds {
 				this.clipOption(),
 				this.fitOption(),
 				this.observe(),
-				this.size(),
-				this.camera(),
+				this.store.size(),
+				this.store.camera(),
 				// TODO: (chau) for some reason, if this effect tracks controls changes, the initial bounds doesn't target properly
-				this.controls(),
+				this.store.controls(),
 			];
 
 			if (observe || count++ === 0) {
@@ -146,13 +142,13 @@ export class NgtsBounds {
 			// This [additional animation step START] is needed to guarantee that delta used in animation isn't absurdly high (2-3 seconds) which is actually possible if rendering happens on demand...
 			if (this.animationState === AnimationState.START) {
 				this.animationState = AnimationState.ACTIVE;
-				this.invalidate();
+				this.store.snapshot.invalidate();
 			} else if (this.animationState === AnimationState.ACTIVE) {
 				const [{ maxDuration, interpolateFunc }, camera, controls, invalidate] = [
 					this.options(),
-					this.camera(),
-					this.controls(),
-					this.invalidate(),
+					this.store.snapshot.camera,
+					this.store.snapshot.controls as unknown as ControlsProto,
+					this.store.snapshot.invalidate,
 				];
 				this.t += delta / maxDuration;
 
@@ -191,10 +187,10 @@ export class NgtsBounds {
 	}
 
 	getSize() {
-		const [camera, { margin }] = [untracked(this.camera), untracked(this.options)];
+		const [camera, { margin }] = [this.store.snapshot.camera, untracked(this.options)];
 
-		const boxSize = this.box.getSize(new Vector3());
-		const center = this.box.getCenter(new Vector3());
+		const boxSize = this.box.getSize(new THREE.Vector3());
+		const center = this.box.getCenter(new THREE.Vector3());
 		const maxSize = Math.max(boxSize.x, boxSize.y, boxSize.z);
 		const fitHeightDistance = is.orthographicCamera(camera)
 			? maxSize * 4
@@ -205,10 +201,10 @@ export class NgtsBounds {
 		return { box: this.box, size: boxSize, center, distance };
 	}
 
-	refresh(object?: Object3D | Box3) {
-		const [group, camera] = [untracked(this.groupRef).nativeElement, untracked(this.camera)];
+	refresh(object?: THREE.Object3D | THREE.Box3) {
+		const [group, camera] = [untracked(this.groupRef).nativeElement, this.store.snapshot.camera];
 
-		if (isBox3(object)) this.box.copy(object);
+		if (is.three<THREE.Box3>(object, 'isBox3')) this.box.copy(object);
 		else {
 			const target = object || group;
 			if (!target) return this;
@@ -217,7 +213,7 @@ export class NgtsBounds {
 		}
 		if (this.box.isEmpty()) {
 			const max = camera.position.length() || 10;
-			this.box.setFromCenterAndSize(new Vector3(), new Vector3(max, max, max));
+			this.box.setFromCenterAndSize(new THREE.Vector3(), new THREE.Vector3(max, max, max));
 		}
 
 		this.origin.camPos.copy(camera.position);
@@ -234,14 +230,14 @@ export class NgtsBounds {
 	}
 
 	reset() {
-		const [camera] = [untracked(this.camera)];
+		const [camera] = [this.store.snapshot.camera];
 		const { center, distance } = this.getSize();
 
 		const direction = camera.position.clone().sub(center).normalize();
 		this.goal.camPos = center.clone().addScaledVector(direction, distance);
 		this.goal.target = center.clone();
-		const mCamRot = new Matrix4().lookAt(this.goal.camPos, this.goal.target, camera.up);
-		this.goal.camRot = new Quaternion().setFromRotationMatrix(mCamRot);
+		const mCamRot = new THREE.Matrix4().lookAt(this.goal.camPos, this.goal.target, camera.up);
+		this.goal.camRot = new THREE.Quaternion().setFromRotationMatrix(mCamRot);
 
 		this.animationState = AnimationState.START;
 		this.t = 0;
@@ -249,8 +245,8 @@ export class NgtsBounds {
 		return this;
 	}
 
-	moveTo(position: Vector3 | [number, number, number]) {
-		this.goal.camPos = Array.isArray(position) ? new Vector3(...position) : position.clone();
+	moveTo(position: THREE.Vector3 | [number, number, number]) {
+		this.goal.camPos = Array.isArray(position) ? new THREE.Vector3(...position) : position.clone();
 
 		this.animationState = AnimationState.START;
 		this.t = 0;
@@ -258,17 +254,23 @@ export class NgtsBounds {
 		return this;
 	}
 
-	lookAt({ target, up }: { target: Vector3 | [number, number, number]; up?: Vector3 | [number, number, number] }) {
-		const [camera] = [untracked(this.camera)];
+	lookAt({
+		target,
+		up,
+	}: {
+		target: THREE.Vector3 | [number, number, number];
+		up?: THREE.Vector3 | [number, number, number];
+	}) {
+		const [camera] = [this.store.snapshot.camera];
 
-		this.goal.target = Array.isArray(target) ? new Vector3(...target) : target.clone();
+		this.goal.target = Array.isArray(target) ? new THREE.Vector3(...target) : target.clone();
 		if (up) {
-			this.goal.camUp = Array.isArray(up) ? new Vector3(...up) : up.clone();
+			this.goal.camUp = Array.isArray(up) ? new THREE.Vector3(...up) : up.clone();
 		} else {
 			this.goal.camUp = camera.up.clone();
 		}
-		const mCamRot = new Matrix4().lookAt(this.goal.camPos || camera.position, this.goal.target, this.goal.camUp);
-		this.goal.camRot = new Quaternion().setFromRotationMatrix(mCamRot);
+		const mCamRot = new THREE.Matrix4().lookAt(this.goal.camPos || camera.position, this.goal.target, this.goal.camUp);
+		this.goal.camRot = new THREE.Quaternion().setFromRotationMatrix(mCamRot);
 
 		this.animationState = AnimationState.START;
 		this.t = 0;
@@ -277,7 +279,11 @@ export class NgtsBounds {
 	}
 
 	fit() {
-		const [camera, controls, { margin }] = [untracked(this.camera), untracked(this.controls), untracked(this.options)];
+		const [camera, controls, { margin }] = [
+			this.store.snapshot.camera,
+			this.store.snapshot.controls as unknown as ControlsProto,
+			untracked(this.options),
+		];
 
 		if (!is.orthographicCamera(camera)) {
 			// For non-orthographic cameras, fit should behave exactly like reset
@@ -288,14 +294,14 @@ export class NgtsBounds {
 		let maxHeight = 0;
 		let maxWidth = 0;
 		const vertices = [
-			new Vector3(this.box.min.x, this.box.min.y, this.box.min.z),
-			new Vector3(this.box.min.x, this.box.max.y, this.box.min.z),
-			new Vector3(this.box.min.x, this.box.min.y, this.box.max.z),
-			new Vector3(this.box.min.x, this.box.max.y, this.box.max.z),
-			new Vector3(this.box.max.x, this.box.max.y, this.box.max.z),
-			new Vector3(this.box.max.x, this.box.max.y, this.box.min.z),
-			new Vector3(this.box.max.x, this.box.min.y, this.box.max.z),
-			new Vector3(this.box.max.x, this.box.min.y, this.box.min.z),
+			new THREE.Vector3(this.box.min.x, this.box.min.y, this.box.min.z),
+			new THREE.Vector3(this.box.min.x, this.box.max.y, this.box.min.z),
+			new THREE.Vector3(this.box.min.x, this.box.min.y, this.box.max.z),
+			new THREE.Vector3(this.box.min.x, this.box.max.y, this.box.max.z),
+			new THREE.Vector3(this.box.max.x, this.box.max.y, this.box.max.z),
+			new THREE.Vector3(this.box.max.x, this.box.max.y, this.box.min.z),
+			new THREE.Vector3(this.box.max.x, this.box.min.y, this.box.max.z),
+			new THREE.Vector3(this.box.max.x, this.box.min.y, this.box.min.z),
 		];
 
 		// Transform the center and each corner to camera space
@@ -303,7 +309,7 @@ export class NgtsBounds {
 		const target = this.goal.target || controls.target;
 		const up = this.goal.camUp || camera.up;
 		const mCamWInv = target
-			? new Matrix4().lookAt(pos, target, up).setPosition(pos).invert()
+			? new THREE.Matrix4().lookAt(pos, target, up).setPosition(pos).invert()
 			: camera.matrixWorldInverse;
 		for (const v of vertices) {
 			v.applyMatrix4(mCamWInv);
@@ -325,9 +331,9 @@ export class NgtsBounds {
 
 	clip() {
 		const [camera, controls, invalidate] = [
-			untracked(this.camera),
-			untracked(this.controls),
-			untracked(this.invalidate),
+			this.store.snapshot.camera,
+			this.store.snapshot.controls as unknown as ControlsProto,
+			this.store.snapshot.invalidate,
 		];
 		const { distance } = this.getSize();
 

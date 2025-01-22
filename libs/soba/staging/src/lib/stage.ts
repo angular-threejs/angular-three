@@ -10,7 +10,7 @@ import {
 	output,
 	signal,
 } from '@angular/core';
-import { extend, NgtArgs, NgtGroup, omit, pick } from 'angular-three';
+import { extend, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { AmbientLight, Group, PointLight, SpotLight, Vector2 } from 'three';
 import { NgtsAccumulativeShadows, NgtsAccumulativeShadowsOptions } from './accumulative-shadows';
@@ -22,22 +22,10 @@ import { NgtsEnvironmentPresets } from './environment/inject-environment';
 import { NgtsRandomizedLights, NgtsRandomizedLightsOptions } from './randomized-lights';
 
 const presets = {
-	rembrandt: {
-		main: [1, 2, 1],
-		fill: [-2, -0.5, -2],
-	},
-	portrait: {
-		main: [-1, 2, 0.5],
-		fill: [-1, 0.5, -1.5],
-	},
-	upfront: {
-		main: [0, 2, 1],
-		fill: [-1, 0.5, -1.5],
-	},
-	soft: {
-		main: [-2, 4, 4],
-		fill: [-1, 0.5, -1.5],
-	},
+	rembrandt: { main: [1, 2, 1], fill: [-2, -0.5, -2] },
+	portrait: { main: [-1, 2, 0.5], fill: [-1, 0.5, -1.5] },
+	upfront: { main: [0, 2, 1], fill: [-1, 0.5, -1.5] },
+	soft: { main: [-2, 4, 4], fill: [-1, 0.5, -1.5] },
 } as const;
 
 type NgtsStageShadowsOptions = Partial<NgtsAccumulativeShadowsOptions> &
@@ -54,7 +42,7 @@ type NgtsStageShadowsOptions = Partial<NgtsAccumulativeShadowsOptions> &
 		size: number;
 	};
 
-export interface NgtsStageOptions extends Partial<NgtGroup> {
+export interface NgtsStageOptions extends Partial<NgtThreeElements['ngt-group']> {
 	/** Lighting setup, default: "rembrandt" */
 	preset:
 		| 'rembrandt'
@@ -159,33 +147,33 @@ export class NgtsStage {
 	centered = output<NgtsCenterState>();
 
 	private dims = signal({ radius: 0, width: 0, height: 0, depth: 0 });
-	radius = pick(this.dims, 'radius');
-	height = pick(this.dims, 'height');
+	protected radius = pick(this.dims, 'radius');
+	protected height = pick(this.dims, 'height');
 
-	center = pick(this.options, 'center');
-	adjustCamera = pick(this.options, 'adjustCamera');
-	margin = computed(() => Number(this.adjustCamera()));
-	intensity = pick(this.options, 'intensity');
-	shadows = pick(this.options, 'shadows');
-	environment = pick(this.options, 'environment');
-	preset = pick(this.options, 'preset');
+	private center = pick(this.options, 'center');
+	protected adjustCamera = pick(this.options, 'adjustCamera');
+	private margin = computed(() => Number(this.adjustCamera()));
+	protected intensity = pick(this.options, 'intensity');
+	protected shadows = pick(this.options, 'shadows');
+	protected environment = pick(this.options, 'environment');
+	private preset = pick(this.options, 'preset');
 
-	config = computed(() => {
+	protected config = computed(() => {
 		const preset = this.preset();
 		return typeof preset === 'string' ? presets[preset] : preset;
 	});
 
-	shadowBias = computed(() => (this.shadows() as NgtsStageShadowsOptions).bias ?? -0.0001);
-	normalBias = computed(() => (this.shadows() as NgtsStageShadowsOptions).normalBias ?? 0);
-	shadowSize = computed(() => (this.shadows() as NgtsStageShadowsOptions).size ?? 1024);
-	shadowOffset = computed(() => (this.shadows() as NgtsStageShadowsOptions).offset ?? 0);
-	contactShadow = computed(
+	protected shadowBias = computed(() => (this.shadows() as NgtsStageShadowsOptions).bias ?? -0.0001);
+	protected normalBias = computed(() => (this.shadows() as NgtsStageShadowsOptions).normalBias ?? 0);
+	protected shadowSize = computed(() => (this.shadows() as NgtsStageShadowsOptions).size ?? 1024);
+	protected shadowOffset = computed(() => (this.shadows() as NgtsStageShadowsOptions).offset ?? 0);
+	protected contactShadow = computed(
 		() => this.shadows() === 'contact' || (this.shadows() as NgtsStageShadowsOptions)?.type === 'contact',
 	);
-	accumulativeShadow = computed(
+	protected accumulativeShadow = computed(
 		() => this.shadows() === 'accumulative' || (this.shadows() as NgtsStageShadowsOptions)?.type === 'accumulative',
 	);
-	shadowOptions = computed(() => {
+	protected shadowOptions = computed(() => {
 		const shadows = this.shadows() as NgtsStageShadowsOptions;
 
 		if (this.contactShadow()) {
@@ -198,7 +186,7 @@ export class NgtsStage {
 
 		return typeof shadows === 'object' ? shadows : {};
 	});
-	randomizedLightsOptions = computed(() => {
+	protected randomizedLightsOptions = computed(() => {
 		if (!this.accumulativeShadow()) return {};
 		const shadows = this.shadows() as NgtsStageShadowsOptions;
 		return {
@@ -216,19 +204,19 @@ export class NgtsStage {
 			mapSize: this.shadowSize(),
 		} as Partial<NgtsRandomizedLightsOptions>;
 	});
-	environmentOptions = computed(() => {
+	protected environmentOptions = computed(() => {
 		const environment = this.environment();
 		return !environment ? {} : typeof environment === 'string' ? { preset: environment } : environment;
 	});
 
-	boundsOptions = computed(() => ({
+	protected boundsOptions = computed(() => ({
 		fit: !!this.adjustCamera(),
 		clip: !!this.adjustCamera(),
-		margin: Number(this.adjustCamera()),
+		margin: this.margin(),
 		observe: true,
 		...this.parameters(),
 	}));
-	centerOptions = computed(
+	protected centerOptions = computed(
 		() =>
 			({
 				...(this.center() || {}),

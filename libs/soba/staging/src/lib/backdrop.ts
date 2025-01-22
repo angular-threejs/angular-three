@@ -7,15 +7,16 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, NgtArgs, NgtGroup, omit, pick } from 'angular-three';
+import { checkUpdate, extend, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { BufferAttribute, Group, Mesh, PlaneGeometry } from 'three';
+import * as THREE from 'three';
+import { Group, Mesh, PlaneGeometry } from 'three';
 
 function easeInExpo(x: number) {
 	return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
 }
 
-export interface NgtsBackdropOptions extends Partial<NgtGroup> {
+export interface NgtsBackdropOptions extends Partial<NgtThreeElements['ngt-group']> {
 	floor: number;
 	segments: number;
 	receiveShadow?: boolean;
@@ -44,13 +45,13 @@ export class NgtsBackdrop {
 	protected readonly Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, ['floor', 'segments', 'receiveShadow']);
+	protected parameters = omit(this.options, ['floor', 'segments', 'receiveShadow']);
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	planeRef = viewChild<ElementRef<PlaneGeometry>>('plane');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	planeRef = viewChild<ElementRef<THREE.PlaneGeometry>>('plane');
 
-	receiveShadow = pick(this.options, 'receiveShadow');
-	segments = pick(this.options, 'segments');
+	protected receiveShadow = pick(this.options, 'receiveShadow');
+	protected segments = pick(this.options, 'segments');
 	private floor = pick(this.options, 'floor');
 
 	constructor() {
@@ -64,7 +65,7 @@ export class NgtsBackdrop {
 
 			let i = 0;
 			const offset = segments / segments / 2;
-			const position = plane.attributes['position'] as BufferAttribute;
+			const position = plane.attributes['position'] as THREE.BufferAttribute;
 			for (let x = 0; x < segments + 1; x++) {
 				for (let y = 0; y < segments + 1; y++) {
 					position.setXYZ(

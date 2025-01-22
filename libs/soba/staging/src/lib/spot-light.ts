@@ -10,45 +10,23 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, NgtArgs, NgtSpotLight, omit, pick } from 'angular-three';
+import { extend, injectBeforeRender, injectStore, is, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { SpotLightMaterial } from 'angular-three-soba/vanilla-exports';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	ColorRepresentation,
-	CylinderGeometry,
-	DepthTexture,
-	DoubleSide,
-	Group,
-	Matrix4,
-	Mesh,
-	MeshBasicMaterial,
-	Object3D,
-	PlaneGeometry,
-	RepeatWrapping,
-	RGBAFormat,
-	ShaderMaterial,
-	SpotLight,
-	SpotLightHelper,
-	Texture,
-	Vector3,
-	WebGLRenderTarget,
-} from 'three';
+import * as THREE from 'three';
+import { Group, Mesh, MeshBasicMaterial, PlaneGeometry, RepeatWrapping, SpotLight } from 'three';
 import { FullScreenQuad } from 'three-stdlib';
 
-function isSpotLight(child: Object3D | null): child is SpotLight {
-	return (child as SpotLight)?.isSpotLight;
-}
-
-export interface NgtsSpotLightOptions extends Partial<NgtSpotLight> {
-	depthBuffer?: DepthTexture;
+export interface NgtsSpotLightOptions extends Partial<NgtThreeElements['ngt-spot-light']> {
+	depthBuffer?: THREE.DepthTexture;
 	attenuation?: number;
 	anglePower?: number;
 	radiusTop?: number;
 	radiusBottom?: number;
 	opacity?: number;
-	color?: ColorRepresentation;
+	color?: THREE.ColorRepresentation;
 	volumetric?: boolean;
 	debug?: boolean;
 }
@@ -74,11 +52,11 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 				<ngt-value attach="uniforms.attenuation.value" [rawValue]="attenuation()" />
 				<ngt-value attach="uniforms.anglePower.value" [rawValue]="anglePower()" />
 				<ngt-value attach="uniforms.depth.value" [rawValue]="depthBuffer()" />
-				<ngt-value attach="uniforms.cameraNear.value" [rawValue]="camera().near" />
-				<ngt-value attach="uniforms.cameraFar.value" [rawValue]="camera().far" />
+				<ngt-value attach="uniforms.cameraNear.value" [rawValue]="camera.near()" />
+				<ngt-value attach="uniforms.cameraFar.value" [rawValue]="camera.far()" />
 				<ngt-value
 					attach="uniforms.resolution.value"
-					[rawValue]="depthBuffer() ? [size().width * dpr(), size().height * dpr()] : [0, 0]"
+					[rawValue]="depthBuffer() ? [size.width() * dpr(), size.height() * dpr()] : [0, 0]"
 				/>
 			</ngt-primitive>
 		</ngt-mesh>
@@ -90,12 +68,12 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 export class NgtsVolumetricMesh {
 	options = input(defaultVolumetricMeshOptions, { transform: mergeInputs(defaultVolumetricMeshOptions) });
 
-	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	private store = injectStore();
-	size = this.store.select('size');
-	dpr = this.store.select('viewport', 'dpr');
-	camera = this.store.select('camera');
+	protected size = this.store.size;
+	protected dpr = this.store.viewport.dpr;
+	protected camera = this.store.camera;
 
 	private radiusTop = pick(this.options, 'radiusTop');
 	private radiusBottom = pick(this.options, 'radiusBottom');
@@ -107,15 +85,15 @@ export class NgtsVolumetricMesh {
 		this.radiusBottom() === undefined ? this.angle()! * 7 : this.radiusBottom(),
 	);
 
-	material = new SpotLightMaterial();
-	opacity = pick(this.options, 'opacity');
-	color = pick(this.options, 'color');
-	attenuation = pick(this.options, 'attenuation');
-	anglePower = pick(this.options, 'anglePower');
-	depthBuffer = pick(this.options, 'depthBuffer');
+	protected material = new SpotLightMaterial();
+	protected opacity = pick(this.options, 'opacity');
+	protected color = pick(this.options, 'color');
+	protected attenuation = pick(this.options, 'attenuation');
+	protected anglePower = pick(this.options, 'anglePower');
+	protected depthBuffer = pick(this.options, 'depthBuffer');
 
-	geometry = computed(() => {
-		const geometry = new CylinderGeometry(
+	protected geometry = computed(() => {
+		const geometry = new THREE.CylinderGeometry(
 			this.normalizedRadiusTop(),
 			this.normalizedRadiusBottom(),
 			this.distance(),
@@ -123,15 +101,15 @@ export class NgtsVolumetricMesh {
 			64,
 			true,
 		);
-		geometry.applyMatrix4(new Matrix4().makeTranslation(0, -this.distance()! / 2, 0));
-		geometry.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
+		geometry.applyMatrix4(new THREE.Matrix4().makeTranslation(0, -this.distance()! / 2, 0));
+		geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 		return geometry;
 	});
 
 	constructor() {
 		extend({ Mesh });
 
-		const vec = new Vector3();
+		const vec = new THREE.Vector3();
 
 		injectBeforeRender(() => {
 			const mesh = this.meshRef().nativeElement;
@@ -146,7 +124,7 @@ export class NgtsVolumetricMesh {
 }
 
 function injectSpotLightCommon(
-	spotLight: () => ElementRef<SpotLight> | null,
+	spotLight: () => ElementRef<THREE.SpotLight> | null,
 	mesh: () => ElementRef<Mesh> | null,
 	width: () => number,
 	height: () => number,
@@ -154,13 +132,13 @@ function injectSpotLightCommon(
 	injector?: Injector,
 ) {
 	assertInjector(injectSpotLightCommon, injector, () => {
-		const pos = new Vector3();
-		const dir = new Vector3();
+		const pos = new THREE.Vector3();
+		const dir = new THREE.Vector3();
 
 		effect(() => {
 			const [_spotLight, _width, _height] = [spotLight()?.nativeElement, width(), height()];
 			if (!_spotLight) return;
-			if (isSpotLight(_spotLight)) {
+			if (is.three<THREE.SpotLight>(_spotLight, 'isSpotLight')) {
 				_spotLight.shadow.mapSize.set(_width, _height);
 				if (_spotLight.shadow.map) {
 					_spotLight.shadow.map.setSize(_width, _height);
@@ -195,7 +173,7 @@ interface NgtsShadowMeshOptions {
 	scale: number;
 	width: number;
 	height: number;
-	map?: Texture;
+	map?: THREE.Texture;
 }
 
 const defaultSpotLightShadowOptions: NgtsShadowMeshOptions = {
@@ -209,10 +187,10 @@ const defaultSpotLightShadowOptions: NgtsShadowMeshOptions = {
 @Component({
 	selector: 'ngts-spot-light-shadow-shader',
 	template: `
-		<ngt-mesh #mesh [scale]="scale()" [castShadow]="true">
+		<ngt-mesh #mesh [scale]="scale()" castShadow>
 			<ngt-plane-geometry />
 			<ngt-mesh-basic-material
-				[transparent]="true"
+				transparent
 				[side]="DoubleSide"
 				[alphaTest]="alphaTest()"
 				[alphaMap]="texture()"
@@ -226,18 +204,18 @@ const defaultSpotLightShadowOptions: NgtsShadowMeshOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsSpotLightShadowShader {
-	protected readonly DoubleSide = DoubleSide;
+	protected readonly DoubleSide = THREE.DoubleSide;
 
 	shader = input.required<string>();
 	options = input(defaultSpotLightShadowOptions, { transform: mergeInputs(defaultSpotLightShadowOptions) });
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	private spotLight = inject(NgtsSpotLight);
-	debug = this.spotLight.debug;
+	protected debug = this.spotLight.debug;
 
-	scale = pick(this.options, 'scale');
-	alphaTest = pick(this.options, 'alphaTest');
+	protected scale = pick(this.options, 'scale');
+	protected alphaTest = pick(this.options, 'alphaTest');
 
 	private width = pick(this.options, 'width');
 	private height = pick(this.options, 'height');
@@ -245,22 +223,22 @@ export class NgtsSpotLightShadowShader {
 	private distance = pick(this.options, 'distance');
 
 	private renderTarget = computed(() => {
-		return new WebGLRenderTarget(this.width(), this.height(), {
-			format: RGBAFormat,
+		return new THREE.WebGLRenderTarget(this.width(), this.height(), {
+			format: THREE.RGBAFormat,
 			stencilBuffer: false,
 			// depthTexture: null!
 		});
 	});
 
-	texture = computed(() => {
+	protected texture = computed(() => {
 		const renderTarget = this.renderTarget();
-		renderTarget.texture.wrapT = renderTarget.texture.wrapS = RepeatWrapping;
+		renderTarget.texture.wrapT = renderTarget.texture.wrapS = THREE.RepeatWrapping;
 		return renderTarget.texture;
 	});
 
 	private fsQuad = computed(() => {
 		return new FullScreenQuad(
-			new ShaderMaterial({
+			new THREE.ShaderMaterial({
 				uniforms: this.uniforms,
 				vertexShader: /* language=glsl glsl */ `
           varying vec2 vUv;
@@ -276,14 +254,14 @@ export class NgtsSpotLightShadowShader {
 	});
 
 	private uniforms = {
-		uShadowMap: { value: undefined as Texture | undefined },
+		uShadowMap: { value: undefined as THREE.Texture | undefined },
 		uTime: { value: 0 },
 	};
 
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
-		injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance);
+		injectSpotLightCommon(this.spotLight.spotLightRef, this.meshRef, this.width, this.height, this.distance);
 
 		effect(() => {
 			this.uniforms.uShadowMap.value = this.map();
@@ -317,10 +295,10 @@ export class NgtsSpotLightShadowShader {
 @Component({
 	selector: 'ngts-spot-light-shadow-no-shader',
 	template: `
-		<ngt-mesh #mesh [scale]="scale()" [castShadow]="true">
+		<ngt-mesh #mesh [scale]="scale()" castShadow>
 			<ngt-plane-geometry />
 			<ngt-mesh-basic-material
-				[transparent]="true"
+				transparent
 				[side]="DoubleSide"
 				[alphaTest]="alphaTest()"
 				[alphaMap]="map()"
@@ -334,18 +312,18 @@ export class NgtsSpotLightShadowShader {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsSpotLightShadowNoShader {
-	protected readonly DoubleSide = DoubleSide;
+	protected readonly DoubleSide = THREE.DoubleSide;
 
 	options = input(defaultSpotLightShadowOptions, { transform: mergeInputs(defaultSpotLightShadowOptions) });
 
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	private spotLight = inject(NgtsSpotLight);
-	debug = this.spotLight.debug;
+	protected debug = this.spotLight.debug;
 
-	alphaTest = pick(this.options, 'alphaTest');
-	scale = pick(this.options, 'scale');
-	map = computed(() => {
+	protected alphaTest = pick(this.options, 'alphaTest');
+	protected scale = pick(this.options, 'scale');
+	protected map = computed(() => {
 		const map = this.options().map;
 		if (map) {
 			map.wrapS = map.wrapT = RepeatWrapping;
@@ -360,7 +338,7 @@ export class NgtsSpotLightShadowNoShader {
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
-		injectSpotLightCommon(this.spotLight.spotLight, this.mesh, this.width, this.height, this.distance);
+		injectSpotLightCommon(this.spotLight.spotLightRef, this.meshRef, this.width, this.height, this.distance);
 	}
 }
 
@@ -401,7 +379,7 @@ const defaultOptions: NgtsSpotLightOptions = {
 				[angle]="angle()"
 				[color]="color()"
 				[distance]="distance()"
-				[castShadow]="true"
+				castShadow
 				[parameters]="parameters()"
 			>
 				@if (volumetric()) {
@@ -420,10 +398,10 @@ const defaultOptions: NgtsSpotLightOptions = {
 	imports: [NgtsVolumetricMesh, NgtsHelper],
 })
 export class NgtsSpotLight {
-	protected readonly SpotLightHelper = SpotLightHelper;
+	protected readonly SpotLightHelper = THREE.SpotLightHelper;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'opacity',
 		'radiusTop',
 		'radiusBottom',
@@ -436,7 +414,7 @@ export class NgtsSpotLight {
 		'volumetric',
 		'debug',
 	]);
-	volumetricOptions = pick(this.options, [
+	protected volumetricOptions = pick(this.options, [
 		'opacity',
 		'radiusTop',
 		'radiusBottom',
@@ -449,13 +427,13 @@ export class NgtsSpotLight {
 		'debug',
 	]);
 
-	spotLight = viewChild.required<ElementRef<SpotLight>>('spotLight');
+	spotLightRef = viewChild.required<ElementRef<THREE.SpotLight>>('spotLight');
 
 	debug = pick(this.options, 'debug');
-	angle = pick(this.options, 'angle');
-	color = pick(this.options, 'color');
-	distance = pick(this.options, 'distance');
-	volumetric = pick(this.options, 'volumetric');
+	protected angle = pick(this.options, 'angle');
+	protected color = pick(this.options, 'color');
+	protected distance = pick(this.options, 'distance');
+	protected volumetric = pick(this.options, 'volumetric');
 
 	constructor() {
 		extend({ Group, SpotLight });

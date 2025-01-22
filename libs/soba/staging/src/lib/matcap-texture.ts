@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { injectTexture } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Texture } from 'three';
+import * as THREE from 'three';
 
 function getFormatString(format: number) {
 	switch (format) {
@@ -41,7 +41,7 @@ export function injectMatcapTexture(
 		format = () => 1024,
 		onLoad,
 		injector,
-	}: { format?: () => number; onLoad?: (texture: Texture[]) => void; injector?: Injector } = {},
+	}: { format?: () => number; onLoad?: (texture: THREE.Texture[]) => void; injector?: Injector } = {},
 ) {
 	return assertInjector(injectMatcapTexture, injector, () => {
 		const matcapList = signal<Record<string, string>>({});
@@ -85,7 +85,7 @@ export interface NgtsMatcapTextureOptions {
 @Directive({ selector: 'ng-template[matcapTexture]' })
 export class NgtsMatcapTexture {
 	matcapTexture = input<NgtsMatcapTextureOptions>();
-	matcapTextureLoaded = output<Texture[]>();
+	matcapTextureLoaded = output<THREE.Texture[]>();
 
 	private template = inject(TemplateRef);
 	private vcr = inject(ViewContainerRef);
@@ -93,7 +93,7 @@ export class NgtsMatcapTexture {
 	private id = computed(() => this.matcapTexture()?.id ?? 0);
 	private format = computed(() => this.matcapTexture()?.format ?? 1024);
 
-	private ref?: EmbeddedViewRef<{ $implicit: Signal<Texture | null> }>;
+	private ref?: EmbeddedViewRef<{ $implicit: Signal<THREE.Texture | null> }>;
 
 	constructor() {
 		const { texture } = injectMatcapTexture(this.id, {
@@ -111,7 +111,10 @@ export class NgtsMatcapTexture {
 		});
 	}
 
-	static ngTemplateContextGuard(_: NgtsMatcapTexture, ctx: unknown): ctx is { $implicit: Signal<Texture | null> } {
+	static ngTemplateContextGuard(
+		_: NgtsMatcapTexture,
+		ctx: unknown,
+	): ctx is { $implicit: Signal<THREE.Texture | null> } {
 		return true;
 	}
 }

@@ -9,13 +9,14 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtGroup, extend, omit, pick } from 'angular-three';
+import { NgtArgs, NgtThreeElements, extend, omit, pick } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { DirectionalLight, Group, MathUtils, Object3D, OrthographicCamera, Vector2, Vector3 } from 'three';
+import * as THREE from 'three';
+import { DirectionalLight, Group, OrthographicCamera, Vector2 } from 'three';
 import { NgtsAccumulativeShadows } from './accumulative-shadows';
 
-export interface NgtsRandomizedLightsOptions extends Partial<NgtGroup> {
+export interface NgtsRandomizedLightsOptions extends Partial<NgtThreeElements['ngt-group']> {
 	/** How many frames it will jiggle the lights, 1.
 	 *  Frames is context aware, if a provider like AccumulativeShadows exists, frames will be taken from there!  */
 	frames: number;
@@ -77,29 +78,36 @@ const defaultOptions: NgtsRandomizedLightsOptions = {
 })
 export class NgtsRandomizedLights {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightsOptions>);
+	protected parameters = omit(this.options, Object.keys(defaultOptions) as Array<keyof NgtsRandomizedLightsOptions>);
 
-	lightsRef = viewChild.required<ElementRef<Group>>('lights');
+	lightsRef = viewChild.required<ElementRef<THREE.Group>>('lights');
 
 	private accumulativeShadows = inject(NgtsAccumulativeShadows);
 
-	castShadow = pick(this.options, 'castShadow');
-	bias = pick(this.options, 'bias');
-	intensity = pick(this.options, 'intensity');
-	amount = pick(this.options, 'amount');
+	protected castShadow = pick(this.options, 'castShadow');
+	protected bias = pick(this.options, 'bias');
+	protected intensity = pick(this.options, 'intensity');
+	protected amount = pick(this.options, 'amount');
 
 	private mapSize = pick(this.options, 'mapSize');
-	shadowMapSize = computed(() => [this.mapSize(), this.mapSize()]);
+	protected shadowMapSize = computed(() => [this.mapSize(), this.mapSize()]);
 
 	private position = pick(this.options, 'position');
-	length = computed(() => new Vector3(...this.position()).length());
+	private length = computed(() => new THREE.Vector3(...this.position()).length());
 
-	count = computed(() => Array.from({ length: this.amount() }, (_, index) => index));
+	protected count = computed(() => Array.from({ length: this.amount() }, (_, index) => index));
 
 	private size = pick(this.options, 'size');
 	private near = pick(this.options, 'near');
 	private far = pick(this.options, 'far');
-	cameraArgs = computed(() => [-this.size(), this.size(), this.size(), -this.size(), this.near(), this.far()]);
+	protected cameraArgs = computed(() => [
+		-this.size(),
+		this.size(),
+		this.size(),
+		-this.size(),
+		this.near(),
+		this.far(),
+	]);
 
 	constructor() {
 		extend({ Group, DirectionalLight, OrthographicCamera, Vector2 });
@@ -112,7 +120,7 @@ export class NgtsRandomizedLights {
 	}
 
 	update() {
-		let light: Object3D | undefined;
+		let light: THREE.Object3D | undefined;
 		const lights = this.lightsRef().nativeElement;
 		if (lights) {
 			const [{ ambient, radius, position }, length] = [this.options(), this.length()];
@@ -121,9 +129,9 @@ export class NgtsRandomizedLights {
 				light = lights.children[i];
 				if (Math.random() > ambient) {
 					light.position.set(
-						position[0] + MathUtils.randFloatSpread(radius),
-						position[1] + MathUtils.randFloatSpread(radius),
-						position[2] + MathUtils.randFloatSpread(radius),
+						position[0] + THREE.MathUtils.randFloatSpread(radius),
+						position[1] + THREE.MathUtils.randFloatSpread(radius),
+						position[2] + THREE.MathUtils.randFloatSpread(radius),
 					);
 				} else {
 					const lambda = Math.acos(2 * Math.random() - 1) - Math.PI / 2.0;

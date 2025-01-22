@@ -1,16 +1,9 @@
 import { computed, effect, Injector, signal, untracked } from '@angular/core';
 import { GainMapLoader, HDRJPGLoader } from '@monogrid/gainmap-js';
-import { injectLoader, injectStore, pick } from 'angular-three';
+import { injectLoader, injectStore, is, pick } from 'angular-three';
 import { LinearEncoding, sRGBEncoding, TextureEncoding } from 'angular-three-soba/misc';
 import { assertInjector } from 'ngxtension/assert-injector';
-import {
-	CubeReflectionMapping,
-	CubeTexture,
-	CubeTextureLoader,
-	EquirectangularReflectionMapping,
-	Loader,
-	Texture,
-} from 'three';
+import * as THREE from 'three';
 import { EXRLoader, RGBELoader } from 'three-stdlib';
 
 export const ENVIRONMENT_PRESETS = {
@@ -34,7 +27,7 @@ export interface NgtsInjectEnvironmentOptions {
 	files: string | string[];
 	path: string;
 	preset?: NgtsEnvironmentPresets;
-	extensions?: (loader: Loader) => void;
+	extensions?: (loader: THREE.Loader) => void;
 	encoding?: TextureEncoding;
 }
 
@@ -73,16 +66,15 @@ export function injectEnvironment(
 		const loader = computed(() => getLoader(extension()));
 
 		const store = injectStore();
-		const gl = store.select('gl');
 
-		const texture = signal<Texture | CubeTexture | null>(null);
+		const texture = signal<THREE.Texture | THREE.CubeTexture | null>(null);
 
 		effect(() => {
 			const [_extension, _multiFile, _files] = [untracked(extension), untracked(multiFile), files()];
 
 			if (_extension !== 'webp' && _extension !== 'jpg' && _extension !== 'jpeg') return;
 
-			gl().domElement.addEventListener(
+			store.gl().domElement.addEventListener(
 				'webglcontextlost',
 				() => {
 					// @ts-expect-error - files is correctly passed
@@ -105,7 +97,7 @@ export function injectEnvironment(
 					const { extension } = resultOptions();
 					if (extension === 'webp' || extension === 'jpg' || extension === 'jpeg') {
 						// @ts-expect-error - Gainmap requires a renderer
-						loader.setRenderer(gl());
+						loader.setRenderer(store.gl());
 					}
 
 					loader.setPath?.(path);
@@ -127,18 +119,22 @@ export function injectEnvironment(
 
 			// NOTE: racing condition, we can skip this
 			//  we just said above that if multiFile is false, it is a single Texture
-			if (!_multiFile && Array.isArray(textureResult) && textureResult[0] instanceof CubeTexture) {
+			if (
+				!_multiFile &&
+				Array.isArray(textureResult) &&
+				is.three<THREE.CubeTexture>(textureResult[0], 'isCubeTexture')
+			) {
 				return;
 			}
 
 			if (
-				!(textureResult instanceof CubeTexture) &&
+				!is.three<THREE.CubeTexture>(textureResult, 'isCubeTexture') &&
 				(extension === 'jpg' || extension === 'jpeg' || extension === 'webp')
 			) {
 				textureResult = (textureResult as any).renderTarget?.texture;
 			}
 
-			textureResult.mapping = isCubeMap ? CubeReflectionMapping : EquirectangularReflectionMapping;
+			textureResult.mapping = isCubeMap ? THREE.CubeReflectionMapping : THREE.EquirectangularReflectionMapping;
 
 			if ('colorSpace' in textureResult)
 				(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
@@ -232,20 +228,20 @@ function getExtension(files: string | string[]) {
 function getLoader(extension: string | undefined) {
 	const loader =
 		extension === 'cube'
-			? CubeTextureLoader
+			? THREE.CubeTextureLoader
 			: extension === 'hdr'
 				? RGBELoader
 				: extension === 'exr'
 					? EXRLoader
 					: extension === 'jpg' || extension === 'jpeg'
-						? (HDRJPGLoader as unknown as typeof Loader)
+						? (HDRJPGLoader as unknown as typeof THREE.Loader)
 						: extension === 'webp'
-							? (GainMapLoader as unknown as typeof Loader)
+							? (GainMapLoader as unknown as typeof THREE.Loader)
 							: null;
 
 	if (!loader) {
 		throw new Error('injectEnvironment: Unrecognized file extension: ' + extension);
 	}
 
-	return loader as typeof Loader;
+	return loader as typeof THREE.Loader;
 }

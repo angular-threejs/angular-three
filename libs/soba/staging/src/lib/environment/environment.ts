@@ -24,33 +24,32 @@ import {
 	injectStore,
 	is,
 	NgtArgs,
+	NgtEuler,
 	NgtPortal,
 	NgtPortalContent,
 	pick,
-	prepare,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { CubeCamera, Euler, HalfFloatType, Scene, Texture, WebGLCubeRenderTarget } from 'three';
+import * as THREE from 'three';
+import { CubeCamera } from 'three';
 import { GroundProjectedEnv } from 'three-stdlib';
 import { injectEnvironment, NgtsEnvironmentPresets, NgtsInjectEnvironmentOptions } from './inject-environment';
 
-function resolveScene(scene: Scene | ElementRef<Scene>) {
+function resolveScene(scene: THREE.Scene | ElementRef<THREE.Scene>) {
 	return is.ref(scene) ? scene.nativeElement : scene;
 }
 
 function setEnvProps(
 	background: boolean | 'only',
-	scene: Scene | ElementRef<Scene> | undefined,
-	defaultScene: Scene,
-	texture: Texture,
+	scene: THREE.Scene | ElementRef<THREE.Scene> | undefined,
+	defaultScene: THREE.Scene,
+	texture: THREE.Texture,
 	sceneProps: Partial<NgtsEnvironmentOptions> = {},
 ) {
 	sceneProps.backgroundBlurriness ??= sceneProps.blur ?? 0;
 	sceneProps.backgroundIntensity ??= 1;
-	// @ts-expect-error - it's ok, we're sending through applyProps
 	sceneProps.backgroundRotation ??= [0, 0, 0];
 	sceneProps.environmentIntensity ??= 1;
-	// @ts-expect-error - it's ok, we're sending through applyProps
 	sceneProps.environmentRotation ??= [0, 0, 0];
 
 	const target = resolveScene(scene || defaultScene);
@@ -86,13 +85,13 @@ export interface NgtsEnvironmentOptions extends Partial<NgtsInjectEnvironmentOpt
 	blur?: number;
 	backgroundBlurriness?: number;
 	backgroundIntensity?: number;
-	backgroundRotation?: Euler;
+	backgroundRotation?: NgtEuler;
 	environmentIntensity?: number;
-	environmentRotation?: Euler;
+	environmentRotation?: NgtEuler;
 
-	map?: Texture;
+	map?: THREE.Texture;
 	preset?: NgtsEnvironmentPresets;
-	scene?: Scene | ElementRef<Scene>;
+	scene?: THREE.Scene | ElementRef<THREE.Scene>;
 	ground?: boolean | { radius?: number; height?: number; scale?: number };
 }
 
@@ -107,7 +106,6 @@ export class NgtsEnvironmentMap {
 
 	constructor() {
 		const store = injectStore();
-		const defaultScene = store.select('scene');
 
 		const _map = pick(this.options, 'map');
 		const _envConfig = computed(() => {
@@ -138,7 +136,7 @@ export class NgtsEnvironmentMap {
 			const map = _map();
 			if (!map) return;
 			const { background = false, scene, ...config } = _envConfig();
-			const cleanup = setEnvProps(background, scene, defaultScene(), map, config);
+			const cleanup = setEnvProps(background, scene, store.scene(), map, config);
 			this.envSet.emit();
 			onCleanup(() => cleanup());
 		});
@@ -151,7 +149,6 @@ export class NgtsEnvironmentCube {
 	envSet = output<void>();
 
 	private store = injectStore();
-	private defaultScene = this.store.select('scene');
 
 	private envConfig = computed(() => {
 		const {
@@ -184,7 +181,7 @@ export class NgtsEnvironmentCube {
 			const texture = _texture();
 			if (!texture) return;
 			const { background = false, scene, ...config } = this.envConfig();
-			const cleanup = setEnvProps(background, scene, this.defaultScene(), texture, config);
+			const cleanup = setEnvProps(background, scene, this.store.scene(), texture, config);
 			this.envSet.emit();
 			onCleanup(() => cleanup());
 		});
@@ -199,11 +196,11 @@ export class NgtsEnvironmentCube {
 	selector: 'ngts-environment-portal',
 	template: `
 		<ngt-portal [container]="virtualScene">
-			<ng-template portalContent let-injector="injector" let-container="container">
+			<ng-template portalContent let-injector="injector">
 				<ng-container
 					[ngTemplateOutlet]="content()"
 					[ngTemplateOutletInjector]="injector"
-					[ngTemplateOutletContext]="{ injector, container }"
+					[ngTemplateOutletContext]="{ injector, container: virtualScene }"
 				/>
 
 				<ngt-cube-camera #cubeCamera *args="cameraArgs()" />
@@ -234,10 +231,8 @@ export class NgtsEnvironmentPortal {
 
 	private injector = inject(Injector);
 	private store = injectStore();
-	private defaultScene = this.store.select('scene');
-	private gl = this.store.select('gl');
 
-	private cameraRef = viewChild<ElementRef<CubeCamera>>('cubeCamera');
+	private cameraRef = viewChild<ElementRef<THREE.CubeCamera>>('cubeCamera');
 
 	protected map = pick(this.options, 'map');
 	protected files = pick(this.options, 'files');
@@ -258,13 +253,13 @@ export class NgtsEnvironmentPortal {
 	private far = pick(this.options, 'far');
 	private resolution = pick(this.options, 'resolution');
 	private fbo = computed(() => {
-		const fbo = new WebGLCubeRenderTarget(this.resolution());
-		fbo.texture.type = HalfFloatType;
+		const fbo = new THREE.WebGLCubeRenderTarget(this.resolution());
+		fbo.texture.type = THREE.HalfFloatType;
 		return fbo;
 	});
 
 	protected cameraArgs = computed(() => [this.near(), this.far(), this.fbo()]);
-	protected virtualScene = prepare(new Scene());
+	protected virtualScene = new THREE.Scene();
 
 	private setEnvEffectRef?: EffectRef;
 
@@ -285,7 +280,7 @@ export class NgtsEnvironmentPortal {
 			if (frames === Infinity || (frames != null && count < frames)) {
 				const camera = this.cameraRef()?.nativeElement;
 				if (camera) {
-					camera.update(this.gl(), this.virtualScene);
+					camera.update(this.store.snapshot.gl, this.virtualScene);
 					count++;
 				}
 			}
@@ -327,7 +322,7 @@ export class NgtsEnvironmentPortal {
 			gl,
 			fbo,
 			defaultScene,
-		] = [this.options(), this.gl(), this.fbo(), this.defaultScene()];
+		] = [this.options(), this.store.gl(), this.fbo(), this.store.scene()];
 
 		if (frames === 1) camera.nativeElement.update(gl, this.virtualScene);
 		const cleanup = setEnvProps(background, scene, defaultScene, fbo.texture, {

@@ -5,26 +5,16 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	effect,
 	ElementRef,
-	Injector,
 	input,
 	numberAttribute,
 	viewChild,
 } from '@angular/core';
-import { extend, NgtMesh, omit, pick } from 'angular-three';
-import { assertInjector } from 'ngxtension/assert-injector';
+import { extend, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	AlwaysStencilFunc,
-	BufferGeometry,
-	EqualStencilFunc,
-	KeepStencilOp,
-	Material,
-	Mesh,
-	NotEqualStencilFunc,
-	ReplaceStencilOp,
-} from 'three';
+import * as THREE from 'three';
+import { Mesh } from 'three';
 
-export interface NgtsMaskOptions extends Partial<NgtMesh> {
+export interface NgtsMaskOptions extends Partial<NgtThreeElements['ngt-mesh']> {
 	colorWrite: boolean;
 	depthWrite: boolean;
 }
@@ -48,9 +38,9 @@ export class NgtsMask {
 	id = input(1, { transform: numberAttribute });
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	parameters = omit(this.options, ['colorWrite', 'depthWrite']);
+	protected parameters = omit(this.options, ['colorWrite', 'depthWrite']);
 
-	meshRef = viewChild.required<ElementRef<Mesh<BufferGeometry, Material>>>('mesh');
+	meshRef = viewChild.required<ElementRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material>>>('mesh');
 
 	private colorWrite = pick(this.options, 'colorWrite');
 	private depthWrite = pick(this.options, 'depthWrite');
@@ -61,10 +51,10 @@ export class NgtsMask {
 			depthWrite,
 			stencilWrite: true,
 			stencilRef: id,
-			stencilFunc: AlwaysStencilFunc,
-			stencilFail: ReplaceStencilOp,
-			stencilZFail: ReplaceStencilOp,
-			stencilZPass: ReplaceStencilOp,
+			stencilFunc: THREE.AlwaysStencilFunc,
+			stencilFail: THREE.ReplaceStencilOp,
+			stencilZFail: THREE.ReplaceStencilOp,
+			stencilZPass: THREE.ReplaceStencilOp,
 		};
 	});
 
@@ -78,22 +68,16 @@ export class NgtsMask {
 	}
 }
 
-export function injectMask(
-	id: () => number,
-	inverse: () => boolean = () => false,
-	{ injector }: { injector?: Injector } = {},
-) {
-	return assertInjector(injectMask, injector, () => {
-		return computed(() => {
-			const [_id, _inverse] = [id(), inverse()];
-			return {
-				stencilWrite: true,
-				stencilRef: _id,
-				stencilFunc: _inverse ? NotEqualStencilFunc : EqualStencilFunc,
-				stencilFail: KeepStencilOp,
-				stencilZFail: KeepStencilOp,
-				stencilZPass: KeepStencilOp,
-			};
-		});
+export function mask(id: () => number, inverse: () => boolean = () => false) {
+	return computed(() => {
+		const [_id, _inverse] = [id(), inverse()];
+		return {
+			stencilWrite: true,
+			stencilRef: _id,
+			stencilFunc: _inverse ? THREE.NotEqualStencilFunc : THREE.EqualStencilFunc,
+			stencilFail: THREE.KeepStencilOp,
+			stencilZFail: THREE.KeepStencilOp,
+			stencilZPass: THREE.KeepStencilOp,
+		};
 	});
 }

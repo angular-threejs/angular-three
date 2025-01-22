@@ -1,16 +1,17 @@
 import {
-	CUSTOM_ELEMENTS_SCHEMA,
 	ChangeDetectionStrategy,
 	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtGroup, extend, injectBeforeRender, omit } from 'angular-three';
+import { extend, injectBeforeRender, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Group, MathUtils } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 
-export interface NgtsFloatOptions extends Partial<NgtGroup> {
+export interface NgtsFloatOptions extends Partial<NgtThreeElements['ngt-group']> {
 	enabled: boolean;
 	speed: number;
 	rotationIntensity: number;
@@ -42,7 +43,7 @@ const defaultOptions: NgtsFloatOptions = {
 })
 export class NgtsFloat {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'enabled',
 		'speed',
 		'rotationIntensity',
@@ -51,7 +52,7 @@ export class NgtsFloat {
 		'autoInvalidate',
 	]);
 
-	floatRef = viewChild.required<ElementRef<Group>>('float');
+	floatRef = viewChild.required<ElementRef<THREE.Group>>('float');
 
 	constructor() {
 		extend({ Group });
@@ -71,7 +72,7 @@ export class NgtsFloat {
 			container.rotation.z = (Math.sin((offsetTime / 4) * speed) / 20) * rotationIntensity;
 
 			let yPosition = Math.sin((offsetTime / 4) * speed) / 10;
-			yPosition = MathUtils.mapLinear(yPosition, -0.1, 0.1, floatingRange[0] ?? -0.1, floatingRange[1] ?? 0.1);
+			yPosition = THREE.MathUtils.mapLinear(yPosition, -0.1, 0.1, floatingRange[0] ?? -0.1, floatingRange[1] ?? 0.1);
 			container.position.y = yPosition * floatIntensity;
 			container.updateMatrix();
 		});

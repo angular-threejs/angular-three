@@ -17,21 +17,20 @@ import {
 	NgtComputeFunction,
 	NgtPortal,
 	NgtPortalContent,
-	NgtTexture,
+	NgtThreeElements,
 	extend,
-	getLocalState,
+	getInstanceState,
 	injectStore,
+	is,
 	omit,
 	pick,
-	prepare,
 } from 'angular-three';
 import { injectFBO } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Group, Object3D, Scene, WebGLRenderTarget } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 
-extend({ Group });
-
-export interface NgtsRenderTextureOptions extends Partial<Omit<NgtTexture, 'attach'>> {
+export interface NgtsRenderTextureOptions extends Partial<Omit<NgtThreeElements['ngt-texture'], 'attach'>> {
 	/** Optional width of the texture, defaults to viewport bounds */
 	width?: number;
 	/** Optional height of the texture, defaults to viewport bounds */
@@ -54,23 +53,22 @@ export interface NgtsRenderTextureOptions extends Partial<Omit<NgtTexture, 'atta
 	compute?: (event: any, state: any, previous: any) => false | undefined;
 }
 
-@Directive({ selector: '[ngtsRenderTextureContainer]' })
+@Directive({ selector: '[renderTextureContainer]' })
 export class NgtsRenderTextureContainer {
-	fbo = input.required<WebGLRenderTarget>();
+	fbo = input.required<THREE.WebGLRenderTarget>();
 	renderPriority = input.required<number>();
 	frames = input.required<number>();
-	injector = input.required<Injector>();
 
 	private store = injectStore();
 
 	constructor() {
 		effect((onCleanup) => {
-			const [renderPriority, { internal }] = [this.renderPriority(), this.store.state()];
+			const [renderPriority, { internal }] = [this.renderPriority(), this.store()];
 
 			let count = 0;
 			let oldAutoClear: boolean;
 			let oldXrEnabled: boolean;
-			let oldRenderTarget: WebGLRenderTarget | null;
+			let oldRenderTarget: THREE.WebGLRenderTarget | null;
 			let oldIsPresenting: boolean;
 
 			const cleanup = internal.subscribe(
@@ -121,7 +119,7 @@ export class NgtsRenderTextureContent {
 	static ngTemplateContextGuard(
 		_: NgtsRenderTextureContent,
 		ctx: unknown,
-	): ctx is { container: Object3D; injector: Injector } {
+	): ctx is { container: THREE.Object3D; injector: Injector } {
 		return true;
 	}
 }
@@ -131,19 +129,18 @@ let incrementId = 0;
 @Component({
 	selector: 'ngts-render-texture',
 	template: `
-		<ngt-portal [container]="virtualScene()" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
-			<ng-template portalContent let-injector="injector" let-container="container">
+		<ngt-portal [container]="virtualScene" [state]="{ events: { compute: compute(), priority: eventPriority() } }">
+			<ng-template portalContent let-injector="injector">
 				<ng-container
-					ngtsRenderTextureContainer
+					renderTextureContainer
 					[fbo]="fbo()"
 					[renderPriority]="renderPriority()"
 					[frames]="frames()"
-					[injector]="injector"
 					[ngTemplateOutlet]="content()"
 					[ngTemplateOutletInjector]="injector"
-					[ngTemplateOutletContext]="{ container, injector }"
+					[ngTemplateOutletContext]="{ container: virtualScene, injector }"
 				>
-					<ngt-group (pointerover)="onPointerOver()" />
+					<ngt-group (pointerover)="(undefined)" />
 				</ng-container>
 			</ng-template>
 		</ngt-portal>
@@ -157,7 +154,7 @@ let incrementId = 0;
 export class NgtsRenderTexture {
 	attach = input<NgtAttachable>('map');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'samples',
 		'renderPriority',
 		'eventPriority',
@@ -173,30 +170,36 @@ export class NgtsRenderTexture {
 	content = contentChild.required(NgtsRenderTextureContent, { read: TemplateRef });
 
 	private store = injectStore();
-	private size = this.store.select('size');
-	private viewport = this.store.select('viewport');
+
+	private width = pick(this.options, 'width');
+	private height = pick(this.options, 'height');
+	private samples = pick(this.options, 'samples');
+	private stencilBuffer = pick(this.options, 'stencilBuffer');
+	private depthBuffer = pick(this.options, 'depthBuffer');
+	private generateMipmaps = pick(this.options, 'generateMipmaps');
+	private computeFn = pick(this.options, 'compute');
 
 	private fboParams = computed(() => ({
-		width: (this.options().width || this.size().width) * this.viewport().dpr,
-		height: (this.options().height || this.size().height) * this.viewport().dpr,
+		width: (this.width() || this.store.size.width()) * this.store.viewport.dpr(),
+		height: (this.height() || this.store.size.height()) * this.store.viewport.dpr(),
 		settings: {
-			samples: this.options().samples,
-			depthBuffer: this.options().depthBuffer,
-			stencilBuffer: this.options().stencilBuffer,
-			generateMipmaps: this.options().generateMipmaps,
+			samples: this.samples(),
+			depthBuffer: this.depthBuffer(),
+			stencilBuffer: this.stencilBuffer(),
+			generateMipmaps: this.generateMipmaps(),
 		},
 	}));
 
-	renderPriority = pick(this.options, 'renderPriority');
-	frames = pick(this.options, 'frames');
-	fbo = injectFBO(this.fboParams);
-	virtualScene = computed(() => {
-		const scene = prepare(new Scene());
+	protected renderPriority = pick(this.options, 'renderPriority');
+	protected frames = pick(this.options, 'frames');
+	protected fbo = injectFBO(this.fboParams);
+	protected virtualScene = (() => {
+		const scene = new THREE.Scene();
 		scene.name = `ngts-render-texture-virtual-scene-${incrementId++}`;
 		return scene;
-	});
-	eventPriority = pick(this.options, 'eventPriority');
-	compute = computed(() => this.options().compute || this.uvCompute);
+	})();
+	protected eventPriority = pick(this.options, 'eventPriority');
+	protected compute = computed(() => this.computeFn() || this.uvCompute);
 
 	private uvCompute: NgtComputeFunction = (event, root, previous) => {
 		const fbo = this.fbo();
@@ -205,11 +208,11 @@ export class NgtsRenderTexture {
 		const previousState = previous?.snapshot;
 
 		// Since this is only a texture it does not have an easy way to obtain the parent, which we
-		// need to transform event coordinates to local coordinates. We use r3f internals to find the
+		// need to transform event coordinates to local coordinates. We use ngt internals to find the
 		// next Object3D.
-		let parent = getLocalState(fbo.texture)?.parent();
-		while (parent && !(parent instanceof Object3D)) {
-			parent = getLocalState(parent)?.parent();
+		let parent = getInstanceState(fbo.texture)?.parent();
+		while (parent && !is.three<THREE.Object3D>(parent, 'isObject3D')) {
+			parent = getInstanceState(parent)?.parent();
 		}
 
 		if (!parent) return;
@@ -226,7 +229,7 @@ export class NgtsRenderTexture {
 		state.raycaster.setFromCamera(state.pointer.set(uv.x * 2 - 1, uv.y * 2 - 1), state.camera);
 	};
 
-	onPointerOver() {
-		/* noop */
+	constructor() {
+		extend({ Group });
 	}
 }

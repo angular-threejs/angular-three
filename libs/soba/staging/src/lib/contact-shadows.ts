@@ -7,23 +7,13 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtGroup, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { NgtArgs, NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	Color,
-	ColorRepresentation,
-	Group,
-	Mesh,
-	MeshBasicMaterial,
-	MeshDepthMaterial,
-	OrthographicCamera,
-	PlaneGeometry,
-	ShaderMaterial,
-	WebGLRenderTarget,
-} from 'three';
+import * as THREE from 'three';
+import { Group, Mesh, MeshBasicMaterial, OrthographicCamera } from 'three';
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib';
 
-export interface NgtsContactShadowsOptions extends Partial<Omit<NgtGroup, 'scale'>> {
+export interface NgtsContactShadowsOptions extends Partial<Omit<NgtThreeElements['ngt-group'], 'scale'>> {
 	opacity: number;
 	width: number;
 	height: number;
@@ -34,7 +24,7 @@ export interface NgtsContactShadowsOptions extends Partial<Omit<NgtGroup, 'scale
 	resolution: number;
 	frames: number;
 	scale: number | [x: number, y: number];
-	color: ColorRepresentation;
+	color: THREE.ColorRepresentation;
 	depthWrite: boolean;
 }
 
@@ -63,12 +53,7 @@ const defaultOptions: NgtsContactShadowsOptions = {
 				[renderOrder]="renderOrder() ?? 0"
 				[geometry]="planeGeometry()"
 			>
-				<ngt-mesh-basic-material
-					[transparent]="true"
-					[opacity]="opacity()"
-					[depthWrite]="depthWrite()"
-					[map]="texture()"
-				/>
+				<ngt-mesh-basic-material transparent [opacity]="opacity()" [depthWrite]="depthWrite()" [map]="texture()" />
 			</ngt-mesh>
 			<ngt-orthographic-camera *args="cameraArgs()" #shadowsCamera />
 		</ngt-group>
@@ -78,10 +63,10 @@ const defaultOptions: NgtsContactShadowsOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsContactShadows {
-	Math = Math;
+	protected readonly Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'scale',
 		'frames',
 		'opacity',
@@ -97,21 +82,25 @@ export class NgtsContactShadows {
 		'renderOrder',
 	]);
 
-	contactShadowsRef = viewChild.required<ElementRef<Group>>('contactShadows');
-	shadowsCameraRef = viewChild<ElementRef<OrthographicCamera>>('shadowsCamera');
+	contactShadowsRef = viewChild.required<ElementRef<THREE.Group>>('contactShadows');
+	private shadowsCameraRef = viewChild<ElementRef<THREE.OrthographicCamera>>('shadowsCamera');
 
 	private store = injectStore();
-	private scene = this.store.select('scene');
-	private gl = this.store.select('gl');
+
+	private width = pick(this.options, 'width');
+	private height = pick(this.options, 'height');
+	private scale = pick(this.options, 'scale');
 
 	private scaledWidth = computed(() => {
-		const { width, scale } = this.options();
+		const [width, scale] = [this.width(), this.scale()];
 		return width * (Array.isArray(scale) ? scale[0] : scale);
 	});
+
 	private scaledHeight = computed(() => {
-		const { height, scale } = this.options();
+		const [height, scale] = [this.height(), this.scale()];
 		return height * (Array.isArray(scale) ? scale[1] : scale);
 	});
+
 	private resolution = pick(this.options, 'resolution');
 	private color = pick(this.options, 'color');
 	private near = pick(this.options, 'near');
@@ -122,11 +111,14 @@ export class NgtsContactShadows {
 
 	private renderTarget = computed(() => this.createRenderTarget(this.resolution()));
 	private renderTargetBlur = computed(() => this.createRenderTarget(this.resolution()));
-	planeGeometry = computed(() => new PlaneGeometry(this.scaledWidth(), this.scaledHeight()).rotateX(Math.PI / 2));
-	private blurPlane = computed(() => new Mesh(this.planeGeometry()));
+
+	protected planeGeometry = computed(() =>
+		new THREE.PlaneGeometry(this.scaledWidth(), this.scaledHeight()).rotateX(Math.PI / 2),
+	);
+	private blurPlane = computed(() => new THREE.Mesh(this.planeGeometry()));
 	private depthMaterial = computed(() => {
-		const color = new Color(this.color());
-		const material = new MeshDepthMaterial();
+		const color = new THREE.Color(this.color());
+		const material = new THREE.MeshDepthMaterial();
 		material.depthTest = material.depthWrite = false;
 		material.onBeforeCompile = (shader) => {
 			shader.uniforms = { ...shader.uniforms, ucolor: { value: color } };
@@ -145,14 +137,14 @@ export class NgtsContactShadows {
 		return material;
 	});
 
-	private horizontalBlurMaterial = new ShaderMaterial({ ...HorizontalBlurShader, depthTest: false });
-	private verticalBlurMaterial = new ShaderMaterial({ ...VerticalBlurShader, depthTest: false });
+	private horizontalBlurMaterial = new THREE.ShaderMaterial({ ...HorizontalBlurShader, depthTest: false });
+	private verticalBlurMaterial = new THREE.ShaderMaterial({ ...VerticalBlurShader, depthTest: false });
 
-	renderOrder = pick(this.options, 'renderOrder');
-	opacity = pick(this.options, 'opacity');
-	depthWrite = pick(this.options, 'depthWrite');
-	texture = pick(this.renderTarget, 'texture');
-	cameraArgs = computed(() => {
+	protected renderOrder = pick(this.options, 'renderOrder');
+	protected opacity = pick(this.options, 'opacity');
+	protected depthWrite = pick(this.options, 'depthWrite');
+	protected texture = pick(this.renderTarget, 'texture');
+	protected cameraArgs = computed(() => {
 		const [width, height, near, far] = [this.scaledWidth(), this.scaledHeight(), this.near(), this.far()];
 		return [-width / 2, width / 2, height / 2, -height / 2, near, far];
 	});
@@ -180,8 +172,8 @@ export class NgtsContactShadows {
 		const [blur, smooth, gl, scene, contactShadows, depthMaterial, renderTarget] = [
 			this.blur(),
 			this.smooth(),
-			this.gl(),
-			this.scene(),
+			this.store.snapshot.gl,
+			this.store.snapshot.scene,
 			this.contactShadowsRef().nativeElement,
 			this.depthMaterial(),
 			this.renderTarget(),
@@ -222,7 +214,7 @@ export class NgtsContactShadows {
 			this.verticalBlurMaterial,
 			this.renderTargetBlur(),
 			this.renderTarget(),
-			this.gl(),
+			this.store.snapshot.gl,
 		];
 
 		blurPlane.visible = true;
@@ -241,7 +233,7 @@ export class NgtsContactShadows {
 	}
 
 	private createRenderTarget(resolution: number) {
-		const renderTarget = new WebGLRenderTarget(resolution, resolution);
+		const renderTarget = new THREE.WebGLRenderTarget(resolution, resolution);
 		renderTarget.texture.generateMipmaps = false;
 		return renderTarget;
 	}

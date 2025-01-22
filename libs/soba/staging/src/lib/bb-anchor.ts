@@ -8,13 +8,22 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtGroup, NgtVector3, extend, getLocalState, injectBeforeRender, omit, vector3 } from 'angular-three';
-import { Box3, Group, Object3D, Vector3 } from 'three';
+import {
+	NgtThreeElements,
+	NgtVector3,
+	extend,
+	getInstanceState,
+	injectBeforeRender,
+	omit,
+	vector3,
+} from 'angular-three';
+import * as THREE from 'three';
+import { Group } from 'three';
 
-const boundingBox = new Box3();
-const boundingBoxSize = new Vector3();
+const boundingBox = new THREE.Box3();
+const boundingBoxSize = new THREE.Vector3();
 
-export interface NgtsBBAnchorOptions extends Partial<NgtGroup> {
+export interface NgtsBBAnchorOptions extends Partial<NgtThreeElements['ngt-group']> {
 	anchor: NgtVector3;
 }
 
@@ -32,9 +41,9 @@ export class NgtsBBAnchor {
 	options = input.required<NgtsBBAnchorOptions>();
 	parameters = omit(this.options, ['anchor']);
 
-	bbAnchorRef = viewChild.required<ElementRef<Group>>('bbAnchor');
+	bbAnchorRef = viewChild.required<ElementRef<THREE.Group>>('bbAnchor');
 
-	parent = signal<Object3D | null>(null);
+	private parent = signal<THREE.Object3D | null>(null);
 	private anchor = vector3(this.options, 'anchor');
 
 	constructor() {
@@ -44,11 +53,11 @@ export class NgtsBBAnchor {
 		// so it becomes a sibling of its initial parent.
 		// We do that so the children have no impact on a bounding box of a parent.
 		effect(() => {
-			const bbAnchorLS = getLocalState(this.bbAnchorRef().nativeElement);
-			const bbAnchorParent = bbAnchorLS?.parent();
-			if (bbAnchorParent?.parent) {
-				this.parent.set(bbAnchorParent);
-				bbAnchorParent.parent.add(this.bbAnchorRef().nativeElement);
+			const bbAnchorInstanceState = getInstanceState(this.bbAnchorRef().nativeElement);
+			const bbAnchorParent = bbAnchorInstanceState?.parent();
+			if (bbAnchorParent && 'parent' in bbAnchorParent) {
+				this.parent.set(bbAnchorParent as unknown as THREE.Object3D);
+				bbAnchorParent['parent'].add(this.bbAnchorRef().nativeElement);
 			}
 		});
 

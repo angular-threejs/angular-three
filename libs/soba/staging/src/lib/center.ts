@@ -8,21 +8,22 @@ import {
 	output,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, NgtGroup, omit, pick } from 'angular-three';
+import { extend, getInstanceState, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Box3, Group, Object3D, Sphere, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 
 export interface NgtsCenterState {
 	/** The next parent above <Center> */
-	parent: Object3D;
+	parent: THREE.Object3D;
 	/** The outmost container group of the <Center> component */
-	container: Object3D;
+	container: THREE.Object3D;
 	width: number;
 	height: number;
 	depth: number;
-	boundingBox: Box3;
-	boundingSphere: Sphere;
-	center: Vector3;
+	boundingBox: THREE.Box3;
+	boundingSphere: THREE.Sphere;
+	center: THREE.Vector3;
 	verticalAlignment: number;
 	horizontalAlignment: number;
 	depthAlignment: number;
@@ -49,7 +50,7 @@ export interface NgtsCenterOptions {
 	cacheKey: any;
 }
 
-const defaultOptions: Partial<NgtGroup> & NgtsCenterOptions = {
+const defaultOptions: Partial<NgtThreeElements['ngt-group']> & NgtsCenterOptions = {
 	precise: true,
 	cacheKey: 0,
 };
@@ -70,7 +71,7 @@ const defaultOptions: Partial<NgtGroup> & NgtsCenterOptions = {
 })
 export class NgtsCenter {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'top',
 		'right',
 		'bottom',
@@ -87,9 +88,9 @@ export class NgtsCenter {
 
 	centered = output<NgtsCenterState>();
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	private outerRef = viewChild.required<ElementRef<Group>>('outer');
-	private innerRef = viewChild.required<ElementRef<Group>>('inner');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	private outerRef = viewChild.required<ElementRef<THREE.Group>>('outer');
+	private innerRef = viewChild.required<ElementRef<THREE.Group>>('inner');
 
 	centerOptions = pick(this.options, [
 		'top',
@@ -111,19 +112,19 @@ export class NgtsCenter {
 
 		effect(() => {
 			const inner = this.innerRef().nativeElement;
-			const localState = getLocalState(inner);
-			if (!localState) return;
+			const innerInstanceState = getInstanceState(inner);
+			if (!innerInstanceState) return;
 
-			const children = [localState.objects(), localState.nonObjects()];
+			const children = [...innerInstanceState.objects(), ...innerInstanceState.nonObjects()];
 			if (!children?.length) return;
 
 			const [{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX }, group, outer] =
 				[this.centerOptions(), this.groupRef().nativeElement, this.outerRef().nativeElement];
 
 			outer.matrixWorld.identity();
-			const box3 = new Box3().setFromObject(inner, precise);
-			const center = new Vector3();
-			const sphere = new Sphere();
+			const box3 = new THREE.Box3().setFromObject(inner, precise);
+			const center = new THREE.Vector3();
+			const sphere = new THREE.Sphere();
 
 			const width = box3.max.x - box3.min.x;
 			const height = box3.max.y - box3.min.y;

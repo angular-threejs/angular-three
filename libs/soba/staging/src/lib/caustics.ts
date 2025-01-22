@@ -8,46 +8,29 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, injectBeforeRender, NgtGroup, omit, pick, resolveRef } from 'angular-three';
+import { extend, getInstanceState, injectBeforeRender, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { injectHelper, NgtsEdges } from 'angular-three-soba/abstractions';
 import { injectFBO } from 'angular-three-soba/misc';
 import { CausticsProjectionMaterial, createCausticsUpdate } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import {
-	CameraHelper,
-	ColorRepresentation,
-	CustomBlending,
-	FloatType,
-	Group,
-	LinearFilter,
-	LinearMipmapLinearFilter,
-	LineBasicMaterial,
-	Mesh,
-	Object3D,
-	OneFactor,
-	OrthographicCamera,
-	PlaneGeometry,
-	Scene,
-	SrcAlphaFactor,
-	UnsignedByteType,
-	Vector3,
-} from 'three';
+import * as THREE from 'three';
+import { Group, LineBasicMaterial, Mesh, OrthographicCamera, PlaneGeometry, Scene } from 'three';
 
 const NORMAL_OPTIONS = {
 	depth: true,
-	minFilter: LinearFilter,
-	magFilter: LinearFilter,
-	type: UnsignedByteType,
+	minFilter: THREE.LinearFilter,
+	magFilter: THREE.LinearFilter,
+	type: THREE.UnsignedByteType,
 };
 
 const CAUSTIC_OPTIONS = {
-	minFilter: LinearMipmapLinearFilter,
-	magFilter: LinearFilter,
-	type: FloatType,
+	minFilter: THREE.LinearMipmapLinearFilter,
+	magFilter: THREE.LinearFilter,
+	type: THREE.FloatType,
 	generateMipmaps: true,
 };
 
-export interface NgtsCausticsOptions extends Partial<NgtGroup> {
+export interface NgtsCausticsOptions extends Partial<NgtThreeElements['ngt-group']> {
 	/** How many frames it will render, set it to Infinity for runtime, default: 1 */
 	frames: number;
 	/** Enables visual cues to help you stage your scene, default: false */
@@ -65,11 +48,11 @@ export interface NgtsCausticsOptions extends Partial<NgtGroup> {
 	/** Intensity of the prjected caustics, default: 0.05 */
 	intensity: number;
 	/** Caustics color, default: white */
-	color: ColorRepresentation;
+	color: THREE.ColorRepresentation;
 	/** Buffer resolution, default: 2048 */
 	resolution: number;
 	/** Camera position, it will point towards the contents bounds center, default: [5, 5, 5] */
-	lightSource: [x: number, y: number, z: number] | ElementRef<Object3D> | Object3D;
+	lightSource: [x: number, y: number, z: number] | ElementRef<THREE.Object3D> | THREE.Object3D;
 }
 
 const defaultOptions: NgtsCausticsOptions = {
@@ -98,7 +81,7 @@ const defaultOptions: NgtsCausticsOptions = {
 			<ngt-mesh #plane [renderOrder]="2" [rotation]="[-Math.PI / 2, 0, 0]">
 				<ngt-plane-geometry />
 				<ngt-caustics-projection-material
-					[transparent]="true"
+					transparent
 					[color]="color()"
 					[causticsTexture]="causticsTarget().texture"
 					[causticsTextureB]="causticsTargetB().texture"
@@ -122,12 +105,12 @@ const defaultOptions: NgtsCausticsOptions = {
 })
 export class NgtsCaustics {
 	protected readonly Math = Math;
-	protected readonly CustomBlending = CustomBlending;
-	protected readonly OneFactor = OneFactor;
-	protected readonly SrcAlphaFactor = SrcAlphaFactor;
+	protected readonly CustomBlending = THREE.CustomBlending;
+	protected readonly OneFactor = THREE.OneFactor;
+	protected readonly SrcAlphaFactor = THREE.SrcAlphaFactor;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'frames',
 		'debug',
 		'causticsOnly',
@@ -141,15 +124,17 @@ export class NgtsCaustics {
 		'lightSource',
 	]);
 
-	debug = pick(this.options, 'debug');
-	color = pick(this.options, 'color');
+	protected debug = pick(this.options, 'debug');
+	protected color = pick(this.options, 'color');
 	private resolution = pick(this.options, 'resolution');
 
-	groupRef = viewChild.required<ElementRef<Group>>('group');
-	private sceneRef = viewChild.required<ElementRef<Scene>>('scene');
-	private cameraRef = viewChild.required<ElementRef<OrthographicCamera>>('camera');
+	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	private sceneRef = viewChild.required<ElementRef<THREE.Scene>>('scene');
+	private cameraRef = viewChild.required<ElementRef<THREE.OrthographicCamera>>('camera');
 	private planeRef =
-		viewChild.required<ElementRef<Mesh<PlaneGeometry, InstanceType<typeof CausticsProjectionMaterial>>>>('plane');
+		viewChild.required<ElementRef<THREE.Mesh<THREE.PlaneGeometry, InstanceType<typeof CausticsProjectionMaterial>>>>(
+			'plane',
+		);
 
 	private normalTargetParams = computed(() => ({
 		width: this.resolution(),
@@ -171,7 +156,7 @@ export class NgtsCaustics {
 
 	private cameraHelper = injectHelper(
 		() => (this.debug() ? this.cameraRef().nativeElement : null),
-		() => CameraHelper,
+		() => THREE.CameraHelper,
 	);
 
 	constructor() {
@@ -185,16 +170,16 @@ export class NgtsCaustics {
 				this.planeRef().nativeElement,
 				this.options(),
 			];
-			const groupLocalState = getLocalState(group);
-			const sceneLocalState = getLocalState(scene);
-			const planeLocalState = getLocalState(plane);
+			const groupInstanceState = getInstanceState(group);
+			const sceneInstanceState = getInstanceState(scene);
+			const planeInstanceState = getInstanceState(plane);
 
-			if (!groupLocalState || !sceneLocalState || !planeLocalState) return;
+			if (!groupInstanceState || !sceneInstanceState || !planeInstanceState) return;
 
-			groupLocalState.objects();
-			sceneLocalState.objects();
-			planeLocalState.objects();
-			planeLocalState.nonObjects();
+			groupInstanceState.objects();
+			sceneInstanceState.objects();
+			planeInstanceState.objects();
+			planeInstanceState.nonObjects();
 
 			group.updateWorldMatrix(false, true);
 		});
@@ -204,7 +189,7 @@ export class NgtsCaustics {
 
 			return {
 				params: Object.assign(rest, {
-					lightSource: Array.isArray(lightSource) ? new Vector3(...lightSource) : resolveRef(lightSource),
+					lightSource: Array.isArray(lightSource) ? new THREE.Vector3(...lightSource) : resolveRef(lightSource),
 				}),
 				normalTarget: this.normalTarget(),
 				normalTargetB: this.normalTargetB(),

@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { injectTexture } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { RepeatWrapping, Texture, Vector2 } from 'three';
+import * as THREE from 'three';
 
 const NORMAL_ROOT = 'https://rawcdn.githack.com/pmndrs/drei-assets/7a3104997e1576f83472829815b00880d88b32fb';
 const LIST_URL = 'https://cdn.jsdelivr.net/gh/pmndrs/drei-assets@master/normals/normals.json';
@@ -32,7 +32,7 @@ export function injectNormalTexture(
 		settings = () => ({}),
 		onLoad,
 		injector,
-	}: { settings?: () => NgtsNormalTextureSettings; onLoad?: (texture: Texture[]) => void; injector?: Injector },
+	}: { settings?: () => NgtsNormalTextureSettings; onLoad?: (texture: THREE.Texture[]) => void; injector?: Injector },
 ) {
 	return assertInjector(injectNormalTexture, injector, () => {
 		const normalList = signal<Record<string, string>>({});
@@ -69,9 +69,9 @@ export function injectNormalTexture(
 			if (!texture) return;
 
 			const { anisotropy = 1, repeat = [1, 1], offset = [0, 0] } = settings();
-			texture.wrapS = texture.wrapT = RepeatWrapping;
-			texture.repeat = new Vector2(repeat[0], repeat[1]);
-			texture.offset = new Vector2(offset[0], offset[1]);
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat = new THREE.Vector2(repeat[0], repeat[1]);
+			texture.offset = new THREE.Vector2(offset[0], offset[1]);
 			texture.anisotropy = anisotropy;
 		});
 
@@ -86,7 +86,7 @@ export interface NgtsNormalTextureOptions extends NgtsNormalTextureSettings {
 @Directive({ selector: 'ng-template[normalTexture]' })
 export class NgtsNormalTexture {
 	normalTexture = input<NgtsNormalTextureOptions>();
-	normalTextureLoaded = output<Texture[]>();
+	normalTextureLoaded = output<THREE.Texture[]>();
 
 	private template = inject(TemplateRef);
 	private vcr = inject(ViewContainerRef);
@@ -97,7 +97,7 @@ export class NgtsNormalTexture {
 		return settings;
 	});
 
-	private ref?: EmbeddedViewRef<{ $implicit: Signal<Texture | null> }>;
+	private ref?: EmbeddedViewRef<{ $implicit: Signal<THREE.Texture | null> }>;
 
 	constructor() {
 		const { texture } = injectNormalTexture(this.id, {
@@ -115,7 +115,10 @@ export class NgtsNormalTexture {
 		});
 	}
 
-	static ngTemplateContextGuard(_: NgtsNormalTexture, ctx: unknown): ctx is { $implicit: Signal<Texture | null> } {
+	static ngTemplateContextGuard(
+		_: NgtsNormalTexture,
+		ctx: unknown,
+	): ctx is { $implicit: Signal<THREE.Texture | null> } {
 		return true;
 	}
 }

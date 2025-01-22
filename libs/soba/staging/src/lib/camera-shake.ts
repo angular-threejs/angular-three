@@ -1,12 +1,12 @@
-import { Directive, Signal, effect, input, untracked } from '@angular/core';
+import { Directive, effect, input, untracked } from '@angular/core';
 import { injectBeforeRender, injectStore } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Vector3 } from 'three';
+import * as THREE from 'three';
 import { SimplexNoise } from 'three-stdlib';
 
 interface ControlsProto {
 	update(): void;
-	target: Vector3;
+	target: THREE.Vector3;
 	addEventListener: (event: string, callback: (event: any) => void) => void;
 	removeEventListener: (event: string, callback: (event: any) => void) => void;
 }
@@ -39,10 +39,8 @@ export class NgtsCameraShake {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private store = injectStore();
-	private camera = this.store.select('camera');
-	private defaultControls = this.store.select('controls') as unknown as Signal<ControlsProto>;
 
-	private initialRotation = untracked(this.camera).rotation.clone();
+	private initialRotation = this.store.snapshot.camera.rotation.clone();
 	private intensityOption = untracked(this.options).intensity;
 
 	get intensity() {
@@ -59,9 +57,9 @@ export class NgtsCameraShake {
 
 	constructor() {
 		effect((onCleanup) => {
-			const defaultControls = this.defaultControls();
+			const defaultControls = this.store.controls() as unknown as ControlsProto;
 			if (!defaultControls) return;
-			const camera = this.camera();
+			const camera = this.store.camera();
 
 			const callback = () => void (this.initialRotation = camera.rotation.clone());
 			defaultControls.addEventListener('change', callback);
@@ -73,7 +71,7 @@ export class NgtsCameraShake {
 		injectBeforeRender(({ delta, clock }) => {
 			const [{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate }, camera] = [
 				this.options(),
-				this.camera(),
+				this.store.snapshot.camera,
 			];
 			const shake = Math.pow(this.intensity, 2);
 			const yaw = maxYaw * shake * this.yawNoise.noise(clock.elapsedTime * yawFrequency, 1);

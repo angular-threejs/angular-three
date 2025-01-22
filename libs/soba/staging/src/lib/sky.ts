@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { NgtArgs, NgtMesh, NgtVector3, omit, pick, vector3 } from 'angular-three';
+import { NgtArgs, NgtThreeElements, NgtVector3, omit, pick, vector3 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Vector3 } from 'three';
+import * as THREE from 'three';
 import { Sky } from 'three-stdlib';
 
-export function calcPosFromAngles(inclination: number, azimuth: number, vector: Vector3 = new Vector3()) {
+export function calcPosFromAngles(inclination: number, azimuth: number, vector: THREE.Vector3 = new THREE.Vector3()) {
 	const theta = Math.PI * (inclination - 0.5);
 	const phi = 2 * Math.PI * (azimuth - 0.5);
 
@@ -15,7 +15,7 @@ export function calcPosFromAngles(inclination: number, azimuth: number, vector: 
 	return vector;
 }
 
-export interface NgtsSkyOptions extends Partial<Omit<NgtMesh, 'scale'>> {
+export interface NgtsSkyOptions extends Partial<Omit<NgtThreeElements['ngt-mesh'], 'scale'>> {
 	distance: number;
 	inclination: number;
 	azimuth: number;
@@ -54,7 +54,7 @@ const defaultOptions: NgtsSkyOptions = {
 })
 export class NgtsSky {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	parameters = omit(this.options, [
+	protected parameters = omit(this.options, [
 		'distance',
 		'inclination',
 		'azimuth',
@@ -65,22 +65,22 @@ export class NgtsSky {
 		'sunPosition',
 	]);
 
-	distance = pick(this.options, 'distance');
-	turbidity = pick(this.options, 'turbidity');
-	mieCoefficient = pick(this.options, 'mieCoefficient');
-	mieDirectionalG = pick(this.options, 'mieDirectionalG');
-	rayleigh = pick(this.options, 'rayleigh');
+	private distance = pick(this.options, 'distance');
+	protected turbidity = pick(this.options, 'turbidity');
+	protected mieCoefficient = pick(this.options, 'mieCoefficient');
+	protected mieDirectionalG = pick(this.options, 'mieDirectionalG');
+	protected rayleigh = pick(this.options, 'rayleigh');
 
-	scale = computed(() => new Vector3().setScalar(this.distance()));
+	protected scale = computed(() => new THREE.Vector3().setScalar(this.distance()));
 
 	private inclination = pick(this.options, 'inclination');
 	private azimuth = pick(this.options, 'azimuth');
 	private sunPosition = vector3(this.options, 'sunPosition', true);
-	calculatedSunPosition = computed(() => {
+	protected calculatedSunPosition = computed(() => {
 		const sunPosition = this.sunPosition();
 		if (sunPosition) return sunPosition;
 		return calcPosFromAngles(this.inclination(), this.azimuth());
 	});
 
-	sky = new Sky();
+	protected sky = new Sky();
 }
