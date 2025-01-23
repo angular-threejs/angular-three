@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { injectBeforeRender } from 'angular-three';
 import { NgtsText, NgtsTextOptions } from 'angular-three-soba/abstractions';
 import { DoubleSide } from 'three';
-import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { color, number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'text-container',
@@ -73,11 +73,11 @@ class TextCustomMaterialContainer {
 
 export default {
 	title: 'Abstractions/Text',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(TextContainer, {
-	canvasOptions: { camera: { position: [0, 0, 200] } },
+export const Default = storyObject(TextContainer, {
+	camera: { position: [0, 0, 200] },
 	argsOptions: {
 		options: {
 			color: color('#EC2D2D'),
@@ -93,8 +93,8 @@ export const Default = makeStoryObject(TextContainer, {
 	},
 });
 
-export const Outline = makeStoryObject(TextContainer, {
-	canvasOptions: { camera: { position: [0, 0, 200] } },
+export const Outline = storyObject(TextContainer, {
+	camera: { position: [0, 0, 200] },
 	argsOptions: {
 		options: {
 			color: color('#EC2D2D'),
@@ -112,8 +112,8 @@ export const Outline = makeStoryObject(TextContainer, {
 	},
 });
 
-export const TransparentWithStroke = makeStoryObject(TextContainer, {
-	canvasOptions: { camera: { position: [0, 0, 200] } },
+export const TransparentWithStroke = storyObject(TextContainer, {
+	camera: { position: [0, 0, 200] },
 	argsOptions: {
 		options: {
 			fontSize: 12,
@@ -131,8 +131,8 @@ export const TransparentWithStroke = makeStoryObject(TextContainer, {
 	},
 });
 
-export const TextShadow = makeStoryObject(TextContainer, {
-	canvasOptions: { camera: { position: [0, 0, 200] } },
+export const TextShadow = storyObject(TextContainer, {
+	camera: { position: [0, 0, 200] },
 	argsOptions: {
 		options: {
 			color: color('#EC2D2D'),
@@ -153,8 +153,8 @@ export const TextShadow = makeStoryObject(TextContainer, {
 	},
 });
 
-export const CustomMaterial = makeStoryObject(TextCustomMaterialContainer, {
-	canvasOptions: { camera: { position: [0, 0, 200] } },
+export const CustomMaterial = storyObject(TextCustomMaterialContainer, {
+	camera: { position: [0, 0, 200] },
 	argsOptions: {
 		color: color('#EC2D2D'),
 		opacity: number(1, { range: true, min: 0, max: 1, step: 0.01 }),

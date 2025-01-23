@@ -24,7 +24,7 @@
 		},
 		"build-docs": {
 			"executor": "@nx/angular:package",
-			"outputs": ["{workspaceRoot}/apps/docs/node_modules/angular-three-soba"],
+			"outputs": ["{workspaceRoot}/node_modules/angular-three-soba"],
 			"options": {
 				"project": "libs/soba/ng-package-docs.json",
 				"tsConfig": "libs/soba/tsconfig.lib.prod.json"

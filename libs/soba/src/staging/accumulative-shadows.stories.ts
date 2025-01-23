@@ -11,7 +11,7 @@ import {
 } from 'angular-three-soba/staging';
 import { CanvasTexture, MeshStandardMaterial, RepeatWrapping, UVMapping } from 'three';
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
-import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
+import { color, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'accumulative-shadows-suzi',
@@ -67,10 +67,10 @@ class DefaultAccumulativeShadowsStory {
 
 export default {
 	title: 'Staging/Accumulative Shadows',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultAccumulativeShadowsStory, {
+export const Default = storyObject(DefaultAccumulativeShadowsStory, {
 	argsOptions: {
 		options: {
 			temporal: true,

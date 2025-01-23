@@ -15,9 +15,9 @@ import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectTexture } from 'angular-three-soba/loaders';
-import { injectSurfaceSampler, NgtsDecal } from 'angular-three-soba/misc';
+import { NgtsDecal, surfaceSampler } from 'angular-three-soba/misc';
 import { Euler, InstancedBufferAttribute, Matrix4, Mesh, Quaternion, Vector3 } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	selector: 'decal-loop-over-instanced-buffer-attribute',
@@ -94,27 +94,27 @@ class DefaultDecalStory {
 	}));
 
 	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
-	bufferAttribute = injectSurfaceSampler(this.meshRef, () => ({
-		count: 50,
-		transform: ({ dummy, position, normal }) => {
-			const p = new Vector3();
-			p.copy(position);
-
-			const r = new Euler();
-			r.x = Math.random() * Math.PI;
-
-			dummy.position.copy(position);
-			dummy.rotation.copy(r);
-			dummy.lookAt(p.add(normal));
+	bufferAttribute = surfaceSampler(this.meshRef, {
+		count: () => 50,
+		transform: () => {
+			return ({ dummy, position, normal }) => {
+				const p = new Vector3();
+				p.copy(position);
+				const r = new Euler();
+				r.x = Math.random() * Math.PI;
+				dummy.position.copy(position);
+				dummy.rotation.copy(r);
+				dummy.lookAt(p.add(normal));
+			};
 		},
-	}));
+	});
 }
 
 export default {
 	title: 'Misc/Decal',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultDecalStory, {
+export const Default = storyFunction(DefaultDecalStory, {
 	camera: { position: [0, 0, 5] },
 });

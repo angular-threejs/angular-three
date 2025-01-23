@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 import { positions } from './positions';
 
 @Component({
@@ -26,7 +26,7 @@ class DefaultOrthographicCameraStory {
 
 export default {
 	title: 'Camera/OrthographicCamera',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 };
 
-export const Default = makeStoryObject(DefaultOrthographicCameraStory);
+export const Default = storyFunction(DefaultOrthographicCameraStory);

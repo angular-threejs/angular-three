@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 import { positions } from './positions';
 
 @Component({
@@ -26,7 +26,7 @@ class DefaultPerspectiveCameraStory {
 
 export default {
 	title: 'Camera/PerspectiveCamera',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 };
 
-export const Default = makeStoryObject(DefaultPerspectiveCameraStory);
+export const Default = storyFunction(DefaultPerspectiveCameraStory);

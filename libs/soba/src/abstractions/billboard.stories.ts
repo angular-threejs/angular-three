@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsBillboard, NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -118,15 +118,17 @@ class DefaultBillboardStory {
 
 export default {
 	title: 'Abstractions/Billboard',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultBillboardStory, {
-	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },
+export const Default = storyObject(DefaultBillboardStory, {
+	camera: { position: [0, 0, 10] },
+	controls: false,
 	argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
 });
 
-export const Text = makeStoryObject(TextBillboardStory, {
-	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },
+export const Text = storyObject(TextBillboardStory, {
+	camera: { position: [0, 0, 10] },
+	controls: false,
 	argsOptions: { follow: true, lockX: false, lockY: false, lockZ: false },
 });

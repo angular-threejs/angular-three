@@ -5,7 +5,7 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial, NgtsMeshTransmissionMaterialOptions } from 'angular-three-soba/materials';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Color, FrontSide } from 'three';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'gelatinous-cube',
@@ -117,11 +117,11 @@ class DefaultMeshTransmissionMaterialStory {
 
 export default {
 	title: 'Materials/MeshTransmissionMaterial',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultMeshTransmissionMaterialStory, {
-	canvasOptions: { camera: { fov: 25, position: [15, 0, 15] } },
+export const Default = storyObject(DefaultMeshTransmissionMaterialStory, {
+	camera: { fov: 25, position: [15, 0, 15] },
 	argsOptions: {
 		blur: number(0.1, { range: true, min: 0, max: 1, step: 0.1 }),
 		options: {

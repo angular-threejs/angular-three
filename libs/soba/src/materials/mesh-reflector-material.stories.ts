@@ -15,7 +15,7 @@ import { NgtsMeshReflectorMaterial, NgtsMeshReflectorMaterialOptions } from 'ang
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Mesh, RepeatWrapping, Vector2 } from 'three';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyFunction, storyObject } from '../setup-canvas';
 
 const defaultOptions: Partial<NgtsMeshReflectorMaterialOptions> = {
 	resolution: 1024,
@@ -96,43 +96,43 @@ class MeshReflectorMaterialStory {
 
 export default {
 	title: 'Materials/MeshReflectorMaterial',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(MeshReflectorMaterialStory, {
-	canvasOptions: { camera: { position: [-2, 2, 6], fov: 20 } },
+export const Default = storyFunction(MeshReflectorMaterialStory, {
+	camera: { position: [-2, 2, 6], fov: 20 },
 });
 
-export const Blur = makeStoryObject(MeshReflectorMaterialStory, {
-	canvasOptions: { camera: { position: [-2, 2, 6], fov: 20 } },
+export const Blur = storyObject(MeshReflectorMaterialStory, {
+	camera: { position: [-2, 2, 6], fov: 20 },
 	argsOptions: {
 		options: { blur: 500 },
 	},
 });
 
-export const Depth = makeStoryObject(MeshReflectorMaterialStory, {
-	canvasOptions: { camera: { position: [-2, 2, 6], fov: 20 } },
+export const Depth = storyObject(MeshReflectorMaterialStory, {
+	camera: { position: [-2, 2, 6], fov: 20 },
 	argsOptions: {
 		options: { depthScale: 2 },
 	},
 });
 
-export const Distortion = makeStoryObject(MeshReflectorMaterialStory, {
-	canvasOptions: { camera: { position: [-2, 2, 6], fov: 20 } },
+export const Distortion = storyObject(MeshReflectorMaterialStory, {
+	camera: { position: [-2, 2, 6], fov: 20 },
 	argsOptions: {
 		options: { distortion: 1 },
 	},
 });
 
-export const NormalMap = makeStoryObject(MeshReflectorMaterialStory, {
-	canvasOptions: { camera: { position: [-2, 2, 6], fov: 20 } },
+export const NormalMap = storyObject(MeshReflectorMaterialStory, {
+	camera: { position: [-2, 2, 6], fov: 20 },
 	argsOptions: {
 		options: { normalScale: new Vector2(1, 1) },
 	},
 });
 
-export const Offset = makeStoryObject(MeshReflectorMaterialStory, {
-	canvasOptions: { camera: { position: [-2, 2, 6], fov: 20 } },
+export const Offset = storyObject(MeshReflectorMaterialStory, {
+	camera: { position: [-2, 2, 6], fov: 20 },
 	argsOptions: {
 		options: { reflectorOffset: 1 },
 	},

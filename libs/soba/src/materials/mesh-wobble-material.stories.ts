@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } fro
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsMeshWobbleMaterial, NgtsMeshWobbleMaterialOptions } from 'angular-three-soba/materials';
-import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { color, number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -21,10 +21,10 @@ class DefaultMeshWobbleMaterialStory {
 
 export default {
 	title: 'Materials/MeshWobbleMaterial',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultMeshWobbleMaterialStory, {
+export const Default = storyObject(DefaultMeshWobbleMaterialStory, {
 	argsOptions: {
 		options: {
 			color: color('#f25042'),

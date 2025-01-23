@@ -5,7 +5,7 @@ import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { BoxHelper, CameraHelper } from 'three';
 import { VertexNormalsHelper } from 'three-stdlib';
 import { NgtsHelper } from '../../abstractions/src/lib/helper';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -59,8 +59,8 @@ class DefaultHelperStory {
 
 export default {
 	title: 'Abstractions/Helper',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultHelperStory);
-export const Camera = makeStoryFunction(CameraHelperStory);
+export const Default = storyFunction(DefaultHelperStory);
+export const Camera = storyFunction(CameraHelperStory);

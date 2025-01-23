@@ -10,7 +10,7 @@ import { Meta } from '@storybook/angular';
 import { merge, NgtArgs } from 'angular-three';
 import { NgtsComputedAttribute, NgtsSampler, NgtsSamplerOptions, TransformFn } from 'angular-three-soba/misc';
 import { BufferAttribute, BufferGeometry, InstancedMesh, Mesh, Vector3 } from 'three';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 const transformInstances: TransformFn = ({ dummy, position }) => {
 	dummy.position.copy(position);
@@ -140,11 +140,11 @@ class DefaultSamplerStory {
 
 export default {
 	title: 'Misc/Sampler',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultSamplerStory, {
-	canvasOptions: { camera: { position: [0, 0, 5] } },
+export const Default = storyObject(DefaultSamplerStory, {
+	camera: { position: [0, 0, 5] },
 	argsOptions: {
 		options: {
 			count: 500,
@@ -152,8 +152,8 @@ export const Default = makeStoryObject(DefaultSamplerStory, {
 	},
 });
 
-export const WithElementRef = makeStoryObject(RefSamplerStory, {
-	canvasOptions: { camera: { position: [0, 0, 5] } },
+export const WithElementRef = storyObject(RefSamplerStory, {
+	camera: { position: [0, 0, 5] },
 	argsOptions: {
 		options: {
 			count: 500,
@@ -161,8 +161,8 @@ export const WithElementRef = makeStoryObject(RefSamplerStory, {
 	},
 });
 
-export const UsingTransform = makeStoryObject(TransformSamplerStory, {
-	canvasOptions: { camera: { position: [0, 0, 5] } },
+export const UsingTransform = storyObject(TransformSamplerStory, {
+	camera: { position: [0, 0, 5] },
 	argsOptions: {
 		options: {
 			count: 500,
@@ -170,8 +170,8 @@ export const UsingTransform = makeStoryObject(TransformSamplerStory, {
 	},
 });
 
-export const WithWeight = makeStoryObject(WeightSamplerStory, {
-	canvasOptions: { camera: { position: [0, 0, 5] } },
+export const WithWeight = storyObject(WeightSamplerStory, {
+	camera: { position: [0, 0, 5] },
 	argsOptions: {
 		options: {
 			count: 500,

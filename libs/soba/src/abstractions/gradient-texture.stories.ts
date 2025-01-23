@@ -5,7 +5,7 @@ import { NgtsGradientTexture } from 'angular-three-soba/abstractions';
 import { NgtsMeshWobbleMaterial } from 'angular-three-soba/materials';
 import { NgtsFloat } from 'angular-three-soba/staging';
 import { DoubleSide } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -32,7 +32,7 @@ class DefaultGradientTextureStory {
 
 export default {
 	title: 'Abstractions/GradientTexture',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultGradientTextureStory);
+export const Default = storyFunction(DefaultGradientTextureStory);

@@ -16,7 +16,7 @@ import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
 import { Bone, Group, MeshStandardMaterial, Object3D, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryObject, select } from '../setup-canvas';
+import { select, storyDecorators, storyObject } from '../setup-canvas';
 
 type BotGLTF = GLTF & {
 	nodes: { 'Y-Bot': Object3D; YB_Body: SkinnedMesh; YB_Joints: SkinnedMesh; mixamorigHips: Bone };
@@ -86,11 +86,11 @@ class DefaultAnimationsStory {
 
 export default {
 	title: 'Misc/injectAnimations',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 };
 
-export const Default = makeStoryObject(DefaultAnimationsStory, {
-	canvasOptions: { camera: { position: [0, 0, 3] } },
+export const Default = storyObject(DefaultAnimationsStory, {
+	camera: { position: [0, 0, 3] },
 	argsOptions: {
 		animation: select('Strut', { options: ['Strut', 'Dance', 'Idle'] }),
 	},

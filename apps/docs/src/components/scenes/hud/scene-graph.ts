@@ -4,7 +4,6 @@ import {
 	Component,
 	ElementRef,
 	computed,
-	effect,
 	inject,
 	input,
 	signal,
@@ -83,7 +82,7 @@ export class FaceMaterial {
 			[position]="position()"
 			[scale]="scale()"
 			(click)="clicked.set(!clicked())"
-			(pointermove)="onPointerMove($event)"
+			(pointermove)="$event.stopPropagation(); hovered.set($any($event).face.materialIndex)"
 			(pointerout)="hovered.set(-1)"
 		>
 			<ngt-box-geometry />
@@ -106,22 +105,6 @@ export class Box {
 	protected scale = computed(() => (this.clicked() ? 1.5 : 1));
 
 	protected faces = ['front', 'back', 'top', 'bottom', 'left', 'right'];
-
-	constructor() {
-		effect(() => {
-			console.log('this.mesh()', this.mesh());
-		});
-
-		injectBeforeRender(({ delta }) => {
-			this.mesh().nativeElement.rotation.x += delta;
-		});
-	}
-
-	onPointerMove(event: any) {
-		console.log('event', event.face.materialIndex);
-		event.stopPropagation();
-		this.hovered.set(event.face.materialIndex);
-	}
 }
 
 @Component({

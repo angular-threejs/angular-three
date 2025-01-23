@@ -11,7 +11,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtsContactShadows, NgtsContactShadowsOptions } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
-import { color, makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';
+import { color, storyDecorators, storyFunction, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -54,11 +54,11 @@ class ContactShadowsStory {
 
 export default {
 	title: 'Staging/Contact Shadows',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(ContactShadowsStory);
-export const Colorized = makeStoryObject(ContactShadowsStory, {
+export const Default = storyFunction(ContactShadowsStory);
+export const Colorized = storyObject(ContactShadowsStory, {
 	argsOptions: {
 		options: {
 			color: color('#2A8AFF'),

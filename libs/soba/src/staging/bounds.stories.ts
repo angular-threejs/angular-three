@@ -5,7 +5,7 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsBounds, NgtsContactShadows } from 'angular-three-soba/staging';
 import { Mesh, MeshStandardMaterial } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -122,10 +122,10 @@ class DefaultBoundsStory {
 
 export default {
 	title: 'Staging/Bounds',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultBoundsStory, {
+export const Default = storyFunction(DefaultBoundsStory, {
 	camera: { position: [0, -10, 80], fov: 50 },
 	lights: false,
 	controls: false,

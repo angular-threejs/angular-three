@@ -1,118 +1,77 @@
 import {
-	CUSTOM_ELEMENTS_SCHEMA,
+	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
-	ComponentMirror,
 	ComponentRef,
+	computed,
+	CUSTOM_ELEMENTS_SCHEMA,
 	DestroyRef,
 	Directive,
-	ElementRef,
-	EnvironmentInjector,
-	InjectionToken,
-	Provider,
-	Signal,
-	Type,
-	ViewContainerRef,
-	afterNextRender,
-	createEnvironmentInjector,
 	effect,
+	ElementRef,
 	inject,
+	Injector,
 	input,
 	isSignal,
+	Provider,
 	reflectComponentType,
+	Type,
 	untracked,
 	viewChild,
+	ViewContainerRef,
 } from '@angular/core';
-import { Args, Decorator, moduleMetadata } from '@storybook/angular';
-import {
-	NgtAnyRecord,
-	NgtArgs,
-	NgtCanvas,
-	NgtPerformance,
-	extend,
-	injectBeforeRender,
-	resolveRef,
-} from 'angular-three';
+import { applicationConfig, Args, Decorator, moduleMetadata } from '@storybook/angular';
+import { extend, injectBeforeRender, NgtAnyRecord, NgtArgs, NgtCanvasOptions, resolveRef } from 'angular-three';
+import { NgtsOrbitControls } from 'angular-three-soba/controls';
+import { NgtsLoader } from 'angular-three-soba/loaders';
+import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
-import { Object3D } from 'three';
-import { NgtsOrbitControls } from '../controls/src/lib/orbit-controls';
-import { NgtsLoader } from '../loaders/src/lib/loader';
-
-extend(THREE);
-
-type OrthographicCameraOptions = {
-	orthographic: true;
-	camera: { position?: [number, number, number]; zoom?: number };
-};
-
-type PerspectiveCameraOptions = {
-	orthographic: false;
-	camera: { position?: [number, number, number]; fov?: number };
-};
-
-export type SetupCanvasOptions = {
-	performance: Partial<Omit<NgtPerformance, 'regress'>>;
-	background: string;
-	controls: boolean | { makeDefault?: boolean };
-	lights: boolean;
-} & (OrthographicCameraOptions | PerspectiveCameraOptions);
-
-const defaultCanvasOptions: SetupCanvasOptions = {
-	camera: { position: [-5, 5, 5], fov: 75 },
-	orthographic: false,
-	performance: { current: 1, min: 0.5, max: 1, debounce: 200 },
-	background: 'black',
-	controls: true,
-	lights: true,
-};
-
-const CANVAS_OPTIONS = new InjectionToken<SetupCanvasOptions>('canvas options');
-const STORY_COMPONENT = new InjectionToken<Type<unknown>>('story component');
-const STORY_COMPONENT_MIRROR = new InjectionToken<ComponentMirror<Type<unknown>>>('story component mirror');
-const STORY_OPTIONS = new InjectionToken<Signal<Record<string, unknown>>>('story inputs');
 
 @Component({
+	selector: 'storybook-scene-graph',
 	template: `
-		<ngt-color *args="[canvasOptions.background]" attach="background" />
+		<ngt-color *args="[setup.background()]" attach="background" />
 
 		<ng-container #anchor />
 
-		@if (canvasOptions.lights) {
+		@if (setup.lights()) {
 			<ngt-ambient-light [intensity]="0.8" />
 			<ngt-point-light [intensity]="Math.PI" [position]="[0, 6, 0]" [decay]="0" />
 		}
 
-		@if (canvasOptions.controls) {
-			<ngts-orbit-controls [options]="{ makeDefault: canvasOptions.controls['makeDefault'] ?? true }" />
+		@let makeDefault = setup.controls();
+		@if (makeDefault !== null) {
+			<ngts-orbit-controls [options]="{ makeDefault }" />
 		}
 	`,
-	imports: [NgtsOrbitControls, NgtArgs],
+	imports: [NgtArgs, NgtsOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	host: { class: 'storybook-scene' },
 })
-export class StorybookScene {
-	protected Math = Math;
+export class StorybookSceneGraph {
+	protected readonly Math = Math;
 
-	protected canvasOptions = inject(CANVAS_OPTIONS);
-	private story = inject(STORY_COMPONENT);
-	private storyMirror = inject(STORY_COMPONENT_MIRROR);
-	private storyOptions = inject(STORY_OPTIONS);
-
+	private injector = inject(Injector);
+	protected setup = inject(StorybookSetup);
 	private anchor = viewChild.required('anchor', { read: ViewContainerRef });
+
 	private ref?: ComponentRef<unknown>;
 	private inputsMirror?: string[];
 
 	constructor() {
 		afterNextRender(() => {
-			this.ref = this.anchor().createComponent(this.story);
-			this.setStoryOptions(this.storyOptions());
-			this.ref.changeDetectorRef.detectChanges();
-		});
+			const anchor = this.anchor();
 
-		effect(() => {
-			this.setStoryOptions(this.storyOptions());
+			this.ref = anchor.createComponent(this.setup.story());
+			this.ref.changeDetectorRef.detectChanges();
+
+			effect(
+				() => {
+					this.setStoryOptions(this.setup.storyOptions());
+				},
+				{ injector: this.injector },
+			);
 		});
 
 		inject(DestroyRef).onDestroy(() => {
@@ -123,17 +82,20 @@ export class StorybookScene {
 	private setStoryOptions(options: NgtAnyRecord) {
 		if (!this.ref) return;
 		if (!this.inputsMirror) {
-			this.inputsMirror = this.storyMirror.inputs.map((input) => input.propName);
+			this.inputsMirror = untracked(this.setup.storyMirror)?.inputs.map((input) => input.propName);
 		}
 
-		const component = this.ref.instance as any;
+		if (!this.inputsMirror) return;
+
+		const component = this.ref.instance as NgtAnyRecord;
 
 		for (const key of this.inputsMirror) {
-			const signalInput = component[key];
-			const isSignalInput = signalInput && isSignal(signalInput);
+			const maybeSignalInput = component[key];
+			const isSignalInput = maybeSignalInput && isSignal(maybeSignalInput);
+
 			const value =
-				isSignalInput && options[key] === undefined && untracked(signalInput) !== undefined
-					? untracked(signalInput)
+				isSignalInput && options[key] === undefined && untracked(maybeSignalInput) !== undefined
+					? untracked(maybeSignalInput)
 					: options[key];
 
 			this.ref.setInput(key, value);
@@ -141,139 +103,143 @@ export class StorybookScene {
 	}
 }
 
+const defaultPerformanceOptions: NgtCanvasOptions['performance'] = { current: 1, min: 0.5, max: 1, debounce: 200 };
+const defaultCameraOptions: NgtCanvasOptions['camera'] = { position: [-5, 5, 5], fov: 75 };
+
 @Component({
 	selector: 'storybook-setup',
 	template: `
-		<ng-container #anchor />
-		@if (withLoader()) {
+		<ngt-canvas shadows [performance]="performance()" [camera]="camera()" [orthographic]="orthographic()">
+			<storybook-scene-graph *canvasContent />
+		</ngt-canvas>
+
+		@if (loader()) {
 			<ngts-loader />
 		}
 	`,
-	imports: [NgtsLoader],
+	imports: [NgtCanvas, NgtCanvasContent, StorybookSceneGraph, NgtsLoader],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StorybookSetup {
+	loader = input(false);
+
+	/* canvas options */
+	performance = input(defaultPerformanceOptions, { transform: mergeInputs(defaultPerformanceOptions) });
+	camera = input(defaultCameraOptions, { transform: mergeInputs(defaultCameraOptions) });
+	orthographic = input(false);
+
+	/* scene graph options */
+	background = input<THREE.ColorRepresentation>('black');
+	lights = input(true);
+	controls = input<boolean | null>(true);
 	story = input.required<Type<unknown>>();
 	storyOptions = input<NgtAnyRecord>({});
-	canvasOptions = input(defaultCanvasOptions, { transform: mergeInputs(defaultCanvasOptions) });
-	withLoader = input(false);
 
-	private anchor = viewChild.required('anchor', { read: ViewContainerRef });
+	storyMirror = computed(() => reflectComponentType(this.story()));
 
 	constructor() {
-		const envInjector = inject(EnvironmentInjector);
-		let ref: ComponentRef<unknown>;
-		let refEnvInjector: EnvironmentInjector;
-
-		afterNextRender(() => {
-			refEnvInjector = createEnvironmentInjector(
-				[
-					{ provide: CANVAS_OPTIONS, useValue: this.canvasOptions() },
-					{ provide: STORY_COMPONENT, useValue: this.story() },
-					{ provide: STORY_COMPONENT_MIRROR, useValue: reflectComponentType(this.story()) },
-					{ provide: STORY_OPTIONS, useValue: this.storyOptions },
-				],
-				envInjector,
-			);
-
-			ref = this.anchor().createComponent(NgtCanvas, { environmentInjector: refEnvInjector });
-			ref.setInput('shadows', true);
-			ref.setInput('performance', this.canvasOptions().performance);
-			ref.setInput('camera', this.canvasOptions().camera);
-			ref.setInput('sceneGraph', StorybookScene);
-			ref.setInput('orthographic', this.canvasOptions().orthographic);
-			ref.changeDetectorRef.detectChanges();
-		});
-
-		inject(DestroyRef).onDestroy(() => {
-			ref?.destroy();
-			refEnvInjector?.destroy();
-		});
+		extend(THREE);
 	}
 }
 
-type DeepPartial<T> = T extends Function
-	? T
-	: T extends Array<infer ArrayItemType>
-		? DeepPartialArray<ArrayItemType>
-		: T extends object
-			? DeepPartialObject<T>
-			: T | undefined;
-
-type DeepPartialArray<T> = Array<DeepPartial<T>>;
-
-type DeepPartialObject<T> = {
-	[Key in keyof T]?: DeepPartial<T[Key]>;
+type StoryOptions = {
+	templateFn: (base: string) => string;
+	loader: boolean;
+	performance: NgtCanvasOptions['performance'];
+	camera: NgtCanvasOptions['camera'];
+	background: THREE.ColorRepresentation;
+	orthographic: boolean;
+	controls: boolean;
+	lights: boolean;
 };
 
-export function makeCanvasOptions(options: DeepPartial<SetupCanvasOptions> = {}) {
-	const orthographic = options.orthographic ?? defaultCanvasOptions.orthographic;
-	let camera: Partial<SetupCanvasOptions['camera']> = {};
+const defaultStoryOptions: StoryOptions = {
+	templateFn: (base) => base,
+	loader: false,
+	performance: defaultPerformanceOptions,
+	camera: defaultCameraOptions,
+	orthographic: false,
+	background: 'black',
+	controls: true,
+	lights: true,
+};
 
-	if (orthographic) {
-		camera = (options.camera || {}) as SetupCanvasOptions['camera'];
-	} else {
-		camera = { ...defaultCanvasOptions.camera, ...(options.camera || {}) } as SetupCanvasOptions['camera'];
-	}
-
-	return {
-		...defaultCanvasOptions,
-		orthographic,
-		camera,
-		performance: { ...defaultCanvasOptions.performance, ...(options.performance || {}) },
-		background: options.background ?? defaultCanvasOptions.background,
-		controls: options.controls ?? defaultCanvasOptions.controls,
-		lights: options.lights ?? defaultCanvasOptions.lights,
-	} as Required<SetupCanvasOptions>;
-}
-
-export function makeStoryFunction(
+export function storyFunction(
 	story: Type<unknown>,
-	canvasOptions: DeepPartial<SetupCanvasOptions> & { withLoader?: boolean } = {},
-	templateFn: (base: string) => string = (base) => base,
+	{
+		templateFn = defaultStoryOptions.templateFn,
+		loader = defaultStoryOptions.loader,
+		performance = defaultStoryOptions.performance,
+		camera = defaultStoryOptions.camera,
+		orthographic = defaultStoryOptions.orthographic,
+		background = defaultStoryOptions.background,
+		controls = defaultStoryOptions.controls,
+		lights = defaultStoryOptions.lights,
+	}: Partial<StoryOptions> = {},
 ) {
 	return (args: Args) => ({
 		props: {
-			canvasOptions: makeCanvasOptions(canvasOptions),
-			withLoader: canvasOptions.withLoader ?? false,
 			storyOptions: args || {},
 			story,
+			loader,
+			performance,
+			camera,
+			orthographic,
+			background,
+			controls,
+			lights,
 		},
-		template: templateFn(
-			`<storybook-setup [story]="story" [storyOptions]="storyOptions" [canvasOptions]="canvasOptions" [withLoader]="withLoader" />`,
-		),
+		template: templateFn(`
+      <storybook-setup
+        [story]="story"
+        [storyOptions]="storyOptions"
+        [loader]="loader"
+        [performance]="performance"
+        [camera]="camera"
+        [orthographic]="orthographic"
+        [background]="background"
+        [controls]="controls"
+        [lights]="lights"
+      />
+    `),
 	});
 }
 
-export function makeStoryObject(
+export function storyObject(
 	story: Type<unknown>,
 	{
-		canvasOptions = {},
-		templateFn = (base) => base,
-		argsOptions = {},
+		templateFn = defaultStoryOptions.templateFn,
+		loader = defaultStoryOptions.loader,
+		performance = defaultStoryOptions.performance,
+		camera = defaultStoryOptions.camera,
+		orthographic = defaultStoryOptions.orthographic,
+		background = defaultStoryOptions.background,
+		controls = defaultStoryOptions.controls,
+		lights = defaultStoryOptions.lights,
 		args = {},
+		argsOptions = {},
 		argTypes = {},
 		parameters = {},
 		name,
-	}: {
-		canvasOptions?: DeepPartial<SetupCanvasOptions> & { withLoader?: boolean };
-		templateFn?: (base: string) => string;
-		args?: Record<string, any>;
-		argTypes?: Record<string, any>;
+	}: Partial<StoryOptions> & {
+		args?: NgtAnyRecord;
+		argTypes?: NgtAnyRecord;
 		argsOptions?: Record<string, any | { defaultValue: any; control: { control: any } }>;
-		parameters?: Record<string, any>;
+		parameters?: NgtAnyRecord;
 		name?: string;
 	} = {},
 ) {
-	for (const [argKey, argOption] of Object.entries(argsOptions)) {
+	for (const argKey in argsOptions) {
+		const argOption = argsOptions[argKey];
 		if (argKey === 'options') {
 			args['options'] = {};
-			for (const [key, option] of Object.entries(argOption)) {
-				if ((option as any)['defaultValue']) {
-					args['options'][key] = (option as any)['defaultValue'];
-					argTypes[`options.${key}`] = (option as any)['control'];
+			for (const optKey in argOption) {
+				const opt = argOption[optKey];
+				if (opt['defaultValue']) {
+					args['options'][optKey] = opt['defaultValue'];
+					argTypes[`options.${optKey}`] = opt['control'];
 				} else {
-					args['options'][key] = option;
+					args['options'][optKey] = opt;
 				}
 			}
 			continue;
@@ -287,7 +253,22 @@ export function makeStoryObject(
 		}
 	}
 
-	return { name, render: makeStoryFunction(story, canvasOptions, templateFn), args, argTypes, parameters };
+	return {
+		name,
+		args,
+		argTypes,
+		parameters,
+		render: storyFunction(story, {
+			templateFn,
+			loader,
+			performance,
+			camera,
+			orthographic,
+			background,
+			controls,
+			lights,
+		}),
+	};
 }
 
 export function number(defaultValue: number): number;
@@ -315,19 +296,23 @@ export function select(defaultValue: string | string[], { multi, options }: { op
 	return { defaultValue, control: { control: multi ? 'multi-select' : 'select', options } };
 }
 
-export function makeDecorators(providers: Provider[] = [], ...decoratorFns: Decorator[]): Decorator[] {
-	return [moduleMetadata({ imports: [StorybookSetup], providers }), ...decoratorFns];
+export function storyDecorators(providers: Provider[] = [], ...decorators: Decorator[]): Decorator[] {
+	return [
+		moduleMetadata({ imports: [StorybookSetup], providers }),
+		applicationConfig({ providers: [provideNgtRenderer()] }),
+		...decorators,
+	];
 }
 
 @Directive({ selector: '[turnable]' })
 export class Turnable {
 	constructor() {
-		const element = inject<ElementRef<Object3D>>(ElementRef);
+		const element = inject<ElementRef<THREE.Object3D>>(ElementRef);
 		injectTurnable(() => element);
 	}
 }
 
-export function injectTurnable(object: () => Object3D | ElementRef<Object3D> | undefined | null) {
+export function injectTurnable(object: () => THREE.Object3D | ElementRef<THREE.Object3D> | undefined | null) {
 	return injectBeforeRender(() => {
 		const obj = resolveRef(object());
 		if (!obj) return;

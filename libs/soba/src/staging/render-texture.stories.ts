@@ -15,7 +15,7 @@ import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	selector: 'render-texture-dodecahedron',
@@ -128,10 +128,10 @@ class DefaultRenderTextureStory {
 
 export default {
 	title: 'Staging/Render Texture',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultRenderTextureStory, {
+export const Default = storyFunction(DefaultRenderTextureStory, {
 	background: 'white',
 	camera: { position: [5, 5, 5], fov: 25 },
 });

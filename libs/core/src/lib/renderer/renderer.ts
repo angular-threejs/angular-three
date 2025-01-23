@@ -48,7 +48,6 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 	private catalogue = injectCatalogue();
 	private document = inject(DOCUMENT);
 	private rendererMap = new Map<string, Renderer2>();
-	// private portals = new Set<Renderer2>();
 
 	/**
 	 * NOTE: We use `useFactory` to instantiate `NgtRendererFactory2`
@@ -387,6 +386,10 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'platform') {
+			if (pRS[NgtRendererClassId.parent] && !cRS[NgtRendererClassId.parent]) {
+				return this.appendChild(pRS[NgtRendererClassId.parent], newChild);
+			}
+
 			return delegatedFn();
 		}
 
@@ -424,7 +427,9 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'portal' && cRS[NgtRendererClassId.type] === 'three') {
-			console.log('portal child three', { parent, newChild });
+			if (!cRS[NgtRendererClassId.parent] && pRS[NgtRendererClassId.portalContainer]) {
+				return this.appendChild(pRS[NgtRendererClassId.portalContainer], newChild);
+			}
 			return;
 		}
 
@@ -561,6 +566,14 @@ export class NgtRenderer2 implements Renderer2 {
 
 		const cRS = oldChild.__ngt_renderer__;
 
+		if (!cRS) {
+			try {
+				return this.delegateRenderer.removeChild(parent, oldChild, isHostElement);
+			} catch {
+				return;
+			}
+		}
+
 		// disassociate things from oldChild
 		cRS[NgtRendererClassId.parent] = null;
 
@@ -672,7 +685,7 @@ export class NgtRenderer2 implements Renderer2 {
 			return rootScene;
 		}
 
-		const rendererParentNode = node.__ngt_renderer__[NgtRendererClassId.parent];
+		const rendererParentNode = node.__ngt_renderer__?.[NgtRendererClassId.parent];
 		// returns the renderer parent node if it exists, otherwise returns the delegateRenderer parentNode
 		return rendererParentNode ?? this.delegateRenderer.parentNode(node);
 	}
@@ -718,6 +731,9 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	setProperty(el: NgtRendererNode, name: string, value: any): void {
+		// NOTE: untrack all signal updates because this is during setProperty which is a reactive context
+		// attaching potentially updates signals which is not allowed
+
 		const rS = el.__ngt_renderer__;
 
 		if (!rS || rS[NgtRendererClassId.destroyed]) {
@@ -737,7 +753,9 @@ export class NgtRenderer2 implements Renderer2 {
 				applyProps(el, value);
 
 				if ('geometry' in value && value['geometry'].isBufferGeometry) {
-					instanceState?.updateGeometryStamp();
+					untracked(() => {
+						instanceState?.updateGeometryStamp();
+					});
 				}
 
 				return;
@@ -767,8 +785,6 @@ export class NgtRenderer2 implements Renderer2 {
 								? value.split('.')
 								: [value];
 				if (parent) {
-					// untrack this attach because this is during setProperty which is a reactive context
-					// attaching potentially updates signals which is not allowed
 					untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
 				}
 
@@ -783,7 +799,9 @@ export class NgtRenderer2 implements Renderer2 {
 			applyProps(el, { [name]: value });
 
 			if (instanceState && name === 'geometry' && value.isBufferGeometry) {
-				instanceState.updateGeometryStamp();
+				untracked(() => {
+					instanceState.updateGeometryStamp();
+				});
 			}
 
 			return;

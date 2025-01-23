@@ -15,7 +15,7 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 type SuzanneGLTF = GLTF & {
 	nodes: { Suzanne: Mesh };
@@ -128,10 +128,10 @@ class DefaultGridStory {
 
 export default {
 	title: 'Abstractions/Grid',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultGridStory, {
+export const Default = storyFunction(DefaultGridStory, {
 	camera: { position: [10, 12, 12], fov: 25 },
 	lights: false,
 	controls: false,

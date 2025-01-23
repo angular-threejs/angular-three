@@ -26,9 +26,9 @@ export class NgtRouterOutlet extends RouterOutlet {
 @Component({
 	selector: 'ngt-routed-scene',
 	template: `
-		<ngt-router-outlet />
+		<router-outlet />
 	`,
-	imports: [NgtRouterOutlet],
+	imports: [RouterOutlet],
 })
 export class NgtRoutedScene {
 	constructor(router: Router, cdr: ChangeDetectorRef) {

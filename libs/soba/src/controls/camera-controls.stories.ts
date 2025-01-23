@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
 import { MathUtils } from 'three';
-import { makeDecorators, makeStoryObject, select } from '../setup-canvas';
+import { select, storyDecorators, storyObject } from '../setup-canvas';
 
 const rotations = {
 	'theta 45deg': [45 * MathUtils.DEG2RAD, 0, true],
@@ -47,11 +47,12 @@ class DefaultCameraControlsStory {
 
 export default {
 	title: 'Controls/Camera Controls',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultCameraControlsStory, {
-	canvasOptions: { camera: { fov: 60 }, controls: false },
+export const Default = storyObject(DefaultCameraControlsStory, {
+	camera: { fov: 60 },
+	controls: false,
 	argsOptions: {
 		rotate: select('none', { options: [...Object.keys(rotations), 'none'] }),
 	},

@@ -6,7 +6,7 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
 import { NgtsBBAnchor, NgtsBBAnchorOptions } from 'angular-three-soba/staging';
 import { BoxHelper } from 'three';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'bb-anchor-mesh-object',
@@ -84,11 +84,12 @@ class WithMeshBBAnchorStory {
 
 export default {
 	title: 'Staging/BB Anchor',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const WithMesh = makeStoryObject(WithMeshBBAnchorStory, {
-	canvasOptions: { camera: { position: [2, 2, 2] }, controls: false },
+export const WithMesh = storyObject(WithMeshBBAnchorStory, {
+	camera: { position: [2, 2, 2] },
+	controls: false,
 	argsOptions: {
 		drawBoundingBox: true,
 		options: {
@@ -97,8 +98,9 @@ export const WithMesh = makeStoryObject(WithMeshBBAnchorStory, {
 	},
 });
 
-export const WithHTML = makeStoryObject(WithHTMLBBAnchorStory, {
-	canvasOptions: { camera: { position: [2, 2, 2] }, controls: false },
+export const WithHTML = storyObject(WithHTMLBBAnchorStory, {
+	camera: { position: [2, 2, 2] },
+	controls: false,
 	argsOptions: {
 		drawBoundingBox: true,
 		options: {

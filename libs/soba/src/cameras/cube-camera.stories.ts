@@ -10,7 +10,7 @@ import { Meta } from '@storybook/angular';
 import { injectBeforeRender, merge, NgtArgs } from 'angular-three';
 import { NgtsCameraContent, NgtsCubeCamera, NgtsCubeCameraOptions } from 'angular-three-soba/cameras';
 import { Mesh } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	selector: 'cube-camera-sphere',
@@ -68,9 +68,9 @@ class DefaultCubeCameraStory {
 
 export default {
 	title: 'Camera/CubeCamera',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultCubeCameraStory, {
+export const Default = storyFunction(DefaultCubeCameraStory, {
 	camera: { position: [0, 10, 40] },
 });

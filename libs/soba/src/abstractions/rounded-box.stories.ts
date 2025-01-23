@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
+import { Meta } from '@storybook/angular';
+import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
+import { injectTurnable, number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -33,17 +36,13 @@ class DefaultRoundedBoxStory {
 	protected readonly Math = Math;
 }
 
-import { Meta } from '@storybook/angular';
-import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
-import { injectTurnable, makeDecorators, makeStoryObject, number } from '../setup-canvas';
-
 export default {
 	title: 'Abstractions/RoundedBox',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultRoundedBoxStory, {
-	canvasOptions: { camera: { position: [-30, 30, 30] } },
+export const Default = storyObject(DefaultRoundedBoxStory, {
+	camera: { position: [-30, 30, 30] },
 	argsOptions: {
 		width: number(25, { range: true, min: 1, max: 100, step: 1 }),
 		height: number(25, { range: true, min: 1, max: 100, step: 1 }),
@@ -54,8 +53,8 @@ export const Default = makeStoryObject(DefaultRoundedBoxStory, {
 	},
 });
 
-export const Solid = makeStoryObject(DefaultRoundedBoxStory, {
-	canvasOptions: { camera: { position: [-30, 30, 30] } },
+export const Solid = storyObject(DefaultRoundedBoxStory, {
+	camera: { position: [-30, 30, 30] },
 	argsOptions: {
 		width: number(25, { range: true, min: 1, max: 100, step: 1 }),
 		height: number(25, { range: true, min: 1, max: 100, step: 1 }),

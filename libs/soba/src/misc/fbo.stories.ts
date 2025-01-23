@@ -11,7 +11,7 @@ import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender } from 'angula
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsFBO } from 'angular-three-soba/misc';
 import { Color, Mesh, Scene, WebGLRenderTarget } from 'three';
-import { makeDecorators, makeStoryFunction, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyFunction, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'fbo-spinning-thing',
@@ -100,11 +100,11 @@ class DefaultFBOStory {
 
 export default {
 	title: 'Misc/FBO',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 };
 
-export const Default = makeStoryFunction(DefaultFBOStory);
-export const WithSettings = makeStoryObject(DefaultFBOStory, {
+export const Default = storyFunction(DefaultFBOStory);
+export const WithSettings = storyObject(DefaultFBOStory, {
 	argsOptions: {
 		width: number(512, { range: true, min: 1, max: 2048, step: 32 }),
 		height: number(512, { range: true, min: 1, max: 2048, step: 32 }),

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtsPivotControls, NgtsPivotControlsOptions } from 'angular-three-soba/gizmos';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -23,11 +23,11 @@ class DefaultPivotControlsStory {
 
 export default {
 	title: 'Gizmos/PivotControls',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultPivotControlsStory, {
-	canvasOptions: { camera: { position: [0, 0, 2.5] } },
+export const Default = storyObject(DefaultPivotControlsStory, {
+	camera: { position: [0, 0, 2.5] },
 	argsOptions: {
 		options: {
 			anchor: [-1, -1, -1],

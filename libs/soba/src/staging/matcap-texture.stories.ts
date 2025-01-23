@@ -5,7 +5,7 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMatcapTexture, NgtsMatcapTextureOptions } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 interface SuzyGLTF extends GLTF {
 	nodes: { Suzanne: Mesh };
@@ -33,11 +33,11 @@ class DefaultMatcapTextureStory {
 
 export default {
 	title: 'Staging/Matcap Texture',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultMatcapTextureStory, {
-	canvasOptions: { camera: { position: [0, 0, 3] } },
+export const Default = storyObject(DefaultMatcapTextureStory, {
+	camera: { position: [0, 0, 3] },
 	argsOptions: {
 		options: {
 			id: number(121, { min: 0, max: 640, step: 1 }),

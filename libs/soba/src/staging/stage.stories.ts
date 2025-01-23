@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } fro
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { ENVIRONMENT_PRESETS, NgtsEnvironmentPresets, NgtsStage, NgtsStageOptions } from 'angular-three-soba/staging';
-import { makeDecorators, makeStoryObject, select } from '../setup-canvas';
+import { select, storyDecorators, storyObject } from '../setup-canvas';
 
 const environments = Object.keys(ENVIRONMENT_PRESETS) as Array<NgtsEnvironmentPresets>;
 const presets = ['rembrandt', 'portrait', 'upfront', 'soft'];
@@ -26,11 +26,12 @@ class DefaultStageStory {
 
 export default {
 	title: 'Staging/Stage',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultStageStory, {
-	canvasOptions: { camera: { position: [0, 0, 3] }, background: 'white' },
+export const Default = storyObject(DefaultStageStory, {
+	camera: { position: [0, 0, 3] },
+	background: 'white',
 	argsOptions: {
 		options: {
 			intensity: 1,

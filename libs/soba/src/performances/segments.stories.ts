@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { injectBeforeRender } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsSegment, NgtsSegments } from 'angular-three-soba/performances';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -66,19 +66,21 @@ class BasicSegmentsStory {
 
 export default {
 	title: 'Performances/Segments',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const BasicSegments = makeStoryObject(BasicSegmentsStory, {
-	canvasOptions: { camera: { position: [10, 10, 10] }, controls: false },
+export const BasicSegments = storyObject(BasicSegmentsStory, {
+	camera: { position: [10, 10, 10] },
+	controls: false,
 	argsOptions: {
 		limit: number(6, { range: true, min: 1, max: 100, step: 1 }),
 		lineWidth: number(2.0, { range: true, min: 0.1, max: 10, step: 0.1 }),
 	},
 });
 
-export const PerformanceSegments = makeStoryObject(PerformanceSegmentsStory, {
-	canvasOptions: { camera: { position: [10, 10, 10] }, controls: false },
+export const PerformanceSegments = storyObject(PerformanceSegmentsStory, {
+	camera: { position: [10, 10, 10] },
+	controls: false,
 	argsOptions: {
 		limit: number(10000, { range: true, min: 1, max: 10000, step: 1 }),
 		lineWidth: number(0.1, { range: true, min: 0.1, max: 10, step: 0.1 }),

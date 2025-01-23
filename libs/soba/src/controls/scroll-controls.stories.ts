@@ -13,16 +13,16 @@ import {
 import { Meta } from '@storybook/angular';
 import { injectBeforeRender, injectStore, NgtArgs, NgtHTML } from 'angular-three';
 import {
-	NgtsScrollCanvas,
+	NgtsCanvasScrollContent,
+	NgtsHTMLScrollContent,
 	NgtsScrollControls,
 	NgtsScrollControlsOptions,
-	NgtsScrollHtml,
 } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { injectAnimations, NgtsIntersect } from 'angular-three-soba/misc';
 import { NgtsSky } from 'angular-three-soba/staging';
 import { MathUtils, Mesh } from 'three';
-import { makeDecorators, makeStoryFunction, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyFunction, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'scroll-littlest-tokyo',
@@ -151,15 +151,15 @@ class Suzanne {
 	selector: 'scroll-html-content',
 	template: `
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize().height * 0.1 + 'px', right: canvasSize().width * 0.2 + 'px' }"
+			[style]="{ position: 'absolute', top: canvasSize.height() * 0.1 + 'px', right: canvasSize.width() * 0.2 + 'px' }"
 		>
 			Scroll down!
 		</h1>
 		<h1
 			[style]="{
 				position: 'absolute',
-				top: canvasSize().height + 'px',
-				right: canvasSize().width * 0.2 + 'px',
+				top: canvasSize.height() + 'px',
+				right: canvasSize.width() * 0.2 + 'px',
 				fontSize: '25em',
 				transform: 'translate3d(0,-100%,0)',
 			}"
@@ -167,22 +167,22 @@ class Suzanne {
 			all
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize().height * 1.8 + 'px', left: canvasSize().width * 0.1 + 'px' }"
+			[style]="{ position: 'absolute', top: canvasSize.height() * 1.8 + 'px', left: canvasSize.width() * 0.1 + 'px' }"
 		>
 			hail
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize().height * 2.6 + 'px', right: canvasSize().width * 0.1 + 'px' }"
+			[style]="{ position: 'absolute', top: canvasSize.height() * 2.6 + 'px', right: canvasSize.width() * 0.1 + 'px' }"
 		>
 			thee,
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize().height * 3.5 + 'px', left: canvasSize().width * 0.1 + 'px' }"
+			[style]="{ position: 'absolute', top: canvasSize.height() * 3.5 + 'px', left: canvasSize.width() * 0.1 + 'px' }"
 		>
 			thoth
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize().height * 4.5 + 'px', right: canvasSize().width * 0.1 + 'px' }"
+			[style]="{ position: 'absolute', top: canvasSize.height() * 4.5 + 'px', right: canvasSize.width() * 0.1 + 'px' }"
 		>
 			her
 			<br />
@@ -192,19 +192,20 @@ class Suzanne {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class HtmlContent extends NgtHTML {
-	canvasSize = this.store.select('size');
+	private store = injectStore();
+	canvasSize = this.store.size;
 }
 
 @Component({
 	template: `
 		<ngts-scroll-controls [(progress)]="progress" [options]="options()">
-			<ngt-group ngtsScrollCanvas>
+			<ngt-group canvasScrollContent>
 				<scroll-suzanne [scale]="2" />
-				<scroll-suzanne [position]="[-viewport().width / 8, -viewport().height, 0]" [scale]="3" />
-				<scroll-suzanne [position]="[viewport().width / 4, -viewport().height * 2, 0]" [scale]="1.5" />
+				<scroll-suzanne [position]="[-viewport.width() / 8, -viewport.height(), 0]" [scale]="3" />
+				<scroll-suzanne [position]="[viewport.width() / 4, -viewport.height() * 2, 0]" [scale]="1.5" />
 			</ngt-group>
 
-			<div ngtsScrollHTML style="width: 100%; color: #ec2d2d">
+			<div htmlScrollContent style="width: 100%; color: #ec2d2d">
 				<scroll-html-content />
 			</div>
 		</ngts-scroll-controls>
@@ -212,24 +213,25 @@ class HtmlContent extends NgtHTML {
 
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsScrollControls, NgtsScrollCanvas, Suzanne, NgtsScrollHtml, HtmlContent],
+	imports: [NgtsScrollControls, NgtsCanvasScrollContent, Suzanne, NgtsHTMLScrollContent, HtmlContent],
 })
 class DefaultScrollControlsStory {
 	progress = signal(0);
 	options = input({} as NgtsScrollControlsOptions);
 
 	private store = injectStore();
-	viewport = this.store.select('viewport');
-	canvasSize = this.store.select('size');
+	viewport = this.store.viewport;
 }
 
 export default {
 	title: 'Controls/ScrollControls',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultScrollControlsStory, {
-	canvasOptions: { orthographic: true, camera: { zoom: 80 }, controls: false },
+export const Default = storyObject(DefaultScrollControlsStory, {
+	camera: { zoom: 80 },
+	orthographic: true,
+	controls: false,
 	argsOptions: {
 		options: {
 			pages: 3, // Each page takes 100% of the height of the canvas
@@ -241,13 +243,15 @@ export const Default = makeStoryObject(DefaultScrollControlsStory, {
 	},
 });
 
-export const InsideAContainer = makeStoryObject(DefaultScrollControlsStory, {
+export const InsideAContainer = storyObject(DefaultScrollControlsStory, {
 	templateFn: (base) => `
     <div style="margin: 50px; padding: 50px; height: calc(100vh - 200px); position: relative;">
       ${base}
     </div>
   `,
-	canvasOptions: { orthographic: true, camera: { zoom: 80 }, controls: false },
+	camera: { zoom: 80 },
+	orthographic: true,
+	controls: false,
 	argsOptions: {
 		options: {
 			pages: 3, // Each page takes 100% of the height of the canvas
@@ -259,7 +263,7 @@ export const InsideAContainer = makeStoryObject(DefaultScrollControlsStory, {
 	},
 });
 
-export const Model = makeStoryFunction(LittlestTokyoStory, {
+export const Model = storyFunction(LittlestTokyoStory, {
 	camera: { position: [0, 0, 10] },
 	lights: false,
 	controls: false,

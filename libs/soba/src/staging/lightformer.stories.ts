@@ -11,7 +11,7 @@ import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
-import { color, makeDecorators, makeStoryObject } from '../setup-canvas';
+import { color, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -68,15 +68,13 @@ class DefaultLightformerStory {
 
 export default {
 	title: 'Staging/Lightformer',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultLightformerStory, {
-	canvasOptions: {
-		controls: false,
-		lights: false,
-		background: 'ivory',
-	},
+export const Default = storyObject(DefaultLightformerStory, {
+	controls: false,
+	lights: false,
+	background: 'ivory',
 	argsOptions: {
 		color: color('#ff0000'),
 	},

@@ -1,6 +1,6 @@
 {
 	"$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-	"dest": "../../apps/docs/node_modules/angular-three-soba",
+	"dest": "../../node_modules/angular-three-soba",
 	"lib": {
 		"entryFile": "src/index.ts"
 	},

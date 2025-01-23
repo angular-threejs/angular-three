@@ -108,7 +108,7 @@ export class NgtsTransformControls {
 
 	private store = injectStore();
 
-	protected controls = computed(() => {
+	controls = computed(() => {
 		let camera = this.camera();
 		if (!camera) {
 			camera = this.store.camera();

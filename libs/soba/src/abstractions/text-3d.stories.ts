@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@ang
 import { Meta } from '@storybook/angular';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsCenter, NgtsFloat } from 'angular-three-soba/staging';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -68,13 +68,13 @@ class DefaultText3DStory {}
 
 export default {
 	title: 'Abstractions/Text3D',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultText3DStory, {
+export const Default = storyFunction(DefaultText3DStory, {
 	camera: { position: [-1.5, 1.5, 3.5] },
 });
 
-export const Float = makeStoryFunction(FloatText3DStory, {
+export const Float = storyFunction(FloatText3DStory, {
 	camera: { position: [-1.5, 1.5, 3.5] },
 });

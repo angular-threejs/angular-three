@@ -7,7 +7,7 @@ import { injectTexture } from 'angular-three-soba/loaders';
 import { injectDepthBuffer } from 'angular-three-soba/misc';
 import { NgtsEnvironment, NgtsSpotLight, NgtsSpotLightOptions, NgtsSpotLightShadow } from 'angular-three-soba/staging';
 import { MathUtils, RepeatWrapping } from 'three';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -127,11 +127,11 @@ class DefaultSpotLightStory {
 
 export default {
 	title: 'Staging/SpotLight',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultSpotLightStory, {
-	canvasOptions: { lights: false },
+export const Default = storyObject(DefaultSpotLightStory, {
+	lights: false,
 	argsOptions: {
 		options: {
 			penumbra: 0.5,
@@ -143,8 +143,9 @@ export const Default = makeStoryObject(DefaultSpotLightStory, {
 	},
 });
 
-export const Shadows = makeStoryObject(SpotLightShadowStory, {
-	canvasOptions: { controls: false, lights: false },
+export const Shadows = storyObject(SpotLightShadowStory, {
+	controls: false,
+	lights: false,
 	argsOptions: {
 		wind: true,
 		options: {

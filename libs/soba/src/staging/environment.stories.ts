@@ -9,7 +9,7 @@ import {
 	NgtsEnvironment,
 	NgtsEnvironmentOptions,
 } from 'angular-three-soba/staging';
-import { makeDecorators, makeStoryObject, number, select } from '../setup-canvas';
+import { number, select, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'environment-torus',
@@ -41,11 +41,12 @@ class DefaultEnvironmentStory {
 
 export default {
 	title: 'Staging/Environment',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultEnvironmentStory, {
-	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },
+export const Default = storyObject(DefaultEnvironmentStory, {
+	controls: false,
+	camera: { position: [0, 0, 10] },
 	argsOptions: {
 		options: {
 			background: true,
@@ -55,8 +56,9 @@ export const Default = makeStoryObject(DefaultEnvironmentStory, {
 	},
 });
 
-export const Files = makeStoryObject(DefaultEnvironmentStory, {
-	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },
+export const Files = storyObject(DefaultEnvironmentStory, {
+	controls: false,
+	camera: { position: [0, 0, 10] },
 	argsOptions: {
 		options: {
 			background: true,
@@ -66,8 +68,9 @@ export const Files = makeStoryObject(DefaultEnvironmentStory, {
 	},
 });
 
-export const GainMap = makeStoryObject(DefaultEnvironmentStory, {
-	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },
+export const GainMap = storyObject(DefaultEnvironmentStory, {
+	controls: false,
+	camera: { position: [0, 0, 10] },
 	argsOptions: {
 		options: {
 			files: ['./gainmap/potsdamer_platz_1k.jpg'],
@@ -98,8 +101,9 @@ class GroundEnvironmentStory {
 	perspectiveCameraOptions = { position: [40, 40, 40], makeDefault: true };
 }
 
-export const Ground = makeStoryObject(GroundEnvironmentStory, {
-	canvasOptions: { controls: false, camera: { position: [0, 0, 10] } },
+export const Ground = storyObject(GroundEnvironmentStory, {
+	controls: false,
+	camera: { position: [0, 0, 10] },
 	argsOptions: {
 		options: {
 			ground: { height: 15, radius: 60 },

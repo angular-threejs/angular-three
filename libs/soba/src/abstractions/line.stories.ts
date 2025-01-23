@@ -13,7 +13,7 @@ import {
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { Vector3 } from 'three';
 import { GeometryUtils } from 'three-stdlib';
-import { color, makeDecorators, makeStoryObject, number, select } from '../setup-canvas';
+import { color, number, select, storyDecorators, storyObject } from '../setup-canvas';
 
 const points = GeometryUtils.hilbert3D(new Vector3(0), 5).map((p) => [p.x, p.y, p.z]) as [number, number, number][];
 const colors = new Array(points.length).fill(0).map(() => [Math.random(), Math.random(), Math.random()]) as [
@@ -92,13 +92,12 @@ class BasicLineStory {
 
 export default {
 	title: 'Abstractions/Line',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-// <Setup controls={false} cameraPosition={new Vector3(0, 0, 17)}>
-
-export const Basic = makeStoryObject(BasicLineStory, {
-	canvasOptions: { camera: { position: [0, 0, 17] }, controls: false },
+export const Basic = storyObject(BasicLineStory, {
+	camera: { position: [0, 0, 17] },
+	controls: false,
 	argsOptions: {
 		options: {
 			color: color('red'),
@@ -109,8 +108,9 @@ export const Basic = makeStoryObject(BasicLineStory, {
 	},
 });
 
-export const VertexColors = makeStoryObject(BasicLineStory, {
-	canvasOptions: { camera: { position: [0, 0, 17] }, controls: false },
+export const VertexColors = storyObject(BasicLineStory, {
+	camera: { position: [0, 0, 17] },
+	controls: false,
 	argsOptions: {
 		options: {
 			lineWidth: 3,
@@ -121,8 +121,9 @@ export const VertexColors = makeStoryObject(BasicLineStory, {
 	},
 });
 
-export const QuadraticBezier = makeStoryObject(QuadraticLineStory, {
-	canvasOptions: { camera: { position: [0, 0, 17] }, controls: false },
+export const QuadraticBezier = storyObject(QuadraticLineStory, {
+	camera: { position: [0, 0, 17] },
+	controls: false,
 	argsOptions: {
 		start: [0, 0, 0],
 		end: [4, 7, 5],
@@ -134,8 +135,9 @@ export const QuadraticBezier = makeStoryObject(QuadraticLineStory, {
 	},
 });
 
-export const CubicBezier = makeStoryObject(CubicLineStory, {
-	canvasOptions: { camera: { position: [0, 0, 17] }, controls: false },
+export const CubicBezier = storyObject(CubicLineStory, {
+	camera: { position: [0, 0, 17] },
+	controls: false,
 	argsOptions: {
 		start: [0, 0, 0],
 		end: [10, 0, 0],
@@ -149,8 +151,9 @@ export const CubicBezier = makeStoryObject(CubicLineStory, {
 	},
 });
 
-export const CatmullRom = makeStoryObject(CatmullRomLineStory, {
-	canvasOptions: { camera: { position: [0, 0, 17] }, controls: false },
+export const CatmullRom = storyObject(CatmullRomLineStory, {
+	camera: { position: [0, 0, 17] },
+	controls: false,
 	argsOptions: {
 		options: {
 			closed: false,

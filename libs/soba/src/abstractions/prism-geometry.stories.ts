@@ -4,7 +4,7 @@ import { NgtsPrismGeometry, NgtsPrismGeometryOptions } from 'angular-three-soba/
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import { NgtsStage } from 'angular-three-soba/staging';
-import { color, makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { color, number, storyDecorators, storyObject } from '../setup-canvas';
 
 const leftTriangle = [
 	[0.101, -0.095],
@@ -105,11 +105,13 @@ class DefaultPrismGeometryStory {
 
 export default {
 	title: 'Abstractions/PrismGeometry',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultPrismGeometryStory, {
-	canvasOptions: { camera: { position: [-0.3, 1, 0.75] }, background: '#cecece', controls: false },
+export const Default = storyObject(DefaultPrismGeometryStory, {
+	camera: { position: [-0.3, 1, 0.75] },
+	background: '#cecece',
+	controls: false,
 	argsOptions: {
 		color: color('#de194a'),
 		options: {

@@ -6,7 +6,7 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAdaptiveDpr, NgtsAdaptiveEvents } from 'angular-three-soba/performances';
 import { Material, Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 interface ArcherGLTF extends GLTF {
 	materials: { material_0: Material };
@@ -74,16 +74,14 @@ class DefaultAdaptiveStory {
 
 export default {
 	title: 'Performances/Adaptive',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultAdaptiveStory, {
-	canvasOptions: {
-		camera: { position: [0, 0, 30], fov: 50 },
-		lights: false,
-		controls: false,
-		performance: { min: 0.2 },
-	},
+export const Default = storyObject(DefaultAdaptiveStory, {
+	camera: { position: [0, 0, 30], fov: 50 },
+	lights: false,
+	controls: false,
+	performance: { min: 0.2 },
 	argsOptions: {
 		pixelated: true,
 	},

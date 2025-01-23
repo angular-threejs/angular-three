@@ -10,7 +10,7 @@ import {
 	NgtsGizmoViewport,
 } from 'angular-three-soba/gizmos';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import { makeDecorators, makeStoryObject, select } from '../setup-canvas';
+import { select, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'gizmo-helper-tokyo',
@@ -68,7 +68,7 @@ class ViewcubeStory {
 
 export default {
 	title: 'Gizmos/GizmoHelper',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
 const alignments = [
@@ -83,14 +83,16 @@ const alignments = [
 	'top-center',
 ];
 
-export const WithViewcube = makeStoryObject(ViewcubeStory, {
-	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },
+export const WithViewcube = storyObject(ViewcubeStory, {
+	camera: { position: [0, 0, 10] },
+	controls: false,
 	argsOptions: {
 		options: { alignment: select('bottom-right', { options: alignments }), margin: [80, 80] },
 	},
 });
-export const WithViewport = makeStoryObject(ViewportStory, {
-	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },
+export const WithViewport = storyObject(ViewportStory, {
+	camera: { position: [0, 0, 10] },
+	controls: false,
 	argsOptions: {
 		options: { alignment: select('bottom-right', { options: alignments }), margin: [80, 80] },
 	},

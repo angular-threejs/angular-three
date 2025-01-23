@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsHTML, NgtsHTMLContent, NgtsHTMLContentOptions, NgtsHTMLOptions } from 'angular-three-soba/misc';
 import { ColorRepresentation } from 'three';
-import { makeDecorators, makeStoryFunction, makeStoryObject, Turnable } from '../setup-canvas';
+import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-canvas';
 
 @Component({
 	selector: 'html-scene',
@@ -14,7 +14,7 @@ import { makeDecorators, makeStoryFunction, makeStoryObject, Turnable } from '..
 				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
 
 				<ngts-html [options]="{ transform: transform() }">
-					<div [ngtsHTMLContent]="{ distanceFactor: 30 }" style="color: white;">
+					<div [htmlContent]="{ distanceFactor: 30 }" style="color: white;">
 						<h1>First</h1>
 					</div>
 				</ngts-html>
@@ -25,7 +25,7 @@ import { makeDecorators, makeStoryFunction, makeStoryObject, Turnable } from '..
 				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
 
 				<ngts-html [options]="{ transform: transform() }">
-					<div [ngtsHTMLContent]="{ distanceFactor: 30 }" style="color: white;">
+					<div [htmlContent]="{ distanceFactor: 30 }" style="color: white;">
 						<h1>Second</h1>
 					</div>
 				</ngts-html>
@@ -36,7 +36,7 @@ import { makeDecorators, makeStoryFunction, makeStoryObject, Turnable } from '..
 				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
 
 				<ngts-html [options]="{ transform: transform() }">
-					<div [ngtsHTMLContent]="{ distanceFactor: 30 }" style="color: white;">
+					<div [htmlContent]="{ distanceFactor: 30 }" style="color: white;">
 						<h1>Third</h1>
 					</div>
 				</ngts-html>
@@ -58,7 +58,7 @@ class HtmlScene {
 	template: `
 		<html-scene color="palegreen" [transform]="true">
 			<ngts-html [options]="htmlOptions()">
-				<div [ngtsHTMLContent]="htmlContentOptions()">Transform mode</div>
+				<div [htmlContent]="htmlContentOptions()">Transform mode</div>
 			</ngts-html>
 		</html-scene>
 	`,
@@ -80,12 +80,12 @@ class HtmlTransformScene {
 
 export default {
 	title: 'Misc/HTML',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(HtmlScene, { camera: { position: [-20, 20, -20] } });
-export const Transform = makeStoryObject(HtmlTransformScene, {
-	canvasOptions: { camera: { position: [-20, 20, -20] } },
+export const Default = storyFunction(HtmlScene, { camera: { position: [-20, 20, -20] } });
+export const Transform = storyObject(HtmlTransformScene, {
+	camera: { position: [-20, 20, -20] },
 	argsOptions: {
 		htmlOptions: {
 			transform: true,

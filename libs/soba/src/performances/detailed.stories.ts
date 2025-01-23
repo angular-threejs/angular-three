@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsDetailed } from 'angular-three-soba/performances';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -34,10 +34,10 @@ class DefaultDetailedStory {}
 
 export default {
 	title: 'Performances/Detailed',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultDetailedStory, {
+export const Default = storyFunction(DefaultDetailedStory, {
 	camera: { position: [0, 0, 100] },
 	controls: false,
 });

@@ -17,7 +17,7 @@ import {
 	NgtsRandomizedLights,
 } from 'angular-three-soba/staging';
 import { RGBELoader } from 'three-stdlib';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 injectLoader.preload(
 	() => RGBELoader,
@@ -162,11 +162,13 @@ class DefaultRefractionStory {
 
 export default {
 	title: 'Materials/MeshRefractionMaterial',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultRefractionStory, {
-	canvasOptions: { camera: { position: [-5, 0.5, 5], fov: 45 }, background: '#f0f0f0', controls: false },
+export const Default = storyObject(DefaultRefractionStory, {
+	camera: { position: [-5, 0.5, 5], fov: 45 },
+	background: '#f0f0f0',
+	controls: false,
 	argsOptions: {
 		options: {
 			bounces: 3,

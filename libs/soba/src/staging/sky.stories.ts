@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } fro
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsSky, NgtsSkyOptions } from 'angular-three-soba/staging';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -24,10 +24,10 @@ class DefaultSkyStory {
 
 export default {
 	title: 'Staging/Sky',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultSkyStory, {
+export const Default = storyObject(DefaultSkyStory, {
 	argsOptions: {
 		options: {
 			turbidity: number(8, { min: 0, max: 10, step: 0.1 }),
@@ -39,7 +39,7 @@ export const Default = makeStoryObject(DefaultSkyStory, {
 	},
 });
 
-export const CustomAngles = makeStoryObject(DefaultSkyStory, {
+export const CustomAngles = storyObject(DefaultSkyStory, {
 	argsOptions: {
 		options: {
 			distance: 3000,

@@ -4,7 +4,7 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsNormalTexture, NgtsNormalTextureOptions } from 'angular-three-soba/staging';
 import { Mesh, Vector2 } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 interface SuzyGLTF extends GLTF {
 	nodes: { Suzanne: Mesh };
@@ -43,11 +43,11 @@ class DefaultNormalTextureStory {
 
 export default {
 	title: 'Staging/Normal Texture',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultNormalTextureStory, {
-	canvasOptions: { camera: { position: [0, 0, 3] } },
+export const Default = storyObject(DefaultNormalTextureStory, {
+	camera: { position: [0, 0, 3] },
 	argsOptions: {
 		options: {
 			id: 3,

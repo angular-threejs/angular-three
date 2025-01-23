@@ -16,7 +16,7 @@ import { NgtsPoint, NgtsPointsBuffer, NgtsPointsInstances } from 'angular-three-
 import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import { buffer, misc } from 'maath';
 import { MathUtils, Quaternion, Vector3 } from 'three';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 const rotationAxis = new Vector3(0, 1, 0).normalize();
 const q = new Quaternion();
@@ -165,13 +165,13 @@ class BasicPointsBufferStory {
 
 export default {
 	title: 'Performances/Points',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const BasicPointsBuffer = makeStoryFunction(BasicPointsBufferStory, {
+export const BasicPointsBuffer = storyFunction(BasicPointsBufferStory, {
 	camera: { position: [5, 5, 5] },
 });
 
-export const BasicPointsInstances = makeStoryFunction(BasicPointsInstancesStory, {
+export const BasicPointsInstances = storyFunction(BasicPointsInstancesStory, {
 	camera: { position: [5, 5, 5] },
 });

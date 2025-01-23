@@ -21,7 +21,7 @@ import {
 } from 'angular-three-soba/staging';
 import { easing } from 'maath';
 import { AdditiveBlending, Color, FrontSide, Group, MeshStandardMaterial } from 'three';
-import { makeDecorators, makeStoryObject } from '../setup-canvas';
+import { storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'caustics-scene',
@@ -195,12 +195,14 @@ class DefaultCausticsStory {
 
 export default {
 	title: 'Staging/Caustics',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
 // https://codesandbox.io/p/sandbox/caustics-forked-tfvz8j?file=/src/App.js:42,13
-export const Default = makeStoryObject(DefaultCausticsStory, {
-	canvasOptions: { camera: { position: [20, 0.9, 20], fov: 26 }, background: '#f0f0f0', controls: false },
+export const Default = storyObject(DefaultCausticsStory, {
+	camera: { position: [20, 0.9, 20], fov: 26 },
+	background: '#f0f0f0',
+	controls: false,
 	argsOptions: {
 		debug: false,
 	},

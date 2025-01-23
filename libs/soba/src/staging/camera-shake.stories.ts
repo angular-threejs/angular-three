@@ -11,7 +11,7 @@ import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsCameraShakeOptions } from 'angular-three-soba/staging';
 import { DoubleSide, Mesh } from 'three';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'camera-shake-objects',
@@ -72,11 +72,12 @@ class WithOrbitControlsCameraShakeStory {
 
 export default {
 	title: 'Staging/Camera Shake',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultCameraShakeStory, {
-	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },
+export const Default = storyObject(DefaultCameraShakeStory, {
+	camera: { position: [0, 0, 10] },
+	controls: false,
 	argsOptions: {
 		options: {
 			maxPitch: number(0.05, { range: true, min: 0, max: 1, step: 0.05 }),
@@ -89,8 +90,9 @@ export const Default = makeStoryObject(DefaultCameraShakeStory, {
 	},
 });
 
-export const WithOrbitControls = makeStoryObject(WithOrbitControlsCameraShakeStory, {
-	canvasOptions: { camera: { position: [0, 0, 10] }, controls: false },
+export const WithOrbitControls = storyObject(WithOrbitControlsCameraShakeStory, {
+	camera: { position: [0, 0, 10] },
+	controls: false,
 	argsOptions: {
 		options: {
 			maxPitch: number(0.05, { range: true, min: 0, max: 1, step: 0.05 }),

@@ -15,7 +15,7 @@ import { NgtsMeshPortalMaterial } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { BufferGeometry, ColorRepresentation, Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryFunction } from '../setup-canvas';
+import { storyDecorators, storyFunction } from '../setup-canvas';
 
 type AOBoxGLTF = GLTF & {
 	nodes: { Cube: Mesh<BufferGeometry, MeshStandardMaterial> };
@@ -128,9 +128,9 @@ class DefaultMeshPortalMaterialStory {
 
 export default {
 	title: 'Materials/MeshPortalMaterial',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryFunction(DefaultMeshPortalMaterialStory, {
+export const Default = storyFunction(DefaultMeshPortalMaterialStory, {
 	camera: { position: [-3, 0.5, 3] },
 });

@@ -7,7 +7,7 @@ import { NgtsInstance, NgtsInstances } from 'angular-three-soba/performances';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { Color, MathUtils, Mesh, MeshPhongMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 function randomVector(r: number) {
 	return [r / 2 - Math.random() * r, r / 2 - Math.random() * r, r / 2 - Math.random() * r];
@@ -144,16 +144,14 @@ class DefaultInstancesStory {
 
 export default {
 	title: 'Performances/Instances',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultInstancesStory, {
-	canvasOptions: {
-		controls: false,
-		lights: false,
-		background: 'white',
-		camera: { position: [0, 0, 20], fov: 50 },
-	},
+export const Default = storyObject(DefaultInstancesStory, {
+	controls: false,
+	lights: false,
+	background: 'white',
+	camera: { position: [0, 0, 20], fov: 50 },
 	argsOptions: {
 		range: number(100, { range: true, min: 10, max: 500, step: 1 }),
 	},

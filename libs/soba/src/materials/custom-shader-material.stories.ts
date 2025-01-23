@@ -5,7 +5,7 @@ import { NgtsCustomShaderMaterial } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { patchShaders } from 'gl-noise';
 import { PointsMaterial } from 'three';
-import { makeDecorators, makeStoryObject, number } from '../setup-canvas';
+import { number, storyDecorators, storyObject } from '../setup-canvas';
 
 const shader = {
 	vertex: /* language=glsl glsl */ `
@@ -91,11 +91,11 @@ class DefaultCustomShaderMaterialStory {
 
 export default {
 	title: 'Materials/Custom Shader Material',
-	decorators: makeDecorators(),
+	decorators: storyDecorators(),
 } as Meta;
 
-export const Default = makeStoryObject(DefaultCustomShaderMaterialStory, {
-	canvasOptions: { camera: { position: [0, 0, 2.5] } },
+export const Default = storyObject(DefaultCustomShaderMaterialStory, {
+	camera: { position: [0, 0, 2.5] },
 	argsOptions: {
 		size: number(0.02, { range: true, min: 0.01, max: 0.1, step: 0.01 }),
 		transparent: true,

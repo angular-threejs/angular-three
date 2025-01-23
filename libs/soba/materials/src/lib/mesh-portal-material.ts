@@ -242,10 +242,6 @@ export class NgtsMeshPortalMaterial {
 	protected content = contentChild.required(TemplateRef);
 
 	private store = injectStore();
-	// private size = this.store.select('size');
-	// private viewport = this.store.select('viewport');
-	// private gl = this.store.select('gl');
-	// private setEvents = this.store.select('setEvents');
 	protected rootScene = this.store.scene;
 
 	protected materialResolution = computed(() => [
@@ -259,9 +255,11 @@ export class NgtsMeshPortalMaterial {
 
 	protected renderTextureFrames = computed(() => (this.visible() ? Infinity : 0));
 
-	protected renderTextureCompute = ([event, state]: Parameters<NgtComputeFunction>) => {
+	protected renderTextureCompute = (...args: Parameters<NgtComputeFunction>) => {
 		const [parent, material] = [this.parent(), this.materialRef().nativeElement];
 		if (!parent) return false;
+
+		const [event, state] = args;
 
 		state.snapshot.pointer.set(
 			(event.offsetX / state.snapshot.size.width) * 2 - 1,
