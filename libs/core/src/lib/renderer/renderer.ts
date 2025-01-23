@@ -14,20 +14,15 @@ import { NgtArgs } from '../directives/args';
 import { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
 import { getInstanceState, prepare } from '../instance';
-import {
-	NgtAnyRecord,
-	NgtConstructorRepresentation,
-	NgtEventHandlers,
-	NgtInstanceNode,
-	NgtInstanceState,
-} from '../types';
+import { NgtConstructorRepresentation, NgtEventHandlers, NgtInstanceNode, NgtInstanceState } from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { injectCatalogue } from './catalogue';
 import {
 	NGT_CANVAS_CONTENT_FLAG,
+	NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG,
 	NGT_DOM_PARENT_FLAG,
-	NGT_GET_NODE_ATTRIBUTE_FLAG,
+	NGT_HTML_FLAG,
 	NGT_INTERNAL_ADD_COMMENT_FLAG,
 	NGT_INTERNAL_SET_PARENT_COMMENT_FLAG,
 	NGT_PORTAL_CONTENT_FLAG,
@@ -41,7 +36,7 @@ import {
 	NgtRendererNode,
 	setRendererParentNode,
 } from './state';
-import { attachThreeNodes, kebabToPascal, NgtRendererClassId, removeThreeChild } from './utils';
+import { attachThreeNodes, internalDestroyNode, kebabToPascal, NgtRendererClassId, removeThreeChild } from './utils';
 
 @Injectable()
 export class NgtRendererFactory2 implements RendererFactory2 {
@@ -59,11 +54,28 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 		if (!type) return delegateRenderer;
 
 		let renderer = this.rendererMap.get(type.id);
-
 		if (renderer) return renderer;
 
 		if (hostElement && !isRendererNode(hostElement)) {
 			createRendererNode('platform', hostElement, this.document);
+		}
+
+		if (Reflect.get(type, 'type')?.[NGT_HTML_FLAG]) {
+			this.rendererMap.set(type.id, delegateRenderer);
+
+			// patch delegate destroyNode so we can destroy this HTML node
+			// TODO: make sure we really need to do this
+			const originalDestroyNode = delegateRenderer.destroyNode?.bind(delegateRenderer);
+			if (!originalDestroyNode || !(NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG in originalDestroyNode)) {
+				delegateRenderer.destroyNode = (node) => {
+					originalDestroyNode?.(node);
+					if (node !== hostElement) return;
+					internalDestroyNode(node, null);
+				};
+				Object.assign(delegateRenderer.destroyNode, { [NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG]: true });
+			}
+
+			return delegateRenderer;
 		}
 
 		this.rendererMap.set(type.id, (renderer = new NgtRenderer2(delegateRenderer, this.catalogue, this.document)));
@@ -292,71 +304,7 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	destroyNode: (node: NgtRendererNode) => void = (node) => {
-		const rS = node.__ngt_renderer__;
-		if (!rS || rS[NgtRendererClassId.destroyed]) return;
-
-		for (const child of rS[NgtRendererClassId.children].slice()) {
-			this.removeChild(node, child);
-			this.destroyNode(child);
-		}
-
-		// clear out parent if haven't
-		rS[NgtRendererClassId.parent] = undefined;
-		// clear out children
-		rS[NgtRendererClassId.children].length = 0;
-
-		// clear out NgtInstanceState
-		const iS = getInstanceState(node);
-		if (iS) {
-			const temp = iS as NgtAnyRecord;
-
-			iS.removeInteraction?.(iS.store);
-
-			delete temp['onAttach'];
-			delete temp['onUpdate'];
-			delete temp['object'];
-			delete temp['objects'];
-			delete temp['nonObjects'];
-			delete temp['parent'];
-			delete temp['add'];
-			delete temp['remove'];
-			delete temp['updateGeometryStamp'];
-			delete temp['setParent'];
-			delete temp['store'];
-			delete temp['handlers'];
-			delete temp['hierarchyStore'];
-			delete temp['previousAttach'];
-			delete temp['setPointerEvent'];
-			delete temp['addInteraction'];
-			delete temp['removeInteraction'];
-
-			if (iS.type !== 'ngt-primitive') {
-				delete node['__ngt__'];
-			}
-		}
-
-		// clear our debugNode
-		rS[NgtRendererClassId.injector] = undefined;
-
-		if (rS[NgtRendererClassId.type] === 'comment') {
-			delete node[NGT_INTERNAL_ADD_COMMENT_FLAG];
-			delete node[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG];
-			delete node[NGT_CANVAS_CONTENT_FLAG];
-			delete node[NGT_PORTAL_CONTENT_FLAG];
-			delete node[NGT_DOM_PARENT_FLAG];
-		}
-
-		// clear getAttribute if exist
-		if (
-			'getAttribute' in node &&
-			typeof node['getAttribute'] === 'function' &&
-			node['getAttribute'][NGT_GET_NODE_ATTRIBUTE_FLAG]
-		) {
-			delete node['getAttribute'];
-		}
-
-		// mark node as destroyed
-		rS[NgtRendererClassId.destroyed] = true;
+		internalDestroyNode(node, this.removeChild.bind(this));
 	};
 
 	appendChild(parent: NgtRendererNode, newChild: NgtRendererNode, refChild?: NgtRendererNode, isMove?: boolean): void {

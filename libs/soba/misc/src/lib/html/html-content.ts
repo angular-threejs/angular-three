@@ -70,7 +70,7 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 };
 
 @Component({
-	selector: '[htmlContent]',
+	selector: 'div[htmlContent]',
 	template: `
 		@if (html.transform()) {
 			<div

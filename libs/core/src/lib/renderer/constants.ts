@@ -8,6 +8,7 @@ export const NGT_INTERNAL_SET_PARENT_COMMENT_FLAG = '__ngt_renderer_set_parent_c
 export const NGT_MANUAL_INJECTED_STORE = '__ngt_manual_injected_store__';
 export const NGT_GET_NODE_ATTRIBUTE_FLAG = '__ngt_get_node_attribute__';
 export const NGT_DOM_PARENT_FLAG = '__ngt_dom_parent__';
+export const NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG = '__ngt_delegate_renderer_destroy_node_patched__';
 
 export const NGT_HTML_FLAG = '__ngt_html__';
 

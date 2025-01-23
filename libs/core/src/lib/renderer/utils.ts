@@ -2,9 +2,17 @@ import { untracked } from '@angular/core';
 import * as THREE from 'three';
 import { removeInteractivity } from '../events';
 import { getInstanceState, invalidateInstance } from '../instance';
-import { NgtInstanceNode } from '../types';
+import { NgtAnyRecord, NgtInstanceNode } from '../types';
 import { attach, detach } from '../utils/attach';
 import { is } from '../utils/is';
+import {
+	NGT_CANVAS_CONTENT_FLAG,
+	NGT_DOM_PARENT_FLAG,
+	NGT_GET_NODE_ATTRIBUTE_FLAG,
+	NGT_INTERNAL_ADD_COMMENT_FLAG,
+	NGT_INTERNAL_SET_PARENT_COMMENT_FLAG,
+	NGT_PORTAL_CONTENT_FLAG,
+} from './constants';
 import { NgtRendererNode } from './state';
 
 // @internal
@@ -179,4 +187,75 @@ export function removeThreeChild(child: NgtInstanceNode, parent: NgtInstanceNode
 	}
 
 	invalidateInstance(parent);
+}
+
+export function internalDestroyNode(
+	node: NgtRendererNode,
+	removeChild: null | ((node: NgtRendererNode, child: NgtRendererNode) => void),
+) {
+	const rS = node.__ngt_renderer__;
+	if (!rS || rS[NgtRendererClassId.destroyed]) return;
+
+	for (const child of rS[NgtRendererClassId.children].slice()) {
+		removeChild?.(node, child);
+		internalDestroyNode(child, removeChild);
+	}
+
+	// clear out parent if haven't
+	rS[NgtRendererClassId.parent] = undefined;
+	// clear out children
+	rS[NgtRendererClassId.children].length = 0;
+
+	// clear out NgtInstanceState
+	const iS = getInstanceState(node);
+	if (iS) {
+		const temp = iS as NgtAnyRecord;
+
+		iS.removeInteraction?.(iS.store);
+
+		delete temp['onAttach'];
+		delete temp['onUpdate'];
+		delete temp['object'];
+		delete temp['objects'];
+		delete temp['nonObjects'];
+		delete temp['parent'];
+		delete temp['add'];
+		delete temp['remove'];
+		delete temp['updateGeometryStamp'];
+		delete temp['setParent'];
+		delete temp['store'];
+		delete temp['handlers'];
+		delete temp['hierarchyStore'];
+		delete temp['previousAttach'];
+		delete temp['setPointerEvent'];
+		delete temp['addInteraction'];
+		delete temp['removeInteraction'];
+
+		if (iS.type !== 'ngt-primitive') {
+			delete node['__ngt__'];
+		}
+	}
+
+	// clear our debugNode
+	rS[NgtRendererClassId.injector] = undefined;
+
+	if (rS[NgtRendererClassId.type] === 'comment') {
+		delete node[NGT_INTERNAL_ADD_COMMENT_FLAG];
+		delete node[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG];
+		delete node[NGT_CANVAS_CONTENT_FLAG];
+		delete node[NGT_PORTAL_CONTENT_FLAG];
+		delete node[NGT_DOM_PARENT_FLAG];
+	}
+
+	// clear getAttribute if exist
+	if (
+		'getAttribute' in node &&
+		typeof node['getAttribute'] === 'function' &&
+		node['getAttribute'][NGT_GET_NODE_ATTRIBUTE_FLAG]
+	) {
+		delete node['getAttribute'];
+	}
+
+	// mark node as destroyed
+	rS[NgtRendererClassId.destroyed] = true;
 }
