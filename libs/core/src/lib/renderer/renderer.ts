@@ -334,6 +334,10 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'platform') {
+			if (newChild[NGT_DOM_PARENT_FLAG] && newChild[NGT_DOM_PARENT_FLAG] instanceof HTMLElement) {
+				return this.delegateRenderer.appendChild(newChild[NGT_DOM_PARENT_FLAG], newChild);
+			}
+
 			if (pRS[NgtRendererClassId.parent] && !cRS[NgtRendererClassId.parent]) {
 				return this.appendChild(pRS[NgtRendererClassId.parent], newChild);
 			}

@@ -25,7 +25,6 @@ import { extend, injectBeforeRender, NgtAnyRecord, NgtArgs, NgtCanvasOptions, re
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
-import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
 @Component({
@@ -124,8 +123,8 @@ export class StorybookSetup {
 	loader = input(false);
 
 	/* canvas options */
-	performance = input(defaultPerformanceOptions, { transform: mergeInputs(defaultPerformanceOptions) });
-	camera = input(defaultCameraOptions, { transform: mergeInputs(defaultCameraOptions) });
+	performance = input<NgtCanvasOptions['performance']>({});
+	camera = input<NgtCanvasOptions['camera']>({});
 	orthographic = input(false);
 
 	/* scene graph options */
@@ -149,7 +148,7 @@ type StoryOptions = {
 	camera: NgtCanvasOptions['camera'];
 	background: THREE.ColorRepresentation;
 	orthographic: boolean;
-	controls: boolean;
+	controls: boolean | null;
 	lights: boolean;
 };
 
@@ -177,6 +176,10 @@ export function storyFunction(
 		lights = defaultStoryOptions.lights,
 	}: Partial<StoryOptions> = {},
 ) {
+	if (!orthographic) {
+		camera = { ...defaultStoryOptions.camera, ...camera };
+	}
+
 	return (args: Args) => ({
 		props: {
 			storyOptions: args || {},

@@ -7,11 +7,11 @@ import { select, storyDecorators, storyFunction, storyObject } from '../setup-ca
 
 @Component({
 	template: `
-		<ngt-mesh #meshOne [position]="[-1, 0, 0]" (click)="selected.set(meshOne)">
+		<ngt-mesh #meshOne [position]="[-1, 0, 0]" (click)="$event.stopPropagation(); selected.set(meshOne)">
 			<ngt-box-geometry />
 			<ngt-mesh-basic-material [wireframe]="selected() === meshOne" color="orange" />
 		</ngt-mesh>
-		<ngt-mesh #meshTwo [position]="[0, 0, 0]" (click)="selected.set(meshTwo)">
+		<ngt-mesh #meshTwo [position]="[0, 0, 0]" (click)="$event.stopPropagation(); selected.set(meshTwo)">
 			<ngt-box-geometry />
 			<ngt-mesh-basic-material [wireframe]="selected() === meshTwo" color="green" />
 		</ngt-mesh>

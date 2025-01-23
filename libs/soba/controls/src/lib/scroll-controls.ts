@@ -181,6 +181,7 @@ export class NgtsScrollControls {
 			const onScroll = () => {
 				// Prevent first scroll because it is indirectly caused by the one pixel offset
 				if (!enabled || firstRun) return;
+
 				invalidate();
 				current = el[horizontal ? 'scrollLeft' : 'scrollTop'];
 				this.scroll = current / scrollThreshold;
@@ -286,7 +287,7 @@ export class NgtsCanvasScrollContent {
 
 @Directive({
 	selector: 'div[htmlScrollContent]',
-	host: { style: 'position: absolute; top: 0; left: 0; will-change: transform;' },
+	host: { style: 'position: absolute; top: 0; left: 0; will-change: transform;', 'data-html-scroll-content': '' },
 	providers: [provideHTMLDomElement([NgtsScrollControls], (scrollControls) => scrollControls.fixed)],
 })
 export class NgtsHTMLScrollContent extends NgtHTML {

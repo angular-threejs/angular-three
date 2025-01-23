@@ -231,7 +231,7 @@ export default {
 export const Default = storyObject(DefaultScrollControlsStory, {
 	camera: { zoom: 80 },
 	orthographic: true,
-	controls: false,
+	controls: null,
 	argsOptions: {
 		options: {
 			pages: 3, // Each page takes 100% of the height of the canvas
@@ -251,7 +251,7 @@ export const InsideAContainer = storyObject(DefaultScrollControlsStory, {
   `,
 	camera: { zoom: 80 },
 	orthographic: true,
-	controls: false,
+	controls: null,
 	argsOptions: {
 		options: {
 			pages: 3, // Each page takes 100% of the height of the canvas
@@ -266,5 +266,5 @@ export const InsideAContainer = storyObject(DefaultScrollControlsStory, {
 export const Model = storyFunction(LittlestTokyoStory, {
 	camera: { position: [0, 0, 10] },
 	lights: false,
-	controls: false,
+	controls: null,
 });
