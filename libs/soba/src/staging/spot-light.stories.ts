@@ -6,7 +6,7 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectTexture } from 'angular-three-soba/loaders';
 import { injectDepthBuffer } from 'angular-three-soba/misc';
 import { NgtsEnvironment, NgtsSpotLight, NgtsSpotLightOptions, NgtsSpotLightShadow } from 'angular-three-soba/staging';
-import { MathUtils, RepeatWrapping } from 'three';
+import { MathUtils, RepeatWrapping, SRGBColorSpace } from 'three';
 import { storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
@@ -57,6 +57,7 @@ class SpotLightShadowStory {
 		{
 			onLoad: (textures) => {
 				textures.forEach((texture) => {
+					texture.colorSpace = SRGBColorSpace;
 					texture.wrapS = texture.wrapT = RepeatWrapping;
 					texture.repeat.set(2, 2);
 				});
@@ -64,7 +65,11 @@ class SpotLightShadowStory {
 		},
 	);
 
-	leafTexture = injectTexture(() => './textures/other/leaves.jpg');
+	leafTexture = injectTexture(() => './textures/other/leaves.jpg', {
+		onLoad: (textures) => {
+			textures[0].colorSpace = SRGBColorSpace;
+		},
+	});
 	shader = computed(() => {
 		if (!this.wind()) return undefined;
 		return /* language=glsl glsl */ `
