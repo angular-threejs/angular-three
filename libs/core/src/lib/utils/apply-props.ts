@@ -48,6 +48,10 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 	for (let i = 0; i < changes.length; i++) {
 		let [key, value] = changes[i];
 
+		// Ignore setting undefined props
+		// https://github.com/pmndrs/react-three-fiber/issues/274
+		if (value === undefined) continue;
+
 		// Alias (output)encoding => (output)colorSpace (since r152)
 		// https://github.com/pmndrs/react-three-fiber/pull/2829
 		// if (is.colorSpaceExist(instance)) {

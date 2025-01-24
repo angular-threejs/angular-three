@@ -128,5 +128,5 @@ export default {
 export const Default = storyFunction(DefaultBoundsStory, {
 	camera: { position: [0, -10, 80], fov: 50 },
 	lights: false,
-	controls: false,
+	controls: null,
 });

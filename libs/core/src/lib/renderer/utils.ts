@@ -46,6 +46,31 @@ export function kebabToPascal(str: string): string {
 	return pascalStr;
 }
 
+function propagateStoreRecursively(node: NgtInstanceNode, parentNode: NgtInstanceNode) {
+	const iS = getInstanceState(node);
+	const pIS = getInstanceState(parentNode);
+
+	if (!iS || !pIS) return;
+
+	// assign store on child if not already exist
+	// or child store is not the same as parent store
+	// or child store is the parent of parent store
+	if (!iS.store || iS.store !== pIS.store || iS.store === pIS.store.snapshot.previousRoot) {
+		iS.store = pIS.store;
+
+		// Call addInteraction if it exists
+		iS.addInteraction?.(pIS.store);
+
+		// Collect all children (objects and nonObjects)
+		const children = [...(iS.objects ? untracked(iS.objects) : []), ...(iS.nonObjects ? untracked(iS.nonObjects) : [])];
+
+		// Recursively reassign the store for each child
+		for (const child of children) {
+			propagateStoreRecursively(child, node);
+		}
+	}
+}
+
 export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode) {
 	const pIS = getInstanceState(parent);
 	const cIS = getInstanceState(child);
@@ -57,25 +82,8 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 	// whether the child is added to the parent with parent.add()
 	let added = false;
 
-	// assign store on child if not already exist
-	// or child store is not the same as parent store
-	// or child store is the parent of parent store
-	if (!cIS.store || cIS.store !== pIS.store || cIS.store === pIS.store.snapshot.previousRoot) {
-		cIS.store = pIS.store;
-
-		cIS.addInteraction?.(cIS.store);
-
-		const grandChildren = [
-			...(cIS.objects ? untracked(cIS.objects) : []),
-			...(cIS.nonObjects ? untracked(cIS.nonObjects) : []),
-		];
-		for (const grandChild of grandChildren) {
-			const grandChildIS = getInstanceState(grandChild);
-			if (!grandChildIS) continue;
-			grandChildIS.store = cIS.store;
-			grandChildIS.addInteraction?.(cIS.store);
-		}
-	}
+	// propagate store recursively
+	propagateStoreRecursively(child, parent);
 
 	if (cIS.attach) {
 		const attachProp = cIS.attach;

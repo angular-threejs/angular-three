@@ -148,7 +148,7 @@ export default {
 } as Meta;
 
 export const Default = storyObject(DefaultInstancesStory, {
-	controls: false,
+	controls: null,
 	lights: false,
 	background: 'white',
 	camera: { position: [0, 0, 20], fov: 50 },

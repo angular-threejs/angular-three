@@ -375,6 +375,10 @@ export class NgtRenderer2 implements Renderer2 {
 				this.appendChild(parent, child);
 			}
 
+			for (const platformChildNode of newChild['childNodes'] || []) {
+				this.appendChild(parent, platformChildNode);
+			}
+
 			return;
 		}
 
@@ -642,6 +646,17 @@ export class NgtRenderer2 implements Renderer2 {
 		return rendererParentNode ?? this.delegateRenderer.parentNode(node);
 	}
 
+	// removeAttribute = this.delegateRenderer.removeAttribute.bind(this.delegateRenderer);
+	removeAttribute(el: NgtRendererNode, name: string, namespace?: string | null): void {
+		const rS = el.__ngt_renderer__;
+		if (!rS || rS[NgtRendererClassId.destroyed]) return this.delegateRenderer.removeAttribute(el, name, namespace);
+
+		if (rS[NgtRendererClassId.type] === 'three') {
+			return;
+		}
+		return this.delegateRenderer.removeAttribute(el, name, namespace);
+	}
+
 	setAttribute(el: NgtRendererNode, name: string, value: string, namespace?: string | null): void {
 		const rS = el.__ngt_renderer__;
 		if (!rS) return this.delegateRenderer.setAttribute(el, name, value, namespace);
@@ -817,7 +832,14 @@ export class NgtRenderer2 implements Renderer2 {
 				};
 			}
 
-			return iS.setPointerEvent?.(eventName as keyof NgtEventHandlers, callback) || (() => {});
+			const cleanup = iS.setPointerEvent?.(eventName as keyof NgtEventHandlers, callback) || (() => {});
+
+			// this means the object has already been attaached to the parent and has its store propgated
+			if (iS.store) {
+				iS.addInteraction?.(iS.store);
+			}
+
+			return cleanup;
 		}
 
 		return this.delegateRenderer.listen(target, eventName, callback);
@@ -905,5 +927,4 @@ export class NgtRenderer2 implements Renderer2 {
 	selectRootElement = this.delegateRenderer.selectRootElement.bind(this.delegateRenderer);
 	nextSibling = this.delegateRenderer.nextSibling.bind(this.delegateRenderer);
 	setValue = this.delegateRenderer.setValue.bind(this.delegateRenderer);
-	removeAttribute = this.delegateRenderer.removeAttribute.bind(this.delegateRenderer);
 }

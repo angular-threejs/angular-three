@@ -14,7 +14,7 @@ import { NgtArgs } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
-import { Bone, Group, MeshStandardMaterial, Object3D, SkinnedMesh } from 'three';
+import { Bone, Group, MeshStandardMaterial, Object3D, SRGBColorSpace, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
 import { select, storyDecorators, storyObject } from '../setup-canvas';
 
@@ -78,8 +78,16 @@ class DefaultAnimationsStory {
 	animation = input('Strut');
 
 	gltf = injectGLTF<BotGLTF>(() => './ybot.glb');
-	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7');
-	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47');
+	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7', {
+		onLoad: (textures) => {
+			textures[0].colorSpace = SRGBColorSpace;
+		},
+	});
+	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47', {
+		onLoad: (textures) => {
+			textures[0].colorSpace = SRGBColorSpace;
+		},
+	});
 
 	boneRef = viewChild<ElementRef<Bone>>('bone');
 }
