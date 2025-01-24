@@ -8,6 +8,7 @@ import { Mesh, MeshStandardMaterial } from 'three';
 import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
+	selector: 'bounds-model',
 	template: `
 		@if (geometry() && material()) {
 			<ngt-mesh
