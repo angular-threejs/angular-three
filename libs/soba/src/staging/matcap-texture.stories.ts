@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsMatcapTexture, NgtsMatcapTextureOptions } from 'angular-three-soba/staging';
-import { Mesh } from 'three';
+import { Mesh, SRGBColorSpace, Texture } from 'three';
 import { GLTF } from 'three-stdlib';
 import { number, storyDecorators, storyObject } from '../setup-canvas';
 
@@ -18,7 +18,9 @@ interface SuzyGLTF extends GLTF {
 
 		@if (gltf(); as gltf) {
 			<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry">
-				<ngt-mesh-matcap-material *matcapTexture="options(); let texture" [matcap]="texture()" />
+				<ng-template [matcapTexture]="options()" (matcapTextureLoaded)="onLoaded($event[0])" let-texture>
+					<ngt-mesh-matcap-material [matcap]="texture()" />
+				</ng-template>
 			</ngt-mesh>
 		}
 	`,
@@ -29,6 +31,10 @@ interface SuzyGLTF extends GLTF {
 class DefaultMatcapTextureStory {
 	options = input<NgtsMatcapTextureOptions>();
 	gltf = injectGLTF<SuzyGLTF>(() => './suzanne.glb', { useDraco: true });
+
+	onLoaded(texture: Texture) {
+		texture.colorSpace = SRGBColorSpace;
+	}
 }
 
 export default {
