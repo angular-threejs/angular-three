@@ -54,7 +54,12 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 		if (!type) return delegateRenderer;
 
 		let renderer = this.rendererMap.get(type.id);
-		if (renderer) return renderer;
+		if (renderer) {
+			if (renderer instanceof NgtRenderer2) {
+				renderer.count += 1;
+			}
+			return renderer;
+		}
 
 		if (hostElement && !isRendererNode(hostElement)) {
 			createRendererNode('platform', hostElement, this.document);
@@ -80,101 +85,6 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 
 		this.rendererMap.set(type.id, (renderer = new NgtRenderer2(delegateRenderer, this.catalogue, this.document)));
 		return renderer;
-
-		// const isPortal = isRendererNode(hostElement) && hostElement.__ngt_renderer__[NgtRendererClassId.type] === 'portal';
-		//
-		// const debugNode = hostElement ? new DebugNode(hostElement) : null;
-		// let store = debugNode?.injector?.get(NGT_STORE, null, { optional: true }) || null;
-		//
-		// // if the host element is already a renderer node, it should hav a store
-		// if (!store && isRendererNode(hostElement) && hostElement.__ngt_renderer__[NgtRendererClassId.store]) {
-		// 	store = hostElement.__ngt_renderer__[NgtRendererClassId.store];
-		// }
-		//
-		// // if there's still no store but there's NGT_MANUAL_INJECTED_STORE (i.e: from NgtRouterOutlet)
-		// if (!store && 'type' in type && typeof type.type === 'function' && NGT_MANUAL_INJECTED_STORE in type.type) {
-		// 	store = type.type[NGT_MANUAL_INJECTED_STORE] as SignalState<NgtState> | null;
-		// }
-		//
-		// let cacheKey = store ? `${type.id}-${store.snapshot.id}` : type.id;
-		// let renderer = !isPortal ? this.rendererMap.get(cacheKey) : null;
-		//
-		// if (!isRendererNode(hostElement)) {
-		// 	renderer = null;
-		// }
-		//
-		// if (!renderer) {
-		// 	// detect the entry point of *canvasContent directive
-		// 	const hasCanvasContent = (type as any)['consts']?.some((constArr: unknown[]) =>
-		// 		constArr.some((item) => item === 'canvasContent'),
-		// 	);
-		//
-		// 	if (!store && !hasCanvasContent) {
-		// 		renderer = delegateRenderer;
-		// 	} else {
-		// 		// NOTE: if we have a store but hostElement isn't a renderer node,
-		// 		// this means the element was created in a context outside of NgtCanvas
-		// 		// but is _embedded_ in the NgtCanvas context later on via ng-template
-		// 		// we'll make the hostElement a RendererNode here
-		// 		if (store && hostElement) {
-		// 			if (!(NGT_RENDERER_NODE_FLAG in hostElement)) {
-		// 				createRendererNode('platform', store, hostElement, this.document);
-		// 			}
-		//
-		// 			const rS = (hostElement as NgtRendererNode).__ngt_renderer__;
-		//
-		// 			if (!rS[NgtRendererClassId.store]) {
-		// 				rS[NgtRendererClassId.store] = store;
-		// 			} else if (rS[NgtRendererClassId.store] !== store) {
-		// 				// reassign store if it's different
-		// 				let resolvedStore = store;
-		// 				let shouldReassign = false;
-		//
-		// 				// check if resolved store has renderer state store as an ancestor
-		// 				while (resolvedStore.snapshot.previousRoot) {
-		// 					// if it is, then we reassign
-		// 					if (resolvedStore.snapshot.previousRoot.snapshot.id === rS[NgtRendererClassId.store].snapshot.id) {
-		// 						shouldReassign = true;
-		// 						break;
-		// 					}
-		// 					resolvedStore = resolvedStore.snapshot.previousRoot;
-		// 				}
-		//
-		// 				if (shouldReassign) {
-		// 					rS[NgtRendererClassId.store] = store;
-		// 				}
-		// 			}
-		//
-		// 			// reassign cache key
-		// 			cacheKey = `${type.id}-${rS[NgtRendererClassId.store].snapshot.id}`;
-		// 		}
-		//
-		// 		const removeRenderer = (renderer: Renderer2) => {
-		// 			if (isPortal) {
-		// 				this.portals.delete(renderer);
-		// 			} else {
-		// 				const existing = this.rendererMap.get(cacheKey);
-		// 				if (existing === renderer) {
-		// 					this.rendererMap.delete(cacheKey);
-		// 				}
-		// 			}
-		// 		};
-		//
-		// 		renderer = new NgtRenderer2(delegateRenderer, this.catalogue, this.document, store, removeRenderer);
-		// 	}
-		//
-		// 	if (isPortal) {
-		// 		this.portals.add(renderer);
-		// 	} else {
-		// 		this.rendererMap.set(cacheKey, renderer);
-		// 	}
-		// }
-		//
-		// if ('count' in renderer && typeof renderer.count === 'number') {
-		// 	renderer.count += 1;
-		// }
-		//
-		// return renderer;
 	}
 }
 
@@ -187,6 +97,7 @@ export class NgtRenderer2 implements Renderer2 {
 		private delegateRenderer: Renderer2,
 		private catalogue: Record<string, NgtConstructorRepresentation>,
 		private document: Document,
+		public count = 1,
 	) {}
 
 	get data(): { [key: string]: any } {
@@ -194,16 +105,16 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	destroy(): void {
-		// if (this.count > 1) {
-		// 	this.count -= 1;
-		// 	return;
-		// }
-		//
-		// // this is the last instance of the same NgtRenderer2
-		// this.count = 0;
-		// this.argsCommentNodes = [];
-		// this.parentCommentNodes = [];
-		// this.removeRenderer(this);
+		if (this.count > 1) {
+			this.count -= 1;
+			return;
+		}
+
+		// this is the last instance of the same NgtRenderer2
+		this.count = 0;
+		this.argsInjectors = [];
+		this.parentInjectors = [];
+		this.portalInjectors = [];
 	}
 
 	createElement(name: string, namespace?: string | null) {
@@ -394,109 +305,6 @@ export class NgtRenderer2 implements Renderer2 {
 			return this.delegateRenderer.appendChild(parent, newChild);
 		}
 
-		// //  if the child is a comment, we'll set the parent then bail
-		// if (cRS?.[NgtRendererClassId.type] === 'comment') {
-		// 	setRendererParentNode(newChild, parent);
-		//
-		// 	// reassign store for comment node if it's different than the parent
-		// 	if (pRS?.[NgtRendererClassId.store] && cRS[NgtRendererClassId.store] !== pRS[NgtRendererClassId.store]) {
-		// 		cRS[NgtRendererClassId.store] = pRS[NgtRendererClassId.store];
-		// 	}
-		//
-		// 	return;
-		// }
-		//
-		// if (cRS?.[NgtRendererClassId.type] === 'three') {
-		// 	//  if child is three and parent is platform
-		// 	if (pRS?.[NgtRendererClassId.type] === 'platform') {
-		// 		// first check if there's a parent on the parent
-		// 		const grandParent = pRS[NgtRendererClassId.parent];
-		// 		// if there is, we'll recurse with the grandparent
-		// 		if (grandParent) {
-		// 			return this.appendChild(grandParent, newChild);
-		// 		}
-		//
-		// 		// if not, then we'll set the relationship between these two for later stages
-		// 		this.setNodeRelationship(parent, newChild);
-		// 		return;
-		// 	}
-		//
-		// 	// if child is three and parent is also three, straight-forward case
-		// 	if (pRS?.[NgtRendererClassId.type] === 'three') {
-		// 		return this.appendThreeRendererNodes(parent, newChild);
-		// 	}
-		//
-		// 	// if parent is portal
-		// 	if (pRS?.[NgtRendererClassId.type] === 'portal') {
-		// 		let portalContainer = pRS[NgtRendererClassId.portalContainer];
-		// 		if (!portalContainer) {
-		// 			// const container = pRS[NgtRendererClassId.store].snapshot.scene;
-		// 			// if (!isRendererNode(container)) {
-		// 			// 	createRendererNode('three', pRS[NgtRendererClassId.store], container, this.document);
-		// 			// }
-		// 			//
-		// 			// const rendererNode = container as unknown as NgtRendererNode;
-		// 			// if (!rendererNode.__ngt_renderer__[NgtRendererClassId.parent]) {
-		// 			// 	rendererNode.__ngt_renderer__[NgtRendererClassId.parent] = parent;
-		// 			// }
-		// 			// portalContainer = pRS[NgtRendererClassId.portalContainer] = rendererNode;
-		// 		}
-		// 		if (portalContainer) {
-		// 			return this.appendChild(portalContainer, newChild);
-		// 		}
-		//
-		// 		// if not, then we'll set the relationship between these two for later stages
-		// 		this.setNodeRelationship(parent, newChild);
-		// 		return;
-		// 	}
-		// }
-		//
-		// if (pRS?.[NgtRendererClassId.type] === 'three') {
-		// 	// if parent is three and child is platform
-		// 	if (cRS?.[NgtRendererClassId.type] === 'platform') {
-		// 		if (!cRS[NgtRendererClassId.parent] || cRS[NgtRendererClassId.parent] !== parent) {
-		// 			setRendererParentNode(newChild, parent);
-		// 		}
-		//
-		// 		for (const rendererChildNode of cRS[NgtRendererClassId.children]) {
-		// 			this.appendChild(parent, rendererChildNode);
-		// 		}
-		//
-		// 		return;
-		// 	}
-		//
-		// 	if (cRS?.[NgtRendererClassId.type] === 'portal') {
-		// 		if (!cRS[NgtRendererClassId.parent] || cRS[NgtRendererClassId.parent] !== parent) {
-		// 			setRendererParentNode(newChild, parent);
-		// 		}
-		// 		return;
-		// 	}
-		//
-		// 	// if parent is three and child is also three, straight-forward case
-		// 	if (cRS?.[NgtRendererClassId.type] === 'three') {
-		// 		return this.appendThreeRendererNodes(parent, newChild);
-		// 	}
-		// }
-		//
-		// if (pRS?.[NgtRendererClassId.type] === 'platform') {
-		// 	// if parent is platform, and child is platform
-		// 	if (cRS?.[NgtRendererClassId.type] === 'platform') {
-		// 		this.setNodeRelationship(parent, newChild);
-		// 		this.delegateRenderer.appendChild(parent, newChild);
-		//
-		// 		const closestAncestorThreeNode = this.findClosestAncestorThreeNode(parent);
-		// 		if (closestAncestorThreeNode) this.appendChild(closestAncestorThreeNode, newChild);
-		// 		return;
-		// 	}
-		//
-		// 	// if parent is platform and child is portal
-		// 	if (cRS?.[NgtRendererClassId.type] === 'portal') {
-		// 		this.setNodeRelationship(parent, newChild);
-		// 		this.delegateRenderer.appendChild(parent, newChild);
-		// 		return;
-		// 	}
-		// }
-
 		return delegatedFn();
 	}
 
@@ -572,33 +380,6 @@ export class NgtRenderer2 implements Renderer2 {
 
 			return this.removeChild(threeParent as unknown as NgtRendererNode, oldChild);
 		}
-
-		// if (pRS[NgtRendererClassId.type] === 'three') {
-		// 	if (cRS[NgtRendererClassId.type] === 'three') {
-		// 		return removeThreeChild(oldChild, parent, true);
-		// 	}
-		//
-		// 	if (cRS[NgtRendererClassId.type] === 'platform') {
-		// 		return;
-		// 	}
-		// }
-		//
-		// if (pRS[NgtRendererClassId.type] === 'platform') {
-		// 	if (cRS[NgtRendererClassId.type] === 'three') {
-		// 		return;
-		// 	}
-		//
-		// 	if (cRS[NgtRendererClassId.type] === 'platform') {
-		// 		return this.delegateRenderer.removeChild(parent, oldChild, isHostElement);
-		// 	}
-		// }
-		//
-		// if (pRS[NgtRendererClassId.type] === 'portal') {
-		// 	const portalContainer = pRS[NgtRendererClassId.portalContainer];
-		// 	if (portalContainer) {
-		// 		return this.removeChild(portalContainer, oldChild, isHostElement);
-		// 	}
-		// }
 
 		return this.delegateRenderer.removeChild(parent, oldChild, isHostElement);
 	}
@@ -844,33 +625,6 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		return this.delegateRenderer.listen(target, eventName, callback);
-	}
-
-	private findClosestAncestorThreeNode<TNode = any>(node: TNode) {
-		// TODO: handle portal
-
-		const rS = (node as NgtRendererNode).__ngt_renderer__;
-		if (!rS) return null;
-
-		if (rS[NgtRendererClassId.type] === 'three') return node;
-
-		let parent = rS[NgtRendererClassId.parent];
-
-		if (
-			parent &&
-			parent.__ngt_renderer__[NgtRendererClassId.type] === 'portal' &&
-			parent.__ngt_renderer__[NgtRendererClassId.portalContainer]?.__ngt_renderer__[NgtRendererClassId.type] === 'three'
-		) {
-			return parent.__ngt_renderer__[NgtRendererClassId.portalContainer];
-		}
-
-		while (parent && parent.__ngt_renderer__ && parent.__ngt_renderer__[NgtRendererClassId.type] !== 'three') {
-			parent =
-				parent.__ngt_renderer__[NgtRendererClassId.portalContainer] ??
-				parent.__ngt_renderer__[NgtRendererClassId.parent];
-		}
-
-		return parent;
 	}
 
 	private appendThreeRendererNodes(parent: NgtRendererNode, child: NgtRendererNode) {
