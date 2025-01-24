@@ -128,13 +128,7 @@ const defaultOptions: NgtsPivotControlsOptions = {
 	selector: 'ngts-pivot-controls',
 	template: `
 		<ngt-group #parent>
-			<ngt-group
-				#group
-				[matrix]="matrix()"
-				[matrixAutoUpdate]="false"
-				[parameters]="parameters()"
-				(pointerover)="(undefined)"
-			>
+			<ngt-group #group [matrix]="matrix()" [matrixAutoUpdate]="false" [parameters]="parameters()">
 				<ngt-group #gizmo [visible]="visible()" [position]="offset()" [rotation]="rotation()">
 					@if (enabled()) {
 						@let _disableAxes = disableAxes();
