@@ -1,10 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { NgtArgs, injectStore, pick } from 'angular-three';
 import { BlendFunction, LUT3DEffect } from 'postprocessing';
-import { Texture } from 'three';
+import * as THREE from 'three';
 
 export interface LUTOptions {
-	lut: Texture;
+	lut: THREE.Texture;
 	blendFunction?: BlendFunction;
 	tetrahedralInterpolation?: boolean;
 }
@@ -20,22 +20,24 @@ export interface LUTOptions {
 })
 export class NgtpLUT {
 	options = input({} as LUTOptions);
+
 	private lut = pick(this.options, 'lut');
+	private tetrahedralInterpolation = pick(this.options, 'tetrahedralInterpolation');
 
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
 
-	effect = computed(() => {
-		const [lut, { lut: _, ...options }] = [this.lut(), this.options()];
+	protected effect = computed(() => {
+		const { lut, ...options } = this.options();
 		return new LUT3DEffect(lut, options);
 	});
 
 	constructor() {
 		effect(() => {
-			const [effect, { lut, tetrahedralInterpolation }, invalidate] = [
+			const [effect, lut, tetrahedralInterpolation, invalidate] = [
 				this.effect(),
-				this.options(),
-				this.invalidate(),
+				this.lut(),
+				this.tetrahedralInterpolation(),
+				this.store.invalidate(),
 			];
 
 			if (tetrahedralInterpolation) effect.tetrahedralInterpolation = tetrahedralInterpolation;

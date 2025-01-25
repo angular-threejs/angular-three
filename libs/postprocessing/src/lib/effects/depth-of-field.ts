@@ -9,11 +9,11 @@ import {
 } from '@angular/core';
 import { NgtAnyRecord, NgtArgs, NgtVector3 } from 'angular-three';
 import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
-import { DepthPackingStrategies, Texture, Vector3 } from 'three';
+import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
 type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1]> &
-	Partial<{ target: NgtVector3; depthTexture: { texture: Texture; packing: DepthPackingStrategies } }>;
+	Partial<{ target: NgtVector3; depthTexture: { texture: THREE.Texture; packing: THREE.DepthPackingStrategies } }>;
 
 @Component({
 	selector: 'ngtp-depth-of-field',
@@ -27,20 +27,23 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 export class NgtpDepthOfField {
 	options = input({} as DOFOptions);
 
-	private autoFocus = computed(() => this.options().target != null);
-
 	private effectComposer = inject(NgtpEffectComposer);
 
-	effect = computed(() => {
-		const [camera, options, autoFocus] = [this.effectComposer.camera(), this.options(), this.autoFocus()];
+	protected effect = computed(() => {
+		const [camera, options] = [this.effectComposer.camera(), this.options()];
+
+		const autoFocus = options.target != null;
 
 		const effect = new DepthOfFieldEffect(camera, options);
 
-		// Creating a target enables autofocus, R3F will set via props
-		if (autoFocus) effect.target = new Vector3();
+		// Creating a target enables autofocus, NGT will set via props
+		if (autoFocus) effect.target = new THREE.Vector3();
 		// Depth texture for depth picking with optional packing strategy
 		if (options.depthTexture) {
-			effect.setDepthTexture(options.depthTexture.texture, options.depthTexture.packing as DepthPackingStrategies);
+			effect.setDepthTexture(
+				options.depthTexture.texture,
+				options.depthTexture.packing as THREE.DepthPackingStrategies,
+			);
 		}
 		// Temporary fix that restores DOF 6.21.3 behavior, everything since then lets shapes leak through the blur
 		const maskPass = (effect as NgtAnyRecord)['maskPass'];

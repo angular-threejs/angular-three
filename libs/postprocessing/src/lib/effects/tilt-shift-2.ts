@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
-import { Uniform } from 'three';
+import * as THREE from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
 const TiltShiftShader = {
@@ -77,13 +77,13 @@ export class TiltShift2Effect extends Effect {
 		super('TiltShiftEffect', TiltShiftShader.fragmentShader, {
 			blendFunction,
 			attributes: EffectAttribute.CONVOLUTION,
-			uniforms: new Map<string, Uniform<number | number[]>>([
-				['blur', new Uniform(blur)],
-				['taper', new Uniform(taper)],
-				['start', new Uniform(start)],
-				['end', new Uniform(end)],
-				['samples', new Uniform(samples)],
-				['direction', new Uniform(direction)],
+			uniforms: new Map<string, THREE.Uniform<number | number[]>>([
+				['blur', new THREE.Uniform(blur)],
+				['taper', new THREE.Uniform(taper)],
+				['start', new THREE.Uniform(start)],
+				['end', new THREE.Uniform(end)],
+				['samples', new THREE.Uniform(samples)],
+				['direction', new THREE.Uniform(direction)],
 			]),
 		});
 	}
@@ -108,6 +108,6 @@ extend({ TiltShift2Effect });
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.NORMAL })],
 })
 export class NgtpTiltShift2 {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<TiltShift2EffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
 }

@@ -10,7 +10,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getLocalState, injectBeforeRender, injectStore, pick } from 'angular-three';
+import { extend, getInstanceState, injectBeforeRender, injectStore, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	DepthDownsamplingPass,
@@ -22,7 +22,8 @@ import {
 	Pass,
 	RenderPass,
 } from 'postprocessing';
-import { Camera, Group, HalfFloatType, NoToneMapping, Scene, TextureDataType } from 'three';
+import * as THREE from 'three';
+import { Group } from 'three';
 import { isWebGL2Available } from 'three-stdlib';
 
 export interface NgtpEffectComposerOptions {
@@ -34,10 +35,10 @@ export interface NgtpEffectComposerOptions {
 	autoClear: boolean;
 	resolutionScale?: number;
 	multisampling: number;
-	frameBufferType: TextureDataType;
+	frameBufferType: THREE.TextureDataType;
 	renderPriority: number;
-	camera?: Camera;
-	scene?: Scene;
+	camera?: THREE.Camera;
+	scene?: THREE.Scene;
 }
 
 const defaultOptions: NgtpEffectComposerOptions = {
@@ -45,7 +46,7 @@ const defaultOptions: NgtpEffectComposerOptions = {
 	renderPriority: 1,
 	autoClear: true,
 	multisampling: 8,
-	frameBufferType: HalfFloatType,
+	frameBufferType: THREE.HalfFloatType,
 };
 
 function isConvolution(effect: Effect) {
@@ -67,10 +68,10 @@ export class NgtpEffectComposer {
 
 	private injector = inject(Injector);
 	private store = injectStore();
-	private size = this.store.select('size');
-	private gl = this.store.select('gl');
-	private defaultScene = this.store.select('scene');
-	private defaultCamera = this.store.select('camera');
+	// private size = this.store.select('size');
+	// private gl = this.store.select('gl');
+	// private defaultScene = this.store.select('scene');
+	// private defaultCamera = this.store.select('camera');
 
 	private depthBuffer = pick(this.options, 'depthBuffer');
 	private stencilBuffer = pick(this.options, 'stencilBuffer');
@@ -81,10 +82,10 @@ export class NgtpEffectComposer {
 	private enabled = pick(this.options, 'enabled');
 	private renderPriority = pick(this.options, 'renderPriority');
 
-	scene = computed(() => this.options().scene ?? this.defaultScene());
-	camera = computed(() => this.options().camera ?? this.defaultCamera());
+	scene = computed(() => this.options().scene ?? this.store.scene());
+	camera = computed(() => this.options().camera ?? this.store.camera());
 
-	private groupRef = viewChild.required<ElementRef<Group>>('group');
+	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private priority = computed(() => {
 		const enabled = this.enabled();
@@ -105,7 +106,7 @@ export class NgtpEffectComposer {
 			enableNormalPass,
 			resolutionScale,
 		] = [
-			this.gl(),
+			this.store.gl(),
 			this.scene(),
 			this.camera(),
 			this.depthBuffer(),
@@ -149,16 +150,16 @@ export class NgtpEffectComposer {
 
 		// NOTE: Disable tone mapping because threejs disallows tonemapping on render targets
 		effect((onCleanup) => {
-			const gl = this.gl();
+			const gl = this.store.gl();
 			const currentTonemapping = gl.toneMapping;
-			gl.toneMapping = NoToneMapping;
+			gl.toneMapping = THREE.NoToneMapping;
 			onCleanup(() => {
 				gl.toneMapping = currentTonemapping;
 			});
 		});
 
 		effect(() => {
-			const [{ composer }, { width, height }] = [this.composerData(), this.size()];
+			const [{ composer }, width, height] = [this.composerData(), this.store.size.width(), this.store.size.height()];
 			if (composer) {
 				composer.setSize(width, height);
 			}
@@ -174,10 +175,10 @@ export class NgtpEffectComposer {
 			const passes: Pass[] = [];
 
 			if (composer) {
-				const localState = getLocalState(group);
-				if (!localState) return;
+				const instanceState = getInstanceState(group);
+				if (!instanceState) return;
 
-				const children = localState.nonObjects();
+				const children = instanceState.nonObjects();
 				for (let i = 0; i < children.length; i++) {
 					const child = children[i];
 					if (child instanceof Effect) {
@@ -222,7 +223,7 @@ export class NgtpEffectComposer {
 					const [{ composer }, { enabled, autoClear, stencilBuffer }, gl] = [
 						this.composerData(),
 						this.options(),
-						this.gl(),
+						this.store.snapshot.gl,
 					];
 
 					if (enabled) {

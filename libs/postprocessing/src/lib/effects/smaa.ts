@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { SMAAEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ SMAAEffect });
-
 export type SMAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof SMAAEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type SMAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpSMAA {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<SMAAEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ SMAAEffect });
+	}
 }

@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { ChromaticAberrationEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ ChromaticAberrationEffect });
-
 export type ChromaticAberrationEffectOptions = Partial<
 	NonNullable<ConstructorParameters<typeof ChromaticAberrationEffect>[0]>
 >;
@@ -23,6 +21,10 @@ export type ChromaticAberrationEffectOptions = Partial<
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpChromaticAberration {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<ChromaticAberrationEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ ChromaticAberrationEffect });
+	}
 }

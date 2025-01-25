@@ -4,8 +4,6 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, ScanlineEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
-extend({ ScanlineEffect });
-
 export type ScanlineEffectOptions = Partial<NonNullable<ConstructorParameters<typeof ScanlineEffect>[0]>>;
 
 const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
@@ -27,6 +25,10 @@ const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.OVERLAY })],
 })
 export class NgtpScanline {
-	effect = inject(NgtpEffect, { host: true });
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ ScanlineEffect });
+	}
 }

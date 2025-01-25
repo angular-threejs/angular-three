@@ -10,11 +10,11 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
+import { NgtArgs, NgtVector3, injectBeforeRender, injectStore, is, omit, vector3 } from 'angular-three';
 import { easing } from 'maath';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, Effect } from 'postprocessing';
-import { Color, Mesh, Texture, Uniform, Vector2, Vector3, WebGLRenderTarget, WebGLRenderer } from 'three';
+import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
 const LensFlareShader = {
@@ -89,31 +89,31 @@ export class LensFlareEffect extends Effect {
 	} = {}) {
 		super('LensFlareEffect', LensFlareShader.fragmentShader, {
 			blendFunction,
-			uniforms: new Map<string, Uniform>([
-				['enabled', new Uniform(enabled)],
-				['glareSize', new Uniform(glareSize)],
-				['lensPosition', new Uniform(lensPosition)],
-				['iTime', new Uniform(0)],
-				['iResolution', new Uniform(iResolution)],
-				['starPoints', new Uniform(starPoints)],
-				['flareSize', new Uniform(flareSize)],
-				['flareSpeed', new Uniform(flareSpeed)],
-				['flareShape', new Uniform(flareShape)],
-				['animated', new Uniform(animated)],
-				['anamorphic', new Uniform(anamorphic)],
-				['colorGain', new Uniform(colorGain)],
-				['lensDirtTexture', new Uniform(lensDirtTexture)],
-				['haloScale', new Uniform(haloScale)],
-				['secondaryGhosts', new Uniform(secondaryGhosts)],
-				['aditionalStreaks', new Uniform(aditionalStreaks)],
-				['ghostScale', new Uniform(ghostScale)],
-				['starBurst', new Uniform(starBurst)],
-				['opacity', new Uniform(opacity)],
+			uniforms: new Map<string, THREE.Uniform>([
+				['enabled', new THREE.Uniform(enabled)],
+				['glareSize', new THREE.Uniform(glareSize)],
+				['lensPosition', new THREE.Uniform(lensPosition)],
+				['iTime', new THREE.Uniform(0)],
+				['iResolution', new THREE.Uniform(iResolution)],
+				['starPoints', new THREE.Uniform(starPoints)],
+				['flareSize', new THREE.Uniform(flareSize)],
+				['flareSpeed', new THREE.Uniform(flareSpeed)],
+				['flareShape', new THREE.Uniform(flareShape)],
+				['animated', new THREE.Uniform(animated)],
+				['anamorphic', new THREE.Uniform(anamorphic)],
+				['colorGain', new THREE.Uniform(colorGain)],
+				['lensDirtTexture', new THREE.Uniform(lensDirtTexture)],
+				['haloScale', new THREE.Uniform(haloScale)],
+				['secondaryGhosts', new THREE.Uniform(secondaryGhosts)],
+				['aditionalStreaks', new THREE.Uniform(aditionalStreaks)],
+				['ghostScale', new THREE.Uniform(ghostScale)],
+				['starBurst', new THREE.Uniform(starBurst)],
+				['opacity', new THREE.Uniform(opacity)],
 			]),
 		});
 	}
 
-	override update(_renderer: WebGLRenderer, _inputBuffer: WebGLRenderTarget, deltaTime: number) {
+	override update(_renderer: THREE.WebGLRenderer, _inputBuffer: THREE.WebGLRenderTarget, deltaTime: number) {
 		const iTime = this.uniforms.get('iTime');
 		if (iTime) {
 			iTime.value += deltaTime;
@@ -122,13 +122,13 @@ export class LensFlareEffect extends Effect {
 }
 
 export type LensFlareOptions = ConstructorParameters<typeof LensFlareEffect>[0] & {
-	position: Vector3;
+	position: NgtVector3;
 	followMouse: boolean;
 	smoothTime: number;
 };
 
 const defaultOptions: LensFlareOptions = {
-	position: new Vector3(-25, 6, -60),
+	position: new THREE.Vector3(-25, 6, -60),
 	followMouse: false,
 	smoothTime: 0.7,
 };
@@ -146,27 +146,28 @@ export class NgtpLensFlare {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private store = injectStore();
-	private viewport = this.store.select('viewport');
-	private raycaster = this.store.select('raycaster');
-	private pointer = this.store.select('pointer');
 
 	private effectComposer = inject(NgtpEffectComposer);
 
-	private projectedPosition = new Vector3();
-	private mouse2d = new Vector2();
+	private effectOptions = omit(this.options, ['position', 'followMouse', 'smoothTime']);
+	private position = vector3(this.options, 'position');
 
-	effect = computed(() => {
-		const { position: _, followMouse: __, smoothTime: ___, ...options } = this.options();
-		return new LensFlareEffect(options);
-	});
+	private projectedPosition = new THREE.Vector3();
+	private mouse2d = new THREE.Vector2();
+
+	protected effect = computed(() => new LensFlareEffect(this.effectOptions()));
 
 	constructor() {
 		effect(() => {
-			const [lensFlareEffect, viewport] = [this.effect(), this.viewport()];
+			const [lensFlareEffect, width, height] = [
+				this.effect(),
+				this.store.viewport.width(),
+				this.store.viewport.height(),
+			];
 			const iResolution = lensFlareEffect.uniforms.get('iResolution');
 			if (iResolution) {
-				iResolution.value.x = viewport.width;
-				iResolution.value.y = viewport.height;
+				iResolution.value.x = width;
+				iResolution.value.y = height;
 			}
 		});
 
@@ -179,12 +180,13 @@ export class NgtpLensFlare {
 			const [effect] = [this.effect()];
 			if (!effect) return;
 
-			const [{ followMouse, position, smoothTime }, pointer, camera, scene, raycaster] = [
+			const [{ followMouse, smoothTime }, position, pointer, camera, scene, raycaster] = [
 				this.options(),
-				this.pointer(),
+				this.position(),
+				this.store.snapshot.pointer,
 				this.effectComposer.camera(),
 				this.effectComposer.scene(),
-				this.raycaster(),
+				this.store.snapshot.raycaster,
 			];
 
 			const uLensPosition = effect.uniforms.get('lensPosition');
@@ -211,11 +213,15 @@ export class NgtpLensFlare {
 				if (object) {
 					if (object.userData?.['lensflare'] === 'no-occlusion') {
 						target = 0;
-					} else if (object instanceof Mesh) {
-						if (object.material.uniforms?._transmission?.value > 0.2) {
+					} else if (is.three<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(object, 'isMesh')) {
+						if (object.material.uniforms?.['_transmission']?.value > 0.2) {
 							//Check for MeshTransmissionMaterial
 							target = 0.2;
-						} else if (object.material._transmission && object.material._transmission > 0.2) {
+						} else if (
+							'_transmission' in object.material &&
+							typeof object.material._transmission === 'number' &&
+							object.material._transmission > 0.2
+						) {
 							//Check for MeshPhysicalMaterial with transmission setting
 							target = 0.2;
 						} else if (object.material.transparent) {

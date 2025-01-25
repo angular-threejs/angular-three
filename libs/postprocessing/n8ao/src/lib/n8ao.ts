@@ -13,7 +13,7 @@ import {
 import { applyProps, NgtArgs, pick } from 'angular-three';
 import { NgtpEffectComposer } from 'angular-three-postprocessing';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { ColorRepresentation } from 'three';
+import * as THREE from 'three';
 
 export interface NgtpN8AOOptions {
 	aoRadius: number;
@@ -25,7 +25,7 @@ export interface NgtpN8AOOptions {
 	aoSamples: number;
 	denoiseSamples: number;
 	denoiseRadius: number;
-	color: ColorRepresentation;
+	color: THREE.ColorRepresentation;
 	halfRes: boolean;
 	depthAwareUpsampling: boolean;
 	screenSpaceRadius: boolean;
@@ -78,7 +78,7 @@ export class NgtpN8AO {
 
 	private effectComposer = inject(NgtpEffectComposer);
 
-	effect = computed(() => {
+	protected effect = computed(() => {
 		const [scene, camera] = [this.effectComposer.scene(), this.effectComposer.camera()];
 		return new N8AOPostPass(scene, camera);
 	});

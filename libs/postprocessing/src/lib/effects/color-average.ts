@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, ColorAverageEffect } from 'postprocessing';
 
-extend({ ColorAverageEffect });
-
 @Component({
 	selector: 'ngtp-color-average',
 	template: `
@@ -21,4 +19,8 @@ export class NgtpColorAverage {
 		{ blendFunction: BlendFunction.NORMAL },
 		{ transform: mergeInputs({ blendFunction: BlendFunction.NORMAL }) },
 	);
+
+	constructor() {
+		extend({ ColorAverageEffect });
+	}
 }

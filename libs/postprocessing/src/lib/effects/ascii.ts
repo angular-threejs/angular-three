@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, e
 import { NgtArgs } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Effect } from 'postprocessing';
-import { CanvasTexture, Color, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three';
+import * as THREE from 'three';
 
 const fragment = /* language=glsl glsl */ `
 uniform sampler2D uCharacters;
@@ -63,12 +63,12 @@ export class ASCIIEffect extends Effect {
 		color = '#ffffff',
 		invert = false,
 	}: ASCIIEffectOptions = {}) {
-		const uniforms = new Map<string, Uniform>([
-			['uCharacters', new Uniform(new Texture())],
-			['uCellSize', new Uniform(cellSize)],
-			['uCharactersCount', new Uniform(characters.length)],
-			['uColor', new Uniform(new Color(color))],
-			['uInvert', new Uniform(invert)],
+		const uniforms = new Map<string, THREE.Uniform>([
+			['uCharacters', new THREE.Uniform(new THREE.Texture())],
+			['uCellSize', new THREE.Uniform(cellSize)],
+			['uCharactersCount', new THREE.Uniform(characters.length)],
+			['uColor', new THREE.Uniform(new THREE.Color(color))],
+			['uInvert', new THREE.Uniform(invert)],
 		]);
 
 		super('ASCIIEffect', fragment, { uniforms });
@@ -81,14 +81,21 @@ export class ASCIIEffect extends Effect {
 	}
 
 	/** Draws the characters on a Canvas and returns a texture */
-	public createCharactersTexture(characters: string, font: string, fontSize: number): Texture {
+	public createCharactersTexture(characters: string, font: string, fontSize: number): THREE.Texture {
 		const canvas = document.createElement('canvas');
 		const SIZE = 1024;
 		const MAX_PER_ROW = 16;
 		const CELL = SIZE / MAX_PER_ROW;
 
 		canvas.width = canvas.height = SIZE;
-		const texture = new CanvasTexture(canvas, undefined, RepeatWrapping, RepeatWrapping, NearestFilter, NearestFilter);
+		const texture = new THREE.CanvasTexture(
+			canvas,
+			undefined,
+			THREE.RepeatWrapping,
+			THREE.RepeatWrapping,
+			THREE.NearestFilter,
+			THREE.NearestFilter,
+		);
 		const context = canvas.getContext('2d');
 
 		if (!context) {
@@ -133,7 +140,8 @@ const defaultOptions: ASCIIEffectOptions = {
 })
 export class NgtpASCII {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	effect = computed(() => new ASCIIEffect(this.options()));
+
+	protected effect = computed(() => new ASCIIEffect(this.options()));
 
 	constructor() {
 		effect((onCleanup) => {

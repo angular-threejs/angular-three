@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { BrightnessContrastEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ BrightnessContrastEffect });
-
 export type BrightnessEffectOptions = NonNullable<ConstructorParameters<typeof BrightnessContrastEffect>[0]>;
 
 @Component({
@@ -21,6 +19,10 @@ export type BrightnessEffectOptions = NonNullable<ConstructorParameters<typeof B
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpBrightnessContrast {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<BrightnessEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ BrightnessContrastEffect });
+	}
 }

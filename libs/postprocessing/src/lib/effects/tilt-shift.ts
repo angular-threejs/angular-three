@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, TiltShiftEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
-extend({ TiltShiftEffect });
-
 export type TiltShiftEffectOptions = Partial<NonNullable<ConstructorParameters<typeof TiltShiftEffect>[0]>>;
 
 @Component({
@@ -22,6 +20,10 @@ export type TiltShiftEffectOptions = Partial<NonNullable<ConstructorParameters<t
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.ADD })],
 })
 export class NgtpTiltShift {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<TiltShiftEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ TiltShiftEffect });
+	}
 }

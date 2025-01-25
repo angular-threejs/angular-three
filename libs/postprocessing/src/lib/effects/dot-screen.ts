@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { DotScreenEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ DotScreenEffect });
-
 export type DotScreenEffectOptions = Partial<NonNullable<ConstructorParameters<typeof DotScreenEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type DotScreenEffectOptions = Partial<NonNullable<ConstructorParameters<t
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpDotScreen {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<DotScreenEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ DotScreenEffect });
+	}
 }

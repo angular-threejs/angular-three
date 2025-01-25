@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, BloomEffect, BloomEffectOptions } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
-extend({ BloomEffect });
-
 @Component({
 	selector: 'ngtp-bloom',
 	template: `
@@ -20,6 +18,11 @@ extend({ BloomEffect });
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.ADD })],
 })
 export class NgtpBloom {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<BloomEffectOptions, 'blendFunction'>);
+
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ BloomEffect });
+	}
 }

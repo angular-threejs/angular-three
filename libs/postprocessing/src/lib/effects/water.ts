@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
-import { Uniform } from 'three';
+import * as THREE from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
 const WaterShader = {
@@ -25,14 +25,12 @@ export class WaterEffect extends Effect {
 		super('WaterEffect', WaterShader.fragmentShader, {
 			blendFunction,
 			attributes: EffectAttribute.CONVOLUTION,
-			uniforms: new Map<string, Uniform<number | number[]>>([['factor', new Uniform(factor)]]),
+			uniforms: new Map<string, THREE.Uniform<number | number[]>>([['factor', new THREE.Uniform(factor)]]),
 		});
 	}
 }
 
 export type WaterEffectOptions = Partial<NonNullable<ConstructorParameters<typeof WaterEffect>[0]>>;
-
-extend({ WaterEffect });
 
 @Component({
 	selector: 'ngtp-water',
@@ -49,6 +47,10 @@ extend({ WaterEffect });
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.NORMAL })],
 })
 export class NgtpWater {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<WaterEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ WaterEffect });
+	}
 }

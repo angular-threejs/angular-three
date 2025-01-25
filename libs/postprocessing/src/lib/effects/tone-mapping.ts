@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { ToneMappingEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ ToneMappingEffect });
-
 export type ToneMappingEffectOptions = NonNullable<ConstructorParameters<typeof ToneMappingEffect>[0]>;
 
 @Component({
@@ -21,6 +19,10 @@ export type ToneMappingEffectOptions = NonNullable<ConstructorParameters<typeof 
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpToneMapping {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<ToneMappingEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ ToneMappingEffect });
+	}
 }

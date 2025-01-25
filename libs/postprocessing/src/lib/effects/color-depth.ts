@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { ColorDepthEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ ColorDepthEffect });
-
 export type ColorDepthEffectOptions = Partial<NonNullable<ConstructorParameters<typeof ColorDepthEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type ColorDepthEffectOptions = Partial<NonNullable<ConstructorParameters<
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpColorDepth {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<ColorDepthEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ ColorDepthEffect });
+	}
 }

@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { SepiaEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ SepiaEffect });
-
 export type SepiaEffectOptions = Partial<NonNullable<ConstructorParameters<typeof SepiaEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type SepiaEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpSepia {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<SepiaEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ SepiaEffect });
+	}
 }

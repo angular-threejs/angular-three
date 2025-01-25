@@ -12,11 +12,11 @@ import {
 import { injectStore, NgtArgs, NgtSelection, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { OutlineEffect } from 'postprocessing';
-import { Object3D } from 'three';
+import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
 export type NgtpOutlineOptions = ConstructorParameters<typeof OutlineEffect>[2] & {
-	selection?: Array<Object3D | ElementRef<Object3D>>;
+	selection?: Array<THREE.Object3D | ElementRef<THREE.Object3D>>;
 	selectionLayer: number;
 };
 
@@ -39,7 +39,6 @@ export class NgtpOutline {
 	private ngtSelection = inject(NgtSelection, { optional: true });
 	private effectComposer = inject(NgtpEffectComposer);
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
 
 	private selection = pick(this.options, 'selection');
 	private selectionLayer = pick(this.options, 'selectionLayer');
@@ -125,7 +124,7 @@ export class NgtpOutline {
 		});
 
 		effect(() => {
-			const [effect, invalidate, selectionLayer] = [this.effect(), this.invalidate(), this.selectionLayer()];
+			const [effect, invalidate, selectionLayer] = [this.effect(), this.store.invalidate(), this.selectionLayer()];
 			effect.selectionLayer = selectionLayer;
 			invalidate();
 		});
@@ -137,7 +136,7 @@ export class NgtpOutline {
 				if (this.selection() === undefined) {
 					throw new Error('[NGT PostProcessing]: ngtp-outline requires selection input or use NgtSelection');
 				}
-				const cleanup = this.handleSelectionChangeEffect(this.selection, this.effect, this.invalidate);
+				const cleanup = this.handleSelectionChangeEffect(this.selection, this.effect, this.store.invalidate);
 
 				onCleanup(() => {
 					cleanup?.();
@@ -148,7 +147,7 @@ export class NgtpOutline {
 			// NOTE: we run this effect if declarative NgtSelection is enabled
 			const selectionEnabled = this.ngtSelection.enabled();
 			if (!selectionEnabled) return;
-			const cleanup = this.handleSelectionChangeEffect(this.ngtSelection.selected, this.effect, this.invalidate);
+			const cleanup = this.handleSelectionChangeEffect(this.ngtSelection.selected, this.effect, this.store.invalidate);
 			onCleanup(() => {
 				cleanup?.();
 			});
@@ -156,7 +155,7 @@ export class NgtpOutline {
 	}
 
 	private handleSelectionChangeEffect(
-		selected: () => Array<Object3D | ElementRef<Object3D>> | undefined,
+		selected: () => Array<THREE.Object3D | ElementRef<THREE.Object3D>> | undefined,
 		_effect: () => OutlineEffect,
 		_invalidate: () => () => void,
 	) {
@@ -165,7 +164,7 @@ export class NgtpOutline {
 
 		const [effect, invalidate] = [_effect(), _invalidate()];
 
-		const objects: Object3D[] = [];
+		const objects: THREE.Object3D[] = [];
 		for (const el of selection) {
 			const obj = resolveRef(el);
 			if (!obj) continue;

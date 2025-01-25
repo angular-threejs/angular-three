@@ -27,6 +27,11 @@ export class NgtpGlitch {
 
 	private active = pick(this.options, 'active');
 	private mode = pick(this.options, 'mode');
+	private ratio = pick(this.options, 'ratio');
+	private dtSize = pick(this.options, 'dtSize');
+	private columns = pick(this.options, 'columns');
+	private blendFunction = pick(this.options, 'blendFunction');
+	private perturbationMap = pick(this.options, 'perturbationMap');
 
 	private delay = vector2(this.options, 'delay');
 	private duration = vector2(this.options, 'duration');
@@ -34,32 +39,30 @@ export class NgtpGlitch {
 	private strength = vector2(this.options, 'strength');
 
 	private store = injectStore();
-	private invalidate = this.store.select('invalidate');
 
-	effect = computed(() => {
-		const [
-			{ ratio, dtSize, columns, blendFunction, perturbationMap },
-			delay,
-			duration,
-			chromaticAberrationOffset,
-			strength,
-		] = [this.options(), this.delay(), this.duration(), this.chromaticAberrationOffset(), this.strength()];
-		return new GlitchEffect({
-			ratio,
-			dtSize,
-			columns,
-			blendFunction,
-			perturbationMap,
-			delay,
-			duration,
-			chromaticAberrationOffset,
-			strength,
-		});
-	});
+	effect = computed(
+		() =>
+			new GlitchEffect({
+				ratio: this.ratio(),
+				dtSize: this.dtSize(),
+				columns: this.columns(),
+				blendFunction: this.blendFunction(),
+				perturbationMap: this.perturbationMap(),
+				delay: this.delay(),
+				duration: this.duration(),
+				chromaticAberrationOffset: this.chromaticAberrationOffset(),
+				strength: this.strength(),
+			}),
+	);
 
 	constructor() {
 		effect(() => {
-			const [glitchEffect, invalidate, mode, active] = [this.effect(), this.invalidate(), this.mode(), this.active()];
+			const [glitchEffect, invalidate, mode, active] = [
+				this.effect(),
+				this.store.invalidate(),
+				this.mode(),
+				this.active(),
+			];
 			glitchEffect.mode = active ? mode || GlitchMode.SPORADIC : GlitchMode.DISABLED;
 			invalidate();
 		});

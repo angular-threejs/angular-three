@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
-import { NgtArgs, pick } from 'angular-three';
+import { NgtArgs, omit, pick } from 'angular-three';
 import { GridEffect } from 'postprocessing';
 
 type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
@@ -16,12 +16,10 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 })
 export class NgtpGrid {
 	options = input({} as GridOptions);
+	private effectOptions = omit(this.options, ['size']);
 	private size = pick(this.options, 'size');
 
-	effect = computed(() => {
-		const { size: _, ...options } = this.options();
-		return new GridEffect(options);
-	});
+	protected effect = computed(() => new GridEffect(this.effectOptions()));
 
 	constructor() {
 		effect(() => {

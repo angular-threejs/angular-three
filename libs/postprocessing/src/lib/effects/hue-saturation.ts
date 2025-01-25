@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { HueSaturationEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ HueSaturationEffect });
-
 export type HueSaturationEffectOptions = Partial<NonNullable<ConstructorParameters<typeof HueSaturationEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type HueSaturationEffectOptions = Partial<NonNullable<ConstructorParamete
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpHueSaturation {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<HueSaturationEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ HueSaturationEffect });
+	}
 }

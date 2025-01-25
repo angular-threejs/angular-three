@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { FXAAEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ FXAAEffect });
-
 export type FXAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof FXAAEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type FXAAEffectOptions = Partial<NonNullable<ConstructorParameters<typeof
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpFXAA {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<FXAAEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ FXAAEffect });
+	}
 }

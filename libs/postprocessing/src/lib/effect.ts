@@ -31,6 +31,6 @@ export class NgtpEffect {
 	opacity = input(this.defaultEffectOptions?.opacity);
 
 	private store = injectStore();
-	camera = this.store.select('camera');
-	invalidate = this.store.select('invalidate');
+	camera = this.store.camera;
+	invalidate = this.store.invalidate;
 }

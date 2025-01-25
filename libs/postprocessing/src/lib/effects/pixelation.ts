@@ -6,6 +6,7 @@ import { PixelationEffect } from 'postprocessing';
 export interface PixelationOptions {
 	granularity: number;
 }
+
 @Component({
 	selector: 'ngtp-pixelation',
 	template: `
@@ -19,7 +20,7 @@ export class NgtpPixelation {
 	options = input({ granularity: 5 } as PixelationOptions, { transform: mergeInputs({ granularity: 5 }) });
 	private granularity = pick(this.options, 'granularity');
 
-	effect = computed(() => new PixelationEffect(this.granularity()));
+	protected effect = computed(() => new PixelationEffect(this.granularity()));
 
 	constructor() {
 		effect((onCleanup) => {

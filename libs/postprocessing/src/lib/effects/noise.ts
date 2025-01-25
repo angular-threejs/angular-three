@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, NoiseEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
-extend({ NoiseEffect });
-
 export type NoiseEffectOptions = Partial<NonNullable<ConstructorParameters<typeof NoiseEffect>[0]>>;
 
 @Component({
@@ -22,6 +20,10 @@ export type NoiseEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.COLOR_DODGE })],
 })
 export class NgtpNoise {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<NoiseEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ NoiseEffect });
+	}
 }

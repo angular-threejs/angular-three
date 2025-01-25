@@ -3,8 +3,6 @@ import { NgtArgs, extend } from 'angular-three';
 import { VignetteEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
-extend({ VignetteEffect });
-
 export type VignetteEffectOptions = Partial<NonNullable<ConstructorParameters<typeof VignetteEffect>[0]>>;
 
 @Component({
@@ -21,6 +19,10 @@ export type VignetteEffectOptions = Partial<NonNullable<ConstructorParameters<ty
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpVignette {
-	effect = inject(NgtpEffect, { host: true });
 	options = input({} as Omit<VignetteEffectOptions, 'blendFunction'>);
+	protected effect = inject(NgtpEffect, { host: true });
+
+	constructor() {
+		extend({ VignetteEffect });
+	}
 }
