@@ -15,16 +15,16 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'render-texture',
-	// 	loadComponent: () => import('./render-texture/render-texture'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Render Texture',
-	// 			link: 'https://codesandbox.io/p/sandbox/0z8i2c',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'render-texture',
+		loadComponent: () => import('./render-texture/render-texture'),
+		data: {
+			credits: {
+				title: 'Render Texture',
+				link: 'https://codesandbox.io/p/sandbox/0z8i2c',
+			},
+		},
+	},
 	// {
 	// 	path: 'shaky',
 	// 	loadComponent: () => import('./shaky/shaky'),
