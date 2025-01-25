@@ -14,9 +14,9 @@ export function injectProgress(injector?: Injector) {
 		}>({ errors: [], active: false, progress: 0, item: '', loaded: 0, total: 0 });
 
 		const defaultOnStart = THREE.DefaultLoadingManager.onStart?.bind(THREE.DefaultLoadingManager);
-		const defaultOnLoad = THREE.DefaultLoadingManager.onLoad.bind(THREE.DefaultLoadingManager);
-		const defaultOnError = THREE.DefaultLoadingManager.onError.bind(THREE.DefaultLoadingManager);
-		const defaultOnProgress = THREE.DefaultLoadingManager.onProgress.bind(THREE.DefaultLoadingManager);
+		const defaultOnLoad = THREE.DefaultLoadingManager.onLoad?.bind(THREE.DefaultLoadingManager);
+		const defaultOnError = THREE.DefaultLoadingManager.onError?.bind(THREE.DefaultLoadingManager);
+		const defaultOnProgress = THREE.DefaultLoadingManager.onProgress?.bind(THREE.DefaultLoadingManager);
 
 		let saveLastTotalLoaded = 0;
 

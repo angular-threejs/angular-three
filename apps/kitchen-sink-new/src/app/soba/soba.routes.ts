@@ -35,16 +35,16 @@ const routes: Routes = [
 	// 		},
 	// 	},
 	// },
-	// {
-	// 	path: 'lod',
-	// 	loadComponent: () => import('./lod/lod'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'LOD w/ reusing geometry',
-	// 			link: 'https://pmndrs.github.io/examples/demos/re-using-geometry-and-level-of-detail',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'lod',
+		loadComponent: () => import('./lod/lod'),
+		data: {
+			credits: {
+				title: 'LOD w/ reusing geometry',
+				link: 'https://pmndrs.github.io/examples/demos/re-using-geometry-and-level-of-detail',
+			},
+		},
+	},
 	{
 		path: 'decal',
 		loadComponent: () => import('./decal/decal'),
