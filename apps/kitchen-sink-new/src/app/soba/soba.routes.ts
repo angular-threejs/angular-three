@@ -5,16 +5,16 @@ const routes: Routes = [
 		path: 'basic',
 		loadComponent: () => import('./basic/basic'),
 	},
-	// {
-	// 	path: 'hud',
-	// 	loadComponent: () => import('./hud/hud'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'HUD',
-	// 			link: 'https://pmndrs.github.io/examples/demos/viewcube',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'hud',
+		loadComponent: () => import('./hud/hud'),
+		data: {
+			credits: {
+				title: 'HUD',
+				link: 'https://pmndrs.github.io/examples/demos/viewcube',
+			},
+		},
+	},
 	// {
 	// 	path: 'render-texture',
 	// 	loadComponent: () => import('./render-texture/render-texture'),
