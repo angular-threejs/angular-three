@@ -153,17 +153,17 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'instanced-vertex-colors',
-	// 	loadComponent: () => import('./instanced-vertex-colors/instanced-vertex-colors'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Instanced Vertex Colors',
-	// 			link: 'https://pmndrs.github.io/examples/demos/instanced-vertex-colors',
-	// 			class: 'text-white',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'instanced-vertex-colors',
+		loadComponent: () => import('./instanced-vertex-colors/instanced-vertex-colors'),
+		data: {
+			credits: {
+				title: 'Instanced Vertex Colors',
+				link: 'https://pmndrs.github.io/examples/demos/instanced-vertex-colors',
+				class: 'text-white',
+			},
+		},
+	},
 	// {
 	// 	path: 'portal-shapes',
 	// 	loadComponent: () => import('./portal-shapes/portal-shapes'),
