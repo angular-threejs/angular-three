@@ -1,10 +1,10 @@
-import { Euler, Matrix4, Object3D, Quaternion, Vector3 } from 'three';
+import * as THREE from 'three';
 
-export const _quaternion = new Quaternion();
-export const _euler = new Euler();
-export const _vector3 = new Vector3();
-export const _object3d = new Object3D();
-export const _matrix4 = new Matrix4();
-export const _position = new Vector3();
-export const _rotation = new Quaternion();
-export const _scale = new Vector3();
+export const _quaternion = new THREE.Quaternion();
+export const _euler = new THREE.Euler();
+export const _vector3 = new THREE.Vector3();
+export const _object3d = new THREE.Object3D();
+export const _matrix4 = new THREE.Matrix4();
+export const _position = new THREE.Vector3();
+export const _rotation = new THREE.Quaternion();
+export const _scale = new THREE.Vector3();

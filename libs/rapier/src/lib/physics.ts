@@ -16,7 +16,7 @@ import {
 import RAPIER, { ColliderHandle, EventQueue, Rotation, Vector, World } from '@dimforge/rapier3d-compat';
 import { injectStore, pick, vector3 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { MathUtils, Quaternion, Vector3 } from 'three';
+import * as THREE from 'three';
 import { NgtrDebug } from './debug';
 import { NgtrFrameStepper } from './frame-stepper';
 import { _matrix4, _position, _rotation, _scale } from './shared';
@@ -86,8 +86,8 @@ export class NgtrPhysicsFallback {
 export class NgtrPhysics {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	content = contentChild.required(TemplateRef);
-	fallbackContent = contentChild(NgtrPhysicsFallback, { read: TemplateRef });
+	protected content = contentChild.required(TemplateRef);
+	protected fallbackContent = contentChild(NgtrPhysicsFallback, { read: TemplateRef });
 
 	protected updatePriority = pick(this.options, 'updatePriority');
 	protected updateLoop = pick(this.options, 'updateLoop');
@@ -104,8 +104,8 @@ export class NgtrPhysics {
 	private timeStep = pick(this.options, 'timeStep');
 	private interpolate = pick(this.options, 'interpolate');
 
-	paused = pick(this.options, 'paused');
-	debug = pick(this.options, 'debug');
+	private paused = pick(this.options, 'paused');
+	protected debug = pick(this.options, 'debug');
 	colliders = pick(this.options, 'colliders');
 
 	private vGravity = vector3(this.options, 'gravity');
@@ -116,7 +116,7 @@ export class NgtrPhysics {
 	protected rapierError = signal<string | null>(null);
 	rapier = this.rapierConstruct.asReadonly();
 
-	ready = computed(() => !!this.rapier());
+	protected ready = computed(() => !!this.rapier());
 	worldSingleton = computed(() => {
 		const rapier = this.rapier();
 		if (!rapier) return null;
@@ -203,7 +203,7 @@ export class NgtrPhysics {
 		 * Fixed timeStep simulation progression.
 		 * @see https://gafferongames.com/post/fix_your_timestep/
 		 */
-		const clampedDelta = MathUtils.clamp(delta, 0, 0.5);
+		const clampedDelta = THREE.MathUtils.clamp(delta, 0, 0.5);
 
 		const stepWorld = (innerDelta: number) => {
 			// Trigger beforeStep callbacks
@@ -264,15 +264,19 @@ export class NgtrPhysics {
 			}
 
 			// New states
-			let t = rigidBody.translation() as Vector3;
-			let r = rigidBody.rotation() as Quaternion;
+			let t = rigidBody.translation() as THREE.Vector3;
+			let r = rigidBody.rotation() as THREE.Quaternion;
 
 			let previousState = this.steppingState.previousState[handle];
 
 			if (previousState) {
 				// Get previous simulated world position
 				_matrix4
-					.compose(previousState.position as Vector3, rapierQuaternionToQuaternion(previousState.rotation), state.scale)
+					.compose(
+						previousState.position as THREE.Vector3,
+						rapierQuaternionToQuaternion(previousState.rotation),
+						state.scale,
+					)
 					.premultiply(state.invertedWorldMatrix)
 					.decompose(_position, _rotation, _scale);
 

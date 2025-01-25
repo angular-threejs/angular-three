@@ -1,6 +1,6 @@
 import { Quaternion as RapierQuaternion, Vector3 as RapierVector3 } from '@dimforge/rapier3d-compat';
-import { NgtEuler, NgtQuaternion, NgtVector3 } from 'angular-three';
-import { BufferGeometry, Euler, Mesh, Object3D, Vector3 } from 'three';
+import { is, NgtEuler, NgtQuaternion, NgtVector3 } from 'angular-three';
+import * as THREE from 'three';
 import { mergeVertices } from 'three-stdlib';
 import { _matrix4, _position, _quaternion, _rotation, _scale } from './shared';
 import { NgtrColliderOptions, NgtrColliderShape, NgtrRigidBodyAutoCollider, NgtrRigidBodyOptions } from './types';
@@ -69,18 +69,19 @@ export function vector3ToRapierVector(v: NgtVector3) {
 	if (typeof v === 'number') {
 		return new RapierVector3(v, v, v);
 	}
-	const vector = v as Vector3;
-	return new RapierVector3(vector.x, vector.y, vector.z);
+
+	return new RapierVector3(v.x, v.y, v.z);
 }
 
 export function quaternionToRapierQuaternion(v: NgtQuaternion) {
 	if (Array.isArray(v)) {
 		return new RapierQuaternion(v[0], v[1], v[2], v[3]);
 	}
+
 	return new RapierQuaternion(v.x, v.y, v.z, v.w);
 }
 
-function isChildOfMeshCollider(child: Mesh) {
+function isChildOfMeshCollider(child: THREE.Mesh) {
 	let flag = false;
 	child.traverseAncestors((a) => {
 		if (a.userData['ngtRapierType'] === 'MeshCollider') flag = true;
@@ -96,17 +97,17 @@ const autoColliderMap = {
 };
 
 function getColliderArgsFromGeometry(
-	geometry: BufferGeometry,
+	geometry: THREE.BufferGeometry,
 	colliders: NgtrRigidBodyAutoCollider,
-): { args: unknown[]; offset: Vector3 } {
+): { args: unknown[]; offset: THREE.Vector3 } {
 	switch (colliders) {
 		case 'cuboid': {
 			geometry.computeBoundingBox();
 			const { boundingBox } = geometry;
-			const size = boundingBox!.getSize(new Vector3());
+			const size = boundingBox!.getSize(new THREE.Vector3());
 			return {
 				args: [size.x / 2, size.y / 2, size.z / 2],
-				offset: boundingBox!.getCenter(new Vector3()),
+				offset: boundingBox!.getCenter(new THREE.Vector3()),
 			};
 		}
 
@@ -127,7 +128,7 @@ function getColliderArgsFromGeometry(
 
 			return {
 				args: [clonedGeometry.attributes['position'].array as Float32Array, clonedGeometry.index?.array as Uint32Array],
-				offset: new Vector3(),
+				offset: new THREE.Vector3(),
 			};
 		}
 
@@ -135,15 +136,19 @@ function getColliderArgsFromGeometry(
 			const clonedGeometry = geometry.clone();
 			return {
 				args: [clonedGeometry.attributes['position'].array as Float32Array],
-				offset: new Vector3(),
+				offset: new THREE.Vector3(),
 			};
 		}
 	}
 
-	return { args: [], offset: new Vector3() };
+	return { args: [], offset: new THREE.Vector3() };
 }
 
-export function createColliderOptions(object: Object3D, options: NgtrRigidBodyOptions, ignoreMeshColliders = true) {
+export function createColliderOptions(
+	object: THREE.Object3D,
+	options: NgtrRigidBodyOptions,
+	ignoreMeshColliders = true,
+) {
 	const childColliderOptions: {
 		colliderOptions: NgtrColliderOptions;
 		args: unknown[];
@@ -155,19 +160,18 @@ export function createColliderOptions(object: Object3D, options: NgtrRigidBodyOp
 	object.updateWorldMatrix(true, false);
 	const invertedParentMatrixWorld = object.matrixWorld.clone().invert();
 
-	const colliderFromChild = (child: Object3D) => {
-		if ((child as Mesh).isMesh) {
-			if (ignoreMeshColliders && isChildOfMeshCollider(child as Mesh)) return;
+	const colliderFromChild = (child: THREE.Object3D) => {
+		if (is.three<THREE.Mesh>(child, 'isMesh')) {
+			if (ignoreMeshColliders && isChildOfMeshCollider(child)) return;
 
 			const worldScale = child.getWorldScale(_scale);
 			const shape = autoColliderMap[options.colliders || 'cuboid'] as NgtrColliderShape;
 			child.updateWorldMatrix(true, false);
 			_matrix4.copy(child.matrixWorld).premultiply(invertedParentMatrixWorld).decompose(_position, _rotation, _scale);
 
-			const rotationEuler = new Euler().setFromQuaternion(_rotation, 'XYZ');
+			const rotationEuler = new THREE.Euler().setFromQuaternion(_rotation, 'XYZ');
 
-			const { geometry } = child as Mesh;
-			const { args, offset } = getColliderArgsFromGeometry(geometry, options.colliders || 'cuboid');
+			const { args, offset } = getColliderArgsFromGeometry(child.geometry, options.colliders || 'cuboid');
 			const { mass, linearDamping, angularDamping, canSleep, ccd, gravityScale, softCcdPrediction, ...rest } = options;
 
 			childColliderOptions.push({

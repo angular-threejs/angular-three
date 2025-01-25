@@ -17,19 +17,21 @@ import {
 	applyProps,
 	extend,
 	getEmitter,
-	getLocalState,
+	getInstanceState,
 	hasListener,
+	is,
 	NgtEuler,
-	NgtObject3D,
 	NgtQuaternion,
+	NgtThreeElements,
 	NgtVector3,
 	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { Matrix4, Object3D, Vector3 } from 'three';
+import * as THREE from 'three';
+import { Object3D } from 'three';
 import { NgtrPhysics } from './physics';
 import { _matrix4, _position, _rotation, _scale, _vector3 } from './shared';
-import {
+import type {
 	NgtrColliderOptions,
 	NgtrColliderShape,
 	NgtrColliderState,
@@ -54,20 +56,18 @@ export class NgtrAnyCollider {
 	rotation = input<NgtEuler | undefined>([0, 0, 0]);
 	scale = input<NgtVector3 | undefined>([1, 1, 1]);
 	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
-	userData = input<NgtObject3D['userData'] | undefined>({});
-	name = input<NgtObject3D['name'] | undefined>();
+	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>(undefined);
+	name = input<NgtThreeElements['ngt-object3D']['name'] | undefined>(undefined);
 	options = input(colliderDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
-	private object3DParameters = computed(() => {
-		return {
-			position: this.position(),
-			rotation: this.rotation(),
-			scale: this.scale(),
-			quaternion: this.quaternion(),
-			userData: this.userData(),
-			name: this.name(),
-		};
-	});
+	private object3DParameters = computed(() => ({
+		position: this.position(),
+		rotation: this.rotation(),
+		scale: this.scale(),
+		quaternion: this.quaternion(),
+		userData: this.userData(),
+		name: this.name(),
+	}));
 
 	// TODO: change this to input required when Angular allows setting hostDirective input
 	shape = model<NgtrColliderShape | undefined>(undefined, { alias: 'ngtrCollider' });
@@ -94,7 +94,7 @@ export class NgtrAnyCollider {
 
 	private rigidBody = inject(NgtrRigidBody, { optional: true });
 	private physics = inject(NgtrPhysics);
-	private objectRef = inject<ElementRef<Object3D>>(ElementRef);
+	private objectRef = inject<ElementRef<THREE.Object3D>>(ElementRef);
 
 	private scaledArgs = computed(() => {
 		const [shape, args] = [
@@ -163,7 +163,7 @@ export class NgtrAnyCollider {
 	}
 
 	get worldScale() {
-		return this.objectRef.nativeElement.getWorldScale(new Vector3());
+		return this.objectRef.nativeElement.getWorldScale(new THREE.Vector3());
 	}
 
 	setShape(shape: NgtrColliderShape) {
@@ -181,11 +181,11 @@ export class NgtrAnyCollider {
 		const worldSingleton = this.physics.worldSingleton();
 		if (!worldSingleton) return;
 
-		const localState = getLocalState(this.objectRef.nativeElement);
-		if (!localState) return;
+		const instanceState = getInstanceState(this.objectRef.nativeElement);
+		if (!instanceState) return;
 
-		const parent = localState.parent();
-		if (!parent || !(parent as Object3D).isObject3D) return;
+		const parent = instanceState.parent();
+		if (!parent || !is.three<THREE.Object3D>(parent, 'isObject3D')) return;
 
 		const state = this.createColliderState(
 			collider,
@@ -356,13 +356,13 @@ export class NgtrAnyCollider {
 
 	private createColliderState(
 		collider: Collider,
-		object: Object3D,
-		rigidBodyObject?: Object3D | null,
+		object: THREE.Object3D,
+		rigidBodyObject?: THREE.Object3D | null,
 	): NgtrColliderState {
 		return { collider, worldParent: rigidBodyObject || undefined, object };
 	}
 
-	private scaleVertices(vertices: ArrayLike<number>, scale: Vector3) {
+	private scaleVertices(vertices: ArrayLike<number>, scale: THREE.Vector3) {
 		const scaledVerts = Array.from(vertices);
 
 		for (let i = 0; i < vertices.length / 3; i++) {
@@ -426,18 +426,16 @@ export class NgtrRigidBody {
 	rotation = input<NgtEuler | undefined>([0, 0, 0]);
 	scale = input<NgtVector3 | undefined>([1, 1, 1]);
 	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
-	userData = input<NgtObject3D['userData'] | undefined>({});
+	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>(undefined);
 	options = input(rigidBodyDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
-	private object3DParameters = computed(() => {
-		return {
-			position: this.position(),
-			rotation: this.rotation(),
-			scale: this.scale(),
-			quaternion: this.quaternion(),
-			userData: this.userData(),
-		};
-	});
+	private object3DParameters = computed(() => ({
+		position: this.position(),
+		rotation: this.rotation(),
+		scale: this.scale(),
+		quaternion: this.quaternion(),
+		userData: this.userData(),
+	}));
 
 	wake = output<void>();
 	sleep = output<void>();
@@ -464,7 +462,7 @@ export class NgtrRigidBody {
 	private angularVelocity = pick(this.options, 'angularVelocity');
 	private linearVelocity = pick(this.options, 'linearVelocity');
 
-	objectRef = inject<ElementRef<Object3D>>(ElementRef);
+	objectRef = inject<ElementRef<THREE.Object3D>>(ElementRef);
 	private physics = inject(NgtrPhysics);
 
 	private bodyType = computed(() => RIGID_BODY_TYPE_MAP[this.type()]);
@@ -491,12 +489,12 @@ export class NgtrRigidBody {
 		// if colliders on object is not set, use physics colliders
 		if (!options.colliders) options.colliders = physicsColliders;
 
-		const objectLocalState = getLocalState(this.objectRef.nativeElement);
-		if (!objectLocalState) return [];
+		const objectInstanceState = getInstanceState(this.objectRef.nativeElement);
+		if (!objectInstanceState) return [];
 
 		// track object's parent and non-object children
-		const [parent] = [objectLocalState.parent(), objectLocalState.nonObjects()];
-		if (!parent || !(parent as Object3D).isObject3D) return [];
+		const [parent] = [objectInstanceState.parent(), objectInstanceState.nonObjects()];
+		if (!parent || !is.three<THREE.Object3D>(parent, 'isObject3D')) return [];
 
 		return createColliderOptions(this.objectRef.nativeElement, options, true);
 	});
@@ -533,11 +531,11 @@ export class NgtrRigidBody {
 
 		const transformState = untracked(this.transformState);
 
-		const localState = getLocalState(this.objectRef.nativeElement);
-		if (!localState) return;
+		const instanceState = getInstanceState(this.objectRef.nativeElement);
+		if (!instanceState) return;
 
-		const parent = localState.parent();
-		if (!parent || !(parent as Object3D).isObject3D) return;
+		const parent = instanceState.parent();
+		if (!parent || !is.three<THREE.Object3D>(parent, 'isObject3D')) return;
 
 		const state = this.createRigidBodyState(body, this.objectRef.nativeElement);
 		this.physics.rigidBodyStates.set(body.handle, transformState ? transformState(state) : state);
@@ -649,9 +647,9 @@ export class NgtrRigidBody {
 	private createRigidBodyState(
 		rigidBody: RigidBody,
 		object: Object3D,
-		setMatrix?: (matrix: Matrix4) => void,
-		getMatrix?: (matrix: Matrix4) => Matrix4,
-		worldScale?: Vector3,
+		setMatrix?: (matrix: THREE.Matrix4) => void,
+		getMatrix?: (matrix: THREE.Matrix4) => THREE.Matrix4,
+		worldScale?: THREE.Vector3,
 		meshType: NgtrRigidBodyState['meshType'] = 'mesh',
 	) {
 		object.updateWorldMatrix(true, false);
@@ -662,10 +660,10 @@ export class NgtrRigidBody {
 			invertedWorldMatrix,
 			setMatrix: setMatrix
 				? setMatrix
-				: (matrix: Matrix4) => {
+				: (matrix: THREE.Matrix4) => {
 						object.matrix.copy(matrix);
 					},
-			getMatrix: getMatrix ? getMatrix : (matrix: Matrix4) => matrix.copy(object.matrix),
+			getMatrix: getMatrix ? getMatrix : (matrix: THREE.Matrix4) => matrix.copy(object.matrix),
 			scale: worldScale || object.getWorldScale(_scale).clone(),
 			isSleeping: false,
 			meshType,

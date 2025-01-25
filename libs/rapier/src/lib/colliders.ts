@@ -1,6 +1,6 @@
 import { Directive, effect, inject, input } from '@angular/core';
 import { NgtrAnyCollider } from './rigid-body';
-import {
+import type {
 	NgtrBallArgs,
 	NgtrCapsuleArgs,
 	NgtrConeArgs,

@@ -14,15 +14,17 @@ import {
 import {
 	applyProps,
 	extend,
-	getLocalState,
+	getInstanceState,
+	is,
 	NgtEuler,
-	NgtObject3D,
 	NgtQuaternion,
+	NgtThreeElements,
 	NgtVector3,
 	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { DynamicDrawUsage, InstancedMesh, Object3D } from 'three';
+import * as THREE from 'three';
+import { Object3D } from 'three';
 import { NgtrPhysics } from './physics';
 import { NgtrAnyCollider, NgtrRigidBody, rigidBodyDefaultOptions } from './rigid-body';
 import { NgtrRigidBodyOptions, NgtrRigidBodyState, NgtrRigidBodyType } from './types';
@@ -35,7 +37,7 @@ export interface NgtrInstancedRigidBodyOptions {
 	rotation?: NgtEuler;
 	scale?: NgtVector3;
 	quaternion?: NgtQuaternion;
-	userData?: NgtObject3D['userData'];
+	userData?: NgtThreeElements['ngt-object3D']['userData'];
 	options?: NgtrRigidBodyOptions;
 }
 
@@ -85,7 +87,7 @@ export class NgtrInstancedRigidBodies {
 	rotation = input<NgtEuler | undefined>([0, 0, 0]);
 	scale = input<NgtVector3 | undefined>([1, 1, 1]);
 	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
-	userData = input<NgtObject3D['userData'] | undefined>({});
+	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>({});
 	instances = input([], {
 		alias: 'ngtrInstancedRigidBodies',
 		transform: (value: Array<NgtrInstancedRigidBodyOptions> | '') => {
@@ -105,11 +107,11 @@ export class NgtrInstancedRigidBodies {
 		};
 	});
 
-	private instanceWrapperRef = viewChild.required<ElementRef<Object3D>>('instanceWrapper');
+	private instanceWrapperRef = viewChild.required<ElementRef<THREE.Object3D>>('instanceWrapper');
 	rigidBodyRefs = viewChildren(NgtrRigidBody);
 
 	private physics = inject(NgtrPhysics);
-	objectRef = inject<ElementRef<Object3D>>(ElementRef);
+	objectRef = inject<ElementRef<THREE.Object3D>>(ElementRef);
 
 	private colliders = pick(this.options, 'colliders');
 
@@ -117,15 +119,15 @@ export class NgtrInstancedRigidBodies {
 		const instanceWrapper = this.instanceWrapperRef().nativeElement;
 		if (!instanceWrapper) return null;
 
-		const localState = getLocalState(instanceWrapper);
-		if (!localState) return null;
+		const instanceState = getInstanceState(instanceWrapper);
+		if (!instanceState) return null;
 
 		// track object's children
-		localState.objects();
+		instanceState.objects();
 		const firstChild = instanceWrapper.children[0];
-		if (!firstChild || !(firstChild as InstancedMesh).isInstancedMesh) return null;
+		if (!firstChild || !(firstChild as THREE.InstancedMesh).isInstancedMesh) return null;
 
-		return firstChild as InstancedMesh;
+		return firstChild as THREE.InstancedMesh;
 	});
 
 	protected instancesOptions = computed(() => {
@@ -171,12 +173,12 @@ export class NgtrInstancedRigidBodies {
 		// if colliders on object is not set, use physics colliders
 		if (!options.colliders) options.colliders = physicsColliders;
 
-		const objectLocalState = getLocalState(this.objectRef.nativeElement);
-		if (!objectLocalState) return [];
+		const objectInstanceState = getInstanceState(this.objectRef.nativeElement);
+		if (!objectInstanceState) return [];
 
 		// track object's parent and non-object children
-		const [parent] = [objectLocalState.parent(), objectLocalState.nonObjects()];
-		if (!parent || !(parent as Object3D).isObject3D) return [];
+		const [parent] = [objectInstanceState.parent(), objectInstanceState.nonObjects()];
+		if (!parent || !is.three<THREE.Object3D>(parent, 'isObject3D')) return [];
 
 		return createColliderOptions(this.objectRef.nativeElement, options);
 	});
@@ -192,7 +194,7 @@ export class NgtrInstancedRigidBodies {
 		effect(() => {
 			const instancedMesh = this.instancedMesh();
 			if (!instancedMesh) return;
-			instancedMesh.instanceMatrix.setUsage(DynamicDrawUsage);
+			instancedMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 		});
 	}
 }

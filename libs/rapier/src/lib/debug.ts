@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { World } from '@dimforge/rapier3d-compat';
 import { extend, injectBeforeRender } from 'angular-three';
+import * as THREE from 'three';
 import { BufferAttribute, Group, LineBasicMaterial, LineSegments } from 'three';
 
 @Component({
@@ -26,7 +27,7 @@ import { BufferAttribute, Group, LineBasicMaterial, LineSegments } from 'three';
 export class NgtrDebug {
 	world = input.required<World | undefined>();
 
-	private lineSegmentsRef = viewChild.required<ElementRef<LineSegments>>('lineSegments');
+	private lineSegmentsRef = viewChild.required<ElementRef<THREE.LineSegments>>('lineSegments');
 
 	constructor() {
 		extend({ Group, LineSegments, LineBasicMaterial, BufferAttribute });

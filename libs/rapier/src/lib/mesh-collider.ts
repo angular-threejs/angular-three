@@ -7,10 +7,11 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { extend, getLocalState } from 'angular-three';
+import { extend, getInstanceState } from 'angular-three';
+import * as THREE from 'three';
 import { Object3D } from 'three';
 import { NgtrAnyCollider, NgtrRigidBody } from './rigid-body';
-import { NgtrRigidBodyAutoCollider } from './types';
+import type { NgtrRigidBodyAutoCollider } from './types';
 import { createColliderOptions } from './utils';
 
 @Component({
@@ -36,19 +37,19 @@ import { createColliderOptions } from './utils';
 export class NgtrMeshCollider {
 	colliders = input.required<NgtrRigidBodyAutoCollider>({ alias: 'ngtrMeshCollider' });
 
-	objectRef = inject<ElementRef<Object3D>>(ElementRef);
+	objectRef = inject<ElementRef<THREE.Object3D>>(ElementRef);
 	private rigidBody = inject(NgtrRigidBody);
 
 	protected childColliderOptions = computed(() => {
 		const rigidBodyOptions = this.rigidBody.options();
 		rigidBodyOptions.colliders = this.colliders();
 
-		const objectLocalState = getLocalState(this.objectRef.nativeElement);
-		if (!objectLocalState) return [];
+		const objectInstaceState = getInstanceState(this.objectRef.nativeElement);
+		if (!objectInstaceState) return [];
 
 		// track object's children
-		objectLocalState.nonObjects();
-		objectLocalState.objects();
+		objectInstaceState.nonObjects();
+		objectInstaceState.objects();
 
 		return createColliderOptions(this.objectRef.nativeElement, rigidBodyOptions, false);
 	});

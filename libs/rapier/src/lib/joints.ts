@@ -13,7 +13,7 @@ import {
 import { resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { NgtrPhysics } from './physics';
-import {
+import type {
 	NgtrFixedJointParams,
 	NgtrPrismaticJointParams,
 	NgtrRevoluteJointParams,

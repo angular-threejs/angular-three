@@ -1,4 +1,4 @@
-import {
+import type {
 	ActiveCollisionTypes,
 	CoefficientCombineRule,
 	Collider,
@@ -11,8 +11,8 @@ import {
 	Vector,
 	World,
 } from '@dimforge/rapier3d-compat';
-import { NgtObject3D, NgtQuaternion, NgtVector3 } from 'angular-three';
-import { Matrix4, Object3D, Vector3, Vector3Tuple } from 'three';
+import type { NgtQuaternion, NgtThreeElements, NgtVector3 } from 'angular-three';
+import type * as THREE from 'three';
 
 export type NgtrRigidBodyAutoCollider = 'ball' | 'cuboid' | 'hull' | 'trimesh' | false;
 
@@ -21,7 +21,7 @@ export interface NgtrPhysicsOptions {
 	 * Set the gravity of the physics world
 	 * @defaultValue [0, -9.81, 0]
 	 */
-	gravity: Vector3Tuple;
+	gravity: THREE.Vector3Tuple;
 
 	/**
 	 * Amount of penetration the engine wont attempt to correct
@@ -168,35 +168,35 @@ export interface NgtrPhysicsOptions {
 export interface NgtrRigidBodyState {
 	meshType: 'instancedMesh' | 'mesh';
 	rigidBody: RigidBody;
-	object: Object3D;
-	invertedWorldMatrix: Matrix4;
-	setMatrix: (matrix: Matrix4) => void;
-	getMatrix: (matrix: Matrix4) => Matrix4;
+	object: THREE.Object3D;
+	invertedWorldMatrix: THREE.Matrix4;
+	setMatrix: (matrix: THREE.Matrix4) => void;
+	getMatrix: (matrix: THREE.Matrix4) => THREE.Matrix4;
 	/**
 	 * Required for instanced rigid bodies.
 	 */
-	scale: Vector3;
+	scale: THREE.Vector3;
 	isSleeping: boolean;
 }
 export type NgtrRigidBodyStateMap = Map<RigidBody['handle'], NgtrRigidBodyState>;
 
 export interface NgtrColliderState {
 	collider: Collider;
-	object: Object3D;
+	object: THREE.Object3D;
 
 	/**
 	 * The parent of which this collider needs to base its
 	 * world position on, can be empty
 	 */
-	worldParent?: Object3D;
+	worldParent?: THREE.Object3D;
 }
 export type NgtrColliderStateMap = Map<Collider['handle'], NgtrColliderState>;
 
 export interface NgtrCollisionTarget {
 	rigidBody?: RigidBody;
 	collider: Collider;
-	rigidBodyObject?: Object3D;
-	colliderObject?: Object3D;
+	rigidBodyObject?: THREE.Object3D;
+	colliderObject?: THREE.Object3D;
 }
 
 export interface NgtrCollisionPayload {
@@ -280,7 +280,7 @@ export interface NgtrColliderOptions {
 	/**
 	 * Principal angular inertia of this rigid body
 	 */
-	principalAngularInertia?: Vector3Tuple;
+	principalAngularInertia?: THREE.Vector3Tuple;
 
 	/**
 	 * Restitution controls how elastic (aka. bouncy) a contact is. Le elasticity of a contact is controlled by the restitution coefficient
@@ -391,13 +391,13 @@ export interface NgtrRigidBodyOptions extends NgtrColliderOptions {
 	 * The initial linear velocity of this body.
 	 * @defaultValue [0,0,0]
 	 */
-	linearVelocity: Vector3Tuple;
+	linearVelocity: THREE.Vector3Tuple;
 
 	/**
 	 * The initial angular velocity of this body.
 	 * @defaultValue [0,0,0]
 	 */
-	angularVelocity: Vector3Tuple;
+	angularVelocity: THREE.Vector3Tuple;
 
 	/**
 	 * The scaling factor applied to the gravity affecting the rigid-body.
@@ -438,12 +438,12 @@ export interface NgtrRigidBodyOptions extends NgtrColliderOptions {
 	/**
 	 * Initial position of the RigidBody
 	 */
-	position?: NgtObject3D['position'];
+	position?: NgtThreeElements['ngt-object3D']['position'];
 
 	/**
 	 * Initial rotation of the RigidBody
 	 */
-	rotation?: NgtObject3D['rotation'];
+	rotation?: NgtThreeElements['ngt-object3D']['rotation'];
 
 	/**
 	 * Automatically generate colliders based on meshes inside this
@@ -525,7 +525,7 @@ export interface NgtrRigidBodyOptions extends NgtrColliderOptions {
 	/**
 	 * Passed down to the object3d representing this collider.
 	 */
-	userData?: NgtObject3D['userData'];
+	userData?: NgtThreeElements['ngt-object3D']['userData'];
 
 	/**
 	 * Include invisible objects on the collider creation estimation.
