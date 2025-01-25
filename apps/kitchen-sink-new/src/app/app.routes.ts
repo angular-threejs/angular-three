@@ -1,12 +1,12 @@
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
-	// {
-	// 	path: 'cannon',
-	// 	loadComponent: () => import('./cannon/cannon'),
-	// 	loadChildren: () => import('./cannon/cannon.routes'),
-	// 	title: 'Cannon - Angular Three Demo',
-	// },
+	{
+		path: 'cannon',
+		loadComponent: () => import('./cannon/cannon'),
+		loadChildren: () => import('./cannon/cannon.routes'),
+		title: 'Cannon - Angular Three Demo',
+	},
 	{
 		path: 'postprocessing',
 		loadComponent: () => import('./postprocessing/postprocessing'),
