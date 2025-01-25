@@ -208,7 +208,7 @@ const routes: Routes = [
 	},
 	{
 		path: '',
-		redirectTo: 'aquarium',
+		redirectTo: 'stars',
 		pathMatch: 'full',
 	},
 ];

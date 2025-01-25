@@ -360,6 +360,11 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		const pRS = parent.__ngt_renderer__;
+
+		if (!pRS) {
+			return this.delegateRenderer.removeChild(parent, oldChild, isHostElement);
+		}
+
 		const childIndex = pRS[NgtRendererClassId.children].indexOf(oldChild);
 		if (childIndex >= 0) {
 			// disassociate oldChild from parent children

@@ -1,9 +1,10 @@
 import {
-	Attribute,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
+	HostAttributeToken,
+	inject,
 	input,
 	signal,
 	viewChild,
@@ -57,8 +58,9 @@ export class Box {
 	position = input<NgtVector3>(0);
 	color = input('turquoise');
 
-	constructor(@Attribute('context') context: string) {
+	constructor() {
 		const store = injectStore();
+		const context = inject(new HostAttributeToken('context'), { optional: true });
 		console.log({ context, store: store.snapshot.id, previous: store.snapshot.previousRoot });
 	}
 
@@ -97,6 +99,8 @@ export class NestedBox {
 @Component({
 	selector: 'app-scene',
 	template: `
+		<ngt-color attach="background" *args="['#303030']" />
+
 		<ngt-ambient-light [intensity]="Math.PI" />
 		<ngt-directional-light [position]="5" [intensity]="Math.PI" />
 
@@ -109,81 +113,81 @@ export class NestedBox {
 
 			<ngt-primitive *args="[mesh]" [parameters]="{ position: [2, 0, 0] }" />
 
-			<!--			<app-nested-box [position]="[-3, 0, 0]" />-->
+			<app-nested-box [position]="[-3, 0, 0]" />
 
-			<!--			&lt;!&ndash; three element under condition &ndash;&gt;-->
-			<!--			@if (show()) {-->
-			<!--				<ngt-mesh [position]="[3, 0, 0]">-->
-			<!--					<ngt-icosahedron-geometry />-->
-			<!--					<ngt-mesh-normal-material />-->
-			<!--				</ngt-mesh>-->
-			<!--			}-->
+			<!-- three element under condition -->
+			@if (show()) {
+				<ngt-mesh [position]="[3, 0, 0]">
+					<ngt-icosahedron-geometry />
+					<ngt-mesh-normal-material />
+				</ngt-mesh>
+			}
 
-			<!--			&lt;!&ndash; component wrapping three elemnent &ndash;&gt;-->
-			<!--			<app-box [position]="[1, 0, 0]" />-->
+			<!-- component wrapping three elemnent -->
+			<app-box [position]="[1, 0, 0]" />
 
-			<!--			&lt;!&ndash; with input for default content &ndash;&gt;-->
-			<!--			<app-box [position]="[-1, 0, 0]" color="red" />-->
+			<!-- with input for default content -->
+			<app-box [position]="[-1, 0, 0]" color="red" />
 
-			<!--			&lt;!&ndash; with custom ng content &ndash;&gt;-->
-			<!--			<app-box [position]="[0, 1, 0]">-->
-			<!--				<ngt-mesh-standard-material color="green" />-->
-			<!--			</app-box>-->
+			<!-- with custom ng content -->
+			<app-box [position]="[0, 1, 0]">
+				<ngt-mesh-standard-material color="green" />
+			</app-box>
 
-			<!--			&lt;!&ndash; with property binding for input for default content &ndash;&gt;-->
-			<!--			<app-box [position]="[0, -1, 0]" [color]="color()" />-->
+			<!-- with property binding for input for default content -->
+			<app-box [position]="[0, -1, 0]" [color]="color()" />
 
-			<!--			&lt;!&ndash; component under condition &ndash;&gt;-->
-			<!--			@if (show()) {-->
-			<!--				<app-box [position]="[1, 1, 0]">-->
-			<!--					@if (show()) {-->
-			<!--						<ngt-mesh-phong-material color="yellow" />-->
-			<!--					}-->
-			<!--				</app-box>-->
-			<!--			}-->
+			<!-- component under condition -->
+			@if (show()) {
+				<app-box [position]="[1, 1, 0]">
+					@if (show()) {
+						<ngt-mesh-phong-material color="yellow" />
+					}
+				</app-box>
+			}
 
-			<!--			&lt;!&ndash; component with component as content &ndash;&gt;-->
-			<!--			<app-box [position]="[-1, -1, 0]" color="brown" context="in root">-->
-			<!--				<app-box data-children [position]="[-0.5, -0.5, 0]" color="pink" context="in box content in root" />-->
-			<!--			</app-box>-->
+			<!-- component with component as content -->
+			<app-box [position]="[-1, -1, 0]" color="brown" context="in root">
+				<app-box data-children [position]="[-0.5, -0.5, 0]" color="pink" context="in box content in root" />
+			</app-box>
 
-			<!--			&lt;!&ndash; component with both content projection slots &ndash;&gt;-->
-			<!--			<app-box [position]="[-1, 1, 0]">-->
-			<!--				<ngt-mesh-lambert-material color="orange" />-->
-			<!--				<app-box data-children [position]="[-0.5, 0.5, 0]" color="skyblue" />-->
-			<!--			</app-box>-->
+			<!-- component with both content projection slots -->
+			<app-box [position]="[-1, 1, 0]">
+				<ngt-mesh-lambert-material color="orange" />
+				<app-box data-children [position]="[-0.5, 0.5, 0]" color="skyblue" />
+			</app-box>
 
-			<!--			&lt;!&ndash; component with conditional content slots &ndash;&gt;-->
-			<!--			<app-box [position]="[1, -1, 0]">-->
-			<!--				@if (true) {-->
-			<!--					<ngt-mesh-normal-material />-->
-			<!--				}-->
+			<!-- component with conditional content slots -->
+			<app-box [position]="[1, -1, 0]">
+				@if (true) {
+					<ngt-mesh-normal-material />
+				}
 
-			<!--				@if (show()) {-->
-			<!--					<app-box data-children [position]="[0.5, -0.5, 0]" color="black" />-->
-			<!--				}-->
-			<!--			</app-box>-->
+				@if (show()) {
+					<app-box data-children [position]="[0.5, -0.5, 0]" color="black" />
+				}
+			</app-box>
 
-			<!--			&lt;!&ndash; component with conditional template &ndash;&gt;-->
-			<!--			<app-condition-box [position]="[0, 2, 0]" />-->
+			<!-- component with conditional template -->
+			<app-condition-box [position]="[0, 2, 0]" />
 
-			<!--			&lt;!&ndash; component with conditional template under condition &ndash;&gt;-->
-			<!--			@if (show()) {-->
-			<!--				<app-condition-box [position]="[0, -2, 0]" />-->
-			<!--			}-->
+			<!-- component with conditional template under condition -->
+			@if (show()) {
+				<app-condition-box [position]="[0, -2, 0]" />
+			}
 		</ngt-group>
 
 		<!-- portal -->
-		<!--		<ngt-portal [container]="virtualScene">-->
-		<!--			<ngt-group *portalContent>-->
-		<!--				&lt;!&ndash; component inside portal &ndash;&gt;-->
-		<!--				<app-box context="in portal" />-->
+		<ngt-portal [container]="virtualScene">
+			<ngt-group *portalContent>
+				<!-- component inside portal -->
+				<app-box context="in portal" />
 
-		<!--				@if (show()) {-->
-		<!--					<app-box context="in portal in condition" />-->
-		<!--				}-->
-		<!--			</ngt-group>-->
-		<!--		</ngt-portal>-->
+				@if (show()) {
+					<app-box context="in portal in condition" />
+				}
+			</ngt-group>
+		</ngt-portal>
 	`,
 	imports: [NgtArgs, Box, ConditionBox, NgtPortalDeclarations, NestedBox],
 	changeDetection: ChangeDetectionStrategy.OnPush,
