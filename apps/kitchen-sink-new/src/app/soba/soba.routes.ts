@@ -69,17 +69,17 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'stars',
-	// 	loadComponent: () => import('./stars/stars'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Stars',
-	// 			link: 'https://pmndrs.github.io/examples/demos/gatsby-stars',
-	// 			class: 'text-white',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'stars',
+		loadComponent: () => import('./stars/stars'),
+		data: {
+			credits: {
+				title: 'Stars',
+				link: 'https://pmndrs.github.io/examples/demos/gatsby-stars',
+				class: 'text-white',
+			},
+		},
+	},
 	{
 		path: 'skydiving',
 		loadComponent: () => import('./skydiving/skydiving'),

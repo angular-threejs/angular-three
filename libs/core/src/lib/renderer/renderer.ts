@@ -57,6 +57,9 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 		if (renderer) {
 			if (renderer instanceof NgtRenderer2) {
 				renderer.count += 1;
+				if (renderer.delegateRenderer !== delegateRenderer) {
+					renderer.delegateRenderer = delegateRenderer;
+				}
 			}
 			return renderer;
 		}
@@ -94,7 +97,7 @@ export class NgtRenderer2 implements Renderer2 {
 	private portalInjectors: Array<Injector> = [];
 
 	constructor(
-		private delegateRenderer: Renderer2,
+		public delegateRenderer: Renderer2,
 		private catalogue: Record<string, NgtConstructorRepresentation>,
 		private document: Document,
 		public count = 1,
