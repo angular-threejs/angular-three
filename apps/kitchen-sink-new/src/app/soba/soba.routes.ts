@@ -59,16 +59,16 @@ const routes: Routes = [
 	// 	path: 'html-chart',
 	// 	loadComponent: () => import('./html-chart/html-chart'),
 	// },
-	// {
-	// 	path: 'lowpoly-earth',
-	// 	loadComponent: () => import('./lowpoly-earth/lowpoly-earth'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Lowpoly Earth',
-	// 			link: 'https://pmndrs.github.io/examples/demos/html-markers',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'lowpoly-earth',
+		loadComponent: () => import('./lowpoly-earth/lowpoly-earth'),
+		data: {
+			credits: {
+				title: 'Lowpoly Earth',
+				link: 'https://pmndrs.github.io/examples/demos/html-markers',
+			},
+		},
+	},
 	// {
 	// 	path: 'stars',
 	// 	loadComponent: () => import('./stars/stars'),

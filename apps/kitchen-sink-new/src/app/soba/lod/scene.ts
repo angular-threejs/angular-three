@@ -24,8 +24,8 @@ interface BustGLTF extends GLTF {
 		<ngts-detailed [distances]="[0, 15, 25, 35, 100]" [options]="{ position: position(), rotation: rotation() }">
 			@for (level of gltfs() || []; track $index) {
 				<ngt-mesh
-					[receiveShadow]="true"
-					[castShadow]="true"
+					castShadow
+					receiveShadow
 					[geometry]="level.nodes.Mesh_0001.geometry"
 					[material]="level.materials.default"
 				>
@@ -64,7 +64,7 @@ export class LODBust {
 
 		<ngt-point-light [intensity]="0.5 * Math.PI" [decay]="0" />
 		<ngt-spot-light [position]="50" [intensity]="1.5 * Math.PI" castShadow [decay]="0" />
-		<ngts-environment [options]="{ preset: 'city' }" />
+		<ngts-environment [options]="{ preset: 'night' }" />
 		<ngts-bake-shadows />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
