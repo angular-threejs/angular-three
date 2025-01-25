@@ -143,16 +143,16 @@ const routes: Routes = [
 	// 		},
 	// 	},
 	// },
-	// {
-	// 	path: 'bruno-simons-20k',
-	// 	loadComponent: () => import('./bruno-simons-20k/bruno-simons-20k'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Bruno Simons 20k',
-	// 			link: 'https://pmndrs.github.io/examples/demos/bruno-simons-20k-challenge',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'bruno-simons-20k',
+		loadComponent: () => import('./bruno-simons-20k/bruno-simons-20k'),
+		data: {
+			credits: {
+				title: 'Bruno Simons 20k',
+				link: 'https://pmndrs.github.io/examples/demos/bruno-simons-20k-challenge',
+			},
+		},
+	},
 	// {
 	// 	path: 'instanced-vertex-colors',
 	// 	loadComponent: () => import('./instanced-vertex-colors/instanced-vertex-colors'),
