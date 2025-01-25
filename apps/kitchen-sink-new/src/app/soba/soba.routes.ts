@@ -25,16 +25,16 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'shaky',
-	// 	loadComponent: () => import('./shaky/shaky'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Camera Shake',
-	// 			link: 'https://pmndrs.github.io/examples/demos/camera-shake',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'shaky',
+		loadComponent: () => import('./shaky/shaky'),
+		data: {
+			credits: {
+				title: 'Camera Shake',
+				link: 'https://pmndrs.github.io/examples/demos/camera-shake',
+			},
+		},
+	},
 	{
 		path: 'lod',
 		loadComponent: () => import('./lod/lod'),
