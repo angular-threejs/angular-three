@@ -101,17 +101,17 @@ const routes: Routes = [
 	// 		},
 	// 	},
 	// },
-	// {
-	// 	path: 'instances',
-	// 	loadComponent: () => import('./instances/instances'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Instances',
-	// 			link: 'https://pmndrs.github.io/examples/demos/instances',
-	// 			class: 'p-2 rounded border border-black bg-white',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'instances',
+		loadComponent: () => import('./instances/instances'),
+		data: {
+			credits: {
+				title: 'Instances',
+				link: 'https://pmndrs.github.io/examples/demos/instances',
+				class: 'p-2 rounded border border-black bg-white',
+			},
+		},
+	},
 	// {
 	// 	path: 'inverted-stencil-buffer',
 	// 	loadComponent: () => import('./inverted-stencil-buffer/inverted-stencil-buffer'),
