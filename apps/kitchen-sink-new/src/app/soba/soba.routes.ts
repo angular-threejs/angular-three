@@ -90,17 +90,17 @@ const routes: Routes = [
 	// 		},
 	// 	},
 	// },
-	// {
-	// 	path: 'porsche',
-	// 	loadComponent: () => import('./porsche/porsche'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Porsche Lighting',
-	// 			link: 'https://pmndrs.github.io/examples/demos/building-live-envmaps',
-	// 			class: 'left-2 text-white',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'porsche',
+		loadComponent: () => import('./porsche/porsche'),
+		data: {
+			credits: {
+				title: 'Porsche Lighting',
+				link: 'https://pmndrs.github.io/examples/demos/building-live-envmaps',
+				class: 'left-2 text-white',
+			},
+		},
+	},
 	{
 		path: 'instances',
 		loadComponent: () => import('./instances/instances'),
