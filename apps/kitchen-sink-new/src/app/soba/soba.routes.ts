@@ -45,16 +45,16 @@ const routes: Routes = [
 	// 		},
 	// 	},
 	// },
-	// {
-	// 	path: 'decal',
-	// 	loadComponent: () => import('./decal/decal'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Iridescent Decals',
-	// 			link: 'https://pmndrs.github.io/examples/demos/iridescent-decals',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'decal',
+		loadComponent: () => import('./decal/decal'),
+		data: {
+			credits: {
+				title: 'Iridescent Decals',
+				link: 'https://pmndrs.github.io/examples/demos/iridescent-decals',
+			},
+		},
+	},
 	// {
 	// 	path: 'html-chart',
 	// 	loadComponent: () => import('./html-chart/html-chart'),
