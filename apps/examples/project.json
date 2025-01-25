@@ -1,26 +1,26 @@
 {
-	"name": "kitchen-sink-new",
+	"name": "examples",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"projectType": "application",
 	"prefix": "app",
-	"sourceRoot": "apps/kitchen-sink-new/src",
+	"sourceRoot": "apps/examples/src",
 	"tags": [],
 	"targets": {
 		"build": {
 			"executor": "@angular/build:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/apps/kitchen-sink-new",
-				"index": "apps/kitchen-sink-new/src/index.html",
-				"browser": "apps/kitchen-sink-new/src/main.ts",
-				"tsConfig": "apps/kitchen-sink-new/tsconfig.app.json",
+				"outputPath": "dist/apps/examples",
+				"index": "apps/examples/src/index.html",
+				"browser": "apps/examples/src/main.ts",
+				"tsConfig": "apps/examples/tsconfig.app.json",
 				"assets": [
 					{
 						"glob": "**/*",
-						"input": "apps/kitchen-sink-new/public"
+						"input": "apps/examples/public"
 					}
 				],
-				"styles": ["apps/kitchen-sink-new/src/styles.css"],
+				"styles": ["apps/examples/src/styles.css"],
 				"scripts": [],
 				"loader": {
 					".blob": "file",
@@ -59,10 +59,10 @@
 			"executor": "@angular/build:dev-server",
 			"configurations": {
 				"production": {
-					"buildTarget": "kitchen-sink-new:build:production"
+					"buildTarget": "examples:build:production"
 				},
 				"development": {
-					"buildTarget": "kitchen-sink-new:build:development"
+					"buildTarget": "examples:build:development"
 				}
 			},
 			"defaultConfiguration": "development"
@@ -70,7 +70,7 @@
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
 			"options": {
-				"buildTarget": "kitchen-sink-new:build"
+				"buildTarget": "examples:build"
 			}
 		},
 		"lint": {
