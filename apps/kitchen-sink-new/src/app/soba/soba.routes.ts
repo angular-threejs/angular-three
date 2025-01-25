@@ -133,16 +133,16 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'starbucks',
-	// 	loadComponent: () => import('./starbucks/starbucks'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Decal and Pivot Controls',
-	// 			link: 'https://codesandbox.io/p/sandbox/om2ff8',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'starbucks',
+		loadComponent: () => import('./starbucks/starbucks'),
+		data: {
+			credits: {
+				title: 'Decal and Pivot Controls',
+				link: 'https://codesandbox.io/p/sandbox/om2ff8',
+			},
+		},
+	},
 	{
 		path: 'bruno-simons-20k',
 		loadComponent: () => import('./bruno-simons-20k/bruno-simons-20k'),
