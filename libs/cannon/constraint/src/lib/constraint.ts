@@ -10,7 +10,7 @@ import {
 import { makeId, resolveRef } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Object3D } from 'three';
+import * as THREE from 'three';
 
 export interface NgtcConstraintApi {
 	disable: () => void;
@@ -44,7 +44,7 @@ export type NgtcConstraintOptions<TConstraintType extends 'Hinge' | ConstraintTy
 };
 
 function createInjectConstraint<TConstraint extends ConstraintTypes | 'Hinge'>(type: TConstraint) {
-	return <A extends Object3D = Object3D, B extends Object3D = Object3D>(
+	return <A extends THREE.Object3D = THREE.Object3D, B extends THREE.Object3D = THREE.Object3D>(
 		bodyA: ElementRef<A> | A | Signal<ElementRef<A> | A | undefined>,
 		bodyB: ElementRef<B> | B | Signal<ElementRef<B> | B | undefined>,
 		options?: NgtcConstraintOptions<TConstraint>,
@@ -53,8 +53,8 @@ function createInjectConstraint<TConstraint extends ConstraintTypes | 'Hinge'>(t
 
 function injectConstraint<
 	TConstraint extends ConstraintTypes | 'Hinge',
-	A extends Object3D = Object3D,
-	B extends Object3D = Object3D,
+	A extends THREE.Object3D = THREE.Object3D,
+	B extends THREE.Object3D = THREE.Object3D,
 >(
 	type: TConstraint,
 	bodyA: ElementRef<A> | A | Signal<ElementRef<A> | A | undefined>,

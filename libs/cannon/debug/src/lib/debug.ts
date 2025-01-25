@@ -1,18 +1,19 @@
 import { Directive, afterNextRender, inject, input } from '@angular/core';
 import { BodyProps, BodyShapeType, propsToBody } from '@pmndrs/cannon-worker-api';
-import { injectBeforeRender, injectStore } from 'angular-three';
+import { injectBeforeRender, injectStore, is } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { InstancedMesh, Matrix4, Object3D, Quaternion, Scene, Vector3 } from 'three';
+import * as THREE from 'three';
 
-const q = new Quaternion();
-const s = new Vector3(1, 1, 1);
-const v = new Vector3();
-const m = new Matrix4();
-function getMatrix(o: Object3D) {
-	if (o instanceof InstancedMesh) {
+const q = new THREE.Quaternion();
+const s = new THREE.Vector3(1, 1, 1);
+const v = new THREE.Vector3();
+const m = new THREE.Matrix4();
+
+function getMatrix(o: THREE.Object3D) {
+	if (is.three<THREE.InstancedMesh>(o, 'isInstancedMesh')) {
 		o.getMatrixAt(parseInt(o.uuid.split('/')[1]), m);
 		return m;
 	}
@@ -35,14 +36,14 @@ const defaultOptions: NgtcDebugInputs = {
 
 @Directive({ selector: 'ngtc-physics[debug]' })
 export class NgtcDebug {
-	private store = injectStore();
-	private physics = inject(NgtcPhysics);
-
 	debug = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private defaultScene = this.store.select('scene');
+	private physics = inject(NgtcPhysics);
 
-	private debuggerScene = new Scene();
+	private store = injectStore();
+	private defaultScene = this.store.scene;
+
+	private debuggerScene = new THREE.Scene();
 	private bodies: Body[] = [];
 	private bodyMap: Record<string, Body> = {};
 

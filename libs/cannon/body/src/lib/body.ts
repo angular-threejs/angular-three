@@ -10,11 +10,11 @@ import {
 	signal,
 } from '@angular/core';
 import { BodyShapeType } from '@pmndrs/cannon-worker-api';
-import { resolveRef } from 'angular-three';
+import { is, resolveRef } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { DynamicDrawUsage, InstancedMesh, Object3D } from 'three';
+import * as THREE from 'three';
 import { NgtcArgFn, NgtcBodyPropsMap, NgtcBodyPublicApi, NgtcGetByIndex } from './types';
 import { defaultTransformArgs, makeBodyApi, prepare, setupCollision } from './utils';
 
@@ -24,14 +24,14 @@ export interface NgtcBodyOptions<TShape extends BodyShapeType> {
 }
 
 function createInjectBody<TShape extends BodyShapeType>(type: TShape) {
-	return <TObject extends Object3D>(
+	return <TObject extends THREE.Object3D>(
 		getPropFn: NgtcGetByIndex<NgtcBodyPropsMap[TShape]>,
 		ref: ElementRef<TObject> | TObject | Signal<ElementRef<TObject> | TObject | undefined>,
 		options?: NgtcBodyOptions<TShape>,
 	) => injectBody<TShape, TObject>(type, getPropFn, ref, options);
 }
 
-function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
+function injectBody<TShape extends BodyShapeType, TObject extends THREE.Object3D>(
 	type: TShape,
 	getPropFn: NgtcGetByIndex<NgtcBodyPropsMap[TShape]>,
 	ref: ElementRef<TObject> | TObject | Signal<ElementRef<TObject> | TObject | undefined>,
@@ -77,11 +77,11 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 
 			const [uuid, props] = (() => {
 				let uuids: string[] = [];
-				let temp: Object3D;
-				if (object instanceof InstancedMesh) {
-					object.instanceMatrix.setUsage(DynamicDrawUsage);
+				let temp: THREE.Object3D;
+				if (is.three<THREE.InstancedMesh>(object, 'isInstancedMesh')) {
+					object.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 					uuids = new Array(object.count).fill(0).map((_, i) => `${object.uuid}/${i}`);
-					temp = new Object3D();
+					temp = new THREE.Object3D();
 				} else {
 					uuids = [object.uuid];
 				}
@@ -91,8 +91,8 @@ function injectBody<TShape extends BodyShapeType, TObject extends Object3D>(
 						const props = getPropFn(index);
 						if (temp) {
 							prepare(temp, props);
-							(object as unknown as InstancedMesh).setMatrixAt(index, temp.matrix);
-							(object as unknown as InstancedMesh).instanceMatrix.needsUpdate = true;
+							(object as unknown as THREE.InstancedMesh).setMatrixAt(index, temp.matrix);
+							(object as unknown as THREE.InstancedMesh).instanceMatrix.needsUpdate = true;
 						} else {
 							prepare(object, props);
 						}

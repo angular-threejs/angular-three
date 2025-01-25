@@ -20,22 +20,23 @@ import {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
+import { is } from 'angular-three';
 import { NgtcCannonEvents, NgtcPhysics } from 'angular-three-cannon';
-import { Euler, Object3D, Quaternion, Vector3 } from 'three';
+import * as THREE from 'three';
 import { NgtcWorkerApi } from './types';
 
 function capitalize<T extends string>(str: T): Capitalize<T> {
 	return (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
 }
 
-function getUUID(body: Object3D, index?: number) {
+function getUUID(body: THREE.Object3D, index?: number) {
 	const suffix = index === undefined ? '' : `/${index}`;
 	if (typeof body === 'function') return null;
 	return body && body && `${body.uuid}${suffix}`;
 }
 
-const e = new Euler();
-const q = new Quaternion();
+const e = new THREE.Euler();
+const q = new THREE.Quaternion();
 
 function quaternionToRotation(callback: (v: Triplet) => void) {
 	return (v: Quad) => callback(e.setFromQuaternion(q.fromArray(v)).toArray() as Triplet);
@@ -43,7 +44,7 @@ function quaternionToRotation(callback: (v: Triplet) => void) {
 
 let incrementingId = 0;
 export function createSubscribe<T extends SubscriptionName>(
-	body: Object3D,
+	body: THREE.Object3D,
 	worker: CannonWorkerAPI,
 	subscriptions: Subscriptions,
 	type: T,
@@ -62,11 +63,14 @@ export function createSubscribe<T extends SubscriptionName>(
 	};
 }
 
-function makeTriplet(v: Vector3 | Triplet): Triplet {
-	return v instanceof Vector3 ? [v.x, v.y, v.z] : v;
+function makeTriplet(v: THREE.Vector3 | Triplet): Triplet {
+	return is.three<THREE.Vector3>(v, 'isVector3') ? [v.x, v.y, v.z] : v;
 }
 
-export function prepare(object: Object3D, { position = [0, 0, 0], rotation = [0, 0, 0], userData = {} }: BodyProps) {
+export function prepare(
+	object: THREE.Object3D,
+	{ position = [0, 0, 0], rotation = [0, 0, 0], userData = {} }: BodyProps,
+) {
 	object.userData = userData;
 	object.position.set(...position);
 	object.rotation.set(...rotation);
@@ -82,7 +86,7 @@ export function setupCollision(
 }
 
 export function makeBodyApi(
-	body: Object3D,
+	body: THREE.Object3D,
 	worker: CannonWorkerAPI,
 	{ subscriptions, scaleOverrides }: Pick<NgtcPhysics, 'subscriptions' | 'scaleOverrides'>,
 ) {
@@ -101,7 +105,7 @@ export function makeBodyApi(
 	const makeQuaternion = (index?: number) => {
 		const type = 'quaternion';
 		return {
-			copy: ({ w, x, y, z }: Quaternion) => {
+			copy: ({ w, x, y, z }: THREE.Quaternion) => {
 				const uuid = getUUID(body, index);
 				uuid && worker.setQuaternion({ props: [x, y, z, w], uuid });
 			},
@@ -115,7 +119,7 @@ export function makeBodyApi(
 
 	const makeRotation = (index?: number) => {
 		return {
-			copy: ({ x, y, z }: Vector3 | Euler) => {
+			copy: ({ x, y, z }: THREE.Vector3 | THREE.Euler) => {
 				const uuid = getUUID(body, index);
 				uuid && worker.setRotation({ props: [x, y, z], uuid });
 			},
@@ -140,7 +144,7 @@ export function makeBodyApi(
 	const makeVec = (type: VectorName, index?: number) => {
 		const op: SetOpName<VectorName> = `set${capitalize(type)}`;
 		return {
-			copy: ({ x, y, z }: Vector3 | Euler) => {
+			copy: ({ x, y, z }: THREE.Vector3 | THREE.Euler) => {
 				const uuid = getUUID(body, index);
 				uuid && worker[op]({ props: [x, y, z], uuid });
 			},
@@ -199,7 +203,7 @@ export function makeBodyApi(
 			rotation: makeRotation(index),
 			scaleOverride(scale) {
 				const uuid = getUUID(body, index);
-				if (uuid) scaleOverrides[uuid] = new Vector3(...scale);
+				if (uuid) scaleOverrides[uuid] = new THREE.Vector3(...scale);
 			},
 			sleep() {
 				const uuid = getUUID(body, index);

@@ -14,9 +14,9 @@ import {
 	WorkerFrameMessage,
 	WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { injectBeforeRender, injectStore, pick } from 'angular-three';
+import { injectBeforeRender, injectStore, is, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { InstancedMesh, Matrix4, Object3D, Quaternion, QuaternionTuple, Vector3 } from 'three';
+import * as THREE from 'three';
 
 export interface NgtcCannonWorkerEvents {
 	collide: WorkerCollideEvent;
@@ -31,20 +31,20 @@ export type NgtcCannonWorker = CannonWorkerAPI & {
 	removeAllListeners: () => void;
 };
 
-const v = new Vector3();
-const s = new Vector3(1, 1, 1);
-const q = new Quaternion();
-const m = new Matrix4();
+const v = new THREE.Vector3();
+const s = new THREE.Vector3(1, 1, 1);
+const q = new THREE.Quaternion();
+const m = new THREE.Matrix4();
 
 function apply(
 	index: number,
 	positions: ArrayLike<number>,
 	quaternions: ArrayLike<number>,
 	scale = s,
-	object?: Object3D,
+	object?: THREE.Object3D,
 ) {
 	if (index !== undefined) {
-		m.compose(v.fromArray(positions, index * 3), q.fromArray(quaternions as QuaternionTuple, index * 4), scale);
+		m.compose(v.fromArray(positions, index * 3), q.fromArray(quaternions as THREE.QuaternionTuple, index * 4), scale);
 		if (object) {
 			object.matrixAutoUpdate = false;
 			object.matrix.copy(m);
@@ -66,7 +66,7 @@ type NgtcCallbackByType<T extends { type: string }> = {
 
 export type NgtcCannonEvents = Record<string, Partial<NgtcCallbackByType<NgtcCannonEvent>>>;
 
-export type ScaleOverrides = Record<string, Vector3>;
+export type ScaleOverrides = Record<string, THREE.Vector3>;
 
 export interface NgtcPhysicsOptions extends CannonWorkerProps {
 	isPaused?: boolean;
@@ -111,7 +111,7 @@ export class NgtcPhysics {
 	private iterations = pick(this.options, 'iterations');
 	private tolerance = pick(this.options, 'tolerance');
 
-	private invalidate = this.store.select('invalidate');
+	private invalidate = this.store.invalidate;
 	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator.
 	private cannonWorker = signal<CannonWorkerAPI>(null);
 
@@ -237,7 +237,7 @@ export class NgtcPhysics {
 		});
 		if (!active) return;
 		for (const ref of Object.values(refs).filter(unique())) {
-			if (ref instanceof InstancedMesh) {
+			if (is.three<THREE.InstancedMesh>(ref, 'isInstancedMesh')) {
 				for (let i = 0; i < ref.count; i++) {
 					const uuid = `${ref.uuid}/${i}`;
 					const index = bodies[uuid];

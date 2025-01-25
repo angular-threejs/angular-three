@@ -1,4 +1,4 @@
-import {
+import type {
 	AtomicName,
 	AtomicProps,
 	BodyProps,
@@ -15,7 +15,7 @@ import {
 	Triplet,
 	VectorName,
 } from '@pmndrs/cannon-worker-api';
-import { Euler, Quaternion, Vector3 } from 'three';
+import type * as THREE from 'three';
 
 export interface NgtcAtomicApi<K extends AtomicName> {
 	set: (value: AtomicProps[K]) => void;
@@ -23,13 +23,13 @@ export interface NgtcAtomicApi<K extends AtomicName> {
 }
 
 export interface NgtcQuaternionApi {
-	copy: ({ w, x, y, z }: Quaternion) => void;
+	copy: ({ w, x, y, z }: THREE.Quaternion) => void;
 	set: (x: number, y: number, z: number, w: number) => void;
 	subscribe: (callback: (value: Quad) => void) => () => void;
 }
 
 export interface NgtcVectorApi {
-	copy: ({ x, y, z }: Vector3 | Euler) => void;
+	copy: ({ x, y, z }: THREE.Vector3 | THREE.Euler) => void;
 	set: (x: number, y: number, z: number) => void;
 	subscribe: (callback: (value: Triplet) => void) => () => void;
 }
