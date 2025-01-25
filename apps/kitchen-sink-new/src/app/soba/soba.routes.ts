@@ -123,16 +123,16 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'simple-sound-analyser',
-	// 	loadComponent: () => import('./simple-sound-analyser/simple-sound-analyser'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Simple Sound Analyser',
-	// 			link: 'https://pmndrs.github.io/examples/demos/simple-audio-analyser',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'simple-sound-analyser',
+		loadComponent: () => import('./simple-sound-analyser/simple-sound-analyser'),
+		data: {
+			credits: {
+				title: 'Simple Sound Analyser',
+				link: 'https://pmndrs.github.io/examples/demos/simple-audio-analyser',
+			},
+		},
+	},
 	// {
 	// 	path: 'starbucks',
 	// 	loadComponent: () => import('./starbucks/starbucks'),
