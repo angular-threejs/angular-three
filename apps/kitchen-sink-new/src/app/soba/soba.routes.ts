@@ -164,16 +164,16 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'portal-shapes',
-	// 	loadComponent: () => import('./portal-shapes/portal-shapes'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Portal Shapes',
-	// 			link: 'https://pmndrs.github.io/examples/demos/portal-shapes',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'portal-shapes',
+		loadComponent: () => import('./portal-shapes/portal-shapes'),
+		data: {
+			credits: {
+				title: 'Portal Shapes',
+				link: 'https://pmndrs.github.io/examples/demos/portal-shapes',
+			},
+		},
+	},
 	{
 		path: 'backdrop-cable',
 		loadComponent: () => import('./backdrop-cable/backdrop-cable'),
