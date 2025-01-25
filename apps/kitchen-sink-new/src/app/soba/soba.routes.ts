@@ -112,17 +112,17 @@ const routes: Routes = [
 			},
 		},
 	},
-	// {
-	// 	path: 'inverted-stencil-buffer',
-	// 	loadComponent: () => import('./inverted-stencil-buffer/inverted-stencil-buffer'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'Inverted Stencil Buffer',
-	// 			link: 'https://pmndrs.github.io/examples/demos/inverted-stencil-buffer',
-	// 			class: 'left-2',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'inverted-stencil-buffer',
+		loadComponent: () => import('./inverted-stencil-buffer/inverted-stencil-buffer'),
+		data: {
+			credits: {
+				title: 'Inverted Stencil Buffer',
+				link: 'https://pmndrs.github.io/examples/demos/inverted-stencil-buffer',
+				class: 'left-2',
+			},
+		},
+	},
 	// {
 	// 	path: 'simple-sound-analyser',
 	// 	loadComponent: () => import('./simple-sound-analyser/simple-sound-analyser'),
