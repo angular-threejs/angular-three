@@ -13,12 +13,12 @@ export const appRoutes: Route[] = [
 		loadChildren: () => import('./postprocessing/postprocessing.routes'),
 		title: 'Postprocessing - Angular Three Demo',
 	},
-	// {
-	// 	path: 'soba',
-	// 	loadComponent: () => import('./soba/soba'),
-	// 	loadChildren: () => import('./soba/soba.routes'),
-	// 	title: 'Soba - Angular Three Demo',
-	// },
+	{
+		path: 'soba',
+		loadComponent: () => import('./soba/soba'),
+		loadChildren: () => import('./soba/soba.routes'),
+		title: 'Soba - Angular Three Demo',
+	},
 	{
 		path: 'rapier',
 		loadComponent: () => import('./rapier/rapier'),

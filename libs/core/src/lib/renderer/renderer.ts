@@ -287,7 +287,11 @@ export class NgtRenderer2 implements Renderer2 {
 			}
 
 			for (const platformChildNode of newChild['childNodes'] || []) {
-				if (!isRendererNode(platformChildNode)) continue;
+				if (
+					!isRendererNode(platformChildNode) ||
+					platformChildNode.__ngt_renderer__[NgtRendererClassId.type] !== 'platform'
+				)
+					continue;
 				this.appendChild(parent, platformChildNode);
 			}
 
