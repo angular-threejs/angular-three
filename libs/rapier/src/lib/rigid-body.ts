@@ -50,7 +50,7 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 	contactSkin: 0,
 };
 
-@Directive({ selector: 'ngt-object3D[ngtrCollider]' })
+@Directive({ selector: 'ngt-object3D[collider]' })
 export class NgtrAnyCollider {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);
 	rotation = input<NgtEuler | undefined>([0, 0, 0]);
@@ -70,7 +70,7 @@ export class NgtrAnyCollider {
 	}));
 
 	// TODO: change this to input required when Angular allows setting hostDirective input
-	shape = model<NgtrColliderShape | undefined>(undefined, { alias: 'ngtrCollider' });
+	shape = model<NgtrColliderShape | undefined>(undefined, { alias: 'collider' });
 	args = model<unknown[]>([]);
 
 	collisionEnter = output<NgtrCollisionEnterPayload>();
@@ -394,13 +394,13 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 };
 
 @Component({
-	selector: 'ngt-object3D[ngtrRigidBody]',
+	selector: 'ngt-object3D[rigidBody]',
 	exportAs: 'rigidBody',
 	template: `
 		<ng-content />
 		@for (childColliderOption of childColliderOptions(); track $index) {
 			<ngt-object3D
-				[ngtrCollider]="childColliderOption.shape"
+				[collider]="childColliderOption.shape"
 				[args]="childColliderOption.args"
 				[position]="childColliderOption.position"
 				[rotation]="childColliderOption.rotation"
@@ -416,7 +416,7 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 })
 export class NgtrRigidBody {
 	type = input('dynamic', {
-		alias: 'ngtrRigidBody',
+		alias: 'rigidBody',
 		transform: (value: NgtrRigidBodyType | '' | undefined) => {
 			if (value === '' || value === undefined) return 'dynamic' as NgtrRigidBodyType;
 			return value;

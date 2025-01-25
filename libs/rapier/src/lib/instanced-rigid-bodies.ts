@@ -44,7 +44,7 @@ export interface NgtrInstancedRigidBodyOptions {
 const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 
 @Component({
-	selector: 'ngt-object3D[ngtrInstancedRigidBodies]',
+	selector: 'ngt-object3D[instancedRigidBodies]',
 	exportAs: 'instancedRigidBodies',
 	template: `
 		<ngt-object3D #instanceWrapper>
@@ -53,7 +53,7 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 
 		@for (instance of instancesOptions(); track instance.key) {
 			<ngt-object3D
-				[ngtrRigidBody]="instance.type"
+				[rigidBody]="instance.type"
 				[options]="instance.options"
 				[position]="instance.position"
 				[rotation]="instance.rotation"
@@ -66,7 +66,7 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 
 				@for (childColliderOption of childColliderOptions(); track $index) {
 					<ngt-object3D
-						[ngtrCollider]="childColliderOption.shape"
+						[collider]="childColliderOption.shape"
 						[args]="childColliderOption.args"
 						[position]="childColliderOption.position"
 						[rotation]="childColliderOption.rotation"
@@ -89,7 +89,7 @@ export class NgtrInstancedRigidBodies {
 	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
 	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>({});
 	instances = input([], {
-		alias: 'ngtrInstancedRigidBodies',
+		alias: 'instancedRigidBodies',
 		transform: (value: Array<NgtrInstancedRigidBodyOptions> | '') => {
 			if (value === '') return [];
 			return value;

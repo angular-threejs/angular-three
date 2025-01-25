@@ -15,12 +15,12 @@ import type { NgtrRigidBodyAutoCollider } from './types';
 import { createColliderOptions } from './utils';
 
 @Component({
-	selector: 'ngt-object3D[ngtrMeshCollider]',
+	selector: 'ngt-object3D[meshCollider]',
 	template: `
 		<ng-content />
 		@for (childColliderOption of childColliderOptions(); track $index) {
 			<ngt-object3D
-				[ngtrCollider]="childColliderOption.shape"
+				[collider]="childColliderOption.shape"
 				[args]="childColliderOption.args"
 				[position]="childColliderOption.position"
 				[rotation]="childColliderOption.rotation"

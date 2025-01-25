@@ -104,7 +104,7 @@ export class NgtrPhysics {
 	private timeStep = pick(this.options, 'timeStep');
 	private interpolate = pick(this.options, 'interpolate');
 
-	private paused = pick(this.options, 'paused');
+	paused = pick(this.options, 'paused');
 	protected debug = pick(this.options, 'debug');
 	colliders = pick(this.options, 'colliders');
 

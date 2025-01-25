@@ -19,12 +19,12 @@ export const appRoutes: Route[] = [
 	// 	loadChildren: () => import('./soba/soba.routes'),
 	// 	title: 'Soba - Angular Three Demo',
 	// },
-	// {
-	// 	path: 'rapier',
-	// 	loadComponent: () => import('./rapier/rapier'),
-	// 	loadChildren: () => import('./rapier/rapier.routes'),
-	// 	title: 'Rapier - Angular Three Demo',
-	// },
+	{
+		path: 'rapier',
+		loadComponent: () => import('./rapier/rapier'),
+		loadChildren: () => import('./rapier/rapier.routes'),
+		title: 'Rapier - Angular Three Demo',
+	},
 	{
 		path: 'misc',
 		loadComponent: () => import('./misc/misc'),
