@@ -7,12 +7,12 @@ export const appRoutes: Route[] = [
 	// 	loadChildren: () => import('./cannon/cannon.routes'),
 	// 	title: 'Cannon - Angular Three Demo',
 	// },
-	// {
-	// 	path: 'postprocessing',
-	// 	loadComponent: () => import('./postprocessing/postprocessing'),
-	// 	loadChildren: () => import('./postprocessing/postprocessing.routes'),
-	// 	title: 'Postprocessing - Angular Three Demo',
-	// },
+	{
+		path: 'postprocessing',
+		loadComponent: () => import('./postprocessing/postprocessing'),
+		loadChildren: () => import('./postprocessing/postprocessing.routes'),
+		title: 'Postprocessing - Angular Three Demo',
+	},
 	// {
 	// 	path: 'soba',
 	// 	loadComponent: () => import('./soba/soba'),
