@@ -80,16 +80,16 @@ const routes: Routes = [
 	// 		},
 	// 	},
 	// },
-	// {
-	// 	path: 'skydiving',
-	// 	loadComponent: () => import('./skydiving/skydiving'),
-	// 	data: {
-	// 		credits: {
-	// 			title: 'WebGL Skydiving',
-	// 			link: 'https://github.com/sebastien-lempens/webgl-skydiving',
-	// 		},
-	// 	},
-	// },
+	{
+		path: 'skydiving',
+		loadComponent: () => import('./skydiving/skydiving'),
+		data: {
+			credits: {
+				title: 'WebGL Skydiving',
+				link: 'https://github.com/sebastien-lempens/webgl-skydiving',
+			},
+		},
+	},
 	{
 		path: 'porsche',
 		loadComponent: () => import('./porsche/porsche'),
