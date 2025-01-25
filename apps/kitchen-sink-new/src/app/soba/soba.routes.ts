@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 
 const routes: Routes = [
-	// {
-	// 	path: 'basic',
-	// 	loadComponent: () => import('./basic/basic'),
-	// },
+	{
+		path: 'basic',
+		loadComponent: () => import('./basic/basic'),
+	},
 	// {
 	// 	path: 'hud',
 	// 	loadComponent: () => import('./hud/hud'),
