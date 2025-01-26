@@ -38,6 +38,8 @@ import {
 } from './state';
 import { attachThreeNodes, internalDestroyNode, kebabToPascal, NgtRendererClassId, removeThreeChild } from './utils';
 
+declare const ngDevMode: boolean;
+
 @Injectable()
 export class NgtRendererFactory2 implements RendererFactory2 {
 	private catalogue = injectCatalogue();
@@ -230,7 +232,7 @@ export class NgtRenderer2 implements Renderer2 {
 		const cRS = newChild.__ngt_renderer__;
 
 		if (!pRS || !cRS) {
-			console.warn('[NGT] One of parent or child is not a renderer node.', { parent, newChild });
+			ngDevMode && console.warn('[NGT dev mode] One of parent or child is not a renderer node.', { parent, newChild });
 			return delegatedFn();
 		}
 
@@ -355,7 +357,7 @@ export class NgtRenderer2 implements Renderer2 {
 				// if the child is already destroyed, just skip
 				return;
 			}
-			console.warn('[NGT] parent is not found when remove child', { parent, oldChild });
+			ngDevMode && console.warn('[NGT dev mode] parent is not found when remove child', { parent, oldChild });
 			return;
 		}
 
@@ -456,7 +458,8 @@ export class NgtRenderer2 implements Renderer2 {
 		if (!rS) return this.delegateRenderer.setAttribute(el, name, value, namespace);
 
 		if (rS[NgtRendererClassId.destroyed]) {
-			console.warn(`[NGT] setAttribute is invoked on destroyed renderer node.`, { el, name, value });
+			ngDevMode &&
+				console.warn(`[NGT dev mode] setAttribute is invoked on destroyed renderer node.`, { el, name, value });
 			return;
 		}
 
@@ -498,7 +501,8 @@ export class NgtRenderer2 implements Renderer2 {
 		const rS = el.__ngt_renderer__;
 
 		if (!rS || rS[NgtRendererClassId.destroyed]) {
-			console.log('case setProperty but renderer state is undefined or destroyed', { el, name, value });
+			ngDevMode &&
+				console.warn('[NGT dev mode] setProperty is invoked on destroyed renderer node.', { el, name, value });
 			return;
 		}
 
@@ -590,7 +594,9 @@ export class NgtRenderer2 implements Renderer2 {
 		if (rS[NgtRendererClassId.type] === 'three') {
 			const iS = getInstanceState(target);
 			if (!iS) {
-				console.warn('[NGT] instance has not been prepared yet.');
+				console.warn(
+					'[NGT] instance which has not been prepared cannot have events. Call `prepare()` manually if needed.',
+				);
 				return () => {};
 			}
 
@@ -642,7 +648,8 @@ export class NgtRenderer2 implements Renderer2 {
 	private appendThreeRendererNodes(parent: NgtRendererNode, child: NgtRendererNode) {
 		// if parent and chlid are the same, skip
 		if (parent === child) {
-			console.log('case three renderer node but parent and child are the same', { parent, child });
+			ngDevMode &&
+				console.warn('[NGT dev mode] appending THREE.js parent and child but they are the same', { parent, child });
 			return;
 		}
 
@@ -650,7 +657,11 @@ export class NgtRenderer2 implements Renderer2 {
 
 		// if child is already attached to a parent, skip
 		if (cIS?.hierarchyStore.snapshot.parent) {
-			console.log('case three renderer node but child already attached', { parent, child });
+			ngDevMode &&
+				console.warn('[NGT dev mode] appending THREE.js parent and child but child is already attached', {
+					parent,
+					child,
+				});
 			return;
 		}
 
