@@ -22,7 +22,7 @@ export function injectIntersect<TObject extends THREE.Object3D>(
 			});
 
 			// If the object is inside the frustum three will call onRender
-			const oldOnRender = obj.onBeforeRender.bind(obj);
+			const oldOnRender = obj.onBeforeRender?.bind(obj);
 			obj.onBeforeRender = () => (check = true);
 
 			// Compare the check value against the temp value, if it differs set state
