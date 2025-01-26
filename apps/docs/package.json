@@ -13,6 +13,11 @@
 		"@astrojs/starlight": "^0.31.1",
 		"@astrojs/starlight-tailwind": "^3.0.0",
 		"@astrojs/tailwind": "^5.1.4",
+		"angular-three": "next",
+		"angular-three-cannon": "next",
+		"angular-three-postprocessing": "next",
+		"angular-three-rapier": "next",
+		"angular-three-soba": "next",
 		"astro": "^5.1.5",
 		"sharp": "^0.33.5",
 		"starlight-blog": "^0.16.1",
@@ -20,20 +25,5 @@
 	},
 	"devDependencies": {
 		"@expressive-code/plugin-line-numbers": "^0.40.1"
-	},
-	"nx": {
-		"targets": {
-			"dev": {
-				"dependsOn": [
-					{
-						"projects": [
-							"core",
-							"soba"
-						],
-						"target": "build-docs"
-					}
-				]
-			}
-		}
 	}
 }

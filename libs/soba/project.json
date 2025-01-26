@@ -22,14 +22,6 @@
 			},
 			"defaultConfiguration": "production"
 		},
-		"build-docs": {
-			"executor": "@nx/angular:package",
-			"outputs": ["{workspaceRoot}/node_modules/angular-three-soba"],
-			"options": {
-				"project": "libs/soba/ng-package-docs.json",
-				"tsConfig": "libs/soba/tsconfig.lib.prod.json"
-			}
-		},
 		"test": {
 			"executor": "@analogjs/vitest-angular:test"
 		},
