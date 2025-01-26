@@ -5,6 +5,7 @@ import { NgtsHelper } from './helper';
 
 describe(NgtsHelper.name, () => {
 	@Component({
+		selector: 'test-scene-graph',
 		template: `
 			<ngt-mesh>
 				<ngt-box-geometry />
@@ -24,6 +25,9 @@ describe(NgtsHelper.name, () => {
 		fixture.detectChanges();
 
 		expect(scene.children.length).toEqual(2);
+
+		console.log('here???', scene.children);
+
 		expect(scene.children[1].type).toEqual('BoxHelper');
 		expect(toGraph()).toMatchSnapshot();
 	});

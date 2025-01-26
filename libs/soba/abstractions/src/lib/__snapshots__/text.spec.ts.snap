@@ -9,3 +9,13 @@ exports[`NgtsText > should render properly 1`] = `
   },
 ]
 `;
+
+exports[`NgtsText2 > should render properly 1`] = `
+[
+  {
+    "children": [],
+    "name": "",
+    "type": "Mesh",
+  },
+]
+`;

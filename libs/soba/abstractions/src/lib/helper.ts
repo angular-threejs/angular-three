@@ -84,9 +84,9 @@ export class NgtsHelper<TConstructor extends new (...args: any[]) => THREE.Objec
 	private parent = computed(() => {
 		const helper = this.helperRef().nativeElement;
 		if (!helper) return;
-		const localState = getInstanceState(helper);
-		if (!localState) return;
-		return localState.parent() as unknown as THREE.Object3D;
+		const instanceState = getInstanceState(helper);
+		if (!instanceState) return;
+		return instanceState.parent() as unknown as THREE.Object3D;
 	});
 
 	helper = injectHelper(this.parent, this.type, { args: this.options });

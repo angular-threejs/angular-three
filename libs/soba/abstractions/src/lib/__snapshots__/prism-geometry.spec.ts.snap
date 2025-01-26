@@ -9,3 +9,13 @@ exports[`NgtsPrismGeometry > should render properly 1`] = `
   },
 ]
 `;
+
+exports[`NgtsPrismGeometry2 > should render properly 1`] = `
+[
+  {
+    "children": [],
+    "name": "",
+    "type": "Mesh",
+  },
+]
+`;
