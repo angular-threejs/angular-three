@@ -46,36 +46,12 @@ importers:
       '@angular/router':
         specifier: 19.0.6
         version: 19.0.6(@angular/common@19.0.6(@angular/core@19.0.6(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.6(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.0.6(@angular/animations@19.0.6(@angular/core@19.0.6(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.0.6(@angular/core@19.0.6(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.0.6(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
-      '@capacitor/core':
-        specifier: ^5.0.3
-        version: 5.7.7
-      '@capacitor/haptics':
-        specifier: ^5.0.0
-        version: 5.0.8(@capacitor/core@5.7.7)
-      '@capacitor/keyboard':
-        specifier: ^5.0.0
-        version: 5.0.9(@capacitor/core@5.7.7)
-      '@capacitor/status-bar':
-        specifier: ^5.0.0
-        version: 5.0.8(@capacitor/core@5.7.7)
       '@dimforge/rapier3d-compat':
         specifier: ^0.14.0
         version: 0.14.0
       '@monogrid/gainmap-js':
         specifier: ^3.1.0
         version: 3.1.0(three@0.172.0)
-      '@nativescript/angular':
-        specifier: ^18.1.3
-        version: 18.1.3
-      '@nativescript/canvas':
-        specifier: 2.0.0-webgpu.11
-        version: 2.0.0-webgpu.11
-      '@nativescript/canvas-media':
-        specifier: 2.0.0-webgpu.11
-        version: 2.0.0-webgpu.11
-      '@nativescript/canvas-three':
-        specifier: 2.0.0-webgpu.11
-        version: 2.0.0-webgpu.11
       '@pmndrs/cannon-worker-api':
         specifier: ^2.4.0
         version: 2.4.0(three@0.172.0)
@@ -1667,24 +1643,6 @@ packages:
 
   '@braintree/sanitize-url@6.0.4':
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
-
-  '@capacitor/core@5.7.7':
-    resolution: {integrity: sha512-LeV1ljAihl/1lFGHZERNY2DtD1fbPBF3rNOSHFPMXIluK4Cq4nK4a4z/dLPX+Cv4F0TyCIzX3+/t79PMbhDwrg==}
-
-  '@capacitor/haptics@5.0.8':
-    resolution: {integrity: sha512-PkmBlaApk0vQ/ddm875H0VPmnmUUAQ+lxEtGgvJAaXV83acDdo6zH+pJLCodgIR7UPiscfdcqt6xajeYw2Ld1w==}
-    peerDependencies:
-      '@capacitor/core': ^5.0.0
-
-  '@capacitor/keyboard@5.0.9':
-    resolution: {integrity: sha512-JFiIHR251LrC6NGdstO3T5H5XfOcVEDEm0zWbHfROO1xyJwXjH3QHu6F22VXu5cGEmIOFII32Tt+cXGsGzJpcQ==}
-    peerDependencies:
-      '@capacitor/core': ^5.0.0
-
-  '@capacitor/status-bar@5.0.8':
-    resolution: {integrity: sha512-ES/4ik3/6SV6RVXVVoMm5i7zanwZ+CBtNX6glhBHDHS0nR2m3Dmdxuk/BaFEZWT5bDn4xzg0LlnMsS8mlbUf+A==}
-    peerDependencies:
-      '@capacitor/core': ^5.0.0
 
   '@choojs/findup@0.2.1':
     resolution: {integrity: sha512-YstAqNb0MCN8PjdLCDfRsBcGVRN41f3vgLvaI0IrIcBp4AqILRSS0DeWNGkicC+f/zRIPJLc+9RURVSepwvfBw==}
@@ -15300,22 +15258,6 @@ snapshots:
 
   '@braintree/sanitize-url@6.0.4': {}
 
-  '@capacitor/core@5.7.7':
-    dependencies:
-      tslib: 2.8.1
-
-  '@capacitor/haptics@5.0.8(@capacitor/core@5.7.7)':
-    dependencies:
-      '@capacitor/core': 5.7.7
-
-  '@capacitor/keyboard@5.0.9(@capacitor/core@5.7.7)':
-    dependencies:
-      '@capacitor/core': 5.7.7
-
-  '@capacitor/status-bar@5.0.8(@capacitor/core@5.7.7)':
-    dependencies:
-      '@capacitor/core': 5.7.7
-
   '@choojs/findup@0.2.1':
     dependencies:
       commander: 2.20.3
@@ -16983,10 +16925,13 @@ snapshots:
     dependencies:
       '@nativescript/zone-js': 3.0.4
       tslib: 2.8.1
+    optional: true
 
-  '@nativescript/canvas-media@2.0.0-webgpu.11': {}
+  '@nativescript/canvas-media@2.0.0-webgpu.11':
+    optional: true
 
-  '@nativescript/canvas-media@2.0.0-webgpu.42': {}
+  '@nativescript/canvas-media@2.0.0-webgpu.42':
+    optional: true
 
   '@nativescript/canvas-polyfill@2.0.0-webgpu.42':
     dependencies:
@@ -16996,23 +16941,29 @@ snapshots:
       '@xmldom/xmldom': 0.8.10
       query-selector: 2.0.0
       set-value: 4.1.0
+    optional: true
 
   '@nativescript/canvas-svg@2.0.0-webgpu.42':
     dependencies:
       '@xmldom/xmldom': 0.8.10
       query-selector: 2.0.0
       set-value: 4.1.0
+    optional: true
 
   '@nativescript/canvas-three@2.0.0-webgpu.11':
     dependencies:
       '@nativescript/canvas-polyfill': 2.0.0-webgpu.42
       three: 0.157.0
+    optional: true
 
-  '@nativescript/canvas@2.0.0-webgpu.11': {}
+  '@nativescript/canvas@2.0.0-webgpu.11':
+    optional: true
 
-  '@nativescript/canvas@2.0.0-webgpu.42': {}
+  '@nativescript/canvas@2.0.0-webgpu.42':
+    optional: true
 
-  '@nativescript/zone-js@3.0.4': {}
+  '@nativescript/zone-js@3.0.4':
+    optional: true
 
   '@netlify/functions@2.8.2':
     dependencies:
@@ -19287,7 +19238,8 @@ snapshots:
     dependencies:
       arch: 3.0.0
 
-  '@xmldom/xmldom@0.8.10': {}
+  '@xmldom/xmldom@0.8.10':
+    optional: true
 
   '@xtuc/ieee754@1.2.0': {}
 
@@ -23175,7 +23127,8 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1: {}
 
-  is-primitive@3.0.1: {}
+  is-primitive@3.0.1:
+    optional: true
 
   is-promise@2.2.2: {}
 
@@ -26771,7 +26724,8 @@ snapshots:
     dependencies:
       side-channel: 1.0.6
 
-  query-selector@2.0.0: {}
+  query-selector@2.0.0:
+    optional: true
 
   querystringify@2.2.0: {}
 
@@ -27516,6 +27470,7 @@ snapshots:
     dependencies:
       is-plain-object: 2.0.4
       is-primitive: 3.0.1
+    optional: true
 
   setprototypeof@1.1.0: {}
 
@@ -28276,7 +28231,8 @@ snapshots:
       potpack: 1.0.2
       three: 0.172.0
 
-  three@0.157.0: {}
+  three@0.157.0:
+    optional: true
 
   three@0.172.0: {}
 
