@@ -1,3 +1,13 @@
+## 4.0.0-next.2 (2025-01-26)
+
+### 🩹 Fixes
+
+- **rapier:** compute rotation and quaternion properly ([cfd3ea56](https://github.com/angular-threejs/angular-three/commit/cfd3ea56))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.1 (2025-01-26)
 
 ### 🚀 Features
