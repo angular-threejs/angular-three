@@ -1,55 +1,59 @@
 import {
-	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	ComponentRef,
-	createEnvironmentInjector,
 	DestroyRef,
 	effect,
-	EnvironmentInjector,
 	inject,
-	Injector,
 	input,
 	Type,
+	viewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { extend, injectStore, provideNgtRenderer } from 'angular-three';
+import { extend, injectStore, NGT_CANVAS_CONTENT_FLAG, NGT_RENDERER_NODE_FLAG, NgtAnyRecord } from 'angular-three';
 import * as THREE from 'three';
 
 @Component({
 	selector: 'ngt-test-canvas',
-	template: '',
+	template: `
+		<ng-container #anchor />
+	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtTestCanvas {
-	sceneGraph = input.required<Type<any>>();
+	sceneGraph = input.required<Type<unknown>>();
+	sceneGraphInputs = input<NgtAnyRecord>({});
 
-	private ref?: ComponentRef<any>;
-	private environmentInjector?: EnvironmentInjector;
+	private anchorRef = viewChild.required('anchor', { read: ViewContainerRef });
+
+	private store = injectStore();
+
+	sceneRef?: ComponentRef<unknown>;
 
 	constructor() {
 		extend(THREE);
 
-		const vcr = inject(ViewContainerRef);
-		const parentEnvironmentInjector = inject(EnvironmentInjector);
-		const parentInjector = inject(Injector);
-		const store = injectStore();
+		effect(() => {
+			const anchor = this.anchorRef();
+			const sceneGraph = this.sceneGraph();
+			if (!sceneGraph) return;
 
-		afterNextRender(() => {
-			effect(
-				() => {
-					const sceneGraph = this.sceneGraph();
+			const sceneGraphInputs = this.sceneGraphInputs();
 
-					this.environmentInjector = createEnvironmentInjector([provideNgtRenderer(store)], parentEnvironmentInjector);
+			const anchorComment = anchor.element.nativeElement;
+			anchorComment.data = NGT_CANVAS_CONTENT_FLAG;
+			anchorComment[NGT_CANVAS_CONTENT_FLAG] = this.store;
+			if (anchorComment[NGT_RENDERER_NODE_FLAG]) {
+				anchorComment[NGT_RENDERER_NODE_FLAG][5] = this.store.snapshot.scene;
+			}
 
-					this.ref = vcr.createComponent(sceneGraph, {
-						environmentInjector: this.environmentInjector,
-						injector: parentInjector,
-					});
-					this.ref.changeDetectorRef.detectChanges();
-				},
-				{ injector: parentInjector },
-			);
+			this.sceneRef = anchor.createComponent(sceneGraph);
+
+			for (const key in sceneGraphInputs) {
+				this.sceneRef.setInput(key, sceneGraphInputs[key]);
+			}
+
+			this.sceneRef.changeDetectorRef.detectChanges();
 		});
 
 		inject(DestroyRef).onDestroy(() => {
@@ -58,7 +62,6 @@ export class NgtTestCanvas {
 	}
 
 	destroy() {
-		this.environmentInjector?.destroy();
-		this.ref?.destroy();
+		this.sceneRef?.destroy();
 	}
 }

@@ -1,18 +1,26 @@
-import { CUSTOM_ELEMENTS_SCHEMA, provideEnvironmentInitializer, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-	getLocalState,
+	ComponentRef,
+	CUSTOM_ELEMENTS_SCHEMA,
+	provideEnvironmentInitializer,
+	RendererFactory2,
+	Type,
+} from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ɵDomRendererFactory2 as DomRendererFactory2 } from '@angular/platform-browser';
+import {
+	getInstanceState,
 	injectCanvasRootInitializer,
 	NGT_STORE,
-	NgtAnyRecord,
-	NgtCanvasOptions,
-	NgtEventHandlers,
-	NgtInstanceNode,
-	NgtSignalStore,
-	NgtState,
-	provideStore,
+	type NgtAnyRecord,
+	type NgtCanvasOptions,
+	type NgtEventHandlers,
+	type NgtInstanceNode,
+	NgtRendererFactory2,
+	type NgtState,
+	type SignalState,
+	storeFactory,
 } from 'angular-three';
-import { Object3D } from 'three';
+import type * as THREE from 'three';
 import { NgtTestCanvas } from './test-canvas';
 import { createMockCanvas } from './utils/mock-canvas';
 
@@ -26,6 +34,7 @@ export class NgtTestBed {
 	static create<T extends Type<any>>(
 		sceneGraph: T,
 		{
+			sceneGraphInputs = {},
 			mockCanvasOptions = {},
 			canvasConfiguration = {},
 			errorOnUnknownElements,
@@ -35,6 +44,7 @@ export class NgtTestBed {
 			teardown,
 			deferBlockBehavior,
 		}: {
+			sceneGraphInputs?: NgtAnyRecord;
 			mockCanvasOptions?: { width?: number; height?: number; beforeReturn?: (canvas: HTMLCanvasElement) => void };
 			canvasConfiguration?: Partial<Omit<NgtCanvasOptions, 'frameloop' | 'size' | 'events'>>;
 		} & Omit<Parameters<TestBed['configureTestingModule']>[0], 'schemas'> = {},
@@ -43,7 +53,12 @@ export class NgtTestBed {
 
 		const fixture = TestBed.configureTestingModule({
 			providers: [
-				provideStore(),
+				{
+					provide: RendererFactory2,
+					useFactory: (delegate: RendererFactory2) => new NgtRendererFactory2(delegate),
+					deps: [DomRendererFactory2],
+				},
+				{ provide: NGT_STORE, useFactory: storeFactory },
 				provideEnvironmentInitializer(() => {
 					const initializerFn = (() => {
 						const initRoot = injectCanvasRootInitializer();
@@ -51,6 +66,8 @@ export class NgtTestBed {
 						return () => {
 							const configurator = initRoot(mockedCanvas);
 							configurator.configure({
+								...canvasConfiguration,
+								events: undefined,
 								frameloop: 'never',
 								size: {
 									width: mockCanvasOptions.width ?? mockedCanvas.width ?? 1280,
@@ -58,8 +75,6 @@ export class NgtTestBed {
 									top: 0,
 									left: 0,
 								},
-								...canvasConfiguration,
-								events: undefined,
 							});
 						};
 					})();
@@ -76,6 +91,7 @@ export class NgtTestBed {
 		}).createComponent(NgtTestCanvas);
 
 		fixture.componentRef.setInput('sceneGraph', sceneGraph);
+		fixture.componentRef.setInput('sceneGraphInputs', sceneGraphInputs);
 		fixture.detectChanges();
 
 		const store = TestBed.inject(NGT_STORE);
@@ -85,8 +101,9 @@ export class NgtTestBed {
 		return {
 			store,
 			fixture,
+			sceneGraphComponentRef: fixture.componentInstance.sceneRef as ComponentRef<T>,
 			scene: store.snapshot.scene,
-			sceneInstanceNode: getLocalState(store.snapshot.scene)!,
+			sceneInstanceNode: getInstanceState(store.snapshot.scene)!,
 			canvas: mockedCanvas,
 			destroy: fixture.componentInstance.destroy.bind(fixture.componentInstance),
 			fireEvent: this.createEventFirer(store, fixture),
@@ -95,12 +112,12 @@ export class NgtTestBed {
 		};
 	}
 
-	static createToGraph(store: NgtSignalStore<NgtState>) {
+	static createToGraph(store: SignalState<NgtState>) {
 		function graphify(type: string, name: string, children: NgtTestGraphedObject[]): NgtTestGraphedObject {
 			return { type, name, children };
 		}
 
-		function toGraph(node: Object3D): NgtTestGraphedObject[] {
+		function toGraph(node: THREE.Object3D): NgtTestGraphedObject[] {
 			return node.children.map((child) => graphify(child.type, child.name || '', toGraph(child)));
 		}
 
@@ -110,7 +127,7 @@ export class NgtTestBed {
 		};
 	}
 
-	static createAdvance(store: NgtSignalStore<NgtState>) {
+	static createAdvance(store: SignalState<NgtState>) {
 		return async (frames: number, delta: number | number[] = 1) => {
 			const state = store.snapshot;
 			const subscribers = state.internal.subscribers;
@@ -141,17 +158,17 @@ export class NgtTestBed {
 		};
 	}
 
-	static createEventFirer(store: NgtSignalStore<NgtState>, fixture: ComponentFixture<NgtTestCanvas>) {
+	static createEventFirer(store: SignalState<NgtState>, fixture: ComponentFixture<NgtTestCanvas>) {
 		let autoDetectChanges = true;
 
 		async function fireEvent(el: NgtInstanceNode, eventName: keyof NgtEventHandlers, eventData: NgtAnyRecord = {}) {
-			const localState = getLocalState(el);
-			if (!localState) {
+			const instanceState = getInstanceState(el);
+			if (!instanceState) {
 				console.warn(`[NGT Test] ${el} has no local state`);
 				return;
 			}
 
-			const handler = localState.handlers[eventName];
+			const handler = instanceState.handlers[eventName];
 			if (!handler) {
 				console.warn(`[NGT Test] ${el} has no ${eventName} handler`);
 				return;
