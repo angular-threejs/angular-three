@@ -26,10 +26,10 @@ import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
  <div class="h-full w-full grid grid-cols-8 gap-4">
   <div class="col-span-3">
    <h1>
-    Declarative <span class="text-accent-600 dark:text-accent-200">scene graphs</span>
+    <span class="text-accent-600 dark:text-accent-200">Declarative</span> scene graphs
    </h1>
    <p>
-    Angular Three allows the users to use every feature of THREE.js in a declarative way via Angular{' '}
+    Angular Three allows users to use every feature of THREE.js in a declarative way via Angular{' '}
     <strong>template syntax</strong>. Scale your 3D experiences with ease by leveraging Angular's batteries-included
     APIs like <strong>Signal</strong>, and more
    </p>
@@ -38,7 +38,7 @@ import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
    </div>
   </div>
   <FloatingCodeBlock
-   class="col-span-5"
+   class="col-span-5 max-h-[800px]"
    snippets={[
     { title: 'scene-graph.ts', name: 'simple-scene' },
     { title: 'canvas.ts', name: 'simple-scene-canvas' },
@@ -48,5 +48,24 @@ import SimpleScene from '../../components/scenes/simple-scene/simple-scene';
 </section>
 
 <section class="min-h-screen w-full flex justify-center items-center">
- <div class="h-full w-full grid grid-cols-8 gap-4"></div>
+ <div class="h-full w-full grid grid-cols-8 gap-4">
+  <FloatingCodeBlock
+   class="col-span-5 max-h-[800px]"
+   snippets={[
+    { title: 'scene-graph.ts', name: 'rapier-demo-scene-graph' },
+    { title: 'canvas.ts', name: 'rapier-demo' },
+   ]}
+  />
+  <div class="col-span-3">
+   <h1>
+    Powerful <span class="text-accent-600 dark:text-accent-200">utilities</span>
+   </h1>
+   <p>
+    Angular Three comes with integrations for physics engines like <strong>Rapier</strong> and{' '}
+    <strong>Cannon</strong>; as well as postprocessing library like <strong>Postprocessing</strong>. On top of that,{' '}
+    <code>angular-three-soba</code> provides a collection of utilities to help you focus on building your ideas.
+   </p>
+
+  </div>
+ </div>
 </section>

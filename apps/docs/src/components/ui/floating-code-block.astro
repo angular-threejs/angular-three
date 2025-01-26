@@ -41,7 +41,7 @@ const rendered = await Promise.all(
 );
 ---
 
-<div class:list={["p-4 rounded border border-dashed border-accent-600 dark:border-accent-200 shadow-2xl h-fit", className]}>
+<div class:list={["p-4 rounded border border-dashed border-accent-600 dark:border-accent-200 shadow-2xl h-fit overflow-y-auto", className]}>
   <Tabs>
     {rendered.map(({Content, tabTitle}) => (
       <TabItem label={tabTitle || ''}>
