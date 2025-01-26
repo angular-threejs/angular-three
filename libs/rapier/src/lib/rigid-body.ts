@@ -53,21 +53,35 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 @Directive({ selector: 'ngt-object3D[collider]' })
 export class NgtrAnyCollider {
 	position = input<NgtVector3 | undefined>([0, 0, 0]);
-	rotation = input<NgtEuler | undefined>([0, 0, 0]);
+	rotation = input<NgtEuler | undefined>();
 	scale = input<NgtVector3 | undefined>([1, 1, 1]);
-	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
+	quaternion = input<NgtQuaternion | undefined>();
 	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>(undefined);
 	name = input<NgtThreeElements['ngt-object3D']['name'] | undefined>(undefined);
 	options = input(colliderDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
-	private object3DParameters = computed(() => ({
-		position: this.position(),
-		rotation: this.rotation(),
-		scale: this.scale(),
-		quaternion: this.quaternion(),
-		userData: this.userData(),
-		name: this.name(),
-	}));
+	private object3DParameters = computed(() => {
+		const [position, rotation, scale, quaternion, userData, name] = [
+			this.position(),
+			this.rotation(),
+			this.scale(),
+			this.quaternion(),
+			this.userData(),
+			this.name(),
+		];
+
+		const parameters = { position, scale, userData, name };
+
+		if (quaternion) {
+			Object.assign(parameters, { quaternion });
+		} else if (rotation) {
+			Object.assign(parameters, { rotation });
+		} else {
+			Object.assign(parameters, { rotation: [0, 0, 0] });
+		}
+
+		return parameters;
+	});
 
 	// TODO: change this to input required when Angular allows setting hostDirective input
 	shape = model<NgtrColliderShape | undefined>(undefined, { alias: 'collider' });
@@ -429,13 +443,27 @@ export class NgtrRigidBody {
 	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>(undefined);
 	options = input(rigidBodyDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
-	private object3DParameters = computed(() => ({
-		position: this.position(),
-		rotation: this.rotation(),
-		scale: this.scale(),
-		quaternion: this.quaternion(),
-		userData: this.userData(),
-	}));
+	private object3DParameters = computed(() => {
+		const [position, rotation, scale, quaternion, userData] = [
+			this.position(),
+			this.rotation(),
+			this.scale(),
+			this.quaternion(),
+			this.userData(),
+		];
+
+		const parameters = { position, scale, userData };
+
+		if (quaternion) {
+			Object.assign(parameters, { quaternion });
+		} else if (rotation) {
+			Object.assign(parameters, { rotation });
+		} else {
+			Object.assign(parameters, { rotation: [0, 0, 0] });
+		}
+
+		return parameters;
+	});
 
 	wake = output<void>();
 	sleep = output<void>();
