@@ -1,3 +1,49 @@
+## 4.0.0-next.1 (2025-01-26)
+
+### 🚀 Features
+
+- **core:** new renderer ([c7bec7eb](https://github.com/angular-threejs/angular-three/commit/c7bec7eb))
+
+### 🩹 Fixes
+
+- **core:** adjust portals with new renderer ([f0243b93](https://github.com/angular-threejs/angular-three/commit/f0243b93))
+- **core:** adjust portals with new renderer (2) ([b62b21d3](https://github.com/angular-threejs/angular-three/commit/b62b21d3))
+- **core:** html now works ([6db540b9](https://github.com/angular-threejs/angular-three/commit/6db540b9))
+- **core:** adjust a lot in renderer ([6869f226](https://github.com/angular-threejs/angular-three/commit/6869f226))
+- **core:** pivot controls work ([43c431e6](https://github.com/angular-threejs/angular-three/commit/43c431e6))
+- **core:** update testing lib ([2110ec66](https://github.com/angular-threejs/angular-three/commit/2110ec66))
+- **core:** adjust tests in soba ([5a18452c](https://github.com/angular-threejs/angular-three/commit/5a18452c))
+- **soba:** adjust html with new renderer ([86ff1a7d](https://github.com/angular-threejs/angular-three/commit/86ff1a7d))
+- **soba,core:** controls now work ([96892ad1](https://github.com/angular-threejs/angular-three/commit/96892ad1))
+
+### 💅 Refactors
+
+- **cannon:** update cannon with new renderer ([b73211db](https://github.com/angular-threejs/angular-three/commit/b73211db))
+- **core:** clean up renderer ([04b39d4c](https://github.com/angular-threejs/angular-three/commit/04b39d4c))
+- **core:** clean up renderer ([8c1ae6c2](https://github.com/angular-threejs/angular-three/commit/8c1ae6c2))
+- **core:** make renderer not aware of store internally ([18cafe1e](https://github.com/angular-threejs/angular-three/commit/18cafe1e))
+- **core:** refactor more with no-store renderer ([c56b03e9](https://github.com/angular-threejs/angular-three/commit/c56b03e9))
+- **core:** update object events ([6cf56c30](https://github.com/angular-threejs/angular-three/commit/6cf56c30))
+- **core:** clean up more renderer code ([698e2752](https://github.com/angular-threejs/angular-three/commit/698e2752))
+- **examples:** rename ([371eb49b](https://github.com/angular-threejs/angular-three/commit/371eb49b))
+- **postprocessing:** update postprocessing with new renderer ([bfb3dbb5](https://github.com/angular-threejs/angular-three/commit/bfb3dbb5))
+- **rapier:** update rapier with new renderer ([25f8ac31](https://github.com/angular-threejs/angular-three/commit/25f8ac31))
+- **soba:** clean up abstractions ([5f40d894](https://github.com/angular-threejs/angular-three/commit/5f40d894))
+- **soba:** update cameras with new renderer ([cb9d2069](https://github.com/angular-threejs/angular-three/commit/cb9d2069))
+- **soba:** update abstractions with new renderer ([441a5f0b](https://github.com/angular-threejs/angular-three/commit/441a5f0b))
+- **soba:** update controls with new renderer ([b16d477e](https://github.com/angular-threejs/angular-three/commit/b16d477e))
+- **soba:** update gizmos with new renderer ([b41f1d64](https://github.com/angular-threejs/angular-three/commit/b41f1d64))
+- **soba:** adjust html with new renderer ([155a68d2](https://github.com/angular-threejs/angular-three/commit/155a68d2))
+- **soba:** adjust performances with new renderer ([a83ba07c](https://github.com/angular-threejs/angular-three/commit/a83ba07c))
+- **soba:** adjust shaders with new renderer ([d9bcca60](https://github.com/angular-threejs/angular-three/commit/d9bcca60))
+- **soba:** adjust staging with new renderer ([d43bd2c7](https://github.com/angular-threejs/angular-three/commit/d43bd2c7))
+- **soba:** adjust stats and vanilla exports with new renderer ([41ca5f5b](https://github.com/angular-threejs/angular-three/commit/41ca5f5b))
+- **soba:** adjust misc with new renderer ([df00fb76](https://github.com/angular-threejs/angular-three/commit/df00fb76))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.6.0 (2025-01-11)
 
 ### 🚀 Features
