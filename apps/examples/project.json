@@ -24,7 +24,8 @@
 				"scripts": [],
 				"loader": {
 					".blob": "file",
-					".glb": "file"
+					".glb": "file",
+					".gltf": "file"
 				}
 			},
 			"configurations": {

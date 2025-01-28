@@ -207,6 +207,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'baking-soft-shadows',
+		loadComponent: () => import('./baking-soft-shadows/baking-soft-shadows'),
+		data: {
+			credits: {
+				title: 'Baking Soft Shadows',
+				link: 'https://pmndrs.github.io/examples/demos/baking-soft-shadows',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
