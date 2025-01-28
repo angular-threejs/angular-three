@@ -27,6 +27,12 @@
 		},
 		"lint": {
 			"executor": "@nx/eslint:lint"
+		},
+		"publish-next": {
+			"command": "npm publish --tag=next",
+			"options": {
+				"cwd": "{workspaceRoot}/dist/{projectRoot}"
+			}
 		}
 	}
 }
