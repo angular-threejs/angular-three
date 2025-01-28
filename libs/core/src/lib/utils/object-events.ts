@@ -13,6 +13,7 @@ import {
 import { assertInjector } from 'ngxtension/assert-injector';
 import type * as THREE from 'three';
 import type { NgtEventHandlers, NgtThreeEvent } from '../types';
+import { is } from './is';
 import { resolveRef } from './resolve-ref';
 
 @Directive({ selector: '[ngtObjectEvents]' })
@@ -103,7 +104,7 @@ export function injectObjectEvents(
 		effect((onCleanup) => {
 			const targetRef = resolveRef(target());
 
-			if (!targetRef) return;
+			if (!targetRef || !is.instance(targetRef)) return;
 
 			Object.entries(events).forEach(([eventName, eventHandler]) => {
 				cleanUps.push(renderer.listen(targetRef, eventName, eventHandler));
