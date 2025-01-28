@@ -68,10 +68,6 @@ export class NgtpEffectComposer {
 
 	private injector = inject(Injector);
 	private store = injectStore();
-	// private size = this.store.select('size');
-	// private gl = this.store.select('gl');
-	// private defaultScene = this.store.select('scene');
-	// private defaultCamera = this.store.select('camera');
 
 	private depthBuffer = pick(this.options, 'depthBuffer');
 	private stencilBuffer = pick(this.options, 'stencilBuffer');
