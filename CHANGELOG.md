@@ -1,3 +1,13 @@
+## 4.0.0-next.6 (2025-01-28)
+
+### 🩹 Fixes
+
+- **soba:** update peer deps ([ae568890](https://github.com/angular-threejs/angular-three/commit/ae568890))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.5 (2025-01-28)
 
 ### 🩹 Fixes
