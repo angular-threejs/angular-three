@@ -1,3 +1,13 @@
+## 4.0.0-next.5 (2025-01-28)
+
+### 🩹 Fixes
+
+- **core:** assign attach directly on instance state ([554dc48b](https://github.com/angular-threejs/angular-three/commit/554dc48b))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.4 (2025-01-26)
 
 ### 🩹 Fixes
