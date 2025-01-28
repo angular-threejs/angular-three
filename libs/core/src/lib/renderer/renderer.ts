@@ -159,7 +159,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 		const threeName = kebabToPascal(name.startsWith('ngt-') ? name.slice(4) : name);
 		const threeTarget = this.catalogue[threeName];
-		//
+
 		if (threeTarget) {
 			const threeInstance = prepare(new threeTarget(...injectedArgs), name);
 			const rendererNode = createRendererNode('three', threeInstance, this.document);
@@ -168,7 +168,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 			// auto-attach for geometry and material
 			if (is.three<THREE.BufferGeometry>(threeInstance, 'isBufferGeometry')) {
-				Object.assign(instanceState, { attach: ['geometry'] });
+				instanceState.attach = ['geometry'];
 			} else if (is.three<THREE.Material>(threeInstance, 'isMaterial')) {
 				instanceState.attach = ['material'];
 			}
