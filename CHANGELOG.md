@@ -1,3 +1,13 @@
+## 4.0.0-next.7 (2025-01-28)
+
+### 🩹 Fixes
+
+- **core:** injectObjectEvents check for NgtInstanceNode ([d92164e1](https://github.com/angular-threejs/angular-three/commit/d92164e1))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.6 (2025-01-28)
 
 ### 🩹 Fixes
