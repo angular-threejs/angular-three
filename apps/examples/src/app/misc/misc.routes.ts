@@ -17,6 +17,17 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'pointer-events',
+		loadComponent: () => import('./pointer-events/pointer-events'),
+		data: {
+			credits: {
+				title: 'Pointer Events',
+				link: 'https://docs.tresjs.org/api/events.html',
+				class: 'text-white',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
