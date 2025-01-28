@@ -7,12 +7,6 @@ import * as THREE from 'three';
 import { FlakesTexture, GLTF } from 'three-stdlib';
 import suziGLTF from './suzi.gltf';
 
-interface SuziGLTF extends GLTF {
-	materials: {
-		default: THREE.MeshStandardMaterial;
-	};
-}
-
 @Component({
 	selector: 'app-suzi',
 	template: `
@@ -24,7 +18,7 @@ interface SuziGLTF extends GLTF {
 })
 export class Suzi {
 	options = input<Partial<NgtThreeElements['ngt-group']>>({});
-	protected gltf = injectGLTF<SuziGLTF>(() => suziGLTF);
+	protected gltf = injectGLTF<GLTF & { materials: { default: THREE.MeshStandardMaterial } }>(() => suziGLTF);
 
 	protected scene = computed(() => {
 		const gltf = this.gltf();
