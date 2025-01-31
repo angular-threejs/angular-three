@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@analogjs/content':
-        specifier: 1.12.1
-        version: 1.12.1(dre4lefnv3getiornlbfxq6wte)
+        specifier: 1.13.0
+        version: 1.13.0(dre4lefnv3getiornlbfxq6wte)
       '@analogjs/router':
-        specifier: 1.12.1
-        version: 1.12.1(@analogjs/content@1.12.1(dre4lefnv3getiornlbfxq6wte))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/router@19.1.4(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))
+        specifier: 1.13.0
+        version: 1.13.0(@analogjs/content@1.13.0(dre4lefnv3getiornlbfxq6wte))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/router@19.1.4(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))
       '@angular/animations':
         specifier: 19.1.4
         version: 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))
@@ -142,14 +142,14 @@ importers:
         specifier: 1.12.0
         version: 1.12.0(ux3spe5bxroat4jvxlw3ik7kmi)
       '@analogjs/platform':
-        specifier: 1.12.1
-        version: 1.12.1(yfo5cyutjyyk3hjmqqccpazqjq)
+        specifier: 1.13.0
+        version: 1.13.0(yfo5cyutjyyk3hjmqqccpazqjq)
       '@analogjs/vite-plugin-angular':
-        specifier: 1.12.1
-        version: 1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
+        specifier: 1.13.0
+        version: 1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
       '@analogjs/vitest-angular':
-        specifier: 1.12.1
-        version: 1.12.1(@analogjs/vite-plugin-angular@1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q)))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))
+        specifier: 1.13.0
+        version: 1.13.0(@analogjs/vite-plugin-angular@1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q)))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))
       '@angular-devkit/build-angular':
         specifier: 19.1.5
         version: 19.1.5(aijzibjpi7nfoczdlpp2p2cc7i)
@@ -530,8 +530,8 @@ packages:
       tslib: ^2.4.0
       zone.js: '>=0.13.3'
 
-  '@analogjs/content@1.12.1':
-    resolution: {integrity: sha512-qZF9gy/HTmUtzLIeePpicf65Mb2WKV+AmH7yC0ZXOk//1cMWmYLm8bbTb/U377Qr+YShC56LLXNuBRkSvIDGgw==}
+  '@analogjs/content@1.13.0':
+    resolution: {integrity: sha512-3uoicAYnh6XBUDNAsQpn5nzJAVRvPlxVLrB76Hmk2YCVLQMvLGSqui+s7mX9WLCpHMLNTmX0j5L637qpcMXtnQ==}
     peerDependencies:
       '@angular/common': ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       '@angular/core': ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -556,8 +556,8 @@ packages:
       sharp:
         optional: true
 
-  '@analogjs/platform@1.12.1':
-    resolution: {integrity: sha512-y6JQquYEw1T5lfuTJYDSQzW5G2eZAyQvWQ6gWg5Z0OLJB0RROvxdu9X9mFLCV2q2Boi6QK92EA3MSI2TLeX28w==}
+  '@analogjs/platform@1.13.0':
+    resolution: {integrity: sha512-dgLigWA/1NVVrJJSk9jrxkZfNmAcnpvMiSwcHy3KL7r/51rAe96cT3UNv/Swtwrm0xgR3Mj1bd+MENmk30DTpw==}
     peerDependencies:
       '@nx/angular': ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0
       '@nx/devkit': ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0
@@ -579,15 +579,15 @@ packages:
       shiki:
         optional: true
 
-  '@analogjs/router@1.12.1':
-    resolution: {integrity: sha512-oUtsRIFqfZSbWvOFn1ABreDFHO04m4ZVDqlbneL/dbfaiw+ZsSxLxqcJ01bwMfeja2orwIGE85uT4BeMwj3lHA==}
+  '@analogjs/router@1.13.0':
+    resolution: {integrity: sha512-ad7JzKN3WsEFWqzjF7kEV68pE2ayBlRmEf0NbzZwoz+C+tSWPluXkOYm2lRserwtBWD/e1P8LXuNz/dwV+yeCg==}
     peerDependencies:
-      '@analogjs/content': ^1.12.1
+      '@analogjs/content': ^1.13.0
       '@angular/core': ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       '@angular/router': ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@analogjs/vite-plugin-angular@1.12.1':
-    resolution: {integrity: sha512-dkM3wCzC+agtTgSuWFdDYhW8JFq66jeOkJH0pobKe41nE3VCT9nBBqnP2QuHKrK8Gt6Td9jNSsMHKKV3YllayA==}
+  '@analogjs/vite-plugin-angular@1.13.0':
+    resolution: {integrity: sha512-h9XTXtbOKXyjrjFdy5qy40wam3vTttujWCpnoqygnopWaKS9T86LVnBFAW1p2yaBa7Wzz/BKDs2MtBBPWht8Sw==}
     peerDependencies:
       '@angular-devkit/build-angular': ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       '@angular/build': ^18.0.0 || ^19.0.0
@@ -597,15 +597,15 @@ packages:
       '@angular/build':
         optional: true
 
-  '@analogjs/vite-plugin-nitro@1.12.1':
-    resolution: {integrity: sha512-ZVvCWW6cozxzadMTAVSYiKMT5Doh71xzdbI6t/8JNi3/MxhElRp1oFLeFkkbyJqxWI0P3T7Vg+guLV4X4fR5Vg==}
+  '@analogjs/vite-plugin-nitro@1.13.0':
+    resolution: {integrity: sha512-C60hGQwmoEr2fWT/uc62fKCHJHUAB0F0hQMemdpborxq8XekHk+FT1jS4bRhkFuQk1ZV2BNwH3biHBBs/M+3fQ==}
 
-  '@analogjs/vitest-angular@1.12.1':
-    resolution: {integrity: sha512-Dv5sjGxWxHZHIoAh57Zlc/pLtHlhPba6P3fiQselnl3SHqljc8VA26rM2XwjVMzQ0wpnQXPMGAj02SmDOoUFtw==}
+  '@analogjs/vitest-angular@1.13.0':
+    resolution: {integrity: sha512-V3jLxXhiKSvSam15UGe9hVIfiX/Kx/XHXzFIlfHKlq0jUj/ys+WDdMuqaG4LrlhsxCjjDtISPGmW9uM+OMfO/A==}
     peerDependencies:
       '@analogjs/vite-plugin-angular': '*'
       '@angular-devkit/architect': ^0.1500.0 || ^0.1600.0 || ^0.1700.0 || ^0.1800.0 || ^0.1900.0 || next
-      vitest: ^1.3.1 || ^2.0.0
+      vitest: ^1.3.1 || ^2.0.0 || ^3.0.0
 
   '@angular-devkit/architect@0.1901.5':
     resolution: {integrity: sha512-zlRudZx34FkFZnSdaQCjxDleHwbQYNLdBFcLi+FBwt0UXqxmhbEIasK3l/3kCOC3QledrjUzVXgouji+OZ/WGQ==}
@@ -13177,7 +13177,7 @@ snapshots:
 
   '@analogjs/astro-angular@1.12.0(ux3spe5bxroat4jvxlw3ik7kmi)':
     dependencies:
-      '@analogjs/vite-plugin-angular': 1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
+      '@analogjs/vite-plugin-angular': 1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
       '@angular-devkit/build-angular': 19.1.5(aijzibjpi7nfoczdlpp2p2cc7i)
       '@angular/animations': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
@@ -13196,7 +13196,7 @@ snapshots:
 
   '@analogjs/astro-angular@1.9.4(aochxqbp3quzlbesharvk6ytpi)':
     dependencies:
-      '@analogjs/vite-plugin-angular': 1.12.1(@angular-devkit/build-angular@19.1.5(n63mqv7tciw3i73jfavzcmicqm))(@angular/build@19.1.5(c5eswrwitcowtb7nw6ak4wmtsm))
+      '@analogjs/vite-plugin-angular': 1.13.0(@angular-devkit/build-angular@19.1.5(n63mqv7tciw3i73jfavzcmicqm))(@angular/build@19.1.5(c5eswrwitcowtb7nw6ak4wmtsm))
       '@angular-devkit/build-angular': 19.1.5(n63mqv7tciw3i73jfavzcmicqm)
       '@angular/animations': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
@@ -13213,7 +13213,7 @@ snapshots:
     transitivePeerDependencies:
       - '@angular/build'
 
-  '@analogjs/content@1.12.1(dre4lefnv3getiornlbfxq6wte)':
+  '@analogjs/content@1.13.0(dre4lefnv3getiornlbfxq6wte)':
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
@@ -13231,10 +13231,10 @@ snapshots:
     optionalDependencies:
       sharp: 0.33.5
 
-  '@analogjs/platform@1.12.1(yfo5cyutjyyk3hjmqqccpazqjq)':
+  '@analogjs/platform@1.13.0(yfo5cyutjyyk3hjmqqccpazqjq)':
     dependencies:
-      '@analogjs/vite-plugin-angular': 1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
-      '@analogjs/vite-plugin-nitro': 1.12.1(encoding@0.1.13)(typescript@5.7.3)
+      '@analogjs/vite-plugin-angular': 1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
+      '@analogjs/vite-plugin-nitro': 1.13.0(encoding@0.1.13)(typescript@5.7.3)
       '@nx/angular': 20.4.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular-devkit/core@19.1.5(chokidar@4.0.1))(@angular-devkit/schematics@19.1.5(chokidar@4.0.1))(@babel/traverse@7.25.9)(@rspack/core@1.1.8(@swc/helpers@0.5.15))(@schematics/angular@19.1.5(chokidar@4.0.1))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.14.12)(@zkochan/js-yaml@0.0.7)(esbuild@0.24.2)(eslint@9.17.0(jiti@2.4.2))(html-webpack-plugin@5.6.0(@rspack/core@1.1.8(@swc/helpers@0.5.15))(webpack@5.96.1(@swc/core@1.10.7(@swc/helpers@0.5.15))(esbuild@0.24.2)))(nx@20.4.0(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1)(typescript@5.7.3)
       '@nx/devkit': 20.4.0(nx@20.4.0(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15)))
       '@nx/vite': 20.4.0(@babel/traverse@7.25.9)(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@20.14.12)(nx@20.4.0(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15)))(typescript@5.7.3)(vite@5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))
@@ -13278,14 +13278,14 @@ snapshots:
       - vite
       - xml2js
 
-  '@analogjs/router@1.12.1(@analogjs/content@1.12.1(dre4lefnv3getiornlbfxq6wte))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/router@19.1.4(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))':
+  '@analogjs/router@1.13.0(@analogjs/content@1.13.0(dre4lefnv3getiornlbfxq6wte))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/router@19.1.4(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1))':
     dependencies:
-      '@analogjs/content': 1.12.1(dre4lefnv3getiornlbfxq6wte)
+      '@analogjs/content': 1.13.0(dre4lefnv3getiornlbfxq6wte)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/router': 19.1.4(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       tslib: 2.8.1
 
-  '@analogjs/vite-plugin-angular@1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))':
+  '@analogjs/vite-plugin-angular@1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))':
     dependencies:
       ts-morph: 21.0.1
       vfile: 6.0.3
@@ -13293,7 +13293,7 @@ snapshots:
       '@angular-devkit/build-angular': 19.1.5(aijzibjpi7nfoczdlpp2p2cc7i)
       '@angular/build': 19.1.5(jqrriztt6yjxytzkcr75x6hk4q)
 
-  '@analogjs/vite-plugin-angular@1.12.1(@angular-devkit/build-angular@19.1.5(n63mqv7tciw3i73jfavzcmicqm))(@angular/build@19.1.5(c5eswrwitcowtb7nw6ak4wmtsm))':
+  '@analogjs/vite-plugin-angular@1.13.0(@angular-devkit/build-angular@19.1.5(n63mqv7tciw3i73jfavzcmicqm))(@angular/build@19.1.5(c5eswrwitcowtb7nw6ak4wmtsm))':
     dependencies:
       ts-morph: 21.0.1
       vfile: 6.0.3
@@ -13301,7 +13301,7 @@ snapshots:
       '@angular-devkit/build-angular': 19.1.5(n63mqv7tciw3i73jfavzcmicqm)
       '@angular/build': 19.1.5(c5eswrwitcowtb7nw6ak4wmtsm)
 
-  '@analogjs/vite-plugin-nitro@1.12.1(encoding@0.1.13)(typescript@5.7.3)':
+  '@analogjs/vite-plugin-nitro@1.13.0(encoding@0.1.13)(typescript@5.7.3)':
     dependencies:
       esbuild: 0.20.2
       nitropack: 2.10.4(encoding@0.1.13)(typescript@5.7.3)
@@ -13334,9 +13334,9 @@ snapshots:
       - uploadthing
       - xml2js
 
-  '@analogjs/vitest-angular@1.12.1(@analogjs/vite-plugin-angular@1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q)))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))':
+  '@analogjs/vitest-angular@1.13.0(@analogjs/vite-plugin-angular@1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q)))(vitest@1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))':
     dependencies:
-      '@analogjs/vite-plugin-angular': 1.12.1(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
+      '@analogjs/vite-plugin-angular': 1.13.0(@angular-devkit/build-angular@19.1.5(aijzibjpi7nfoczdlpp2p2cc7i))(@angular/build@19.1.5(jqrriztt6yjxytzkcr75x6hk4q))
       vitest: 1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0)
 
   '@angular-devkit/architect@0.1901.5(chokidar@4.0.1)':
@@ -13613,7 +13613,7 @@ snapshots:
       browserslist: 4.24.2
       esbuild: 0.24.2
       fast-glob: 3.3.3
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       istanbul-lib-instrument: 6.0.3
       listr2: 8.2.5
       magic-string: 0.30.17
@@ -13664,7 +13664,7 @@ snapshots:
       browserslist: 4.24.2
       esbuild: 0.24.2
       fast-glob: 3.3.3
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       istanbul-lib-instrument: 6.0.3
       listr2: 8.2.5
       magic-string: 0.30.17
@@ -13715,7 +13715,7 @@ snapshots:
       browserslist: 4.24.2
       esbuild: 0.24.2
       fast-glob: 3.3.3
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       istanbul-lib-instrument: 6.0.3
       listr2: 8.2.5
       magic-string: 0.30.17
@@ -14145,7 +14145,7 @@ snapshots:
   '@astrojs/telemetry@3.2.0':
     dependencies:
       ci-info: 4.1.0
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       dlv: 1.1.3
       dset: 3.1.4
       is-docker: 3.0.0
@@ -14184,7 +14184,7 @@ snapshots:
       '@babel/traverse': 7.25.3
       '@babel/types': 7.25.6
       convert-source-map: 2.0.0
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -14204,7 +14204,7 @@ snapshots:
       '@babel/traverse': 7.25.9
       '@babel/types': 7.26.3
       convert-source-map: 2.0.0
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -14272,7 +14272,7 @@ snapshots:
       '@babel/core': 7.26.0
       '@babel/helper-compilation-targets': 7.25.9
       '@babel/helper-plugin-utils': 7.25.9
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -15060,7 +15060,7 @@ snapshots:
       '@babel/parser': 7.26.2
       '@babel/template': 7.25.9
       '@babel/types': 7.26.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -15072,7 +15072,7 @@ snapshots:
       '@babel/parser': 7.26.2
       '@babel/template': 7.25.9
       '@babel/types': 7.26.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -15661,7 +15661,7 @@ snapshots:
   '@eslint/config-array@0.19.0':
     dependencies:
       '@eslint/object-schema': 2.1.4
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -15671,7 +15671,7 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.1
@@ -15685,7 +15685,7 @@ snapshots:
   '@eslint/eslintrc@3.2.0':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.1
@@ -16289,7 +16289,7 @@ snapshots:
     dependencies:
       consola: 3.2.3
       detect-libc: 2.0.3
-      https-proxy-agent: 7.0.5(supports-color@9.4.0)
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       node-fetch: 2.7.0(encoding@0.1.13)
       nopt: 8.0.0
       semver: 7.6.3
@@ -16695,7 +16695,7 @@ snapshots:
     dependencies:
       agent-base: 7.1.3
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       lru-cache: 10.4.3
       socks-proxy-agent: 8.0.4
     transitivePeerDependencies:
@@ -17397,7 +17397,7 @@ snapshots:
       '@redocly/ajv': 8.11.2
       '@redocly/config': 0.17.1
       colorette: 1.4.0
-      https-proxy-agent: 7.0.5(supports-color@9.4.0)
+      https-proxy-agent: 7.0.6(supports-color@9.4.0)
       js-levenshtein: 1.1.6
       js-yaml: 4.1.0
       minimatch: 5.1.6
@@ -17408,13 +17408,13 @@ snapshots:
       - encoding
       - supports-color
 
-  '@rollup/plugin-alias@5.1.1(rollup@4.29.1)':
+  '@rollup/plugin-alias@5.1.1(rollup@4.30.1)':
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
-  '@rollup/plugin-commonjs@28.0.2(rollup@4.29.1)':
+  '@rollup/plugin-commonjs@28.0.2(rollup@4.30.1)':
     dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       commondir: 1.0.1
       estree-walker: 2.0.2
       fdir: 6.4.2(picomatch@4.0.2)
@@ -17422,15 +17422,15 @@ snapshots:
       magic-string: 0.30.17
       picomatch: 4.0.2
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
-  '@rollup/plugin-inject@5.0.5(rollup@4.29.1)':
+  '@rollup/plugin-inject@5.0.5(rollup@4.30.1)':
     dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       estree-walker: 2.0.2
       magic-string: 0.30.17
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
   '@rollup/plugin-json@6.1.0(rollup@4.29.1)':
     dependencies:
@@ -17438,30 +17438,36 @@ snapshots:
     optionalDependencies:
       rollup: 4.29.1
 
-  '@rollup/plugin-node-resolve@15.3.1(rollup@4.29.1)':
+  '@rollup/plugin-json@6.1.0(rollup@4.30.1)':
     dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/pluginutils': 5.1.3(rollup@4.30.1)
+    optionalDependencies:
+      rollup: 4.30.1
+
+  '@rollup/plugin-node-resolve@15.3.1(rollup@4.30.1)':
+    dependencies:
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-module: 1.0.0
-      resolve: 1.22.8
+      resolve: 1.22.10
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
-  '@rollup/plugin-replace@6.0.2(rollup@4.29.1)':
+  '@rollup/plugin-replace@6.0.2(rollup@4.30.1)':
     dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       magic-string: 0.30.17
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
-  '@rollup/plugin-terser@0.4.4(rollup@4.29.1)':
+  '@rollup/plugin-terser@0.4.4(rollup@4.30.1)':
     dependencies:
       serialize-javascript: 6.0.2
       smob: 1.5.0
-      terser: 5.36.0
+      terser: 5.37.0
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
   '@rollup/pluginutils@5.1.3(rollup@4.29.1)':
     dependencies:
@@ -18273,7 +18279,7 @@ snapshots:
 
   '@ts-morph/common@0.22.0':
     dependencies:
-      fast-glob: 3.3.2
+      fast-glob: 3.3.3
       minimatch: 9.0.5
       mkdirp: 3.0.1
       path-browserify: 1.0.1
@@ -18597,7 +18603,7 @@ snapshots:
       '@typescript-eslint/types': 8.19.1
       '@typescript-eslint/typescript-estree': 8.19.1(typescript@5.7.3)
       '@typescript-eslint/visitor-keys': 8.19.1
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       eslint: 9.17.0(jiti@2.4.2)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -18612,7 +18618,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 8.19.1(typescript@5.7.3)
       '@typescript-eslint/utils': 8.19.1(eslint@9.17.0(jiti@2.4.2))(typescript@5.7.3)
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       eslint: 9.17.0(jiti@2.4.2)
       ts-api-utils: 2.0.0(typescript@5.7.3)
       typescript: 5.7.3
@@ -18625,7 +18631,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.19.1
       '@typescript-eslint/visitor-keys': 8.19.1
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -18653,10 +18659,10 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vercel/nft@0.27.10(encoding@0.1.13)(rollup@4.29.1)':
+  '@vercel/nft@0.27.10(encoding@0.1.13)(rollup@4.30.1)':
     dependencies:
       '@mapbox/node-pre-gyp': 2.0.0-rc.0(encoding@0.1.13)
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       acorn: 8.14.0
       acorn-import-attributes: 1.9.5(acorn@8.14.0)
       async-sema: 3.1.1
@@ -19092,13 +19098,13 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
-  agent-base@7.1.1(supports-color@9.4.0):
+  agent-base@7.1.1:
     dependencies:
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -19424,7 +19430,7 @@ snapshots:
       common-ancestor-path: 1.0.1
       cookie: 0.7.2
       cssesc: 3.0.0
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       deterministic-object-hash: 2.0.2
       devalue: 5.1.1
       diff: 5.2.0
@@ -19522,7 +19528,7 @@ snapshots:
       common-ancestor-path: 1.0.1
       cookie: 0.7.2
       cssesc: 3.0.0
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       deterministic-object-hash: 2.0.2
       devalue: 5.1.1
       diff: 5.2.0
@@ -20966,15 +20972,11 @@ snapshots:
     optionalDependencies:
       supports-color: 8.1.1
 
-  debug@4.3.7(supports-color@9.4.0):
+  debug@4.4.0(supports-color@9.4.0):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 9.4.0
-
-  debug@4.4.0:
-    dependencies:
-      ms: 2.1.3
 
   decamelize@1.2.0: {}
 
@@ -21068,7 +21070,7 @@ snapshots:
   detect-port@1.6.1:
     dependencies:
       address: 1.2.2
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -21311,7 +21313,7 @@ snapshots:
 
   esbuild-register@3.6.0(esbuild@0.24.2):
     dependencies:
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       esbuild: 0.24.2
     transitivePeerDependencies:
       - supports-color
@@ -21460,7 +21462,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       escape-string-regexp: 4.0.0
       eslint-scope: 8.2.0
       eslint-visitor-keys: 4.2.0
@@ -21891,7 +21893,7 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       commander: 5.1.0
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -21934,7 +21936,7 @@ snapshots:
 
   follow-redirects@1.15.6(debug@4.4.0):
     optionalDependencies:
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
 
   for-each@0.3.3:
     dependencies:
@@ -22682,14 +22684,14 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
   http-proxy-agent@7.0.2:
     dependencies:
-      agent-base: 7.1.1(supports-color@9.4.0)
-      debug: 4.3.7(supports-color@9.4.0)
+      agent-base: 7.1.1
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -22720,7 +22722,7 @@ snapshots:
   http-proxy-middleware@3.0.3:
     dependencies:
       '@types/http-proxy': 1.17.15
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       http-proxy: 1.18.1(debug@4.4.0)
       is-glob: 4.0.3
       is-plain-object: 5.0.0
@@ -22771,21 +22773,21 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.5(supports-color@9.4.0):
+  https-proxy-agent@7.0.5:
     dependencies:
-      agent-base: 7.1.1(supports-color@9.4.0)
-      debug: 4.3.7(supports-color@9.4.0)
+      agent-base: 7.1.1
+      debug: 4.3.7(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.6:
+  https-proxy-agent@7.0.6(supports-color@9.4.0):
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -22891,7 +22893,7 @@ snapshots:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.4.0(supports-color@9.4.0)
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -23116,7 +23118,7 @@ snapshots:
 
   istanbul-lib-source-maps@4.0.1:
     dependencies:
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -23722,7 +23724,7 @@ snapshots:
       form-data: 4.0.0
       html-encoding-sniffer: 4.0.0
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.5(supports-color@9.4.0)
+      https-proxy-agent: 7.0.5
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.12
       parse5: 7.1.2
@@ -23840,7 +23842,7 @@ snapshots:
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookies: 0.9.1
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       delegates: 1.0.0
       depd: 2.0.0
       destroy: 1.2.0
@@ -24111,7 +24113,7 @@ snapshots:
   log4js@6.9.1:
     dependencies:
       date-format: 4.0.14
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       flatted: 3.3.1
       rfdc: 1.4.1
       streamroller: 3.1.5
@@ -24886,7 +24888,7 @@ snapshots:
   micromark@3.2.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -24908,7 +24910,7 @@ snapshots:
   micromark@4.0.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       decode-named-character-reference: 1.0.2
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.1
@@ -25213,16 +25215,16 @@ snapshots:
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@netlify/functions': 2.8.2
-      '@rollup/plugin-alias': 5.1.1(rollup@4.29.1)
-      '@rollup/plugin-commonjs': 28.0.2(rollup@4.29.1)
-      '@rollup/plugin-inject': 5.0.5(rollup@4.29.1)
-      '@rollup/plugin-json': 6.1.0(rollup@4.29.1)
-      '@rollup/plugin-node-resolve': 15.3.1(rollup@4.29.1)
-      '@rollup/plugin-replace': 6.0.2(rollup@4.29.1)
-      '@rollup/plugin-terser': 0.4.4(rollup@4.29.1)
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/plugin-alias': 5.1.1(rollup@4.30.1)
+      '@rollup/plugin-commonjs': 28.0.2(rollup@4.30.1)
+      '@rollup/plugin-inject': 5.0.5(rollup@4.30.1)
+      '@rollup/plugin-json': 6.1.0(rollup@4.30.1)
+      '@rollup/plugin-node-resolve': 15.3.1(rollup@4.30.1)
+      '@rollup/plugin-replace': 6.0.2(rollup@4.30.1)
+      '@rollup/plugin-terser': 0.4.4(rollup@4.30.1)
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       '@types/http-proxy': 1.17.15
-      '@vercel/nft': 0.27.10(encoding@0.1.13)(rollup@4.29.1)
+      '@vercel/nft': 0.27.10(encoding@0.1.13)(rollup@4.30.1)
       archiver: 7.0.1
       c12: 2.0.1(magicast@0.3.5)
       chokidar: 3.6.0
@@ -25251,7 +25253,7 @@ snapshots:
       klona: 2.0.6
       knitwork: 1.2.0
       listhen: 1.9.0
-      magic-string: 0.30.14
+      magic-string: 0.30.17
       magicast: 0.3.5
       mime: 4.0.4
       mlly: 1.7.3
@@ -25264,8 +25266,8 @@ snapshots:
       pkg-types: 1.3.0
       pretty-bytes: 6.1.1
       radix3: 1.1.2
-      rollup: 4.29.1
-      rollup-plugin-visualizer: 5.12.0(rollup@4.29.1)
+      rollup: 4.30.1
+      rollup-plugin-visualizer: 5.12.0(rollup@4.30.1)
       scule: 1.3.0
       semver: 7.6.3
       serve-placeholder: 2.0.2
@@ -25275,7 +25277,7 @@ snapshots:
       uncrypto: 0.1.3
       unctx: 2.3.1
       unenv: 1.10.0
-      unimport: 3.14.5(rollup@4.29.1)
+      unimport: 3.14.5(rollup@4.30.1)
       unstorage: 1.14.4(db0@0.2.1)(ioredis@5.4.1)
       untyped: 1.5.2
       unwasm: 0.3.9
@@ -27027,14 +27029,14 @@ snapshots:
 
   robust-predicates@3.0.2: {}
 
-  rollup-plugin-visualizer@5.12.0(rollup@4.29.1):
+  rollup-plugin-visualizer@5.12.0(rollup@4.30.1):
     dependencies:
       open: 8.4.2
       picomatch: 2.3.1
       source-map: 0.7.4
       yargs: 17.7.2
     optionalDependencies:
-      rollup: 4.29.1
+      rollup: 4.30.1
 
   rollup@4.22.4:
     dependencies:
@@ -27464,7 +27466,7 @@ snapshots:
   socks-proxy-agent@8.0.4:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       socks: 2.8.3
     transitivePeerDependencies:
       - supports-color
@@ -27553,7 +27555,7 @@ snapshots:
 
   spdy-transport@3.0.0:
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -27564,7 +27566,7 @@ snapshots:
 
   spdy@4.0.2:
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       handle-thing: 2.0.1
       http-deceiver: 1.2.7
       select-hose: 2.0.0
@@ -27659,7 +27661,7 @@ snapshots:
   streamroller@3.1.5:
     dependencies:
       date-format: 4.0.14
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       fs-extra: 8.1.0
     transitivePeerDependencies:
       - supports-color
@@ -27789,7 +27791,7 @@ snapshots:
   stylus@0.64.0:
     dependencies:
       '@adobe/css-tools': 4.3.3
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       glob: 10.4.5
       sax: 1.4.1
       source-map: 0.7.4
@@ -28305,7 +28307,7 @@ snapshots:
   tuf-js@3.0.1:
     dependencies:
       '@tufjs/models': 3.0.1
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
       make-fetch-happen: 14.0.3
     transitivePeerDependencies:
       - supports-color
@@ -28420,13 +28422,13 @@ snapshots:
       trough: 2.2.0
       vfile: 6.0.3
 
-  unimport@3.14.5(rollup@4.29.1):
+  unimport@3.14.5(rollup@4.30.1):
     dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.29.1)
+      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       acorn: 8.14.0
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
-      fast-glob: 3.3.2
+      fast-glob: 3.3.3
       local-pkg: 0.5.1
       magic-string: 0.30.17
       mlly: 1.7.3
@@ -28542,7 +28544,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.0
       '@babel/standalone': 7.26.4
-      '@babel/types': 7.26.3
+      '@babel/types': 7.26.7
       citty: 0.1.6
       defu: 6.1.4
       jiti: 2.4.2
@@ -28664,7 +28666,7 @@ snapshots:
   vite-node@1.6.0(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.7(supports-color@9.4.0)
+      debug: 4.3.7(supports-color@8.1.1)
       pathe: 1.1.2
       picocolors: 1.1.0
       vite: 5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0)
@@ -28964,7 +28966,7 @@ snapshots:
     dependencies:
       chalk: 2.4.2
       commander: 3.0.2
-      debug: 4.4.0
+      debug: 4.4.0(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
