@@ -1,3 +1,13 @@
+## 3.7.2 (2025-02-01)
+
+### 🩹 Fixes
+
+- **core:** make sure getAttribute is configurable ([48e64797](https://github.com/angular-threejs/angular-three/commit/48e64797))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 3.7.1 (2025-01-26)
 
 This was a version bump only, there were no code changes.
