@@ -46,25 +46,25 @@ importers:
         version: 0.14.0
       '@monogrid/gainmap-js':
         specifier: ^3.1.0
-        version: 3.1.0(three@0.172.0)
+        version: 3.1.0(three@0.173.0)
       '@pmndrs/cannon-worker-api':
         specifier: ^2.4.0
-        version: 2.4.0(three@0.172.0)
+        version: 2.4.0(three@0.173.0)
       '@pmndrs/vanilla':
         specifier: ^1.20.2
-        version: 1.20.2(three@0.172.0)
+        version: 1.20.2(three@0.173.0)
       '@swc/helpers':
         specifier: 0.5.15
         version: 0.5.15
       camera-controls:
         specifier: ^2.9.0
-        version: 2.9.0(three@0.172.0)
+        version: 2.9.0(three@0.173.0)
       cannon-es:
         specifier: ^0.20.0
         version: 0.20.0
       cannon-es-debugger:
         specifier: ^1.0.0
-        version: 1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3)
+        version: 1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3)
       front-matter:
         specifier: ^4.0.2
         version: 4.0.2
@@ -82,7 +82,7 @@ importers:
         version: 7.4.0
       maath:
         specifier: ^0.10.8
-        version: 0.10.8(@types/three@0.172.0)(three@0.172.0)
+        version: 0.10.8(@types/three@0.173.0)(three@0.173.0)
       marked:
         specifier: ^13.0.3
         version: 13.0.3
@@ -97,10 +97,10 @@ importers:
         version: 10.9.3
       meshline:
         specifier: ^3.3.1
-        version: 3.3.1(three@0.172.0)
+        version: 3.3.1(three@0.173.0)
       n8ao:
         specifier: ^1.9.4
-        version: 1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0)
+        version: 1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0)
       ngxtension:
         specifier: ^4.3.2
         version: 4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1)
@@ -118,19 +118,19 @@ importers:
         version: 7.8.1
       stats-gl:
         specifier: ^3.6.0
-        version: 3.6.0(three@0.172.0)
+        version: 3.6.0(three@0.173.0)
       three-custom-shader-material:
-        specifier: ~6.2.1
-        version: 6.2.1(react@18.3.1)(three@0.172.0)
+        specifier: ~6.3.0
+        version: 6.3.0(react@18.3.1)(three@0.173.0)
       three-mesh-bvh:
         specifier: ^0.9.0
-        version: 0.9.0(three@0.172.0)
+        version: 0.9.0(three@0.173.0)
       three-stdlib:
         specifier: ^2.35.13
-        version: 2.35.13(three@0.172.0)
+        version: 2.35.13(three@0.173.0)
       troika-three-text:
         specifier: ^0.52.3
-        version: 0.52.3(three@0.172.0)
+        version: 0.52.3(three@0.173.0)
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -268,8 +268,8 @@ importers:
         specifier: 20.14.12
         version: 20.14.12
       '@types/three':
-        specifier: ^0.172.0
-        version: 0.172.0
+        specifier: ^0.173.0
+        version: 0.173.0
       '@typescript-eslint/utils':
         specifier: 8.22.0
         version: 8.22.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
@@ -341,7 +341,7 @@ importers:
         version: 10.1.3(postcss@8.5.1)
       postprocessing:
         specifier: ^6.36.6
-        version: 6.36.6(three@0.172.0)
+        version: 6.36.6(three@0.173.0)
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -361,8 +361,8 @@ importers:
         specifier: ^3.4.17
         version: 3.4.17(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@20.14.12)(typescript@5.7.3))
       three:
-        specifier: ^0.172.0
-        version: 0.172.0
+        specifier: ^0.173.0
+        version: 0.173.0
       ts-jest:
         specifier: ^29.2.5
         version: 29.2.5(@babel/core@7.26.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.0))(esbuild@0.24.2)(jest@29.7.0(@types/node@20.14.12)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@20.14.12)(typescript@5.7.3)))(typescript@5.7.3)
@@ -407,16 +407,16 @@ importers:
         version: 5.1.4(astro@5.1.1(@types/node@22.3.0)(db0@0.2.1)(ioredis@5.4.1)(jiti@2.4.2)(less@4.2.1)(rollup@4.30.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(typescript@5.7.3)(yaml@2.7.0))(tailwindcss@3.4.15(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@22.3.0)(typescript@5.7.3)))(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@22.3.0)(typescript@5.7.3))
       angular-three:
         specifier: ^3.0.0
-        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@nativescript/angular@18.1.3)(@nativescript/canvas-media@2.0.0-webgpu.11)(@nativescript/canvas-three@2.0.0-webgpu.11)(@nativescript/canvas@2.0.0-webgpu.11)(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.172.0)(typescript@5.7.3)
+        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@nativescript/angular@18.1.3)(@nativescript/canvas-media@2.0.0-webgpu.11)(@nativescript/canvas-three@2.0.0-webgpu.11)(@nativescript/canvas@2.0.0-webgpu.11)(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.173.0)(typescript@5.7.3)
       angular-three-cannon:
         specifier: ^3.0.0
-        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.172.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.172.0)
+        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.173.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.173.0)
       angular-three-postprocessing:
         specifier: ^3.0.0
-        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0))(postprocessing@6.36.6(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)
+        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0))(postprocessing@6.36.6(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)
       angular-three-soba:
         specifier: ^3.0.0
-        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.172.0))(@pmndrs/vanilla@1.20.2(three@0.172.0))(camera-controls@2.9.0(three@0.172.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(meshline@3.3.1(three@0.172.0))(stats-gl@3.6.0(three@0.172.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.172.0))(three-mesh-bvh@0.8.3(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)(troika-three-text@0.52.3(three@0.172.0))
+        version: 3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.173.0))(@pmndrs/vanilla@1.20.2(three@0.173.0))(camera-controls@2.9.0(three@0.173.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(meshline@3.3.1(three@0.173.0))(stats-gl@3.6.0(three@0.173.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.173.0))(three-mesh-bvh@0.8.3(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)(troika-three-text@0.52.3(three@0.173.0))
       astro:
         specifier: ^5.1.1
         version: 5.1.1(@types/node@22.3.0)(db0@0.2.1)(ioredis@5.4.1)(jiti@2.4.2)(less@4.2.1)(rollup@4.30.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(typescript@5.7.3)(yaml@2.7.0)
@@ -450,19 +450,19 @@ importers:
         version: 5.1.5(astro@5.1.8(@types/node@22.3.0)(db0@0.2.1)(ioredis@5.4.1)(jiti@2.4.2)(less@4.2.1)(rollup@4.30.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(typescript@5.7.3)(yaml@2.7.0))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@22.3.0)(typescript@5.7.3)))(ts-node@10.9.2(@swc/core@1.10.7(@swc/helpers@0.5.15))(@types/node@22.3.0)(typescript@5.7.3))
       angular-three:
         specifier: next
-        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.172.0)(typescript@5.7.3)
+        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.173.0)(typescript@5.7.3)
       angular-three-cannon:
         specifier: next
-        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.172.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.172.0)
+        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.173.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.173.0)
       angular-three-postprocessing:
         specifier: next
-        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0))(postprocessing@6.36.6(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)
+        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0))(postprocessing@6.36.6(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)
       angular-three-rapier:
         specifier: next
-        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@dimforge/rapier3d-compat@0.14.0)(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)
+        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@dimforge/rapier3d-compat@0.14.0)(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)
       angular-three-soba:
         specifier: next
-        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.172.0))(@pmndrs/vanilla@1.20.2(three@0.172.0))(camera-controls@2.9.0(three@0.172.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(meshline@3.3.1(three@0.172.0))(stats-gl@3.6.0(three@0.172.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.172.0))(three-mesh-bvh@0.9.0(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)(troika-three-text@0.52.3(three@0.172.0))
+        version: 4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.173.0))(@pmndrs/vanilla@1.20.2(three@0.173.0))(camera-controls@2.9.0(three@0.173.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(meshline@3.3.1(three@0.173.0))(stats-gl@3.6.0(three@0.173.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.173.0))(three-mesh-bvh@0.9.0(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)(troika-three-text@0.52.3(three@0.173.0))
       astro:
         specifier: ^5.1.5
         version: 5.1.8(@types/node@22.3.0)(db0@0.2.1)(ioredis@5.4.1)(jiti@2.4.2)(less@4.2.1)(rollup@4.30.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(typescript@5.7.3)(yaml@2.7.0)
@@ -4621,8 +4621,8 @@ packages:
   '@types/stats.js@0.17.3':
     resolution: {integrity: sha512-pXNfAD3KHOdif9EQXZ9deK82HVNaXP5ZIF5RP2QG6OQFNTaY2YIetfrE9t528vEreGQvEPRDDc8muaoYeK0SxQ==}
 
-  '@types/three@0.172.0':
-    resolution: {integrity: sha512-LrUtP3FEG26Zg5WiF0nbg8VoXiKokBLTcqM2iLvM9vzcfEiYmmBAPGdBgV0OYx9fvWlY3R/3ERTZcD9X5sc0NA==}
+  '@types/three@0.173.0':
+    resolution: {integrity: sha512-KtNjfI/CRB6JVKIVeZM1R3GYDX2wkoV2itNcQu2j4d7qkhjGOuB+s2oF6jl9mztycDLGMtrAnJQYxInC8Bb20A==}
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -11802,6 +11802,18 @@ packages:
       react:
         optional: true
 
+  three-custom-shader-material@6.3.0:
+    resolution: {integrity: sha512-5hd5IpAxybyJmrUBZ7tiVW67ESGzMcYv4im6Hs9m9Zgmwj3gHkbPhniqg2Mu69WrtaMialV9gxxFnGP91Yl1vA==}
+    peerDependencies:
+      '@react-three/fiber': '>=8.0'
+      react: '>=18.0'
+      three: '>=0.170'
+    peerDependenciesMeta:
+      '@react-three/fiber':
+        optional: true
+      react:
+        optional: true
+
   three-mesh-bvh@0.8.3:
     resolution: {integrity: sha512-4G5lBaF+g2auKX3P0yqx+MJC6oVt6sB5k+CchS6Ob0qvH0YIhuUk1eYr7ktsIpY+albCqE80/FVQGV190PmiAg==}
     peerDependencies:
@@ -11820,8 +11832,8 @@ packages:
   three@0.157.0:
     resolution: {integrity: sha512-CeAwQrf4x3z0/e+MC4F+nXLW5t0gh3pw+L6CCBqpHvOq3bGYIgRYub7Pv0j/9wR+d++OiEglyZzWyuSYbwWGOA==}
 
-  three@0.172.0:
-    resolution: {integrity: sha512-6HMgMlzU97MsV7D/tY8Va38b83kz8YJX+BefKjspMNAv0Vx6dxMogHOrnRl/sbMIs3BPUKijPqDqJ/+UwJbIow==}
+  three@0.173.0:
+    resolution: {integrity: sha512-AUwVmViIEUgBwxJJ7stnF0NkPpZxx1aZ6WiAbQ/Qq61h6I9UR4grXtZDmO8mnlaNORhHnIBlXJ1uBxILEKuVyw==}
 
   throttleit@1.0.1:
     resolution: {integrity: sha512-vDZpf9Chs9mAdfY046mcPt8fg5QSZr37hEH4TXYBnDF+izxgrbRGUAAaBvIk/fJm9aOFCGFd1EsNg5AZCbnQCQ==}
@@ -16603,10 +16615,10 @@ snapshots:
       '@module-federation/runtime': 0.8.9
       '@module-federation/sdk': 0.8.9
 
-  '@monogrid/gainmap-js@3.1.0(three@0.172.0)':
+  '@monogrid/gainmap-js@3.1.0(three@0.173.0)':
     dependencies:
       promise-worker-transferable: 1.0.4
-      three: 0.172.0
+      three: 0.173.0
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     optional: true
@@ -17456,14 +17468,14 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@pmndrs/cannon-worker-api@2.4.0(three@0.172.0)':
+  '@pmndrs/cannon-worker-api@2.4.0(three@0.173.0)':
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
 
-  '@pmndrs/vanilla@1.20.2(three@0.172.0)':
+  '@pmndrs/vanilla@1.20.2(three@0.173.0)':
     dependencies:
       glsl-noise: 0.0.0
-      three: 0.172.0
+      three: 0.173.0
 
   '@redocly/ajv@8.11.2':
     dependencies:
@@ -18623,7 +18635,7 @@ snapshots:
 
   '@types/stats.js@0.17.3': {}
 
-  '@types/three@0.172.0':
+  '@types/three@0.173.0':
     dependencies:
       '@tweenjs/tween.js': 23.1.3
       '@types/stats.js': 0.17.3
@@ -19277,100 +19289,100 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  angular-three-cannon@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.172.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.172.0):
+  angular-three-cannon@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.173.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.173.0):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      '@pmndrs/cannon-worker-api': 2.4.0(three@0.172.0)
+      '@pmndrs/cannon-worker-api': 2.4.0(three@0.173.0)
       cannon-es: 0.20.0
-      three: 0.172.0
+      three: 0.173.0
       tslib: 2.8.1
     optionalDependencies:
-      cannon-es-debugger: 1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3)
+      cannon-es-debugger: 1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3)
 
-  angular-three-cannon@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.172.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.172.0):
+  angular-three-cannon@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@pmndrs/cannon-worker-api@2.4.0(three@0.173.0))(cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3))(cannon-es@0.20.0)(three@0.173.0):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      '@pmndrs/cannon-worker-api': 2.4.0(three@0.172.0)
+      '@pmndrs/cannon-worker-api': 2.4.0(three@0.173.0)
       cannon-es: 0.20.0
-      three: 0.172.0
+      three: 0.173.0
       tslib: 2.8.1
     optionalDependencies:
-      cannon-es-debugger: 1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3)
+      cannon-es-debugger: 1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3)
 
-  angular-three-postprocessing@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0))(postprocessing@6.36.6(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0):
+  angular-three-postprocessing@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0))(postprocessing@6.36.6(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      maath: 0.10.8(@types/three@0.172.0)(three@0.172.0)
-      postprocessing: 6.36.6(three@0.172.0)
-      three: 0.172.0
-      three-stdlib: 2.35.13(three@0.172.0)
+      maath: 0.10.8(@types/three@0.173.0)(three@0.173.0)
+      postprocessing: 6.36.6(three@0.173.0)
+      three: 0.173.0
+      three-stdlib: 2.35.13(three@0.173.0)
       tslib: 2.8.1
     optionalDependencies:
-      n8ao: 1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0)
+      n8ao: 1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0)
 
-  angular-three-postprocessing@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0))(postprocessing@6.36.6(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0):
+  angular-three-postprocessing@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(n8ao@1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0))(postprocessing@6.36.6(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      maath: 0.10.8(@types/three@0.172.0)(three@0.172.0)
-      postprocessing: 6.36.6(three@0.172.0)
-      three: 0.172.0
-      three-stdlib: 2.35.13(three@0.172.0)
+      maath: 0.10.8(@types/three@0.173.0)(three@0.173.0)
+      postprocessing: 6.36.6(three@0.173.0)
+      three: 0.173.0
+      three-stdlib: 2.35.13(three@0.173.0)
       tslib: 2.8.1
     optionalDependencies:
-      n8ao: 1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0)
+      n8ao: 1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0)
 
-  angular-three-rapier@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@dimforge/rapier3d-compat@0.14.0)(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0):
+  angular-three-rapier@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@dimforge/rapier3d-compat@0.14.0)(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
       '@dimforge/rapier3d-compat': 0.14.0
-      three: 0.172.0
-      three-stdlib: 2.35.13(three@0.172.0)
+      three: 0.173.0
+      three-stdlib: 2.35.13(three@0.173.0)
       tslib: 2.8.1
 
-  angular-three-soba@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.172.0))(@pmndrs/vanilla@1.20.2(three@0.172.0))(camera-controls@2.9.0(three@0.172.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(meshline@3.3.1(three@0.172.0))(stats-gl@3.6.0(three@0.172.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.172.0))(three-mesh-bvh@0.8.3(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)(troika-three-text@0.52.3(three@0.172.0)):
+  angular-three-soba@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.173.0))(@pmndrs/vanilla@1.20.2(three@0.173.0))(camera-controls@2.9.0(three@0.173.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(meshline@3.3.1(three@0.173.0))(stats-gl@3.6.0(three@0.173.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.173.0))(three-mesh-bvh@0.8.3(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)(troika-three-text@0.52.3(three@0.173.0)):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      three: 0.172.0
-      three-stdlib: 2.35.13(three@0.172.0)
+      three: 0.173.0
+      three-stdlib: 2.35.13(three@0.173.0)
       tslib: 2.8.1
     optionalDependencies:
-      '@monogrid/gainmap-js': 3.1.0(three@0.172.0)
-      '@pmndrs/vanilla': 1.20.2(three@0.172.0)
-      camera-controls: 2.9.0(three@0.172.0)
+      '@monogrid/gainmap-js': 3.1.0(three@0.173.0)
+      '@pmndrs/vanilla': 1.20.2(three@0.173.0)
+      camera-controls: 2.9.0(three@0.173.0)
       hls.js: 1.5.20
-      maath: 0.10.8(@types/three@0.172.0)(three@0.172.0)
-      meshline: 3.3.1(three@0.172.0)
-      stats-gl: 3.6.0(three@0.172.0)
-      three-custom-shader-material: 6.2.1(react@18.3.1)(three@0.172.0)
-      three-mesh-bvh: 0.8.3(three@0.172.0)
-      troika-three-text: 0.52.3(three@0.172.0)
+      maath: 0.10.8(@types/three@0.173.0)(three@0.173.0)
+      meshline: 3.3.1(three@0.173.0)
+      stats-gl: 3.6.0(three@0.173.0)
+      three-custom-shader-material: 6.2.1(react@18.3.1)(three@0.173.0)
+      three-mesh-bvh: 0.8.3(three@0.173.0)
+      troika-three-text: 0.52.3(three@0.173.0)
 
-  angular-three-soba@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.172.0))(@pmndrs/vanilla@1.20.2(three@0.172.0))(camera-controls@2.9.0(three@0.172.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.172.0)(three@0.172.0))(meshline@3.3.1(three@0.172.0))(stats-gl@3.6.0(three@0.172.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.172.0))(three-mesh-bvh@0.9.0(three@0.172.0))(three-stdlib@2.35.13(three@0.172.0))(three@0.172.0)(troika-three-text@0.52.3(three@0.172.0)):
+  angular-three-soba@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@monogrid/gainmap-js@3.1.0(three@0.173.0))(@pmndrs/vanilla@1.20.2(three@0.173.0))(camera-controls@2.9.0(three@0.173.0))(hls.js@1.5.20)(maath@0.10.8(@types/three@0.173.0)(three@0.173.0))(meshline@3.3.1(three@0.173.0))(stats-gl@3.6.0(three@0.173.0))(three-custom-shader-material@6.2.1(react@18.3.1)(three@0.173.0))(three-mesh-bvh@0.9.0(three@0.173.0))(three-stdlib@2.35.13(three@0.173.0))(three@0.173.0)(troika-three-text@0.52.3(three@0.173.0)):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      three: 0.172.0
-      three-stdlib: 2.35.13(three@0.172.0)
+      three: 0.173.0
+      three-stdlib: 2.35.13(three@0.173.0)
       tslib: 2.8.1
     optionalDependencies:
-      '@monogrid/gainmap-js': 3.1.0(three@0.172.0)
-      '@pmndrs/vanilla': 1.20.2(three@0.172.0)
-      camera-controls: 2.9.0(three@0.172.0)
+      '@monogrid/gainmap-js': 3.1.0(three@0.173.0)
+      '@pmndrs/vanilla': 1.20.2(three@0.173.0)
+      camera-controls: 2.9.0(three@0.173.0)
       hls.js: 1.5.20
-      maath: 0.10.8(@types/three@0.172.0)(three@0.172.0)
-      meshline: 3.3.1(three@0.172.0)
-      stats-gl: 3.6.0(three@0.172.0)
-      three-custom-shader-material: 6.2.1(react@18.3.1)(three@0.172.0)
-      three-mesh-bvh: 0.9.0(three@0.172.0)
-      troika-three-text: 0.52.3(three@0.172.0)
+      maath: 0.10.8(@types/three@0.173.0)(three@0.173.0)
+      meshline: 3.3.1(three@0.173.0)
+      stats-gl: 3.6.0(three@0.173.0)
+      three-custom-shader-material: 6.2.1(react@18.3.1)(three@0.173.0)
+      three-mesh-bvh: 0.9.0(three@0.173.0)
+      troika-three-text: 0.52.3(three@0.173.0)
 
-  angular-three@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@nativescript/angular@18.1.3)(@nativescript/canvas-media@2.0.0-webgpu.11)(@nativescript/canvas-three@2.0.0-webgpu.11)(@nativescript/canvas@2.0.0-webgpu.11)(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.172.0)(typescript@5.7.3):
+  angular-three@3.2.3(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@nativescript/angular@18.1.3)(@nativescript/canvas-media@2.0.0-webgpu.11)(@nativescript/canvas-three@2.0.0-webgpu.11)(@nativescript/canvas@2.0.0-webgpu.11)(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.173.0)(typescript@5.7.3):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
@@ -19378,7 +19390,7 @@ snapshots:
       '@phenomnomnominal/tsquery': 6.1.3(typescript@5.7.3)
       ngxtension: 4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1)
       nx: 20.4.0(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))
-      three: 0.172.0
+      three: 0.173.0
       tslib: 2.8.1
     optionalDependencies:
       '@nativescript/angular': 18.1.3
@@ -19391,7 +19403,7 @@ snapshots:
       - debug
       - typescript
 
-  angular-three@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.172.0)(typescript@5.7.3):
+  angular-three@4.0.0-next.7(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(ngxtension@4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1))(three@0.173.0)(typescript@5.7.3):
     dependencies:
       '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
@@ -19399,7 +19411,7 @@ snapshots:
       '@phenomnomnominal/tsquery': 6.1.3(typescript@5.7.3)
       ngxtension: 4.3.2(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))(rxjs@7.8.1)
       nx: 20.4.0(@swc-node/register@1.10.9(@swc/core@1.10.7(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.7(@swc/helpers@0.5.15))
-      three: 0.172.0
+      three: 0.173.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@swc-node/register'
@@ -20216,9 +20228,9 @@ snapshots:
 
   camelcase@8.0.0: {}
 
-  camera-controls@2.9.0(three@0.172.0):
+  camera-controls@2.9.0(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
 
   caniuse-api@3.0.0:
     dependencies:
@@ -20231,10 +20243,10 @@ snapshots:
 
   caniuse-lite@1.0.30001684: {}
 
-  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.172.0)(typescript@5.7.3):
+  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.173.0)(typescript@5.7.3):
     dependencies:
       cannon-es: 0.20.0
-      three: 0.172.0
+      three: 0.173.0
     optionalDependencies:
       typescript: 5.7.3
 
@@ -24285,10 +24297,10 @@ snapshots:
 
   lz-string@1.5.0: {}
 
-  maath@0.10.8(@types/three@0.172.0)(three@0.172.0):
+  maath@0.10.8(@types/three@0.173.0)(three@0.173.0):
     dependencies:
-      '@types/three': 0.172.0
-      three: 0.172.0
+      '@types/three': 0.173.0
+      three: 0.173.0
 
   magic-string@0.30.11:
     dependencies:
@@ -24647,9 +24659,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  meshline@3.3.1(three@0.172.0):
+  meshline@3.3.1(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
 
   meshoptimizer@0.18.1: {}
 
@@ -25245,10 +25257,10 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  n8ao@1.9.4(postprocessing@6.36.6(three@0.172.0))(three@0.172.0):
+  n8ao@1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0):
     dependencies:
-      postprocessing: 6.36.6(three@0.172.0)
-      three: 0.172.0
+      postprocessing: 6.36.6(three@0.173.0)
+      three: 0.173.0
 
   nanoid@3.3.7: {}
 
@@ -26586,9 +26598,9 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postprocessing@6.36.6(three@0.172.0):
+  postprocessing@6.36.6(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
 
   potpack@1.0.2: {}
 
@@ -27750,9 +27762,9 @@ snapshots:
       - astro
       - supports-color
 
-  stats-gl@3.6.0(three@0.172.0):
+  stats-gl@3.6.0(three@0.173.0):
     optionalDependencies:
-      three: 0.172.0
+      three: 0.173.0
 
   statuses@1.5.0: {}
 
@@ -28155,22 +28167,29 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  three-custom-shader-material@6.2.1(react@18.3.1)(three@0.172.0):
+  three-custom-shader-material@6.2.1(react@18.3.1)(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
+    optionalDependencies:
+      react: 18.3.1
+    optional: true
+
+  three-custom-shader-material@6.3.0(react@18.3.1)(three@0.173.0):
+    dependencies:
+      three: 0.173.0
     optionalDependencies:
       react: 18.3.1
 
-  three-mesh-bvh@0.8.3(three@0.172.0):
+  three-mesh-bvh@0.8.3(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
     optional: true
 
-  three-mesh-bvh@0.9.0(three@0.172.0):
+  three-mesh-bvh@0.9.0(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
 
-  three-stdlib@2.35.13(three@0.172.0):
+  three-stdlib@2.35.13(three@0.173.0):
     dependencies:
       '@types/draco3d': 1.4.10
       '@types/offscreencanvas': 2019.7.3
@@ -28178,12 +28197,12 @@ snapshots:
       draco3d: 1.5.7
       fflate: 0.6.10
       potpack: 1.0.2
-      three: 0.172.0
+      three: 0.173.0
 
   three@0.157.0:
     optional: true
 
-  three@0.172.0: {}
+  three@0.173.0: {}
 
   throttleit@1.0.1: {}
 
@@ -28273,17 +28292,17 @@ snapshots:
 
   trim-lines@3.0.1: {}
 
-  troika-three-text@0.52.3(three@0.172.0):
+  troika-three-text@0.52.3(three@0.173.0):
     dependencies:
       bidi-js: 1.0.3
-      three: 0.172.0
-      troika-three-utils: 0.52.0(three@0.172.0)
+      three: 0.173.0
+      troika-three-utils: 0.52.0(three@0.173.0)
       troika-worker-utils: 0.52.0
       webgl-sdf-generator: 1.1.1
 
-  troika-three-utils@0.52.0(three@0.172.0):
+  troika-three-utils@0.52.0(three@0.173.0):
     dependencies:
-      three: 0.172.0
+      three: 0.173.0
 
   troika-worker-utils@0.52.0: {}
 
