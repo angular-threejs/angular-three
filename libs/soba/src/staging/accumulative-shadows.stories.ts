@@ -10,7 +10,7 @@ import {
 	NgtsRandomizedLights,
 } from 'angular-three-soba/staging';
 import { CanvasTexture, MeshStandardMaterial, RepeatWrapping, UVMapping } from 'three';
-import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
+import { FlakesTexture } from 'three-stdlib';
 import { color, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
@@ -35,7 +35,12 @@ class Suzi {
 
 		material.color.set('orange');
 		material.roughness = 0;
-		material.normalMap = new CanvasTexture(new FlakesTexture(), UVMapping, RepeatWrapping, RepeatWrapping);
+		material.normalMap = new CanvasTexture(
+			new FlakesTexture() as HTMLCanvasElement,
+			UVMapping,
+			RepeatWrapping,
+			RepeatWrapping,
+		);
 		material.normalMap.flipY = false;
 		material.normalMap.repeat.set(40, 40);
 		material.normalScale.set(0.05, 0.05);

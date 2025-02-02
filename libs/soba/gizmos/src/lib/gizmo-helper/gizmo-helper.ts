@@ -221,6 +221,7 @@ export class NgtsGizmoHelper {
 	private updateDefaultUpEffect() {
 		const mainCamera = this.store.camera();
 		this.defaultUp.copy(mainCamera.up);
+		dummy.up.copy(mainCamera.up);
 	}
 
 	private isOrbitControls(controls: ControlsProto): controls is OrbitControls {
