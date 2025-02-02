@@ -1,3 +1,19 @@
+## 4.0.0-next.9 (2025-02-02)
+
+### 🚀 Features
+
+- **postprocessing:** selective bloom effect ([dc6b7d1a](https://github.com/angular-threejs/angular-three/commit/dc6b7d1a))
+
+### 🩹 Fixes
+
+- **core:** applyProps assign geometry directly instead of copying ([68da7aa8](https://github.com/angular-threejs/angular-three/commit/68da7aa8))
+- **soba:** fix billboard rotation ([66eb44f9](https://github.com/angular-threejs/angular-three/commit/66eb44f9))
+- **soba:** gizmo rotation should respect camera up ([9e92d423](https://github.com/angular-threejs/angular-three/commit/9e92d423))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.8 (2025-02-01)
 
 This was a version bump only, there were no code changes.
