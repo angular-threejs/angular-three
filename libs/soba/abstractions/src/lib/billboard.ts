@@ -55,10 +55,10 @@ export class NgtsBillboard {
 				this.innerRef().nativeElement,
 			];
 
-			if (!follow || !group) return;
+			if (!follow || !group || !inner) return;
 
 			// save previous rotation in case we're locking an axis
-			const prevRotation = group.rotation.clone();
+			const prevRotation = inner.rotation.clone();
 
 			// always face the camera
 			group.updateMatrix();
@@ -67,9 +67,9 @@ export class NgtsBillboard {
 			camera.getWorldQuaternion(inner.quaternion).premultiply(q.invert());
 
 			// readjust any axis that is locked
-			if (lockX) group.rotation.x = prevRotation.x;
-			if (lockY) group.rotation.y = prevRotation.y;
-			if (lockZ) group.rotation.z = prevRotation.z;
+			if (lockX) inner.rotation.x = prevRotation.x;
+			if (lockY) inner.rotation.y = prevRotation.y;
+			if (lockZ) inner.rotation.z = prevRotation.z;
 		});
 	}
 }

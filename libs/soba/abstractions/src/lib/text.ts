@@ -45,6 +45,7 @@ export interface NgtsTextOptions extends Partial<NgtThreeElements['ngt-mesh']> {
 	fillOpacity?: number;
 	sdfGlyphSize: number;
 	debugSDF?: boolean;
+	glyphGeometryDetail?: number;
 }
 
 const defaultOptions: NgtsTextOptions = {
