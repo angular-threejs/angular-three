@@ -18,6 +18,7 @@ export * from './noise';
 export * from './outline';
 export * from './pixelation';
 export * from './scanline';
+export * from './selective-bloom';
 export * from './sepia';
 export * from './shock-wave';
 export * from './smaa';
