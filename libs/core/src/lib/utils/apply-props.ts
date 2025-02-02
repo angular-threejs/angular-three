@@ -35,6 +35,21 @@ const colorMaps = ['map', 'emissiveMap', 'sheenColorMap', 'specularColorMap', 'e
 
 type ClassConstructor = { new (): void };
 
+const MEMOIZED_PROTOTYPES = new Map();
+
+function getMemoizedPrototype(root: any) {
+	let ctor = MEMOIZED_PROTOTYPES.get(root.constructor);
+	try {
+		if (!ctor) {
+			ctor = new root.constructor();
+			MEMOIZED_PROTOTYPES.set(root.constructor, ctor);
+		}
+	} catch (e) {
+		// ...
+	}
+	return ctor;
+}
+
 // This function applies a set of changes to the instance
 export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>['object'], props: NgtAnyRecord) {
 	// if props is empty
@@ -77,7 +92,21 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 			(value as ClassConstructor | undefined)?.constructor &&
 			(targetProp as ClassConstructor).constructor === (value as ClassConstructor).constructor
 		) {
-			targetProp.copy(value);
+			// If both are geometries, we should assign the value directly instead of copying
+			if (
+				is.three<THREE.BufferGeometry>(targetProp, 'isBufferGeometry') &&
+				is.three<THREE.BufferGeometry>(value, 'isBufferGeometry')
+			) {
+				Object.assign(currentInstance, { [key]: value });
+			} else {
+				// fetch the default state of the target
+				const ctor = getMemoizedPrototype(currentInstance);
+				// The target key was originally null or undefined, which indicates that the object which
+				// is now present was externally set by the user, we should therefore assign the value directly
+				if (ctor !== undefined && ctor[key] == null) Object.assign(currentInstance, { [key]: value });
+				// Otherwise copy is correct
+				else targetProp.copy(value);
+			}
 		}
 		// Layers have no copy function, we must therefore copy the mask property
 		else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) {
