@@ -177,6 +177,7 @@ export class NgtCanvas {
 						configurator.configure(canvasOptions);
 
 						if (this.glRef) {
+							this.store.snapshot.invalidate();
 							this.glRef.detectChanges();
 						} else {
 							this.noZoneRender(canvasElement, canvasVcr, canvasContent);
