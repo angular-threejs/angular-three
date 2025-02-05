@@ -1,3 +1,15 @@
+## 4.0.0-next.10 (2025-02-05)
+
+### 🩹 Fixes
+
+- **core:** run invalidate on canvasOtions changes ([e64eccfc](https://github.com/angular-threejs/angular-three/commit/e64eccfc))
+- **core:** adjust after attach type ([c0197de1](https://github.com/angular-threejs/angular-three/commit/c0197de1))
+- **postprocessing:** expose effectComposer ([726dfdbe](https://github.com/angular-threejs/angular-three/commit/726dfdbe))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.9 (2025-02-02)
 
 ### 🚀 Features
