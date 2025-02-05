@@ -28,6 +28,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'webgpu-renderer',
+		loadComponent: () => import('./webgpu-renderer/webgpu-renderer'),
+		data: {
+			credits: {
+				title: "Threlte's WebGPU Renderer example",
+				link: 'https://threlte.xyz/docs/learn/advanced/webgpu',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
