@@ -141,6 +141,8 @@ export class NgtpEffectComposer {
 		return { composer, normalPass, downSamplingPass };
 	});
 
+	effectComposer = pick(this.composerData, 'composer');
+
 	constructor() {
 		extend({ Group });
 
