@@ -12,4 +12,4 @@ import { SceneGraph } from './scene';
 	host: { class: 'pointer-events' },
 	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
 })
-export default class PoointEvents {}
+export default class PointerEvents {}
