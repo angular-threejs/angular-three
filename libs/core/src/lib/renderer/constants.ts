@@ -10,4 +10,4 @@ export const NGT_DOM_PARENT_FLAG = '__ngt_dom_parent__';
 export const NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG = '__ngt_delegate_renderer_destroy_node_patched__';
 export const NGT_HTML_FLAG = '__ngt_html__';
 
-export const THREE_NATIVE_EVENTS = ['added', 'removed', 'childadded', 'childremoved', 'disposed'];
+export const THREE_NATIVE_EVENTS = ['added', 'removed', 'childadded', 'childremoved', 'change', 'disposed'];

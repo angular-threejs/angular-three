@@ -52,6 +52,7 @@ export interface NgtRaycastableRepresentation {
 }
 
 export type ThreeDisposeEvent = { type: 'dispose'; target: any };
+export type ThreeChangeEvent = { type: 'change'; target: any };
 export type ThreeAddedEvent = { type: 'added'; target: any };
 export type ThreeRemovedEvent = { type: 'removed'; target: any };
 export type ThreeChildAddedEvent = { type: 'childadded'; target: any; child: any };
@@ -71,6 +72,7 @@ export type NgtObject3DEventsMap = {
 	removed: ThreeRemovedEvent;
 	childadded: ThreeChildAddedEvent;
 	childremoved: ThreeChildRemovedEvent;
+	change: ThreeChangeEvent;
 };
 
 export type NgtAllObject3DEventsMap<TInstance> = NgtObject3DEventsMap & NgtNodeEventMap<TInstance>;
