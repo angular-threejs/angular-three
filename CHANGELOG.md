@@ -1,3 +1,13 @@
+## 4.0.0-next.12 (2025-02-07)
+
+### 🚀 Features
+
+- **core:** support pierced property ([e5a7285b](https://github.com/angular-threejs/angular-three/commit/e5a7285b))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.11 (2025-02-07)
 
 ### 🩹 Fixes
