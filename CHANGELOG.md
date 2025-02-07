@@ -1,3 +1,13 @@
+## 4.0.0-next.11 (2025-02-07)
+
+### 🩹 Fixes
+
+- **soba:** use booleanAttribute for adaptive dpr pixelated input ([dfb76f8b](https://github.com/angular-threejs/angular-three/commit/dfb76f8b))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.10 (2025-02-05)
 
 ### 🩹 Fixes
