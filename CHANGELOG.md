@@ -1,3 +1,13 @@
+## 4.0.0-next.13 (2025-02-07)
+
+### 🚀 Features
+
+- **core:** add change as THREE native events ([e44c2b8a](https://github.com/angular-threejs/angular-three/commit/e44c2b8a))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.12 (2025-02-07)
 
 ### 🚀 Features
