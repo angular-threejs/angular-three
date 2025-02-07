@@ -6,10 +6,10 @@ import { checkUpdate } from './update';
 
 // This function prepares a set of changes to be applied to the instance
 function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
-	const propsEntries = Object.entries(props);
 	const changes: [key: string, value: unknown][] = [];
 
-	for (const [propKey, propValue] of propsEntries) {
+	for (const propKey in props) {
+		const propValue = props[propKey];
 		let key = propKey;
 		if (is.colorSpaceExist(instance)) {
 			if (propKey === 'encoding') {
@@ -50,6 +50,21 @@ function getMemoizedPrototype(root: any) {
 	return ctor;
 }
 
+function resolve(instance: any, key: string): { root: any; targetKey: string; targetProp: any } {
+	let targetProp = instance[key];
+	if (!key.includes('.')) return { root: instance, targetKey: key, targetProp };
+
+	// Resolve pierced target
+	const chain = key.split('.');
+	targetProp = chain.reduce((acc, part) => acc[part], instance);
+	const targetKey = chain.pop()!;
+
+	// Switch root if atomic
+	if (!targetProp?.set) instance = chain.reduce((acc, part) => acc[part], instance);
+
+	return { root: instance, targetKey, targetProp };
+}
+
 // This function applies a set of changes to the instance
 export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>['object'], props: NgtAnyRecord) {
 	// if props is empty
@@ -83,8 +98,12 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 		// 	}
 		// }
 
-		const currentInstance = instance;
-		const targetProp = (currentInstance as NgtAnyRecord)[key];
+		const { root, targetKey, targetProp } = resolve(instance, key);
+
+		// we have switched due to pierced props
+		if (root !== instance) {
+			return applyProps(root, { [targetKey]: value });
+		}
 
 		// Copy if properties match signatures
 		if (
@@ -97,13 +116,13 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 				is.three<THREE.BufferGeometry>(targetProp, 'isBufferGeometry') &&
 				is.three<THREE.BufferGeometry>(value, 'isBufferGeometry')
 			) {
-				Object.assign(currentInstance, { [key]: value });
+				Object.assign(root, { [targetKey]: value });
 			} else {
 				// fetch the default state of the target
-				const ctor = getMemoizedPrototype(currentInstance);
+				const ctor = getMemoizedPrototype(root);
 				// The target key was originally null or undefined, which indicates that the object which
 				// is now present was externally set by the user, we should therefore assign the value directly
-				if (ctor !== undefined && ctor[key] == null) Object.assign(currentInstance, { [key]: value });
+				if (ctor !== undefined && ctor[targetKey] == null) Object.assign(root, { [targetKey]: value });
 				// Otherwise copy is correct
 				else targetProp.copy(value);
 			}
@@ -127,7 +146,7 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 		}
 		// Else, just overwrite the value
 		else {
-			Object.assign(currentInstance, { [key]: value });
+			Object.assign(root, { [targetKey]: value });
 
 			// Auto-convert sRGB texture parameters for built-in materials
 			// https://github.com/pmndrs/react-three-fiber/issues/344
@@ -135,18 +154,18 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 			if (
 				rootState &&
 				!rootState.linear &&
-				colorMaps.includes(key) &&
-				(currentInstance[key] as THREE.Texture | undefined)?.isTexture &&
+				colorMaps.includes(targetKey) &&
+				(root[targetKey] as THREE.Texture | undefined)?.isTexture &&
 				// sRGB textures must be RGBA8 since r137 https://github.com/mrdoob/three.js/pull/23129
-				currentInstance[key].format === THREE.RGBAFormat &&
-				currentInstance[key].type === THREE.UnsignedByteType
+				root[targetKey].format === THREE.RGBAFormat &&
+				root[targetKey].type === THREE.UnsignedByteType
 			) {
 				// NOTE: this cannot be set from the renderer (e.g. sRGB source textures rendered to P3)
-				currentInstance[key].colorSpace = THREE.SRGBColorSpace;
+				root[targetKey].colorSpace = THREE.SRGBColorSpace;
 			}
 		}
 
-		checkUpdate(currentInstance[key]);
+		checkUpdate(root[targetKey]);
 		checkUpdate(targetProp);
 		invalidateInstance(instance as NgtInstanceNode<T>);
 	}

@@ -470,22 +470,23 @@ export class NgtRenderer2 implements Renderer2 {
 					const instanceState = getInstanceState(el);
 					if (instanceState) instanceState.attach = paths;
 				}
+				return;
+			}
+
+			// coercion for primitive values
+			let maybeCoerced: string | number | boolean = value;
+
+			if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
+				maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
 			} else {
-				// coercion for primitive values
-				let maybeCoerced: string | number | boolean = value;
+				const maybeNumber = Number(maybeCoerced);
+				if (!isNaN(maybeNumber)) maybeCoerced = maybeNumber;
+			}
 
-				if (maybeCoerced === '' || maybeCoerced === 'true' || maybeCoerced === 'false') {
-					maybeCoerced = maybeCoerced === 'true' || maybeCoerced === '';
-				} else {
-					const maybeNumber = Number(maybeCoerced);
-					if (!isNaN(maybeNumber)) maybeCoerced = maybeNumber;
-				}
-
-				if (name === 'rawValue') {
-					rS[NgtRendererClassId.rawValue] = maybeCoerced;
-				} else {
-					applyProps(el, { [name]: maybeCoerced });
-				}
+			if (name === 'rawValue') {
+				rS[NgtRendererClassId.rawValue] = maybeCoerced;
+			} else {
+				applyProps(el, { [name]: maybeCoerced });
 			}
 
 			return;

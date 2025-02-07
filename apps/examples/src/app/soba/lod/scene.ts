@@ -28,9 +28,8 @@ interface BustGLTF extends GLTF {
 					receiveShadow
 					[geometry]="level.nodes.Mesh_0001.geometry"
 					[material]="level.materials.default"
-				>
-					<ngt-value [rawValue]="0.25" attach="material.envMapIntensity" />
-				</ngt-mesh>
+					[material.envMapIntensity]="0.75"
+				/>
 			}
 		</ngts-detailed>
 	`,
