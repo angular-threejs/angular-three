@@ -1,9 +1,9 @@
-import { DestroyRef, Directive, effect, inject, input, untracked } from '@angular/core';
+import { booleanAttribute, DestroyRef, Directive, effect, inject, input, untracked } from '@angular/core';
 import { injectStore } from 'angular-three';
 
 @Directive({ selector: 'ngts-adaptive-dpr' })
 export class NgtsAdaptiveDpr {
-	pixelated = input(false);
+	pixelated = input(false, { transform: booleanAttribute });
 
 	constructor() {
 		const store = injectStore();
