@@ -1,3 +1,18 @@
+## 4.0.0-next.14 (2025-02-08)
+
+### 🚀 Features
+
+- **core:** allow injectBeforeRender to accept priority as signal ([5aad08bc](https://github.com/angular-threejs/angular-three/commit/5aad08bc))
+
+### 🩹 Fixes
+
+- **postprocessing:** use injectBeforeRender with priority signal ([16307f30](https://github.com/angular-threejs/angular-three/commit/16307f30))
+- **soba:** use injectBeforeRender with priority signal ([c5d6e3dc](https://github.com/angular-threejs/angular-three/commit/c5d6e3dc))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.13 (2025-02-07)
 
 ### 🚀 Features
