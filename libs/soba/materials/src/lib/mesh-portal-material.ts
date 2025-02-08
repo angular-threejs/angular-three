@@ -8,8 +8,6 @@ import {
 	Directive,
 	effect,
 	ElementRef,
-	inject,
-	Injector,
 	input,
 	signal,
 	TemplateRef,
@@ -50,7 +48,6 @@ export class ManagePortalScene {
 	worldUnits = input.required<boolean>();
 
 	constructor() {
-		const injector = inject(Injector);
 		const renderTextureStore = injectStore();
 
 		const buffer1 = injectFBO();
@@ -100,59 +97,54 @@ export class ManagePortalScene {
 			setEvents({ enabled: events });
 		});
 
-		effect((onCleanup) => {
-			const priority = this.priority();
+		injectBeforeRender(
+			({ gl, camera }) => {
+				const material = this.material();
 
-			// we start the before render in effect because we need the priority input to be resolved
-			const sub = injectBeforeRender(
-				({ gl, camera }) => {
-					const material = this.material();
+				const instanceState = getInstanceState(material);
+				if (!instanceState) return;
 
-					const instanceState = getInstanceState(material);
-					if (!instanceState) return;
+				const parent = instanceState.parent();
+				if (!parent) return;
 
-					const parent = instanceState.parent();
-					if (!parent) return;
+				const priority = this.priority();
+				const materialBlend = 'blend' in material && typeof material.blend === 'number' ? material.blend : 0;
+				const [worldUnits, rootScene, scene, [quad, blend]] = [
+					this.worldUnits(),
+					this.rootScene(),
+					renderTextureStore.snapshot.scene,
+					fullScreenQuad(),
+				];
+				// Move portal contents along with the parent if worldUnits is true
+				if (!worldUnits) {
+					// If the portal renders exclusively the original scene needs to be updated
+					if (priority && materialBlend === 1) parent['updateWorldMatrix'](true, false);
+					scene.matrixWorld.copy(parent['matrixWorld']);
+				} else {
+					scene.matrixWorld.identity();
+				}
 
-					const materialBlend = 'blend' in material && typeof material.blend === 'number' ? material.blend : 0;
-					const [worldUnits, rootScene, scene, [quad, blend]] = [
-						this.worldUnits(),
-						this.rootScene(),
-						renderTextureStore.snapshot.scene,
-						fullScreenQuad(),
-					];
-					// Move portal contents along with the parent if worldUnits is true
-					if (!worldUnits) {
-						// If the portal renders exclusively the original scene needs to be updated
-						if (priority && materialBlend === 1) parent['updateWorldMatrix'](true, false);
-						scene.matrixWorld.copy(parent['matrixWorld']);
-					} else {
-						scene.matrixWorld.identity();
+				// This bit is only necessary if the portal is blended, now it has a render-priority
+				// and will take over the render loop
+				if (priority) {
+					if (materialBlend > 0 && materialBlend < 1) {
+						// If blend is ongoing (> 0 and < 1) then we need to render both the root scene
+						// and the portal scene, both will then be mixed in the quad from above
+						blend.value = materialBlend;
+						gl.setRenderTarget(buffer1());
+						gl.render(scene, camera);
+						gl.setRenderTarget(buffer2());
+						gl.render(rootScene, camera);
+						gl.setRenderTarget(null);
+						quad.render(gl);
+					} else if (materialBlend === 1) {
+						// However if blend is 1 we only need to render the portal scene
+						gl.render(scene, camera);
 					}
-
-					// This bit is only necessary if the portal is blended, now it has a render-priority
-					// and will take over the render loop
-					if (priority) {
-						if (materialBlend > 0 && materialBlend < 1) {
-							// If blend is ongoing (> 0 and < 1) then we need to render both the root scene
-							// and the portal scene, both will then be mixed in the quad from above
-							blend.value = materialBlend;
-							gl.setRenderTarget(buffer1());
-							gl.render(scene, camera);
-							gl.setRenderTarget(buffer2());
-							gl.render(rootScene, camera);
-							gl.setRenderTarget(null);
-							quad.render(gl);
-						} else if (materialBlend === 1) {
-							// However if blend is 1 we only need to render the portal scene
-							gl.render(scene, camera);
-						}
-					}
-				},
-				{ injector, priority },
-			);
-			onCleanup(() => sub());
-		});
+				}
+			},
+			{ priority: this.priority },
+		);
 	}
 }
 
