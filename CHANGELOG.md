@@ -1,3 +1,13 @@
+## 4.0.0-next.15 (2025-02-08)
+
+### 🩹 Fixes
+
+- **core:** use resolveRef in NgtParent ([b2fc55bd](https://github.com/angular-threejs/angular-three/commit/b2fc55bd))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.14 (2025-02-08)
 
 ### 🚀 Features
