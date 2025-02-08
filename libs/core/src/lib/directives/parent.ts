@@ -7,6 +7,7 @@ import {
 } from '../renderer/constants';
 import { injectStore } from '../store';
 import { NgtNullish } from '../types';
+import { resolveRef } from '../utils/resolve-ref';
 import { NgtCommonDirective } from './common';
 
 @Directive({ selector: 'ng-template[parent]' })
@@ -30,11 +31,7 @@ export class NgtParent extends NgtCommonDirective<THREE.Object3D | null | undefi
 			return scene.getObjectByName(rawParent);
 		}
 
-		if ('nativeElement' in rawParent) {
-			return rawParent.nativeElement;
-		}
-
-		return rawParent;
+		return resolveRef(rawParent);
 	});
 
 	protected linkedValue = linkedSignal(this._parent);

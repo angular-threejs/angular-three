@@ -31,8 +31,9 @@ export abstract class NgtCommonDirective<TValue> {
 
 	constructor() {
 		effect(() => {
-			const value = this.linkedValue();
 			if (this.shouldSkipRender()) return;
+
+			const value = this.linkedValue();
 
 			if (is.equ(value, this.injectedValue)) {
 				// we have the same value as before, no need to update
