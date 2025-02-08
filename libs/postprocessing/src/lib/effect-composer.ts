@@ -3,10 +3,8 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	Injector,
 	computed,
 	effect,
-	inject,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -66,7 +64,6 @@ function isConvolution(effect: Effect) {
 export class NgtpEffectComposer {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private injector = inject(Injector);
 	private store = injectStore();
 
 	private depthBuffer = pick(this.options, 'depthBuffer');
@@ -157,7 +154,7 @@ export class NgtpEffectComposer {
 		});
 
 		effect(() => {
-			const [{ composer }, width, height] = [this.composerData(), this.store.size.width(), this.store.size.height()];
+			const [composer, width, height] = [this.effectComposer(), this.store.size.width(), this.store.size.height()];
 			if (composer) {
 				composer.setSize(width, height);
 			}
@@ -213,29 +210,23 @@ export class NgtpEffectComposer {
 			});
 		});
 
-		effect((onCleanup) => {
-			const priority = this.priority();
+		injectBeforeRender(
+			({ delta }) => {
+				const [composer, { enabled, autoClear, stencilBuffer }, gl] = [
+					this.effectComposer(),
+					this.options(),
+					this.store.snapshot.gl,
+				];
 
-			const sub = injectBeforeRender(
-				({ delta }) => {
-					const [{ composer }, { enabled, autoClear, stencilBuffer }, gl] = [
-						this.composerData(),
-						this.options(),
-						this.store.snapshot.gl,
-					];
-
-					if (enabled) {
-						const currentAutoClear = gl.autoClear;
-						gl.autoClear = autoClear;
-						if (stencilBuffer && !autoClear) gl.clearStencil();
-						composer.render(delta);
-						gl.autoClear = currentAutoClear;
-					}
-				},
-				{ injector: this.injector, priority },
-			);
-
-			onCleanup(() => sub());
-		});
+				if (enabled) {
+					const currentAutoClear = gl.autoClear;
+					gl.autoClear = autoClear;
+					if (stencilBuffer && !autoClear) gl.clearStencil();
+					composer.render(delta);
+					gl.autoClear = currentAutoClear;
+				}
+			},
+			{ priority: this.priority },
+		);
 	}
 }
