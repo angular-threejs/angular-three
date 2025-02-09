@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { NgtCanvasElement, NgtDpr, NgtGLOptions, NgtIntersection, NgtSize } from '../types';
+import type { NgtCanvasElement, NgtDpr, NgtGLDefaultOptions, NgtGLOptions, NgtIntersection, NgtSize } from '../types';
 import { is } from './is';
 
 const idCache: { [id: string]: boolean | undefined } = {};
@@ -28,15 +28,18 @@ export function makeRendererInstance<TCanvas extends NgtCanvasElement>(
 	glOptions: NgtGLOptions,
 	canvas: TCanvas,
 ): THREE.WebGLRenderer {
-	const customRenderer = (typeof glOptions === 'function' ? glOptions(canvas) : glOptions) as THREE.WebGLRenderer;
-	if (is.renderer(customRenderer)) return customRenderer;
-	return new THREE.WebGLRenderer({
+	const defaultOptions: NgtGLDefaultOptions = {
 		powerPreference: 'high-performance',
 		canvas,
 		antialias: true,
 		alpha: true,
-		...glOptions,
-	});
+	};
+
+	const customRenderer = (
+		typeof glOptions === 'function' ? glOptions(defaultOptions) : glOptions
+	) as THREE.WebGLRenderer;
+	if (is.renderer(customRenderer)) return customRenderer;
+	return new THREE.WebGLRenderer({ ...defaultOptions, ...glOptions });
 }
 
 export function makeCameraInstance(isOrthographic: boolean, size: NgtSize) {

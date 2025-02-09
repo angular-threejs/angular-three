@@ -16,9 +16,10 @@ import { SceneGraph } from './scene';
 })
 export default class WebGPURenderer {
 	protected frameloop = signal<NgtFrameloop>('never');
-	protected glFactory: NgtGLOptions = (canvas) => {
+	protected glFactory: NgtGLOptions = (defaultOptions) => {
 		const renderer = new THREE.WebGPURenderer({
-			canvas: canvas as HTMLCanvasElement,
+			canvas: defaultOptions.canvas as HTMLCanvasElement,
+			powerPreference: 'high-performance',
 			antialias: true,
 			forceWebGL: false,
 		});

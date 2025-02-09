@@ -43,9 +43,12 @@ export interface NgtRendererLike {
 export type NgtCanvasElement = HTMLCanvasElement | OffscreenCanvas;
 export type NgtGlobalRenderCallback = (timeStamp: number) => void;
 
+export type NgtGLDefaultOptions = Omit<THREE.WebGLRendererParameters, 'canvas'> & {
+	canvas: NgtCanvasElement;
+};
 export type NgtGLOptions =
 	| NgtRendererLike
-	| ((canvas: NgtCanvasElement) => NgtRendererLike)
+	| ((defaultGLOptions: NgtGLDefaultOptions) => NgtRendererLike)
 	| Partial<NgtProperties<THREE.WebGLRenderer> | THREE.WebGLRendererParameters>
 	| undefined;
 export type NgtDpr = number | [min: number, max: number];
