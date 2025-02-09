@@ -1,3 +1,14 @@
+## 4.0.0-next.16 (2025-02-09)
+
+### 🩹 Fixes
+
+- **core:** pass through defaultGLOptions instead of just canvas for NgtGLOptions ([d67e2a75](https://github.com/angular-threejs/angular-three/commit/d67e2a75))
+- **core:** bubble up events from primitive children ([fb1f73ab](https://github.com/angular-threejs/angular-three/commit/fb1f73ab))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.15 (2025-02-08)
 
 ### 🩹 Fixes
