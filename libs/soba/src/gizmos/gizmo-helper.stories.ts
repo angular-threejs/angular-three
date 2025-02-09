@@ -4,7 +4,6 @@ import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import {
 	NgtsGizmoHelper,
-	NgtsGizmoHelperContent,
 	NgtsGizmoHelperOptions,
 	NgtsGizmoViewcube,
 	NgtsGizmoViewport,
@@ -40,7 +39,7 @@ class Tokyo {
 
 		<ngts-orbit-controls [options]="{ makeDefault: true }" />
 	`,
-	imports: [Tokyo, NgtsGizmoHelper, NgtsGizmoHelperContent, NgtsOrbitControls, NgtsGizmoViewport],
+	imports: [Tokyo, NgtsGizmoHelper, NgtsOrbitControls, NgtsGizmoViewport],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -58,7 +57,7 @@ class ViewportStory {
 
 		<ngts-orbit-controls [options]="{ makeDefault: true }" />
 	`,
-	imports: [Tokyo, NgtsGizmoHelper, NgtsGizmoViewcube, NgtsGizmoHelperContent, NgtsOrbitControls],
+	imports: [Tokyo, NgtsGizmoHelper, NgtsGizmoViewcube, NgtsOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

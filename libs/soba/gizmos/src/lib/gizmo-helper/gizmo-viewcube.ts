@@ -22,7 +22,7 @@ import {
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial } from 'three';
-import { NgtsGizmoHelper } from './gizmo-helper';
+import { NgtsGizmoHelperImpl } from './gizmo-helper';
 
 type XYZ = [number, number, number];
 
@@ -138,7 +138,7 @@ export class FaceCube {
 	options = input({} as Partial<NgtsViewcubeCommonOptions>);
 	onClick = input<NgtEventHandlers['click']>();
 
-	private gizmoHelper = inject(NgtsGizmoHelper);
+	private gizmoHelper = inject(NgtsGizmoHelperImpl);
 
 	protected hover = signal(-1);
 	protected count = Array.from({ length: 6 });
@@ -188,7 +188,7 @@ export class EdgeCube {
 	});
 	onClick = input<NgtEventHandlers['click']>();
 
-	private gizmoHelper = inject(NgtsGizmoHelper);
+	private gizmoHelper = inject(NgtsGizmoHelperImpl);
 
 	protected hover = signal(false);
 	protected color = computed(() => (this.hover() ? this.hoverColor() : 'white'));

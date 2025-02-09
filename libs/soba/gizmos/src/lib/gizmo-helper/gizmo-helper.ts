@@ -10,6 +10,7 @@ import {
 	ElementRef,
 	Injector,
 	input,
+	NgModule,
 	output,
 	TemplateRef,
 	viewChild,
@@ -21,7 +22,6 @@ import {
 	injectStore,
 	NgtPortal,
 	NgtPortalAutoRender,
-	NgtPortalContent,
 	pick,
 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
@@ -96,9 +96,9 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtPortal, NgtPortalAutoRender, NgtPortalContent, NgtsOrthographicCamera, NgTemplateOutlet],
+	imports: [NgtPortal, NgtPortalAutoRender, NgtsOrthographicCamera, NgTemplateOutlet],
 })
-export class NgtsGizmoHelper {
+export class NgtsGizmoHelperImpl {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	update = output<void>();
 
@@ -232,3 +232,9 @@ export class NgtsGizmoHelper {
 		return 'getTarget' in (controls as CameraControls);
 	}
 }
+
+@NgModule({
+	imports: [NgtsGizmoHelperImpl, NgtsGizmoHelperContent],
+	exports: [NgtsGizmoHelperImpl, NgtsGizmoHelperContent],
+})
+export class NgtsGizmoHelper {}

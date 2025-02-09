@@ -26,7 +26,7 @@ import {
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three';
-import { NgtsGizmoHelper } from './gizmo-helper';
+import { NgtsGizmoHelperImpl } from './gizmo-helper';
 
 @Component({
 	selector: 'viewport-axis',
@@ -85,7 +85,7 @@ export class AxisHead {
 	onClick = input<NgtEventHandlers['click']>();
 
 	private document = inject(DOCUMENT);
-	private gizmoHelper = inject(NgtsGizmoHelper);
+	private gizmoHelper = inject(NgtsGizmoHelperImpl);
 	private store = injectStore();
 
 	protected texture = computed(() => {
