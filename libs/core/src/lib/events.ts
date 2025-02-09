@@ -160,7 +160,23 @@ export function createEvents(store: SignalState<NgtState>) {
 		if (intersections.length) {
 			const localState = { stopped: false };
 			for (const hit of intersections) {
-				const { raycaster, pointer, camera, internal } = getInstanceState(hit.object)?.store?.snapshot || rootState;
+				let instanceState = getInstanceState(hit.object);
+
+				// If the object is not managed by NGT, it might be parented to an element which is.
+				// Traverse upwards until we find a managed parent and use its state instead.
+				if (!instanceState) {
+					hit.object.traverseAncestors((ancestor) => {
+						const parentInstanceState = getInstanceState(ancestor);
+						if (parentInstanceState) {
+							instanceState = parentInstanceState;
+							return false;
+						}
+						return;
+					});
+				}
+
+				const { raycaster, pointer, camera, internal } = instanceState?.store?.snapshot || rootState;
+
 				const unprojectedPoint = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
 				const hasPointerCapture = (id: number) => internal.capturedMap.get(id)?.has(hit.eventObject) ?? false;
 
