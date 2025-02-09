@@ -13,6 +13,7 @@ import {
 	inject,
 	Injector,
 	input,
+	NgModule,
 	NgZone,
 	output,
 	signal,
@@ -84,7 +85,7 @@ export class NgtCanvasContent {
 	},
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtCanvas {
+export class NgtCanvasImpl {
 	private store = injectStore();
 	private initRoot = injectCanvasRootInitializer();
 
@@ -240,4 +241,5 @@ export class NgtCanvas {
 	}
 }
 
-export const NgtCanvasDeclarations = [NgtCanvas, NgtCanvasContent] as const;
+@NgModule({ imports: [NgtCanvasImpl, NgtCanvasContent], exports: [NgtCanvasImpl, NgtCanvasContent] })
+export class NgtCanvas {}
