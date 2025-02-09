@@ -15,7 +15,7 @@ import {
 import { injectBeforeRender, injectStore, is, NgtHTML, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
-import { NgtsHTML } from './html';
+import { NgtsHTMLImpl } from './html';
 import {
 	CalculatePosition,
 	defaultCalculatePosition,
@@ -120,7 +120,7 @@ export class NgtsHTMLContent extends NgtHTML {
 	transformInnerRef = viewChild<ElementRef<HTMLDivElement>>('transformInner');
 	containerRef = viewChild<ElementRef<HTMLDivElement>>('container');
 
-	protected html = inject(NgtsHTML);
+	protected html = inject(NgtsHTMLImpl);
 	private host = inject<ElementRef<HTMLElement>>(ElementRef);
 	private store = injectStore();
 	protected size = this.store.size;

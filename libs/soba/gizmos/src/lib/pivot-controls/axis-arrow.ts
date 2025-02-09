@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { extend, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
-import { NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { ConeGeometry, CylinderGeometry, Group, Mesh, MeshBasicMaterial } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
@@ -116,7 +116,7 @@ const offsetMatrix = new THREE.Matrix4();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsLine, NgtsHTMLDeclarations],
+	imports: [NgtArgs, NgtsLine, NgtsHTML],
 })
 export class NgtsAxisArrow {
 	protected readonly DoubleSide = THREE.DoubleSide;

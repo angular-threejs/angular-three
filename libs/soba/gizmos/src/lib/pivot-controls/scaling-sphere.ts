@@ -10,7 +10,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
-import { calculateScaleFactor, NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import { calculateScaleFactor, NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, SphereGeometry } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
@@ -87,7 +87,7 @@ const scaleMatrix = new THREE.Matrix4();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsHTMLDeclarations, NgtArgs],
+	imports: [NgtsHTML, NgtArgs],
 })
 export class NgtsScalingSphere {
 	direction = input.required<THREE.Vector3>();

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { extend, injectStore, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
-import { NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { Group } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
@@ -120,7 +120,7 @@ const intersection = new THREE.Vector3();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsLine, NgtsHTMLDeclarations],
+	imports: [NgtsLine, NgtsHTML],
 })
 export class NgtsAxisRotator {
 	protected readonly DoubleSide = THREE.DoubleSide;

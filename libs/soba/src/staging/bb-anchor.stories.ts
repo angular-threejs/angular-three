@@ -3,7 +3,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
+import { NgtsHTML } from 'angular-three-soba/misc';
 import { NgtsBBAnchor, NgtsBBAnchorOptions } from 'angular-three-soba/staging';
 import { BoxHelper } from 'three';
 import { storyDecorators, storyObject } from '../setup-canvas';
@@ -60,7 +60,7 @@ class BBAnchorWrapper {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [BBAnchorWrapper, NgtsHTML, NgtsHTMLContent],
+	imports: [BBAnchorWrapper, NgtsHTML],
 })
 class WithHTMLBBAnchorStory {
 	options = input<NgtsBBAnchorOptions>({ anchor: [1, 1, 1] });

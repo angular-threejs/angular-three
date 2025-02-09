@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { extend, injectStore, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
-import { NgtsHTMLDeclarations } from 'angular-three-soba/misc';
+import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
@@ -97,7 +97,7 @@ const offsetMatrix = new THREE.Matrix4();
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsHTMLDeclarations, NgtsLine],
+	imports: [NgtsHTML, NgtsLine],
 })
 export class NgtsPlaneSlider {
 	protected readonly DoubleSide = THREE.DoubleSide;

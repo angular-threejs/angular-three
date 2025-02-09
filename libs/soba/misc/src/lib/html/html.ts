@@ -5,6 +5,7 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
+	NgModule,
 	viewChild,
 } from '@angular/core';
 import { extend, is, NgtThreeElements, omit, pick } from 'angular-three';
@@ -52,7 +53,7 @@ const defaultHtmlOptions: NgtsHTMLOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtsHTML {
+export class NgtsHTMLImpl {
 	options = input(defaultHtmlOptions, { transform: mergeInputs(defaultHtmlOptions) });
 	protected parameters = omit(this.options, ['occlude', 'castShadow', 'receiveShadow', 'transform']);
 
@@ -128,4 +129,5 @@ export class NgtsHTML {
 	protected readonly DoubleSide = THREE.DoubleSide;
 }
 
-export const NgtsHTMLDeclarations = [NgtsHTML, NgtsHTMLContent] as const;
+@NgModule({ imports: [NgtsHTMLImpl, NgtsHTMLContent], exports: [NgtsHTMLImpl, NgtsHTMLContent] })
+export class NgtsHTML {}

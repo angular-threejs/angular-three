@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
-import { NgtsHTML, NgtsHTMLContent, NgtsHTMLContentOptions, NgtsHTMLOptions } from 'angular-three-soba/misc';
+import { NgtsHTML, NgtsHTMLContentOptions, NgtsHTMLOptions } from 'angular-three-soba/misc';
 import { ColorRepresentation } from 'three';
 import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-canvas';
 
@@ -47,7 +47,7 @@ import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtArgs, NgtsHTML, NgtsHTMLContent, Turnable],
+	imports: [NgtArgs, NgtsHTML, Turnable],
 })
 class HtmlScene {
 	color = input<ColorRepresentation>('hotpink');
@@ -71,7 +71,7 @@ class HtmlScene {
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [HtmlScene, NgtsHTML, NgtsHTMLContent],
+	imports: [HtmlScene, NgtsHTML],
 })
 class HtmlTransformScene {
 	htmlOptions = input({} as NgtsHTMLOptions);
