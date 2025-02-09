@@ -1,3 +1,13 @@
+## 4.0.0-next.17 (2025-02-09)
+
+### 🩹 Fixes
+
+- **soba:** adjust orbit controls options ([60b7d645](https://github.com/angular-threejs/angular-three/commit/60b7d645))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.16 (2025-02-09)
 
 ### 🩹 Fixes
