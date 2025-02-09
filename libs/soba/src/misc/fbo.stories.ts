@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, NgtPortalContent, injectBeforeRender } from 'angular-three';
+import { NgtArgs, NgtPortal, injectBeforeRender } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsFBO } from 'angular-three-soba/misc';
 import { Color, Mesh, Scene, WebGLRenderTarget } from 'three';
@@ -50,7 +50,7 @@ class SpinningThing {
 			<ngt-mesh-standard-material [map]="target().texture" />
 		</ngt-mesh>
 	`,
-	imports: [NgtsPerspectiveCamera, SpinningThing, NgtPortal, NgtPortalContent, NgtArgs],
+	imports: [NgtsPerspectiveCamera, SpinningThing, NgtPortal, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

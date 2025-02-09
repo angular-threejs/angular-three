@@ -26,7 +26,6 @@ import {
 	NgtArgs,
 	NgtEuler,
 	NgtPortal,
-	NgtPortalContent,
 	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -213,7 +212,7 @@ export class NgtsEnvironmentCube {
 			</ng-template>
 		</ngt-portal>
 	`,
-	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal, NgtPortalContent, NgTemplateOutlet],
+	imports: [NgtsEnvironmentCube, NgtsEnvironmentMap, NgtArgs, NgtPortal, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

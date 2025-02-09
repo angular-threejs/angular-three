@@ -10,6 +10,7 @@ import {
 	inject,
 	Injector,
 	input,
+	NgModule,
 	numberAttribute,
 	signal,
 	SkipSelf,
@@ -34,7 +35,7 @@ import { updateCamera } from './utils/update';
 export class NgtPortalAutoRender {
 	private portalStore = injectStore({ host: true });
 	private parentStore = injectStore({ skipSelf: true });
-	private portal = inject(NgtPortal, { host: true });
+	private portal = inject(NgtPortalImpl, { host: true });
 
 	renderPriority = input(1, { alias: 'autoRender', transform: (value) => numberAttribute(value, 1) });
 
@@ -187,7 +188,7 @@ function mergeState(
 		},
 	],
 })
-export class NgtPortal {
+export class NgtPortalImpl {
 	container = input.required<THREE.Object3D>();
 	state = input<Partial<NgtPortalState>>({});
 
@@ -249,4 +250,5 @@ export class NgtPortal {
 	}
 }
 
-export const NgtPortalDeclarations = [NgtPortal, NgtPortalContent] as const;
+@NgModule({ imports: [NgtPortalImpl, NgtPortalContent], exports: [NgtPortalImpl, NgtPortalContent] })
+export class NgtPortal {}
