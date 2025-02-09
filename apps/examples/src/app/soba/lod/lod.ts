@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import { NgtsStats } from 'angular-three-soba/stats';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -12,7 +12,7 @@ import { SceneGraph } from './scene';
 		<ngts-loader />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtsLoader, NgtsStats, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, NgtsLoader, NgtsStats, SceneGraph],
 	host: { class: 'lod-soba' },
 })
 export default class LOD {}

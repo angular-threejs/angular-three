@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { extend, NgtRoutedScene } from 'angular-three';
-import { NgtCanvasDeclarations } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import * as THREE from 'three';
 
 extend(THREE);
@@ -37,7 +37,7 @@ extend(THREE);
 			</li>
 		</ul>
 	`,
-	imports: [NgtRoutedScene, RouterLink, RouterLinkActive, NgtCanvasDeclarations],
+	imports: [NgtRoutedScene, RouterLink, RouterLinkActive, NgtCanvas],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'routed' },
 })

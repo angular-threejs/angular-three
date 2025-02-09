@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph, bloom, glitch, selectedAction } from './scene';
 
 @Component({
@@ -32,7 +32,7 @@ import { SceneGraph, bloom, glitch, selectedAction } from './scene';
 		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, SceneGraph],
 	host: { class: 'basic-soba' },
 })
 export default class Basic {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph, invert, logo } from './scene';
 
 @Component({
@@ -23,7 +23,7 @@ import { SceneGraph, invert, logo } from './scene';
 	`,
 	host: { class: 'inverted-stencil-buffer-soba' },
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 })
 export default class InvertedStencilBuffer {
 	protected invert = invert;

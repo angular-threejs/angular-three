@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -9,7 +9,7 @@ import { SceneGraph } from './scene';
 		</ngt-canvas>
 		<div class="absolute top-4 left-4 font-mono">* Click to invert gravity</div>
 	`,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'convex-cannon' },
 })

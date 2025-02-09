@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { ToggleButton } from '../../toggle-button';
 import { debug, SceneGraph, withN8ao } from './scene';
 
@@ -21,7 +21,7 @@ import { debug, SceneGraph, withN8ao } from './scene';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'bruno-simons-2k-soba' },
-	imports: [NgtCanvas, NgtCanvasContent, ToggleButton, SceneGraph],
+	imports: [NgtCanvas, ToggleButton, SceneGraph],
 })
 export default class BrunoSimons20k {
 	protected debug = debug;

@@ -9,18 +9,11 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import {
-	NgtArgs,
-	NgtPortal,
-	NgtPortalAutoRender,
-	NgtPortalContent,
-	injectBeforeRender,
-	injectStore,
-} from 'angular-three';
+import { NgtArgs, NgtPortal, NgtPortalAutoRender, injectBeforeRender, injectStore } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsEnvironment, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
+import { NgtsEnvironment, NgtsRenderTexture } from 'angular-three-soba/staging';
 import { Matrix4, Mesh, Scene } from 'three';
 
 @Component({
@@ -60,7 +53,7 @@ export class Torus {
 			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
-	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs, NgtsRenderTextureContent],
+	imports: [NgtsText, NgtsRenderTexture, NgtsOrthographicCamera, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -126,7 +119,7 @@ export class Box {
 			</ng-template>
 		</ngt-portal>
 	`,
-	imports: [Box, NgtPortal, NgtPortalContent, NgtPortalAutoRender, NgtsPerspectiveCamera],
+	imports: [Box, NgtPortal, NgtPortalAutoRender, NgtsPerspectiveCamera],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

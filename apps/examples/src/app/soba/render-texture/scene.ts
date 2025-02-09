@@ -12,7 +12,7 @@ import { NgtArgs, injectBeforeRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsContactShadows, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
+import { NgtsContactShadows, NgtsRenderTexture } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 
 @Component({
@@ -83,7 +83,7 @@ export class Dodecahedron {
 			</ngts-render-texture>
 		</ngt-mesh-standard-material>
 	`,
-	imports: [Dodecahedron, NgtsRenderTexture, NgtsRenderTextureContent, NgtArgs, NgtsPerspectiveCamera, NgtsText],
+	imports: [Dodecahedron, NgtsRenderTexture, NgtArgs, NgtsPerspectiveCamera, NgtsText],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

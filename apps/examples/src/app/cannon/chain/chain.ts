@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -9,7 +9,7 @@ import { SceneGraph } from './scene';
 		</ngt-canvas>
 		<div class="absolute bottom-4 right-4 font-mono text-white">* Click to reset</div>
 	`,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'chain-cannon' },
 })

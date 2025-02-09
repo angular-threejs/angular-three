@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -9,7 +9,7 @@ import { SceneGraph } from './scene';
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	host: { class: 'kinematic-cannon' },
 })
 export default class KinematicCube {}

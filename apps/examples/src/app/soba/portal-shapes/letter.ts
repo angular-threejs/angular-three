@@ -21,7 +21,7 @@ import {
 import { NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
-import { NgtsCenter, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
+import { NgtsCenter, NgtsRenderTexture } from 'angular-three-soba/staging';
 import { Group } from 'three';
 
 import { NgTemplateOutlet } from '@angular/common';
@@ -86,7 +86,6 @@ import boldFont from './bold.blob';
 		NgtsText3D,
 		NgtsMeshTransmissionMaterial,
 		NgtsRenderTexture,
-		NgtsRenderTextureContent,
 		NgtArgs,
 		NgTemplateOutlet,
 		NgtObjectEvents,

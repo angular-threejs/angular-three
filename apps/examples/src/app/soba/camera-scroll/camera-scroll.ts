@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, InjectionToken } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { Overlay } from './overlay';
 import { SceneGraph } from './scene';
 
@@ -14,7 +14,7 @@ export const SCROLL = new InjectionToken('scroll', {
 		</ngt-canvas>
 		<app-overlay />
 	`,
-	imports: [NgtCanvas, NgtCanvasContent, Overlay, SceneGraph],
+	imports: [NgtCanvas, Overlay, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'camera-scroll-soba' },
 	styles: `

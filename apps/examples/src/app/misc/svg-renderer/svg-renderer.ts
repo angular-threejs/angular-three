@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvasElement } from 'angular-three';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtGLOptions } from 'angular-three';
+import { NgtCanvas } from 'angular-three/dom';
 import { SVGRenderer } from 'three-stdlib';
 import { SceneGraph } from './scene';
 
@@ -10,11 +10,11 @@ import { SceneGraph } from './scene';
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
 	`,
-	imports: [NgtCanvas, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SVGRendererExample {
-	svgRendererFactory = (canvas: NgtCanvasElement) => {
+	svgRendererFactory: NgtGLOptions = ({ canvas }) => {
 		const renderer = new SVGRenderer();
 
 		if (canvas instanceof HTMLCanvasElement) {

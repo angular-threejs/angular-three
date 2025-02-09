@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtsStats } from 'angular-three-soba/stats';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -9,7 +9,7 @@ import { SceneGraph } from './scene';
 			<app-shaky-scene-graph *canvasContent />
 		</ngt-canvas>
 	`,
-	imports: [NgtCanvas, NgtsStats, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, NgtsStats, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'shaky-soba' },
 	styles: `

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { AudioStore } from './audio.store';
 import { Overlay } from './overlay';
 import { SceneGraph } from './scene';
@@ -11,7 +11,7 @@ import { SceneGraph } from './scene';
 		</ngt-canvas>
 		<app-overlay />
 	`,
-	imports: [NgtCanvas, Overlay, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, Overlay, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'simple-sound-analyser-soba block h-full w-full' },
 	styles: `

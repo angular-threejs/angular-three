@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -10,6 +10,6 @@ import { SceneGraph } from './scene';
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'postprocessing-outline' },
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 })
 export default class PostprocessingOutline {}

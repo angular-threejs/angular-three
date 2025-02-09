@@ -19,7 +19,6 @@ import {
 	NgtsEnvironment,
 	NgtsRandomizedLights,
 	NgtsRenderTexture,
-	NgtsRenderTextureContent,
 } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 
@@ -96,15 +95,7 @@ export class Dodecahedron {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		NgtsDecal,
-		NgtsRenderTexture,
-		NgtsRenderTextureContent,
-		NgtsPerspectiveCamera,
-		NgtArgs,
-		NgtsText,
-		Dodecahedron,
-	],
+	imports: [NgtsDecal, NgtsRenderTexture, NgtsPerspectiveCamera, NgtArgs, NgtsText, Dodecahedron],
 })
 export class Bunny {
 	protected readonly Math = Math;

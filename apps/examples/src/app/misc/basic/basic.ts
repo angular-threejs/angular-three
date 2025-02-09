@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvasDeclarations } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { Scene } from './scene';
 
 @Component({
@@ -8,7 +8,7 @@ import { Scene } from './scene';
 			<app-scene *canvasContent />
 		</ngt-canvas>
 	`,
-	imports: [NgtCanvasDeclarations, Scene],
+	imports: [NgtCanvas, Scene],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class Basic {}

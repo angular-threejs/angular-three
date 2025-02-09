@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 
 @Component({
@@ -10,6 +10,6 @@ import { SceneGraph } from './scene';
 		<code class="absolute top-2 left-2 text-black">double click to zoom in/out</code>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, SceneGraph],
 })
 export default class PortalShapes {}

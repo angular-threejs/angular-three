@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { ToggleButton } from '../toggle-button';
 import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-default';
 
@@ -15,7 +15,7 @@ import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-defa
 		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, ToggleButton, NgtCanvasContent, RapierWrapperDefault],
+	imports: [NgtCanvas, ToggleButton, RapierWrapperDefault],
 })
 export default class RapierWrapper {
 	protected sceneGraph = RapierWrapperDefault;

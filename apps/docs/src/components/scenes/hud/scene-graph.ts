@@ -21,7 +21,7 @@ import {
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { NgtsEnvironment, NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
+import { NgtsEnvironment, NgtsRenderTexture } from 'angular-three-soba/staging';
 import * as THREE from 'three';
 import { Matrix4, Mesh, Scene } from 'three';
 

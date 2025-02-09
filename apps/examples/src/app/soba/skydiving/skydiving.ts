@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgtsLoader } from 'angular-three-soba/loaders';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
@@ -11,7 +11,7 @@ import { SceneGraph } from './scene-graph';
 		</ngt-canvas>
 		<ngts-loader />
 	`,
-	imports: [NgtCanvas, NgtsLoader, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, NgtsLoader, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'skydiving-soba' },
 })

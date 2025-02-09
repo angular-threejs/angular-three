@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtArgs, NgtPortalDeclarations, NgtVector3 } from 'angular-three';
+import { injectBeforeRender, injectStore, NgtArgs, NgtPortal, NgtVector3 } from 'angular-three';
 import * as THREE from 'three';
 
 @Component({
@@ -189,7 +189,7 @@ export class NestedBox {
 			</ngt-group>
 		</ngt-portal>
 	`,
-	imports: [NgtArgs, Box, ConditionBox, NgtPortalDeclarations, NestedBox],
+	imports: [NgtArgs, Box, ConditionBox, NgtPortal, NestedBox],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: {

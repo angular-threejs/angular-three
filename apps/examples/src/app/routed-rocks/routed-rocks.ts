@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { extend, NgtRoutedScene } from 'angular-three';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import * as THREE from 'three';
 import { RockStore } from './store';
 
@@ -12,7 +12,7 @@ extend(THREE);
 			<ngt-routed-scene *canvasContent />
 		</ngt-canvas>
 	`,
-	imports: [NgtCanvas, NgtRoutedScene, NgtCanvasContent],
+	imports: [NgtCanvas, NgtRoutedScene],
 	providers: [RockStore],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'routed-rocks block h-svh' },

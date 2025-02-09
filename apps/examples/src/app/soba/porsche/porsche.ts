@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@ang
 import { injectBeforeRender } from 'angular-three';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { Vector3 } from 'three';
 import { color, colorAsHex } from './color';
 import { Lightformers } from './lightformers';
@@ -66,7 +66,7 @@ export class SceneGraph {
 		<input class="absolute top-0 right-0" type="color" [value]="colorAsHex()" (change)="onChange($event)" />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, NgtCanvasContent, SceneGraph],
+	imports: [NgtCanvas, SceneGraph],
 	host: { class: 'porsche-soba' },
 })
 export default class Porsche {

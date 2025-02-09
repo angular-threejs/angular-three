@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgtCanvas, NgtCanvasContent } from 'angular-three/dom';
+import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene';
 import { State } from './state';
 
@@ -14,7 +14,7 @@ import { State } from './state';
 			<button (click)="state.changeGravity()">Change gravity: {{ state.gravity() }}</button>
 		</div>
 	`,
-	imports: [NgtCanvas, SceneGraph, NgtCanvasContent],
+	imports: [NgtCanvas, SceneGraph],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'basic-cannon ' },
 	providers: [State],

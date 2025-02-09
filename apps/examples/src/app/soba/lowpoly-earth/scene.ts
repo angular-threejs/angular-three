@@ -15,7 +15,7 @@ import {
 import { injectBeforeRender, NgtArgs, NgtEuler, NgtHTML, NgtVector3 } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import { NgtsHTML, NgtsHTMLContent } from 'angular-three-soba/misc';
+import { NgtsHTML } from 'angular-three-soba/misc';
 import { NgtsContactShadows, NgtsEnvironment } from 'angular-three-soba/staging';
 import { Group, Vector3 } from 'three';
 
@@ -32,7 +32,7 @@ import { Group, Vector3 } from 'three';
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsHTML, NgtsHTMLContent],
+	imports: [NgtsHTML],
 })
 export class Marker {
 	position = input<NgtVector3>([0, 0, 0]);
