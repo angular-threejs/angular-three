@@ -1,3 +1,17 @@
+## 4.0.0-next.18 (2025-02-09)
+
+### 🚀 Features
+
+- **core:** expose NgtPortal as module with portal and portalContent grouped ([919a1a8f](https://github.com/angular-threejs/angular-three/commit/919a1a8f))
+- **core/dom:** expose NgtCanvas as a module with canvas and canvasContent grouped ([bb0a9491](https://github.com/angular-threejs/angular-three/commit/bb0a9491))
+- **soba/gizmos:** expose NgtsGizmoHelper as module ([a85cf9a9](https://github.com/angular-threejs/angular-three/commit/a85cf9a9))
+- **soba/misc:** expose NgtsHTML as module ([60df7770](https://github.com/angular-threejs/angular-three/commit/60df7770))
+- **soba/staging:** expose NgtsRenderTexture as module ([c76f4f7f](https://github.com/angular-threejs/angular-three/commit/c76f4f7f))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.17 (2025-02-09)
 
 ### 🩹 Fixes
