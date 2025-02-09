@@ -5,6 +5,7 @@ import {
 	Component,
 	Directive,
 	Injector,
+	NgModule,
 	TemplateRef,
 	computed,
 	contentChild,
@@ -16,7 +17,6 @@ import {
 	NgtAttachable,
 	NgtComputeFunction,
 	NgtPortal,
-	NgtPortalContent,
 	NgtThreeElements,
 	extend,
 	getInstanceState,
@@ -147,11 +147,11 @@ let incrementId = 0;
 
 		<ngt-primitive *args="[fbo().texture]" [attach]="attach()" [parameters]="parameters()" />
 	`,
-	imports: [NgtPortal, NgtsRenderTextureContainer, NgtPortalContent, NgtArgs, NgTemplateOutlet],
+	imports: [NgtPortal, NgtsRenderTextureContainer, NgtArgs, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtsRenderTexture {
+export class NgtsRenderTextureImpl {
 	attach = input<NgtAttachable>('map');
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
@@ -233,3 +233,9 @@ export class NgtsRenderTexture {
 		extend({ Group });
 	}
 }
+
+@NgModule({
+	imports: [NgtsRenderTextureImpl, NgtsRenderTextureContent],
+	exports: [NgtsRenderTextureImpl, NgtsRenderTextureContent],
+})
+export class NgtsRenderTexture {}

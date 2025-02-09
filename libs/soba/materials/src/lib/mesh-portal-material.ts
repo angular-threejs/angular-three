@@ -26,7 +26,7 @@ import {
 	pick,
 } from 'angular-three';
 import { getVersion, injectFBO, injectIntersect } from 'angular-three-soba/misc';
-import { NgtsRenderTexture, NgtsRenderTextureContent } from 'angular-three-soba/staging';
+import { NgtsRenderTexture } from 'angular-three-soba/staging';
 import {
 	MeshPortalMaterial,
 	meshPortalMaterialApplySDF,
@@ -210,7 +210,7 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsRenderTexture, NgtsRenderTextureContent, ManagePortalScene, NgTemplateOutlet],
+	imports: [NgtsRenderTexture, ManagePortalScene, NgTemplateOutlet],
 })
 export class NgtsMeshPortalMaterial {
 	attach = input<NgtAttachable>('material');
