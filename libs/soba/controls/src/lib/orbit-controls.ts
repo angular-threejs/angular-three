@@ -14,7 +14,8 @@ export interface NgtsOrbitControlsOptions {
 	keyEvents: boolean | HTMLElement;
 }
 
-const defaultOptions: Partial<OrbitControls> & NgtsOrbitControlsOptions = {
+const defaultOptions: Partial<Omit<OrbitControls, 'target' | 'enableDamping' | 'domElement'>> &
+	NgtsOrbitControlsOptions = {
 	enableDamping: true,
 	regress: false,
 	makeDefault: false,
