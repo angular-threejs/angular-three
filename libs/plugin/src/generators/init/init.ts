@@ -254,7 +254,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	const componentDecorator = componentDecorators[0];
 	const componentMetadata = componentDecorator.getArguments()[0] as ObjectLiteralExpression;
 
-	const templateUrlMetadata = componentMetadata.getFirstChild((node): node is PropertyAssignment => {
+	const templateUrlMetadata = componentMetadata.getFirstDescendant((node): node is PropertyAssignment => {
 		return Node.isPropertyAssignment(node) && node.getName() === 'templateUrl';
 	});
 
