@@ -21,7 +21,7 @@ import {
 	SyntaxKind,
 } from 'ts-morph';
 import { addMetadataJson } from '../../utils';
-import { NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../../versions';
+import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../../versions';
 import { finishSetup, handleAppConfig, stopSetup } from './utils';
 
 export interface InitGeneratorSchema {
@@ -43,7 +43,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 
 	addDependenciesToPackageJson(
 		tree,
-		{ 'angular-three': version, three: THREE_VERSION, ngxtension: NGXTENSION_VERSION },
+		{ 'angular-three': ANGULAR_THREE_VERSION, three: THREE_VERSION, ngxtension: NGXTENSION_VERSION },
 		{ '@types/three': THREE_TYPE_VERSION },
 	);
 
@@ -69,9 +69,9 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	const projects = getProjects(tree);
 	const applications: Record<string, ProjectConfiguration> = {};
 
-	for (const project of projects.values()) {
+	for (const [projectName, project] of projects.entries()) {
 		if (!project.sourceRoot || project.projectType !== 'application') continue;
-		applications[project.name] = project;
+		applications[project.name || projectName] = project;
 	}
 
 	const { appName } = await prompt<{ appName: string }>({
@@ -177,6 +177,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		if (endSetup) {
 			return await endSetup();
 		}
+		tree.write(appConfigPath, appConfigSourceFile.print());
 	}
 
 	if (Node.isObjectLiteralExpression(configArgument)) {
@@ -184,6 +185,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		if (endSetup) {
 			return await endSetup();
 		}
+		tree.write(mainTsPath, mainSourceFile.print());
 	}
 
 	if (options.sceneGraph === 'none') {
@@ -311,6 +313,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	}
 
 	await componentSourceFile.save();
+	tree.write(componentPath, componentSourceFile.print());
 	return await finishSetup(tree);
 }
 
