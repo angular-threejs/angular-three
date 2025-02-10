@@ -7,6 +7,17 @@
 	"type": "commonjs",
 	"main": "./src/index.js",
 	"types": "./src/index.d.ts",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./src/index.d.ts",
+			"default": "./src/index.js"
+		},
+		"./generators": {
+			"types": "./src/generators/index.d.ts",
+			"default": "./src/generators/index.js"
+		}
+	},
 	"dependencies": {
 		"@nx/devkit": "^20.0.0",
 		"nx": "^20.0.0",
