@@ -1,3 +1,13 @@
+## 4.0.0-next.21 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** use next version for ngt ([f33aa1b2](https://github.com/angular-threejs/angular-three/commit/f33aa1b2))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.20 (2025-02-10)
 
 ### 🚀 Features
