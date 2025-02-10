@@ -19,6 +19,7 @@ import {
 	Project,
 	PropertyAssignment,
 	ScriptKind,
+	StringLiteral,
 	SyntaxKind,
 } from 'ts-morph';
 import { addMetadataJson } from '../../utils';
@@ -259,9 +260,16 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	});
 
 	if (templateUrlMetadata) {
-		const templateUrl = templateUrlMetadata.getInitializer().getText();
-		const templateUrlPath = join(componentPath, templateUrl);
-		const templateContent = tree.read(templateUrlPath, 'utf-8');
+		const templateUrl = (
+			templateUrlMetadata.getInitializer() as StringLiteral | NoSubstitutionTemplateLiteral
+		).getLiteralValue?.();
+
+		if (!templateUrl) {
+			return await stopSetup(tree, `Could not locate templateUrl in ${componentPath}`);
+		}
+
+		const templateUrlPath = join(dirname(componentPath), templateUrl);
+		const templateContent = tree.read(templateUrlPath, 'utf8');
 
 		tree.write(
 			templateUrlPath,
