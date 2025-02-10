@@ -12,7 +12,6 @@
 	},
 	"private": true,
 	"devDependencies": {
-		"@analogjs/astro-angular": "1.13.0",
 		"@analogjs/platform": "1.13.0",
 		"@analogjs/vite-plugin-angular": "1.13.0",
 		"@analogjs/vitest-angular": "1.13.0",
@@ -93,7 +92,6 @@
 		"typescript": "5.7.3",
 		"typescript-eslint": "^8.22.0",
 		"vite": "5.4.11",
-		"vite-tsconfig-paths": "^4.3.2",
 		"vitest": "1.6.0",
 		"vitest-webgl-canvas-mock": "^1.1.0"
 	},

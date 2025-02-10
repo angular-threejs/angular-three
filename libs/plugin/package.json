@@ -10,5 +10,7 @@
 		"@phenomnomnominal/tsquery": "^6.0.0",
 		"nx": "^20.0.0",
 		"tslib": "^2.3.0"
-	}
+	},
+	"generators": "./generators.json",
+	"schematics": "./generators.json"
 }

@@ -1,0 +1,16 @@
+{
+	"generators": {
+		"init": {
+			"factory": "./src/generators/init/init",
+			"schema": "./src/generators/init/schema.json",
+			"description": "init generator"
+		}
+	},
+	"schematics": {
+		"init": {
+			"factory": "./src/generators/init/compat",
+			"schema": "./src/generators/init/schema.json",
+			"description": "init generator"
+		}
+	}
+}

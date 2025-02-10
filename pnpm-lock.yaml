@@ -138,9 +138,6 @@ importers:
         specifier: 0.15.0
         version: 0.15.0
     devDependencies:
-      '@analogjs/astro-angular':
-        specifier: 1.13.0
-        version: 1.13.0(5eeet3laf4tuwxsp47pekuoybm)
       '@analogjs/platform':
         specifier: 1.13.0
         version: 1.13.0(ijnhzfa2fn4jxagsnakp5qhcky)
@@ -381,9 +378,6 @@ importers:
       vite:
         specifier: 5.4.11
         version: 5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0)
-      vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.7.3)(vite@5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0))
       vitest:
         specifier: 1.6.0
         version: 1.6.0(@types/node@20.14.12)(jsdom@24.1.1)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0)
@@ -498,23 +492,6 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
-
-  '@analogjs/astro-angular@1.13.0':
-    resolution: {integrity: sha512-ev6jFCeM/uE20utHFJWl87hc5aTigC7dQh415srogLc6Z0Fu4dvfI+U77/kkDwmDmnKDzGGzTUI62H2u3sZpeQ==}
-    peerDependencies:
-      '@angular-devkit/build-angular': '>=16.0.0'
-      '@angular/animations': '>=16.0.0'
-      '@angular/common': '>=16.0.0'
-      '@angular/compiler': '>=16.0.0'
-      '@angular/compiler-cli': '>=16.0.0'
-      '@angular/core': '>=16.0.0'
-      '@angular/language-service': '>=16.0.0'
-      '@angular/platform-browser': '>=16.0.0'
-      '@angular/platform-browser-dynamic': '>=16.0.0'
-      '@angular/platform-server': '>=16.0.0'
-      rxjs: ^7.5.6
-      tslib: ^2.4.0
-      zone.js: '>=0.13.3'
 
   '@analogjs/astro-angular@1.9.4':
     resolution: {integrity: sha512-EbU0P1+7A81Ti5+qJo33iJuWp7XreW+ao50B5Tas+d6tJX1QpvMJLYmGPPEY1bnpsCcGXBmqyLJrMkiWS573Sg==}
@@ -7646,9 +7623,6 @@ packages:
     resolution: {integrity: sha512-s3Fq41ZVh7vbbe2PN3nrW7yC7U7MFVc5c98/iTl9c2GawNMKx/J648KQRW6WKkuU8GIbbh2IXfIRQjOZnXcTnw==}
     engines: {node: '>=18'}
 
-  globrex@0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-
   glsl-inject-defines@1.0.3:
     resolution: {integrity: sha512-W49jIhuDtF6w+7wCMcClk27a2hq8znvHtlGnrYkSWEr8tHe9eA2dcnohlcAmxLYBSpSSdzOkRdyPTrx9fw49+A==}
 
@@ -12042,16 +12016,6 @@ packages:
       '@swc/wasm':
         optional: true
 
-  tsconfck@3.1.1:
-    resolution: {integrity: sha512-00eoI6WY57SvZEVjm13stEVE90VkEdJAFGgpFLTsZbJyW/LwFQ7uQxJHWpZ2hzSWgCPKc9AnBnNP+0X7o3hAmQ==}
-    engines: {node: ^18 || >=20}
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   tsconfck@3.1.4:
     resolution: {integrity: sha512-kdqWFGVJqe+KGYvlSO9NIaWn9jT1Ny4oKVzAJsKii5eoE9snzTJzL4+MMVOMn+fikWGFmKEylcXL710V/kIPJQ==}
     engines: {node: ^18 || >=20}
@@ -12449,14 +12413,6 @@ packages:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
-
-  vite-tsconfig-paths@4.3.2:
-    resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
-    peerDependencies:
-      vite: '*'
-    peerDependenciesMeta:
-      vite:
-        optional: true
 
   vite@5.4.11:
     resolution: {integrity: sha512-c7jFQRklXua0mTzneGW9QVyxFjUgwcihC4bXEtujIo2ouWCe1Ajt/amn2PCxYnhYfd5k09JX3SB7OYWFKYqj8Q==}
@@ -13220,25 +13176,6 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
-
-  '@analogjs/astro-angular@1.13.0(5eeet3laf4tuwxsp47pekuoybm)':
-    dependencies:
-      '@analogjs/vite-plugin-angular': 1.13.0(@angular-devkit/build-angular@19.1.5(rkqvw2l6lpqpmuuwgj4k6tbtda))(@angular/build@19.1.5(aeubln72aahwfrfh4hp73tccia))
-      '@angular-devkit/build-angular': 19.1.5(rkqvw2l6lpqpmuuwgj4k6tbtda)
-      '@angular/animations': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))
-      '@angular/common': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
-      '@angular/compiler': 19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))
-      '@angular/compiler-cli': 19.1.4(@angular/compiler@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.7.3)
-      '@angular/core': 19.1.4(rxjs@7.8.1)(zone.js@0.15.0)
-      '@angular/language-service': 19.1.4
-      '@angular/platform-browser': 19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))
-      '@angular/platform-browser-dynamic': 19.1.4(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))
-      '@angular/platform-server': 19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@19.1.4(@angular/animations@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@19.1.4(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@19.1.4(rxjs@7.8.1)(zone.js@0.15.0)))
-      rxjs: 7.8.1
-      tslib: 2.8.1
-      zone.js: 0.15.0
-    transitivePeerDependencies:
-      - '@angular/build'
 
   '@analogjs/astro-angular@1.9.4(udzbvmojiumzdr7n6norafgq6y)':
     dependencies:
@@ -22358,8 +22295,6 @@ snapshots:
       slash: 5.1.0
       unicorn-magic: 0.1.0
 
-  globrex@0.1.2: {}
-
   glsl-inject-defines@1.0.3:
     dependencies:
       glsl-token-inject-block: 1.1.0
@@ -28420,10 +28355,6 @@ snapshots:
       '@swc/core': 1.10.7(@swc/helpers@0.5.15)
     optional: true
 
-  tsconfck@3.1.1(typescript@5.7.3):
-    optionalDependencies:
-      typescript: 5.7.3
-
   tsconfck@3.1.4(typescript@5.7.3):
     optionalDependencies:
       typescript: 5.7.3
@@ -28826,17 +28757,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-
-  vite-tsconfig-paths@4.3.2(typescript@5.7.3)(vite@5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0)):
-    dependencies:
-      debug: 4.3.5
-      globrex: 0.1.2
-      tsconfck: 3.1.1(typescript@5.7.3)
-    optionalDependencies:
-      vite: 5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
 
   vite@5.4.11(@types/node@20.14.12)(less@4.1.3)(sass@1.83.0)(stylus@0.64.0)(terser@5.37.0):
     dependencies:
