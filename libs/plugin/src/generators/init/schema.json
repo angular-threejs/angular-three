@@ -1,18 +1,37 @@
 {
-	"$schema": "https://json-schema.org/schema",
+	"cli": "nx",
 	"$id": "Init",
-	"title": "",
+	"title": "Init Angular Three",
 	"type": "object",
 	"properties": {
-		"name": {
+		"sceneGraph": {
 			"type": "string",
-			"description": "",
-			"$default": {
-				"$source": "argv",
-				"index": 0
-			},
-			"x-prompt": "What name would you like to use?"
+			"description": "Generate a getting started SceneGraph component",
+			"enum": ["append", "replace", "generate-only", "none"],
+			"default": "generate-only",
+			"alias": "sg",
+			"x-prompt": {
+				"message": "How would you like to generate a SceneGraph component?",
+				"type": "list",
+				"items": [
+					{
+						"value": "append",
+						"label": "Append to parent component template"
+					},
+					{
+						"value": "replace",
+						"label": "Replace parent component template"
+					},
+					{
+						"value": "generate-only",
+						"label": "Generate a SceneGraph component but do not write to template"
+					},
+					{
+						"none": "none",
+						"label": "Do not generate a SceneGraph component"
+					}
+				]
+			}
 		}
-	},
-	"required": ["name"]
+	}
 }

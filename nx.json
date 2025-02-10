@@ -144,7 +144,7 @@
 		}
 	},
 	"release": {
-		"projects": ["core", "cannon", "postprocessing", "soba", "rapier"],
+		"projects": ["core", "cannon", "postprocessing", "soba", "rapier", "plugin"],
 		"version": {
 			"preVersionCommand": "npm run package",
 			"generatorOptions": {

@@ -28,30 +28,7 @@
 		"three": ">=0.156.0 <0.174.0"
 	},
 	"dependencies": {
-		"tslib": "^2.7.0",
-		"@nx/devkit": "^20.0.0",
-		"@phenomnomnominal/tsquery": "^6.0.0",
-		"nx": "^20.0.0"
-	},
-	"generators": "./plugin/generators.json",
-	"schematics": "./plugin/generators.json",
-	"nx-migrations": {
-		"migrations": "./plugin/migrations.json",
-		"packageGroup": [
-			"angular-three-soba",
-			"angular-three-postprocessing",
-			"angular-three-cannon",
-			"angular-three-rapier"
-		]
-	},
-	"ng-update": {
-		"migrations": "./plugin/migrations.json",
-		"packageGroup": [
-			"angular-three-soba",
-			"angular-three-postprocessing",
-			"angular-three-cannon",
-			"angular-three-rapier"
-		]
+		"tslib": "^2.7.0"
 	},
 	"web-types": [
 		"./web-types.json",

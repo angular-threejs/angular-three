@@ -7,10 +7,28 @@
 	"types": "./src/index.d.ts",
 	"dependencies": {
 		"@nx/devkit": "^20.0.0",
-		"@phenomnomnominal/tsquery": "^6.0.0",
 		"nx": "^20.0.0",
+		"ts-morph": "^25.0.0",
 		"tslib": "^2.3.0"
 	},
 	"generators": "./generators.json",
-	"schematics": "./generators.json"
+	"schematics": "./generators.json",
+	"nx-migrations": {
+		"migrations": "./migrations.json",
+		"packageGroup": [
+			"angular-three-soba",
+			"angular-three-postprocessing",
+			"angular-three-cannon",
+			"angular-three-rapier"
+		]
+	},
+	"ng-update": {
+		"migrations": "./migrations.json",
+		"packageGroup": [
+			"angular-three-soba",
+			"angular-three-postprocessing",
+			"angular-three-cannon",
+			"angular-three-rapier"
+		]
+	}
 }

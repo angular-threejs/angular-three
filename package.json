@@ -8,7 +8,7 @@
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
 		"commit": "czg",
 		"package_old": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin-old && nx generate-json @platform/source",
-		"package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin-old"
+		"package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin"
 	},
 	"private": true,
 	"devDependencies": {
@@ -88,6 +88,7 @@
 		"tailwindcss": "^3.4.17",
 		"three": "^0.173.0",
 		"ts-jest": "^29.2.5",
+		"ts-morph": "^25.0.1",
 		"ts-node": "10.9.2",
 		"typescript": "5.7.3",
 		"typescript-eslint": "^8.23.0",

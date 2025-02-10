@@ -43,6 +43,12 @@
 			"options": {
 				"jestConfig": "libs/plugin/jest.config.ts"
 			}
+		},
+		"publish-next": {
+			"command": "npm publish --tag=next",
+			"options": {
+				"cwd": "{workspaceRoot}/dist/{projectRoot}"
+			}
 		}
 	}
 }
