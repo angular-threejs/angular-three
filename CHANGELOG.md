@@ -1,3 +1,13 @@
+## 4.0.0-next.25 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** write template properly ([329bde6f](https://github.com/angular-threejs/angular-three/commit/329bde6f))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.24 (2025-02-10)
 
 ### 🩹 Fixes
