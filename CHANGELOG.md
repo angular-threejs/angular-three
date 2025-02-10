@@ -1,3 +1,13 @@
+## 4.0.0-next.28 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** get literal value of templateUrl if available ([b5bd817c](https://github.com/angular-threejs/angular-three/commit/b5bd817c))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.27 (2025-02-10)
 
 ### 🩹 Fixes
