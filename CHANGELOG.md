@@ -1,3 +1,13 @@
+## 4.0.0-next.19 (2025-02-10)
+
+### 🩹 Fixes
+
+- use as const array instead of module ([7cbcd9b3](https://github.com/angular-threejs/angular-three/commit/7cbcd9b3))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.18 (2025-02-09)
 
 ### 🚀 Features
