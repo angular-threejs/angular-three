@@ -19,6 +19,7 @@ import {
 	PropertyAssignment,
 	ScriptKind,
 	SyntaxKind,
+	TemplateLiteral,
 } from 'ts-morph';
 import { addMetadataJson } from '../../utils';
 import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../../versions';
@@ -264,32 +265,21 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 
 		tree.write(
 			templateUrlPath,
-			options.sceneGraph === 'replace'
-				? `<ngt-canvas>
-	  <app-scene-graph *canvasContent />
-	</ngt-canvas>`
-				: `${templateContent}
-	<ngt-canvas>
-	  <app-scene-graph *canvasContent />
-	</ngt-canvas>`,
+			`${options.sceneGraph === 'append' ? templateContent : ''}
+<ngt-canvas>
+  <app-scene-graph *canvasContent />
+</ngt-canvas>`,
 		);
 	} else {
-		const templateMetadata = componentMetadata.getFirstChild((node): node is PropertyAssignment => {
+		const templateMetadata = componentMetadata.getFirstDescendant((node): node is PropertyAssignment => {
 			return Node.isPropertyAssignment(node) && node.getName() === 'template';
 		});
-		templateMetadata.setInitializer((writer) => {
-			if (options.sceneGraph === 'append') {
-				writer.write(templateMetadata.getInitializer().getText());
-				writer.newLineIfLastNot();
-			}
 
-			writer.writeLine('<ngt-canvas>');
-			writer.withIndentationLevel(2, () => {
-				writer.writeLine('<app-scene-graph *canvasContent />');
-			});
-			writer.writeLine(`</ngt-canvas>`);
-			writer.newLineIfLastNot();
-		});
+		const template = templateMetadata.getInitializer() as TemplateLiteral;
+		template.setLiteralValue(`${options.sceneGraph === 'append' ? template.getFullText() : ''}
+<ngt-canvas>
+  <app-scene-graph *canvasContent />
+</ngt-canvas>`);
 	}
 
 	// update import statements
@@ -309,7 +299,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	} else {
 		componentMetadata.addPropertyAssignment({
 			name: 'imports',
-			initializer: `['NgtCanvas', 'SceneGraph']`,
+			initializer: `[NgtCanvas, SceneGraph]`,
 		});
 	}
 
