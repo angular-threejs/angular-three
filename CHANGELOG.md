@@ -1,3 +1,13 @@
+## 4.0.0-next.20 (2025-02-10)
+
+### 🚀 Features
+
+- **plugin:** add angular-three-plugin ([394b95c5](https://github.com/angular-threejs/angular-three/commit/394b95c5))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.19 (2025-02-10)
 
 ### 🩹 Fixes
