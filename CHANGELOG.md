@@ -1,3 +1,13 @@
+## 4.0.0-next.26 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** maintain format of template literal ([3f3e5fa8](https://github.com/angular-threejs/angular-three/commit/3f3e5fa8))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.25 (2025-02-10)
 
 ### 🩹 Fixes
