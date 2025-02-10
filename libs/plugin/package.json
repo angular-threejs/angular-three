@@ -1,7 +1,9 @@
 {
 	"name": "angular-three-plugin",
 	"version": "0.0.0-replace",
-	"private": true,
+	"publishConfig": {
+		"access": "public"
+	},
 	"type": "commonjs",
 	"main": "./src/index.js",
 	"types": "./src/index.d.ts",
