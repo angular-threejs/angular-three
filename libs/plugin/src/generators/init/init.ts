@@ -177,7 +177,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		if (endSetup) {
 			return await endSetup();
 		}
-		tree.write(appConfigPath, appConfigSourceFile.print());
+		tree.write(appConfigPath, appConfigSourceFile.getFullText());
 	}
 
 	if (Node.isObjectLiteralExpression(configArgument)) {
@@ -185,7 +185,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		if (endSetup) {
 			return await endSetup();
 		}
-		tree.write(mainTsPath, mainSourceFile.print());
+		tree.write(mainTsPath, mainSourceFile.getFullText());
 	}
 
 	if (options.sceneGraph === 'none') {
@@ -221,7 +221,8 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		message: `Enter the path to the component (from ${app.sourceRoot})`,
 		name: 'componentPath',
 		validate(value) {
-			if (!value.endsWith('.ts') || !tree.exists(value)) {
+			const fullPath = join(app.sourceRoot, value);
+			if (!value.endsWith('.ts') || !tree.exists(fullPath)) {
 				return `[NGT] Please use the path to the component TS file.`;
 			}
 			return true;
@@ -237,7 +238,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		scriptKind: ScriptKind.TS,
 	});
 
-	const decorators = componentSourceFile.getChildrenOfKind(SyntaxKind.Decorator);
+	const decorators = componentSourceFile.getDescendantsOfKind(SyntaxKind.Decorator);
 	const componentDecorators = decorators.filter((decorator) => decorator.getName() === 'Component');
 	if (componentDecorators.length !== 1) {
 		return await stopSetup(tree, `There are no Component or more than one Component in ${componentPath}`);
@@ -313,7 +314,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	}
 
 	await componentSourceFile.save();
-	tree.write(componentPath, componentSourceFile.print());
+	tree.write(componentPath, componentSourceFile.getFullText());
 	return await finishSetup(tree);
 }
 
