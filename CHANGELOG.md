@@ -1,3 +1,13 @@
+## 4.0.0-next.24 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** get template metadata via descendant ([44de9464](https://github.com/angular-threejs/angular-three/commit/44de9464))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.23 (2025-02-10)
 
 ### 🩹 Fixes
