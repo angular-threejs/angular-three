@@ -11,7 +11,13 @@ import { random } from 'maath';
 		<ngt-group [rotation]="[0, 0, Math.PI / 4]">
 			<ngts-points-buffer [positions]="sphere" [stride]="3" [options]="{ frustumCulled: false }">
 				<ngts-point-material
-					[options]="{ transparent: true, color: '#ccc', size: 0.005, sizeAttenuation: true, depthWrite: false }"
+					[options]="{
+						transparent: true,
+						color: '#ccc',
+						size: 0.005,
+						sizeAttenuation: true,
+						depthWrite: false,
+					}"
 				/>
 			</ngts-points-buffer>
 		</ngt-group>

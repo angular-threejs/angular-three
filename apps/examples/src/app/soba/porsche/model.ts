@@ -7,7 +7,10 @@ import { color } from './color';
 @Component({
 	selector: 'app-porsche-model',
 	template: `
-		<ngt-primitive *args="[model()]" [parameters]="{ position: position(), rotation: rotation(), scale: scale() }" />
+		<ngt-primitive
+			*args="[model()]"
+			[parameters]="{ position: position(), rotation: rotation(), scale: scale() }"
+		/>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,

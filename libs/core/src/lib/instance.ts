@@ -81,7 +81,8 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			add(object, type) {
 				const current = instance.__ngt__.hierarchyStore.snapshot[type];
 				const foundIndex = current.findIndex(
-					(node) => object === node || (!!object['uuid'] && !!node['uuid'] && object['uuid'] === node['uuid']),
+					(node) =>
+						object === node || (!!object['uuid'] && !!node['uuid'] && object['uuid'] === node['uuid']),
 				);
 
 				if (foundIndex > -1) {
@@ -94,7 +95,9 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 				notifyAncestors(instance.__ngt__.hierarchyStore.snapshot.parent, type);
 			},
 			remove(object, type) {
-				instance.__ngt__.hierarchyStore.update((prev) => ({ [type]: prev[type].filter((node) => node !== object) }));
+				instance.__ngt__.hierarchyStore.update((prev) => ({
+					[type]: prev[type].filter((node) => node !== object),
+				}));
 				notifyAncestors(instance.__ngt__.hierarchyStore.snapshot.parent, type);
 			},
 			setParent(parent) {
@@ -157,7 +160,9 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 
 				if (root.snapshot.internal) {
 					const interactions = root.snapshot.internal.interaction;
-					const index = interactions.findIndex((obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid);
+					const index = interactions.findIndex(
+						(obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid,
+					);
 					// if already exists, do not add to interactions
 					if (index < 0) {
 						root.snapshot.internal.interaction.push(instance as unknown as THREE.Object3D);
@@ -177,7 +182,9 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 
 				if (root.snapshot.internal) {
 					const interactions = root.snapshot.internal.interaction;
-					const index = interactions.findIndex((obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid);
+					const index = interactions.findIndex(
+						(obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid,
+					);
 					if (index >= 0) interactions.splice(index, 1);
 				}
 			},

@@ -170,12 +170,20 @@ export class NgtsGizmoHelperImpl {
 					// animate position by doing a slerp and then scaling the position on the unit sphere
 					q1.rotateTowards(q2, step);
 					// animate orientation
-					mainCamera.position.set(0, 0, 1).applyQuaternion(q1).multiplyScalar(this.radius).add(this.focusPoint);
+					mainCamera.position
+						.set(0, 0, 1)
+						.applyQuaternion(q1)
+						.multiplyScalar(this.radius)
+						.add(this.focusPoint);
 					mainCamera.up.set(0, 1, 0).applyQuaternion(q1).normalize();
 					mainCamera.quaternion.copy(q1);
 
 					if (this.isCameraControls(defaultControls)) {
-						void defaultControls.setPosition(mainCamera.position.x, mainCamera.position.y, mainCamera.position.z);
+						void defaultControls.setPosition(
+							mainCamera.position.x,
+							mainCamera.position.y,
+							mainCamera.position.z,
+						);
 					}
 
 					if (hasListener(this.update)) this.update.emit();

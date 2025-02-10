@@ -107,7 +107,11 @@ export class NgtsDecal {
 			}
 
 			const [position, rotation, scale] = [this.position(), this.rotation(), this.scale()];
-			const state = { position: new THREE.Vector3(), rotation: new THREE.Euler(), scale: new THREE.Vector3(1, 1, 1) };
+			const state = {
+				position: new THREE.Vector3(),
+				rotation: new THREE.Euler(),
+				scale: new THREE.Vector3(1, 1, 1),
+			};
 
 			applyProps(state, { position, scale });
 

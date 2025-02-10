@@ -293,7 +293,11 @@ export class NgtsHTMLContent extends NgtHTML {
 							: `translateZ(${fov}px)`;
 						let matrix = group.matrixWorld;
 						if (sprite) {
-							matrix = camera.matrixWorldInverse.clone().transpose().copyPosition(matrix).scale(group.scale);
+							matrix = camera.matrixWorldInverse
+								.clone()
+								.transpose()
+								.copyPosition(matrix)
+								.scale(group.scale);
 							matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0;
 							matrix.elements[15] = 1;
 						}
@@ -316,7 +320,11 @@ export class NgtsHTMLContent extends NgtHTML {
 						}
 					} else {
 						const scale = distanceFactor === undefined ? 1 : objectScale(group, camera) * distanceFactor;
-						renderer.setStyle(hostEl, 'transform', `translate3d(${vec[0]}px,${vec[1]}px,0) scale(${scale})`);
+						renderer.setStyle(
+							hostEl,
+							'transform',
+							`translate3d(${vec[0]}px,${vec[1]}px,0) scale(${scale})`,
+						);
 					}
 					oldPosition = vec;
 					oldZoom = camera.zoom;

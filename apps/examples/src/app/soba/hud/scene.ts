@@ -43,11 +43,22 @@ export class Torus {
 				<ng-template renderTextureContent>
 					<ngt-color *args="['white']" attach="background" />
 					<ngts-orthographic-camera
-						[options]="{ makeDefault: true, left: -1, right: 1, top: 1, bottom: -1, position: [0, 0, 10], zoom: 0.5 }"
+						[options]="{
+							makeDefault: true,
+							left: -1,
+							right: 1,
+							top: 1,
+							bottom: -1,
+							position: [0, 0, 10],
+							zoom: 0.5,
+						}"
 					/>
 					<ngts-text
 						[text]="text()"
-						[options]="{ color: 'black', font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff' }"
+						[options]="{
+							color: 'black',
+							font: 'https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff',
+						}"
 					/>
 				</ng-template>
 			</ngts-render-texture>
@@ -110,7 +121,13 @@ export class Box {
 		<ngt-portal [container]="scene()" autoRender>
 			<ng-template portalContent>
 				<ngt-ambient-light [intensity]="Math.PI / 2" />
-				<ngt-spot-light [position]="[10, 10, 10]" [angle]="0.15" [penumbra]="0" [decay]="0" [intensity]="Math.PI" />
+				<ngt-spot-light
+					[position]="[10, 10, 10]"
+					[angle]="0.15"
+					[penumbra]="0"
+					[decay]="0"
+					[intensity]="Math.PI"
+				/>
 				<ngt-point-light [position]="[-10, -10, -10]" [decay]="0" [intensity]="Math.PI" />
 				<ngts-perspective-camera [options]="{ makeDefault: true, position: [0, 0, 10] }" />
 				<app-box [position]="boxPosition()" />

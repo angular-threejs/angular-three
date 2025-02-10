@@ -65,7 +65,11 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 					</ngt-mesh>
 				</ngts-caustics>
 
-				<ngt-mesh [scale]="[0.95, 1, 0.95]" [geometry]="gltf.nodes.glass_back.geometry" [material]="innerMaterial" />
+				<ngt-mesh
+					[scale]="[0.95, 1, 0.95]"
+					[geometry]="gltf.nodes.glass_back.geometry"
+					[material]="innerMaterial"
+				/>
 				<ngt-mesh [geometry]="gltf.nodes.glass_inner.geometry" [material]="innerMaterial" />
 			</ngt-group>
 		}
@@ -95,13 +99,25 @@ class Scene {
 @Component({
 	selector: 'caustics-env',
 	template: `
-		<ngts-environment [options]="{ frames: Infinity, preset: 'city', resolution: 256, background: true, blur: 0.8 }">
+		<ngts-environment
+			[options]="{ frames: Infinity, preset: 'city', resolution: 256, background: true, blur: 0.8 }"
+		>
 			<ng-template>
 				<ngts-lightformer
-					[options]="{ intensity: 4, rotation: [Math.PI / 2, 0, 0], position: [0, 5, -9], scale: [10, 10, 1] }"
+					[options]="{
+						intensity: 4,
+						rotation: [Math.PI / 2, 0, 0],
+						position: [0, 5, -9],
+						scale: [10, 10, 1],
+					}"
 				/>
 				<ngts-lightformer
-					[options]="{ intensity: 4, rotation: [Math.PI / 2, 0, 0], position: [0, 5, -9], scale: [10, 10, 1] }"
+					[options]="{
+						intensity: 4,
+						rotation: [Math.PI / 2, 0, 0],
+						position: [0, 5, -9],
+						scale: [10, 10, 1],
+					}"
 				/>
 				<ngt-group [rotation]="[Math.PI / 2, 1, 0]">
 					@for (positionX of positions; track $index) {
@@ -116,13 +132,28 @@ class Scene {
 					}
 
 					<ngts-lightformer
-						[options]="{ intensity: 0.5, rotation: [0, Math.PI / 2, 0], position: [-5, 1, -1], scale: [50, 2, 1] }"
+						[options]="{
+							intensity: 0.5,
+							rotation: [0, Math.PI / 2, 0],
+							position: [-5, 1, -1],
+							scale: [50, 2, 1],
+						}"
 					/>
 					<ngts-lightformer
-						[options]="{ intensity: 0.5, rotation: [0, Math.PI / 2, 0], position: [-5, -1, -1], scale: [50, 2, 1] }"
+						[options]="{
+							intensity: 0.5,
+							rotation: [0, Math.PI / 2, 0],
+							position: [-5, -1, -1],
+							scale: [50, 2, 1],
+						}"
 					/>
 					<ngts-lightformer
-						[options]="{ intensity: 0.5, rotation: [0, -Math.PI / 2, 0], position: [10, 1, 0], scale: [50, 2, 1] }"
+						[options]="{
+							intensity: 0.5,
+							rotation: [0, -Math.PI / 2, 0],
+							position: [10, 1, 0],
+							scale: [50, 2, 1],
+						}"
 					/>
 				</ngt-group>
 				<ngt-group #group>
@@ -174,7 +205,14 @@ class Env {
 		<ngt-group [position]="[0, -0.5, 0]" [rotation]="[0, -0.75, 0]">
 			<caustics-scene [debug]="debug()" />
 			<ngts-accumulative-shadows
-				[options]="{ frames: 100, alphaTest: 0.75, opacity: 0.8, color: 'red', scale: 20, position: [0, -0.005, 0] }"
+				[options]="{
+					frames: 100,
+					alphaTest: 0.75,
+					opacity: 0.8,
+					color: 'red',
+					scale: 20,
+					position: [0, -0.005, 0],
+				}"
 			>
 				<ngts-randomized-lights
 					[options]="{ amount: 8, radius: 6, ambient: 0.5, position: [-1.5, 2.5, -2.5], bias: 0.001 }"

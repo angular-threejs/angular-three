@@ -122,7 +122,11 @@ export class NgtpSelectiveBloom {
 		});
 
 		effect(() => {
-			const [selectionLayer, invalidate, effect] = [this.selectionLayer(), this.store.invalidate(), this.effect()];
+			const [selectionLayer, invalidate, effect] = [
+				this.selectionLayer(),
+				this.store.invalidate(),
+				this.effect(),
+			];
 			effect.selection.layer = selectionLayer;
 			invalidate();
 		});

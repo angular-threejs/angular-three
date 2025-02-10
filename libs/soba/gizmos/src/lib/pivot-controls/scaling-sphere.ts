@@ -32,12 +32,10 @@ export function calculateOffset(
 		return -e2 / e1;
 	}
 
-	vec1
-		.copy(rayDir)
+	vec1.copy(rayDir)
 		.multiplyScalar(e1 / e3)
 		.sub(normal);
-	vec2
-		.copy(rayDir)
+	vec2.copy(rayDir)
 		.multiplyScalar(e2 / e3)
 		.add(rayStart)
 		.sub(clickPoint);
@@ -71,7 +69,12 @@ const scaleMatrix = new THREE.Matrix4();
 						></div>
 					</ngts-html>
 				}
-				<ngt-mesh #mesh [position]="[0, position(), 0]" [renderOrder]="500" [userData]="pivotControls.userData()">
+				<ngt-mesh
+					#mesh
+					[position]="[0, position(), 0]"
+					[renderOrder]="500"
+					[userData]="pivotControls.userData()"
+				>
 					<ngt-sphere-geometry *args="[radius(), 12, 12]" />
 					<ngt-mesh-basic-material
 						[transparent]="true"

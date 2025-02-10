@@ -98,7 +98,11 @@ const intersection = new THREE.Vector3();
 
 			<ngts-line
 				[points]="arc()"
-				[options]="{ lineWidth: pivotControls.lineWidth() * 4, visible: false, userData: pivotControls.userData() }"
+				[options]="{
+					lineWidth: pivotControls.lineWidth() * 4,
+					visible: false,
+					userData: pivotControls.userData(),
+				}"
 			/>
 
 			<ngts-line

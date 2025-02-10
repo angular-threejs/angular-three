@@ -402,7 +402,10 @@ export class Cursor {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		const sphereApi = injectSphere<Mesh>(() => ({ args: [0.5], position: [0, 0, 10000], type: 'Static' }), this.mesh);
+		const sphereApi = injectSphere<Mesh>(
+			() => ({ args: [0.5], position: [0, 0, 10000], type: 'Static' }),
+			this.mesh,
+		);
 		injectBeforeRender(({ pointer, viewport: { width, height } }) => {
 			const x = pointer.x * width;
 			const y = (pointer.y * height) / 1.9 + -x / 3.5;

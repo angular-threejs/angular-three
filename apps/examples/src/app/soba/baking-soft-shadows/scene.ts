@@ -85,7 +85,14 @@ export class Suzi {
 				}"
 			>
 				<ngts-randomized-lights
-					[options]="{ intensity: Math.PI, amount: 8, radius: 4, ambient: 0.5, position: [5, 5, -10], bias: 0.001 }"
+					[options]="{
+						intensity: Math.PI,
+						amount: 8,
+						radius: 4,
+						ambient: 0.5,
+						position: [5, 5, -10],
+						bias: 0.001,
+					}"
 				/>
 			</ngts-accumulative-shadows>
 		</ngt-group>

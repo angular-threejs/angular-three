@@ -127,7 +127,10 @@ function getColliderArgsFromGeometry(
 			const clonedGeometry = geometry.index ? geometry.clone() : mergeVertices(geometry);
 
 			return {
-				args: [clonedGeometry.attributes['position'].array as Float32Array, clonedGeometry.index?.array as Uint32Array],
+				args: [
+					clonedGeometry.attributes['position'].array as Float32Array,
+					clonedGeometry.index?.array as Uint32Array,
+				],
 				offset: new THREE.Vector3(),
 			};
 		}
@@ -167,12 +170,16 @@ export function createColliderOptions(
 			const worldScale = child.getWorldScale(_scale);
 			const shape = autoColliderMap[options.colliders || 'cuboid'] as NgtrColliderShape;
 			child.updateWorldMatrix(true, false);
-			_matrix4.copy(child.matrixWorld).premultiply(invertedParentMatrixWorld).decompose(_position, _rotation, _scale);
+			_matrix4
+				.copy(child.matrixWorld)
+				.premultiply(invertedParentMatrixWorld)
+				.decompose(_position, _rotation, _scale);
 
 			const rotationEuler = new THREE.Euler().setFromQuaternion(_rotation, 'XYZ');
 
 			const { args, offset } = getColliderArgsFromGeometry(child.geometry, options.colliders || 'cuboid');
-			const { mass, linearDamping, angularDamping, canSleep, ccd, gravityScale, softCcdPrediction, ...rest } = options;
+			const { mass, linearDamping, angularDamping, canSleep, ccd, gravityScale, softCcdPrediction, ...rest } =
+				options;
 
 			childColliderOptions.push({
 				colliderOptions: rest,

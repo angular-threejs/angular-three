@@ -35,7 +35,9 @@ import { Mesh } from 'three';
 			>
 				<ngt-dodecahedron-geometry *args="[0.75]" />
 				<ngt-mesh-standard-material [color]="hovered() ? 'hotpink' : 'goldenrod'" />
-				<ngts-decal [options]="{ polygonOffsetFactor: 0, position: [0, -0.2, 0.5], scale: 0.75, map: texture() }" />
+				<ngts-decal
+					[options]="{ polygonOffsetFactor: 0, position: [0, -0.2, 0.5], scale: 0.75, map: texture() }"
+				/>
 			</ngt-mesh>
 		</ngt-group>
 	`,
@@ -71,12 +73,19 @@ export class Dodecahedron {
 		@if (gltf(); as gltf) {
 			<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.bunny.geometry" [dispose]="null">
 				<ngt-mesh-standard-material color="black" />
-				<ngts-decal [options]="{ position: [0, 0.9, 0.75], rotation: [-0.4, Math.PI, 0], scale: [0.9, 0.25, 1] }">
+				<ngts-decal
+					[options]="{ position: [0, 0.9, 0.75], rotation: [-0.4, Math.PI, 0], scale: [0.9, 0.25, 1] }"
+				>
 					<ngt-mesh-standard-material [roughness]="1" transparent polygonOffset [polygonOffsetFactor]="-1">
 						<ngts-render-texture>
 							<ng-template renderTextureContent>
 								<ngts-perspective-camera
-									[options]="{ makeDefault: true, manual: true, aspect: 0.9 / 0.25, position: [0, 0, 5] }"
+									[options]="{
+										makeDefault: true,
+										manual: true,
+										aspect: 0.9 / 0.25,
+										position: [0, 0, 5],
+									}"
 								/>
 								<ngt-color attach="background" *args="['#af2040']" />
 								<ngt-ambient-light [intensity]="Math.PI" />
@@ -125,7 +134,14 @@ export class Bunny {
 			<app-bunny />
 			<app-dodecahedron [position]="[-0.9, 2, 0.4]" [scale]="0.1" />
 			<ngts-accumulative-shadows
-				[options]="{ frames: 80, color: 'black', opacity: 1, scale: 12, position: [0, 0.04, 0], alphaTest: 0.65 }"
+				[options]="{
+					frames: 80,
+					color: 'black',
+					opacity: 1,
+					scale: 12,
+					position: [0, 0.04, 0],
+					alphaTest: 0.65,
+				}"
 			>
 				<ngts-randomized-lights [options]="{ amount: 8, radius: 5, position: [5, 5, -10], bias: 0.001 }" />
 			</ngts-accumulative-shadows>

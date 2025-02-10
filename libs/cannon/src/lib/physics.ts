@@ -27,7 +27,10 @@ export interface NgtcCannonWorkerEvents {
 }
 
 export type NgtcCannonWorker = CannonWorkerAPI & {
-	on: <K extends keyof NgtcCannonWorkerEvents>(event: K, cb: (data: NgtcCannonWorkerEvents[K]['data']) => void) => void;
+	on: <K extends keyof NgtcCannonWorkerEvents>(
+		event: K,
+		cb: (data: NgtcCannonWorkerEvents[K]['data']) => void,
+	) => void;
 	removeAllListeners: () => void;
 };
 
@@ -44,7 +47,11 @@ function apply(
 	object?: THREE.Object3D,
 ) {
 	if (index !== undefined) {
-		m.compose(v.fromArray(positions, index * 3), q.fromArray(quaternions as THREE.QuaternionTuple, index * 4), scale);
+		m.compose(
+			v.fromArray(positions, index * 3),
+			q.fromArray(quaternions as THREE.QuaternionTuple, index * 4),
+			scale,
+		);
 		if (object) {
 			object.matrixAutoUpdate = false;
 			object.matrix.copy(m);
@@ -194,7 +201,12 @@ export class NgtcPhysics {
 		const { events, refs } = this;
 		const cb = events[target]?.collide;
 		if (cb) {
-			cb({ body: refs[body], contact: { bi: refs[bi], bj: refs[bj], ...contactRest }, target: refs[target], ...rest });
+			cb({
+				body: refs[body],
+				contact: { bi: refs[bi], bj: refs[bj], ...contactRest },
+				target: refs[target],
+				...rest,
+			});
 		}
 	}
 

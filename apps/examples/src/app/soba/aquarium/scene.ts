@@ -40,7 +40,14 @@ import { Turtle } from './turtle';
 			}"
 		>
 			<ngts-randomized-lights
-				[options]="{ amount: 8, radius: 15, ambient: 0.5, intensity: Math.PI, position: [-5, 10, -5], size: 20 }"
+				[options]="{
+					amount: 8,
+					radius: 15,
+					ambient: 0.5,
+					intensity: Math.PI,
+					position: [-5, 10, -5],
+					size: 20,
+				}"
 			/>
 		</ngts-accumulative-shadows>
 
@@ -48,7 +55,12 @@ import { Turtle } from './turtle';
 		<ngts-environment [options]="{ resolution: 1024 }">
 			<ngt-group * [rotation]="[-Math.PI / 3, 0, 0]">
 				<ngts-lightformer
-					[options]="{ intensity: 4, rotation: [Math.PI / 2, 0, 0], position: [0, 5, -9], scale: [10, 10, 1] }"
+					[options]="{
+						intensity: 4,
+						rotation: [Math.PI / 2, 0, 0],
+						position: [0, 5, -9],
+						scale: [10, 10, 1],
+					}"
 				/>
 
 				@for (x of lightPositions; track $index) {
@@ -64,15 +76,27 @@ import { Turtle } from './turtle';
 				}
 
 				<ngts-lightformer
-					[options]="{ intensity: 2, rotation: [Math.PI / 2, 0, 0], position: [-5, 1, -1], scale: [50, 2, 1] }"
+					[options]="{
+						intensity: 2,
+						rotation: [Math.PI / 2, 0, 0],
+						position: [-5, 1, -1],
+						scale: [50, 2, 1],
+					}"
 				/>
 				<ngts-lightformer
-					[options]="{ intensity: 2, rotation: [-Math.PI / 2, 0, 0], position: [10, 1, 0], scale: [50, 2, 1] }"
+					[options]="{
+						intensity: 2,
+						rotation: [-Math.PI / 2, 0, 0],
+						position: [10, 1, 0],
+						scale: [50, 2, 1],
+					}"
 				/>
 			</ngt-group>
 		</ngts-environment>
 
-		<ngts-camera-controls [options]="{ minPolarAngle: 0, maxPolarAngle: Math.PI / 2, truckSpeed: 0, dollySpeed: 0 }" />
+		<ngts-camera-controls
+			[options]="{ minPolarAngle: 0, maxPolarAngle: Math.PI / 2, truckSpeed: 0, dollySpeed: 0 }"
+		/>
 	`,
 	imports: [
 		NgtArgs,

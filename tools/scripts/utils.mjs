@@ -192,7 +192,9 @@ export function createProgram(filePaths, sourceFilePath) {
 							if (!dtsCollection[member.name.text]) continue;
 							const { dtsPath, dtsName } = dtsCollection[member.name.text];
 
-							const dtsSourceFile = dtsProgram.getSourceFiles().find((sf) => sf.fileName.includes(dtsPath));
+							const dtsSourceFile = dtsProgram
+								.getSourceFiles()
+								.find((sf) => sf.fileName.includes(dtsPath));
 							if (!dtsSourceFile) continue;
 
 							ts.forEachChild(dtsSourceFile, (dtsNode) => {
@@ -211,7 +213,8 @@ export function createProgram(filePaths, sourceFilePath) {
 											const constructorJsDocs = member['jsDoc'] || [];
 											const constructorJsDoc = constructorJsDocs[0];
 											if (constructorJsDoc) {
-												descriptions['constructorDescription'] = concatAllJsDocText(constructorJsDoc);
+												descriptions['constructorDescription'] =
+													concatAllJsDocText(constructorJsDoc);
 											}
 										}
 									}
@@ -317,7 +320,8 @@ export function createProgram(filePaths, sourceFilePath) {
 
 export function createBareJsons(packageName = 'angular-three', libName = 'core') {
 	const metadataJson = {
-		$schema: 'https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json',
+		$schema:
+			'https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json',
 		version: 1.1,
 		tags: [],
 	};

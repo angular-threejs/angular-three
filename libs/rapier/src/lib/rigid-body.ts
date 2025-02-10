@@ -135,7 +135,13 @@ export class NgtrAnyCollider {
 		}
 
 		// prefill with some extra
-		const scaleArray = [this.worldScale.x, this.worldScale.y, this.worldScale.z, this.worldScale.x, this.worldScale.x];
+		const scaleArray = [
+			this.worldScale.x,
+			this.worldScale.y,
+			this.worldScale.z,
+			this.worldScale.x,
+			this.worldScale.x,
+		];
 		return cloned.map((arg, index) => scaleArray[index] * (arg as number));
 	});
 

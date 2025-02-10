@@ -123,7 +123,9 @@ class Diamond {
 				scale: 12,
 			}"
 		>
-			<ngts-randomized-lights [options]="{ position: [5, 5, -10], amount: 8, radius: 10, ambient: 0.5, bias: 0.001 }" />
+			<ngts-randomized-lights
+				[options]="{ position: [5, 5, -10], amount: 8, radius: 10, ambient: 0.5, bias: 0.001 }"
+			/>
 		</ngts-accumulative-shadows>
 
 		<ngts-environment

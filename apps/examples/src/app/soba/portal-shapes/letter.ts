@@ -57,19 +57,35 @@ import boldFont from './bold.blob';
 					(dblclick)="onDblClick($any($event))"
 				>
 					<ngts-mesh-transmission-material
-						[options]="$any({ clearcoat: 1, samples: 3, thickness: 40, chromaticAberration: 0.25, anisotropy: 0.4 })"
+						[options]="
+							$any({
+								clearcoat: 1,
+								samples: 3,
+								thickness: 40,
+								chromaticAberration: 0.25,
+								anisotropy: 0.4,
+							})
+						"
 					>
 						<!--Render a portalled scene into the "buffer" attribute of transmission material, which is a texture.-->
 						<!--Since we're moving the contents with the letter shape in world space we take the standard event compute-->
 						<ngts-render-texture
 							attach="buffer"
-							[options]="{ stencilBuffer: stencilBuffer(), width: 512, height: 512, compute: $any(eventsCompute?.()) }"
+							[options]="{
+								stencilBuffer: stencilBuffer(),
+								width: 512,
+								height: 512,
+								compute: $any(eventsCompute?.()),
+							}"
 						>
 							<!--Everything in here is self-contained, behaves like a regular canvas, but we're *in* the texture-->
 							<ng-template renderTextureContent let-injector="injector">
 								<ngt-color attach="background" *args="['#4899c9']" />
 								<ngt-group #contents [matrixAutoUpdate]="false">
-									<ng-container [ngTemplateOutlet]="content()" [ngTemplateOutletInjector]="injector" />
+									<ng-container
+										[ngTemplateOutlet]="content()"
+										[ngTemplateOutletInjector]="injector"
+									/>
 								</ngt-group>
 							</ng-template>
 						</ngts-render-texture>

@@ -69,16 +69,20 @@ export class NgtsCameraShake {
 		});
 
 		injectBeforeRender(({ delta, clock }) => {
-			const [{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate }, camera] = [
-				this.options(),
-				this.store.snapshot.camera,
-			];
+			const [
+				{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate },
+				camera,
+			] = [this.options(), this.store.snapshot.camera];
 			const shake = Math.pow(this.intensity, 2);
 			const yaw = maxYaw * shake * this.yawNoise.noise(clock.elapsedTime * yawFrequency, 1);
 			const pitch = maxPitch * shake * this.pitchNoise.noise(clock.elapsedTime * pitchFrequency, 1);
 			const roll = maxRoll * shake * this.rollNoise.noise(clock.elapsedTime * rollFrequency, 1);
 
-			camera.rotation.set(this.initialRotation.x + pitch, this.initialRotation.y + yaw, this.initialRotation.z + roll);
+			camera.rotation.set(
+				this.initialRotation.x + pitch,
+				this.initialRotation.y + yaw,
+				this.initialRotation.z + roll,
+			);
 
 			if (decay && this.intensity > 0) {
 				this.intensity -= decayRate * delta;

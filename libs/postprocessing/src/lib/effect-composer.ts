@@ -154,7 +154,11 @@ export class NgtpEffectComposer {
 		});
 
 		effect(() => {
-			const [composer, width, height] = [this.effectComposer(), this.store.size.width(), this.store.size.height()];
+			const [composer, width, height] = [
+				this.effectComposer(),
+				this.store.size.width(),
+				this.store.size.height(),
+			];
 			if (composer) {
 				composer.setSize(width, height);
 			}

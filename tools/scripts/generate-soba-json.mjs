@@ -50,7 +50,11 @@ for (const path of paths) {
 			if (ts.isInterfaceDeclaration(statement) && statement.name.escapedText === 'HTMLElementTagNameMap') {
 				for (const member of statement.members) {
 					if (ts.isPropertySignature(member)) {
-						const metadataAtMember = { name: member.name.text || member.name.escapedText, attributes: [], extends: '' };
+						const metadataAtMember = {
+							name: member.name.text || member.name.escapedText,
+							attributes: [],
+							extends: '',
+						};
 
 						/**
 						 * @type {ts.JSDoc[]}
@@ -95,7 +99,10 @@ for (const path of paths) {
 						} else if (ts.isTypeReferenceNode(member.type)) {
 							const typeDeclaration = typesMap[member.type.typeName.text];
 							if (typeDeclaration) {
-								processTypeReferenceNode(metadataAtMember, typeDeclaration.typeNode || typeDeclaration.type);
+								processTypeReferenceNode(
+									metadataAtMember,
+									typeDeclaration.typeNode || typeDeclaration.type,
+								);
 							}
 						}
 

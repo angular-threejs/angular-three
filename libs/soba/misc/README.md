@@ -48,21 +48,21 @@ The `params` object includes the following properties:
 - `width`: The width of the FBO in pixels. Or it can also be the `settings` object.
 - `height`: The height of the FBO in pixels.
 - `settings`: An object containing the settings for the FBO.
-  - `samples`: The number of samples for multisample anti-aliasing (MSAA). Set to 0 to disable MSAA.
-  - `depth`: If set, the scene depth will be rendered into buffer.depthTexture. (Default: false)
-  - `wrapS`: The wrapping mode for the s-coordinate of the FBO texture.
-  - `wrapT`: The wrapping mode for the t-coordinate of the FBO texture.
-  - `magFilter`: The magnification filter for the FBO texture.
-  - `minFilter`: The minification filter for the FBO texture.
-  - `format`: The internal format of the color buffer.
-  - `type`: The data type of the color buffer.
-  - `anisotropy`: The level of anisotropic filtering for the FBO texture.
-  - `depthBuffer`: Whether to include a depth buffer. (Default: true)
-  - `stencilBuffer`: Whether to include a stencil buffer. (Default: false)
-  - `generateMipmaps`: Whether to generate mipmaps for the FBO texture. (Default: true)
-  - `depthTexture`: A DepthTexture instance to use for the depth buffer.
-  - `encoding`: The encoding of the FBO texture.
-  - `colorSpace`: The color space of the FBO texture.
+    - `samples`: The number of samples for multisample anti-aliasing (MSAA). Set to 0 to disable MSAA.
+    - `depth`: If set, the scene depth will be rendered into buffer.depthTexture. (Default: false)
+    - `wrapS`: The wrapping mode for the s-coordinate of the FBO texture.
+    - `wrapT`: The wrapping mode for the t-coordinate of the FBO texture.
+    - `magFilter`: The magnification filter for the FBO texture.
+    - `minFilter`: The minification filter for the FBO texture.
+    - `format`: The internal format of the color buffer.
+    - `type`: The data type of the color buffer.
+    - `anisotropy`: The level of anisotropic filtering for the FBO texture.
+    - `depthBuffer`: Whether to include a depth buffer. (Default: true)
+    - `stencilBuffer`: Whether to include a stencil buffer. (Default: false)
+    - `generateMipmaps`: Whether to generate mipmaps for the FBO texture. (Default: true)
+    - `depthTexture`: A DepthTexture instance to use for the depth buffer.
+    - `encoding`: The encoding of the FBO texture.
+    - `colorSpace`: The color space of the FBO texture.
 
 ### NgtsFBO
 

@@ -101,7 +101,9 @@ export class NgtsAccumulativeShadows {
 
 	lightsRef = viewChild.required<ElementRef<THREE.Group>>('lights');
 	planeRef =
-		viewChild.required<ElementRef<THREE.Mesh<THREE.PlaneGeometry, InstanceType<typeof SoftShadowMaterial>>>>('plane');
+		viewChild.required<ElementRef<THREE.Mesh<THREE.PlaneGeometry, InstanceType<typeof SoftShadowMaterial>>>>(
+			'plane',
+		);
 
 	private store = injectStore();
 

@@ -147,7 +147,12 @@ export class NgtCanvasImpl {
 			effect(
 				() => {
 					const resizeResult = this.resizeResult();
-					if (!resizeResult.width || resizeResult.width <= 0 || !resizeResult.height || resizeResult.height <= 0)
+					if (
+						!resizeResult.width ||
+						resizeResult.width <= 0 ||
+						!resizeResult.height ||
+						resizeResult.height <= 0
+					)
 						return;
 
 					const configurator = this.configurator();

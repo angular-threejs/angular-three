@@ -29,10 +29,19 @@
 				"libs/soba/abstractions/src/index.ts",
 				"./node_modules/angular-three-soba/abstractions"
 			],
-			"angular-three-soba/cameras": ["libs/soba/cameras/src/index.ts", "./node_modules/angular-three-soba/cameras"],
-			"angular-three-soba/controls": ["libs/soba/controls/src/index.ts", "./node_modules/angular-three-soba/controls"],
+			"angular-three-soba/cameras": [
+				"libs/soba/cameras/src/index.ts",
+				"./node_modules/angular-three-soba/cameras"
+			],
+			"angular-three-soba/controls": [
+				"libs/soba/controls/src/index.ts",
+				"./node_modules/angular-three-soba/controls"
+			],
 			"angular-three-soba/gizmos": ["libs/soba/gizmos/src/index.ts", "./node_modules/angular-three-soba/gizmos"],
-			"angular-three-soba/loaders": ["libs/soba/loaders/src/index.ts", "./node_modules/angular-three-soba/loaders"],
+			"angular-three-soba/loaders": [
+				"libs/soba/loaders/src/index.ts",
+				"./node_modules/angular-three-soba/loaders"
+			],
 			"angular-three-soba/materials": [
 				"libs/soba/materials/src/index.ts",
 				"./node_modules/angular-three-soba/materials"
@@ -42,8 +51,14 @@
 				"libs/soba/performances/src/index.ts",
 				"./node_modules/angular-three-soba/performances"
 			],
-			"angular-three-soba/shaders": ["libs/soba/shaders/src/index.ts", "./node_modules/angular-three-soba/shaders"],
-			"angular-three-soba/staging": ["libs/soba/staging/src/index.ts", "./node_modules/angular-three-soba/staging"],
+			"angular-three-soba/shaders": [
+				"libs/soba/shaders/src/index.ts",
+				"./node_modules/angular-three-soba/shaders"
+			],
+			"angular-three-soba/staging": [
+				"libs/soba/staging/src/index.ts",
+				"./node_modules/angular-three-soba/staging"
+			],
 			"angular-three-soba/stats": ["libs/soba/stats/src/index.ts", "./node_modules/angular-three-soba/stats"],
 			"angular-three-soba/vanilla-exports": [
 				"libs/soba/vanilla-exports/src/index.ts",

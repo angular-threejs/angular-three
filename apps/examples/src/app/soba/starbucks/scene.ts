@@ -33,7 +33,13 @@ type CupGLTF = GLTF & {
 					/>
 				</ngt-group>
 				<ngts-decal
-					[options]="{ map: texture(), position: position(), rotation: rotation(), scale: scale(), depthTest: true }"
+					[options]="{
+						map: texture(),
+						position: position(),
+						rotation: rotation(),
+						scale: scale(),
+						depthTest: true,
+					}"
 				/>
 			</ngt-mesh>
 		}

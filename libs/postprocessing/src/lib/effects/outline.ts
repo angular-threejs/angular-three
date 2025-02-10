@@ -124,7 +124,11 @@ export class NgtpOutline {
 		});
 
 		effect(() => {
-			const [effect, invalidate, selectionLayer] = [this.effect(), this.store.invalidate(), this.selectionLayer()];
+			const [effect, invalidate, selectionLayer] = [
+				this.effect(),
+				this.store.invalidate(),
+				this.selectionLayer(),
+			];
 			effect.selectionLayer = selectionLayer;
 			invalidate();
 		});
@@ -147,7 +151,11 @@ export class NgtpOutline {
 			// NOTE: we run this effect if declarative NgtSelection is enabled
 			const selectionEnabled = this.ngtSelection.enabled();
 			if (!selectionEnabled) return;
-			const cleanup = this.handleSelectionChangeEffect(this.ngtSelection.selected, this.effect, this.store.invalidate);
+			const cleanup = this.handleSelectionChangeEffect(
+				this.ngtSelection.selected,
+				this.effect,
+				this.store.invalidate,
+			);
 			onCleanup(() => {
 				cleanup?.();
 			});

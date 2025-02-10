@@ -86,7 +86,10 @@ function load<
 							url,
 							(data) => {
 								if ('scene' in (data as NgtAnyRecord)) {
-									Object.assign(data as NgtAnyRecord, makeObjectGraph((data as NgtAnyRecord)['scene']));
+									Object.assign(
+										data as NgtAnyRecord,
+										makeObjectGraph((data as NgtAnyRecord)['scene']),
+									);
 								}
 
 								if (onLoad) {
@@ -96,7 +99,8 @@ function load<
 								resolve(data);
 							},
 							onProgress,
-							(error) => reject(new Error(`[NGT] Could not load ${url}: ${(error as ErrorEvent)?.message}`)),
+							(error) =>
+								reject(new Error(`[NGT] Could not load ${url}: ${(error as ErrorEvent)?.message}`)),
 						);
 					}),
 				);
@@ -152,7 +156,9 @@ function _injectLoader<
 							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
 							return result;
 						},
-						{} as { [key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap> },
+						{} as {
+							[key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>;
+						},
 					);
 				});
 			});

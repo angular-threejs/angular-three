@@ -16,7 +16,10 @@ import { color, storyDecorators, storyObject } from '../setup-canvas';
 @Component({
 	selector: 'accumulative-shadows-suzi',
 	template: `
-		<ngt-primitive *args="[scene()]" [parameters]="{ rotation: [-0.63, 0, 0], scale: 2, position: [0, -1.175, 0] }" />
+		<ngt-primitive
+			*args="[scene()]"
+			[parameters]="{ rotation: [-0.63, 0, 0], scale: 2, position: [0, -1.175, 0] }"
+		/>
 	`,
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -55,7 +58,9 @@ class Suzi {
 		<accumulative-shadows-suzi />
 
 		<ngts-accumulative-shadows [options]="accumulativeShadowsOptions()">
-			<ngts-randomized-lights [options]="{ amount: 8, radius: 4, ambient: 0.5, bias: 0.001, position: [5, 5, -10] }" />
+			<ngts-randomized-lights
+				[options]="{ amount: 8, radius: 4, ambient: 0.5, bias: 0.001, position: [5, 5, -10] }"
+			/>
 		</ngts-accumulative-shadows>
 
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />

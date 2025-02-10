@@ -75,7 +75,11 @@ type ModelGLTF = GLTF & {
 						[geometry]="gltf.nodes.boxBase.geometry"
 						[material]="gltf.materials.boxBase"
 					/>
-					<ngt-mesh receiveShadow [geometry]="gltf.nodes.boxBack.geometry" [material]="gltf.materials.inside" />
+					<ngt-mesh
+						receiveShadow
+						[geometry]="gltf.nodes.boxBack.geometry"
+						[material]="gltf.materials.inside"
+					/>
 					<ngt-mesh
 						castShadow
 						receiveShadow
@@ -137,7 +141,15 @@ export class Model {
 			}"
 		>
 			<ngts-randomized-lights
-				[options]="{ amount: 1, mapSize: 512, radius: 5, ambient: 0.5, position: [-10, 10, 5], size: 10, bias: 0.001 }"
+				[options]="{
+					amount: 1,
+					mapSize: 512,
+					radius: 5,
+					ambient: 0.5,
+					position: [-10, 10, 5],
+					size: 10,
+					bias: 0.001,
+				}"
 			/>
 		</ngts-accumulative-shadows>
 

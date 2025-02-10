@@ -36,7 +36,14 @@ import { BackSide, Group } from 'three';
 		<!--		accent red-->
 		<ngts-float [options]="{ speed: 5, floatIntensity: 2, rotationIntensity: 2 }">
 			<ngts-lightformer
-				[options]="{ form: 'ring', color: 'red', intensity: 1, scale: 10, position: [-15, 4, -18], target: [0, 0, 0] }"
+				[options]="{
+					form: 'ring',
+					color: 'red',
+					intensity: 1,
+					scale: 10,
+					position: [-15, 4, -18],
+					target: [0, 0, 0],
+				}"
 			/>
 		</ngts-float>
 

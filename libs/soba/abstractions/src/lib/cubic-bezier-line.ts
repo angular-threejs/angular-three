@@ -36,7 +36,13 @@ export class NgtsCubicBezierLine {
 	private segments = pick(this.options, 'segments');
 
 	protected points = computed(() => {
-		const [start, end, midA, midB, segments] = [this.start(), this.end(), this.midA(), this.midB(), this.segments()];
+		const [start, end, midA, midB, segments] = [
+			this.start(),
+			this.end(),
+			this.midA(),
+			this.midB(),
+			this.segments(),
+		];
 		const startV = is.three<THREE.Vector3>(start, 'isVector3') ? start : new THREE.Vector3(...start);
 		const endV = is.three<THREE.Vector3>(end, 'isVector3') ? end : new THREE.Vector3(...end);
 		const midAV = is.three<THREE.Vector3>(midA, 'isVector3') ? midA : new THREE.Vector3(...midA);

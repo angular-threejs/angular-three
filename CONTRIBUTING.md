@@ -35,7 +35,7 @@ If you would like to _implement_ a new feature, please consider the size of the 
 - For a **Major Feature**, first open an issue and outline your proposal so that it can be discussed.
   This process allows us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project.
 
-  **Note**: Adding a new topic to the documentation, or significantly re-writing a topic, counts as a major feature.
+    **Note**: Adding a new topic to the documentation, or significantly re-writing a topic, counts as a major feature.
 
 - **Small Features** can be crafted and directly [submitted as a Pull Request](#submit-pr).
 
@@ -71,9 +71,9 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 
 4. In your forked repository, make your changes in a new git branch:
 
-   ```shell
-   git checkout -b my-fix-branch main
-   ```
+    ```shell
+    git checkout -b my-fix-branch main
+    ```
 
 5. Create your patch, **including appropriate test cases**.
 
@@ -82,17 +82,17 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 7. Commit your changes using a descriptive commit message that follows our [commit message conventions](#commit).
    Adherence to these conventions is necessary because release notes are automatically generated from these messages.
 
-   ```shell
-   git commit --all
-   ```
+    ```shell
+    git commit --all
+    ```
 
-   Note: the optional commit `--all` command line option will automatically "add" and "rm" edited files.
+    Note: the optional commit `--all` command line option will automatically "add" and "rm" edited files.
 
 8. Push your branch to GitHub:
 
-   ```shell
-   git push origin my-fix-branch
-   ```
+    ```shell
+    git push origin my-fix-branch
+    ```
 
 9. In GitHub, send a pull request to `angular-three:main`.
 
@@ -104,12 +104,12 @@ If we ask for changes via code reviews then:
 
 2. Create a fixup commit and push to your GitHub repository (this will update your Pull Request):
 
-   ```shell
-   git commit --all --fixup HEAD
-   git push
-   ```
+    ```shell
+    git commit --all --fixup HEAD
+    git push
+    ```
 
-   For more info on working with fixup commits see [here](./contributing-docs/using-fixup-commits.md).
+    For more info on working with fixup commits see [here](./contributing-docs/using-fixup-commits.md).
 
 That's it! Thank you for your contribution!
 
@@ -120,21 +120,21 @@ In order to update the commit message of the last commit on your branch:
 
 1. Check out your branch:
 
-   ```shell
-   git checkout my-fix-branch
-   ```
+    ```shell
+    git checkout my-fix-branch
+    ```
 
 2. Amend the last commit and modify the commit message:
 
-   ```shell
-   git commit --amend
-   ```
+    ```shell
+    git commit --amend
+    ```
 
 3. Push to your GitHub repository:
 
-   ```shell
-   git push --force-with-lease
-   ```
+    ```shell
+    git push --force-with-lease
+    ```
 
 > NOTE:<br />
 > If you need to update the commit message of an earlier commit, you can use `git rebase` in interactive mode.
@@ -146,27 +146,27 @@ After your pull request is merged, you can safely delete your branch and pull th
 
 - Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
 
-  ```shell
-  git push origin --delete my-fix-branch
-  ```
+    ```shell
+    git push origin --delete my-fix-branch
+    ```
 
 - Check out the main branch:
 
-  ```shell
-  git checkout main -f
-  ```
+    ```shell
+    git checkout main -f
+    ```
 
 - Delete the local branch:
 
-  ```shell
-  git branch -D my-fix-branch
-  ```
+    ```shell
+    git branch -D my-fix-branch
+    ```
 
 - Update your local `main` with the latest upstream version:
 
-  ```shell
-  git pull --ff upstream main
-  ```
+    ```shell
+    git pull --ff upstream main
+    ```
 
 ## <a name="rules"></a> Coding Rules
 

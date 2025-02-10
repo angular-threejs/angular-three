@@ -62,7 +62,10 @@ function propagateStoreRecursively(node: NgtInstanceNode, parentNode: NgtInstanc
 		iS.addInteraction?.(pIS.store);
 
 		// Collect all children (objects and nonObjects)
-		const children = [...(iS.objects ? untracked(iS.objects) : []), ...(iS.nonObjects ? untracked(iS.nonObjects) : [])];
+		const children = [
+			...(iS.objects ? untracked(iS.objects) : []),
+			...(iS.nonObjects ? untracked(iS.nonObjects) : []),
+		];
 
 		// Recursively reassign the store for each child
 		for (const child of children) {
@@ -96,7 +99,8 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 					cIS.setParent(parent);
 				}
 				// at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
-				if ((child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
+				if ((child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue] === undefined)
+					return;
 				attachCleanUp = attachProp(
 					parent,
 					(child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue],
@@ -130,7 +134,8 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 					cIS.setParent(parent);
 				}
 				// at this point we don't have rawValue yet, so we bail and wait until the Renderer recalls attach
-				if ((child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue] === undefined) return;
+				if ((child as unknown as NgtRendererNode).__ngt_renderer__[NgtRendererClassId.rawValue] === undefined)
+					return;
 
 				// save prev value
 				cIS.previousAttach = attachProp.reduce((value, key) => value[key], parent);

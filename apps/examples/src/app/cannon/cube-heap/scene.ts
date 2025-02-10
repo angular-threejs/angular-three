@@ -100,7 +100,11 @@ export class Spheres extends InstancesInput {
 	private mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
 	bodyApi = injectSphere(
-		() => ({ args: [this.size()], mass: 1, position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5] }),
+		() => ({
+			args: [this.size()],
+			mass: 1,
+			position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5],
+		}),
 		this.mesh,
 	);
 }

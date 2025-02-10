@@ -16,7 +16,13 @@ import { SceneGraph, bloom, glitch, selectedAction } from './scene';
 
 			<div class="text-white">
 				<label for="bloom">Bloom</label>
-				<input id="bloom" type="checkbox" #bloomInput [checked]="bloom()" (change)="bloom.set(bloomInput.checked)" />
+				<input
+					id="bloom"
+					type="checkbox"
+					#bloomInput
+					[checked]="bloom()"
+					(change)="bloom.set(bloomInput.checked)"
+				/>
 			</div>
 
 			<div class="text-white">

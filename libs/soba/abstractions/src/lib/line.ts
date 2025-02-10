@@ -69,7 +69,14 @@ export class NgtsLine {
 	points =
 		input.required<Array<THREE.Vector3 | THREE.Vector2 | [number, number, number] | [number, number] | number>>();
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	protected parameters = omit(this.options, ['color', 'vertexColors', 'lineWidth', 'segments', 'linewidth', 'dashed']);
+	protected parameters = omit(this.options, [
+		'color',
+		'vertexColors',
+		'lineWidth',
+		'segments',
+		'linewidth',
+		'dashed',
+	]);
 
 	lineRef = viewChild<ElementRef<Line2 | LineSegments2>>('line');
 

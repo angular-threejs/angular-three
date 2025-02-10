@@ -31,10 +31,10 @@ The `NgtcDebug` directive is applied to the `ngtc-physics` component to enable p
 
 - `debug`: An object containing the following properties:
 
-  - `enabled`: (boolean) Whether the debug visualization is enabled (default: true).
-  - `color`: (string) The color of the debug visualization (default: 'black').
-  - `impl`: (typeof CannonDebugger) The implementation of the CannonDebugger to use (default: CannonDebugger).
-  - `scale`: (number) The scale of the debug visualization (default: 1).
+    - `enabled`: (boolean) Whether the debug visualization is enabled (default: true).
+    - `color`: (string) The color of the debug visualization (default: 'black').
+    - `impl`: (typeof CannonDebugger) The implementation of the CannonDebugger to use (default: CannonDebugger).
+    - `scale`: (number) The scale of the debug visualization (default: 1).
 
 ## Usage
 

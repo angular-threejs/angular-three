@@ -34,7 +34,12 @@ export class Frame {
 	template: `
 		<ngt-group [position]="position()">
 			<ngts-pivot-controls
-				[options]="{ offset: [0, 0, 1], activeAxes: [true, true, false], disableRotations: true, depthTest: false }"
+				[options]="{
+					offset: [0, 0, 1],
+					activeAxes: [true, true, false],
+					disableRotations: true,
+					depthTest: false,
+				}"
 			>
 				<app-frame [position]="[0, 0, 1]" />
 				<ngts-mask id="1" [options]="{ position: [0, 0, 0.95] }">

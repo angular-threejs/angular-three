@@ -67,7 +67,12 @@ export class Axis {
 			(pointerout)="onPointerOut($any($event))"
 			(pointerdown)="onPointerDown($any($event))"
 		>
-			<ngt-sprite-material [map]="texture()" [alphaTest]="0.3" [opacity]="label() ? 1 : 0.75" [toneMapped]="false" />
+			<ngt-sprite-material
+				[map]="texture()"
+				[alphaTest]="0.3"
+				[opacity]="label() ? 1 : 0.75"
+				[toneMapped]="false"
+			/>
 		</ngt-sprite>
 	`,
 

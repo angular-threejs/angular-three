@@ -63,8 +63,9 @@ export class NgtsEdges {
 			this.memoizedGeometry = geometry;
 			this.memoizedThreshold = threshold;
 
-			const points = (new THREE.EdgesGeometry(geometry, threshold).attributes['position'] as THREE.BufferAttribute)
-				.array as Float32Array;
+			const points = (
+				new THREE.EdgesGeometry(geometry, threshold).attributes['position'] as THREE.BufferAttribute
+			).array as Float32Array;
 			line.geometry.setPositions(points);
 			checkNeedsUpdate(line.geometry.attributes['instanceStart']);
 			checkNeedsUpdate(line.geometry.attributes['instanceEnd']);

@@ -302,7 +302,9 @@ export class NgtsHTMLScrollContent extends NgtHTML {
 			if (this.scrollControls.delta > this.scrollControls.eps()) {
 				this.host.nativeElement.style.transform = `translate3d(${
 					this.scrollControls.horizontal()
-						? -this.store.snapshot.size.width * (this.scrollControls.pages() - 1) * this.scrollControls.offset
+						? -this.store.snapshot.size.width *
+							(this.scrollControls.pages() - 1) *
+							this.scrollControls.offset
 						: 0
 				}px,${this.scrollControls.horizontal() ? 0 : this.store.snapshot.size.height * (this.scrollControls.pages() - 1) * -this.scrollControls.offset}px,0)`;
 			}

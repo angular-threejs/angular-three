@@ -417,7 +417,10 @@ export class NgtrPhysics {
 		} as NgtrCollisionSource;
 	}
 
-	private getCollisionPayloadFromSource(target: NgtrCollisionSource, other: NgtrCollisionSource): NgtrCollisionPayload {
+	private getCollisionPayloadFromSource(
+		target: NgtrCollisionSource,
+		other: NgtrCollisionSource,
+	): NgtrCollisionPayload {
 		return {
 			target: {
 				rigidBody: target.rigidBody.object,

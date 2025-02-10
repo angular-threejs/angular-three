@@ -63,10 +63,16 @@ export class BotAnimations {
 				<ngt-group [dispose]="null" [animations]="gltf" [referenceRef]="boneRef()">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 						<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
-						<ngt-skinned-mesh [geometry]="gltf.nodes.YB_Body.geometry" [skeleton]="gltf.nodes.YB_Body.skeleton">
+						<ngt-skinned-mesh
+							[geometry]="gltf.nodes.YB_Body.geometry"
+							[skeleton]="gltf.nodes.YB_Body.skeleton"
+						>
 							<ngt-mesh-matcap-material [matcap]="matcapBody.texture()" />
 						</ngt-skinned-mesh>
-						<ngt-skinned-mesh [geometry]="gltf.nodes.YB_Joints.geometry" [skeleton]="gltf.nodes.YB_Joints.skeleton">
+						<ngt-skinned-mesh
+							[geometry]="gltf.nodes.YB_Joints.geometry"
+							[skeleton]="gltf.nodes.YB_Joints.skeleton"
+						>
 							<ngt-mesh-matcap-material [matcap]="matcapJoints.texture()" />
 						</ngt-skinned-mesh>
 					</ngt-group>
@@ -108,7 +114,9 @@ export class Bot {
 		@if (!asRenderTexture()) {
 			<ngtp-effect-composer>
 				@if (bloom()) {
-					<ngtp-bloom [options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }" />
+					<ngtp-bloom
+						[options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }"
+					/>
 				}
 
 				@if (glitch()) {

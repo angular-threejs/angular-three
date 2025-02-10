@@ -61,7 +61,9 @@ export function surfaceSampler(
 	} = {},
 ) {
 	const initialBufferAttribute = (() => {
-		const arr = Array.from({ length: count?.() ?? 16 }, () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]).flat();
+		const arr = Array.from({ length: count?.() ?? 16 }, () => [
+			1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+		]).flat();
 		return new THREE.InstancedBufferAttribute(Float32Array.from(arr), 16);
 	})();
 

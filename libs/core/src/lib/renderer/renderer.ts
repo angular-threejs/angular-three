@@ -82,7 +82,9 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 					if (node !== hostElement) return;
 					internalDestroyNode(node, null);
 				};
-				Object.assign(delegateRenderer.destroyNode, { [NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG]: true });
+				Object.assign(delegateRenderer.destroyNode, {
+					[NGT_DELEGATE_RENDERER_DESTROY_NODE_PATCHED_FLAG]: true,
+				});
 			}
 
 			return delegateRenderer;
@@ -223,7 +225,12 @@ export class NgtRenderer2 implements Renderer2 {
 		internalDestroyNode(node, this.removeChild.bind(this));
 	};
 
-	appendChild(parent: NgtRendererNode, newChild: NgtRendererNode, refChild?: NgtRendererNode, isMove?: boolean): void {
+	appendChild(
+		parent: NgtRendererNode,
+		newChild: NgtRendererNode,
+		refChild?: NgtRendererNode,
+		isMove?: boolean,
+	): void {
 		const delegatedFn = refChild
 			? this.delegateRenderer.insertBefore.bind(this.delegateRenderer, parent, newChild, refChild, isMove)
 			: this.delegateRenderer.appendChild.bind(this.delegateRenderer, parent, newChild);
@@ -232,7 +239,8 @@ export class NgtRenderer2 implements Renderer2 {
 		const cRS = newChild.__ngt_renderer__;
 
 		if (!pRS || !cRS) {
-			ngDevMode && console.warn('[NGT dev mode] One of parent or child is not a renderer node.', { parent, newChild });
+			ngDevMode &&
+				console.warn('[NGT dev mode] One of parent or child is not a renderer node.', { parent, newChild });
 			return delegatedFn();
 		}
 
@@ -317,11 +325,21 @@ export class NgtRenderer2 implements Renderer2 {
 		return delegatedFn();
 	}
 
-	insertBefore(parent: NgtRendererNode, newChild: NgtRendererNode, refChild: NgtRendererNode, isMove?: boolean): void {
+	insertBefore(
+		parent: NgtRendererNode,
+		newChild: NgtRendererNode,
+		refChild: NgtRendererNode,
+		isMove?: boolean,
+	): void {
 		// if both are comments and the reference child is NgtCanvasContent, we'll assign the same flag to the newChild
 		// this means that the NgtCanvas component is embedding. This flag allows the Renderer to get the root scene
 		// when it tries to attach the template under `ng-template[canvasContent]`
-		if (refChild && refChild[NGT_CANVAS_CONTENT_FLAG] && refChild instanceof Comment && newChild instanceof Comment) {
+		if (
+			refChild &&
+			refChild[NGT_CANVAS_CONTENT_FLAG] &&
+			refChild instanceof Comment &&
+			newChild instanceof Comment
+		) {
 			Object.assign(newChild, { [NGT_CANVAS_CONTENT_FLAG]: refChild[NGT_CANVAS_CONTENT_FLAG] });
 		}
 
@@ -426,7 +444,11 @@ export class NgtRenderer2 implements Renderer2 {
 				setRendererParentNode(node, sceneRendererNode);
 			}
 
-			if (node[NGT_PORTAL_CONTENT_FLAG] && node[NGT_DOM_PARENT_FLAG] && isRendererNode(node[NGT_DOM_PARENT_FLAG])) {
+			if (
+				node[NGT_PORTAL_CONTENT_FLAG] &&
+				node[NGT_DOM_PARENT_FLAG] &&
+				isRendererNode(node[NGT_DOM_PARENT_FLAG])
+			) {
 				const portalContentParent = node[NGT_DOM_PARENT_FLAG] as NgtRendererNode<'portal'>;
 				const portalContentParentRS = portalContentParent.__ngt_renderer__;
 				if (!portalContentParentRS[NgtRendererClassId.portalContainer]) {
@@ -623,7 +645,10 @@ export class NgtRenderer2 implements Renderer2 {
 					eventName = 'dispose';
 				}
 
-				if ((target as unknown as THREE.Object3D).parent && (eventName === 'added' || eventName === 'removed')) {
+				if (
+					(target as unknown as THREE.Object3D).parent &&
+					(eventName === 'added' || eventName === 'removed')
+				) {
 					callback({ type: eventName, target });
 				}
 
@@ -650,7 +675,10 @@ export class NgtRenderer2 implements Renderer2 {
 		// if parent and chlid are the same, skip
 		if (parent === child) {
 			ngDevMode &&
-				console.warn('[NGT dev mode] appending THREE.js parent and child but they are the same', { parent, child });
+				console.warn('[NGT dev mode] appending THREE.js parent and child but they are the same', {
+					parent,
+					child,
+				});
 			return;
 		}
 

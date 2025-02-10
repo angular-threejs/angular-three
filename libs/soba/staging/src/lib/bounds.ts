@@ -269,7 +269,11 @@ export class NgtsBounds {
 		} else {
 			this.goal.camUp = camera.up.clone();
 		}
-		const mCamRot = new THREE.Matrix4().lookAt(this.goal.camPos || camera.position, this.goal.target, this.goal.camUp);
+		const mCamRot = new THREE.Matrix4().lookAt(
+			this.goal.camPos || camera.position,
+			this.goal.target,
+			this.goal.camUp,
+		);
 		this.goal.camRot = new THREE.Quaternion().setFromRotationMatrix(mCamRot);
 
 		this.animationState = AnimationState.START;

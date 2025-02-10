@@ -118,8 +118,11 @@ export class NgtsCenter {
 			const children = [...innerInstanceState.objects(), ...innerInstanceState.nonObjects()];
 			if (!children?.length) return;
 
-			const [{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX }, group, outer] =
-				[this.centerOptions(), this.groupRef().nativeElement, this.outerRef().nativeElement];
+			const [
+				{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX },
+				group,
+				outer,
+			] = [this.centerOptions(), this.groupRef().nativeElement, this.outerRef().nativeElement];
 
 			outer.matrixWorld.identity();
 			const box3 = new THREE.Box3().setFromObject(inner, precise);

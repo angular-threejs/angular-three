@@ -162,7 +162,11 @@ export const injectPrismaticJoint = createJoint<NgtrPrismaticJointParams, Prisma
  * @category Hooks - Joints
  */
 export const injectRopeJoint = createJoint<NgtrRopeJointParams, RopeImpulseJoint>((rapier, data) =>
-	rapier.JointData.rope(data.length, vector3ToRapierVector(data.body1Anchor), vector3ToRapierVector(data.body2Anchor)),
+	rapier.JointData.rope(
+		data.length,
+		vector3ToRapierVector(data.body1Anchor),
+		vector3ToRapierVector(data.body2Anchor),
+	),
 );
 
 /**

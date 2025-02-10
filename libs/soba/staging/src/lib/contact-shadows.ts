@@ -53,7 +53,12 @@ const defaultOptions: NgtsContactShadowsOptions = {
 				[renderOrder]="renderOrder() ?? 0"
 				[geometry]="planeGeometry()"
 			>
-				<ngt-mesh-basic-material transparent [opacity]="opacity()" [depthWrite]="depthWrite()" [map]="texture()" />
+				<ngt-mesh-basic-material
+					transparent
+					[opacity]="opacity()"
+					[depthWrite]="depthWrite()"
+					[map]="texture()"
+				/>
 			</ngt-mesh>
 			<ngt-orthographic-camera *args="cameraArgs()" #shadowsCamera />
 		</ngt-group>

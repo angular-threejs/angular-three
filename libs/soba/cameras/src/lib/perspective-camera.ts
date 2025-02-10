@@ -46,7 +46,10 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 		</ngt-perspective-camera>
 
 		<ngt-group #group>
-			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: texture }" />
+			<ng-container
+				[ngTemplateOutlet]="cameraContent() ?? null"
+				[ngTemplateOutletContext]="{ $implicit: texture }"
+			/>
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],

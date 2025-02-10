@@ -56,7 +56,12 @@ export function injectCubeCamera(options: () => CubeCameraOptions, { injector }:
 
 		const cubeCamera = computed(() => new THREE.CubeCamera(near()!, far()!, fbo()));
 		const update = () => {
-			const [scene, gl, camera, { envMap, fog }] = [store.scene(), store.gl(), cubeCamera(), untracked(mergedOptions)];
+			const [scene, gl, camera, { envMap, fog }] = [
+				store.scene(),
+				store.gl(),
+				cubeCamera(),
+				untracked(mergedOptions),
+			];
 			let originalFog: THREE.Fog | THREE.FogExp2;
 			let originalBackground: THREE.Texture;
 
@@ -90,7 +95,10 @@ const defaultOptions: NgtsCubeCameraOptions = {
 		<ngt-group [parameters]="parameters()">
 			<ngt-primitive *args="[camera()]" />
 			<ngt-group #group>
-				<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: texture }" />
+				<ng-container
+					[ngTemplateOutlet]="cameraContent() ?? null"
+					[ngTemplateOutletContext]="{ $implicit: texture }"
+				/>
 			</ngt-group>
 		</ngt-group>
 	`,

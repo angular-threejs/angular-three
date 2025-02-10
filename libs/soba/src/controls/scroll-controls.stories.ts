@@ -142,7 +142,12 @@ class Suzanne {
 		injectBeforeRender(({ delta, viewport }) => {
 			const mesh = this.meshRef()?.nativeElement;
 			if (!mesh) return;
-			mesh.rotation.x = MathUtils.damp(mesh.rotation.x, this.isIntersect() ? 0 : -viewport.height / 2 + 1, 4, delta);
+			mesh.rotation.x = MathUtils.damp(
+				mesh.rotation.x,
+				this.isIntersect() ? 0 : -viewport.height / 2 + 1,
+				4,
+				delta,
+			);
 		});
 	}
 }
@@ -151,7 +156,11 @@ class Suzanne {
 	selector: 'scroll-html-content',
 	template: `
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize.height() * 0.1 + 'px', right: canvasSize.width() * 0.2 + 'px' }"
+			[style]="{
+				position: 'absolute',
+				top: canvasSize.height() * 0.1 + 'px',
+				right: canvasSize.width() * 0.2 + 'px',
+			}"
 		>
 			Scroll down!
 		</h1>
@@ -167,22 +176,38 @@ class Suzanne {
 			all
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize.height() * 1.8 + 'px', left: canvasSize.width() * 0.1 + 'px' }"
+			[style]="{
+				position: 'absolute',
+				top: canvasSize.height() * 1.8 + 'px',
+				left: canvasSize.width() * 0.1 + 'px',
+			}"
 		>
 			hail
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize.height() * 2.6 + 'px', right: canvasSize.width() * 0.1 + 'px' }"
+			[style]="{
+				position: 'absolute',
+				top: canvasSize.height() * 2.6 + 'px',
+				right: canvasSize.width() * 0.1 + 'px',
+			}"
 		>
 			thee,
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize.height() * 3.5 + 'px', left: canvasSize.width() * 0.1 + 'px' }"
+			[style]="{
+				position: 'absolute',
+				top: canvasSize.height() * 3.5 + 'px',
+				left: canvasSize.width() * 0.1 + 'px',
+			}"
 		>
 			thoth
 		</h1>
 		<h1
-			[style]="{ position: 'absolute', top: canvasSize.height() * 4.5 + 'px', right: canvasSize.width() * 0.1 + 'px' }"
+			[style]="{
+				position: 'absolute',
+				top: canvasSize.height() * 4.5 + 'px',
+				right: canvasSize.width() * 0.1 + 'px',
+			}"
 		>
 			her
 			<br />

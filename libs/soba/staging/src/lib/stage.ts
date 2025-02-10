@@ -142,7 +142,14 @@ export class NgtsStageRefit {
 })
 export class NgtsStage {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	private parameters = omit(this.options, ['preset', 'shadows', 'adjustCamera', 'environment', 'intensity', 'center']);
+	private parameters = omit(this.options, [
+		'preset',
+		'shadows',
+		'adjustCamera',
+		'environment',
+		'intensity',
+		'center',
+	]);
 
 	centered = output<NgtsCenterState>();
 
@@ -181,7 +188,14 @@ export class NgtsStage {
 		}
 
 		if (this.accumulativeShadow()) {
-			return { temporal: true, frames: 100, alphaTest: 0.9, toneMapped: true, scale: this.radius() * 4, ...shadows };
+			return {
+				temporal: true,
+				frames: 100,
+				alphaTest: 0.9,
+				toneMapped: true,
+				scale: this.radius() * 4,
+				...shadows,
+			};
 		}
 
 		return typeof shadows === 'object' ? shadows : {};

@@ -384,7 +384,12 @@ export function createEvents(store: SignalState<NgtState>) {
 
 				if (isPointerMove) {
 					// Move event ...
-					if (handlers?.pointerover || handlers?.pointerenter || handlers?.pointerout || handlers?.pointerleave) {
+					if (
+						handlers?.pointerover ||
+						handlers?.pointerenter ||
+						handlers?.pointerout ||
+						handlers?.pointerleave
+					) {
 						// When enter or out is present take care of hover-state
 						const id = makeId(data);
 						const hoveredItem = internal.hovered.get(id);
@@ -402,7 +407,9 @@ export function createEvents(store: SignalState<NgtState>) {
 					handlers?.pointermove?.(data as NgtThreeEvent<PointerEvent>);
 				} else {
 					// All other events ...
-					const handler = handlers?.[name as keyof NgtEventHandlers] as (event: NgtThreeEvent<PointerEvent>) => void;
+					const handler = handlers?.[name as keyof NgtEventHandlers] as (
+						event: NgtThreeEvent<PointerEvent>,
+					) => void;
 					if (handler) {
 						// Forward all events back to their respective handlers with the exception of click events,
 						// which must use the initial target

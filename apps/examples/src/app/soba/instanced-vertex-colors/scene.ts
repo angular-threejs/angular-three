@@ -66,7 +66,8 @@ export class Boxes {
 					for (let z = 0; z < 10; z++) {
 						const id = i++;
 						tempObject.position.set(5 - x, 5 - y, 5 - z);
-						tempObject.rotation.y = Math.sin(x / 4 + time) + Math.sin(y / 4 + time) + Math.sin(z / 4 + time);
+						tempObject.rotation.y =
+							Math.sin(x / 4 + time) + Math.sin(y / 4 + time) + Math.sin(z / 4 + time);
 						tempObject.rotation.z = tempObject.rotation.y * 2;
 
 						if (hovered !== this.prev) {
@@ -108,7 +109,9 @@ export class Boxes {
 		@if (!asRenderTexture()) {
 			<ngtp-effect-composer [options]="{ enableNormalPass: false }">
 				<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: Math.PI }" />
-				<ngtp-bloom [options]="{ luminanceThreshold: 1, intensity: 0.5 * Math.PI, levels: 9, mipmapBlur: true }" />
+				<ngtp-bloom
+					[options]="{ luminanceThreshold: 1, intensity: 0.5 * Math.PI, levels: 9, mipmapBlur: true }"
+				/>
 			</ngtp-effect-composer>
 		}
 	`,

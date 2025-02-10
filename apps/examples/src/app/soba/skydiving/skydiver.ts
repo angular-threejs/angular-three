@@ -36,7 +36,10 @@ type SkydiverGLTF = GLTF & {
 			@if (gltf(); as gltf) {
 				<ngt-group>
 					<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
-					<ngt-skinned-mesh [geometry]="gltf.nodes.skydiver_2.geometry" [skeleton]="gltf.nodes.skydiver_2.skeleton">
+					<ngt-skinned-mesh
+						[geometry]="gltf.nodes.skydiver_2.geometry"
+						[skeleton]="gltf.nodes.skydiver_2.skeleton"
+					>
 						@if (textures(); as textures) {
 							<ngt-mesh-standard-material
 								[parameters]="{

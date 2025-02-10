@@ -52,7 +52,13 @@ interface RockGLTF extends GLTF {
 		}
 
 		<ngts-camera-controls
-			[options]="{ makeDefault: true, minDistance: 12, maxDistance: 12, minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }"
+			[options]="{
+				makeDefault: true,
+				minDistance: 12,
+				maxDistance: 12,
+				minPolarAngle: 0,
+				maxPolarAngle: Math.PI / 2,
+			}"
 		/>
 
 		<ngt-icosahedron-geometry #geometry attach="none" />

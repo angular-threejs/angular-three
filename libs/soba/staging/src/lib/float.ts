@@ -59,7 +59,9 @@ export class NgtsFloat {
 
 		const offset = Math.random() * 10000;
 		injectBeforeRender(({ clock, invalidate }) => {
-			const [{ enabled, speed, rotationIntensity, floatingRange, floatIntensity, autoInvalidate }] = [this.options()];
+			const [{ enabled, speed, rotationIntensity, floatingRange, floatIntensity, autoInvalidate }] = [
+				this.options(),
+			];
 			if (!enabled || speed === 0) return;
 
 			if (autoInvalidate) invalidate();
@@ -72,7 +74,13 @@ export class NgtsFloat {
 			container.rotation.z = (Math.sin((offsetTime / 4) * speed) / 20) * rotationIntensity;
 
 			let yPosition = Math.sin((offsetTime / 4) * speed) / 10;
-			yPosition = THREE.MathUtils.mapLinear(yPosition, -0.1, 0.1, floatingRange[0] ?? -0.1, floatingRange[1] ?? 0.1);
+			yPosition = THREE.MathUtils.mapLinear(
+				yPosition,
+				-0.1,
+				0.1,
+				floatingRange[0] ?? -0.1,
+				floatingRange[1] ?? 0.1,
+			);
 			container.position.y = yPosition * floatIntensity;
 			container.updateMatrix();
 		});

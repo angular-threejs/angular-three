@@ -28,7 +28,7 @@ npm install troika-three-text three-mesh-bvh
 - [NgtsPrismGeometry](#ngtsprismgeometry)
 - [NgtsGradientTexture](#ngtsgradienttexture)
 - [injectHelper](#injecthelper)
-  - [NgtsHelper](#ngtshelper)
+    - [NgtsHelper](#ngtshelper)
 
 ## NgtsGrid
 

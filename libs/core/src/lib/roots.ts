@@ -97,10 +97,15 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 					}
 
 					// Create default camera, don't overwrite any user-set state
-					if (!state.camera || (state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose))) {
+					if (
+						!state.camera ||
+						(state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose))
+					) {
 						lastCamera = cameraOptions;
 						const isCamera = is.three<THREE.Camera>(cameraOptions, 'isCamera');
-						let camera = isCamera ? cameraOptions : makeCameraInstance(orthographic, sizeOptions ?? state.size);
+						let camera = isCamera
+							? cameraOptions
+							: makeCameraInstance(orthographic, sizeOptions ?? state.size);
 
 						if (!isCamera) {
 							camera.position.z = 5;
@@ -220,7 +225,8 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							Object.assign(gl.shadowMap, shadows);
 						}
 
-						if (oldEnabled !== gl.shadowMap.enabled || oldType !== gl.shadowMap.type) checkNeedsUpdate(gl.shadowMap);
+						if (oldEnabled !== gl.shadowMap.enabled || oldType !== gl.shadowMap.type)
+							checkNeedsUpdate(gl.shadowMap);
 					}
 
 					THREE.ColorManagement.enabled = !legacy;

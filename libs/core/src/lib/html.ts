@@ -37,7 +37,9 @@ export function provideHTMLDomElement(factory: () => HTMLElement): Provider;
 export function provideHTMLDomElement<
 	TDeps extends Array<ProviderToken<any>>,
 	TValues extends {
-		[K in keyof TDeps]: TDeps[K] extends Type<infer T> | AbstractType<infer T> | InjectionToken<infer T> ? T : never;
+		[K in keyof TDeps]: TDeps[K] extends Type<infer T> | AbstractType<infer T> | InjectionToken<infer T>
+			? T
+			: never;
 	},
 >(deps: TDeps, factory: (...args: TValues) => HTMLElement): Provider;
 export function provideHTMLDomElement(...args: any[]) {

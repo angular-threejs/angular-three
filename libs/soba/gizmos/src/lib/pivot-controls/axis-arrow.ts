@@ -33,12 +33,10 @@ export function calculateOffset(
 		return -e2 / e1;
 	}
 
-	vec1
-		.copy(rayDir)
+	vec1.copy(rayDir)
 		.multiplyScalar(e1 / e3)
 		.sub(normal);
-	vec2
-		.copy(rayDir)
+	vec2.copy(rayDir)
 		.multiplyScalar(e2 / e3)
 		.add(rayStart)
 		.sub(clickPoint);
@@ -99,7 +97,11 @@ const offsetMatrix = new THREE.Matrix4();
 					}"
 				/>
 
-				<ngt-mesh [raycast]="null" [position]="[0, cylinderLength() + coneLength() / 2.0, 0]" [renderOrder]="500">
+				<ngt-mesh
+					[raycast]="null"
+					[position]="[0, cylinderLength() + coneLength() / 2.0, 0]"
+					[renderOrder]="500"
+				>
 					<ngt-cone-geometry *args="[coneWidth(), coneLength(), 24, 1]" />
 					<ngt-mesh-basic-material
 						transparent

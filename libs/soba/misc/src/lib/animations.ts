@@ -77,7 +77,9 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 			const maybeAnimationClips = animations();
 			if (!maybeAnimationClips) return;
 
-			const animationClips = Array.isArray(maybeAnimationClips) ? maybeAnimationClips : maybeAnimationClips.animations;
+			const animationClips = Array.isArray(maybeAnimationClips)
+				? maybeAnimationClips
+				: maybeAnimationClips.animations;
 
 			for (let i = 0; i < animationClips.length; i++) {
 				const clip = animationClips[i];

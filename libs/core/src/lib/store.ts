@@ -70,7 +70,9 @@ export function storeFactory() {
 				if (performanceTimeout) clearTimeout(performanceTimeout);
 				// Set lower bound performance
 				if (state.performance.current !== state.performance.min)
-					store.update((state) => ({ performance: { ...state.performance, current: state.performance.min } }));
+					store.update((state) => ({
+						performance: { ...state.performance, current: state.performance.min },
+					}));
 				// Go back to upper bound performance after a while unless something regresses meanwhile
 				performanceTimeout = setTimeout(
 					() =>
@@ -107,7 +109,15 @@ export function storeFactory() {
 				const distance = camera.getWorldPosition(position).distanceTo(tempTarget);
 
 				if (is.three<THREE.OrthographicCamera>(camera, 'isOrthographicCamera')) {
-					return { width: width / camera.zoom, height: height / camera.zoom, top, left, factor: 1, distance, aspect };
+					return {
+						width: width / camera.zoom,
+						height: height / camera.zoom,
+						top,
+						left,
+						factor: 1,
+						distance,
+						aspect,
+					};
 				}
 
 				const fov = (camera.fov * Math.PI) / 180; // convert vertical fov to radians
@@ -163,7 +173,11 @@ export function storeFactory() {
 			initialClick: [0, 0],
 			initialHits: [],
 			subscribers: [],
-			subscribe: (callback: NgtBeforeRenderRecord['callback'], priority = 0, _store: SignalState<NgtState> = store) => {
+			subscribe: (
+				callback: NgtBeforeRenderRecord['callback'],
+				priority = 0,
+				_store: SignalState<NgtState> = store,
+			) => {
 				const internal = _store.snapshot.internal;
 				// If this subscription was given a priority, it takes rendering into its own hands
 				// For that reason we switch off automatic rendering and increase the manual flag
@@ -219,7 +233,9 @@ export function storeFactory() {
 			oldCamera = newCamera;
 			updateCamera(newCamera, newSize);
 			// Update viewport
-			store.update((state) => ({ viewport: { ...state.viewport, ...state.viewport.getCurrentViewport(newCamera) } }));
+			store.update((state) => ({
+				viewport: { ...state.viewport, ...state.viewport.getCurrentViewport(newCamera) },
+			}));
 		}
 	});
 

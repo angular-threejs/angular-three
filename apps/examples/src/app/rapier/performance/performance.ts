@@ -21,7 +21,13 @@ import { injectSuzanne } from '../suzanne';
 		@if (gltf(); as gltf) {
 			<ngt-object3D rigidBody [position]="position()">
 				<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry" castShadow receiveShadow>
-					<ngt-mesh-physical-material [roughness]="0" [transmission]="0" [thickness]="0.2" [ior]="1.5" color="orange" />
+					<ngt-mesh-physical-material
+						[roughness]="0"
+						[transmission]="0"
+						[thickness]="0.2"
+						[ior]="1.5"
+						color="orange"
+					/>
 				</ngt-mesh>
 			</ngt-object3D>
 		}
@@ -72,7 +78,11 @@ export class MonkeySwarm {
 					...prev,
 					{
 						key: Math.random() + Date.now(),
-						position: [Math.random() * 10 - 5, Math.random(), Math.random() * 10 - 5] as [number, number, number],
+						position: [Math.random() * 10 - 5, Math.random(), Math.random() * 10 - 5] as [
+							number,
+							number,
+							number,
+						],
 					},
 				]);
 			}, 50);

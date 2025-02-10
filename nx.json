@@ -22,7 +22,12 @@
 			"cache": true
 		},
 		"build-storybook": {
-			"inputs": ["default", "^production", "{projectRoot}/.storybook/**/*", "{projectRoot}/tsconfig.storybook.json"],
+			"inputs": [
+				"default",
+				"^production",
+				"{projectRoot}/.storybook/**/*",
+				"{projectRoot}/tsconfig.storybook.json"
+			],
 			"cache": true
 		},
 		"@nx/jest:jest": {

@@ -69,7 +69,9 @@ export class Boxes {
 
 	private c = new Color();
 	protected randomColors = new Float32Array(
-		Array.from({ length: this.length }, () => this.c.set(niceColors[Math.floor(Math.random() * 5)]).toArray()).flat(),
+		Array.from({ length: this.length }, () =>
+			this.c.set(niceColors[Math.floor(Math.random() * 5)]).toArray(),
+		).flat(),
 	);
 
 	private instancesRef = viewChild<ElementRef<InstancedMesh>>('instances');
@@ -97,7 +99,11 @@ export class Boxes {
 					for (let z = 0; z < root; z++) {
 						const id = i++;
 						o.rotation.set(Math.random(), Math.random(), Math.random());
-						o.position.set(halfRoot - x + Math.random(), halfRoot - y + Math.random(), halfRoot - z + Math.random());
+						o.position.set(
+							halfRoot - x + Math.random(),
+							halfRoot - y + Math.random(),
+							halfRoot - z + Math.random(),
+						);
 						o.updateMatrix();
 						instances.setMatrixAt(id, o.matrix);
 					}

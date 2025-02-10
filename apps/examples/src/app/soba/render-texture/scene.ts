@@ -66,7 +66,9 @@ export class Dodecahedron {
 		<ngt-mesh-standard-material>
 			<ngts-render-texture [options]="{ anisotropy: 16 }">
 				<ng-template renderTextureContent>
-					<ngts-perspective-camera [options]="{ manual: true, makeDefault: true, aspect: 1, position: [0, 0, 5] }" />
+					<ngts-perspective-camera
+						[options]="{ manual: true, makeDefault: true, aspect: 1, position: [0, 0, 5] }"
+					/>
 					<ngt-color attach="background" *args="['orange']" />
 					<ngt-ambient-light [intensity]="0.5" />
 					<ngt-directional-light [position]="[10, 10, 5]" />

@@ -38,7 +38,11 @@ type AOBoxGLTF = GLTF & {
 						[rotation]="rotation()"
 						[geometry]="gltf.nodes.Cube.geometry"
 					>
-						<ngt-mesh-standard-material [aoMapIntensity]="1" [aoMap]="gltf.nodes.Cube.material.aoMap" [color]="bg()" />
+						<ngt-mesh-standard-material
+							[aoMapIntensity]="1"
+							[aoMap]="gltf.nodes.Cube.material.aoMap"
+							[color]="bg()"
+						/>
 						<ngt-spot-light
 							[castShadow]="true"
 							[color]="bg()"

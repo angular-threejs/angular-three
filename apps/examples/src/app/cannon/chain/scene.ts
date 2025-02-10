@@ -63,7 +63,10 @@ export class ChainLink {
 	protected mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectCylinder(() => ({ mass: 1, args: this.args(), linearDamping: 0.8, position: this.position() }), this.mesh);
+		injectCylinder(
+			() => ({ mass: 1, args: this.args(), linearDamping: 0.8, position: this.position() }),
+			this.mesh,
+		);
 
 		const injector = inject(Injector);
 		// NOTE: we want to run this in afterNextRender because we want the input to resolve

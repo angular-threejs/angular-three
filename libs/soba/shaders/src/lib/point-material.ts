@@ -13,10 +13,10 @@ export class PointMaterial extends THREE.PointsMaterial {
 				`#include <${opaque_fragment}>`,
 				`
         ${
-					!isWebGL2
-						? `#extension GL_OES_standard_derivatives : enable\n#include <${opaque_fragment}>`
-						: `#include <${opaque_fragment}>`
-				}
+			!isWebGL2
+				? `#extension GL_OES_standard_derivatives : enable\n#include <${opaque_fragment}>`
+				: `#include <${opaque_fragment}>`
+		}
       vec2 cxy = 2.0 * gl_PointCoord - 1.0;
       float r = dot(cxy, cxy);
       float delta = fwidth(r);

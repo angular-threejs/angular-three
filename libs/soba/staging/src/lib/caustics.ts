@@ -132,9 +132,9 @@ export class NgtsCaustics {
 	private sceneRef = viewChild.required<ElementRef<THREE.Scene>>('scene');
 	private cameraRef = viewChild.required<ElementRef<THREE.OrthographicCamera>>('camera');
 	private planeRef =
-		viewChild.required<ElementRef<THREE.Mesh<THREE.PlaneGeometry, InstanceType<typeof CausticsProjectionMaterial>>>>(
-			'plane',
-		);
+		viewChild.required<
+			ElementRef<THREE.Mesh<THREE.PlaneGeometry, InstanceType<typeof CausticsProjectionMaterial>>>
+		>('plane');
 
 	private normalTargetParams = computed(() => ({
 		width: this.resolution(),
@@ -160,7 +160,15 @@ export class NgtsCaustics {
 	);
 
 	constructor() {
-		extend({ CausticsProjectionMaterial, Group, Scene, Mesh, PlaneGeometry, LineBasicMaterial, OrthographicCamera });
+		extend({
+			CausticsProjectionMaterial,
+			Group,
+			Scene,
+			Mesh,
+			PlaneGeometry,
+			LineBasicMaterial,
+			OrthographicCamera,
+		});
 
 		effect(() => {
 			// track all changes
@@ -189,7 +197,9 @@ export class NgtsCaustics {
 
 			return {
 				params: Object.assign(rest, {
-					lightSource: Array.isArray(lightSource) ? new THREE.Vector3(...lightSource) : resolveRef(lightSource),
+					lightSource: Array.isArray(lightSource)
+						? new THREE.Vector3(...lightSource)
+						: resolveRef(lightSource),
 				}),
 				normalTarget: this.normalTarget(),
 				normalTargetB: this.normalTargetB(),

@@ -44,7 +44,9 @@ import { color, storyDecorators, storyObject } from '../setup-canvas';
 			[options]="{ position: [0, -0.99, 0], scale: 10, resolution: 512, opacity: 0.4, blur: 2.8 }"
 		/>
 
-		<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true, autoRotateSpeed: 0.5, enablePan: false }" />
+		<ngts-orbit-controls
+			[options]="{ makeDefault: true, autoRotate: true, autoRotateSpeed: 0.5, enablePan: false }"
+		/>
 	`,
 	imports: [NgtsEnvironment, NgtsLightformer, NgtsContactShadows, NgtArgs, NgtsOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,

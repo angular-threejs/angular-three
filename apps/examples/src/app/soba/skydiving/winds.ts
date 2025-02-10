@@ -46,7 +46,12 @@ export class WindShape {
 		<ngt-group>
 			<ngts-instances>
 				<ngt-plane-geometry *args="[0.0135, 1.2]" />
-				<ngt-mesh-basic-material [side]="DoubleSide" [blending]="AdditiveBlending" [opacity]="0.15" transparent />
+				<ngt-mesh-basic-material
+					[side]="DoubleSide"
+					[blending]="AdditiveBlending"
+					[opacity]="0.15"
+					transparent
+				/>
 
 				@for (i of count; track $index) {
 					<app-wind-shape />

@@ -54,7 +54,10 @@ export class NgtPortalAutoRender {
 
 			const cleanup = internal.subscribe(
 				({ gl, scene, camera }) => {
-					const [parentScene, parentCamera] = [this.parentStore.snapshot.scene, this.parentStore.snapshot.camera];
+					const [parentScene, parentCamera] = [
+						this.parentStore.snapshot.scene,
+						this.parentStore.snapshot.camera,
+					];
 					oldClean = gl.autoClear;
 					if (renderPriority === 1) {
 						// clear scene and render with default
@@ -211,7 +214,12 @@ export class NgtPortalImpl {
 		extend({ Group });
 
 		effect(() => {
-			let [container, anchor, content] = [this.container(), this.anchorRef(), this.contentRef(), this.previousStore()];
+			let [container, anchor, content] = [
+				this.container(),
+				this.anchorRef(),
+				this.contentRef(),
+				this.previousStore(),
+			];
 
 			const [size, events, restState] = [untracked(this.size), untracked(this.events), untracked(this.restState)];
 
@@ -242,7 +250,11 @@ export class NgtPortalImpl {
 				return;
 			}
 
-			this.portalViewRef = anchor.createEmbeddedView(content, { injector: this.injector }, { injector: this.injector });
+			this.portalViewRef = anchor.createEmbeddedView(
+				content,
+				{ injector: this.injector },
+				{ injector: this.injector },
+			);
 			this.portalViewRef.detectChanges();
 			this.portalContentRendered.set(true);
 		});

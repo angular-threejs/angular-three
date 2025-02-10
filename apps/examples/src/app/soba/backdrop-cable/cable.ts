@@ -29,7 +29,11 @@ export class Cable {
 		const [v1, v2] = [new Vector3(), new Vector3()];
 
 		injectBeforeRender(() => {
-			const [bezierLine, start, end] = [this.bezierLine(), this.startRef()?.nativeElement, this.endRef().nativeElement];
+			const [bezierLine, start, end] = [
+				this.bezierLine(),
+				this.startRef()?.nativeElement,
+				this.endRef().nativeElement,
+			];
 			if (!start || !end) return;
 			bezierLine.setPoints(start.getWorldPosition(v1), end.getWorldPosition(v2));
 		});
