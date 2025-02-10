@@ -13,7 +13,6 @@ import {
 	inject,
 	Injector,
 	input,
-	NgModule,
 	NgZone,
 	output,
 	signal,
@@ -241,5 +240,4 @@ export class NgtCanvasImpl {
 	}
 }
 
-@NgModule({ imports: [NgtCanvasImpl, NgtCanvasContent], exports: [NgtCanvasImpl, NgtCanvasContent] })
-export class NgtCanvas {}
+export const NgtCanvas = [NgtCanvasImpl, NgtCanvasContent] as const;

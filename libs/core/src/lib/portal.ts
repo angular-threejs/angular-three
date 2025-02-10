@@ -10,7 +10,6 @@ import {
 	inject,
 	Injector,
 	input,
-	NgModule,
 	numberAttribute,
 	signal,
 	SkipSelf,
@@ -250,5 +249,4 @@ export class NgtPortalImpl {
 	}
 }
 
-@NgModule({ imports: [NgtPortalImpl, NgtPortalContent], exports: [NgtPortalImpl, NgtPortalContent] })
-export class NgtPortal {}
+export const NgtPortal = [NgtPortalImpl, NgtPortalContent] as const;

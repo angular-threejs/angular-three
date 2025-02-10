@@ -5,7 +5,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
-	NgModule,
 	viewChild,
 } from '@angular/core';
 import { extend, is, NgtThreeElements, omit, pick } from 'angular-three';
@@ -129,5 +128,4 @@ export class NgtsHTMLImpl {
 	protected readonly DoubleSide = THREE.DoubleSide;
 }
 
-@NgModule({ imports: [NgtsHTMLImpl, NgtsHTMLContent], exports: [NgtsHTMLImpl, NgtsHTMLContent] })
-export class NgtsHTML {}
+export const NgtsHTML = [NgtsHTMLImpl, NgtsHTMLContent] as const;

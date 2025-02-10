@@ -10,7 +10,6 @@ import {
 	ElementRef,
 	Injector,
 	input,
-	NgModule,
 	output,
 	TemplateRef,
 	viewChild,
@@ -233,8 +232,4 @@ export class NgtsGizmoHelperImpl {
 	}
 }
 
-@NgModule({
-	imports: [NgtsGizmoHelperImpl, NgtsGizmoHelperContent],
-	exports: [NgtsGizmoHelperImpl, NgtsGizmoHelperContent],
-})
-export class NgtsGizmoHelper {}
+export const NgtsGizmoHelper = [NgtsGizmoHelperImpl, NgtsGizmoHelperContent] as const;

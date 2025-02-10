@@ -5,7 +5,6 @@ import {
 	Component,
 	Directive,
 	Injector,
-	NgModule,
 	TemplateRef,
 	computed,
 	contentChild,
@@ -234,8 +233,4 @@ export class NgtsRenderTextureImpl {
 	}
 }
 
-@NgModule({
-	imports: [NgtsRenderTextureImpl, NgtsRenderTextureContent],
-	exports: [NgtsRenderTextureImpl, NgtsRenderTextureContent],
-})
-export class NgtsRenderTexture {}
+export const NgtsRenderTexture = [NgtsRenderTextureImpl, NgtsRenderTextureContent] as const;
