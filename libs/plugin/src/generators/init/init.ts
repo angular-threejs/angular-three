@@ -276,10 +276,12 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		});
 
 		const template = templateMetadata.getInitializer() as NoSubstitutionTemplateLiteral;
-		template.setLiteralValue(`${options.sceneGraph === 'append' ? template.getLiteralValue() : ''}
+		template.setLiteralValue(`
+${options.sceneGraph === 'append' ? template.getLiteralValue() : ''}
 <ngt-canvas>
   <app-scene-graph *canvasContent />
-</ngt-canvas>`);
+</ngt-canvas>
+`);
 	}
 
 	// update import statements
