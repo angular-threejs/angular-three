@@ -9,17 +9,17 @@ import {
 	updateJson,
 } from '@nx/devkit';
 import { prompt } from 'enquirer';
-import { join, relative } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import {
 	ArrayLiteralExpression,
 	CallExpression,
 	Node,
+	NoSubstitutionTemplateLiteral,
 	ObjectLiteralExpression,
 	Project,
 	PropertyAssignment,
 	ScriptKind,
 	SyntaxKind,
-	TemplateLiteral,
 } from 'ts-morph';
 import { addMetadataJson } from '../../utils';
 import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../../versions';
@@ -275,21 +275,25 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 			return Node.isPropertyAssignment(node) && node.getName() === 'template';
 		});
 
-		const template = templateMetadata.getInitializer() as TemplateLiteral;
-		template.setLiteralValue(`${options.sceneGraph === 'append' ? template.getFullText() : ''}
+		const template = templateMetadata.getInitializer() as NoSubstitutionTemplateLiteral;
+		template.setLiteralValue(`${options.sceneGraph === 'append' ? template.getLiteralValue() : ''}
 <ngt-canvas>
   <app-scene-graph *canvasContent />
 </ngt-canvas>`);
 	}
 
 	// update import statements
+	let relativeSceneGraphPath = relative(dirname(componentPath), join(sceneGraphPath, 'scene-graph'));
+	if (!relativeSceneGraphPath.startsWith('.')) {
+		relativeSceneGraphPath = `./${relativeSceneGraphPath}`;
+	}
 	componentSourceFile.addImportDeclarations([
 		{ moduleSpecifier: 'angular-three/dom', namedImports: ['NgtCanvas'] },
-		{ moduleSpecifier: relative(componentPath, sceneGraphPath), namedImports: ['SceneGraph'] },
+		{ moduleSpecifier: relativeSceneGraphPath, namedImports: ['SceneGraph'] },
 	]);
 
 	// update imports array
-	const importsMetadata = componentMetadata.getFirstChild((node): node is PropertyAssignment => {
+	const importsMetadata = componentMetadata.getFirstDescendant((node): node is PropertyAssignment => {
 		return Node.isPropertyAssignment(node) && node.getName() === 'imports';
 	});
 
