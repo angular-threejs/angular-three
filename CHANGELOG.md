@@ -1,3 +1,13 @@
+## 4.0.0-next.23 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** look for decorators as descendants ([dfd893bd](https://github.com/angular-threejs/angular-three/commit/dfd893bd))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.22 (2025-02-10)
 
 ### 🩹 Fixes
