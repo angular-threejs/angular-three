@@ -1,3 +1,13 @@
+## 4.0.0-next.22 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** use tree.write instead because save() ain't enough ([17c56f73](https://github.com/angular-threejs/angular-three/commit/17c56f73))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.21 (2025-02-10)
 
 ### 🩹 Fixes
