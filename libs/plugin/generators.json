@@ -4,6 +4,11 @@
 			"factory": "./src/generators/init/init",
 			"schema": "./src/generators/init/schema.json",
 			"description": "init generator"
+		},
+		"gltf": {
+			"factory": "./src/generators/gltf/gltf",
+			"schema": "./src/generators/gltf/schema.json",
+			"description": "gltf generator"
 		}
 	},
 	"schematics": {
@@ -11,6 +16,11 @@
 			"factory": "./src/generators/init/compat",
 			"schema": "./src/generators/init/schema.json",
 			"description": "init generator"
+		},
+		"gltf": {
+			"factory": "./src/generators/gltf/compat",
+			"schema": "./src/generators/gltf/schema.json",
+			"description": "gltf generator"
 		}
 	}
 }

@@ -20,6 +20,7 @@
 	},
 	"dependencies": {
 		"@nx/devkit": "^20.0.0",
+		"@rosskevin/gltfjsx": "7.0.20",
 		"nx": "^20.0.0",
 		"ts-morph": "^25.0.0",
 		"tslib": "^2.3.0"
