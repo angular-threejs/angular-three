@@ -1,3 +1,13 @@
+## 4.0.0-next.27 (2025-02-10)
+
+### 🩹 Fixes
+
+- **plugin:** use descendant again instead of child ([a14ac5ab](https://github.com/angular-threejs/angular-three/commit/a14ac5ab))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.26 (2025-02-10)
 
 ### 🩹 Fixes
