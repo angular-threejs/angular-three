@@ -1,3 +1,17 @@
+## 4.0.0-next.29 (2025-02-11)
+
+### 🚀 Features
+
+- **plugin:** prep gltf generator ([8e79050a](https://github.com/angular-threejs/angular-three/commit/8e79050a))
+
+### 🩹 Fixes
+
+- **plugin:** expose initGenerator ([25865c20](https://github.com/angular-threejs/angular-three/commit/25865c20))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.28 (2025-02-10)
 
 ### 🩹 Fixes
