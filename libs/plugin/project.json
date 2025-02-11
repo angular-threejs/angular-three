@@ -38,10 +38,10 @@
 			}
 		},
 		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"executor": "@nx/vite:test",
+			"outputs": ["{options.reportsDirectory}"],
 			"options": {
-				"jestConfig": "libs/plugin/jest.config.ts"
+				"reportsDirectory": "../../coverage/libs/plugin"
 			}
 		},
 		"publish-next": {
