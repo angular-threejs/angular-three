@@ -1,3 +1,13 @@
+## 4.0.0-next.30 (2025-02-11)
+
+### 🚀 Features
+
+- **plugin:** prep ([8e750b19](https://github.com/angular-threejs/angular-three/commit/8e750b19))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.29 (2025-02-11)
 
 ### 🚀 Features
