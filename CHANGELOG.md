@@ -1,3 +1,13 @@
+## 4.0.0-next.38 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** adjust one more time ([9fde6590](https://github.com/angular-threejs/angular-three/commit/9fde6590))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.37 (2025-02-12)
 
 ### 🩹 Fixes
