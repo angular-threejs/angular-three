@@ -41,6 +41,9 @@ export type <%= gltfResultTypeName %> = GLTF & {
   selector: '<%= selector %>',
   template: `
     @if (gltf(); as gltf) {
+      @let nodes = gltf.nodes;
+      @let materials = gltf.materials;
+
       <ngt-group #model [parameters]="options()" [dispose]="null">
         <%= scene %>
 

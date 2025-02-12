@@ -36,29 +36,29 @@ export class GenerateNGT {
 		// Bail out on bones
 		if (!bones && type === 'bone') {
 			this.args = true;
-			return `<ngt-primitive *args=[gltf.${node}] />\n`;
+			return `<ngt-primitive *args=[${node}] />\n`;
 		}
 
 		const ngtType = this.getAngularThreeElement(type);
 		if (isTargetedLight(obj)) {
 			this.args = true;
-			return `<${ngtType} ${this.handleAngularInputs(obj)} [target]="gltf.${node}.target">
-  <ngt-primitive *args="[gltf.${node}.target]" ${this.handleAngularInputs(obj.target)} />
+			return `<${ngtType} ${this.handleAngularInputs(obj)} [target]="${node}.target">
+  <ngt-primitive *args="[${node}.target]" ${this.handleAngularInputs(obj.target)} />
 </${ngtType}>`;
 		}
 
 		// TODO: Instances are currently not supported for NGT components
 		//
 		if (isInstancedMesh(obj)) {
-			const geo = `gltf.${node}.geometry`;
+			const geo = `${node}.geometry`;
 			const mat =
-				'name' in obj.material ? `gltf.materials${sanitizeName(obj.material.name)}` : `gltf.${node}.material`;
+				'name' in obj.material ? `materials${sanitizeName(obj.material.name)}` : `gltf.${node}.material`;
 			this.args = true;
 			result = `<ngt-instanced-mesh *args="[${geo}, ${mat}, ${!obj.count ? `gltf.${node}.count` : obj.count}]" `;
 		} else {
 			if (type === 'bone') {
 				this.args = true;
-				result = `<ngt-primitive *args="[gltf.${node}]" `;
+				result = `<ngt-primitive *args="[${node}]" `;
 			} else {
 				result = `<${this.getAngularThreeElement(type)} `;
 			}

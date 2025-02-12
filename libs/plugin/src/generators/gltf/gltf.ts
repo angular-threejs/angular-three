@@ -51,7 +51,9 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 
 	const generateNGT = new GenerateNGT(analyzed, options);
 
-	const test = await generateNGT.print(analyzed.gltf.scene);
+	const test = await generateNGT.generate();
+
+	console.log(test);
 
 	// await formatFiles(tree);
 }
