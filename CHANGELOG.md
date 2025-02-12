@@ -1,3 +1,13 @@
+## 4.0.0-next.36 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** let's see if it works ([6c84dc2f](https://github.com/angular-threejs/angular-three/commit/6c84dc2f))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.35 (2025-02-12)
 
 ### 🩹 Fixes
