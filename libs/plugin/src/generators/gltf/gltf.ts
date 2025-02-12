@@ -1,4 +1,5 @@
 import { Tree } from '@nx/devkit';
+import { join } from 'node:path';
 import { GenerateNGT } from './utils/generate-ngt';
 
 export interface GltfGeneratorSchema {
@@ -28,7 +29,9 @@ export interface GltfGeneratorSchema {
 export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	const { loadGLTF, AnalyzedGLTF, gltfTransform, Log, allPruneStrategies } = await import('@rosskevin/gltfjsx');
 
-	const gltf = await loadGLTF('');
+	const modelPath = join(tree.root, options.modelPath);
+
+	const gltf = await loadGLTF(modelPath);
 
 	const analyzed = new AnalyzedGLTF(
 		gltf,
