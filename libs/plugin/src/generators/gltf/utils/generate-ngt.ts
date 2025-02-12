@@ -11,18 +11,23 @@ export class GenerateNGT {
 		private options: GltfGeneratorSchema,
 	) {}
 
+	async generate() {
+		return this.analyzedGLTF.gltf.scene.children.map((child) => this.print(child)).join('\n');
+	}
+
 	async print(obj: Object3D) {
-		const { nodeName, isRemoved, isChildless, isTargetedLight, isInstancedMesh, sanitizeName } = await import(
+		const { nodeName, isRemoved, isTargetedLight, isInstancedMesh, sanitizeName } = await import(
 			'@rosskevin/gltfjsx'
 		);
 
 		let result = '';
 		let children = '';
 
-		if (isRemoved(obj) && !isChildless(obj)) {
-			obj.children.forEach((child) => (result += this.print(child)));
-			return result;
-		}
+		// Children
+		if (obj.children) obj.children.forEach((child) => (children += this.print(child)));
+
+		// Bail out if the object was pruned
+		if (isRemoved(obj)) return children;
 
 		const { bones } = this.options;
 		const node = nodeName(obj);
@@ -42,11 +47,8 @@ export class GenerateNGT {
 </${ngtType}>`;
 		}
 
-		// Collect children
-		if (obj.children) obj.children.forEach((child) => (children += this.print(child)));
-
 		// TODO: Instances are currently not supported for NGT components
-
+		//
 		if (isInstancedMesh(obj)) {
 			const geo = `gltf.${node}.geometry`;
 			const mat =
@@ -62,22 +64,56 @@ export class GenerateNGT {
 			}
 		}
 
+		let shoudSkipName = false;
 		if (
 			obj.name.length &&
 			'morphTargetDictionary' in obj &&
 			!!obj.morphTargetDictionary &&
 			this.analyzedGLTF.hasAnimations()
 		) {
+			shoudSkipName = true;
 			result += `name="${obj.name}" `;
 		}
 
-		const oldResult = result;
-		result += this.handleAngularInputs(obj);
+		result += this.handleAngularInputs(obj, shoudSkipName);
+
+		if (children.length) {
+			// Add children and close the element's tag
+			result += `>
+      ${children}
+      </${ngtType}>`;
+		} else {
+			// Close this element's tag
+			result += `/>`;
+		}
+
 		return result;
 	}
 
-	private handleAngularInputs(obj: Object3D) {
-		return '';
+	private handleAngularInputs(obj: Object3D, skipName = false) {
+		const properties = this.analyzedGLTF.calculateProps(obj);
+
+		let propertiesString = '';
+
+		for (const key in properties) {
+			const value = properties[key];
+
+			if (key === 'name') {
+				if (skipName) continue;
+				propertiesString += `name="${value}" `;
+				continue;
+			}
+
+			if (value === true) {
+				// i.e: castShadow, receiveShadow
+				propertiesString += `${key} `;
+				continue;
+			}
+
+			propertiesString += `[${key}]="${value}" `;
+		}
+
+		return propertiesString;
 	}
 
 	private getType(obj: Object3D) {
