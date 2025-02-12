@@ -1,3 +1,13 @@
+## 4.0.0-next.32 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** use options modelPath ([399fa40e](https://github.com/angular-threejs/angular-three/commit/399fa40e))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.31 (2025-02-12)
 
 This was a version bump only, there were no code changes.
