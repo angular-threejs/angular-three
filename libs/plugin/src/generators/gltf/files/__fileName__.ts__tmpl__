@@ -45,7 +45,7 @@ export type <%= gltfResultTypeName %> = GLTF & {
       @let materials = gltf.materials;
 
       <ngt-group #model [parameters]="options()" [dispose]="null">
-        <%= scene %>
+        <%- scene %>
 
         <ng-content />
       </ngt-group>

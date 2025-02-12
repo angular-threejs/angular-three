@@ -117,6 +117,7 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 			t !== 'Object3D',
 	);
 	const threeImports = ngtTypesArr.length ? `, ${ngtTypesArr.join(',')}` : '';
+	const gltfPath = transformedModelPath || modelPath;
 	const gltfAnimationTypeName = className + 'AnimationClips';
 	const gltfAnimationApiTypeName = className + 'AnimationApi';
 	const gltfName = className + 'GLTF';
@@ -168,7 +169,7 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 		gltfAnimationTypeName,
 		gltfAnimationApiTypeName,
 		gltfResultTypeName,
-		gltfPath: modelPath,
+		gltfPath,
 		gltfOptions,
 		meshesTypes,
 		bonesTypes,
