@@ -28,11 +28,11 @@ export type <%= gltfAnimationApiTypeName %> = Exclude<NgtsAnimationApi<<%= gltfA
 <% } %>
 export type <%= gltfResultTypeName %> = GLTF & {
   nodes: {
-    <% meshes.map(({ name, type }) => "\'" + name + "\'" + ": THREE." + type).join(';\n') %>
-    <% bones.map(({ name, type }) => "\'" + name + "\'" + ": THREE." + type).join(';\n') %>
+    <%- meshesTypes %>
+    <%- bonesTypes %>
   };
   materials: {
-    <% materials.map(({ name, type }) => "\'" + name + "\'" + ": THREE." + type).join(';\n') %>
+    <%- materialsTypes %>
   };<% if (animations.length) { %>
   animations: <%= gltfAnimationTypeName %>[];<% } %>
 };
@@ -69,11 +69,9 @@ export class <%= className %> {
 
   modelRef = viewChild<ElementRef<Group>>('model');
 
-  protected gltf = injectGLTF<<%= gltfResultTypeName %>>(() => ${options.importattribute && !url.startsWith("http") ? gltfName : `"${url}"`}${gltfOptions ? `, ${JSON.stringify(gltfOptions)}` : ""});
   protected gltf = injectGLTF<<%= gltfResultTypeName %>>(() => <% if (useImportAttribute) { %> <%= gltfName %> <% } else { %> '<%= url %>' <% } %><% if (gltfOptions) { %>, <%= gltfOptions %><% } %>);
 
   constructor() {
-    extend({ Group${ngtTypesArr.length ? ", " + ngtTypesArr.join(", ") : ""} });
     extend({ Group<%= threeImports %> });
 
     <% if (animations.length) { %>

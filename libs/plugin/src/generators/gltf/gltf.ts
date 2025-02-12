@@ -1,5 +1,5 @@
 import { formatFiles, generateFiles, names, Tree } from '@nx/devkit';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { GenerateNGT } from './utils/generate-ngt';
 
 export interface GltfGeneratorSchema {
@@ -15,30 +15,66 @@ export interface GltfGeneratorSchema {
 	console: boolean;
 	instance: boolean;
 	instanceAll: boolean;
+	transform: boolean;
+	degrade: string;
+	degradeResolution: number;
 	resolution: number;
 	keepMeshes: boolean;
 	keepMaterials: boolean;
 	keepAttributes: boolean;
 	keepNames: boolean;
 	keepGroups: boolean;
-	format: string;
+	format: 'jpeg' | 'png' | 'webp' | 'avif';
 	simplify: boolean;
 	ratio: number;
 	error: number;
+	header: string;
 	verbose: boolean;
 }
 
 export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
-	const { loadGLTF, AnalyzedGLTF, gltfTransform, Log, allPruneStrategies } = await import('@rosskevin/gltfjsx');
+	const { loadGLTF, AnalyzedGLTF, gltfTransform, Log, allPruneStrategies, compareFileSizes } = await import(
+		'@rosskevin/gltfjsx'
+	);
 
 	const modelPath = join(tree.root, options.modelPath);
+	const log = new Log({ debug: options.verbose, silent: false });
+
+	//
+	// Transform the GLTF file if necessary using gltf-transform
+	//
+	let size = '';
+	let transformedModelPath: string | undefined = undefined;
+	if (options.transform) {
+		transformedModelPath = resolve(modelPath + '-transformed.glb');
+		await gltfTransform(modelPath, transformedModelPath, {
+			format: options.format,
+			degrade: options.degrade,
+			degraderesolution: options.degradeResolution,
+			simplify: options.simplify ? { ratio: options.ratio, error: options.error } : false,
+			log,
+			bones: options.bones,
+			meta: options.meta,
+			shadows: options.shadows,
+			instance: options.instance,
+			instanceall: options.instanceAll,
+			keepgroups: options.keepGroups,
+			keepnames: options.keepNames,
+			precision: options.precision,
+			keepattributes: options.keepAttributes,
+			keepmeshes: options.keepMeshes,
+			keepmaterials: options.keepMaterials,
+			resolution: options.resolution,
+		});
+		size = compareFileSizes(modelPath, transformedModelPath);
+	}
 
 	const gltf = await loadGLTF(modelPath);
 
 	const analyzed = new AnalyzedGLTF(
 		gltf,
 		{
-			log: new Log({ debug: options.verbose, silent: false }),
+			log,
 			bones: options.bones,
 			meta: options.meta,
 			shadows: options.shadows,
@@ -101,9 +137,18 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	}
 
 	const gltfOptions = options.draco ? `{ useDraco: true }` : '';
-	const meshes = analyzed.getMeshes();
-	const bones = analyzed.getBones();
+	const meshesTypes = analyzed
+		.getMeshes()
+		.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
+		.join(';\n');
+	const bonesTypes = analyzed
+		.getBones()
+		.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
+		.join(';\n');
 	const materials = analyzed.getMaterials();
+	const materialsTypes = materials.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type).join(';\n');
+
+	log.debug(materialsTypes);
 
 	generateFiles(tree, join(__dirname, 'files'), dirname(options.output), {
 		tmpl: '',
@@ -123,11 +168,14 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 		gltfAnimationTypeName,
 		gltfAnimationApiTypeName,
 		gltfResultTypeName,
-		url: modelPath,
+		gltfPath: modelPath,
 		gltfOptions,
-		meshes,
-		bones,
-		materials,
+		meshesTypes,
+		bonesTypes,
+		materialsTypes,
+		angularImports,
+		header: options.header,
+		size,
 	});
 
 	await formatFiles(tree);

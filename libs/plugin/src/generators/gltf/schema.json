@@ -81,6 +81,24 @@
 			"alias": "I",
 			"default": false
 		},
+		"transform": {
+			"type": "boolean",
+			"description": "Transform meshes via @gltf-transform/extensions",
+			"alias": "t",
+			"default": false
+		},
+		"degrade": {
+			"type": "string",
+			"description": "Degrade meshes via @gltf-transform/extensions",
+			"alias": "q",
+			"default": ""
+		},
+		"degradeResolution": {
+			"type": "number",
+			"description": "Degrade meshes via @gltf-transform/extensions",
+			"alias": "Q",
+			"default": 512
+		},
 		"resolution": {
 			"type": "number",
 			"description": "Resolution for texture resizing (default: 1024)",
@@ -140,6 +158,12 @@
 			"description": "Simplifier error threshold (default: 0.0001)",
 			"alias": "e",
 			"default": 0.0001
+		},
+		"header": {
+			"type": "string",
+			"description": "Custom header to add to the generated file",
+			"alias": "H",
+			"default": ""
 		},
 		"verbose": {
 			"type": "boolean",
