@@ -1,3 +1,13 @@
+## 4.0.0-next.37 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** adjust ([c7025c51](https://github.com/angular-threejs/angular-three/commit/c7025c51))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.36 (2025-02-12)
 
 ### 🩹 Fixes
