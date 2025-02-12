@@ -16,7 +16,7 @@ import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';<% } %><% if 
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';<% } %>
 <% if (useImportAttribute) { %>
 // @ts-expect-error - import .glb/.gltf file
-import <%= gltfName %> from '.<%= gltfPath %>' with { loader: 'file' };
+import <%= gltfName %> from '<%= gltfPath %>' with { loader: 'file' };
 <% } %>
 <% if (preload) { %>
 injectGLTF.preload(() => <% if (useImportAttribute) { %><%= gltfName %><% } else { %>'<%= gltfPath %>'<% } %>);
