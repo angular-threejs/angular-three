@@ -19,6 +19,8 @@ export interface GltfGeneratorSchema {
 	keepMeshes: boolean;
 	keepMaterials: boolean;
 	keepAttributes: boolean;
+	keepNames: boolean;
+	keepGroups: boolean;
 	format: string;
 	simplify: boolean;
 	ratio: number;
@@ -42,8 +44,8 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 			shadows: options.shadows,
 			instance: options.instance,
 			instanceall: options.instanceAll,
-			keepgroups: false,
-			keepnames: true,
+			keepgroups: options.keepGroups,
+			keepnames: options.keepNames,
 			precision: options.precision,
 		},
 		allPruneStrategies,

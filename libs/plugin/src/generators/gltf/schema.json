@@ -105,6 +105,18 @@
 			"alias": "a",
 			"default": false
 		},
+		"keepNames": {
+			"type": "boolean",
+			"description": "Keep names of objects",
+			"alias": "n",
+			"default": false
+		},
+		"keepGroups": {
+			"type": "boolean",
+			"description": "Keep groups",
+			"alias": "g",
+			"default": false
+		},
 		"format": {
 			"type": "string",
 			"description": "Texture format jpeg | png | webp | avif (default: \"webp\")",
