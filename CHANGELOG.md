@@ -1,3 +1,13 @@
+## 4.0.0-next.35 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** add keep names and keep groups options ([485657eb](https://github.com/angular-threejs/angular-three/commit/485657eb))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.34 (2025-02-12)
 
 ### 🩹 Fixes
