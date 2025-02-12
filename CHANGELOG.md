@@ -1,3 +1,13 @@
+## 4.0.0-next.33 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** use let for nodes/materials; call generate; adjust node name ([78af9872](https://github.com/angular-threejs/angular-three/commit/78af9872))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.32 (2025-02-12)
 
 ### 🩹 Fixes
