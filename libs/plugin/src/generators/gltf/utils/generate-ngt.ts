@@ -12,19 +12,22 @@ export class GenerateNGT {
 	) {}
 
 	async generate() {
-		return this.analyzedGLTF.gltf.scene.children.map((child) => this.print(child)).join('\n');
+		const gltfjsxApi = await import('@rosskevin/gltfjsx');
+		return this.analyzedGLTF.gltf.scene.children.map((child) => this.print(child, gltfjsxApi)).join('\n');
 	}
 
-	async print(obj: Object3D) {
-		const { nodeName, isRemoved, isTargetedLight, isInstancedMesh, sanitizeName } = await import(
-			'@rosskevin/gltfjsx'
-		);
+	private print(
+		obj: Object3D,
+		// @ts-expect-error - type only import
+		gltfjsxApi: typeof import('@rosskevin/gltfjsx'),
+	) {
+		const { nodeName, isRemoved, isTargetedLight, isInstancedMesh, sanitizeName } = gltfjsxApi;
 
 		let result = '';
 		let children = '';
 
 		// Children
-		if (obj.children) obj.children.forEach((child) => (children += this.print(child)));
+		if (obj.children) obj.children.forEach((child) => (children += this.print(child, gltfjsxApi)));
 
 		// Bail out if the object was pruned
 		if (isRemoved(obj)) return children;
