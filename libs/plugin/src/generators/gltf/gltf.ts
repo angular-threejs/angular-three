@@ -1,5 +1,5 @@
-import { Tree } from '@nx/devkit';
-import { join } from 'node:path';
+import { formatFiles, generateFiles, names, Tree } from '@nx/devkit';
+import { dirname, join } from 'node:path';
 import { GenerateNGT } from './utils/generate-ngt';
 
 export interface GltfGeneratorSchema {
@@ -53,11 +53,84 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 
 	const generateNGT = new GenerateNGT(analyzed, options);
 
-	const test = await generateNGT.generate();
+	const scene = await generateNGT.generate();
 
-	console.log(test);
+	const args = generateNGT.args;
+	const perspective = generateNGT.ngtTypes.has('PerspectiveCamera');
+	const orthographic = generateNGT.ngtTypes.has('OrthographicCamera');
 
-	// await formatFiles(tree);
+	const { className, fileName } = names(options.className);
+	const gltfExtras = analyzed.gltf.parser.json.asset && analyzed.gltf.parser.json.asset.extras;
+	const extras = gltfExtras
+		? Object.keys(gltfExtras)
+				.map((key) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${gltfExtras[key]}`)
+				.join('\n')
+		: '';
+
+	const ngtTypesArr = Array.from(generateNGT.ngtTypes).filter(
+		(t) =>
+			// group always is the top-level object
+			t !== 'Group' &&
+			// we render ngts-perspective-camera instead of ngt-perspective-camera
+			t !== 'PerspectiveCamera' &&
+			// we render ngts-orthographic-camera instead of ngt-orthographic-camera
+			t !== 'OrthographicCamera' &&
+			// we don't render ngt-bone
+			t !== 'Bone' &&
+			// we don't render ngt-object3D
+			t !== 'Object3D',
+	);
+	const threeImports = ngtTypesArr.length ? `, ${ngtTypesArr.join(',')}` : '';
+	const gltfAnimationTypeName = className + 'AnimationClips';
+	const gltfAnimationApiTypeName = className + 'AnimationApi';
+	const gltfName = className + 'GLTF';
+	const gltfResultTypeName = gltfName + 'GLTFResult';
+
+	const angularImports = [];
+
+	if (args) {
+		angularImports.push('NgtArgs');
+	}
+
+	if (perspective) {
+		angularImports.push('NgtsPerspectiveCamera');
+	}
+
+	if (perspective) {
+		angularImports.push('NgtsOrthographicCamera');
+	}
+
+	const gltfOptions = options.draco ? `{ useDraco: true }` : '';
+	const meshes = analyzed.getMeshes();
+	const bones = analyzed.getBones();
+	const materials = analyzed.getMaterials();
+
+	generateFiles(tree, join(__dirname, 'files'), dirname(options.output), {
+		tmpl: '',
+		scene,
+		fileName,
+		className,
+		selector: `${options.selectorPrefix}-${fileName}`,
+		animations: analyzed.gltf.animations || [],
+		extras,
+		threeImports,
+		args,
+		perspective,
+		orthographic,
+		useImportAttribute: !modelPath.startsWith('http'),
+		preload: true,
+		gltfName,
+		gltfAnimationTypeName,
+		gltfAnimationApiTypeName,
+		gltfResultTypeName,
+		url: modelPath,
+		gltfOptions,
+		meshes,
+		bones,
+		materials,
+	});
+
+	await formatFiles(tree);
 }
 
 export default gltfGenerator;

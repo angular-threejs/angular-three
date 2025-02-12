@@ -70,22 +70,19 @@ export class <%= className %> {
   modelRef = viewChild<ElementRef<Group>>('model');
 
   protected gltf = injectGLTF<<%= gltfResultTypeName %>>(() => ${options.importattribute && !url.startsWith("http") ? gltfName : `"${url}"`}${gltfOptions ? `, ${JSON.stringify(gltfOptions)}` : ""});
+  protected gltf = injectGLTF<<%= gltfResultTypeName %>>(() => <% if (useImportAttribute) { %> <%= gltfName %> <% } else { %> '<%= url %>' <% } %><% if (gltfOptions) { %>, <%= gltfOptions %><% } %>);
 
   constructor() {
     extend({ Group${ngtTypesArr.length ? ", " + ngtTypesArr.join(", ") : ""} });
+    extend({ Group<%= threeImports %> });
 
-    ${
-      hasAnimations
-        ? `
+    <% if (animations.length) { %>
     const animations = injectAnimations(this.gltf, this.modelRef);
     effect(() => {
-      if (animations.${useNewAnimationApi ? "isReady" : "ready()"}) {
-        this.animations.set(animations);
-      }
-    }${options.ngVer < 19 ? ", { allowSignalWrites: true }" : ""})
-    `
-        : ""
-    }
+      if (!animations.isReady) return;
+      this.animations.set(animations);
+    });
+    <% } %>
 
     const objectEvents = inject(NgtObjectEvents, { host: true });
     effect(() => {
@@ -93,6 +90,6 @@ export class <%= className %> {
         if (!model) return;
 
         objectEvents.ngtObjectEvents.set(model);
-    }${options.ngVer < 19 ? ", { allowSignalWrites: true }" : ""});
+    });
   }
 }
