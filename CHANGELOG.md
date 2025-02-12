@@ -1,3 +1,13 @@
+## 4.0.0-next.39 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** gltfPath ([9617006c](https://github.com/angular-threejs/angular-three/commit/9617006c))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.38 (2025-02-12)
 
 ### 🩹 Fixes
