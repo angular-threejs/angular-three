@@ -19,7 +19,7 @@ import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';<% } %>
 import <%= gltfName %> from '.<%= gltfPath %>' with { loader: 'file' };
 <% } %>
 <% if (preload) { %>
-injectGLTF(() => <% if (useImportAttribute) { %><%= gltfName %><% } else { %>'<%= gltfPath %>'<% } %>);
+injectGLTF.preload(() => <% if (useImportAttribute) { %><%= gltfName %><% } else { %>'<%= gltfPath %>'<% } %>);
 <% } %>
 <% if (animations.length) { %>
 type ActionName = <% animations.map(clip => "\""+ clip.name + "\"").join(" | ") %>;

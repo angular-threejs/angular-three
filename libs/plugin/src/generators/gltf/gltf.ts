@@ -1,5 +1,5 @@
 import { formatFiles, generateFiles, names, Tree } from '@nx/devkit';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { GenerateNGT } from './utils/generate-ngt';
 
 export interface GltfGeneratorSchema {
@@ -117,7 +117,15 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 			t !== 'Object3D',
 	);
 	const threeImports = ngtTypesArr.length ? `, ${ngtTypesArr.join(',')}` : '';
-	const gltfPath = transformedModelPath || modelPath;
+	let gltfPath =
+		!transformedModelPath && modelPath.startsWith('http')
+			? modelPath
+			: relative(dirname(options.output), transformedModelPath || modelPath);
+
+	if (!gltfPath.startsWith('http') && !gltfPath.startsWith('.')) {
+		gltfPath = `./${gltfPath}`;
+	}
+
 	const gltfAnimationTypeName = className + 'AnimationClips';
 	const gltfAnimationApiTypeName = className + 'AnimationApi';
 	const gltfName = className + 'GLTF';
