@@ -1,3 +1,13 @@
+## 4.0.0-next.34 (2025-02-12)
+
+### 🩹 Fixes
+
+- **plugin:** adjust generate ([8a42b403](https://github.com/angular-threejs/angular-three/commit/8a42b403))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.33 (2025-02-12)
 
 ### 🩹 Fixes
