@@ -65,7 +65,12 @@ function normalizeOptions(tree: Tree, options: GltfGeneratorSchema, gltfJsx: typ
 	const modelPathFromRoot = join(tree.root, options.modelPath);
 	const outputDir = dirname(options.output);
 
-	const injectGLTFOptions = options.draco ? `{ useDraco: true }` : '';
+	const injectGLTFOptions =
+		options.transform && options.draco != null
+			? `{ useDraco: ${options.draco} }`
+			: options.transform
+				? `{ useDraco: true }`
+				: '';
 
 	const selector = `${options.selectorPrefix}-${fileName}`;
 
@@ -116,10 +121,16 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	//
 	let size = '';
 	let transformedModelPath: string | undefined = undefined;
+	let dracoLoader: import('node-three-gltf').DRACOLoader | undefined = undefined; // global instance, instantiate once, dispose once
+
 	if (options.transform) {
 		transformedModelPath = resolve(modelPathFromRoot + '-transformed.glb');
 		await gltfTransform(modelPathFromRoot, transformedModelPath, Object.assign(transformOptions, gltfJsxOptions));
 		size = compareFileSizes(modelPathFromRoot, transformedModelPath);
+
+		log.debug('Instantiating DracoLoader');
+		const { DRACOLoader } = await import('node-three-gltf');
+		dracoLoader = new DRACOLoader();
 	}
 
 	const modelPath = transformedModelPath || modelPathFromRoot;
@@ -127,13 +138,6 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	//
 	// Read the model
 	//
-	let dracoLoader: import('node-three-gltf').DRACOLoader | undefined = undefined; // global instance, instantiate once, dispose once
-	if (options.draco) {
-		log.debug('Instantiating DracoLoader');
-		const { DRACOLoader } = await import('node-three-gltf');
-		dracoLoader = new DRACOLoader();
-	}
-
 	log.debug('Loading model: ', modelPath);
 
 	try {
