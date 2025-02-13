@@ -1,3 +1,13 @@
+## 4.0.0-next.46 (2025-02-13)
+
+### 🩹 Fixes
+
+- **plugin:** adjust draco schema again ([ed44f610](https://github.com/angular-threejs/angular-three/commit/ed44f610))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.45 (2025-02-13)
 
 ### 🩹 Fixes
