@@ -1,3 +1,13 @@
+## 4.0.0-next.45 (2025-02-13)
+
+### 🩹 Fixes
+
+- **plugin:** use string for draco ([d008d2dd](https://github.com/angular-threejs/angular-three/commit/d008d2dd))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.44 (2025-02-13)
 
 ### 🩹 Fixes
