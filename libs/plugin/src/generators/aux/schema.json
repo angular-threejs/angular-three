@@ -1,0 +1,7 @@
+{
+	"cli": "nx",
+	"$id": "Init",
+	"title": "Init aux package",
+	"type": "object",
+	"properties": {}
+}

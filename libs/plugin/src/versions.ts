@@ -3,7 +3,7 @@ export const THREE_VERSION = '^0.173.0';
 export const THREE_TYPE_VERSION = '^0.173.0';
 export const NGXTENSION_VERSION = '^4.0.0';
 
-export const PEER_DEPENDENCIES = {
+export const PEER_DEPENDENCIES: Record<string, Record<string, string>> = {
 	'angular-three-soba': {
 		'three-stdlib': '^2.0.0',
 		'@pmndrs/vanilla': '^1.20.0',

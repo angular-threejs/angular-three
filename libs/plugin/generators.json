@@ -9,6 +9,11 @@
 			"factory": "./src/generators/gltf/gltf",
 			"schema": "./src/generators/gltf/schema.json",
 			"description": "gltf generator"
+		},
+		"aux": {
+			"factory": "./src/generators/aux/aux",
+			"schema": "./src/generators/aux/schema.json",
+			"description": "aux generator"
 		}
 	},
 	"schematics": {
@@ -21,6 +26,11 @@
 			"factory": "./src/generators/gltf/compat",
 			"schema": "./src/generators/gltf/schema.json",
 			"description": "gltf generator"
+		},
+		"aux": {
+			"factory": "./src/generators/aux/compat",
+			"schema": "./src/generators/aux/schema.json",
+			"description": "aux generator"
 		}
 	}
 }
