@@ -1,3 +1,13 @@
+## 4.0.0-next.41 (2025-02-13)
+
+### 🩹 Fixes
+
+- **plugin:** handle draco; clean up ([801a8619](https://github.com/angular-threejs/angular-three/commit/801a8619))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.40 (2025-02-12)
 
 ### 🩹 Fixes
