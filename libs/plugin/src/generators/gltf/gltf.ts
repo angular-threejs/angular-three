@@ -7,7 +7,7 @@ export interface GltfGeneratorSchema {
 	output: string;
 	className: string;
 	selectorPrefix: string;
-	draco: boolean;
+	draco?: boolean;
 	bones: boolean;
 	meta: boolean;
 	shadows: boolean;
