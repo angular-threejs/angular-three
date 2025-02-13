@@ -1,3 +1,21 @@
+## 4.0.0-next.47 (2025-02-13)
+
+### 🚀 Features
+
+- **plugin:** add aux generator ([384f95e7](https://github.com/angular-threejs/angular-three/commit/384f95e7))
+
+### 🩹 Fixes
+
+- **plugin:** adjust migration group ([32992318](https://github.com/angular-threejs/angular-three/commit/32992318))
+
+### 💅 Refactors
+
+- **plugin:** move generate-util outside ([a378788e](https://github.com/angular-threejs/angular-three/commit/a378788e))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.46 (2025-02-13)
 
 ### 🩹 Fixes
