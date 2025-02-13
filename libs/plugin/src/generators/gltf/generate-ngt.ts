@@ -1,5 +1,5 @@
 import type { Object3D } from 'three';
-import type { GltfGeneratorSchema } from '../gltf';
+import type { GltfGeneratorSchema } from './gltf';
 
 export class GenerateNGT {
 	ngtTypes = new Set<string>();

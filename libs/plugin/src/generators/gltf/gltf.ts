@@ -1,6 +1,6 @@
 import { formatFiles, generateFiles, names, Tree } from '@nx/devkit';
 import { dirname, join, relative, resolve } from 'node:path';
-import { GenerateNGT } from './utils/generate-ngt';
+import { GenerateNGT } from './generate-ngt';
 
 export interface GltfGeneratorSchema {
 	modelPath: string;

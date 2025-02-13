@@ -1,5 +1,6 @@
 import { addDependenciesToPackageJson, formatFiles, installPackagesTask, logger, readJson, Tree } from '@nx/devkit';
 import { prompt } from 'enquirer';
+import { addMetadataJson } from '../../utils';
 import { PEER_DEPENDENCIES } from '../../versions';
 
 export async function auxGenerator(tree: Tree) {
@@ -41,6 +42,10 @@ export async function auxGenerator(tree: Tree) {
 			for (const depName in PEER_DEPENDENCIES[pkg]) {
 				packagesToAdd[depName] = PEER_DEPENDENCIES[pkg][depName];
 			}
+		}
+
+		if (pkg === 'angular-three-soba') {
+			addMetadataJson(tree, 'angular-three-soba/metadata.json');
 		}
 	}
 
