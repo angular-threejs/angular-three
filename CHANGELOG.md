@@ -1,3 +1,13 @@
+## 4.0.0-next.43 (2025-02-13)
+
+### 🩹 Fixes
+
+- **plugin:** draco is optional instead of default to false ([f9063a82](https://github.com/angular-threejs/angular-three/commit/f9063a82))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.42 (2025-02-13)
 
 ### 🩹 Fixes
