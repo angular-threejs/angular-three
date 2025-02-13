@@ -8,7 +8,7 @@
 import type * as THREE from 'three';
 import { Group<%= threeImports %> } from 'three';
 import { extend, type NgtThreeElements, NgtObjectEvents<% if (args) { %>, NgtArgs<% } %>  } from 'angular-three';
-import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject, effect<% if (animations.length) { %>, computed, model<% } %> } from '@angular/core';
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject, effect<% if (animations.length) { %>, model<% } %> } from '@angular/core';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import type { GLTF } from 'three-stdlib';<% if (animations.length) { %>
 import { injectAnimations, type NgtsAnimationClips, type NgtsAnimationApi } from 'angular-three-soba/misc';<% } %><% if (perspective) { %>

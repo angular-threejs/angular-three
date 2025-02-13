@@ -8,26 +8,89 @@ export class GenerateNGT {
 	constructor(
 		// @ts-expect-error - type only import
 		private analyzedGLTF: import('@rosskevin/gltfjsx').AnalyzedGLTF,
+		// @ts-expect-error - type only import
+		private gltfjsxAPI: typeof import('@rosskevin/gltfjsx'),
 		private options: GltfGeneratorSchema,
 	) {}
 
-	async generate() {
-		const gltfjsxApi = await import('@rosskevin/gltfjsx');
-		return this.analyzedGLTF.gltf.scene.children.map((child) => this.print(child, gltfjsxApi)).join('\n');
+	generate() {
+		return this.analyzedGLTF.gltf.scene.children.map((child) => this.print(child)).join('\n');
 	}
 
-	private print(
-		obj: Object3D,
-		// @ts-expect-error - type only import
-		gltfjsxApi: typeof import('@rosskevin/gltfjsx'),
-	) {
-		const { nodeName, isRemoved, isTargetedLight, isInstancedMesh, sanitizeName } = gltfjsxApi;
+	getGenerateOptions() {
+		const perspective = this.ngtTypes.has('PerspectiveCamera');
+		const orthographic = this.ngtTypes.has('OrthographicCamera');
+
+		const angularImports = [];
+		if (this.args) angularImports.push('NgtArgs');
+		if (perspective) angularImports.push('NgtsPerspectiveCamera');
+		if (orthographic) angularImports.push('NgtsOrthographicCamera');
+
+		const meshesTypes = this.analyzedGLTF
+			.getMeshes()
+			.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
+			.join(';\n');
+		const bonesTypes = this.analyzedGLTF
+			.getBones()
+			.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
+			.join(';\n');
+		const materialsTypes = this.analyzedGLTF
+			.getMaterials()
+			.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
+			.join(';\n');
+
+		this.analyzedGLTF.options.log.debug({ materialsTypes });
+
+		const animations = this.analyzedGLTF.gltf.animations || [];
+
+		const gltfExtras = this.analyzedGLTF.gltf.parser.json.asset && this.analyzedGLTF.gltf.parser.json.asset.extras;
+		const extras = gltfExtras
+			? Object.keys(gltfExtras)
+					.map((key) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${gltfExtras[key]}`)
+					.join('\n')
+			: '';
+
+		const ngtTypesArr = this.ngtTypesArr;
+		const threeImports = ngtTypesArr.length ? `, ${ngtTypesArr.join(',')}` : '';
+
+		return {
+			animations,
+			extras,
+			threeImports,
+			args: this.args,
+			perspective,
+			orthographic,
+			meshesTypes,
+			bonesTypes,
+			materialsTypes,
+			angularImports,
+		};
+	}
+
+	private get ngtTypesArr() {
+		return Array.from(this.ngtTypes).filter(
+			(t) =>
+				// group always is the top-level object
+				t !== 'Group' &&
+				// we render ngts-perspective-camera instead of ngt-perspective-camera
+				t !== 'PerspectiveCamera' &&
+				// we render ngts-orthographic-camera instead of ngt-orthographic-camera
+				t !== 'OrthographicCamera' &&
+				// we don't render ngt-bone
+				t !== 'Bone' &&
+				// we don't render ngt-object3D
+				t !== 'Object3D',
+		);
+	}
+
+	private print(obj: Object3D) {
+		const { nodeName, isRemoved, isTargetedLight, isInstancedMesh, sanitizeName } = this.gltfjsxAPI;
 
 		let result = '';
 		let children = '';
 
 		// Children
-		if (obj.children) obj.children.forEach((child) => (children += this.print(child, gltfjsxApi)));
+		if (obj.children) obj.children.forEach((child) => (children += this.print(child)));
 
 		// Bail out if the object was pruned
 		if (isRemoved(obj)) return children;
@@ -161,10 +224,3 @@ export class GenerateNGT {
 		return `ngt-${kebabType}`;
 	}
 }
-
-// export async function generateNGT(
-// 	// @ts-expect-error - type only import
-// 	analyzedGLTF: import('@rosskevin/gltfjsx').AnalyzedGLTF,
-// ) {}
-//
-// function generate(obj: Object3D) {}

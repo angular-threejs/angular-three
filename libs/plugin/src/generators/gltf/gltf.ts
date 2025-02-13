@@ -32,13 +32,84 @@ export interface GltfGeneratorSchema {
 	verbose: boolean;
 }
 
-export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
-	const { loadGLTF, AnalyzedGLTF, gltfTransform, Log, allPruneStrategies, compareFileSizes } = await import(
-		'@rosskevin/gltfjsx'
-	);
+// @ts-expect-error - type only import
+function normalizeOptions(tree: Tree, options: GltfGeneratorSchema, gltfJsx: typeof import('@rosskevin/gltfjsx')) {
+	const { Log } = gltfJsx;
 
-	const modelPath = join(tree.root, options.modelPath);
+	const { fileName, className } = names(options.className);
 	const log = new Log({ debug: options.verbose, silent: false });
+
+	const gltfJsxOptions = {
+		log,
+		bones: options.bones,
+		meta: options.meta,
+		shadows: options.shadows,
+		instance: options.instance,
+		instanceall: options.instanceAll,
+		keepgroups: options.keepGroups,
+		keepnames: options.keepNames,
+		precision: options.precision,
+	};
+
+	const transformOptions = {
+		format: options.format,
+		degrade: options.degrade,
+		degraderesolution: options.degradeResolution,
+		simplify: options.simplify ? { ratio: options.ratio, error: options.error } : false,
+		keepattributes: options.keepAttributes,
+		keepmeshes: options.keepMeshes,
+		keepmaterials: options.keepMaterials,
+		resolution: options.resolution,
+	};
+
+	const modelPathFromRoot = join(tree.root, options.modelPath);
+	const outputDir = dirname(options.output);
+
+	const injectGLTFOptions = options.draco ? `{ useDraco: true }` : '';
+
+	const selector = `${options.selectorPrefix}-${fileName}`;
+
+	const gltfAnimationTypeName = className + 'AnimationClips';
+	const gltfAnimationApiTypeName = className + 'AnimationApi';
+	const gltfName = className + 'GLTF';
+	const gltfResultTypeName = gltfName + 'GLTFResult';
+
+	return {
+		log,
+		selector,
+		fileName,
+		className,
+		gltfJsxOptions,
+		transformOptions,
+		modelPathFromRoot,
+		outputDir,
+		injectGLTFOptions,
+		gltfAnimationTypeName,
+		gltfAnimationApiTypeName,
+		gltfName,
+		gltfResultTypeName,
+	};
+}
+
+export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
+	const gltfjsx = await import('@rosskevin/gltfjsx');
+	const { loadGLTF, AnalyzedGLTF, gltfTransform, compareFileSizes } = gltfjsx;
+
+	const {
+		selector,
+		className,
+		fileName,
+		modelPathFromRoot,
+		log,
+		gltfJsxOptions,
+		transformOptions,
+		outputDir,
+		injectGLTFOptions,
+		gltfAnimationTypeName,
+		gltfAnimationApiTypeName,
+		gltfName,
+		gltfResultTypeName,
+	} = normalizeOptions(tree, options, gltfjsx);
 
 	//
 	// Transform the GLTF file if necessary using gltf-transform
@@ -46,146 +117,74 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	let size = '';
 	let transformedModelPath: string | undefined = undefined;
 	if (options.transform) {
-		transformedModelPath = resolve(modelPath + '-transformed.glb');
-		await gltfTransform(modelPath, transformedModelPath, {
-			format: options.format,
-			degrade: options.degrade,
-			degraderesolution: options.degradeResolution,
-			simplify: options.simplify ? { ratio: options.ratio, error: options.error } : false,
-			log,
-			bones: options.bones,
-			meta: options.meta,
-			shadows: options.shadows,
-			instance: options.instance,
-			instanceall: options.instanceAll,
-			keepgroups: options.keepGroups,
-			keepnames: options.keepNames,
-			precision: options.precision,
-			keepattributes: options.keepAttributes,
-			keepmeshes: options.keepMeshes,
-			keepmaterials: options.keepMaterials,
-			resolution: options.resolution,
+		transformedModelPath = resolve(modelPathFromRoot + '-transformed.glb');
+		await gltfTransform(modelPathFromRoot, transformedModelPath, Object.assign(transformOptions, gltfJsxOptions));
+		size = compareFileSizes(modelPathFromRoot, transformedModelPath);
+	}
+
+	const modelPath = transformedModelPath || modelPathFromRoot;
+
+	//
+	// Read the model
+	//
+	let dracoLoader: import('node-three-gltf').DRACOLoader | undefined = undefined; // global instance, instantiate once, dispose once
+	if (options.draco) {
+		log.debug('Instantiating DracoLoader');
+		const { DRACOLoader } = await import('node-three-gltf');
+		dracoLoader = new DRACOLoader();
+	}
+
+	log.debug('Loading model: ', modelPath);
+
+	try {
+		const gltf = await loadGLTF(modelPath, dracoLoader);
+		const analyzed = new AnalyzedGLTF(gltf, gltfJsxOptions);
+		const generateNGT = new GenerateNGT(analyzed, gltfjsx, options);
+
+		const scene = generateNGT.generate();
+		const generateOptions = generateNGT.getGenerateOptions();
+
+		let gltfPath =
+			!transformedModelPath && modelPath.startsWith('http') ? modelPath : relative(outputDir, modelPath);
+
+		if (!gltfPath.startsWith('http') && !gltfPath.startsWith('.')) {
+			gltfPath = `./${gltfPath}`;
+		}
+
+		generateFiles(tree, join(__dirname, 'files'), outputDir, {
+			tmpl: '',
+			...generateOptions,
+			scene,
+			fileName,
+			className,
+			selector,
+			animations: analyzed.gltf.animations || [],
+			useImportAttribute: !modelPath.startsWith('http'),
+			preload: true,
+			gltfName,
+			gltfAnimationTypeName,
+			gltfAnimationApiTypeName,
+			gltfResultTypeName,
+			gltfPath,
+			gltfOptions: injectGLTFOptions,
+			header: options.header,
+			size,
 		});
-		size = compareFileSizes(modelPath, transformedModelPath);
+
+		if (options.console) {
+			const outputPath = join(outputDir, `${fileName}.ts`);
+			const outputContent = tree.read(outputPath, 'utf8');
+			console.log(outputContent);
+			tree.delete(outputPath);
+		}
+	} catch (err) {
+		log.error(err);
+		dracoLoader?.dispose();
+		return process.exit(1);
+	} finally {
+		log.debug('Disposing of DracoLoader');
+		dracoLoader?.dispose();
 	}
-
-	const gltf = await loadGLTF(modelPath);
-
-	const analyzed = new AnalyzedGLTF(
-		gltf,
-		{
-			log,
-			bones: options.bones,
-			meta: options.meta,
-			shadows: options.shadows,
-			instance: options.instance,
-			instanceall: options.instanceAll,
-			keepgroups: options.keepGroups,
-			keepnames: options.keepNames,
-			precision: options.precision,
-		},
-		allPruneStrategies,
-	);
-
-	const generateNGT = new GenerateNGT(analyzed, options);
-
-	const scene = await generateNGT.generate();
-
-	const args = generateNGT.args;
-	const perspective = generateNGT.ngtTypes.has('PerspectiveCamera');
-	const orthographic = generateNGT.ngtTypes.has('OrthographicCamera');
-
-	const { className, fileName } = names(options.className);
-	const gltfExtras = analyzed.gltf.parser.json.asset && analyzed.gltf.parser.json.asset.extras;
-	const extras = gltfExtras
-		? Object.keys(gltfExtras)
-				.map((key) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${gltfExtras[key]}`)
-				.join('\n')
-		: '';
-
-	const ngtTypesArr = Array.from(generateNGT.ngtTypes).filter(
-		(t) =>
-			// group always is the top-level object
-			t !== 'Group' &&
-			// we render ngts-perspective-camera instead of ngt-perspective-camera
-			t !== 'PerspectiveCamera' &&
-			// we render ngts-orthographic-camera instead of ngt-orthographic-camera
-			t !== 'OrthographicCamera' &&
-			// we don't render ngt-bone
-			t !== 'Bone' &&
-			// we don't render ngt-object3D
-			t !== 'Object3D',
-	);
-	const threeImports = ngtTypesArr.length ? `, ${ngtTypesArr.join(',')}` : '';
-	let gltfPath =
-		!transformedModelPath && modelPath.startsWith('http')
-			? modelPath
-			: relative(dirname(options.output), transformedModelPath || modelPath);
-
-	if (!gltfPath.startsWith('http') && !gltfPath.startsWith('.')) {
-		gltfPath = `./${gltfPath}`;
-	}
-
-	const gltfAnimationTypeName = className + 'AnimationClips';
-	const gltfAnimationApiTypeName = className + 'AnimationApi';
-	const gltfName = className + 'GLTF';
-	const gltfResultTypeName = gltfName + 'GLTFResult';
-
-	const angularImports = [];
-
-	if (args) {
-		angularImports.push('NgtArgs');
-	}
-
-	if (perspective) {
-		angularImports.push('NgtsPerspectiveCamera');
-	}
-
-	if (perspective) {
-		angularImports.push('NgtsOrthographicCamera');
-	}
-
-	const gltfOptions = options.draco ? `{ useDraco: true }` : '';
-	const meshesTypes = analyzed
-		.getMeshes()
-		.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
-		.join(';\n');
-	const bonesTypes = analyzed
-		.getBones()
-		.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type)
-		.join(';\n');
-	const materials = analyzed.getMaterials();
-	const materialsTypes = materials.map(({ name, type }) => "\'" + name + "\'" + ': THREE.' + type).join(';\n');
-
-	log.debug(materialsTypes);
-
-	generateFiles(tree, join(__dirname, 'files'), dirname(options.output), {
-		tmpl: '',
-		scene,
-		fileName,
-		className,
-		selector: `${options.selectorPrefix}-${fileName}`,
-		animations: analyzed.gltf.animations || [],
-		extras,
-		threeImports,
-		args,
-		perspective,
-		orthographic,
-		useImportAttribute: !modelPath.startsWith('http'),
-		preload: true,
-		gltfName,
-		gltfAnimationTypeName,
-		gltfAnimationApiTypeName,
-		gltfResultTypeName,
-		gltfPath,
-		gltfOptions,
-		meshesTypes,
-		bonesTypes,
-		materialsTypes,
-		angularImports,
-		header: options.header,
-		size,
-	});
 
 	await formatFiles(tree);
 }
