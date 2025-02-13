@@ -1,3 +1,13 @@
+## 4.0.0-next.44 (2025-02-13)
+
+### 🩹 Fixes
+
+- **plugin:** default draco to null? ([a345eee1](https://github.com/angular-threejs/angular-three/commit/a345eee1))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.43 (2025-02-13)
 
 ### 🩹 Fixes
