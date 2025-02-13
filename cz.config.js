@@ -19,11 +19,10 @@ module.exports = {
 	],
 	scopes: [
 		{ name: 'core' },
+		{ name: 'tweakpane' },
 		{ name: 'soba' },
 		{ name: 'cannon' },
 		{ name: 'postprocessing' },
 		{ name: 'plugin' },
-		{ name: 'docs' },
-		{ name: 'testing' },
 	],
 };

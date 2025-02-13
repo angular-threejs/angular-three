@@ -67,6 +67,7 @@
 			"angular-three/dom": ["libs/core/dom/src/index.ts", "./node_modules/angular-three/dom"],
 			"angular-three/nativescript": ["libs/core/nativescript/src/index.ts"],
 			"angular-three/testing": ["libs/core/testing/src/index.ts"],
+			"angular-three-tweakpane": ["libs/tweakpane/src/index.ts"],
 			"plugin": ["libs/plugin-old/src/index.ts"]
 		}
 	},

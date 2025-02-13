@@ -1,0 +1,39 @@
+{
+	"name": "tweakpane",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/tweakpane/src",
+	"prefix": "platform",
+	"projectType": "library",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+			"options": {
+				"project": "libs/tweakpane/ng-package.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/tweakpane/tsconfig.lib.prod.json"
+				},
+				"development": {
+					"tsConfig": "libs/tweakpane/tsconfig.lib.json"
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"test": {
+			"executor": "@analogjs/vitest-angular:test"
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
+		},
+		"publish-next": {
+			"command": "npm publish --tag=next",
+			"options": {
+				"cwd": "{workspaceRoot}/dist/{projectRoot}"
+			}
+		}
+	}
+}

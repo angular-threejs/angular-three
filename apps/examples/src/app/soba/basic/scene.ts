@@ -17,6 +17,14 @@ import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
+import {
+	NgtTweakCheckbox,
+	NgtTweakColor,
+	NgtTweakFolder,
+	NgtTweakList,
+	NgtTweakNumber,
+	NgtTweakPane,
+} from 'angular-three-tweakpane';
 import { Bone, Group, MeshStandardMaterial, Object3D, SRGBColorSpace, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
 
@@ -105,7 +113,7 @@ export class Bot {
 @Component({
 	selector: 'app-basic-scene-graph',
 	template: `
-		<ngt-color *args="['#303030']" attach="background" />
+		<ngt-color *args="[backgroundColor()]" attach="background" />
 		<ngt-ambient-light [intensity]="0.8" />
 		<ngt-point-light [intensity]="Math.PI" [decay]="0" [position]="[0, 6, 0]" />
 
@@ -115,7 +123,12 @@ export class Bot {
 			<ngtp-effect-composer>
 				@if (bloom()) {
 					<ngtp-bloom
-						[options]="{ kernelSize: 3, luminanceThreshold: 0, luminanceSmoothing: 0.4, intensity: 1.5 }"
+						[options]="{
+							kernelSize: 3,
+							luminanceThreshold: luminanceThreshold(),
+							luminanceSmoothing: luminanceSmoothing(),
+							intensity: intensity(),
+						}"
 					/>
 				}
 
@@ -126,8 +139,48 @@ export class Bot {
 
 			<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
 		}
+
+		<ngt-tweak-pane title="Soba Basic">
+			<ngt-tweak-folder title="Bloom">
+				<ngt-tweak-checkbox [(value)]="bloom" label="Enabled" />
+				<ngt-tweak-number
+					[(value)]="luminanceThreshold"
+					label="luminanceThreshold"
+					[params]="{ min: 0, max: 1, step: 0.01 }"
+				/>
+				<ngt-tweak-number
+					[(value)]="luminanceSmoothing"
+					label="luminanceSmoothing"
+					[params]="{ min: 0, max: 1, step: 0.01 }"
+				/>
+				<ngt-tweak-number
+					[(value)]="intensity"
+					label="bloomIntensity"
+					[params]="{ min: 0, max: 10, step: 0.5 }"
+				/>
+			</ngt-tweak-folder>
+			<ngt-tweak-folder title="Glitch">
+				<ngt-tweak-checkbox [(value)]="glitch" label="Enabled" />
+			</ngt-tweak-folder>
+
+			<ngt-tweak-list [(value)]="selectedAction" [options]="['Strut', 'Dance', 'Idle']" label="Animation" />
+			<ngt-tweak-color [(value)]="backgroundColor" label="Background" />
+		</ngt-tweak-pane>
 	`,
-	imports: [NgtsOrbitControls, NgtArgs, Bot, NgtpEffectComposer, NgtpBloom, NgtpGlitch],
+	imports: [
+		NgtsOrbitControls,
+		NgtArgs,
+		Bot,
+		NgtpEffectComposer,
+		NgtpBloom,
+		NgtpGlitch,
+		NgtTweakPane,
+		NgtTweakFolder,
+		NgtTweakCheckbox,
+		NgtTweakList,
+		NgtTweakColor,
+		NgtTweakNumber,
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	host: { class: 'soba-experience' },
@@ -136,6 +189,13 @@ export class SceneGraph {
 	protected Math = Math;
 	protected bloom = bloom;
 	protected glitch = glitch;
+	protected selectedAction = selectedAction;
+
+	protected backgroundColor = signal('#303030');
+
+	protected luminanceThreshold = signal(0);
+	protected luminanceSmoothing = signal(0.4);
+	protected intensity = signal(1.5);
 
 	asRenderTexture = input(false);
 }

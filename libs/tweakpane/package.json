@@ -1,0 +1,34 @@
+{
+	"name": "angular-three-tweakpane",
+	"version": "0.0.0-replace",
+	"publishConfig": {
+		"access": "public"
+	},
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/angular-threejs/angular-three/tree/main/libs/tweakpane"
+	},
+	"author": {
+		"name": "Chau Tran",
+		"email": "nartc7789@gmail.com",
+		"url": "https://nartc.me"
+	},
+	"description": "Tweakpane UI implementation for Angular Three",
+	"keywords": [
+		"angular",
+		"threejs",
+		"renderer",
+		"tweakpane"
+	],
+	"license": "MIT",
+	"peerDependencies": {
+		"@angular/common": ">=19.0.0 <20.0.0",
+		"@angular/core": ">=19.0.0 <20.0.0",
+		"three": ">=0.156.0 <0.174.0",
+		"tweakpane": "^4.0.0"
+	},
+	"dependencies": {
+		"tslib": "^2.7.0"
+	}
+}
