@@ -34,10 +34,11 @@
 			"x-prompt": "Enter the prefix to use for the generated component selector (default: app)"
 		},
 		"draco": {
-			"type": "boolean",
+			"type": "string",
+			"enum": ["true", "false", ""],
 			"description": "Use DracoLoader",
 			"alias": "d",
-			"default": null
+			"default": ""
 		},
 		"bones": {
 			"type": "boolean",
