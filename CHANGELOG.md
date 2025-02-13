@@ -1,3 +1,13 @@
+## 4.0.0-next.42 (2025-02-13)
+
+### 🩹 Fixes
+
+- **plugin:** load draco based on transform ([863d7db7](https://github.com/angular-threejs/angular-three/commit/863d7db7))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.41 (2025-02-13)
 
 ### 🩹 Fixes
