@@ -155,25 +155,31 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 			gltfPath = `./${gltfPath}`;
 		}
 
-		generateFiles(tree, join(__dirname, 'files'), outputDir, {
-			tmpl: '',
-			...generateOptions,
-			scene,
-			fileName,
-			className,
-			selector,
-			animations: analyzed.gltf.animations || [],
-			useImportAttribute: !modelPath.startsWith('http'),
-			preload: true,
-			gltfName,
-			gltfAnimationTypeName,
-			gltfAnimationApiTypeName,
-			gltfResultTypeName,
-			gltfPath,
-			gltfOptions: injectGLTFOptions,
-			header: options.header,
-			size,
-		});
+		generateFiles(
+			tree,
+			join(__dirname, 'files'),
+			outputDir,
+			Object.assign(generateOptions, {
+				tmpl: '',
+				scene,
+				fileName,
+				className,
+				selector,
+				animations: analyzed.gltf.animations || [],
+				useImportAttribute: !modelPath.startsWith('http'),
+				preload: true,
+				gltfName,
+				gltfAnimationTypeName,
+				gltfAnimationApiTypeName,
+				gltfResultTypeName,
+				gltfPath,
+				gltfOptions: injectGLTFOptions,
+				header: options.header,
+				size,
+			}),
+		);
+
+		await formatFiles(tree);
 
 		if (options.console) {
 			const outputPath = join(outputDir, `${fileName}.ts`);
@@ -189,8 +195,6 @@ export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 		log.debug('Disposing of DracoLoader');
 		dracoLoader?.dispose();
 	}
-
-	await formatFiles(tree);
 }
 
 export default gltfGenerator;
