@@ -7,7 +7,7 @@ export interface GltfGeneratorSchema {
 	output: string;
 	className: string;
 	selectorPrefix: string;
-	draco: string;
+	draco: boolean;
 	bones: boolean;
 	meta: boolean;
 	shadows: boolean;
@@ -65,7 +65,12 @@ function normalizeOptions(tree: Tree, options: GltfGeneratorSchema, gltfJsx: typ
 	const modelPathFromRoot = join(tree.root, options.modelPath);
 	const outputDir = dirname(options.output);
 
-	const injectGLTFOptions = options.transform ? `{ useDraco: ${options.draco === 'true'} }` : '';
+	const injectGLTFOptions =
+		options.transform && options.draco != null
+			? `{ useDraco: ${options.draco} }`
+			: options.transform
+				? '{ useDraco: true }'
+				: '';
 
 	const selector = `${options.selectorPrefix}-${fileName}`;
 
