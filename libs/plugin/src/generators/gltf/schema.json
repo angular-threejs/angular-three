@@ -36,7 +36,8 @@
 		"draco": {
 			"type": "boolean",
 			"description": "Use DracoLoader",
-			"alias": "d"
+			"alias": "d",
+			"default": null
 		},
 		"bones": {
 			"type": "boolean",
