@@ -1,3 +1,13 @@
+## 4.0.0-next.50 (2025-02-14)
+
+### 🩹 Fixes
+
+- **tweakpane:** append pane as canvas child ([4220b907](https://github.com/angular-threejs/angular-three/commit/4220b907))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.49 (2025-02-14)
 
 ### 🩹 Fixes
