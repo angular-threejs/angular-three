@@ -1,3 +1,18 @@
+## 4.0.0-next.48 (2025-02-14)
+
+### 🚀 Features
+
+- **plugin:** add tweakpane as an aux generator option ([78a04ea2](https://github.com/angular-threejs/angular-three/commit/78a04ea2))
+- **tweakpane:** tweakpane v1 ([54f2a3ef](https://github.com/angular-threejs/angular-three/commit/54f2a3ef))
+
+### 🩹 Fixes
+
+- **tweakpane:** expose hostDirectives as public API ([c0aac2fa](https://github.com/angular-threejs/angular-three/commit/c0aac2fa))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.47 (2025-02-13)
 
 ### 🚀 Features
