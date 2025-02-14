@@ -43,7 +43,7 @@ class WithSelectionStory {
 		<ngts-transform-controls>
 			<ngt-mesh>
 				<ngt-box-geometry />
-				<ngt-mesh-basic-material [wireframe]="true" />
+				<ngt-mesh-basic-material wireframe />
 			</ngt-mesh>
 		</ngts-transform-controls>
 
@@ -59,7 +59,7 @@ class LockControlsStory {}
 		<ngts-transform-controls [options]="{ mode: mode() }">
 			<ngt-mesh>
 				<ngt-box-geometry />
-				<ngt-mesh-basic-material [wireframe]="true" />
+				<ngt-mesh-basic-material wireframe />
 			</ngt-mesh>
 		</ngts-transform-controls>
 	`,

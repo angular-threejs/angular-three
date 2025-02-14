@@ -12,7 +12,7 @@ import { positions } from './positions';
 			@for (position of positions(); track position.id) {
 				<ngt-mesh [position]="position.position">
 					<ngt-icosahedron-geometry *args="[1, 1]" />
-					<ngt-mesh-basic-material color="white" [wireframe]="true" />
+					<ngt-mesh-basic-material color="white" wireframe />
 				</ngt-mesh>
 			}
 		</ngt-group>

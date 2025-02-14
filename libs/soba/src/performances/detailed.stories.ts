@@ -10,17 +10,17 @@ import { storyDecorators, storyFunction } from '../setup-canvas';
 		<ngts-detailed [distances]="[0, 50, 150]">
 			<ngt-mesh>
 				<ngt-icosahedron-geometry *args="[10, 3]" />
-				<ngt-mesh-basic-material color="hotpink" [wireframe]="true" />
+				<ngt-mesh-basic-material color="hotpink" wireframe />
 			</ngt-mesh>
 
 			<ngt-mesh>
 				<ngt-icosahedron-geometry *args="[10, 2]" />
-				<ngt-mesh-basic-material color="lightgreen" [wireframe]="true" />
+				<ngt-mesh-basic-material color="lightgreen" wireframe />
 			</ngt-mesh>
 
 			<ngt-mesh>
 				<ngt-icosahedron-geometry *args="[10, 1]" />
-				<ngt-mesh-basic-material color="lightblue" [wireframe]="true" />
+				<ngt-mesh-basic-material color="lightblue" wireframe />
 			</ngt-mesh>
 		</ngts-detailed>
 

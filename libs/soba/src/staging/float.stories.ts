@@ -10,14 +10,14 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 		<ngts-float [options]="options()">
 			<ngt-mesh>
 				<ngt-box-geometry *args="[2, 2, 2]" />
-				<ngt-mesh-standard-material [wireframe]="true" color="white" />
+				<ngt-mesh-standard-material wireframe color="white" />
 			</ngt-mesh>
 		</ngts-float>
 
 		<!-- ground plane -->
 		<ngt-mesh [position]="[0, -6, 0]" [rotation]="[-Math.PI / 2, 0, 0]">
 			<ngt-plane-geometry *args="[200, 200, 75, 75]" />
-			<ngt-mesh-basic-material [wireframe]="true" color="red" [side]="DoubleSide" />
+			<ngt-mesh-basic-material wireframe color="red" [side]="DoubleSide" />
 		</ngt-mesh>
 	`,
 

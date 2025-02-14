@@ -1,8 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { is, NgtArgs, NgtThreeElements } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
+import {
+	NgtTweakCheckbox,
+	NgtTweakFolder,
+	NgtTweakList,
+	NgtTweakNumber,
+	NgtTweakPane,
+	NgtTweakPoint,
+} from 'angular-three-tweakpane';
 import * as THREE from 'three';
 import { FlakesTexture, GLTF } from 'three-stdlib';
 import suziGLTF from './suzi.gltf';
@@ -75,30 +83,82 @@ export class Suzi {
 			<ngts-accumulative-shadows
 				[options]="{
 					temporal: true,
-					frames: 100,
-					color: 'orange',
-					colorBlend: 2,
+					frames: shadows.frame(),
+					color: shadows.color(),
+					colorBlend: shadows.colorBlend(),
 					toneMapped: true,
-					alphaTest: 0.75,
+					alphaTest: shadows.alphaTest(),
 					opacity: 2,
 					scale: 12,
 				}"
 			>
 				<ngts-randomized-lights
 					[options]="{
-						intensity: Math.PI,
-						amount: 8,
-						radius: 4,
-						ambient: 0.5,
-						position: [5, 5, -10],
-						bias: 0.001,
+						intensity: lights.intensity(),
+						amount: lights.amount(),
+						radius: lights.radius(),
+						ambient: lights.ambient(),
+						position: lights.position(),
+						bias: lights.bias(),
 					}"
 				/>
 			</ngts-accumulative-shadows>
 		</ngt-group>
 
 		<ngts-orbit-controls [options]="{ minPolarAngle: 0, maxPolarAngle: Math.PI / 2 }" />
-		<ngts-environment [options]="{ preset: 'city' }" />
+		<ngts-environment [options]="{ preset: 'city', background: background() }" />
+
+		<ngt-tweak-pane title="Baking soft shadows controls" left="8px">
+			<ngt-tweak-folder title="Environment">
+				<ngt-tweak-checkbox [(value)]="background" label="Background" />
+			</ngt-tweak-folder>
+			<ngt-tweak-folder title="Shadows">
+				<ngt-tweak-number
+					[(value)]="shadows.frame"
+					label="Frames"
+					[params]="{
+						options: [
+							{ text: 'default', value: 100 },
+							{ text: 'infinity', value: Inifinity },
+						],
+					}"
+				/>
+				<ngt-tweak-number
+					[(value)]="shadows.alphaTest"
+					label="alphaTest"
+					[params]="{ min: 0, max: 1, step: 0.01 }"
+				/>
+				<ngt-tweak-list [(value)]="shadows.color" [options]="['#FFA500', '#97B2C2', '#E8888E']" label="Color" />
+				<ngt-tweak-number
+					[(value)]="shadows.colorBlend"
+					[params]="{ min: 0, max: 5, step: 0.1 }"
+					label="Color Blend"
+				/>
+				<ngt-tweak-checkbox [(value)]="shadows.toneMapped" label="toneMapped" />
+				<ngt-tweak-number
+					[(value)]="shadows.opacity"
+					label="opacity"
+					[params]="{ min: 0, max: 4, step: 0.05 }"
+				/>
+				<ngt-tweak-number [(value)]="shadows.scale" label="scale" [params]="{ min: 0, max: 20, step: 0.1 }" />
+			</ngt-tweak-folder>
+			<ngt-tweak-folder title="Shadows Lights">
+				<ngt-tweak-number
+					[(value)]="lights.intensity"
+					label="intensity"
+					[params]="{ min: 0, max: 10, step: 0.1 }"
+				/>
+				<ngt-tweak-number [(value)]="lights.amount" label="amount" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<ngt-tweak-number [(value)]="lights.radius" label="radius" [params]="{ min: 0, max: 10, step: 0.1 }" />
+				<ngt-tweak-number
+					[(value)]="lights.ambient"
+					label="ambient"
+					[params]="{ min: 0, max: 1, step: 0.01 }"
+				/>
+				<ngt-tweak-number [(value)]="lights.bias" label="bias" [params]="{ min: 0, max: 1, step: 0.01 }" />
+				<ngt-tweak-point [(value)]="lights.position" label="position" />
+			</ngt-tweak-folder>
+		</ngt-tweak-pane>
 	`,
 
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -111,8 +171,36 @@ export class Suzi {
 		NgtsCenter,
 		NgtArgs,
 		Suzi,
+		NgtTweakPane,
+		NgtTweakFolder,
+		NgtTweakCheckbox,
+		NgtTweakList,
+		NgtTweakNumber,
+		NgtTweakPoint,
 	],
 })
 export class SceneGraph {
 	protected readonly Math = Math;
+	protected readonly Inifinity = Infinity;
+
+	protected background = signal(false);
+
+	protected shadows = {
+		frame: signal(100),
+		color: signal('#FFA500'),
+		colorBlend: signal(2),
+		alphaTest: signal(0.75),
+		toneMapped: signal(true),
+		opacity: signal(2),
+		scale: signal(12),
+	};
+
+	protected lights = {
+		intensity: signal(Math.PI),
+		amount: signal(8),
+		radius: signal(4),
+		ambient: signal(0.5),
+		position: signal<[number, number, number]>([5, 5, -10]),
+		bias: signal(0.001),
+	};
 }

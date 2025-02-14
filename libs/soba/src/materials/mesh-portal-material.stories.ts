@@ -33,8 +33,8 @@ type AOBoxGLTF = GLTF & {
 				<!-- A box with baked AO -->
 				@if (gltf(); as gltf) {
 					<ngt-mesh
-						[castShadow]="true"
-						[receiveShadow]="true"
+						castShadow
+						receiveShadow
 						[rotation]="rotation()"
 						[geometry]="gltf.nodes.Cube.geometry"
 					>
@@ -44,7 +44,7 @@ type AOBoxGLTF = GLTF & {
 							[color]="bg()"
 						/>
 						<ngt-spot-light
-							[castShadow]="true"
+							castShadow
 							[color]="bg()"
 							[intensity]="2 * Math.PI"
 							[position]="[10, 10, 10]"
@@ -59,7 +59,7 @@ type AOBoxGLTF = GLTF & {
 				}
 
 				<!-- The shape -->
-				<ngt-mesh #shape [castShadow]="true" [receiveShadow]="true">
+				<ngt-mesh #shape castShadow receiveShadow>
 					<ng-content />
 					<ngt-mesh-standard-material [color]="bg()" />
 				</ngt-mesh>
@@ -92,7 +92,7 @@ class Side {
 
 @Component({
 	template: `
-		<ngt-mesh [castShadow]="true" [receiveShadow]="true">
+		<ngt-mesh castShadow receiveShadow>
 			<ngt-box-geometry *args="[2, 2, 2]" />
 
 			<portal-material-side [rotation]="[0, 0, 0]" bg="orange" [index]="0">

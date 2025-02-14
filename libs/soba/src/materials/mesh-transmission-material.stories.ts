@@ -17,7 +17,7 @@ import { number, storyDecorators, storyObject } from '../setup-canvas';
 				</ngt-mesh>
 
 				<ngt-mesh
-					[castShadow]="true"
+					castShadow
 					[renderOrder]="100"
 					[geometry]="gltf.nodes.cube2.geometry"
 					[material]="gltf.materials.cube_mat"

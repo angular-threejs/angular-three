@@ -1,4 +1,5 @@
 import {
+	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
@@ -135,5 +136,5 @@ export class Boxes {
 	imports: [NgtsCameraControls, Boxes, NgtArgs],
 })
 export class SceneGraph {
-	asRenderTexture = input(false);
+	asRenderTexture = input(false, { transform: booleanAttribute });
 }

@@ -28,7 +28,7 @@ class MeshObject {}
 		<ngts-orbit-controls [options]="{ autoRotate: true }" />
 		<ngt-mesh #mesh>
 			<ngt-icosahedron-geometry />
-			<ngt-mesh-basic-material color="hotpink" [wireframe]="true" />
+			<ngt-mesh-basic-material color="hotpink" wireframe />
 			<ngts-bb-anchor [options]="options()">
 				<ng-content />
 			</ngts-bb-anchor>

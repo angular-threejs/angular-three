@@ -189,7 +189,7 @@ export class StaticHandle {
 			[penumbra]="1"
 			[intensity]="Math.PI"
 			[decay]="0"
-			[castShadow]="true"
+			castShadow
 		/>
 
 		<ngtc-physics [options]="{ gravity: [0, -40, 0], allowSleep: false }">

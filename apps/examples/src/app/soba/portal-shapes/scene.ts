@@ -26,7 +26,7 @@ import { Letter } from './letter';
 				<app-letter char="A" [position]="[1, 50, -1]">
 					<ng-template>
 						<ngt-group [scale]="10">
-							<app-basic-scene-graph [asRenderTexture]="true" />
+							<app-basic-scene-graph asRenderTexture />
 						</ngt-group>
 					</ng-template>
 				</app-letter>
@@ -34,41 +34,41 @@ import { Letter } from './letter';
 				<app-letter char="N" [position]="[2, 60, -2]" [rotation]="[4, 5, 6]">
 					<ng-template>
 						<ngt-group [scale]="10">
-							<app-instances-scene-graph [asRenderTexture]="true" />
+							<app-instances-scene-graph asRenderTexture />
 						</ngt-group>
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="G" [position]="[3, 70, 2]" [rotation]="[7, 8, 9]">
 					<ng-template>
-						<app-instanced-vertex-colors-scene-graph [asRenderTexture]="true" />
+						<app-instanced-vertex-colors-scene-graph asRenderTexture />
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="U" [position]="[-1, 80, 3]" [rotation]="[10, 11, 12]">
 					<ng-template>
-						<app-lod-scene-graph [asRenderTexture]="true" />
+						<app-lod-scene-graph asRenderTexture />
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="L" [position]="[-2, 90, 2]" [rotation]="[13, 14, 15]">
 					<ng-template>
 						<ngt-group [scale]="10">
-							<app-lowpoly-earth-scene-graph [asRenderTexture]="true" />
+							<app-lowpoly-earth-scene-graph asRenderTexture />
 						</ngt-group>
 					</ng-template>
 				</app-letter>
 
 				<app-letter char="A" [position]="[-3, 100, -3]" [rotation]="[16, 17, 18]">
 					<ng-template>
-						<app-shaky-scene-graph [asRenderTexture]="true" />
+						<app-shaky-scene-graph asRenderTexture />
 					</ng-template>
 				</app-letter>
 
-				<app-letter char="R" [position]="[-4, 110, 1]" [rotation]="[19, 20, 21]" [stencilBuffer]="true">
+				<app-letter char="R" [position]="[-4, 110, 1]" [rotation]="[19, 20, 21]" stencilBuffer>
 					<ng-template>
 						<ngt-group [scale]="5">
-							<app-inverted-stencil-buffer-scene-graph [asRenderTexture]="true" />
+							<app-inverted-stencil-buffer-scene-graph asRenderTexture />
 						</ngt-group>
 					</ng-template>
 				</app-letter>

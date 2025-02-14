@@ -28,8 +28,8 @@ type SuzanneGLTF = GLTF & {
 		@if (gltf(); as gltf) {
 			<ngt-mesh
 				[geometry]="gltf.nodes.Suzanne.geometry"
-				[castShadow]="true"
-				[receiveShadow]="true"
+				castShadow
+				receiveShadow
 				[rotation]="rotation()"
 				[scale]="scale()"
 			>
@@ -81,14 +81,14 @@ class Shadows {}
 
 			@if (loaded()) {
 				<ngts-center [options]="{ top: true, position: [-2, 0, 2] }">
-					<ngt-mesh [castShadow]="true">
+					<ngt-mesh castShadow>
 						<ngt-sphere-geometry *args="[0.5, 64, 64]" />
 						<ngt-mesh-standard-material color="#9d4b4b" />
 					</ngt-mesh>
 				</ngts-center>
 
 				<ngts-center [options]="{ top: true, position: [2.5, 0, 1] }">
-					<ngt-mesh [castShadow]="true" [rotation]="[0, Math.PI / 4, 0]">
+					<ngt-mesh castShadow [rotation]="[0, Math.PI / 4, 0]">
 						<ngt-box-geometry *args="[0.7, 0.7, 0.7]" />
 						<ngt-mesh-standard-material color="#9d4b4b" />
 					</ngt-mesh>

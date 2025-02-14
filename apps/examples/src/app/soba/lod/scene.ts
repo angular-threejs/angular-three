@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import {
+	booleanAttribute,
+	ChangeDetectionStrategy,
+	Component,
+	computed,
+	CUSTOM_ELEMENTS_SCHEMA,
+	input,
+} from '@angular/core';
 import { NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -74,7 +81,7 @@ export class LODBust {
 export class SceneGraph {
 	protected Math = Math;
 
-	asRenderTexture = input(false);
+	asRenderTexture = input(false, { transform: booleanAttribute });
 	protected positions = computed(() => {
 		const asRenderTexture = this.asRenderTexture();
 		if (!asRenderTexture) return positions;

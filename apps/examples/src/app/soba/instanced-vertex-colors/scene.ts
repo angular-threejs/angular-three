@@ -1,4 +1,5 @@
 import {
+	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
@@ -123,5 +124,5 @@ export class Boxes {
 export class SceneGraph {
 	protected readonly Math = Math;
 
-	asRenderTexture = input(false);
+	asRenderTexture = input(false, { transform: booleanAttribute });
 }

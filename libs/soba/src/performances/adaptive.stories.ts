@@ -21,20 +21,20 @@ interface ArcherGLTF extends GLTF {
 				<ngt-group [rotation]="[-Math.PI / 2, 0, 0]">
 					<ngt-group [position]="[0, 0, 2]">
 						<ngt-mesh
-							[castShadow]="true"
-							[receiveShadow]="true"
+							castShadow
+							receiveShadow
 							[material]="gltf.materials.material_0"
 							[geometry]="gltf.nodes.mesh_0.geometry"
 						/>
 						<ngt-mesh
-							[castShadow]="true"
-							[receiveShadow]="true"
+							castShadow
+							receiveShadow
 							[geometry]="gltf.nodes.mesh_1.geometry"
 							[material]="gltf.materials.material_0"
 						/>
 						<ngt-mesh
-							[castShadow]="true"
-							[receiveShadow]="true"
+							castShadow
+							receiveShadow
 							[material]="gltf.materials.material_0"
 							[geometry]="gltf.nodes.mesh_2.geometry"
 						/>
@@ -55,7 +55,7 @@ class Archer {
 @Component({
 	template: `
 		<adaptive-archer />
-		<ngt-directional-light [intensity]="0.2 * Math.PI" [position]="[10, 10, 5]" [castShadow]="true">
+		<ngt-directional-light [intensity]="0.2 * Math.PI" [position]="[10, 10, 5]" castShadow>
 			<ngt-vector2 *args="[64, 64]" attach="shadow.mapSize" />
 			<ngt-value [rawValue]="-0.001" attach="shadow.bias" />
 		</ngt-directional-light>

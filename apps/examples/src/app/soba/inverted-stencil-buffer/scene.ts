@@ -1,5 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
+import {
+	booleanAttribute,
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	input,
+	signal,
+} from '@angular/core';
 import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -162,5 +169,5 @@ export class SceneGraph {
 	protected invert = invert;
 	protected logo = logo;
 
-	asRenderTexture = input(false);
+	asRenderTexture = input(false, { transform: booleanAttribute });
 }

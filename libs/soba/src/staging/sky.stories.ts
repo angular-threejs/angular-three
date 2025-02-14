@@ -9,7 +9,7 @@ import { number, storyDecorators, storyObject } from '../setup-canvas';
 		<ngts-sky [options]="options()" />
 		<ngt-mesh [rotation]="[Math.PI / 2, 0, 0]">
 			<ngt-plane-geometry *args="[100, 100, 4, 4]" />
-			<ngt-mesh-basic-material color="black" [wireframe]="true" />
+			<ngt-mesh-basic-material color="black" wireframe />
 		</ngt-mesh>
 		<ngt-axes-helper />
 	`,

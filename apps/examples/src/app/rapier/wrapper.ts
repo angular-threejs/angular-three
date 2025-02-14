@@ -5,7 +5,7 @@ import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-defa
 
 @Component({
 	template: `
-		<ngt-canvas [shadows]="true" [dpr]="1">
+		<ngt-canvas shadows [dpr]="1">
 			<app-rapier-wrapper-default *canvasContent />
 		</ngt-canvas>
 		<div class="absolute top-2 right-2 font-mono flex gap-4">

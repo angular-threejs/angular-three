@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	afterNextRender,
+	booleanAttribute,
 	effect,
 	input,
 	output,
@@ -25,7 +26,7 @@ import { Group } from 'three';
 				<ngt-plane-geometry *args="[8, 8]" />
 				<ngt-mesh-basic-material color="#ffb385" />
 			</ngt-mesh>
-			<ngt-mesh [receiveShadow]="true">
+			<ngt-mesh receiveShadow>
 				<ngt-plane-geometry *args="[8, 8]" />
 				<ngt-shadow-material color="lightsalmon" />
 			</ngt-mesh>
@@ -48,11 +49,11 @@ export class Plane {
 	selector: 'app-compound-body',
 	template: `
 		<ngt-group #group>
-			<ngt-mesh [castShadow]="true">
+			<ngt-mesh castShadow>
 				<ngt-box-geometry *args="boxSize" />
 				<ngt-mesh-normal-material />
 			</ngt-mesh>
-			<ngt-mesh [castShadow]="true" [position]="[1, 0, 0]">
+			<ngt-mesh castShadow [position]="[1, 0, 0]">
 				<ngt-sphere-geometry *args="[sphereRadius, 16, 16]" />
 				<ngt-mesh-normal-material />
 			</ngt-mesh>
@@ -68,7 +69,7 @@ export class CompoundBody {
 
 	position = input<Triplet>([0, 0, 0]);
 	rotation = input<Triplet>([0, 0, 0]);
-	isTrigger = input(false);
+	isTrigger = input(false, { transform: booleanAttribute });
 	mass = input(12);
 
 	positionChanged = output<Triplet>();
@@ -111,7 +112,7 @@ export class CompoundBody {
 	template: `
 		<ngt-color attach="background" *args="['#f6d186']" />
 		<ngt-hemisphere-light [intensity]="0.35" />
-		<ngt-spot-light [position]="[5, 5, 5]" [angle]="0.3" [penumbra]="1" [intensity]="2" [castShadow]="true">
+		<ngt-spot-light [position]="[5, 5, 5]" [angle]="0.3" [penumbra]="1" [intensity]="2" castShadow>
 			<ngt-vector2 *args="[1028, 1028]" attach="shadow.mapSize" />
 		</ngt-spot-light>
 
@@ -130,7 +131,7 @@ export class CompoundBody {
 			}
 
 			@if (copy()) {
-				<app-compound-body [isTrigger]="true" [mass]="0" [position]="position" [rotation]="rotation" />
+				<app-compound-body isTrigger [mass]="0" [position]="position" [rotation]="rotation" />
 			}
 		</ngtc-physics>
 	`,

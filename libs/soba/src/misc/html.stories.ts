@@ -11,7 +11,7 @@ import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-
 		<ngt-group turnable>
 			<ngt-mesh [position]="[3, 6, 4]">
 				<ngt-icosahedron-geometry *args="[2, 2]" />
-				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
+				<ngt-mesh-basic-material [color]="color()" wireframe />
 
 				<ngts-html [options]="{ transform: transform() }">
 					<div [htmlContent]="{ distanceFactor: 30 }" style="color: white;">
@@ -22,7 +22,7 @@ import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-
 
 			<ngt-mesh [position]="[10, 0, 10]">
 				<ngt-icosahedron-geometry *args="[2, 2]" />
-				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
+				<ngt-mesh-basic-material [color]="color()" wireframe />
 
 				<ngts-html [options]="{ transform: transform() }">
 					<div [htmlContent]="{ distanceFactor: 30 }" style="color: white;">
@@ -33,7 +33,7 @@ import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-
 
 			<ngt-mesh [position]="[-20, 0, -20]">
 				<ngt-icosahedron-geometry *args="[2, 2]" />
-				<ngt-mesh-basic-material [color]="color()" [wireframe]="true" />
+				<ngt-mesh-basic-material [color]="color()" wireframe />
 
 				<ngts-html [options]="{ transform: transform() }">
 					<div [htmlContent]="{ distanceFactor: 30 }" style="color: white;">
@@ -56,7 +56,7 @@ class HtmlScene {
 
 @Component({
 	template: `
-		<html-scene color="palegreen" [transform]="true">
+		<html-scene color="palegreen" transform>
 			<ngts-html [options]="htmlOptions()">
 				<div [htmlContent]="htmlContentOptions()">Transform mode</div>
 			</ngts-html>

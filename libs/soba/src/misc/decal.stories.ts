@@ -70,11 +70,11 @@ class LoopOverInstancedBufferAttribute {
 				<ngts-decal *="let options" [mesh]="meshRef()" [options]="options">
 					<ngt-mesh-physical-material
 						[roughness]="0.2"
-						[transparent]="true"
+						transparent
 						[depthTest]="false"
 						[map]="Math.random() > 0.5 ? decals.reactMap : decals.threeMap"
 						[alphaTest]="0"
-						[polygonOffset]="true"
+						polygonOffset
 						[polygonOffsetFactor]="-10"
 					/>
 				</ngts-decal>

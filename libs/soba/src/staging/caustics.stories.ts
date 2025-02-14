@@ -30,7 +30,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 			<ngt-group [dispose]="null">
 				<ngts-center [options]="{ top: true, position: [-1, -0.01, -2], rotation: [0, -0.4, 0] }">
 					<ngt-mesh
-						[castShadow]="true"
+						castShadow
 						[scale]="1.2"
 						[geometry]="gltf.nodes.flowers.geometry"
 						[material]="gltf.materials['draifrawer_u1_v1.001']"
@@ -49,7 +49,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 						backsideIOR: 1.26,
 					}"
 				>
-					<ngt-mesh [castShadow]="true" [receiveShadow]="true" [geometry]="gltf.nodes.glass.geometry">
+					<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.glass.geometry">
 						<ngts-mesh-transmission-material
 							[options]="{
 								backside: true,

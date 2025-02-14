@@ -35,7 +35,7 @@ class TextContainer {
 	selector: 'text-container',
 	template: `
 		<ngts-text [text]="text" [options]="options">
-			<ngt-mesh-basic-material [side]="DoubleSide" [color]="color()" [transparent]="true" [opacity]="opacity()" />
+			<ngt-mesh-basic-material [side]="DoubleSide" [color]="color()" transparent [opacity]="opacity()" />
 		</ngts-text>
 	`,
 	imports: [NgtsText],

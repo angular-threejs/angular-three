@@ -34,7 +34,7 @@ function toConvexProps(bufferGeometry: BufferGeometry): [vertices: Triplet[], fa
 	template: `
 		<ngt-mesh
 			#mesh
-			[castShadow]="true"
+			castShadow
 			[geometry]="geometry()"
 			[rotation]="positionRotationInputs.rotation()"
 			[position]="positionRotationInputs.position()"
@@ -75,8 +75,8 @@ export class Cone {
 	template: `
 		<ngt-mesh
 			#mesh
-			[receiveShadow]="true"
-			[castShadow]="true"
+			receiveShadow
+			castShadow
 			[geometry]="geometry()"
 			[rotation]="positionRotationInputs.rotation()"
 			[position]="positionRotationInputs.position()"
@@ -121,12 +121,12 @@ type DiamondGLTF = GLTF & {
 		@if (geometry(); as geometry) {
 			<ngt-mesh
 				#mesh
-				[castShadow]="true"
-				[receiveShadow]="true"
+				castShadow
+				receiveShadow
 				[geometry]="geometry"
 				[rotation]="positionRotationInputs.rotation()"
 			>
-				<ngt-mesh-standard-material [wireframe]="true" color="white" />
+				<ngt-mesh-standard-material wireframe color="white" />
 			</ngt-mesh>
 		}
 	`,

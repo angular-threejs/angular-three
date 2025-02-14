@@ -20,7 +20,7 @@ import { State } from './state';
 @Component({
 	selector: 'app-plane',
 	template: `
-		<ngt-mesh #mesh [receiveShadow]="true">
+		<ngt-mesh #mesh receiveShadow>
 			<ngt-plane-geometry *args="args" />
 			<ngt-mesh-standard-material color="#171717" />
 		</ngt-mesh>
@@ -42,7 +42,7 @@ export class Plane {
 @Component({
 	selector: 'app-box',
 	template: `
-		<ngt-mesh #mesh [receiveShadow]="true" [castShadow]="true">
+		<ngt-mesh #mesh receiveShadow castShadow>
 			<ngt-box-geometry *args="args" />
 			<ngt-mesh-standard-material [roughness]="0.5" color="#575757" />
 		</ngt-mesh>
@@ -71,7 +71,7 @@ export class Box {
 			[angle]="0.2"
 			[penumbra]="1"
 			[decay]="0"
-			[castShadow]="true"
+			castShadow
 		/>
 
 		<ngtc-physics

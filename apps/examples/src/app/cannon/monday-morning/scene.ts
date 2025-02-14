@@ -6,6 +6,7 @@ import {
 	Injector,
 	Signal,
 	afterNextRender,
+	booleanAttribute,
 	computed,
 	inject,
 	input,
@@ -81,7 +82,7 @@ export class Box {
 	depth = input(1);
 	color = input('white');
 	opacity = input(1);
-	transparent = input(false);
+	transparent = input(false, { transform: booleanAttribute });
 	args = input([1, 1, 1]);
 	position = input<NgtVector3>([0, 0, 0]);
 	scale = input<NgtVector3>([1, 1, 1]);
@@ -183,7 +184,7 @@ export class BodyPart {
 							[args]="[0.3, 0.01, 0.1]"
 							[opacity]="0.8"
 							[position]="[-0.3, 0.1, 0.5]"
-							[transparent]="true"
+							transparent
 						/>
 						<app-box
 							color="black"
@@ -193,7 +194,7 @@ export class BodyPart {
 							[args]="[0.3, 0.01, 0.1]"
 							[opacity]="0.8"
 							[position]="[0.3, 0.1, 0.5]"
-							[transparent]="true"
+							transparent
 						/>
 					</ngt-group>
 					<app-box
@@ -205,7 +206,7 @@ export class BodyPart {
 						[args]="[0.3, 0.05, 0.1]"
 						[opacity]="0.8"
 						[position]="[0, -0.2, 0.5]"
-						[transparent]="true"
+						transparent
 					/>
 				</ng-container>
 			</app-body-part>
@@ -310,14 +311,14 @@ interface CupGLTF extends GLTF {
 					<ngt-mesh
 						[material]="gltf.materials.default"
 						[geometry]="gltf.nodes['buffer-0-mesh-0'].geometry"
-						[castShadow]="true"
-						[receiveShadow]="true"
+						castShadow
+						receiveShadow
 					/>
 					<ngt-mesh
 						[material]="gltf.materials.Liquid"
 						[geometry]="gltf.nodes['buffer-0-mesh-0_1'].geometry"
-						[castShadow]="true"
-						[receiveShadow]="true"
+						castShadow
+						receiveShadow
 					/>
 				}
 			</ngt-group>
@@ -390,7 +391,7 @@ export class Table {
 	template: `
 		<ngt-mesh #mesh>
 			<ngt-sphere-geometry *args="[0.5, 32, 32]" />
-			<ngt-mesh-basic-material [fog]="false" [depthTest]="false" [transparent]="true" [opacity]="0.5" />
+			<ngt-mesh-basic-material [fog]="false" [depthTest]="false" transparent [opacity]="0.5" />
 		</ngt-mesh>
 		<ng-content />
 	`,

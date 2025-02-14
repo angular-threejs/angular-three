@@ -30,8 +30,8 @@ type HatGLTF = GLTF & {
 				<ngt-instanced-mesh
 					*args="[gltf.nodes.Plane006_1.geometry, gltf.materials.boxCap, 80]"
 					[dispose]="null"
-					[receiveShadow]="true"
-					[castShadow]="true"
+					receiveShadow
+					castShadow
 				/>
 			</ngt-object3D>
 		}
@@ -105,7 +105,7 @@ export class Model {
 	template: `
 		<ngt-color attach="background" *args="['#f0f0f0']" />
 		<ngt-ambient-light [intensity]="0.5" />
-		<ngt-directional-light [position]="[-10, 10, 5]" [castShadow]="true">
+		<ngt-directional-light [position]="[-10, 10, 5]" castShadow>
 			<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
 			<ngt-vector2 *args="[256, 256]" attach="shadow.mapSize" />
 			<ngt-orthographic-camera *args="[-10, 10, -10, 10]" attach="shadow.camera" />

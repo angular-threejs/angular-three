@@ -21,7 +21,7 @@ import { shape } from './state';
 @Component({
 	selector: 'app-plane',
 	template: `
-		<ngt-mesh #mesh [receiveShadow]="true">
+		<ngt-mesh #mesh receiveShadow>
 			<ngt-plane-geometry *args="[10, 10]" />
 			<ngt-shadow-material color="#171717" />
 		</ngt-mesh>
@@ -60,11 +60,11 @@ export abstract class InstancesInput {
 @Component({
 	selector: 'app-boxes',
 	template: `
-		<ngt-instanced-mesh *args="[undefined, undefined, count()]" [receiveShadow]="true" [castShadow]="true" #mesh>
+		<ngt-instanced-mesh *args="[undefined, undefined, count()]" receiveShadow castShadow #mesh>
 			<ngt-box-geometry *args="args()">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
 			</ngt-box-geometry>
-			<ngt-mesh-lambert-material [vertexColors]="true" />
+			<ngt-mesh-lambert-material vertexColors />
 		</ngt-instanced-mesh>
 	`,
 	imports: [NgtArgs],
@@ -84,11 +84,11 @@ export class Boxes extends InstancesInput {
 @Component({
 	selector: 'app-spheres',
 	template: `
-		<ngt-instanced-mesh *args="[undefined, undefined, count()]" [receiveShadow]="true" [castShadow]="true" #mesh>
+		<ngt-instanced-mesh *args="[undefined, undefined, count()]" receiveShadow castShadow #mesh>
 			<ngt-sphere-geometry *args="[size(), 48, 48]">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
 			</ngt-sphere-geometry>
-			<ngt-mesh-lambert-material [vertexColors]="true" />
+			<ngt-mesh-lambert-material vertexColors />
 		</ngt-instanced-mesh>
 	`,
 	imports: [NgtArgs],
@@ -116,7 +116,7 @@ export class Spheres extends InstancesInput {
 		<ngt-hemisphere-light [intensity]="0.35 * Math.PI" />
 		<ngt-spot-light
 			[angle]="0.3"
-			[castShadow]="true"
+			castShadow
 			[decay]="0"
 			[intensity]="2 * Math.PI"
 			[penumbra]="1"

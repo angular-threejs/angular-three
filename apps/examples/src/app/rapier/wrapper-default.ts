@@ -41,7 +41,7 @@ export class Floor {}
 		} @else {
 			<ngtr-physics [options]="{ debug: debug(), interpolate: interpolate(), paused: paused() }">
 				<ng-template>
-					<ngt-directional-light [castShadow]="true" [position]="10">
+					<ngt-directional-light castShadow [position]="10">
 						<ngt-value [rawValue]="-40" attach="shadow.camera.bottom" />
 						<ngt-value [rawValue]="40" attach="shadow.camera.top" />
 						<ngt-value [rawValue]="-40" attach="shadow.camera.left" />

@@ -8,7 +8,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 		<ngts-pivot-controls [options]="options()">
 			<ngt-mesh>
 				<ngt-box-geometry />
-				<ngt-mesh-standard-material [wireframe]="true" />
+				<ngt-mesh-standard-material wireframe />
 			</ngt-mesh>
 		</ngts-pivot-controls>
 		<ngt-directional-light [position]="[10, 10, 5]" />

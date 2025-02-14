@@ -1,4 +1,5 @@
 import {
+	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
 	contentChild,
@@ -111,7 +112,7 @@ export class Letter {
 	protected readonly boldFont: string = boldFont;
 
 	char = input.required<string>();
-	stencilBuffer = input(false);
+	stencilBuffer = input(false, { transform: booleanAttribute });
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtEuler>([0, 0, 0]);
 

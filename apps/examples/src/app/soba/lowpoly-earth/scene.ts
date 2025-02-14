@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
 	computed,
@@ -83,7 +84,7 @@ export class Marker {
 })
 export class MarkerIcon extends NgtHTML {
 	color = input<string>('text-orange-500');
-	withText = input(false);
+	withText = input(false, { transform: booleanAttribute });
 }
 
 @Component({
@@ -107,7 +108,7 @@ export class MarkerIcon extends NgtHTML {
 
 					<ngt-group [position]="[0, 0, 1.3]" [rotation]="[0, 0, Math.PI]">
 						<app-marker [rotation]="[0, Math.PI / 2, Math.PI / 2]">
-							<app-marker-icon color="text-red-500" [withText]="true" />
+							<app-marker-icon color="text-red-500" withText />
 						</app-marker>
 					</ngt-group>
 				</ngt-mesh>
@@ -153,7 +154,7 @@ export class Model {
 export class SceneGraph {
 	protected Math = Math;
 
-	asRenderTexture = input(false);
+	asRenderTexture = input(false, { transform: booleanAttribute });
 }
 
 injectGLTF.preload(() => './earth.gltf');

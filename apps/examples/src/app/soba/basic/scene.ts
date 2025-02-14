@@ -4,6 +4,7 @@ import {
 	Component,
 	Directive,
 	ElementRef,
+	booleanAttribute,
 	computed,
 	effect,
 	inject,
@@ -197,5 +198,5 @@ export class SceneGraph {
 	protected luminanceSmoothing = signal(0.4);
 	protected intensity = signal(1.5);
 
-	asRenderTexture = input(false);
+	asRenderTexture = input(false, { transform: booleanAttribute });
 }

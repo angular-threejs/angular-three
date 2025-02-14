@@ -84,7 +84,7 @@ class LittlestTokyo {
 			color="#ffd0d0"
 			[penumbra]="1"
 			[position]="[25, 50, -20]"
-			[castShadow]="true"
+			castShadow
 			[intensity]="Math.PI"
 			[decay]="0"
 		>

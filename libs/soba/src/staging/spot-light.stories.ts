@@ -19,7 +19,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 
 		<ngt-hemisphere-light *args="['#ffffbb', '#080820', Math.PI]" />
 
-		<ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" [receiveShadow]="true">
+		<ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" receiveShadow>
 			<ngt-circle-geometry *args="[5, 64, 64]" />
 			<ngt-mesh-standard-material
 				[map]="textures()?.diffuse"
@@ -95,12 +95,12 @@ class SpotLightShadowStory {
 		<ngts-spot-light [options]="spotLightOneOptions()" />
 		<ngts-spot-light [options]="spotLightTwoOptions()" />
 
-		<ngt-mesh [position]="[0, 0.5, 0]" [castShadow]="true">
+		<ngt-mesh [position]="[0, 0.5, 0]" castShadow>
 			<ngt-box-geometry />
 			<ngt-mesh-phong-material />
 		</ngt-mesh>
 
-		<ngt-mesh [receiveShadow]="true" [rotation]="[-Math.PI / 2, 0, 0]">
+		<ngt-mesh receiveShadow [rotation]="[-Math.PI / 2, 0, 0]">
 			<ngt-plane-geometry *args="[100, 100]" />
 			<ngt-mesh-phong-material />
 		</ngt-mesh>

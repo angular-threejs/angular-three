@@ -5,7 +5,7 @@ import { State } from './state';
 
 @Component({
 	template: `
-		<ngt-canvas [shadows]="true" [camera]="{ position: [0, 0, 15] }">
+		<ngt-canvas shadows [camera]="{ position: [0, 0, 15] }">
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
 		<div class="font-mono absolute top-0 right-0 flex gap-4 text-white">

@@ -16,7 +16,7 @@ const rotations = {
 	template: `
 		<ngt-mesh>
 			<ngt-box-geometry />
-			<ngt-mesh-basic-material color="red" [wireframe]="true" />
+			<ngt-mesh-basic-material color="red" wireframe />
 		</ngt-mesh>
 
 		<ngt-grid-helper *args="[50, 50]" [position]="[0, -1, 0]" />

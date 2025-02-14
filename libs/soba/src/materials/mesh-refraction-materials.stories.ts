@@ -44,7 +44,7 @@ injectLoader.preload(
 							}"
 						>
 							<ngt-mesh
-								[castShadow]="true"
+								castShadow
 								[geometry]="gltf.nodes.Diamond_1_0.geometry"
 								[rotation]="rotation()"
 								[position]="position()"
@@ -97,7 +97,7 @@ class Diamond {
 				intensity: 0.004,
 			}"
 		>
-			<ngt-mesh [castShadow]="true" [receiveShadow]="true" [position]="[-2, 0.5, -1]" [scale]="0.5">
+			<ngt-mesh castShadow receiveShadow [position]="[-2, 0.5, -1]" [scale]="0.5">
 				<ngt-sphere-geometry *args="[1, 64, 64]" />
 				<ngts-mesh-transmission-material
 					[options]="{ resolution: 1024, distortion: 0.25, color: '#FF8F20', thickness: 1, anisotropy: 1 }"
@@ -105,7 +105,7 @@ class Diamond {
 			</ngt-mesh>
 		</ngts-caustics>
 
-		<ngt-mesh [castShadow]="true" [receiveShadow]="true" [position]="[1.75, 0.25, 1]" [scale]="0.75">
+		<ngt-mesh castShadow receiveShadow [position]="[1.75, 0.25, 1]" [scale]="0.75">
 			<ngt-sphere-geometry *args="[1, 64, 64]" />
 			<ngt-mesh-standard-material color="hotpink" />
 		</ngt-mesh>

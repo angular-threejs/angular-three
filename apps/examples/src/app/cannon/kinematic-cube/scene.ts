@@ -17,7 +17,7 @@ import niceColors from '../../colors';
 @Component({
 	selector: 'app-plane',
 	template: `
-		<ngt-mesh #mesh [receiveShadow]="true">
+		<ngt-mesh #mesh receiveShadow>
 			<ngt-plane-geometry *args="[1000, 1000]" />
 			<ngt-mesh-phong-material [color]="color()" />
 		</ngt-mesh>
@@ -41,7 +41,7 @@ export class Plane {
 @Component({
 	selector: 'app-box',
 	template: `
-		<ngt-mesh #mesh [castShadow]="true" [receiveShadow]="true">
+		<ngt-mesh #mesh castShadow receiveShadow>
 			<ngt-box-geometry *args="args" />
 			<ngt-mesh-lambert-material color="white" />
 		</ngt-mesh>
@@ -73,14 +73,14 @@ export class Box {
 	template: `
 		<ngt-instanced-mesh
 			#instancedMesh
-			[castShadow]="true"
-			[receiveShadow]="true"
+			castShadow
+			receiveShadow
 			*args="[undefined, undefined, count()]"
 		>
 			<ngt-sphere-geometry *args="[1, 16, 16]">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
 			</ngt-sphere-geometry>
-			<ngt-mesh-phong-material [vertexColors]="true" />
+			<ngt-mesh-phong-material vertexColors />
 		</ngt-instanced-mesh>
 	`,
 	imports: [NgtArgs],
@@ -122,7 +122,7 @@ export class InstancedSpheres {
 		<ngt-hemisphere-light [intensity]="0.35 * Math.PI" />
 		<ngt-spot-light
 			[angle]="0.3"
-			[castShadow]="true"
+			castShadow
 			[decay]="0"
 			[intensity]="2 * Math.PI"
 			[penumbra]="1"
