@@ -8,7 +8,7 @@
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
 		"commit": "czg",
 		"package_old": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin-old && nx generate-json @platform/source",
-		"package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin"
+		"package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin,tweakpane"
 	},
 	"private": true,
 	"devDependencies": {
