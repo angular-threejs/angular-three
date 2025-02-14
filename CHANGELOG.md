@@ -1,3 +1,16 @@
+## 4.0.0-next.49 (2025-02-14)
+
+### 🩹 Fixes
+
+- **rapier:** use boolean coercion ([6308326a](https://github.com/angular-threejs/angular-three/commit/6308326a))
+- **soba/abstractions:** use boolean coercion ([a8c842c5](https://github.com/angular-threejs/angular-three/commit/a8c842c5))
+- **soba/gizmos:** use boolean coercion ([b91128e0](https://github.com/angular-threejs/angular-three/commit/b91128e0))
+- **soba/staging:** use boolean coercions ([852b7761](https://github.com/angular-threejs/angular-three/commit/852b7761))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.48 (2025-02-14)
 
 ### 🚀 Features
