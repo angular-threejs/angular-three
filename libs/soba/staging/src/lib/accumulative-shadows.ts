@@ -64,7 +64,7 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 				<ng-content />
 			</ngt-group>
 
-			<ngt-mesh #plane [scale]="scale()" [rotation]="[-Math.PI / 2, 0, 0]" [receiveShadow]="true">
+			<ngt-mesh #plane [scale]="scale()" [rotation]="[-Math.PI / 2, 0, 0]" receiveShadow>
 				<ngt-plane-geometry />
 				<ngt-soft-shadow-material
 					[depthWrite]="false"
@@ -72,7 +72,7 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 					[color]="color()"
 					[blend]="colorBlend()"
 					[map]="map()"
-					[transparent]="true"
+					transparent
 				/>
 			</ngt-mesh>
 		</ngt-group>
