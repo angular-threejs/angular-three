@@ -1,4 +1,5 @@
-import { afterNextRender, Directive, effect, inject, input, isSignal, signal } from '@angular/core';
+import { afterNextRender, DestroyRef, Directive, effect, inject, input, isSignal, signal } from '@angular/core';
+import { injectStore } from 'angular-three';
 import { Pane } from 'tweakpane';
 import { NgtTweakFolder } from './folder';
 import { NgtTweakTitle } from './title';
@@ -16,16 +17,37 @@ export class NgtTweakPane {
 
 	private title = inject(NgtTweakTitle, { host: true });
 	private folder = inject(NgtTweakFolder, { host: true });
+	private store = injectStore();
 	private pane = signal<Pane | null>(null);
 
 	constructor() {
 		this.folder.isSelf = false;
 
 		afterNextRender(() => {
-			const pane = new Pane({ title: this.title.title(), expanded: this.folder.expanded() });
+			// the ngt-canvas
+			const parentElement = this.store.snapshot.gl.domElement.parentElement?.parentElement;
+
+			const pane = new Pane({
+				title: this.title.title(),
+				expanded: this.folder.expanded(),
+			});
+
+			if (parentElement && pane.element.parentElement) {
+				parentElement.appendChild(pane.element.parentElement);
+			}
 
 			this.pane.set(pane);
 			this.folder.parentFolder.set(pane);
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			const pane = this.pane();
+			if (!pane) return;
+
+			const parentElement = this.store.snapshot.gl.domElement.parentElement?.parentElement;
+			if (!parentElement || !pane.element.parentElement) return;
+
+			pane.element.parentElement.remove();
 		});
 
 		effect(() => {
