@@ -16,7 +16,7 @@ import { BufferAttribute, Group, LineBasicMaterial, LineSegments } from 'three';
 	template: `
 		<ngt-group>
 			<ngt-line-segments #lineSegments [frustumCulled]="false">
-				<ngt-line-basic-material color="white" [vertexColors]="true" />
+				<ngt-line-basic-material color="white" vertexColors />
 				<ngt-buffer-geometry />
 			</ngt-line-segments>
 		</ngt-group>
