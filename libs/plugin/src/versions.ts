@@ -30,4 +30,7 @@ export const PEER_DEPENDENCIES: Record<string, Record<string, string>> = {
 		'cannon-es': '^0.20.0',
 		'cannon-es-debugger': '^1.0.0',
 	},
+	'angular-three-tweakpane': {
+		tweakpane: '^4.0.0',
+	},
 };

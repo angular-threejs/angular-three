@@ -24,7 +24,13 @@ export async function auxGenerator(tree: Tree) {
 		type: 'multiselect',
 		name: 'packages',
 		message: 'Which packages to add?',
-		choices: ['angular-three-soba', 'angular-three-rapier', 'angular-three-postprocessing', 'angular-three-cannon'],
+		choices: [
+			'angular-three-soba',
+			'angular-three-rapier',
+			'angular-three-postprocessing',
+			'angular-three-cannon',
+			'angular-three-tweakpane',
+		],
 	});
 
 	const packagesToAdd = {};
