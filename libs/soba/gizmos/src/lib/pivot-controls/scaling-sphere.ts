@@ -77,11 +77,11 @@ const scaleMatrix = new THREE.Matrix4();
 				>
 					<ngt-sphere-geometry *args="[radius(), 12, 12]" />
 					<ngt-mesh-basic-material
-						[transparent]="true"
+						transparent
 						[depthTest]="pivotControls.depthTest()"
 						[color]="color()"
 						[opacity]="pivotControls.opacity()"
-						[polygonOffset]="true"
+						polygonOffset
 						[polygonOffsetFactor]="-10"
 					/>
 				</ngt-mesh>

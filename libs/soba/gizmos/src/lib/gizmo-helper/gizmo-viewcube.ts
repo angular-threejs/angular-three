@@ -169,7 +169,7 @@ export class FaceCube {
 			(pointerover)="$any($event).stopPropagation(); hover.set(true)"
 			(click)="internalOnClick($any($event))"
 		>
-			<ngt-mesh-basic-material [transparent]="true" [opacity]="0.6" [color]="color()" [visible]="hover()" />
+			<ngt-mesh-basic-material transparent [opacity]="0.6" [color]="color()" [visible]="hover()" />
 			<ngt-box-geometry *args="dimensions()" />
 		</ngt-mesh>
 	`,
