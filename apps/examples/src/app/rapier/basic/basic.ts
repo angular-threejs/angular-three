@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { injectBeforeRender } from 'angular-three';
 import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
-import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 
 @Component({
 	selector: 'app-rapier-basic',
@@ -35,7 +34,7 @@ import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-rapier' },
-	imports: [NgtrRigidBody, NgtrCuboidCollider, NgtsPerspectiveCamera],
+	imports: [NgtrRigidBody, NgtrCuboidCollider],
 })
 export default class Basic {
 	protected currentCollider = signal(1);

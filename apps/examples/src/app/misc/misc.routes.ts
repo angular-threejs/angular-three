@@ -38,6 +38,17 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'particle-maxime',
+		loadComponent: () => import('./particle-maxime/particle-maxime'),
+		data: {
+			credits: {
+				title: 'The magical world of particles with React Three Fiber and shaders',
+				link: 'https://blog.maximeheckel.com/posts/the-magical-world-of-particles-with-react-three-fiber-and-shaders/',
+				class: 'text-white',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'basic',
 		pathMatch: 'full',
