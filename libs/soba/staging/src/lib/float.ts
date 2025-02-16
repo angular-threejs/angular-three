@@ -68,7 +68,7 @@ export class NgtsFloat {
 
 			const container = this.floatRef().nativeElement;
 
-			const offsetTime = offset + clock.getElapsedTime();
+			const offsetTime = offset + clock.elapsedTime;
 			container.rotation.x = (Math.cos((offsetTime / 4) * speed) / 8) * rotationIntensity;
 			container.rotation.y = (Math.sin((offsetTime / 4) * speed) / 8) * rotationIntensity;
 			container.rotation.z = (Math.sin((offsetTime / 4) * speed) / 20) * rotationIntensity;

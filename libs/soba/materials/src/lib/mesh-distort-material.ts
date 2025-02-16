@@ -38,7 +38,7 @@ export class NgtsMeshDistortMaterial {
 		inject(DestroyRef).onDestroy(() => this.material.dispose());
 
 		injectBeforeRender(({ clock }) => {
-			this.material.time = clock.getElapsedTime() * this.speed();
+			this.material.time = clock.elapsedTime * this.speed();
 		});
 	}
 }

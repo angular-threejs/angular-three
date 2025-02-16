@@ -185,7 +185,7 @@ export class NgtsMeshTransmissionMaterial {
 				this.side(),
 			];
 
-			material.time = clock.getElapsedTime();
+			material.time = clock.elapsedTime;
 			// Render only if the buffer matches the built-in and no transmission sampler is set
 			// @ts-expect-error - we know material.buffer is not just undefined | null
 			if (material.buffer === fboMain.texture && !transmissionSampler) {
