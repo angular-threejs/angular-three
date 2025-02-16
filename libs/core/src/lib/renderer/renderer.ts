@@ -276,6 +276,8 @@ export class NgtRenderer2 implements Renderer2 {
 		if (pRS[NgtRendererClassId.type] === 'platform' && cRS[NgtRendererClassId.type] === 'three') {
 			// if platform has parent, delegate to that parent
 			if (pRS[NgtRendererClassId.parent]) {
+				// but track the child for this parent as well
+				addRendererChildNode(parent, newChild);
 				return this.appendChild(pRS[NgtRendererClassId.parent], newChild);
 			}
 
