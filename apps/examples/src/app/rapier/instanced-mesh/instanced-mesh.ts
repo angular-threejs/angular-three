@@ -15,6 +15,7 @@ import { injectSuzanne } from '../suzanne';
 const MAX_COUNT = 2000;
 
 @Component({
+	selector: 'app-rapier-instanced-mesh',
 	template: `
 		<ngt-group>
 			@if (gltf(); as gltf) {
@@ -41,7 +42,7 @@ const MAX_COUNT = 2000;
 	host: { class: 'instanced-mesh-rapier' },
 	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
-export class InstancedMeshExample {
+export default class InstancedMeshExample {
 	protected readonly MAX_COUNT = MAX_COUNT;
 
 	private instancedMeshRef = viewChild<ElementRef<InstancedMesh>>('instancedMesh');

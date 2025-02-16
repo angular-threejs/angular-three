@@ -3,8 +3,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { extend } from 'angular-three';
 import * as THREE from 'three';
 
-import { SCENES_MAP } from './constants';
-
 extend(THREE);
 
 @Component({
@@ -34,5 +32,5 @@ extend(THREE);
 	host: { class: 'rapier' },
 })
 export default class Rapier {
-	protected examples = Object.keys(SCENES_MAP);
+	protected examples = ['basic', 'rope-joint', 'spring', 'cluster', 'instanced-mesh', 'joints', 'performance'];
 }

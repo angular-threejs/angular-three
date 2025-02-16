@@ -1,14 +1,8 @@
-import { NgComponentOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
-import { injectParams } from 'ngxtension/inject-params';
-import { SCENES_MAP } from './constants';
-
-export const debug = signal(false);
-export const interpolate = signal(true);
-export const paused = signal(false);
 
 @Component({
 	selector: 'app-floor',
@@ -36,41 +30,37 @@ export class Floor {}
 @Component({
 	selector: 'app-rapier-wrapper-default',
 	template: `
-		@if (scene() === 'basic') {
-			<ng-container *ngComponentOutlet="component()" />
-		} @else {
-			<ngtr-physics [options]="{ debug: debug(), interpolate: interpolate(), paused: paused() }">
-				<ng-template>
-					<ngt-directional-light castShadow [position]="10">
-						<ngt-value [rawValue]="-40" attach="shadow.camera.bottom" />
-						<ngt-value [rawValue]="40" attach="shadow.camera.top" />
-						<ngt-value [rawValue]="-40" attach="shadow.camera.left" />
-						<ngt-value [rawValue]="40" attach="shadow.camera.right" />
-						<ngt-value [rawValue]="1024" attach="shadow.mapSize.width" />
-						<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
-					</ngt-directional-light>
+		<ngtr-physics [options]="{ debug: debug(), interpolate: interpolate(), paused: paused() }">
+			<ng-template>
+				<ngt-directional-light
+					castShadow
+					[position]="10"
+					[shadow.camera.bottom]="-40"
+					[shadow.camera.top]="40"
+					[shadow.camera.left]="-40"
+					[shadow.camera.right]="40"
+					[shadow.mapSize.width]="1024"
+					[shadow.bias]="-0.0001"
+				/>
 
-					<ngts-environment [options]="{ preset: 'apartment' }" />
-					<ngts-orbit-controls />
+				<ngts-environment [options]="{ preset: 'apartment' }" />
+				<ngts-orbit-controls />
 
-					<ng-container *ngComponentOutlet="component()" />
+				<router-outlet #o="outlet" />
 
+				@if (o.activatedRoute.snapshot.url[0]?.path !== 'basic') {
 					<app-floor />
-				</ng-template>
-			</ngtr-physics>
-		}
+				}
+			</ng-template>
+		</ngtr-physics>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtrPhysics, NgtsEnvironment, NgtsOrbitControls, NgComponentOutlet, Floor],
+	imports: [NgtrPhysics, NgtsEnvironment, NgtsOrbitControls, Floor, RouterOutlet],
 	host: { class: 'rapier-wrapper-default' },
 })
 export class RapierWrapperDefault {
-	private params = injectParams();
-	protected scene = computed(() => this.params()['scene'] as keyof typeof SCENES_MAP);
-	protected component = computed(() => SCENES_MAP[this.scene()]);
-
-	protected debug = debug;
-	protected interpolate = interpolate;
-	protected paused = paused;
+	debug = input(true);
+	interpolate = input(false);
+	paused = input(false);
 }

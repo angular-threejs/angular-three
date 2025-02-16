@@ -130,6 +130,7 @@ export class Prismatic {
 }
 
 @Component({
+	selector: 'app-rapier-joints',
 	template: `
 		<ngt-group>
 			<app-rope [length]="40" />
@@ -141,4 +142,4 @@ export class Prismatic {
 	host: { class: 'joints-rapier' },
 	imports: [Rope, Prismatic],
 })
-export class JointsExample {}
+export default class JointsExample {}

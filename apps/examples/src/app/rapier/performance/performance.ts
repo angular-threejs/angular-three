@@ -126,6 +126,7 @@ export class Bendy {
 }
 
 @Component({
+	selector: 'app-rapier-performance',
 	template: `
 		<ngt-group>
 			<app-bendy />
@@ -140,4 +141,4 @@ export class Bendy {
 	host: { class: 'performance-rapier' },
 	imports: [Bendy, MonkeySwarm],
 })
-export class PerformanceExample {}
+export default class PerformanceExample {}

@@ -1,43 +1,54 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { extend, NgtRoutedScene } from 'angular-three';
+import { extend } from 'angular-three';
 import { NgtCanvas } from 'angular-three/dom';
 import * as THREE from 'three';
+import { RoutedScene } from './routed-scene';
 
 extend(THREE);
 
 @Component({
 	template: `
 		<div class="h-svh">
-			<ngt-canvas>
-				<ngt-routed-scene *canvasContent />
+			<ngt-canvas shadows [camera]="{ position: [0, 0, 20], fov: 50 }">
+				<app-routed-scene *canvasContent />
 			</ngt-canvas>
 		</div>
 
-		<ul class="absolute bottom-0 left-0 flex items-center gap-2">
+		<ul class="absolute top-4 left-4 flex items-center gap-2">
 			<li>
 				<a
-					routerLink="red"
+					routerLink="knot"
 					class="underline"
 					routerLinkActive="text-blue-500"
 					[routerLinkActiveOptions]="{ exact: true }"
 				>
-					red
+					knot
 				</a>
 			</li>
 			<li>
 				<a
-					routerLink="blue"
+					routerLink="torus"
 					class="underline"
 					routerLinkActive="text-blue-500"
 					[routerLinkActiveOptions]="{ exact: true }"
 				>
-					blue
+					torus
+				</a>
+			</li>
+			<li>
+				<a
+					routerLink="bomb"
+					class="underline"
+					routerLinkActive="text-blue-500"
+					[routerLinkActiveOptions]="{ exact: true }"
+				>
+					bomb
 				</a>
 			</li>
 		</ul>
 	`,
-	imports: [NgtRoutedScene, RouterLink, RouterLinkActive, NgtCanvas],
+	imports: [RoutedScene, RouterLink, RouterLinkActive, NgtCanvas],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'routed' },
 })

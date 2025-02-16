@@ -90,6 +90,7 @@ export class BallSpring {
 }
 
 @Component({
+	selector: 'app-rapier-spring',
 	template: `
 		<ngt-object3D #floor="rigidBody" rigidBody="fixed" [position]="[0, 0, 0]" />
 
@@ -114,7 +115,7 @@ export class BallSpring {
 	host: { class: 'spring-rapier' },
 	imports: [NgtrRigidBody, BallSpring, Box],
 })
-export class SpringExample {
+export default class SpringExample {
 	protected readonly COLORS_ARR = ['#335C67', '#FFF3B0', '#E09F3E', '#9E2A2B', '#540B0E'];
 	protected balls = Array.from({ length: 30 }, (_, i) => [-20 + 1.5 * (i + 1), 7.5, -30] as [number, number, number]);
 }

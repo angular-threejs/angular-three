@@ -14,6 +14,7 @@ import { Color, InstancedMesh, Vector3 } from 'three';
 const BALLS = 1000;
 
 @Component({
+	selector: 'app-cluster-rapier',
 	template: `
 		<ngt-group>
 			<ngt-object3D [instancedRigidBodies]="bodies" [options]="{ colliders: 'ball', linearDamping: 5 }">
@@ -29,7 +30,7 @@ const BALLS = 1000;
 	host: { class: 'cluster-rapier' },
 	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
-export class ClusterExample {
+export default class ClusterExample {
 	protected readonly BALLS = BALLS;
 	protected bodies = Array.from({ length: BALLS }, (_, index) => {
 		return {

@@ -1,26 +1,26 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { NgtTweakCheckbox, NgtTweakPane } from 'angular-three-tweakpane';
 import { NgtCanvas } from 'angular-three/dom';
-import { ToggleButton } from '../toggle-button';
-import { debug, interpolate, paused, RapierWrapperDefault } from './wrapper-default';
+import { RapierWrapperDefault } from './wrapper-default';
 
 @Component({
 	template: `
 		<ngt-canvas shadows [dpr]="1">
-			<app-rapier-wrapper-default *canvasContent />
+			<ng-template canvasContent>
+				<app-rapier-wrapper-default [debug]="debug()" [interpolate]="interpolate()" [paused]="paused()" />
+				<ngt-tweak-pane title="Rapier" [expanded]="true">
+					<ngt-tweak-checkbox [(value)]="debug" label="debug" />
+					<ngt-tweak-checkbox [(value)]="interpolate" label="interpolate" />
+					<ngt-tweak-checkbox [(value)]="paused" label="paused" />
+				</ngt-tweak-pane>
+			</ng-template>
 		</ngt-canvas>
-		<div class="absolute top-2 right-2 font-mono flex gap-4">
-			<button [(toggleButton)]="debug">debug</button>
-			<button [(toggleButton)]="interpolate">interpolate</button>
-			<button [(toggleButton)]="paused">paused</button>
-		</div>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, ToggleButton, RapierWrapperDefault],
+	imports: [NgtCanvas, RapierWrapperDefault, NgtTweakPane, NgtTweakCheckbox],
 })
 export default class RapierWrapper {
-	protected sceneGraph = RapierWrapperDefault;
-
-	protected debug = debug;
-	protected interpolate = interpolate;
-	protected paused = paused;
+	protected debug = signal(true);
+	protected interpolate = signal(false);
+	protected paused = signal(false);
 }

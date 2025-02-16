@@ -1,51 +1,43 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { injectBeforeRender } from 'angular-three';
-import { NgtrCuboidCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
-import { NgtsOrbitControls } from 'angular-three-soba/controls';
 
 @Component({
+	selector: 'app-rapier-basic',
 	template: `
-		<ngts-perspective-camera [options]="{ makeDefault: true, position: [5, 5, 5] }" />
+		<ngt-object3D rigidBody [options]="{ colliders: 'hull' }" [position]="[0, 5, 0]">
+			<ngt-mesh>
+				<ngt-torus-geometry />
+			</ngt-mesh>
+		</ngt-object3D>
 
-		<ngtr-physics [options]="{ debug: true }">
-			<ng-template>
-				<ngt-object3D rigidBody [options]="{ colliders: 'hull' }" [position]="[0, 5, 0]">
-					<ngt-mesh>
-						<ngt-torus-geometry />
-					</ngt-mesh>
-				</ngt-object3D>
-
-				@if (currentCollider() === 1) {
-					<ngt-object3D cuboidCollider [args]="[1, 0.5, 1]" (collisionExit)="currentCollider.set(2)" />
-				} @else if (currentCollider() === 2) {
-					<ngt-object3D
-						cuboidCollider
-						[position]="[0, -1, 0]"
-						[args]="[3, 0.5, 3]"
-						(collisionExit)="currentCollider.set(3)"
-					/>
-				} @else if (currentCollider() === 3) {
-					<ngt-object3D
-						cuboidCollider
-						[position]="[0, -3, 0]"
-						[args]="[6, 0.5, 6]"
-						(collisionExit)="currentCollider.set(4)"
-					/>
-				} @else {
-					<ngt-object3D cuboidCollider [position]="[0, -6, 0]" [args]="[20, 0.5, 20]" />
-				}
-			</ng-template>
-		</ngtr-physics>
-
-		<ngts-orbit-controls />
+		@if (currentCollider() === 1) {
+			<ngt-object3D cuboidCollider [args]="[1, 0.5, 1]" (collisionExit)="currentCollider.set(2)" />
+		} @else if (currentCollider() === 2) {
+			<ngt-object3D
+				cuboidCollider
+				[position]="[0, -1, 0]"
+				[args]="[3, 0.5, 3]"
+				(collisionExit)="currentCollider.set(3)"
+			/>
+		} @else if (currentCollider() === 3) {
+			<ngt-object3D
+				cuboidCollider
+				[position]="[0, -3, 0]"
+				[args]="[6, 0.5, 6]"
+				(collisionExit)="currentCollider.set(4)"
+			/>
+		} @else {
+			<ngt-object3D cuboidCollider [position]="[0, -6, 0]" [args]="[20, 0.5, 20]" />
+		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-rapier' },
-	imports: [NgtrPhysics, NgtrRigidBody, NgtrCuboidCollider, NgtsOrbitControls, NgtsPerspectiveCamera],
+	imports: [NgtrRigidBody, NgtrCuboidCollider, NgtsPerspectiveCamera],
 })
-export class Basic {
+export default class Basic {
 	protected currentCollider = signal(1);
 
 	constructor() {

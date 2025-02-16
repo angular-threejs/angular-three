@@ -111,6 +111,7 @@ export class RopeJoint {
 }
 
 @Component({
+	selector: 'app-rapier-rope-joint',
 	template: `
 		<ngt-group [scale]="3">
 			<app-floor />
@@ -123,4 +124,4 @@ export class RopeJoint {
 	host: { class: 'rope-joint-rapier' },
 	imports: [Floor, BoxWall, RopeJoint],
 })
-export class RopeJointExample {}
+export default class RopeJointExample {}

@@ -2,18 +2,18 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
 	{
-		path: 'red',
-		loadComponent: () => import('./red'),
+		path: 'knot',
+		loadComponent: () => import('./knot'),
 	},
 	{
-		path: 'blue',
-		loadComponent: () => import('./blue'),
+		path: 'torus',
+		loadComponent: () => import('./torus'),
 	},
 	{
-		path: '',
-		redirectTo: 'red',
-		pathMatch: 'full',
+		path: 'bomb',
+		loadComponent: () => import('./bomb'),
 	},
+	{ path: '', redirectTo: 'knot', pathMatch: 'full' },
 ];
 
 export default routes;
