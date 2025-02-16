@@ -1,3 +1,13 @@
+## 4.0.0-next.52 (2025-02-16)
+
+### 🩹 Fixes
+
+- **soba:** use elapsedTime instead of getElapsedTime() ([08c8491c](https://github.com/angular-threejs/angular-three/commit/08c8491c))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.51 (2025-02-16)
 
 ### 🩹 Fixes
