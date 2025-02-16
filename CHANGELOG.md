@@ -1,3 +1,13 @@
+## 4.0.0-next.51 (2025-02-16)
+
+### 🩹 Fixes
+
+- **core:** track the three child on platform parent before passing off to the ancestor ([18094f29](https://github.com/angular-threejs/angular-three/commit/18094f29))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.50 (2025-02-14)
 
 ### 🩹 Fixes
