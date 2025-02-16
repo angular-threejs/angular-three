@@ -47,7 +47,7 @@ class ContactShadowsStory {
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
-			this.sphere().nativeElement.position.y = Math.sin(clock.getElapsedTime()) + 2;
+			this.sphere().nativeElement.position.y = Math.sin(clock.elapsedTime) + 2;
 		});
 	}
 }

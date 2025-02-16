@@ -48,7 +48,7 @@ export class Floor {}
 
 				<router-outlet #o="outlet" />
 
-				@if (o.activatedRoute.snapshot.url[0]?.path !== 'basic') {
+				@if (o.activatedRoute.snapshot.url[0].path !== 'basic') {
 					<app-floor />
 				}
 			</ng-template>

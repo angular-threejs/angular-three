@@ -80,7 +80,7 @@ class Shoe {
 
 		injectBeforeRender(({ clock }) => {
 			const instance = this.instance().positionMeshRef().nativeElement;
-			const t = clock.getElapsedTime() + this.random() * 10000;
+			const t = clock.elapsedTime + this.random() * 10000;
 
 			instance.rotation.set(Math.cos(t / 4) / 2, Math.sin(t / 4) / 2, Math.cos(t / 1.5) / 2);
 			instance.position.y = Math.sin(t / 1.5) / 2;

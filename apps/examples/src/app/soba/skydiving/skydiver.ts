@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { injectGLTF, injectTexture } from 'angular-three-soba/loaders';
-import { injectAnimations } from 'angular-three-soba/misc';
+import { injectAnimations, NgtsAnimationClips } from 'angular-three-soba/misc';
 import {
-	Bone,
 	BufferGeometry,
 	DoubleSide,
+	Group,
 	Mesh,
 	MeshStandardMaterial,
 	ShaderMaterial,
@@ -27,6 +27,7 @@ type SkydiverGLTF = GLTF & {
 		mixamorigHips: Mesh;
 	};
 	materials: {};
+	animations: NgtsAnimationClips<'animation_0'>;
 };
 
 @Component({
@@ -34,28 +35,28 @@ type SkydiverGLTF = GLTF & {
 	template: `
 		<ngt-group [dispose]="null">
 			@if (gltf(); as gltf) {
-				<ngt-group>
+				<ngt-group #group>
 					<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
 					<ngt-skinned-mesh
 						[geometry]="gltf.nodes.skydiver_2.geometry"
 						[skeleton]="gltf.nodes.skydiver_2.skeleton"
 					>
-						@if (textures(); as textures) {
-							<ngt-mesh-standard-material
-								[parameters]="{
-									uniforms: { uTime: { value: 0 }, uClothes: { value: textures.clothes } },
-									onBeforeCompile,
-									toneMapped: false,
-									envMapIntensity: 0.8,
-									metalnessMap: textures.metallic,
-									normalMap: textures.normal,
-									roughnessMap: textures.roughness,
-									map: textures.baseColor,
-									normalScale: [-0.2, 0.2],
-									side: DoubleSide,
-								}"
-							/>
-						}
+						@let metallic = textures()?.metallic;
+						@let normal = textures()?.normal;
+						@let roughness = textures()?.roughness;
+						@let baseColor = textures()?.baseColor;
+
+						<ngt-mesh-standard-material
+							[toneMapped]="false"
+							[envMapIntensity]="0.8"
+							[metalnessMap]="metallic"
+							[normalMap]="normal"
+							[roughnessMap]="roughness"
+							[map]="baseColor"
+							[normalScale]="[-0.2, 0.2]"
+							[side]="DoubleSide"
+							[parameters]="{ onBeforeCompile }"
+						/>
 					</ngt-skinned-mesh>
 				</ngt-group>
 			}
@@ -87,14 +88,15 @@ export class Skydiver {
 		},
 	);
 
-	private boneRef = viewChild<ElementRef<Bone>>('bone');
-	private animations = injectAnimations(this.gltf, this.boneRef);
+	private groupRef = viewChild<ElementRef<Group>>('group');
+	private animations = injectAnimations(this.gltf, this.groupRef);
 
 	protected onBeforeCompile: MeshStandardMaterial['onBeforeCompile'] = (shader) => {
 		const gltf = this.gltf();
+		if (!gltf) return;
 
 		Object.assign(shader.uniforms, {
-			...(gltf?.nodes['skydiver_2'].material?.uniforms || {}),
+			...gltf.nodes['skydiver_2'].material.uniforms,
 		});
 
 		shader.vertexShader = /* language=glsl glsl */ `
@@ -116,17 +118,30 @@ export class Skydiver {
 	};
 
 	constructor() {
+		effect(() => {
+			const gltf = this.gltf();
+			if (!gltf) return;
+
+			const textures = this.textures();
+			if (!textures) return;
+
+			gltf.nodes['skydiver_2'].material.uniforms = {
+				uTime: { value: 0 },
+				uClothes: { value: textures.clothes },
+			};
+		});
+
 		effect((onCleanup) => {
 			if (!this.animations.isReady) return;
 			const { actions } = this.animations;
-			actions['animation_0']?.reset().play();
-			onCleanup(() => actions['animation_0']?.stop());
+			actions['animation_0'].reset().play();
+			onCleanup(() => actions['animation_0'].stop());
 		});
 
 		injectBeforeRender(({ clock }) => {
 			const skydiver = this.gltf()?.nodes['skydiver_2'];
 			if (skydiver?.material.uniforms?.['uTime']) {
-				skydiver.material.uniforms['uTime'].value = clock.getElapsedTime();
+				skydiver.material.uniforms['uTime'].value = clock.elapsedTime;
 			}
 		});
 	}

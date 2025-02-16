@@ -61,7 +61,7 @@ export class Box {
 		injectBeforeRender(({ clock }) => {
 			const api = boxApi();
 			if (!api) return;
-			const t = clock.getElapsedTime();
+			const t = clock.elapsedTime;
 			api.position.set(Math.sin(t * 2) * 5, Math.cos(t * 2) * 5, 3);
 			api.rotation.set(Math.sin(t * 6), Math.cos(t * 6), 0);
 		});
@@ -71,12 +71,7 @@ export class Box {
 @Component({
 	selector: 'app-instanced-spheres',
 	template: `
-		<ngt-instanced-mesh
-			#instancedMesh
-			castShadow
-			receiveShadow
-			*args="[undefined, undefined, count()]"
-		>
+		<ngt-instanced-mesh #instancedMesh castShadow receiveShadow *args="[undefined, undefined, count()]">
 			<ngt-sphere-geometry *args="[1, 16, 16]">
 				<ngt-instanced-buffer-attribute attach="attributes.color" *args="[colors(), 3]" />
 			</ngt-sphere-geometry>

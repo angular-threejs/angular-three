@@ -84,7 +84,7 @@ class DefaultCustomShaderMaterialStory {
 	constructor() {
 		injectBeforeRender(({ clock }) => {
 			const material = this.materialRef().material();
-			material.uniforms['uTime'].value = clock.getElapsedTime();
+			material.uniforms['uTime'].value = clock.elapsedTime;
 		});
 	}
 }

@@ -29,7 +29,7 @@ class CameraHelperStory {
 		injectBeforeRender(({ clock }) => {
 			const camera = this.perspectiveCamera().cameraRef().nativeElement;
 
-			const t = clock.getElapsedTime();
+			const t = clock.elapsedTime;
 
 			camera.lookAt(0, 0, 0);
 			camera.position.x = Math.sin(t) * 4;

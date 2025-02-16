@@ -241,8 +241,8 @@ export class RagDoll {
 		injectBeforeRender(({ clock }) => {
 			const [eyes, mouth] = [this.eyes(), this.mouth()];
 			if (eyes && mouth) {
-				eyes.nativeElement.position.y = Math.sin(clock.getElapsedTime() * 1) * 0.06;
-				mouth.meshRef().nativeElement.scale.y = (1 + Math.sin(clock.getElapsedTime())) * 0.6;
+				eyes.nativeElement.position.y = Math.sin(clock.elapsedTime * 1) * 0.06;
+				mouth.meshRef().nativeElement.scale.y = (1 + Math.sin(clock.elapsedTime)) * 0.6;
 			}
 		});
 	}

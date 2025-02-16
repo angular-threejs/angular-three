@@ -55,7 +55,7 @@ export class Boxes {
 			const instanced = this.meshRef()?.nativeElement;
 			if (!instanced) return;
 
-			const time = clock.getElapsedTime();
+			const time = clock.elapsedTime;
 			instanced.rotation.x = Math.sin(time / 4);
 			instanced.rotation.y = Math.sin(time / 2);
 

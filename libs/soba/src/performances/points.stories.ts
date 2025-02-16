@@ -153,7 +153,7 @@ class BasicPointsBufferStory {
 
 	constructor() {
 		injectBeforeRender(({ clock }) => {
-			const elapsedTime = clock.getElapsedTime();
+			const elapsedTime = clock.elapsedTime;
 			const t = misc.remap(Math.sin(elapsedTime), [-1, 1], [0, 1]);
 
 			buffer.rotate(this.color, { q: q.setFromAxisAngle(rotationAxis, t * 0.01) });

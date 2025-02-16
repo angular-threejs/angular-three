@@ -88,8 +88,8 @@ class MeshReflectorMaterialStory {
 
 		injectBeforeRender(({ clock }) => {
 			const mesh = this.mesh().nativeElement;
-			mesh.position.y += Math.sin(clock.getElapsedTime()) / 25;
-			mesh.rotation.y = clock.getElapsedTime() / 2;
+			mesh.position.y += Math.sin(clock.elapsedTime) / 25;
+			mesh.rotation.y = clock.elapsedTime / 2;
 		});
 	}
 }
