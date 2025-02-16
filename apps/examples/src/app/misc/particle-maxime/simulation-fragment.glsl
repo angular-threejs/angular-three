@@ -143,9 +143,18 @@ void main() {
     vec3 pos = texture2D(positions, vUv).rgb;
     vec3 curlPos = texture2D(positions, vUv).rgb;
 
-    pos = curlNoise(pos * uFrequency + uTime * 0.1);
-    curlPos = curlNoise(curlPos * uFrequency + uTime * 0.1);
-    curlPos += curlNoise(curlPos * uFrequency * 2.0) * 0.5;
+    vec3 originalPos = pos;
+    vec3 noise = curlNoise(pos * uFrequency + uTime * 0.1);
+    
+    // Calculate pulsing mix factor (0 to 1)
+    float pulseSpeed = 0.5;
+    float mixFactor = (sin(uTime * pulseSpeed) + 1.0) * 0.5;
+    
+    // Mix between original position and noise with pulsing effect
+    pos = mix(originalPos, originalPos + noise * 0.8, mixFactor);
+    
+    // Add secondary motion that also pulses
+    pos += curlNoise(pos * uFrequency * 3.0) * 0.2 * mixFactor;
 
-    gl_FragColor = vec4(mix(pos, curlPos, sin(uTime)), 1.0);
+    gl_FragColor = vec4(pos, 1.0);
 }

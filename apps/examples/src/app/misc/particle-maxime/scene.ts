@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, NgtPortal } from 'angular-three';
+import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectFBO } from 'angular-three-soba/misc';
@@ -37,7 +38,7 @@ extend({ SimulationMaterial });
 			</ng-template>
 		</ngt-portal>
 
-		<ngt-points>
+		<ngt-points [position]="[-1, -1, 0]" [rotation]="[0.05, -0.1, 0]">
 			<ngt-buffer-geometry>
 				<ngt-buffer-attribute
 					attach="attributes.position"
@@ -119,12 +120,11 @@ export class FBOParticles {
 			gl.render(this.virtualScene, this.virtualCamera);
 			gl.setRenderTarget(null);
 
-			const simulationMateria = this.simulationMaterialRef()?.nativeElement;
-
-			if (!simulationMateria) return;
+			const simulationMaterial = this.simulationMaterialRef()?.nativeElement;
+			if (!simulationMaterial) return;
 
 			this.uniforms['uPositions'].value = this.renderTarget().texture;
-			simulationMateria.uniforms['uTime'].value = clock.elapsedTime;
+			simulationMaterial.uniforms['uTime'].value = clock.elapsedTime;
 		});
 	}
 }
@@ -132,16 +132,20 @@ export class FBOParticles {
 @Component({
 	selector: 'app-scene-graph',
 	template: `
-		<ngts-perspective-camera [options]="{ makeDefault: true, position: [1.5, 1.5, 2.5], fov: 75 }" />
+		<ngts-perspective-camera [options]="{ makeDefault: true, position: [0, 0, 3] }" />
 
-		<ngt-color *args="['#20222B']" attach="background" />
+		<ngt-color *args="['black']" attach="background" />
 		<ngt-ambient-light [intensity]="Math.PI * 0.5" />
 
 		<app-fbo-particles />
 
-		<ngts-orbit-controls [options]="{ autoRotate: true }" />
+		<ngtp-effect-composer>
+			<ngtp-bloom [options]="{ luminanceThreshold: 0, intensity: 4 }" />
+		</ngtp-effect-composer>
+
+		<ngts-orbit-controls [options]="{ enablePan: false }" />
 	`,
-	imports: [NgtsPerspectiveCamera, NgtsOrbitControls, NgtArgs, FBOParticles],
+	imports: [NgtsPerspectiveCamera, NgtsOrbitControls, NgtArgs, FBOParticles, NgtpEffectComposer, NgtpBloom],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
