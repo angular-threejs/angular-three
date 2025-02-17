@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
+	input,
+	signal,
+	viewChild,
+} from '@angular/core';
 import { extend, injectBeforeRender, NgtArgs, NgtPortal } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
@@ -8,6 +16,7 @@ import * as THREE from 'three';
 
 import { SimulationMaterial } from './simulation-material';
 
+import { NgtTweakNumber, NgtTweakPane } from 'angular-three-tweakpane';
 import fragmentShader from './fragment.glsl' with { loader: 'text' };
 import vertexShader from './vertex.glsl' with { loader: 'text' };
 
@@ -65,6 +74,9 @@ export class FBOParticles {
 	protected readonly vertexShader = vertexShader;
 	protected readonly fragmentShader = fragmentShader;
 	protected readonly AdditiveBlending = THREE.AdditiveBlending;
+
+	frequency = input.required<number>();
+	timeScale = input.required<number>();
 
 	protected size = 128;
 	protected virtualScene = new THREE.Scene();
@@ -124,7 +136,8 @@ export class FBOParticles {
 			if (!simulationMaterial) return;
 
 			this.uniforms['uPositions'].value = this.renderTarget().texture;
-			simulationMaterial.uniforms['uTime'].value = clock.elapsedTime;
+			simulationMaterial.uniforms['uFrequency'].value = this.frequency();
+			simulationMaterial.uniforms['uTime'].value = clock.elapsedTime * this.timeScale();
 		});
 	}
 }
@@ -137,18 +150,35 @@ export class FBOParticles {
 		<ngt-color *args="['black']" attach="background" />
 		<ngt-ambient-light [intensity]="Math.PI * 0.5" />
 
-		<app-fbo-particles />
+		<app-fbo-particles [frequency]="frequency()" [timeScale]="timeScale()" />
 
 		<ngtp-effect-composer>
 			<ngtp-bloom [options]="{ luminanceThreshold: 0, intensity: 4 }" />
 		</ngtp-effect-composer>
 
 		<ngts-orbit-controls [options]="{ enablePan: false }" />
+
+		<ngt-tweak-pane title="Particles" [top]="48" [expanded]="true">
+			<ngt-tweak-number [(value)]="frequency" label="frequency" [params]="{ min: 0.25, max: 1, step: 0.01 }" />
+			<ngt-tweak-number [(value)]="timeScale" label="timeScale" [params]="{ min: 0.5, max: 1.5, step: 0.01 }" />
+		</ngt-tweak-pane>
 	`,
-	imports: [NgtsPerspectiveCamera, NgtsOrbitControls, NgtArgs, FBOParticles, NgtpEffectComposer, NgtpBloom],
+	imports: [
+		NgtsPerspectiveCamera,
+		NgtsOrbitControls,
+		NgtArgs,
+		FBOParticles,
+		NgtpEffectComposer,
+		NgtpBloom,
+		NgtTweakPane,
+		NgtTweakNumber,
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {
 	protected readonly Math = Math;
+
+	protected frequency = signal(0.5);
+	protected timeScale = signal(1);
 }

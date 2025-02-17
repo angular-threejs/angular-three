@@ -17,7 +17,7 @@ function generateRandomPointInTriangle(v1: THREE.Vector3, v2: THREE.Vector3, v3:
 		.addScaledVector(v3, r3 / sum);
 }
 
-function createGeometryFromCurve(curveData: any, matrix: THREE.Matrix4) {
+function createGeometryFromCurve(curveData: (typeof shapes)['curve']) {
 	const geometry = new THREE.BufferGeometry();
 	geometry.setAttribute('position', new THREE.Float32BufferAttribute(curveData.data.attributes.position.array, 3));
 	geometry.setAttribute('normal', new THREE.Float32BufferAttribute(curveData.data.attributes.normal.array, 3));
@@ -44,7 +44,7 @@ function getRandomData(width: number, height: number) {
 			.setPosition(positions[shapeIndex])
 			.scale(new THREE.Vector3(scale, scale, scale));
 
-		const geometry = createGeometryFromCurve(curveData, matrix);
+		const geometry = createGeometryFromCurve(curveData);
 		const positionsArr = geometry.attributes['position'].array;
 		const indices = curveData.data.index.array;
 
