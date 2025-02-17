@@ -156,7 +156,7 @@ export class FBOParticles {
 			<ngtp-bloom [options]="{ luminanceThreshold: 0, intensity: 4 }" />
 		</ngtp-effect-composer>
 
-		<ngts-orbit-controls [options]="{ enablePan: false }" />
+		<ngts-orbit-controls [options]="{ enablePan: false, autoRotate: true }" />
 
 		<ngt-tweak-pane title="Particles" [top]="48" [expanded]="true">
 			<ngt-tweak-number [(value)]="frequency" label="frequency" [params]="{ min: 0.25, max: 1, step: 0.01 }" />
