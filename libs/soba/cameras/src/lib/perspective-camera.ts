@@ -8,7 +8,6 @@ import {
 	contentChild,
 	effect,
 	input,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
@@ -68,9 +67,6 @@ export class NgtsPerspectiveCamera {
 
 	private store = injectStore();
 
-	private camera = this.store.camera;
-	private size = this.store.size;
-
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
@@ -87,8 +83,12 @@ export class NgtsPerspectiveCamera {
 		effect(() => {
 			const manual = this.manual();
 			if (manual) return;
-			const [camera, size] = [this.cameraRef().nativeElement, this.size()];
-			camera.aspect = size.width / size.height;
+			const [camera, width, height] = [
+				this.cameraRef().nativeElement,
+				this.store.size.width(),
+				this.store.size.height(),
+			];
+			camera.aspect = width / height;
 			camera.updateProjectionMatrix();
 		});
 
@@ -96,7 +96,7 @@ export class NgtsPerspectiveCamera {
 			const makeDefault = this.makeDefault();
 			if (!makeDefault) return;
 
-			const oldCam = untracked(this.camera);
+			const oldCam = this.store.snapshot.camera;
 			this.store.update({ camera: this.cameraRef().nativeElement });
 			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});

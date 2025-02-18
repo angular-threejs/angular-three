@@ -9,7 +9,6 @@ import {
 	contentChild,
 	effect,
 	input,
-	untracked,
 	viewChild,
 } from '@angular/core';
 import { NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
@@ -86,13 +85,15 @@ export class NgtsOrthographicCamera {
 
 	private store = injectStore();
 
-	private camera = this.store.camera;
-	private size = this.store.size;
+	private _left = pick(this.options, 'left');
+	private _right = pick(this.options, 'right');
+	private _top = pick(this.options, 'top');
+	private _bottom = pick(this.options, 'bottom');
 
-	protected left = computed(() => this.options().left ?? this.size().width / -2);
-	protected right = computed(() => this.options().right ?? this.size().width / 2);
-	protected top = computed(() => this.options().top ?? this.size().height / 2);
-	protected bottom = computed(() => this.options().bottom ?? this.size().height / -2);
+	protected left = computed(() => this._left() ?? this.store.size.width() / -2);
+	protected right = computed(() => this._right() ?? this.store.size.width() / 2);
+	protected top = computed(() => this._top() ?? this.store.size.height() / 2);
+	protected bottom = computed(() => this._bottom() ?? this.store.size.height() / -2);
 
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');
@@ -120,7 +121,7 @@ export class NgtsOrthographicCamera {
 			const makeDefault = this.makeDefault();
 			if (!makeDefault) return;
 
-			const oldCam = untracked(this.camera);
+			const oldCam = this.store.snapshot.camera;
 			this.store.update({ camera: this.cameraRef().nativeElement });
 			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
