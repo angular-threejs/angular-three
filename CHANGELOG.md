@@ -1,3 +1,13 @@
+## 4.0.0-next.53 (2025-02-18)
+
+### 🩹 Fixes
+
+- **soba/cameras:** clean up cameras ([2f034b73](https://github.com/angular-threejs/angular-three/commit/2f034b73))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.52 (2025-02-16)
 
 ### 🩹 Fixes
