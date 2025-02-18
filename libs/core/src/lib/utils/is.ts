@@ -20,6 +20,8 @@ export const is = {
 		a: unknown,
 		isKey: TKey extends `is${infer K}` ? TKey : never,
 	): a is TThreeEntity => !!a && (a as any)[isKey],
+	colorRepresentation: (a: unknown): a is THREE.ColorRepresentation =>
+		a != null && (typeof a === 'string' || typeof a === 'number' || is.three<THREE.Color>(a, 'isColor')),
 	colorSpaceExist: <
 		T extends NgtRendererLike | THREE.Texture | object,
 		P = T extends NgtRendererLike ? { outputColorSpace: string } : { colorSpace: string },

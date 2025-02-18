@@ -105,9 +105,17 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 			return applyProps(root, { [targetKey]: value });
 		}
 
+		// Layers have no copy function, we must therefore copy the mask property
+		if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) {
+			targetProp.mask = value.mask;
+		} else if (is.three<THREE.Color>(targetProp, 'isColor') && is.colorRepresentation(value)) {
+			targetProp.set(value);
+		}
 		// Copy if properties match signatures
-		if (
-			targetProp?.copy &&
+		else if (
+			targetProp &&
+			typeof targetProp.set === 'function' &&
+			typeof targetProp.copy === 'function' &&
 			(value as ClassConstructor | undefined)?.constructor &&
 			(targetProp as ClassConstructor).constructor === (value as ClassConstructor).constructor
 		) {
@@ -118,29 +126,20 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 			) {
 				Object.assign(root, { [targetKey]: value });
 			} else {
-				// fetch the default state of the target
-				const ctor = getMemoizedPrototype(root);
-				// The target key was originally null or undefined, which indicates that the object which
-				// is now present was externally set by the user, we should therefore assign the value directly
-				if (ctor !== undefined && ctor[targetKey] == null) Object.assign(root, { [targetKey]: value });
-				// Otherwise copy is correct
-				else targetProp.copy(value);
+				targetProp.copy(value);
 			}
 		}
-		// Layers have no copy function, we must therefore copy the mask property
-		else if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) {
-			targetProp.mask = value.mask;
-		}
 		// Set array types
-		else if (targetProp?.set && Array.isArray(value)) {
-			if (targetProp.fromArray) targetProp.fromArray(value);
+		else if (targetProp && typeof targetProp.set === 'function' && Array.isArray(value)) {
+			if (typeof targetProp.fromArray === 'function') targetProp.fromArray(value);
 			else targetProp.set(...value);
 		}
 		// Set literal types
-		else if (targetProp?.set && typeof value !== 'object') {
-			const isColor = (targetProp as THREE.Color | undefined)?.isColor;
+		else if (targetProp && typeof targetProp.set === 'function' && typeof value !== 'object') {
+			const isColor = is.three<THREE.Color>(targetProp, 'isColor');
 			// Allow setting array scalars
-			if (!isColor && targetProp.setScalar && typeof value === 'number') targetProp.setScalar(value);
+			if (!isColor && typeof targetProp.setScalar === 'function' && typeof value === 'number')
+				targetProp.setScalar(value);
 			// Otherwise just set single value
 			else targetProp.set(value);
 		}

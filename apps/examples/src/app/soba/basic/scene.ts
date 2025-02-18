@@ -139,34 +139,34 @@ export class Bot {
 			</ngtp-effect-composer>
 
 			<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
+
+			<ngt-tweak-pane title="Soba Basic">
+				<ngt-tweak-folder title="Bloom">
+					<ngt-tweak-checkbox [(value)]="bloom" label="Enabled" />
+					<ngt-tweak-number
+						[(value)]="luminanceThreshold"
+						label="luminanceThreshold"
+						[params]="{ min: 0, max: 1, step: 0.01 }"
+					/>
+					<ngt-tweak-number
+						[(value)]="luminanceSmoothing"
+						label="luminanceSmoothing"
+						[params]="{ min: 0, max: 1, step: 0.01 }"
+					/>
+					<ngt-tweak-number
+						[(value)]="intensity"
+						label="bloomIntensity"
+						[params]="{ min: 0, max: 10, step: 0.5 }"
+					/>
+				</ngt-tweak-folder>
+				<ngt-tweak-folder title="Glitch">
+					<ngt-tweak-checkbox [(value)]="glitch" label="Enabled" />
+				</ngt-tweak-folder>
+
+				<ngt-tweak-list [(value)]="selectedAction" [options]="['Strut', 'Dance', 'Idle']" label="Animation" />
+				<ngt-tweak-color [(value)]="backgroundColor" label="Background" />
+			</ngt-tweak-pane>
 		}
-
-		<ngt-tweak-pane title="Soba Basic">
-			<ngt-tweak-folder title="Bloom">
-				<ngt-tweak-checkbox [(value)]="bloom" label="Enabled" />
-				<ngt-tweak-number
-					[(value)]="luminanceThreshold"
-					label="luminanceThreshold"
-					[params]="{ min: 0, max: 1, step: 0.01 }"
-				/>
-				<ngt-tweak-number
-					[(value)]="luminanceSmoothing"
-					label="luminanceSmoothing"
-					[params]="{ min: 0, max: 1, step: 0.01 }"
-				/>
-				<ngt-tweak-number
-					[(value)]="intensity"
-					label="bloomIntensity"
-					[params]="{ min: 0, max: 10, step: 0.5 }"
-				/>
-			</ngt-tweak-folder>
-			<ngt-tweak-folder title="Glitch">
-				<ngt-tweak-checkbox [(value)]="glitch" label="Enabled" />
-			</ngt-tweak-folder>
-
-			<ngt-tweak-list [(value)]="selectedAction" [options]="['Strut', 'Dance', 'Idle']" label="Animation" />
-			<ngt-tweak-color [(value)]="backgroundColor" label="Background" />
-		</ngt-tweak-pane>
 	`,
 	imports: [
 		NgtsOrbitControls,
