@@ -1,3 +1,13 @@
+## 4.0.0-next.55 (2025-02-18)
+
+### 🩹 Fixes
+
+- **core:** adjust applyProps to match r3f ([0ea7a285](https://github.com/angular-threejs/angular-three/commit/0ea7a285))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.54 (2025-02-18)
 
 ### 🩹 Fixes
