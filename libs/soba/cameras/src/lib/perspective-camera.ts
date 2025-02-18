@@ -57,7 +57,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 })
 export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
-	protected parameters = omit(this.options, ['envMap', 'makeDefault', 'manual', 'frames', 'resolution']);
+	protected parameters = omit(this.options, ['envMap', 'makeDefault', 'frames', 'resolution']);
 
 	protected content = contentChild(TemplateRef);
 	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });

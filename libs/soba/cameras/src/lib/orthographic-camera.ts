@@ -68,7 +68,6 @@ export class NgtsOrthographicCamera {
 	protected parameters = omit(this.options, [
 		'envMap',
 		'makeDefault',
-		'manual',
 		'frames',
 		'resolution',
 		'left',
