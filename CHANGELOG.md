@@ -1,3 +1,13 @@
+## 4.0.0-next.54 (2025-02-18)
+
+### 🩹 Fixes
+
+- **soba/cameras:** assign manual on camera instance ([898e9f60](https://github.com/angular-threejs/angular-three/commit/898e9f60))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.53 (2025-02-18)
 
 ### 🩹 Fixes
