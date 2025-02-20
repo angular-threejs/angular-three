@@ -1,3 +1,14 @@
+## 4.0.0-next.57 (2025-02-20)
+
+### 🩹 Fixes
+
+- **core:** rename selection apis ([52fe3404](https://github.com/angular-threejs/angular-three/commit/52fe3404))
+- **postprocessing:** use renamed selection api ([281931d2](https://github.com/angular-threejs/angular-three/commit/281931d2))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.56 (2025-02-18)
 
 This was a version bump only, there were no code changes.
