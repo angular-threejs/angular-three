@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { NgtArgs, NgtSelect, NgtSelection } from 'angular-three';
+import { NgtArgs, NgtSelection, NgtSelectionApi } from 'angular-three';
 import { NgtpEffectComposer, NgtpOutline, NgtpSMAA } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { KernelSize } from 'postprocessing';
@@ -7,15 +7,16 @@ import { KernelSize } from 'postprocessing';
 /**
  * There are multiple ways to use the Outline effect.
  *
- * 1. Via NgtSelection and NgtSelect
+ * 1. Via NgtSelectionApi and NgtSelect
  *    This is the recommended way to use the Outline effect.
  *
- *    1a. We can use NgtSelection as hostDirective (as shown) to enable Selection on the entire scene.
+ *    1a. We can use NgtSelectionApi as hostDirective (as shown) to enable Selection on the entire scene.
  *        NgtpOutline will automatically be aware of the NgtSelection context and will use it for the selected objects.
  *
- *    1b. We can wrap `<ng-container ngtSelection>` around the objects we want to select AS WELL AS the Outline effect.
+ *    1b. We can wrap `<ng-container selection>` around the objects we want to select AS WELL AS the Outline effect.
+ *        When using this approach, you can use `NgtSelection` in the imports array instead of [NgtSelectionApi, NgtSelect].
  *
- *    ngtSelect can be used on ngt-group or ngt-mesh. ngt-group will select all children, ngt-mesh will only select itself.
+ *    select can be used on ngt-group or ngt-mesh. ngt-group will select all children, ngt-mesh will only select itself.
  *
  * 2. Via selection input on NgtpOutline
  *    If we want to control the selection ourselves, we can pass in the selection input an Array of Object3D or ElementRef<Object3D>
@@ -36,7 +37,7 @@ import { KernelSize } from 'postprocessing';
 		<ngt-point-light [position]="[0, -1, -1]" [decay]="0" color="green" />
 		<ngt-directional-light [position]="[0, 1, 1]" />
 
-		<ngt-group [ngtSelect]="hovered()" (pointerenter)="hovered.set(true)" (pointerleave)="hovered.set(false)">
+		<ngt-group [select]="hovered()" (pointerenter)="hovered.set(true)" (pointerleave)="hovered.set(false)">
 			<ngt-mesh>
 				<ngt-box-geometry />
 				<ngt-mesh-standard-material color="hotpink" />
@@ -59,8 +60,8 @@ import { KernelSize } from 'postprocessing';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'postprocessing-sample' },
-	hostDirectives: [NgtSelection],
-	imports: [NgtsOrbitControls, NgtSelect, NgtpEffectComposer, NgtpOutline, NgtArgs, NgtpSMAA],
+	hostDirectives: [NgtSelectionApi],
+	imports: [NgtsOrbitControls, NgtSelection, NgtpEffectComposer, NgtpOutline, NgtArgs, NgtpSMAA],
 })
 export class SceneGraph {
 	protected KernelSize = KernelSize;

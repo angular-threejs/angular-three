@@ -2,9 +2,9 @@ import { booleanAttribute, Directive, effect, ElementRef, inject, input, signal,
 import { Group, Mesh, Object3D } from 'three';
 import { getInstanceState } from '../instance';
 
-@Directive({ selector: '[ngtSelection]' })
-export class NgtSelection {
-	enabled = input(true, { alias: 'ngtSelection', transform: booleanAttribute });
+@Directive({ selector: '[selection]' })
+export class NgtSelectionApi {
+	enabled = input(true, { alias: 'selection', transform: booleanAttribute });
 
 	private source = signal<Array<ElementRef<Object3D> | Object3D>>([]);
 	selected = this.source.asReadonly();
@@ -15,16 +15,16 @@ export class NgtSelection {
 	}
 }
 
-@Directive({ selector: 'ngt-group[ngtSelect], ngt-mesh[ngtSelect]' })
+@Directive({ selector: 'ngt-group[select], ngt-mesh[select]' })
 export class NgtSelect {
-	enabled = input(false, { transform: booleanAttribute, alias: 'ngtSelect' });
+	enabled = input(false, { transform: booleanAttribute, alias: 'select' });
 
 	constructor() {
 		const elementRef = inject<ElementRef<Group | Mesh>>(ElementRef);
-		const selection = inject(NgtSelection);
+		const selectionApi = inject(NgtSelectionApi);
 
 		effect((onCleanup) => {
-			const selectionEnabled = selection.enabled();
+			const selectionEnabled = selectionApi.enabled();
 			if (!selectionEnabled) return;
 
 			const enabled = this.enabled();
@@ -36,14 +36,14 @@ export class NgtSelect {
 			const localState = getInstanceState(host);
 			if (!localState) return;
 
-			// ngt-mesh[ngtSelect]
+			// ngt-mesh[select]
 			if (host.type === 'Mesh') {
-				selection.update((prev) => [...prev, host]);
-				onCleanup(() => selection.update((prev) => prev.filter((el) => el !== host)));
+				selectionApi.update((prev) => [...prev, host]);
+				onCleanup(() => selectionApi.update((prev) => prev.filter((el) => el !== host)));
 				return;
 			}
 
-			const [collection] = [untracked(selection.selected), localState.objects()];
+			const [collection] = [untracked(selectionApi.selected), localState.objects()];
 			let changed = false;
 			const current: Object3D[] = [];
 			host.traverse((child) => {
@@ -53,10 +53,12 @@ export class NgtSelect {
 
 			if (!changed) return;
 
-			selection.update((prev) => [...prev, ...current]);
+			selectionApi.update((prev) => [...prev, ...current]);
 			onCleanup(() => {
-				selection.update((prev) => prev.filter((el) => !current.includes(el as Object3D)));
+				selectionApi.update((prev) => prev.filter((el) => !current.includes(el as Object3D)));
 			});
 		});
 	}
 }
+
+export const NgtSelection = [NgtSelectionApi, NgtSelect] as const;
