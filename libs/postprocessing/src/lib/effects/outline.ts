@@ -9,7 +9,7 @@ import {
 	input,
 	untracked,
 } from '@angular/core';
-import { injectStore, NgtArgs, NgtSelection, omit, pick, resolveRef } from 'angular-three';
+import { injectStore, NgtArgs, NgtSelectionApi, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { OutlineEffect } from 'postprocessing';
 import * as THREE from 'three';
@@ -36,7 +36,7 @@ const defaultOptions: NgtpOutlineOptions = {
 export class NgtpOutline {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private ngtSelection = inject(NgtSelection, { optional: true });
+	private selectionApi = inject(NgtSelectionApi, { optional: true });
 	private effectComposer = inject(NgtpEffectComposer);
 	private store = injectStore();
 
@@ -135,7 +135,7 @@ export class NgtpOutline {
 
 		effect((onCleanup) => {
 			// NOTE: we run this effect if declarative NgtSelection is not enabled
-			if (!this.ngtSelection) {
+			if (!this.selectionApi) {
 				// NOTE: if NgtSelection is not used and selection is not provided, we throw
 				if (this.selection() === undefined) {
 					throw new Error('[NGT PostProcessing]: ngtp-outline requires selection input or use NgtSelection');
@@ -149,10 +149,10 @@ export class NgtpOutline {
 			}
 
 			// NOTE: we run this effect if declarative NgtSelection is enabled
-			const selectionEnabled = this.ngtSelection.enabled();
+			const selectionEnabled = this.selectionApi.enabled();
 			if (!selectionEnabled) return;
 			const cleanup = this.handleSelectionChangeEffect(
-				this.ngtSelection.selected,
+				this.selectionApi.selected,
 				this.effect,
 				this.store.invalidate,
 			);

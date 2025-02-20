@@ -11,7 +11,7 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { injectStore, NgtArgs, NgtSelection, pick, resolveRef } from 'angular-three';
+import { injectStore, NgtArgs, NgtSelectionApi, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, BloomEffectOptions, SelectiveBloomEffect } from 'postprocessing';
 import * as THREE from 'three';
@@ -67,7 +67,7 @@ export class NgtpSelectiveBloom {
 
 	private store = injectStore();
 	private effectComposer = inject(NgtpEffectComposer);
-	private ngtSelection = inject(NgtSelection, { optional: true });
+	private selectionApi = inject(NgtSelectionApi, { optional: true });
 
 	private resolvedLights = computed(() => this.lights().map((light) => resolveRef(light)));
 	private resolvedSelected = computed(() => {
@@ -77,8 +77,8 @@ export class NgtpSelectiveBloom {
 		return array.map((selected) => resolveRef(selected));
 	});
 	private resolvedNgtSelected = computed(() => {
-		if (!this.ngtSelection || !this.ngtSelection.enabled) return [];
-		return this.ngtSelection.selected().map((selected) => resolveRef(selected));
+		if (!this.selectionApi || !this.selectionApi.enabled) return [];
+		return this.selectionApi.selected().map((selected) => resolveRef(selected));
 	});
 
 	protected effect = computed(() => {
@@ -107,7 +107,7 @@ export class NgtpSelectiveBloom {
 	constructor() {
 		effect((onCleanup) => {
 			// skip input selection altogether if NgtSelection is used
-			if (this.ngtSelection) return;
+			if (this.selectionApi) return;
 			const selection = this.resolvedSelected();
 			if (!selection.length) return;
 
