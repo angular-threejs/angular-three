@@ -2,9 +2,12 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
 	effect,
 	ElementRef,
+	inject,
 	input,
+	signal,
 	untracked,
 	viewChild,
 } from '@angular/core';
@@ -14,7 +17,7 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree, SAH, SplitStrategy } from 'three-mesh-bvh';
 
-export type NgtsBvhOptions = Partial<NgtThreeElements['ngt-group']> & {
+export type NgtsBVHOptions = Partial<NgtThreeElements['ngt-group']> & {
 	/**Enabled, default: true */
 	enabled: boolean;
 	/** Use .raycastFirst to retrieve hits which is generally faster, default: false */
@@ -40,7 +43,7 @@ export type NgtsBvhOptions = Partial<NgtThreeElements['ngt-group']> & {
 	indirect?: boolean;
 };
 
-const defaultOptions: NgtsBvhOptions = {
+const defaultOptions: NgtsBVHOptions = {
 	enabled: true,
 	firstHitOnly: false,
 	strategy: SAH,
@@ -61,7 +64,7 @@ const defaultOptions: NgtsBvhOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgtsBvh {
+export class NgtsBVH {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'enabled',
@@ -87,6 +90,10 @@ export class NgtsBvh {
 	private maxLeafTris = pick(this.options, 'maxLeafTris');
 	private indirect = pick(this.options, 'indirect');
 
+	private reset = signal(Math.random());
+	private retryMap = new Map();
+	private MAX_RETRIES = 3;
+
 	constructor() {
 		extend({ Group });
 
@@ -94,31 +101,46 @@ export class NgtsBvh {
 			const enabled = this.enabled();
 			if (!enabled) return;
 
-			// This can only safely work if the component is used once, but there is no alternative.
+			const group = this.groupRef().nativeElement;
+
+			// track reset
+			this.reset();
+
 			// Hijacking the raycast method to do it for individual meshes is not an option as it would
+			// This can only safely work if the component is used once, but there is no alternative.
 			// cost too much memory ...
-			const [firstHitOnly, strategy, verbose, setBoundingBox, maxDepth, maxLeafTris, indirect, group, raycaster] =
-				[
-					untracked(this.firstHitOnly),
-					untracked(this.strategy),
-					untracked(this.verbose),
-					untracked(this.setBoundingBox),
-					untracked(this.maxDepth),
-					untracked(this.maxLeafTris),
-					untracked(this.indirect),
-					this.groupRef().nativeElement,
-					this.store.snapshot.raycaster,
-				];
+			const [firstHitOnly, strategy, verbose, setBoundingBox, maxDepth, maxLeafTris, indirect, raycaster] = [
+				untracked(this.firstHitOnly),
+				untracked(this.strategy),
+				untracked(this.verbose),
+				untracked(this.setBoundingBox),
+				untracked(this.maxDepth),
+				untracked(this.maxLeafTris),
+				untracked(this.indirect),
+				this.store.snapshot.raycaster,
+			];
 
 			const options = { strategy, verbose, setBoundingBox, maxDepth, maxLeafTris, indirect };
 			raycaster.firstHitOnly = firstHitOnly;
 
+			let timeoutId: ReturnType<typeof setTimeout> | undefined;
 			group.traverse((child) => {
 				if (
 					is.three<THREE.Mesh>(child, 'isMesh') &&
 					!child.geometry.boundsTree &&
 					child.raycast === THREE.Mesh.prototype.raycast
 				) {
+					const geometry = child.geometry;
+					const retryCount = this.retryMap.get(child) ?? 0;
+					// retry 3 times
+					if (!Object.keys(geometry.attributes).length && retryCount <= this.MAX_RETRIES) {
+						this.retryMap.set(child, retryCount + 1);
+						timeoutId = setTimeout(() => {
+							this.reset.set(Math.random());
+						});
+						return;
+					}
+
 					child.raycast = acceleratedRaycast;
 					child.geometry.computeBoundsTree = computeBoundsTree;
 					child.geometry.disposeBoundsTree = disposeBoundsTree;
@@ -127,6 +149,8 @@ export class NgtsBvh {
 			});
 
 			onCleanup(() => {
+				timeoutId && clearTimeout(timeoutId);
+
 				delete raycaster.firstHitOnly;
 				group.traverse((child) => {
 					if (is.three<THREE.Mesh>(child, 'isMesh') && child.geometry.boundsTree) {
@@ -135,6 +159,10 @@ export class NgtsBvh {
 					}
 				});
 			});
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			this.retryMap.clear();
 		});
 	}
 }
