@@ -1,3 +1,17 @@
+## 4.0.0-next.58 (2025-02-22)
+
+### 🚀 Features
+
+- **soba/performances:** add bvh ([89c1e5ab](https://github.com/angular-threejs/angular-three/commit/89c1e5ab))
+
+### 🩹 Fixes
+
+- **soba/performances:** adjust tracking logic in bvh effect ([883e0f27](https://github.com/angular-threejs/angular-three/commit/883e0f27))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.57 (2025-02-20)
 
 ### 🩹 Fixes
