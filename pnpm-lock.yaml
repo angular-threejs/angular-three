@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@nx/angular':
+    hash: gnfdvdqyctpbe6upzhg6w4v3bm
+    path: patches/@nx__angular.patch
+
 importers:
 
   .:
@@ -170,7 +175,7 @@ importers:
         version: 2.1.4
       '@nx/angular':
         specifier: 20.4.5
-        version: 20.4.5(@angular-devkit/build-angular@19.1.7(2lpbiecmxhfj3cnjtb4dpzx4ku))(@angular-devkit/core@19.1.7(chokidar@4.0.1))(@angular-devkit/schematics@19.1.7(chokidar@4.0.1))(@babel/traverse@7.25.9)(@rspack/core@1.1.8(@swc/helpers@0.5.15))(@schematics/angular@19.1.7(chokidar@4.0.1))(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.14.12)(@zkochan/js-yaml@0.0.7)(esbuild@0.24.2)(eslint@9.20.1(jiti@2.4.2))(html-webpack-plugin@5.6.0(@rspack/core@1.1.8(@swc/helpers@0.5.15))(webpack@5.97.1(@swc/core@1.10.17(@swc/helpers@0.5.15))(esbuild@0.24.2)))(nx@20.4.5(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1)(typescript@5.7.3)
+        version: 20.4.5(patch_hash=gnfdvdqyctpbe6upzhg6w4v3bm)(@angular-devkit/build-angular@19.1.7(2lpbiecmxhfj3cnjtb4dpzx4ku))(@angular-devkit/core@19.1.7(chokidar@4.0.1))(@angular-devkit/schematics@19.1.7(chokidar@4.0.1))(@babel/traverse@7.25.9)(@rspack/core@1.1.8(@swc/helpers@0.5.15))(@schematics/angular@19.1.7(chokidar@4.0.1))(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.14.12)(@zkochan/js-yaml@0.0.7)(esbuild@0.24.2)(eslint@9.20.1(jiti@2.4.2))(html-webpack-plugin@5.6.0(@rspack/core@1.1.8(@swc/helpers@0.5.15))(webpack@5.97.1(@swc/core@1.10.17(@swc/helpers@0.5.15))(esbuild@0.24.2)))(nx@20.4.5(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1)(typescript@5.7.3)
       '@nx/cypress':
         specifier: 20.4.5
         version: 20.4.5(@babel/traverse@7.25.9)(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15))(@types/node@20.14.12)(@zkochan/js-yaml@0.0.7)(cypress@13.17.0)(eslint@9.20.1(jiti@2.4.2))(nx@20.4.5(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15)))(typescript@5.7.3)
@@ -16607,7 +16612,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  '@nx/angular@20.4.5(@angular-devkit/build-angular@19.1.7(2lpbiecmxhfj3cnjtb4dpzx4ku))(@angular-devkit/core@19.1.7(chokidar@4.0.1))(@angular-devkit/schematics@19.1.7(chokidar@4.0.1))(@babel/traverse@7.25.9)(@rspack/core@1.1.8(@swc/helpers@0.5.15))(@schematics/angular@19.1.7(chokidar@4.0.1))(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.14.12)(@zkochan/js-yaml@0.0.7)(esbuild@0.24.2)(eslint@9.20.1(jiti@2.4.2))(html-webpack-plugin@5.6.0(@rspack/core@1.1.8(@swc/helpers@0.5.15))(webpack@5.97.1(@swc/core@1.10.17(@swc/helpers@0.5.15))(esbuild@0.24.2)))(nx@20.4.5(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1)(typescript@5.7.3)':
+  '@nx/angular@20.4.5(patch_hash=gnfdvdqyctpbe6upzhg6w4v3bm)(@angular-devkit/build-angular@19.1.7(2lpbiecmxhfj3cnjtb4dpzx4ku))(@angular-devkit/core@19.1.7(chokidar@4.0.1))(@angular-devkit/schematics@19.1.7(chokidar@4.0.1))(@babel/traverse@7.25.9)(@rspack/core@1.1.8(@swc/helpers@0.5.15))(@schematics/angular@19.1.7(chokidar@4.0.1))(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(@types/node@20.14.12)(@zkochan/js-yaml@0.0.7)(esbuild@0.24.2)(eslint@9.20.1(jiti@2.4.2))(html-webpack-plugin@5.6.0(@rspack/core@1.1.8(@swc/helpers@0.5.15))(webpack@5.97.1(@swc/core@1.10.17(@swc/helpers@0.5.15))(esbuild@0.24.2)))(nx@20.4.5(@swc-node/register@1.10.9(@swc/core@1.10.17(@swc/helpers@0.5.15))(@swc/types@0.1.17)(typescript@5.7.3))(@swc/core@1.10.17(@swc/helpers@0.5.15)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rxjs@7.8.1)(typescript@5.7.3)':
     dependencies:
       '@angular-devkit/build-angular': 19.1.7(2lpbiecmxhfj3cnjtb4dpzx4ku)
       '@angular-devkit/core': 19.1.7(chokidar@4.0.1)
