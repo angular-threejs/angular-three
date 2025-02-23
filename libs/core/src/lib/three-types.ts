@@ -83,6 +83,7 @@ export interface NgtNodeElement<
 > {
 	attach: string | string[] | NgtAttachFunction;
 	dispose?: (() => void) | null;
+	parameters: Partial<TInstance>;
 	__ngt_args__: NgtArguments<TConstructor>;
 }
 
@@ -121,429 +122,109 @@ type NgtThreeElementsImpl = {
 		: never;
 };
 
-export type NgtThreeElementsMap = {
-	/**
-	 * @from node_modules/@types/three/src/core/Object3D.d.ts
-	 */
-	'ngt-object3D': Extract<keyof ThreeExports, 'Object3D'>;
-	/**
-	 * @from node_modules/@types/three/src/objects/LOD.d.ts
-	 */
-	'ngt-lOD': Extract<keyof ThreeExports, 'LOD'>;
-	/**
-	 * @from node_modules/@types/three/src/objects/Mesh.d.ts
-	 */
-	'ngt-mesh': Extract<keyof ThreeExports, 'Mesh'>;
-	/**
-	 * @from node_modules/@types/three/src/objects/InstancedMesh.d.ts
-	 */
-	'ngt-instanced-mesh': Extract<keyof ThreeExports, 'InstancedMesh'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/Material.d.ts
-	 */
-	'ngt-material': Extract<keyof ThreeExports, 'Material'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshBasicMaterial.d.ts
-	 */
-	'ngt-mesh-basic-material': Extract<keyof ThreeExports, 'MeshBasicMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshPhysicalMaterial.d.ts
-	 */
-	'ngt-mesh-physical-material': Extract<keyof ThreeExports, 'MeshPhysicalMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshStandardMaterial.d.ts
-	 */
-	'ngt-mesh-standard-material': Extract<keyof ThreeExports, 'MeshStandardMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshToonMaterial.d.ts
-	 */
-	'ngt-mesh-toon-material': Extract<keyof ThreeExports, 'MeshToonMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshNormalMaterial.d.ts
-	 */
-	'ngt-mesh-normal-material': Extract<keyof ThreeExports, 'MeshNormalMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshDepthMaterial.d.ts
-	 */
-	'ngt-mesh-depth-material': Extract<keyof ThreeExports, 'MeshDepthMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshDistanceMaterial.d.ts
-	 */
-	'ngt-mesh-distance-material': Extract<keyof ThreeExports, 'MeshDistanceMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshMatcapMaterial.d.ts
-	 */
-	'ngt-mesh-matcap-material': Extract<keyof ThreeExports, 'MeshMatcapMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshPhongMaterial.d.ts
-	 */
-	'ngt-mesh-phong-material': Extract<keyof ThreeExports, 'MeshPhongMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/LineBasicMaterial.d.ts
-	 */
-	'ngt-line-basic-material': Extract<keyof ThreeExports, 'LineBasicMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/LineDashedMaterial.d.ts
-	 */
-	'ngt-line-dashed-material': Extract<keyof ThreeExports, 'LineDashedMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/MeshLambertMaterial.d.ts
-	 */
-	'ngt-mesh-lambert-material': Extract<keyof ThreeExports, 'MeshLambertMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/PointsMaterial.d.ts
-	 */
-	'ngt-points-material': Extract<keyof ThreeExports, 'PointsMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/RawShaderMaterial.d.ts
-	 */
-	'ngt-raw-shader-material': Extract<keyof ThreeExports, 'RawShaderMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/ShaderMaterial.d.ts
-	 */
-	'ngt-shader-material': Extract<keyof ThreeExports, 'ShaderMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/ShadowMaterial.d.ts
-	 */
-	'ngt-shadow-material': Extract<keyof ThreeExports, 'ShadowMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/materials/SpriteMaterial.d.ts
-	 */
-	'ngt-sprite-material': Extract<keyof ThreeExports, 'SpriteMaterial'>;
-	/**
-	 * @from node_modules/@types/three/src/core/InstancedBufferGeometry.d.ts
-	 */
-	'ngt-instanced-buffer-geometry': Extract<keyof ThreeExports, 'InstancedBufferGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/core/BufferGeometry.d.ts
-	 */
-	'ngt-buffer-geometry': Extract<keyof ThreeExports, 'BufferGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/core/WireframeGeometry.d.ts
-	 */
-	'ngt-wireframe-geometry': Extract<keyof ThreeExports, 'WireframeGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/TetrahedronGeometry.d.ts
-	 */
-	'ngt-tetrahedron-geometry': Extract<keyof ThreeExports, 'TetrahedronGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/OctahedronGeometry.d.ts
-	 */
-	'ngt-octahedron-geometry': Extract<keyof ThreeExports, 'OctahedronGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/IcosahedronGeometry.d.ts
-	 */
-	'ngt-icosahedron-geometry': Extract<keyof ThreeExports, 'IcosahedronGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/PolyhedronGeometry.d.ts
-	 */
-	'ngt-polyhedron-geometry': Extract<keyof ThreeExports, 'PolyhedronGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/DodecahedronGeometry.d.ts
-	 */
-	'ngt-dodecahedron-geometry': Extract<keyof ThreeExports, 'DodecahedronGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/TubeGeometry.d.ts
-	 */
-	'ngt-tube-geometry': Extract<keyof ThreeExports, 'TubeGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/TorusKnotGeometry.d.ts
-	 */
-	'ngt-torus-knot-geometry': Extract<keyof ThreeExports, 'TorusKnotGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/TorusGeometry.d.ts
-	 */
-	'ngt-torus-geometry': Extract<keyof ThreeExports, 'TorusGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/SphereGeometry.d.ts
-	 */
-	'ngt-sphere-geometry': Extract<keyof ThreeExports, 'SphereGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/RingGeometry.d.ts
-	 */
-	'ngt-ring-geometry': Extract<keyof ThreeExports, 'RingGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/PlaneGeometry.d.ts
-	 */
-	'ngt-plane-geometry': Extract<keyof ThreeExports, 'PlaneGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/LatheGeometry.d.ts
-	 */
-	'ngt-lathe-geometry': Extract<keyof ThreeExports, 'LatheGeometry'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/LineSegments.d.ts
-	 */
-	'ngt-line-segments': Extract<keyof ThreeExports, 'LineSegments'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/LineLoop.d.ts
-	 */
-	'ngt-line-loop': Extract<keyof ThreeExports, 'LineLoop'>;
-	/**
-	 * @from node_modules/@types/three/src/geometries/Points.d.ts
-	 */
-	'ngt-points': Extract<keyof ThreeExports, 'Points'>;
-	/**
-	 * @from node_modules/@types/three/src/objects/Group.d.ts
-	 */
-	'ngt-group': Extract<keyof ThreeExports, 'Group'>;
-	/**
-	 * @from node_modules/@types/three/src/cameras/Camera.d.ts
-	 */
-	'ngt-camera': Extract<keyof ThreeExports, 'Camera'>;
-	/**
-	 * @from node_modules/@types/three/src/cameras/PerspectiveCamera.d.ts
-	 */
-	'ngt-perspective-camera': Extract<keyof ThreeExports, 'PerspectiveCamera'>;
-	/**
-	 * @from node_modules/@types/three/src/cameras/OrthographicCamera.d.ts
-	 */
-	'ngt-orthographic-camera': Extract<keyof ThreeExports, 'OrthographicCamera'>;
-	/**
-	 * @from node_modules/@types/three/src/cameras/CubeCamera.d.ts
-	 */
-	'ngt-cube-camera': Extract<keyof ThreeExports, 'CubeCamera'>;
-	/**
-	 * @from node_modules/@types/three/src/cameras/ArrayCamera.d.ts
-	 */
-	'ngt-array-camera': Extract<keyof ThreeExports, 'ArrayCamera'>;
-
-	/**
-	 * @from node_modules/@types/three/src/lights/LightShadow.d.ts
-	 */
-	'ngt-light-shadow': Extract<keyof ThreeExports, 'LightShadow'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/SpotLightShadow.d.ts
-	 */
-	'ngt-spot-light-shadow': Extract<keyof ThreeExports, 'SpotLightShadow'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/DirectionalLightShadow.d.ts
-	 */
-	'ngt-directional-light-shadow': Extract<keyof ThreeExports, 'DirectionalLightShadow'>;
-
-	/**
-	 * @from node_modules/@types/three/src/lights/SpotLight.d.ts
-	 */
-	'ngt-spot-light': Extract<keyof ThreeExports, 'SpotLight'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/PointLight.d.ts
-	 */
-	'ngt-point-light': Extract<keyof ThreeExports, 'PointLight'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/RectAreaLight.d.ts
-	 */
-	'ngt-rect-area-light': Extract<keyof ThreeExports, 'RectAreaLight'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/HemisphereLight.d.ts
-	 */
-	'ngt-hemisphere-light': Extract<keyof ThreeExports, 'HemisphereLight'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/DirectionalLight.d.ts
-	 */
-	'ngt-directional-light': Extract<keyof ThreeExports, 'DirectionalLight'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/AmbientLight.d.ts
-	 */
-	'ngt-ambient-light': Extract<keyof ThreeExports, 'AmbientLight'>;
-	/**
-	 * @from node_modules/@types/three/src/lights/LightProbe.d.ts
-	 */
-	'ngt-light-probe': Extract<keyof ThreeExports, 'LightProbe'>;
-
-	/**
-	 * @from node_modules/@types/three/src/helpers/SpotLightHelper.d.ts
-	 */
-	'ngt-spot-light-helper': Extract<keyof ThreeExports, 'SpotLightHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/SkeletonHelper.d.ts
-	 */
-	'ngt-skeleton-helper': Extract<keyof ThreeExports, 'SkeletonHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/PointLightHelper.d.ts
-	 */
-	'ngt-point-light-helper': Extract<keyof ThreeExports, 'PointLightHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/HemisphereLightHelper.d.ts
-	 */
-	'ngt-hemisphere-light-helper': Extract<keyof ThreeExports, 'HemisphereLightHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/GridHelper.d.ts
-	 */
-	'ngt-grid-helper': Extract<keyof ThreeExports, 'GridHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/PolarGridHelper.d.ts
-	 */
-	'ngt-polar-grid-helper': Extract<keyof ThreeExports, 'PolarGridHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/DirectionalLightHelper.d.ts
-	 */
-	'ngt-directional-light-helper': Extract<keyof ThreeExports, 'DirectionalLightHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/CameraHelper.d.ts
-	 */
-	'ngt-camera-helper': Extract<keyof ThreeExports, 'CameraHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/BoxHelper.d.ts
-	 */
-	'ngt-box-helper': Extract<keyof ThreeExports, 'BoxHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/Box3Helper.d.ts
-	 */
-	'ngt-box3-helper': Extract<keyof ThreeExports, 'Box3Helper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/PlaneHelper.d.ts
-	 */
-	'ngt-plane-helper': Extract<keyof ThreeExports, 'PlaneHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/ArrowHelper.d.ts
-	 */
-	'ngt-arrow-helper': Extract<keyof ThreeExports, 'ArrowHelper'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/AxesHelper.d.ts
-	 */
-	'ngt-axes-helper': Extract<keyof ThreeExports, 'AxesHelper'>;
-
-	/**
-	 * @from node_modules/@types/three/src/helpers/Audio.d.ts
-	 */
-	'ngt-audio': Extract<keyof ThreeExports, 'Audio'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/PositionalAudio.d.ts
-	 */
-	'ngt-positional-audio': Extract<keyof ThreeExports, 'PositionalAudio'>;
-	/**
-	 * @from node_modules/@types/three/src/helpers/AudioListener.d.ts
-	 */
-	'ngt-audio-listener': Extract<keyof ThreeExports, 'AudioListener'>;
-
-	/**
-	 * @from node_modules/@types/three/src/textures/Texture.d.ts
-	 */
-	'ngt-texture': Extract<keyof ThreeExports, 'Texture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/CompressedTexture.d.ts
-	 */
-	'ngt-compressed-texture': Extract<keyof ThreeExports, 'CompressedTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/VideoTexture.d.ts
-	 */
-	'ngt-video-texture': Extract<keyof ThreeExports, 'VideoTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/DataTexture.d.ts
-	 */
-	'ngt-data-texture': Extract<keyof ThreeExports, 'DataTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/Data3DTexture.d.ts
-	 */
-	'ngt-data3D-texture': Extract<keyof ThreeExports, 'Data3DTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/CubeTexture.d.ts
-	 */
-	'ngt-cube-texture': Extract<keyof ThreeExports, 'CubeTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/CanvasTexture.d.ts
-	 */
-	'ngt-canvas-texture': Extract<keyof ThreeExports, 'CanvasTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/textures/DepthTexture.d.ts
-	 */
-	'ngt-depth-texture': Extract<keyof ThreeExports, 'DepthTexture'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Raycaster.d.ts
-	 */
-	'ngt-raycaster': Extract<keyof ThreeExports, 'Raycaster'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Vector2.d.ts
-	 */
-	'ngt-vector2': Extract<keyof ThreeExports, 'Vector2'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Vector3.d.ts
-	 */
-	'ngt-vector3': Extract<keyof ThreeExports, 'Vector3'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Vector4.d.ts
-	 */
-	'ngt-vector4': Extract<keyof ThreeExports, 'Vector4'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Euler.d.ts
-	 */
-	'ngt-euler': Extract<keyof ThreeExports, 'Euler'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Matrix3.d.ts
-	 */
-	'ngt-matrix3': Extract<keyof ThreeExports, 'Matrix3'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Matrix4.d.ts
-	 */
-	'ngt-matrix4': Extract<keyof ThreeExports, 'Matrix4'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Quaternion.d.ts
-	 */
-	'ngt-quaternion': Extract<keyof ThreeExports, 'Quaternion'>;
-
-	/**
-	 * @from node_modules/@types/three/src/core/BufferAttribute.d.ts
-	 */
-	'ngt-buffer-attribute': Extract<keyof ThreeExports, 'BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Float16BufferAttribute.d.ts
-	 */
-	'ngt-float16-buffer-attribute': Extract<keyof ThreeExports, 'Float16BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Float32BufferAttribute.d.ts
-	 */
-	'ngt-float32-buffer-attribute': Extract<keyof ThreeExports, 'Float32BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Int8BufferAttribute.d.ts
-	 */
-	'ngt-int8-buffer-attribute': Extract<keyof ThreeExports, 'Int8BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Int16BufferAttribute.d.ts
-	 */
-	'ngt-int16-buffer-attribute': Extract<keyof ThreeExports, 'Int16BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Int32BufferAttribute.d.ts
-	 */
-	'ngt-int32-buffer-attribute': Extract<keyof ThreeExports, 'Int32BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Uint8BufferAttribute.d.ts
-	 */
-	'ngt-unit8-buffer-attribute': Extract<keyof ThreeExports, 'Uint8BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Uint16BufferAttribute.d.ts
-	 */
-	'ngt-unit16-buffer-attribute': Extract<keyof ThreeExports, 'Uint16BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/Uint32BufferAttribute.d.ts
-	 */
-	'ngt-unit32-buffer-attribute': Extract<keyof ThreeExports, 'Uint32BufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/core/InstancedBufferAttribute.d.ts
-	 */
-	'ngt-instanced-buffer-attribute': Extract<keyof ThreeExports, 'InstancedBufferAttribute'>;
-	/**
-	 * @from node_modules/@types/three/src/math/Color.d.ts
-	 */
-	'ngt-color': Extract<keyof ThreeExports, 'Color'>;
-	/**
-	 * @from node_modules/@types/three/src/scenes/Fog.d.ts
-	 */
-	'ngt-fog': Extract<keyof ThreeExports, 'Fog'>;
-	/**
-	 * @from node_modules/@types/three/src/scenes/FogExp2.d.ts
-	 */
-	'ngt-fog-exp2': Extract<keyof ThreeExports, 'FogExp2'>;
-	/**
-	 * @from node_modules/@types/three/src/extras/core/Shape.d.ts
-	 */
-	'ngt-shape': Extract<keyof ThreeExports, 'Shape'>;
-};
-
-export type NgtThreeElements = {
-	[NgtKey in keyof NgtThreeElementsMap]: NgtThreeElementsImpl[NgtThreeElementsMap[NgtKey]];
-} & {
+export interface NgtThreeElements {
+	'ngt-object3D': NgtThreeElementsImpl['Object3D'];
+	'ngt-lOD': NgtThreeElementsImpl['LOD'];
+	'ngt-mesh': NgtThreeElementsImpl['Mesh'];
+	'ngt-instanced-mesh': NgtThreeElementsImpl['InstancedMesh'];
+	'ngt-material': NgtThreeElementsImpl['Material'];
+	'ngt-mesh-basic-material': NgtThreeElementsImpl['MeshBasicMaterial'];
+	'ngt-mesh-physical-material': NgtThreeElementsImpl['MeshPhysicalMaterial'];
+	'ngt-mesh-standard-material': NgtThreeElementsImpl['MeshStandardMaterial'];
+	'ngt-mesh-toon-material': NgtThreeElementsImpl['MeshToonMaterial'];
+	'ngt-mesh-normal-material': NgtThreeElementsImpl['MeshNormalMaterial'];
+	'ngt-mesh-depth-material': NgtThreeElementsImpl['MeshDepthMaterial'];
+	'ngt-mesh-distance-material': NgtThreeElementsImpl['MeshDistanceMaterial'];
+	'ngt-mesh-matcap-material': NgtThreeElementsImpl['MeshMatcapMaterial'];
+	'ngt-mesh-phong-material': NgtThreeElementsImpl['MeshPhongMaterial'];
+	'ngt-line-basic-material': NgtThreeElementsImpl['LineBasicMaterial'];
+	'ngt-line-dashed-material': NgtThreeElementsImpl['LineDashedMaterial'];
+	'ngt-mesh-lambert-material': NgtThreeElementsImpl['MeshLambertMaterial'];
+	'ngt-points-material': NgtThreeElementsImpl['PointsMaterial'];
+	'ngt-raw-shader-material': NgtThreeElementsImpl['RawShaderMaterial'];
+	'ngt-shader-material': NgtThreeElementsImpl['ShaderMaterial'];
+	'ngt-shadow-material': NgtThreeElementsImpl['ShadowMaterial'];
+	'ngt-sprite-material': NgtThreeElementsImpl['SpriteMaterial'];
+	'ngt-instanced-buffer-geometry': NgtThreeElementsImpl['InstancedBufferGeometry'];
+	'ngt-buffer-geometry': NgtThreeElementsImpl['BufferGeometry'];
+	'ngt-wireframe-geometry': NgtThreeElementsImpl['WireframeGeometry'];
+	'ngt-tetrahedron-geometry': NgtThreeElementsImpl['TetrahedronGeometry'];
+	'ngt-octahedron-geometry': NgtThreeElementsImpl['OctahedronGeometry'];
+	'ngt-icosahedron-geometry': NgtThreeElementsImpl['IcosahedronGeometry'];
+	'ngt-polyhedron-geometry': NgtThreeElementsImpl['PolyhedronGeometry'];
+	'ngt-dodecahedron-geometry': NgtThreeElementsImpl['DodecahedronGeometry'];
+	'ngt-tube-geometry': NgtThreeElementsImpl['TubeGeometry'];
+	'ngt-torus-knot-geometry': NgtThreeElementsImpl['TorusKnotGeometry'];
+	'ngt-torus-geometry': NgtThreeElementsImpl['TorusGeometry'];
+	'ngt-sphere-geometry': NgtThreeElementsImpl['SphereGeometry'];
+	'ngt-ring-geometry': NgtThreeElementsImpl['RingGeometry'];
+	'ngt-plane-geometry': NgtThreeElementsImpl['PlaneGeometry'];
+	'ngt-lathe-geometry': NgtThreeElementsImpl['LatheGeometry'];
+	'ngt-line-segments': NgtThreeElementsImpl['LineSegments'];
+	'ngt-line-loop': NgtThreeElementsImpl['LineLoop'];
+	'ngt-points': NgtThreeElementsImpl['Points'];
+	'ngt-group': NgtThreeElementsImpl['Group'];
+	'ngt-camera': NgtThreeElementsImpl['Camera'];
+	'ngt-perspective-camera': NgtThreeElementsImpl['PerspectiveCamera'];
+	'ngt-orthographic-camera': NgtThreeElementsImpl['OrthographicCamera'];
+	'ngt-cube-camera': NgtThreeElementsImpl['CubeCamera'];
+	'ngt-array-camera': NgtThreeElementsImpl['ArrayCamera'];
+	'ngt-spot-light': NgtThreeElementsImpl['SpotLight'];
+	'ngt-point-light': NgtThreeElementsImpl['PointLight'];
+	'ngt-rect-area-light': NgtThreeElementsImpl['RectAreaLight'];
+	'ngt-hemisphere-light': NgtThreeElementsImpl['HemisphereLight'];
+	'ngt-directional-light': NgtThreeElementsImpl['DirectionalLight'];
+	'ngt-ambient-light': NgtThreeElementsImpl['AmbientLight'];
+	'ngt-light-probe': NgtThreeElementsImpl['LightProbe'];
+	'ngt-spot-light-helper': NgtThreeElementsImpl['SpotLightHelper'];
+	'ngt-skeleton-helper': NgtThreeElementsImpl['SkeletonHelper'];
+	'ngt-point-light-helper': NgtThreeElementsImpl['PointLightHelper'];
+	'ngt-hemisphere-light-helper': NgtThreeElementsImpl['HemisphereLightHelper'];
+	'ngt-grid-helper': NgtThreeElementsImpl['GridHelper'];
+	'ngt-polar-grid-helper': NgtThreeElementsImpl['PolarGridHelper'];
+	'ngt-directional-light-helper': NgtThreeElementsImpl['DirectionalLightHelper'];
+	'ngt-camera-helper': NgtThreeElementsImpl['CameraHelper'];
+	'ngt-box-helper': NgtThreeElementsImpl['BoxHelper'];
+	'ngt-box3-helper': NgtThreeElementsImpl['Box3Helper'];
+	'ngt-plane-helper': NgtThreeElementsImpl['PlaneHelper'];
+	'ngt-arrow-helper': NgtThreeElementsImpl['ArrowHelper'];
+	'ngt-axes-helper': NgtThreeElementsImpl['AxesHelper'];
+	'ngt-audio': NgtThreeElementsImpl['Audio'];
+	'ngt-positional-audio': NgtThreeElementsImpl['PositionalAudio'];
+	'ngt-audio-listener': NgtThreeElementsImpl['AudioListener'];
+	'ngt-texture': NgtThreeElementsImpl['Texture'];
+	'ngt-compressed-texture': NgtThreeElementsImpl['CompressedTexture'];
+	'ngt-video-texture': NgtThreeElementsImpl['VideoTexture'];
+	'ngt-data-texture': NgtThreeElementsImpl['DataTexture'];
+	'ngt-data3D-texture': NgtThreeElementsImpl['Data3DTexture'];
+	'ngt-cube-texture': NgtThreeElementsImpl['CubeTexture'];
+	'ngt-canvas-texture': NgtThreeElementsImpl['CanvasTexture'];
+	'ngt-depth-texture': NgtThreeElementsImpl['DepthTexture'];
+	'ngt-raycaster': NgtThreeElementsImpl['Raycaster'];
+	'ngt-vector2': NgtThreeElementsImpl['Vector2'];
+	'ngt-vector3': NgtThreeElementsImpl['Vector3'];
+	'ngt-vector4': NgtThreeElementsImpl['Vector4'];
+	'ngt-euler': NgtThreeElementsImpl['Euler'];
+	'ngt-matrix3': NgtThreeElementsImpl['Matrix3'];
+	'ngt-matrix4': NgtThreeElementsImpl['Matrix4'];
+	'ngt-quaternion': NgtThreeElementsImpl['Quaternion'];
+	'ngt-buffer-attribute': NgtThreeElementsImpl['BufferAttribute'];
+	'ngt-float16-buffer-attribute': NgtThreeElementsImpl['Float16BufferAttribute'];
+	'ngt-float32-buffer-attribute': NgtThreeElementsImpl['Float32BufferAttribute'];
+	'ngt-int8-buffer-attribute': NgtThreeElementsImpl['Int8BufferAttribute'];
+	'ngt-int16-buffer-attribute': NgtThreeElementsImpl['Int16BufferAttribute'];
+	'ngt-int32-buffer-attribute': NgtThreeElementsImpl['Int32BufferAttribute'];
+	'ngt-uint8-buffer-attribute': NgtThreeElementsImpl['Uint8BufferAttribute'];
+	'ngt-uint16-buffer-attribute': NgtThreeElementsImpl['Uint16BufferAttribute'];
+	'ngt-uint32-buffer-attribute': NgtThreeElementsImpl['Uint32BufferAttribute'];
+	'ngt-instanced-buffer-attribute': NgtThreeElementsImpl['InstancedBufferAttribute'];
+	'ngt-color': NgtThreeElementsImpl['Color'];
+	'ngt-fog': NgtThreeElementsImpl['Fog'];
+	'ngt-fog-exp2': NgtThreeElementsImpl['FogExp2'];
+	'ngt-shape': NgtThreeElementsImpl['Shape'];
 	'ngt-primitive': NgtThreeElement<any>;
 	'ngt-value': NgtThreeElement<any> & { rawValue: any };
-};
+}
 
 declare global {
 	interface HTMLElementTagNameMap extends NgtThreeElements {}
