@@ -4,11 +4,11 @@
 	"license": "MIT",
 	"scripts": {
 		"**comments**": "these scripts are here for convenience to debugging",
-		"generate-json": "node tools/scripts/generate-json.mjs",
+		"generate-json": "node tools/scripts/json/index.mjs",
 		"generate-soba": "node tools/scripts/generate-soba-json.mjs",
 		"commit": "czg",
 		"package_old": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin-old && nx generate-json @platform/source",
-		"package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin,tweakpane"
+		"package": "nx run-many -t build --projects=core,cannon,postprocessing,soba,rapier,plugin,tweakpane && nx generate-json @platform/source"
 	},
 	"private": true,
 	"devDependencies": {
@@ -159,8 +159,7 @@
 				"executor": "nx:run-commands",
 				"options": {
 					"commands": [
-						"node ./tools/scripts/generate-json.mjs",
-						"node ./tools/scripts/generate-soba-json.mjs"
+						"node ./tools/scripts/json/index.mjs"
 					],
 					"parallel": true
 				}
