@@ -1,3 +1,16 @@
+## 4.0.0-next.60 (2025-02-24)
+
+### 🩹 Fixes
+
+- **core:** adjust NgtRendererLike to also have an optional dispose ([cdd34ed5](https://github.com/angular-threejs/angular-three/commit/cdd34ed5))
+- **core:** add `created` event ([b9cd35aa](https://github.com/angular-threejs/angular-three/commit/b9cd35aa))
+- **soba/staging:** dispose texture on destroy ([050aee53](https://github.com/angular-threejs/angular-three/commit/050aee53))
+- **tweakpane:** use default tweakpane parent element ([2d7120f8](https://github.com/angular-threejs/angular-three/commit/2d7120f8))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.59 (2025-02-23)
 
 This was a version bump only, there were no code changes.
