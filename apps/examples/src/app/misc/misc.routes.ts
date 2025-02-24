@@ -42,8 +42,8 @@ const routes: Routes = [
 		loadComponent: () => import('./webgpu-tsl/webgpu-tsl'),
 		data: {
 			credits: {
-				title: "Threlte's WebGPU TSL example",
-				link: 'https://threlte.xyz/docs/learn/advanced/webgpu#tsl',
+				title: 'THREE.js TSL Angular Slicing',
+				link: 'https://threejs.org/examples/?q=tsl#webgpu_tsl_angular_slicing',
 			},
 		},
 	},

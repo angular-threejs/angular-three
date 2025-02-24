@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -8,33 +9,29 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore } from 'angular-three';
+import { extend, injectBeforeRender, injectLoader, injectStore } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import * as THREE from 'three/webgpu';
-
-import { NgTemplateOutlet } from '@angular/common';
-import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { NgtTweakCheckbox, NgtTweakColor, NgtTweakNumber, NgtTweakPane } from 'angular-three-tweakpane';
-import { GLTF } from 'three-stdlib';
-import gearsGLB from './gears.glb' with { loader: 'file' };
+import { GLTF, RGBELoader } from 'three-stdlib';
+import * as THREE from 'three/webgpu';
+import { DirectionalLight, MeshPhysicalNodeMaterial } from 'three/webgpu';
 import { SliceMaterial } from './slice-material';
+
+import gearsGLB from './gears.glb' with { loader: 'file' };
+import royalHDR from './royal_esplanade_1k.hdr' with { loader: 'file' };
 
 injectGLTF.preload(() => gearsGLB);
 
 interface GearsGLB extends GLTF {
-	nodes: {
-		axle: THREE.Mesh;
-		gears: THREE.Mesh;
-		outerHull: THREE.Mesh;
-	};
+	nodes: { axle: THREE.Mesh; gears: THREE.Mesh; outerHull: THREE.Mesh };
 }
 
 @Component({
 	selector: 'app-scene-graph',
 	template: `
-		<ngts-perspective-camera [options]="{ makeDefault: true, position: [-5, 5, 12] }" />
+		<ngts-perspective-camera [options]="{ makeDefault: true, position: [-5, 5, 5] }" />
 
 		<ngt-directional-light
 			castShadow
@@ -64,7 +61,7 @@ interface GearsGLB extends GLTF {
 			</ngt-mesh>
 		</ng-template>
 
-		<ngt-group #gears [position]="gearsPosition">
+		<ngt-group #gears>
 			@if (gltf(); as gltf) {
 				@let gears = gltf.nodes.gears;
 				@let axle = gltf.nodes.axle;
@@ -86,19 +83,18 @@ interface GearsGLB extends GLTF {
 						[arcAngle]="arcAngle()"
 						[startAngle]="startAngle()"
 						[sliceColor]="sliceColor()"
-						[parameters]="{ metalness, roughness, envMapIntensity, color, side: DoubleSide }"
+						[parameters]="{ metalness, roughness, envMapIntensity, color }"
 					/>
 				</ngt-mesh>
 			}
 		</ngt-group>
 
-		<ngt-mesh #plane [position]="[-4, -3, -4]" [scale]="10" receiveShadow>
+		<ngt-mesh [position]="[-4, -3, -4]" [scale]="10" receiveShadow (updated)="$event.lookAt(0, 0, 0)">
 			<ngt-plane-geometry />
 			<ngt-mesh-standard-material color="#aaaaaa" />
 		</ngt-mesh>
 
-		<ngts-environment [options]="{ preset: 'warehouse', background: true, blur: 0.5 }" />
-		<ngts-orbit-controls />
+		<ngts-orbit-controls [options]="{ zoomSpeed: 0.2 }" />
 
 		<ngt-tweak-pane title="Slice Material" left="8px">
 			<ngt-tweak-checkbox [(value)]="rotate" label="rotate" />
@@ -120,7 +116,6 @@ interface GearsGLB extends GLTF {
 	imports: [
 		NgtsPerspectiveCamera,
 		NgtsOrbitControls,
-		NgtsEnvironment,
 		NgTemplateOutlet,
 		SliceMaterial,
 		NgtTweakPane,
@@ -132,20 +127,20 @@ interface GearsGLB extends GLTF {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {
-	protected readonly DoubleSide = THREE.DoubleSide;
-
 	private gearsRef = viewChild.required<ElementRef<THREE.Group>>('gears');
-	private planeRef = viewChild.required<ElementRef<THREE.Mesh>>('plane');
 
+	protected environmentMap = injectLoader(
+		() => RGBELoader,
+		() => royalHDR,
+	);
 	protected gltf = injectGLTF<GearsGLB>(() => gearsGLB);
+
 	private store = injectStore();
 
 	protected metalness = 0.5;
 	protected roughness = 0.25;
 	protected envMapIntensity = 0.5;
 	protected color = '#858080';
-
-	protected gearsPosition = new THREE.Vector3();
 
 	protected rotate = signal(true);
 	protected sliceColor = signal('#9370DB');
@@ -156,29 +151,33 @@ export class SceneGraph {
 	protected startAngle = computed(() => THREE.MathUtils.DEG2RAD * this.startAngleDegrees());
 
 	constructor() {
-		extend(THREE);
+		extend({ MeshPhysicalNodeMaterial, DirectionalLight });
 
 		injectBeforeRender(({ delta }) => {
-			const [gears, plane] = [this.gearsRef().nativeElement, this.planeRef().nativeElement];
-			plane.lookAt(gears.position);
-
 			if (!this.rotate()) return;
-
-			gears.rotation.y += 0.1 * delta;
+			this.gearsRef().nativeElement.rotation.y += 0.1 * delta;
 		});
 
 		effect((onCleanup) => {
-			const [scene, gl] = [this.store.scene(), this.store.gl()];
+			const environmentMap = this.environmentMap();
+			if (!environmentMap) return;
 
+			const scene = this.store.scene();
+
+			const oldBackground = scene.background;
+			const oldEnvironment = scene.environment;
 			const blurriness = scene.backgroundBlurriness;
-			const lastToneMapping = gl.toneMapping;
 
+			environmentMap.mapping = THREE.EquirectangularReflectionMapping;
+
+			scene.background = environmentMap;
 			scene.backgroundBlurriness = 0.5;
-			gl.toneMapping = THREE.ACESFilmicToneMapping;
+			scene.environment = environmentMap;
 
 			onCleanup(() => {
+				scene.background = oldBackground;
+				scene.environment = oldEnvironment;
 				scene.backgroundBlurriness = blurriness;
-				gl.toneMapping = lastToneMapping;
 			});
 		});
 	}

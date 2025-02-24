@@ -25,11 +25,12 @@ export class SliceMaterial {
 			startAngle: this.uStartAngle,
 			arcAngle: this.uArcAngle,
 		});
+		this.material.nativeElement.side = THREE.DoubleSide;
 
 		effect(() => {
 			const [arcAngle, startAngle, sliceColor] = [this.arcAngle(), this.startAngle(), this.sliceColor()];
-			this.uStartAngle.value = arcAngle;
-			this.uArcAngle.value = startAngle;
+			this.uStartAngle.value = startAngle;
+			this.uArcAngle.value = arcAngle;
 			this.uColor.value.set(sliceColor);
 		});
 	}

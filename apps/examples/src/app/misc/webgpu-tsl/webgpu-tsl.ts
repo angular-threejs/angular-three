@@ -9,6 +9,11 @@ import { SceneGraph } from './scene';
 		<ngt-canvas shadows [gl]="glFactory" [frameloop]="frameloop()">
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
+
+		<code class="absolute top-10 right-4 px-4 max-w-[50%]">
+			* There seems to be an issue with WebGPURenderer and dispose process. Environment map will not load properly
+			on navigating away and back.
+		</code>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, SceneGraph],
@@ -19,13 +24,21 @@ export default class WebGPUTSL {
 	protected glFactory: NgtGLOptions = (defaultOptions) => {
 		const renderer = new THREE.WebGPURenderer({
 			canvas: defaultOptions.canvas as HTMLCanvasElement,
-			powerPreference: 'high-performance',
 			antialias: true,
 			forceWebGL: false,
 		});
 
 		renderer.init().then(() => {
 			this.frameloop.set('always');
+		});
+
+		const dispose = renderer.dispose.bind(renderer);
+		Object.assign(renderer, {
+			dispose: () => {
+				renderer._renderLists?.dispose();
+				renderer._renderContexts?.dispose();
+				dispose();
+			},
 		});
 
 		return renderer;
