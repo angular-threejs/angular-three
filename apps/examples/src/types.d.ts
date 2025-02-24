@@ -17,3 +17,8 @@ declare module '*.gltf' {
 	const url: string;
 	export default url;
 }
+
+declare module '*.hdr' {
+	const data: string;
+	export default data;
+}
