@@ -61,6 +61,7 @@ export type ThreeChildRemovedEvent = { type: 'childremoved'; target: any; child:
 export interface NgtNodeEventMap<TInstance = NgtAnyRecord> {
 	attached: NgtAfterAttach<TInstance, any>;
 	updated: TInstance;
+	created: TInstance;
 	// NOTE: this is named "disposed" to differentiate it from [dispose] property.
 	disposed: ThreeDisposeEvent;
 }

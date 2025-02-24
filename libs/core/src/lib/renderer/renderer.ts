@@ -625,6 +625,11 @@ export class NgtRenderer2 implements Renderer2 {
 				return () => {};
 			}
 
+			if (eventName === 'created') {
+				callback(target);
+				return () => {};
+			}
+
 			if (eventName === 'attached') {
 				iS.onAttach = callback;
 				const parent = iS.parent && untracked(iS.parent);

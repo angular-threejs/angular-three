@@ -50,6 +50,11 @@ export const COMMON_EVENTS = [
 		type: 'any',
 		description: 'Fires when the element is updated with the updated instance',
 	},
+	{
+		name: '(created)',
+		type: 'any',
+		description: 'Fires when the element is created with the created instance',
+	},
 ];
 
 export const OBJECT3D_EVENTS = [
