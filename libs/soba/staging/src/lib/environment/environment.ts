@@ -179,6 +179,7 @@ export class NgtsEnvironmentCube {
 		effect((onCleanup) => {
 			const texture = _texture();
 			if (!texture) return;
+
 			const { background = false, scene, ...config } = this.envConfig();
 			const cleanup = setEnvProps(background, scene, this.store.scene(), texture, config);
 			this.envSet.emit();
@@ -365,6 +366,10 @@ export class NgtsEnvironmentGround {
 
 	constructor() {
 		extend({ GroundProjectedEnv });
+
+		inject(DestroyRef).onDestroy(() => {
+			this.defaultTexture()?.dispose();
+		});
 	}
 }
 
