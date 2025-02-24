@@ -48,7 +48,9 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 							try {
 								const state = root.snapshot;
 								state.events.disconnect?.();
+
 								state.gl?.renderLists?.dispose?.();
+								state.gl?.dispose?.();
 								state.gl?.forceContextLoss?.();
 								if (state.gl?.xr) state.xr.disconnect();
 								dispose(state.scene);

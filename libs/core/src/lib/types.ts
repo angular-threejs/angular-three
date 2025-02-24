@@ -39,6 +39,7 @@ export type NgtCameraParameters = Partial<
 > & { manual?: boolean };
 export interface NgtRendererLike {
 	render: (scene: THREE.Scene, camera: THREE.Camera) => any;
+	dispose?: () => void;
 }
 export type NgtCanvasElement = HTMLCanvasElement | OffscreenCanvas;
 export type NgtGlobalRenderCallback = (timeStamp: number) => void;
