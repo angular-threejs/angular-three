@@ -1,14 +1,4 @@
-import {
-	afterNextRender,
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	inject,
-	Injector,
-	input,
-	viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { NgtArgs, NgtVector3 } from 'angular-three';
 import { injectRopeJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
 
@@ -96,16 +86,11 @@ export class RopeJoint {
 	private ballBody = viewChild.required('ball', { read: NgtrRigidBody });
 
 	constructor() {
-		const injector = inject(Injector);
+		const anchorBody = computed(() => this.anchorBody().rigidBody());
+		const ballBody = computed(() => this.ballBody().rigidBody());
 
-		afterNextRender(() => {
-			const anchorBody = computed(() => this.anchorBody().rigidBody());
-			const ballBody = computed(() => this.ballBody().rigidBody());
-
-			injectRopeJoint(anchorBody, ballBody, {
-				injector,
-				data: { body1Anchor: [0, 0, 0], body2Anchor: [0, 0, 0], length: this.length() },
-			});
+		injectRopeJoint(anchorBody, ballBody, {
+			data: () => ({ body1Anchor: [0, 0, 0], body2Anchor: [0, 0, 0], length: this.length() }),
 		});
 	}
 }

@@ -1,14 +1,4 @@
-import {
-	afterNextRender,
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	inject,
-	Injector,
-	input,
-	viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { NgtArgs, NgtVector3, vector3 } from 'angular-three';
 import { injectSpringJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
 import { ColorRepresentation } from 'three';
@@ -64,27 +54,22 @@ export class BallSpring {
 	private stiffness = 1.0e3;
 
 	constructor() {
-		const injector = inject(Injector);
+		const floorBody = computed(() => this.floorRigidBody().rigidBody());
+		const ballBody = computed(() => this.ballBody().rigidBody());
 
-		afterNextRender(() => {
-			const floorBody = computed(() => this.floorRigidBody().rigidBody());
-			const ballBody = computed(() => this.ballBody().rigidBody());
+		const criticalDamping = computed(() => 2 * Math.sqrt(this.stiffness * this.mass()));
+		const dampingRatio = computed(() => this.jointNum() / (this.total() / 2));
+		const damping = computed(() => dampingRatio() * criticalDamping());
+		const positionVector = vector3(this.position);
 
-			const criticalDamping = computed(() => 2 * Math.sqrt(this.stiffness * this.mass()));
-			const dampingRatio = computed(() => this.jointNum() / (this.total() / 2));
-			const damping = computed(() => dampingRatio() * criticalDamping());
-			const positionVector = vector3(this.position);
-
-			injectSpringJoint(ballBody, floorBody, {
-				injector,
-				data: {
-					body1Anchor: [0, 0, 0],
-					body2Anchor: [positionVector().x, positionVector().y - 3, positionVector().z],
-					restLength: 0,
-					stiffness: this.stiffness,
-					damping: damping(),
-				},
-			});
+		injectSpringJoint(ballBody, floorBody, {
+			data: () => ({
+				body1Anchor: [0, 0, 0],
+				body2Anchor: [positionVector().x, positionVector().y - 3, positionVector().z],
+				restLength: 0,
+				stiffness: this.stiffness,
+				damping: damping(),
+			}),
 		});
 	}
 }

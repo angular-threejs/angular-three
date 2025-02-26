@@ -1,4 +1,4 @@
-import { computed, effect, ElementRef, inject, Injector } from '@angular/core';
+import { computed, effect, ElementRef, inject, Injector, untracked } from '@angular/core';
 import {
 	FixedImpulseJoint,
 	ImpulseJoint,
@@ -69,15 +69,21 @@ function createJoint<TJointParams, TJoinType extends ImpulseJoint>(
 	return function _injectJoint(
 		bodyA: ElementRef<RigidBody> | RigidBody | (() => ElementRef<RigidBody> | RigidBody | undefined | null),
 		bodyB: ElementRef<RigidBody> | RigidBody | (() => ElementRef<RigidBody> | RigidBody | undefined | null),
-		{ injector, data }: { injector?: Injector; data: TJointParams },
+		{ injector, data }: { injector?: Injector; data: TJointParams | (() => TJointParams) },
 	) {
 		return assertInjector(_injectJoint, injector, () => {
 			const physics = inject(NgtrPhysics);
 
+			let dataFn = data as () => TJointParams;
+
+			if (typeof data !== 'function') {
+				dataFn = () => data;
+			}
+
 			const jointData = computed(() => {
 				const rapier = physics.rapier();
 				if (!rapier) return null;
-				return jointDataFn(rapier, data);
+				return jointDataFn(rapier, untracked(dataFn));
 			});
 
 			return injectImpulseJoint<TJoinType>(bodyA, bodyB, { injector, data: jointData });

@@ -7,7 +7,7 @@ import {
 	inject,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { checkUpdate, injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtrInstancedRigidBodies, NgtrPhysics } from 'angular-three-rapier';
 import { Color, InstancedMesh, Vector3 } from 'three';
 
@@ -32,12 +32,10 @@ const BALLS = 1000;
 })
 export default class ClusterExample {
 	protected readonly BALLS = BALLS;
-	protected bodies = Array.from({ length: BALLS }, (_, index) => {
-		return {
-			key: index,
-			position: [Math.floor(index / 30), (index % 30) * 0.5, 0] as [number, number, number],
-		};
-	});
+	protected bodies = Array.from({ length: BALLS }, (_, index) => ({
+		key: index,
+		position: [Math.floor(index / 30), (index % 30) * 0.5, 0] as [number, number, number],
+	}));
 
 	private rigidBodiesRef = viewChild.required(NgtrInstancedRigidBodies);
 	private instancedMeshRef = viewChild<ElementRef<InstancedMesh>>('instancedMesh');
@@ -68,7 +66,7 @@ export default class ClusterExample {
 			for (let i = 0; i < BALLS; i++) {
 				instancedMesh.setColorAt(i, new Color(Math.random() * 0xffffff));
 			}
-			if (instancedMesh.instanceColor) instancedMesh.instanceColor.needsUpdate = true;
+			checkUpdate(instancedMesh.instanceColor);
 		});
 	}
 }

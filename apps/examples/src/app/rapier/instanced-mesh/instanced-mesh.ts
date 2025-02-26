@@ -7,7 +7,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { checkUpdate, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtrInstancedRigidBodies, NgtrInstancedRigidBodyOptions } from 'angular-three-rapier';
 import { Color, InstancedMesh } from 'three';
 import { injectSuzanne } from '../suzanne';
@@ -29,7 +29,7 @@ const MAX_COUNT = 2000;
 						#instancedMesh
 						castShadow
 						[count]="bodies().length"
-						(click)="onClick(instancedRigidBodies, $any($event))"
+						(click)="onClick(instancedRigidBodies, $event)"
 					>
 						<ngt-mesh-physical-material />
 					</ngt-instanced-mesh>
@@ -60,9 +60,7 @@ export default class InstancedMeshExample {
 			for (let i = 0; i < MAX_COUNT; i++) {
 				instancedMesh.setColorAt(i, new Color(Math.random() * 0xffffff));
 			}
-			if (instancedMesh.instanceColor) {
-				instancedMesh.instanceColor.needsUpdate = true;
-			}
+			checkUpdate(instancedMesh.instanceColor);
 		});
 
 		effect((onCleanup) => {

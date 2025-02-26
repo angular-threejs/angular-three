@@ -6,6 +6,8 @@ type SuzanneGLTF = GLTF & {
 	nodes: { Suzanne: Mesh };
 };
 
+injectGLTF.preload(() => './suzanne.glb');
+
 export function injectSuzanne() {
 	return injectGLTF<SuzanneGLTF>(() => './suzanne.glb');
 }
