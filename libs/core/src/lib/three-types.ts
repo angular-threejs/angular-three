@@ -124,6 +124,7 @@ type NgtThreeElementsImpl = {
 };
 
 export interface NgtThreeElements {
+	'ngt-scene': NgtThreeElementsImpl['Scene'];
 	'ngt-object3D': NgtThreeElementsImpl['Object3D'];
 	'ngt-lOD': NgtThreeElementsImpl['LOD'];
 	'ngt-mesh': NgtThreeElementsImpl['Mesh'];
