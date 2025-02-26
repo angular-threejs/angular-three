@@ -1,3 +1,17 @@
+## 4.0.0-next.61 (2025-02-26)
+
+### 🚀 Features
+
+- **rapier:** allow data to be a function ([0dc863fe](https://github.com/angular-threejs/angular-three/commit/0dc863fe))
+
+### 🩹 Fixes
+
+- **core:** add ngt-scene to three elements collection ([4bdd2801](https://github.com/angular-threejs/angular-three/commit/4bdd2801))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.60 (2025-02-24)
 
 ### 🩹 Fixes
