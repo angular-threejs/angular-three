@@ -32,5 +32,16 @@ extend(THREE);
 	host: { class: 'rapier' },
 })
 export default class Rapier {
-	protected examples = ['basic', 'rope-joint', 'spring', 'cluster', 'instanced-mesh', 'joints', 'performance'];
+	protected examples = [
+		'basic',
+		'rope-joint',
+		'spring',
+		'cluster',
+		'instanced-mesh',
+		'joints',
+		'performance',
+		'all-colliders',
+		'sensors',
+		'contact-force-events',
+	];
 }

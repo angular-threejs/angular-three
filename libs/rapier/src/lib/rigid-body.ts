@@ -119,6 +119,8 @@ export class NgtrAnyCollider {
 
 		const cloned = args.slice();
 
+		if (cloned.length === 0) return [];
+
 		// Heightfield uses a vector
 		if (shape === 'heightfield') {
 			const s = cloned[3] as { x: number; y: number; z: number };
@@ -150,7 +152,10 @@ export class NgtrAnyCollider {
 		const worldSingleton = this.physics.worldSingleton();
 		if (!worldSingleton) return null;
 
-		const [shape, args, rigidBody] = [this.shape(), this.scaledArgs(), this.rigidBody?.rigidBody()];
+		const args = this.scaledArgs();
+		if (!args.length) return null;
+
+		const [shape, rigidBody] = [this.shape(), this.rigidBody?.rigidBody()];
 
 		// @ts-expect-error - we know the type of the data
 		const desc = ColliderDesc[shape](...args);
@@ -513,6 +518,7 @@ export class NgtrRigidBody {
 
 	protected childColliderOptions = computed(() => {
 		const colliders = this.colliders();
+
 		// if self colliders is false explicitly, disable auto colliders for this object entirely.
 		if (colliders === false) return [];
 
@@ -527,8 +533,12 @@ export class NgtrRigidBody {
 		const objectInstanceState = getInstanceState(this.objectRef.nativeElement);
 		if (!objectInstanceState) return [];
 
-		// track object's parent and non-object children
-		const [parent] = [objectInstanceState.parent(), objectInstanceState.nonObjects()];
+		// track object's parent and children
+		const [parent] = [
+			objectInstanceState.parent(),
+			objectInstanceState.nonObjects(),
+			objectInstanceState.objects(),
+		];
 		if (!parent || !is.three<THREE.Object3D>(parent, 'isObject3D')) return [];
 
 		return createColliderOptions(this.objectRef.nativeElement, options, true);

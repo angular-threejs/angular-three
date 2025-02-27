@@ -34,6 +34,18 @@ const routes: Routes = [
 				loadComponent: () => import('./performance/performance'),
 			},
 			{
+				path: 'all-colliders',
+				loadComponent: () => import('./all-colliders/all-colliders'),
+			},
+			{
+				path: 'sensors',
+				loadComponent: () => import('./sensors/sensors'),
+			},
+			{
+				path: 'contact-force-events',
+				loadComponent: () => import('./contact-force-events/contact-force-events'),
+			},
+			{
 				path: '',
 				redirectTo: 'basic',
 				pathMatch: 'full',

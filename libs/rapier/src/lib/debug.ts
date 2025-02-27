@@ -3,13 +3,13 @@ import {
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
-	input,
+	inject,
 	viewChild,
 } from '@angular/core';
-import { World } from '@dimforge/rapier3d-compat';
 import { extend, injectBeforeRender } from 'angular-three';
 import * as THREE from 'three';
-import { BufferAttribute, Group, LineBasicMaterial, LineSegments } from 'three';
+import { Group, LineBasicMaterial, LineSegments } from 'three';
+import { NgtrPhysics } from './physics';
 
 @Component({
 	selector: 'ngtr-debug',
@@ -25,21 +25,22 @@ import { BufferAttribute, Group, LineBasicMaterial, LineSegments } from 'three';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtrDebug {
-	world = input.required<World | undefined>();
-
+	private physics = inject(NgtrPhysics);
 	private lineSegmentsRef = viewChild.required<ElementRef<THREE.LineSegments>>('lineSegments');
 
 	constructor() {
-		extend({ Group, LineSegments, LineBasicMaterial, BufferAttribute });
+		extend({ Group, LineSegments, LineBasicMaterial });
 
 		injectBeforeRender(() => {
-			const [world, lineSegments] = [this.world(), this.lineSegmentsRef().nativeElement];
-			if (!world || !lineSegments) return;
+			const worldSingleton = this.physics.worldSingleton();
+			if (!worldSingleton) return;
 
-			const buffers = world.debugRender();
+			const lineSegments = this.lineSegmentsRef().nativeElement;
+			if (!lineSegments) return;
 
-			lineSegments.geometry.setAttribute('position', new BufferAttribute(buffers.vertices, 3));
-			lineSegments.geometry.setAttribute('color', new BufferAttribute(buffers.colors, 4));
+			const buffers = worldSingleton.proxy.debugRender();
+			lineSegments.geometry.setAttribute('position', new THREE.BufferAttribute(buffers.vertices, 3));
+			lineSegments.geometry.setAttribute('color', new THREE.BufferAttribute(buffers.colors, 4));
 		});
 	}
 }

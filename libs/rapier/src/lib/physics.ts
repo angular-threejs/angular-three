@@ -65,7 +65,7 @@ export class NgtrPhysicsFallback {
 
 		@if (rapierConstruct()) {
 			@if (debug()) {
-				<ngtr-debug [world]="worldSingleton()?.proxy" />
+				<ngtr-debug />
 			}
 
 			<ngtr-frame-stepper
