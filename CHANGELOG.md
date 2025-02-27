@@ -1,3 +1,13 @@
+## 4.0.0-next.65 (2025-02-27)
+
+### 🩹 Fixes
+
+- **rapier:** make sure args and shape colliders are in sync ([0bedb235](https://github.com/angular-threejs/angular-three/commit/0bedb235))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.64 (2025-02-27)
 
 ### 🩹 Fixes
