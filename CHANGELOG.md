@@ -1,3 +1,13 @@
+## 4.0.0-next.62 (2025-02-27)
+
+### 🩹 Fixes
+
+- **rapier:** adjust rigidbody and collider input types ([35c25040](https://github.com/angular-threejs/angular-three/commit/35c25040))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.61 (2025-02-26)
 
 ### 🚀 Features
