@@ -37,7 +37,7 @@ import { injectSuzanne } from '../suzanne';
 	imports: [NgtrRigidBody],
 })
 export class Monkey {
-	position = input<NgtVector3 | undefined>([0, 0, 0]);
+	position = input<NgtVector3>([0, 0, 0]);
 
 	dead = output<Vector3Like>();
 
