@@ -1,3 +1,13 @@
+## 4.0.0-next.64 (2025-02-27)
+
+### 🩹 Fixes
+
+- **rapier:** more inputs adjustments ([757fa4c4](https://github.com/angular-threejs/angular-three/commit/757fa4c4))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.63 (2025-02-27)
 
 ### 🚀 Features
