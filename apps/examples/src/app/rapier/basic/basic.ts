@@ -12,23 +12,21 @@ import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
 		</ngt-object3D>
 
 		@if (currentCollider() === 1) {
-			<ngt-object3D cuboidCollider [args]="[1, 0.5, 1]" (collisionExit)="currentCollider.set(2)" />
+			<ngt-object3D [cuboidCollider]="[1, 0.5, 1]" (collisionExit)="currentCollider.set(2)" />
 		} @else if (currentCollider() === 2) {
 			<ngt-object3D
-				cuboidCollider
+				[cuboidCollider]="[3, 0.5, 3]"
 				[position]="[0, -1, 0]"
-				[args]="[3, 0.5, 3]"
 				(collisionExit)="currentCollider.set(3)"
 			/>
 		} @else if (currentCollider() === 3) {
 			<ngt-object3D
-				cuboidCollider
+				[cuboidCollider]="[6, 0.5, 6]"
 				[position]="[0, -3, 0]"
-				[args]="[6, 0.5, 6]"
 				(collisionExit)="currentCollider.set(4)"
 			/>
 		} @else {
-			<ngt-object3D cuboidCollider [position]="[0, -6, 0]" [args]="[20, 0.5, 20]" />
+			<ngt-object3D [cuboidCollider]="[20, 0.5, 20]" [position]="[0, -6, 0]" />
 		}
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

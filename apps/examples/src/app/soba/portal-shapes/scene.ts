@@ -74,11 +74,11 @@ import { Letter } from './letter';
 				</app-letter>
 
 				<!-- invisible walls -->
-				<ngt-object3D cuboidCollider [args]="[100, 1, 100]" [position]="[0, -6, 0]" />
-				<ngt-object3D cuboidCollider [args]="[30, 100, 1]" [position]="[0, 0, -30]" />
-				<ngt-object3D cuboidCollider [args]="[30, 100, 1]" [position]="[0, 0, 10]" />
-				<ngt-object3D cuboidCollider [args]="[1, 100, 30]" [position]="[-30, 0, 0]" />
-				<ngt-object3D cuboidCollider [args]="[1, 100, 30]" [position]="[30, 0, 0]" />
+				<ngt-object3D [cuboidCollider]="[100, 1, 100]" [position]="[0, -6, 0]" />
+				<ngt-object3D [cuboidCollider]="[30, 100, 1]" [position]="[0, 0, -30]" />
+				<ngt-object3D [cuboidCollider]="[30, 100, 1]" [position]="[0, 0, 10]" />
+				<ngt-object3D [cuboidCollider]="[1, 100, 30]" [position]="[-30, 0, 0]" />
+				<ngt-object3D [cuboidCollider]="[1, 100, 30]" [position]="[30, 0, 0]" />
 			</ng-template>
 		</ngtr-physics>
 

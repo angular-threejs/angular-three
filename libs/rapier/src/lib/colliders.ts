@@ -27,7 +27,7 @@ const ANY_COLLIDER_HOST_DIRECTIVE = {
 
 @Directive({ selector: 'ngt-object3D[cuboidCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrCuboidCollider {
-	args = input.required<NgtrCuboidArgs>();
+	args = input.required<NgtrCuboidArgs>({ alias: 'cuboidCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -40,7 +40,7 @@ export class NgtrCuboidCollider {
 
 @Directive({ selector: 'ngt-object3D[capsuleCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrCapsuleCollider {
-	args = input.required<NgtrCapsuleArgs>();
+	args = input.required<NgtrCapsuleArgs>({ alias: 'capsuleCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -53,7 +53,7 @@ export class NgtrCapsuleCollider {
 
 @Directive({ selector: 'ngt-object3D[ballCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrBallCollider {
-	args = input.required<NgtrBallArgs>();
+	args = input.required<NgtrBallArgs>({ alias: 'ballCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -66,7 +66,7 @@ export class NgtrBallCollider {
 
 @Directive({ selector: 'ngt-object3D[convexHullCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrConvexHullCollider {
-	args = input.required<NgtrConvexHullArgs>();
+	args = input.required<NgtrConvexHullArgs>({ alias: 'convexHullCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -79,7 +79,7 @@ export class NgtrConvexHullCollider {
 
 @Directive({ selector: 'ngt-object3D[heightfieldCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrHeightfieldCollider {
-	args = input.required<NgtrHeightfieldArgs>();
+	args = input.required<NgtrHeightfieldArgs>({ alias: 'heightfieldCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -92,7 +92,7 @@ export class NgtrHeightfieldCollider {
 
 @Directive({ selector: 'ngt-object3D[trimeshCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrTrimeshCollider {
-	args = input.required<NgtrTrimeshArgs>();
+	args = input.required<NgtrTrimeshArgs>({ alias: 'trimeshCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -105,7 +105,7 @@ export class NgtrTrimeshCollider {
 
 @Directive({ selector: 'ngt-object3D[polylineCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrPolylineCollider {
-	args = input.required<NgtrPolylineArgs>();
+	args = input.required<NgtrPolylineArgs>({ alias: 'polylineCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -118,7 +118,7 @@ export class NgtrPolylineCollider {
 
 @Directive({ selector: 'ngt-object3D[roundCuboidCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrRoundCuboidCollider {
-	args = input.required<NgtrRoundCuboidArgs>();
+	args = input.required<NgtrRoundCuboidArgs>({ alias: 'roundCuboidCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -131,7 +131,7 @@ export class NgtrRoundCuboidCollider {
 
 @Directive({ selector: 'ngt-object3D[cylinderCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrCylinderCollider {
-	args = input.required<NgtrCylinderArgs>();
+	args = input.required<NgtrCylinderArgs>({ alias: 'cylinderCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -144,7 +144,7 @@ export class NgtrCylinderCollider {
 
 @Directive({ selector: 'ngt-object3D[roundCylinderCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrRoundCylinderCollider {
-	args = input.required<NgtrRoundCylinderArgs>();
+	args = input.required<NgtrRoundCylinderArgs>({ alias: 'roundCylinderCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -157,7 +157,7 @@ export class NgtrRoundCylinderCollider {
 
 @Directive({ selector: 'ngt-object3D[coneCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrConeCollider {
-	args = input.required<NgtrConeArgs>();
+	args = input.required<NgtrConeArgs>({ alias: 'coneCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -170,7 +170,7 @@ export class NgtrConeCollider {
 
 @Directive({ selector: 'ngt-object3D[roundConeCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrRoundConeCollider {
-	args = input.required<NgtrRoundConeArgs>();
+	args = input.required<NgtrRoundConeArgs>({ alias: 'roundConeCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -183,7 +183,7 @@ export class NgtrRoundConeCollider {
 
 @Directive({ selector: 'ngt-object3D[convexMeshCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrConvexMeshCollider {
-	args = input.required<NgtrConvexMeshArgs>();
+	args = input.required<NgtrConvexMeshArgs>({ alias: 'convexMeshCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -196,7 +196,7 @@ export class NgtrConvexMeshCollider {
 
 @Directive({ selector: 'ngt-object3D[roundConvexHullCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrRoundConvexHullCollider {
-	args = input.required<NgtrRoundConvexHullArgs>();
+	args = input.required<NgtrRoundConvexHullArgs>({ alias: 'roundConvexHullCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
@@ -209,7 +209,7 @@ export class NgtrRoundConvexHullCollider {
 
 @Directive({ selector: 'ngt-object3D[roundConvexMeshCollider]', hostDirectives: [ANY_COLLIDER_HOST_DIRECTIVE] })
 export class NgtrRoundConvexMeshCollider {
-	args = input.required<NgtrRoundConvexMeshArgs>();
+	args = input.required<NgtrRoundConvexMeshArgs>({ alias: 'roundConvexMeshCollider' });
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });

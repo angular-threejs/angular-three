@@ -69,7 +69,7 @@ export class BoxWall {
 					<ngt-mesh-standard-material [metalness]="1" [roughness]="0.3" />
 				</ngt-mesh>
 
-				<ngt-object3D ballCollider [args]="[2]" />
+				<ngt-object3D [ballCollider]="[2]" />
 			</ngt-object3D>
 		</ngt-group>
 	`,

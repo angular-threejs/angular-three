@@ -124,7 +124,7 @@ export class Model {
 				<app-model [position]="[1, 0, -1.5]" />
 				<app-hats />
 				<ngt-object3D rigidBody="fixed" [options]="{ colliders: false }" [position]="[0, -1, 0]">
-					<ngt-object3D cuboidCollider [args]="[1000, 1, 1000]" />
+					<ngt-object3D [cuboidCollider]="[1000, 1, 1000]" />
 				</ngt-object3D>
 			</ng-template>
 		</ngtr-physics>

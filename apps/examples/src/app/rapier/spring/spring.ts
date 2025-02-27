@@ -36,7 +36,7 @@ export class Box {
 				<ngt-mesh-standard-material color="#E09F3E" />
 			</ngt-mesh>
 
-			<ngt-object3D ballCollider [args]="[0.5]" />
+			<ngt-object3D [ballCollider]="[0.5]" />
 		</ngt-object3D>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
