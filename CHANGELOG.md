@@ -1,3 +1,17 @@
+## 4.0.0-next.63 (2025-02-27)
+
+### 🚀 Features
+
+- ⚠️  **rapier:** make the colliders' args the colliders name themselves ([f6149ca8](https://github.com/angular-threejs/angular-three/commit/f6149ca8))
+
+### ⚠️  Breaking Changes
+
+- **rapier:** this moves the `[args]` binding to colliders name
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.62 (2025-02-27)
 
 ### 🩹 Fixes
