@@ -436,7 +436,7 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 	imports: [NgtrAnyCollider],
 })
 export class NgtrRigidBody {
-	type = input('dynamic', {
+	type = input.required({
 		alias: 'rigidBody',
 		transform: (value: NgtrRigidBodyType | '' | undefined) => {
 			if (value === '' || value === undefined) return 'dynamic' as NgtrRigidBodyType;

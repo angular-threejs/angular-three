@@ -88,7 +88,7 @@ export class NgtrInstancedRigidBodies {
 	scale = input<NgtVector3>([1, 1, 1]);
 	quaternion = input<NgtQuaternion>();
 	userData = input<NgtThreeElements['ngt-object3D']['userData']>();
-	instances = input([], {
+	instances = input.required({
 		alias: 'instancedRigidBodies',
 		transform: (value: Array<NgtrInstancedRigidBodyOptions> | '') => {
 			if (value === '') return [];
