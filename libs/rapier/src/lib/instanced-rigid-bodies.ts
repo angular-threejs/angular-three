@@ -83,11 +83,11 @@ const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 	imports: [NgtrRigidBody, NgtrAnyCollider],
 })
 export class NgtrInstancedRigidBodies {
-	position = input<NgtVector3 | undefined>([0, 0, 0]);
-	rotation = input<NgtEuler | undefined>([0, 0, 0]);
-	scale = input<NgtVector3 | undefined>([1, 1, 1]);
-	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
-	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>({});
+	position = input<NgtVector3>([0, 0, 0]);
+	rotation = input<NgtEuler>();
+	scale = input<NgtVector3>([1, 1, 1]);
+	quaternion = input<NgtQuaternion>();
+	userData = input<NgtThreeElements['ngt-object3D']['userData']>();
 	instances = input([], {
 		alias: 'instancedRigidBodies',
 		transform: (value: Array<NgtrInstancedRigidBodyOptions> | '') => {
@@ -98,13 +98,25 @@ export class NgtrInstancedRigidBodies {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private object3DParameters = computed(() => {
-		return {
-			position: this.position(),
-			rotation: this.rotation(),
-			scale: this.scale(),
-			quaternion: this.quaternion(),
-			userData: this.userData(),
-		};
+		const [position, rotation, scale, quaternion, userData] = [
+			this.position(),
+			this.rotation(),
+			this.scale(),
+			this.quaternion(),
+			this.userData(),
+		];
+
+		const parameters = { position, scale, userData };
+
+		if (quaternion) {
+			Object.assign(parameters, { quaternion });
+		} else if (rotation) {
+			Object.assign(parameters, { rotation });
+		} else {
+			Object.assign(parameters, { rotation: [0, 0, 0] });
+		}
+
+		return parameters;
 	});
 
 	private instanceWrapperRef = viewChild.required<ElementRef<THREE.Object3D>>('instanceWrapper');
@@ -156,7 +168,11 @@ export class NgtrInstancedRigidBodies {
 						},
 					},
 					key: `${instance.key}-${index}` + `${instancedMesh?.uuid || ''}`,
-				}) as Omit<NgtrInstancedRigidBodyOptions, 'options'> & { options: Partial<NgtrRigidBodyOptions> },
+				}) as Omit<NgtrInstancedRigidBodyOptions, 'options' | 'position' | 'scale'> & {
+					position: NgtVector3;
+					scale: NgtVector3;
+					options: Partial<NgtrRigidBodyOptions>;
+				},
 		);
 	});
 

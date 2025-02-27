@@ -35,7 +35,7 @@ import { createColliderOptions } from './utils';
 	imports: [NgtrAnyCollider],
 })
 export class NgtrMeshCollider {
-	colliders = input.required<NgtrRigidBodyAutoCollider>({ alias: 'ngtrMeshCollider' });
+	colliders = input.required<NgtrRigidBodyAutoCollider>({ alias: 'meshCollider' });
 
 	objectRef = inject<ElementRef<THREE.Object3D>>(ElementRef);
 	private rigidBody = inject(NgtrRigidBody);

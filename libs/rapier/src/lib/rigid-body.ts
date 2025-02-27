@@ -52,12 +52,12 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 
 @Directive({ selector: 'ngt-object3D[collider]' })
 export class NgtrAnyCollider {
-	position = input<NgtVector3 | undefined>([0, 0, 0]);
-	rotation = input<NgtEuler | undefined>();
-	scale = input<NgtVector3 | undefined>([1, 1, 1]);
-	quaternion = input<NgtQuaternion | undefined>();
-	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>(undefined);
-	name = input<NgtThreeElements['ngt-object3D']['name'] | undefined>(undefined);
+	position = input<NgtVector3>([0, 0, 0]);
+	rotation = input<NgtEuler>();
+	scale = input<NgtVector3>([1, 1, 1]);
+	quaternion = input<NgtQuaternion>();
+	userData = input<NgtThreeElements['ngt-object3D']['userData']>();
+	name = input<NgtThreeElements['ngt-object3D']['name']>();
 	options = input(colliderDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
 	private object3DParameters = computed(() => {
@@ -70,7 +70,7 @@ export class NgtrAnyCollider {
 			this.name(),
 		];
 
-		const parameters = { position, scale, userData, name };
+		const parameters = { position, scale, userData, name: name || `${untracked(this.shape)}-${Date.now()}` };
 
 		if (quaternion) {
 			Object.assign(parameters, { quaternion });
@@ -85,6 +85,7 @@ export class NgtrAnyCollider {
 
 	// TODO: change this to input required when Angular allows setting hostDirective input
 	shape = model<NgtrColliderShape | undefined>(undefined, { alias: 'collider' });
+	// NOTE: this will be typed by individual collider
 	args = model<unknown[]>([]);
 
 	collisionEnter = output<NgtrCollisionEnterPayload>();
@@ -442,11 +443,11 @@ export class NgtrRigidBody {
 			return value;
 		},
 	});
-	position = input<NgtVector3 | undefined>([0, 0, 0]);
-	rotation = input<NgtEuler | undefined>([0, 0, 0]);
-	scale = input<NgtVector3 | undefined>([1, 1, 1]);
-	quaternion = input<NgtQuaternion | undefined>([0, 0, 0, 1]);
-	userData = input<NgtThreeElements['ngt-object3D']['userData'] | undefined>(undefined);
+	position = input<NgtVector3>([0, 0, 0]);
+	rotation = input<NgtEuler>();
+	scale = input<NgtVector3>([1, 1, 1]);
+	quaternion = input<NgtQuaternion>();
+	userData = input<NgtThreeElements['ngt-object3D']['userData']>();
 	options = input(rigidBodyDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
 
 	private object3DParameters = computed(() => {
