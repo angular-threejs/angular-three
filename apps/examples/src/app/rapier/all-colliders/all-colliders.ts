@@ -17,27 +17,6 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three-stdlib';
 import { injectSuzanne } from '../suzanne';
 
-const heightFieldHeight = 10;
-const heightFieldWidth = 10;
-const heightField = Array.from({ length: heightFieldHeight * heightFieldWidth }, () => Math.random());
-
-const heightFieldGeometry = new THREE.PlaneGeometry(
-	heightFieldWidth,
-	heightFieldHeight,
-	heightFieldWidth - 1,
-	heightFieldHeight - 1,
-);
-
-heightField.forEach((v, index) => {
-	heightFieldGeometry.attributes['position'].array[index * 3 + 2] = v;
-});
-heightFieldGeometry.scale(1, -1, 1);
-heightFieldGeometry.rotateX(-Math.PI / 2);
-heightFieldGeometry.rotateY(-Math.PI / 2);
-heightFieldGeometry.computeVertexNormals();
-
-const roundBoxGeometry = new RoundedBoxGeometry(1.4, 1.4, 1.4, 8, 0.2);
-
 @Component({
 	selector: 'app-cute-box',
 	template: `
@@ -254,13 +233,29 @@ export class Suzanne {
 })
 export default class AllCollidersExample {
 	protected readonly DoubleSide = THREE.DoubleSide;
-	protected readonly roundBoxGeometry = roundBoxGeometry;
-	protected readonly heightFieldGeometry = heightFieldGeometry;
-	protected readonly heightFieldWidth = heightFieldWidth;
-	protected readonly heightFieldHeight = heightFieldHeight;
-	protected readonly heightField = heightField;
 
+	protected heightFieldHeight = 10;
+	protected heightFieldWidth = 10;
+	protected heightField = Array.from({ length: this.heightFieldHeight * this.heightFieldWidth }, () => Math.random());
+	protected heightFieldGeometry = new THREE.PlaneGeometry(
+		this.heightFieldWidth,
+		this.heightFieldHeight,
+		this.heightFieldWidth - 1,
+		this.heightFieldHeight - 1,
+	);
+
+	protected roundBoxGeometry = new RoundedBoxGeometry(1.4, 1.4, 1.4, 8, 0.2);
 	protected capsuleGeometry = new THREE.CapsuleGeometry(0.5, 1, 4, 8);
 	protected cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 2);
 	protected coneGeometry = new THREE.ConeGeometry(0.5, 2);
+
+	constructor() {
+		this.heightField.forEach((v, index) => {
+			this.heightFieldGeometry.attributes['position'].array[index * 3 + 2] = v;
+		});
+		this.heightFieldGeometry.scale(1, -1, 1);
+		this.heightFieldGeometry.rotateX(-Math.PI / 2);
+		this.heightFieldGeometry.rotateY(-Math.PI / 2);
+		this.heightFieldGeometry.computeVertexNormals();
+	}
 }
