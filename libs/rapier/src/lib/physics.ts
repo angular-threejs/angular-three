@@ -127,8 +127,8 @@ export class NgtrPhysics {
 	colliderStates: NgtrColliderStateMap = new Map();
 	rigidBodyEvents: NgtrEventMap = new Map();
 	colliderEvents: NgtrEventMap = new Map();
-	private beforeStepCallbacks: NgtrWorldStepCallbackSet = new Set();
-	private afterStepCallbacks: NgtrWorldStepCallbackSet = new Set();
+	beforeStepCallbacks: NgtrWorldStepCallbackSet = new Set();
+	afterStepCallbacks: NgtrWorldStepCallbackSet = new Set();
 
 	private eventQueue = computed(() => {
 		const rapier = this.rapier();

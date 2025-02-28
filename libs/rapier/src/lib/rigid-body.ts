@@ -11,8 +11,16 @@ import {
 	model,
 	output,
 	untracked,
+	viewChildren,
 } from '@angular/core';
-import { ActiveEvents, Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier3d-compat';
+import {
+	ActiveEvents,
+	Collider,
+	ColliderDesc,
+	InteractionGroups,
+	RigidBody,
+	RigidBodyDesc,
+} from '@dimforge/rapier3d-compat';
 import {
 	applyProps,
 	extend,
@@ -29,6 +37,7 @@ import {
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Object3D } from 'three';
+import { COLLISION_GROUPS_HANDLER } from './interaction-groups';
 import { NgtrPhysics } from './physics';
 import { _matrix4, _position, _rotation, _scale, _vector3 } from './shared';
 import type {
@@ -439,6 +448,27 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtrAnyCollider],
+	providers: [
+		{
+			provide: COLLISION_GROUPS_HANDLER,
+			useFactory: (rigidBody: NgtrRigidBody) => {
+				return () => {
+					const anyColliders = rigidBody.anyColliders();
+					if (!anyColliders.length) return;
+
+					const colliders = anyColliders.map((anyCollider) => anyCollider['collider']);
+					return (interactionGroups: InteractionGroups) => {
+						for (const colliderFn of colliders) {
+							const collider = colliderFn();
+							if (!collider) continue;
+							collider.setCollisionGroups(interactionGroups);
+						}
+					};
+				};
+			},
+			deps: [NgtrRigidBody],
+		},
+	],
 })
 export class NgtrRigidBody {
 	type = input.required({
@@ -454,6 +484,8 @@ export class NgtrRigidBody {
 	quaternion = input<NgtQuaternion>();
 	userData = input<NgtThreeElements['ngt-object3D']['userData']>();
 	options = input(rigidBodyDefaultOptions, { transform: mergeInputs(rigidBodyDefaultOptions) });
+
+	anyColliders = viewChildren(NgtrAnyCollider);
 
 	private object3DParameters = computed(() => {
 		const [position, rotation, scale, quaternion, userData] = [
