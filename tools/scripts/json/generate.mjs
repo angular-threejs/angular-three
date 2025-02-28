@@ -54,7 +54,6 @@ const PROPERTIES_TO_SKIP = [
 	'saveState',
 	'parent',
 	'children',
-	'name',
 	'userData',
 	'up',
 ];

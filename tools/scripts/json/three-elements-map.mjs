@@ -24,6 +24,14 @@ export const NGT_THREE_ELEMENTS = {
 	'ngt-instanced-buffer-geometry': 'InstancedBufferGeometry',
 	'ngt-buffer-geometry': 'BufferGeometry',
 	'ngt-wireframe-geometry': 'WireframeGeometry',
+	'ngt-box-geometry': 'BoxGeometry',
+	'ngt-extrude-geometry': 'ExtrudeGeometry',
+	'ngt-shape-geometry': 'ShapeGeometry',
+	'ngt-circle-geometry': 'CircleGeometry',
+	'ngt-cylinder-geometry': 'CylinderGeometry',
+	'ngt-capsule-geometry': 'CapsuleGeometry',
+	'ngt-cone-geometry': 'ConeGeometry',
+	'ngt-edges-geometry': 'EdgesGeometry',
 	'ngt-tetrahedron-geometry': 'TetrahedronGeometry',
 	'ngt-octahedron-geometry': 'OctahedronGeometry',
 	'ngt-icosahedron-geometry': 'IcosahedronGeometry',
@@ -114,8 +122,8 @@ export const ELEMENT_METADATA = {
 			{
 				name: 'rawValue',
 				type: 'any',
-				description: 'Raw value to be attached'
-			}
-		]
+				description: 'Raw value to be attached',
+			},
+		],
 	},
 };

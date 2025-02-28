@@ -150,6 +150,14 @@ export interface NgtThreeElements {
 	'ngt-instanced-buffer-geometry': NgtThreeElementsImpl['InstancedBufferGeometry'];
 	'ngt-buffer-geometry': NgtThreeElementsImpl['BufferGeometry'];
 	'ngt-wireframe-geometry': NgtThreeElementsImpl['WireframeGeometry'];
+	'ngt-box-geometry': NgtThreeElementsImpl['BoxGeometry'];
+	'ngt-extrude-geometry': NgtThreeElementsImpl['ExtrudeGeometry'];
+	'ngt-shape-geometry': NgtThreeElementsImpl['ShapeGeometry'];
+	'ngt-circle-geometry': NgtThreeElementsImpl['CircleGeometry'];
+	'ngt-cylinder-geometry': NgtThreeElementsImpl['CylinderGeometry'];
+	'ngt-capsule-geometry': NgtThreeElementsImpl['CapsuleGeometry'];
+	'ngt-cone-geometry': NgtThreeElementsImpl['ConeGeometry'];
+	'ngt-edges-geometry': NgtThreeElementsImpl['EdgesGeometry'];
 	'ngt-tetrahedron-geometry': NgtThreeElementsImpl['TetrahedronGeometry'];
 	'ngt-octahedron-geometry': NgtThreeElementsImpl['OctahedronGeometry'];
 	'ngt-icosahedron-geometry': NgtThreeElementsImpl['IcosahedronGeometry'];
