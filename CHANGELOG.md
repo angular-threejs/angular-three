@@ -1,3 +1,18 @@
+## 4.0.0-next.66 (2025-02-28)
+
+### 🚀 Features
+
+- **rapier:** add interaction groups and physics step support ([8ba12fe6](https://github.com/angular-threejs/angular-three/commit/8ba12fe6))
+- **rapier/addons:** add attractor in addons secondary entry point ([c7e6e451](https://github.com/angular-threejs/angular-three/commit/c7e6e451))
+
+### 🩹 Fixes
+
+- **core:** add missing geometry three elements ([0f3eb989](https://github.com/angular-threejs/angular-three/commit/0f3eb989))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.65 (2025-02-27)
 
 ### 🩹 Fixes
