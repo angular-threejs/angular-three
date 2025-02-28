@@ -43,5 +43,9 @@ export default class Rapier {
 		'all-colliders',
 		'sensors',
 		'contact-force-events',
+		'active-collision-types',
+		'attractors',
+		'kinematics',
+		'car',
 	];
 }

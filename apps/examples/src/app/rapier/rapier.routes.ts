@@ -46,6 +46,22 @@ const routes: Routes = [
 				loadComponent: () => import('./contact-force-events/contact-force-events'),
 			},
 			{
+				path: 'active-collision-types',
+				loadComponent: () => import('./active-collision-types/active-collision-types'),
+			},
+			{
+				path: 'attractors',
+				loadComponent: () => import('./attractors/attractors'),
+			},
+			{
+				path: 'kinematics',
+				loadComponent: () => import('./kinematics/kinematics'),
+			},
+			{
+				path: 'car',
+				loadComponent: () => import('./car/car'),
+			},
+			{
 				path: '',
 				redirectTo: 'basic',
 				pathMatch: 'full',
