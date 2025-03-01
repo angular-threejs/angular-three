@@ -104,10 +104,8 @@ export class Suzanne {
 			</ngt-object3D>
 
 			<ngt-object3D rigidBody [position]="[6, 0, 0]" [options]="{ colliders: false }">
-				<ngt-mesh castShadow receiveShadow [geometry]="capsuleGeometry">
-					<!-- TODO: rigidBody does not work with *args
+				<ngt-mesh castShadow receiveShadow>
 					<ngt-capsule-geometry *args="[0.5, 1, 4, 8]" />
-          -->
 					<ngt-mesh-physical-material color="orange" />
 				</ngt-mesh>
 				<ngt-object3D [capsuleCollider]="[0.5, 0.5]" />
@@ -117,10 +115,8 @@ export class Suzanne {
 			</ngt-object3D>
 
 			<ngt-object3D rigidBody [position]="[15, 0, 0]" [options]="{ colliders: false }">
-				<ngt-mesh castShadow receiveShadow [geometry]="cylinderGeometry">
-					<!-- TODO: rigidBody does not work with *args
-          <ngt-cylinder-geometry *args="[0.5, 0.5, 2]" />
-          -->
+				<ngt-mesh castShadow receiveShadow>
+					<ngt-cylinder-geometry *args="[0.5, 0.5, 2]" />
 					<ngt-mesh-physical-material color="orange" />
 				</ngt-mesh>
 				<ngt-object3D [cylinderCollider]="[1, 0.5]" />
@@ -154,10 +150,8 @@ export class Suzanne {
 			</ngt-object3D>
 
 			<ngt-object3D rigidBody [options]="{ colliders: false }">
-				<ngt-mesh castShadow receiveShadow [geometry]="coneGeometry">
-					<!-- TODO: rigidBody does not work with *args
-          <ngt-cone-geometry *args="[0.5, 2]" />
-          -->
+				<ngt-mesh castShadow receiveShadow>
+					<ngt-cone-geometry *args="[0.5, 2]" />
 					<ngt-mesh-physical-material color="orange" />
 				</ngt-mesh>
 				<ngt-object3D [coneCollider]="[1, 0.5]" />
@@ -167,10 +161,8 @@ export class Suzanne {
 			</ngt-object3D>
 
 			<ngt-object3D rigidBody [position]="[0, 3, 0]" [options]="{ colliders: false }">
-				<ngt-mesh castShadow receiveShadow [geometry]="coneGeometry">
-					<!-- TODO: rigidBody does not work with *args
-          <ngt-cone-geometry *args="[0.5, 2]" />
-          -->
+				<ngt-mesh castShadow receiveShadow>
+					<ngt-cone-geometry *args="[0.5, 2]" />
 					<ngt-mesh-physical-material color="orange" />
 				</ngt-mesh>
 				<ngt-object3D [roundConeCollider]="[1, 0.5, 0.1]" />
@@ -180,10 +172,8 @@ export class Suzanne {
 			</ngt-object3D>
 
 			<ngt-object3D rigidBody [position]="[3, 3, 0]" [options]="{ colliders: false }">
-				<ngt-mesh castShadow receiveShadow [geometry]="cylinderGeometry">
-					<!-- TODO: rigidBody does not work with *args
-          <ngt-cylinder-geometry *args="[0.5, 0.5, 2]" />
-          -->
+				<ngt-mesh castShadow receiveShadow>
+					<ngt-cylinder-geometry *args="[0.5, 0.5, 2]" />
 					<ngt-mesh-physical-material color="orange" />
 				</ngt-mesh>
 				<ngt-object3D [roundCylinderCollider]="[1, 0.4, 0.1]" />
@@ -227,6 +217,7 @@ export class Suzanne {
 		NgtrRoundCylinderCollider,
 		NgtrHeightfieldCollider,
 		NgtsHTML,
+		NgtArgs,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -245,9 +236,6 @@ export default class AllCollidersExample {
 	);
 
 	protected roundBoxGeometry = new RoundedBoxGeometry(1.4, 1.4, 1.4, 8, 0.2);
-	protected capsuleGeometry = new THREE.CapsuleGeometry(0.5, 1, 4, 8);
-	protected cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 2);
-	protected coneGeometry = new THREE.ConeGeometry(0.5, 2);
 
 	constructor() {
 		this.heightField.forEach((v, index) => {

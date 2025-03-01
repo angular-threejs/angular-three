@@ -7,9 +7,8 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { injectBeforeRender, NgtVector3 } from 'angular-three';
+import { injectBeforeRender, NgtArgs, NgtVector3 } from 'angular-three';
 import { injectRevoluteJoint, NgtrRigidBody } from 'angular-three-rapier';
-import * as THREE from 'three';
 
 @Directive({ selector: '[rigidBody][wheel]' })
 export class WheelJoint {
@@ -50,9 +49,8 @@ export class WheelJoint {
 					[options]="{ colliders: 'hull' }"
 					[wheel]="body"
 				>
-					<ngt-mesh castShadow receiveShadow [rotation.x]="Math.PI / 2" [geometry]="cylinderGeometry">
-						<!--            TODO: rigidBody does not work with *args-->
-						<!--            <ngt-cylinder-geometry *args="[1, 1, 1, 32]" />-->
+					<ngt-mesh castShadow receiveShadow [rotation.x]="Math.PI / 2">
+						<ngt-cylinder-geometry *args="[1, 1, 1, 32]" />
 						<ngt-mesh-standard-material color="grey" />
 					</ngt-mesh>
 				</ngt-object3D>
@@ -61,10 +59,9 @@ export class WheelJoint {
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtrRigidBody, WheelJoint],
+	imports: [NgtrRigidBody, WheelJoint, NgtArgs],
 })
 export default class CarExample {
-	protected cylinderGeometry = new THREE.CylinderGeometry(1, 1, 1, 32);
 	protected wheelPositions: NgtVector3[] = [
 		[-3, 0, 2],
 		[-3, 0, -2],

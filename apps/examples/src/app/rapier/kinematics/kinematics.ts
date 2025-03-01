@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
 
@@ -60,9 +60,8 @@ export class Ball {
 				[options]="{ colliders: 'cuboid' }"
 				[position]="[0, -8, 0]"
 			>
-				<ngt-mesh castShadow receiveShadow [geometry]="boxGeometry">
-					<!--          TODO: rigidBody does not work with *args-->
-					<!--          <ngt-box-geometry *args="[40, 1, 40]" />-->
+				<ngt-mesh castShadow receiveShadow>
+					<ngt-box-geometry *args="[40, 1, 40]" />
 					<ngt-mesh-physical-material />
 				</ngt-mesh>
 			</ngt-object3D>
@@ -70,11 +69,9 @@ export class Ball {
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [Ball, NgtrRigidBody],
+	imports: [Ball, NgtrRigidBody, NgtArgs],
 })
 export default class KinematicsExample {
-	protected boxGeometry = new THREE.BoxGeometry(40, 1, 40);
-
 	private torusRef = viewChild.required('torus', { read: NgtrRigidBody });
 	private platformRef = viewChild.required('platform', { read: NgtrRigidBody });
 

@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, output, signal, viewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
+	inject,
+	output,
+	signal,
+	viewChild,
+} from '@angular/core';
+import { NgtArgs } from 'angular-three';
 import { NgtrContactForcePayload, NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
 
@@ -55,21 +65,18 @@ export class Ball {
 	selector: 'app-floor',
 	template: `
 		<ngt-object3D rigidBody="fixed" [options]="{ colliders: 'cuboid' }">
-			<ngt-mesh [geometry]="boxGeometry">
-				<!-- TODO: rigidBody does not work with *args
-        <ngt-box-geometry *args="[10, 1, 10]" />
-        -->
+			<ngt-mesh>
+				<ngt-box-geometry *args="[10, 1, 10]" />
 				<ngt-mesh-physical-material [color]="floorColor()" />
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
-	imports: [NgtrRigidBody],
+	imports: [NgtrRigidBody, NgtArgs],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Floor {
 	protected readonly floorColor = floorColor;
-	protected boxGeometry = new THREE.BoxGeometry(10, 1, 10);
 }
 
 @Component({
@@ -85,7 +92,11 @@ export class Floor {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export default class ContactForceEventsExample {
-	protected readonly floorColor = floorColor;
+	constructor() {
+		inject(DestroyRef).onDestroy(() => {
+			floorColor.set(startColor.clone().getHex());
+		});
+	}
 
 	protected onContactForce(totalForceMagnitude: number) {
 		const color = startColor.clone().multiplyScalar(1 - totalForceMagnitude / startForce);

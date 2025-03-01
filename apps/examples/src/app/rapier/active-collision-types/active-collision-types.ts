@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
 import { ActiveCollisionTypes } from '@dimforge/rapier3d-compat';
-import { injectBeforeRender } from 'angular-three';
+import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
-import * as THREE from 'three';
 
 @Component({
 	selector: 'app-ball',
@@ -44,20 +43,17 @@ export class Ball {
 	selector: 'app-wall',
 	template: `
 		<ngt-object3D rigidBody="fixed" [options]="{ colliders: 'cuboid' }">
-			<ngt-mesh [geometry]="boxGeometry">
-				<!--        TODO: rigidBody does not work with *args       -->
-				<!--        <ngt-box-geometry *args="[0.5, 5, 2]" />-->
+			<ngt-mesh>
+				<ngt-box-geometry *args="[0.5, 5, 2]" />
 				<ngt-mesh-standard-material transparent [opacity]="0.5" />
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtrRigidBody],
+	imports: [NgtrRigidBody, NgtArgs],
 })
-export class Wall {
-	protected boxGeometry = new THREE.BoxGeometry(0.5, 5, 2);
-}
+export class Wall {}
 
 @Component({
 	selector: 'app-active-collision-types-rapier',
