@@ -32,12 +32,7 @@ type AOBoxGLTF = GLTF & {
 
 				<!-- A box with baked AO -->
 				@if (gltf(); as gltf) {
-					<ngt-mesh
-						castShadow
-						receiveShadow
-						[rotation]="rotation()"
-						[geometry]="gltf.nodes.Cube.geometry"
-					>
+					<ngt-mesh castShadow receiveShadow [rotation]="rotation()" [geometry]="gltf.nodes.Cube.geometry">
 						<ngt-mesh-standard-material
 							[aoMapIntensity]="1"
 							[aoMap]="gltf.nodes.Cube.material.aoMap"

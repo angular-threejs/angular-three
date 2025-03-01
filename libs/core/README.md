@@ -22,10 +22,10 @@ import { extend } from 'angular-three';
 import { Mesh, BoxGeometry } from 'three';
 
 extend({
- Mesh, // makes ngt-mesh available
- BoxGeometry, // makes ngt-box-geometry available
- /* ... */
- MyMesh: Mesh, // makes ngt-my-mesh available
+	Mesh, // makes ngt-mesh available
+	BoxGeometry, // makes ngt-box-geometry available
+	/* ... */
+	MyMesh: Mesh, // makes ngt-my-mesh available
 });
 
 // alternatively for demo purposes, you can use the following
@@ -33,14 +33,14 @@ extend({
 // This includes the entire THREE.js namespace
 
 @Component({
- selector: 'app-scene-graph',
- template: `
-  <ngt-mesh>
-   <ngt-box-geometry />
-  </ngt-mesh>
- `,
- schemas: [CUSTOM_ELEMENTS_SCHEMA], // required
- changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'app-scene-graph',
+	template: `
+		<ngt-mesh>
+			<ngt-box-geometry />
+		</ngt-mesh>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA], // required
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {}
 ```
@@ -52,14 +52,14 @@ import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph } from './scene-graph';
 
 @Component({
- // This Component is rendered normally in Angular.
- selector: 'app-my-experience',
- template: `
-  <ngt-canvas>
-   <app-scene-graph *canvasContent />
-  </ngt-canvas>
- `,
- imports: [NgtCanvas],
+	// This Component is rendered normally in Angular.
+	selector: 'app-my-experience',
+	template: `
+		<ngt-canvas>
+			<app-scene-graph *canvasContent />
+		</ngt-canvas>
+	`,
+	imports: [NgtCanvas],
 })
 export class MyExperience {}
 ```
@@ -72,6 +72,6 @@ export class MyExperience {}
 import { provideNgtRenderer } from 'angular-three/dom';
 
 bootstrapApplication(AppComponent, {
- providers: [provideNgtRenderer()],
+	providers: [provideNgtRenderer()],
 });
 ```
