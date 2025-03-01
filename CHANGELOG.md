@@ -1,3 +1,13 @@
+## 4.0.0-next.67 (2025-03-01)
+
+### 🚀 Features
+
+- bump three 0.174 ([605816e1](https://github.com/angular-threejs/angular-three/commit/605816e1))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.66 (2025-02-28)
 
 ### 🚀 Features
