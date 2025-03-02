@@ -74,6 +74,19 @@ const routes: Routes = [
 				loadComponent: () => import('./car/car'),
 			},
 			{
+				path: 'locked-transforms',
+				providers: [provideResetOrbitControls(30)],
+				loadComponent: () => import('./locked-transforms/locked-transforms'),
+			},
+			{
+				path: 'cradle',
+				loadComponent: () => import('./cradle/cradle'),
+			},
+			{
+				path: 'all-shapes',
+				loadComponent: () => import('./all-shapes/all-shapes'),
+			},
+			{
 				path: '',
 				redirectTo: 'basic',
 				pathMatch: 'full',

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { extend } from 'angular-three';
 import * as THREE from 'three';
+import routes from './rapier.routes';
 
 extend(THREE);
 
@@ -32,20 +33,5 @@ extend(THREE);
 	host: { class: 'rapier' },
 })
 export default class Rapier {
-	protected examples = [
-		'basic',
-		'rope-joint',
-		'spring',
-		'cluster',
-		'instanced-mesh',
-		'joints',
-		'performance',
-		'all-colliders',
-		'sensors',
-		'contact-force-events',
-		'active-collision-types',
-		'attractors',
-		'kinematics',
-		'car',
-	];
+	protected examples = routes[0].children?.filter((route) => !!route.path).map((route) => route.path) || [];
 }
