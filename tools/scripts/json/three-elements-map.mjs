@@ -120,7 +120,7 @@ export const ELEMENT_METADATA = {
 		onlyCommonProperties: true,
 		properties: [
 			{
-				name: 'rawValue',
+				name: '[rawValue]',
 				type: 'any',
 				description: 'Raw value to be attached',
 			},
