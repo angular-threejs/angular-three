@@ -52,7 +52,11 @@ export interface NgtsCausticsOptions extends Partial<NgtThreeElements['ngt-group
 	/** Buffer resolution, default: 2048 */
 	resolution: number;
 	/** Camera position, it will point towards the contents bounds center, default: [5, 5, 5] */
-	lightSource: [x: number, y: number, z: number] | ElementRef<THREE.Object3D> | THREE.Object3D;
+	lightSource:
+		| [x: number, y: number, z: number]
+		| ElementRef<THREE.Object3D | NgtThreeElements['ngt-object3D']>
+		| THREE.Object3D
+		| NgtThreeElements['ngt-object3D'];
 }
 
 const defaultOptions: NgtsCausticsOptions = {
@@ -199,7 +203,7 @@ export class NgtsCaustics {
 				params: Object.assign(rest, {
 					lightSource: Array.isArray(lightSource)
 						? new THREE.Vector3(...lightSource)
-						: resolveRef(lightSource),
+						: (resolveRef(lightSource) as THREE.Object3D),
 				}),
 				normalTarget: this.normalTarget(),
 				normalTargetB: this.normalTargetB(),
