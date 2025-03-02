@@ -78,9 +78,10 @@ export function injectCubeCamera(options: () => CubeCameraOptions, { injector }:
 	});
 }
 
-export interface NgtsCubeCameraOptions extends Partial<NgtThreeElements['ngt-group']>, CubeCameraOptions {
-	frames: number;
-}
+export type NgtsCubeCameraOptions = Partial<NgtThreeElements['ngt-group']> &
+	CubeCameraOptions & {
+		frames: number;
+	};
 
 const defaultOptions: NgtsCubeCameraOptions = {
 	frames: Infinity,
