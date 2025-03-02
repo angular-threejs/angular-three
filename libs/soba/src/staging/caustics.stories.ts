@@ -4,7 +4,6 @@ import {
 	CUSTOM_ELEMENTS_SCHEMA,
 	ElementRef,
 	input,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
@@ -32,7 +31,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 					<ngt-mesh
 						castShadow
 						[scale]="1.2"
-						[geometry]="gltf.nodes.flowers.geometry"
+						[geometry]="gltf.meshes['flowers'].geometry"
 						[material]="gltf.materials['draifrawer_u1_v1.001']"
 					/>
 				</ngts-center>
@@ -49,13 +48,12 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 						backsideIOR: 1.26,
 					}"
 				>
-					<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.glass.geometry">
+					<ngt-mesh castShadow receiveShadow [geometry]="gltf.meshes['glass'].geometry">
 						<ngts-mesh-transmission-material
 							[options]="{
 								backside: true,
 								backsideThickness: 0.1,
 								thickness: 0.05,
-								chromaticAberration: 0.05,
 								anisotropicBlur: 1,
 								clearcoat: 1,
 								clearcoatRoughness: 1,
@@ -67,10 +65,10 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 
 				<ngt-mesh
 					[scale]="[0.95, 1, 0.95]"
-					[geometry]="gltf.nodes.glass_back.geometry"
+					[geometry]="gltf.meshes['glass_back'].geometry"
 					[material]="innerMaterial"
 				/>
-				<ngt-mesh [geometry]="gltf.nodes.glass_inner.geometry" [material]="innerMaterial" />
+				<ngt-mesh [geometry]="gltf.meshes['glass_inner'].geometry" [material]="innerMaterial" />
 			</ngt-group>
 		}
 	`,
@@ -81,7 +79,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 class Scene {
 	debug = input(false);
 
-	gltf = injectGLTF(() => './glass-transformed.glb') as Signal<any>;
+	gltf = injectGLTF(() => './glass-transformed.glb');
 	color = new Color(1, 0.8, 0.8);
 	innerMaterial = new MeshStandardMaterial({
 		transparent: true,

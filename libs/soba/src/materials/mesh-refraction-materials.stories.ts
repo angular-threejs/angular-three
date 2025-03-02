@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { injectLoader, NgtArgs } from 'angular-three';
 import { NgtsCameraContent, NgtsCubeCamera } from 'angular-three-soba/cameras';
@@ -28,7 +28,7 @@ injectLoader.preload(
 	selector: 'diamond-flat',
 	template: `
 		@if (texture(); as envMap) {
-			<ngts-cube-camera [options]="{ envMap, frames: 1, resolution: 256 }">
+			<ngts-cube-camera [options]="{ envMap: envMap, frames: 1, resolution: 256 }">
 				<ng-template cameraContent let-cameraTexture>
 					@if (gltf(); as gltf) {
 						<ngts-caustics
@@ -45,7 +45,7 @@ injectLoader.preload(
 						>
 							<ngt-mesh
 								castShadow
-								[geometry]="gltf.nodes.Diamond_1_0.geometry"
+								[geometry]="gltf.meshes['Diamond_1_0'].geometry"
 								[rotation]="rotation()"
 								[position]="position()"
 							>
@@ -67,7 +67,7 @@ class Diamond {
 	lightSource = input<NgtsCausticsOptions['lightSource']>();
 	options = input({} as NgtsMeshRefractionMaterialOptions);
 
-	gltf = injectGLTF(() => './dflat.glb') as Signal<any | null>;
+	gltf = injectGLTF(() => './dflat.glb');
 	texture = injectLoader(
 		() => RGBELoader,
 		() => 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr',

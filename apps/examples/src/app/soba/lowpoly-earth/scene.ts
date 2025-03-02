@@ -9,7 +9,6 @@ import {
 	ElementRef,
 	input,
 	signal,
-	Signal,
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
@@ -93,13 +92,13 @@ export class MarkerIcon extends NgtHTML {
 		@if (gltf(); as gltf) {
 			<ngt-group [rotation]="[-Math.PI / 2, 0, Math.PI]" [position]="position()" [dispose]="null">
 				<ngt-mesh
-					[geometry]="gltf.nodes['URF-Height_Lampd_Ice_0'].geometry"
-					[material]="gltf.materials.Lampd_Ice"
+					[geometry]="gltf.meshes['URF-Height_Lampd_Ice_0'].geometry"
+					[material]="gltf.materials['Lampd_Ice']"
 				/>
-				<ngt-mesh [geometry]="gltf.nodes['URF-Height_watr_0'].geometry" [material]="gltf.materials.watr">
+				<ngt-mesh [geometry]="gltf.meshes['URF-Height_watr_0'].geometry" [material]="gltf.materials['watr']">
 					<ngt-value [rawValue]="0" attach="material.roughness" />
 				</ngt-mesh>
-				<ngt-mesh [geometry]="gltf.nodes['URF-Height_Lampd_0'].geometry" [material]="gltf.materials.Lampd">
+				<ngt-mesh [geometry]="gltf.meshes['URF-Height_Lampd_0'].geometry" [material]="gltf.materials['Lampd']">
 					<ngt-value [rawValue]="'lightgreen'" attach="material.color" />
 
 					<app-marker [position]="[0, 1.3, 0]" [rotation]="[0, Math.PI / 2, 0]">
@@ -128,7 +127,7 @@ export class Model {
 
 	protected content = contentChild.required(TemplateRef);
 
-	protected gltf = injectGLTF(() => './earth.gltf') as Signal<any>;
+	protected gltf = injectGLTF(() => './earth.gltf');
 }
 
 @Component({

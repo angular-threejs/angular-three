@@ -50,11 +50,12 @@ export function makeCameraInstance(isOrthographic: boolean, size: NgtSize) {
 export type NgtObjectMap = {
 	nodes: Record<string, THREE.Object3D<any>>;
 	materials: Record<string, THREE.Material>;
+	meshes: Record<string, THREE.Mesh>;
 	[key: string]: any;
 };
 
 export function makeObjectGraph(object: THREE.Object3D): NgtObjectMap {
-	const data: NgtObjectMap = { nodes: {}, materials: {} };
+	const data: NgtObjectMap = { nodes: {}, materials: {}, meshes: {} };
 
 	if (object) {
 		object.traverse((child) => {
@@ -63,6 +64,7 @@ export function makeObjectGraph(object: THREE.Object3D): NgtObjectMap {
 				data.materials[((child as THREE.Mesh).material as THREE.Material).name] = (child as THREE.Mesh)
 					.material as THREE.Material;
 			}
+			if (is.three<THREE.Mesh>(child, 'isMesh') && !data.meshes[child.name]) data.meshes[child.name] = child;
 		});
 	}
 	return data;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
@@ -12,30 +12,36 @@ import { number, storyDecorators, storyObject } from '../setup-canvas';
 	template: `
 		<ngt-group [dispose]="null">
 			@if (gltf(); as gltf) {
-				<ngt-mesh [geometry]="gltf.nodes.cube1.geometry" [position]="[-0.56, 0.38, -0.11]">
+				<ngt-mesh [geometry]="gltf.meshes['cube1'].geometry" [position]="[-0.56, 0.38, -0.11]">
 					<ngts-mesh-transmission-material [options]="options()" />
 				</ngt-mesh>
 
 				<ngt-mesh
 					castShadow
 					[renderOrder]="100"
-					[geometry]="gltf.nodes.cube2.geometry"
-					[material]="gltf.materials.cube_mat"
+					[geometry]="gltf.meshes['cube2'].geometry"
+					[material]="gltf.materials['cube_mat']"
 					[position]="[-0.56, 0.38, -0.11]"
 				>
 					<ngt-value [rawValue]="FrontSide" attach="material.side" />
 				</ngt-mesh>
 
 				<ngt-mesh
-					[geometry]="gltf.nodes.bubbles.geometry"
-					[material]="gltf.materials.cube_bubbles_mat"
+					[geometry]="gltf.meshes['bubbles'].geometry"
+					[material]="gltf.materials['cube_bubbles_mat']"
 					[position]="[-0.56, 0.38, -0.11]"
 				/>
 
 				<ngt-group [position]="[-0.56, 0.38, -0.41]">
-					<ngt-mesh [geometry]="gltf.nodes.arrows.geometry" [material]="gltf.materials.weapons_mat" />
-					<ngt-mesh [geometry]="gltf.nodes.skeleton_1.geometry" [material]="gltf.materials.skele_mat" />
-					<ngt-mesh [geometry]="gltf.nodes.skeleton_2.geometry" [material]="gltf.materials.weapons_mat">
+					<ngt-mesh [geometry]="gltf.meshes['arrows'].geometry" [material]="gltf.materials['weapons_mat']" />
+					<ngt-mesh
+						[geometry]="gltf.meshes['skeleton_1'].geometry"
+						[material]="gltf.materials['skele_mat']"
+					/>
+					<ngt-mesh
+						[geometry]="gltf.meshes['skeleton_2'].geometry"
+						[material]="gltf.materials['weapons_mat']"
+					>
 						<ngt-value [rawValue]="FrontSide" attach="material.side" />
 					</ngt-mesh>
 				</ngt-group>
@@ -52,7 +58,7 @@ class GelatinousCube {
 
 	options = input({} as NgtsMeshTransmissionMaterialOptions);
 
-	gltf = injectGLTF(() => './gelatinous_cube.glb') as Signal<any>;
+	gltf = injectGLTF(() => './gelatinous_cube.glb');
 }
 
 @Component({

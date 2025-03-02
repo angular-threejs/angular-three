@@ -7,7 +7,6 @@ import {
 	inject,
 	input,
 	signal,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
@@ -113,7 +112,7 @@ class LittlestTokyoStory {
 				<ngt-mesh
 					#mesh
 					[(intersect)]="isIntersect"
-					[geometry]="gltf.nodes.Suzanne.geometry"
+					[geometry]="gltf.meshes['Suzanne'].geometry"
 					(pointerover)="hovered.set(true)"
 					(pointerout)="hovered.set(false)"
 				>
@@ -131,7 +130,7 @@ class Suzanne {
 	position = input([0, 0, 0]);
 	scale = input(1);
 
-	gltf = injectGLTF(() => './suzanne.glb') as Signal<any>;
+	gltf = injectGLTF(() => './suzanne.glb');
 
 	hovered = signal(false);
 	isIntersect = signal(false);

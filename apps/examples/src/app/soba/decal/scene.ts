@@ -5,7 +5,6 @@ import {
 	ElementRef,
 	input,
 	signal,
-	Signal,
 	viewChild,
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
@@ -71,7 +70,7 @@ export class Dodecahedron {
 	selector: 'app-bunny',
 	template: `
 		@if (gltf(); as gltf) {
-			<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.bunny.geometry" [dispose]="null">
+			<ngt-mesh castShadow receiveShadow [geometry]="gltf.meshes['bunny'].geometry" [dispose]="null">
 				<ngt-mesh-standard-material color="black" />
 				<ngts-decal
 					[options]="{ position: [0, 0.9, 0.75], rotation: [-0.4, Math.PI, 0], scale: [0.9, 0.25, 1] }"
@@ -109,7 +108,7 @@ export class Dodecahedron {
 export class Bunny {
 	protected readonly Math = Math;
 
-	protected gltf = injectGLTF(() => './bunny-transformed.glb') as Signal<any | null>;
+	protected gltf = injectGLTF(() => './bunny-transformed.glb');
 
 	private textRef = viewChild(NgtsText);
 
@@ -128,9 +127,9 @@ export class Bunny {
 	template: `
 		<ngt-color attach="background" *args="['#f0f0f0']" />
 		<ngt-ambient-light [intensity]="0.25 * Math.PI" />
-		<ngt-spot-light [decay]="0" [position]="[10, 10, 10]" [angle]="0.15" [penumbra]="1" />
+		<ngt-spot-light [decay]="0" [position]="10" [angle]="0.15" [penumbra]="1" />
 		<ngt-point-light [decay]="0" [position]="[-10, 0, -5]" [intensity]="6" />
-		<ngt-group [position]="[0, -0.75, 0]">
+		<ngt-group [position.y]="-0.75">
 			<app-bunny />
 			<app-dodecahedron [position]="[-0.9, 2, 0.4]" [scale]="0.1" />
 			<ngts-accumulative-shadows
