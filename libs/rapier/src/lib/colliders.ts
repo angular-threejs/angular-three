@@ -70,7 +70,7 @@ export class NgtrConvexHullCollider {
 
 	constructor() {
 		const anyCollider = inject(NgtrAnyCollider, { host: true });
-		anyCollider.setShape('roundConvexHull');
+		anyCollider.setShape('convexHull');
 		effect(() => {
 			anyCollider.setArgs(this.args());
 		});
