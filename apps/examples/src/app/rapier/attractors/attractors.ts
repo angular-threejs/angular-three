@@ -3,6 +3,7 @@ import { NgtArgs, NgtVector3 } from 'angular-three';
 import { NgtrInstancedRigidBodies, NgtrInteractionGroups, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtrAttractor } from 'angular-three-rapier/addons';
 import { NgtsHTML } from 'angular-three-soba/misc';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Component({
 	selector: 'app-attractors-rapier',
@@ -45,7 +46,7 @@ import { NgtsHTML } from 'angular-three-soba/misc';
 			</ngt-group>
 		</ngt-group>
 	`,
-
+	hostDirectives: [ResetOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [NgtrInstancedRigidBodies, NgtArgs, NgtrRigidBody, NgtrInteractionGroups, NgtsHTML, NgtrAttractor],

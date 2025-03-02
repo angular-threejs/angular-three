@@ -11,6 +11,7 @@ import {
 import { NgtArgs } from 'angular-three';
 import { NgtrContactForcePayload, NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 // magic number: this is the start force for where the ball drops from
 // and is used to calculate the color change
@@ -87,6 +88,7 @@ export class Floor {
 			<app-floor />
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	imports: [Ball, Floor],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { NgtArgs, NgtVector3 } from 'angular-three';
 import { injectRopeJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 const WALL_COLORS = ['#50514F', '#CBD4C2', '#FFFCFF', '#247BA0', '#C3B299'];
 
@@ -23,7 +24,7 @@ export class Floor {}
 @Component({
 	selector: 'app-box-wall',
 	template: `
-		<ngt-group name="wall" [rotation]="[0, -0.7853982, 0]" [position]="[-1.8, 0, -1.8]">
+		<ngt-group name="wall" [rotation.y]="-0.7853982" [position]="[-1.8, 0, -1.8]">
 			@for (row of rows(); track row) {
 				@for (column of columns(); track column) {
 					<ngt-object3D rigidBody [options]="{ density: 2 }" [position]="[column, row, 0]">
@@ -104,6 +105,7 @@ export class RopeJoint {
 			<app-rope-joint [length]="35" [anchorPosition]="[0, 15, 0]" [ballPosition]="[-8, 15, 8]" />
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'rope-joint-rapier' },

@@ -10,6 +10,7 @@ import {
 import { checkUpdate, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtrInstancedRigidBodies, NgtrInstancedRigidBodyOptions } from 'angular-three-rapier';
 import { Color, InstancedMesh } from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 import { injectSuzanne } from '../suzanne';
 
 const MAX_COUNT = 2000;
@@ -37,6 +38,7 @@ const MAX_COUNT = 2000;
 			}
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'instanced-mesh-rapier' },

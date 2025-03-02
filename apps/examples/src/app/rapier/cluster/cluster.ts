@@ -10,6 +10,7 @@ import {
 import { checkUpdate, injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtrInstancedRigidBodies, NgtrPhysics } from 'angular-three-rapier';
 import { Color, InstancedMesh, Vector3 } from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 const BALLS = 1000;
 
@@ -25,6 +26,7 @@ const BALLS = 1000;
 			</ngt-object3D>
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'cluster-rapier' },

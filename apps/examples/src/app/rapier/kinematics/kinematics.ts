@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild }
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Component({
 	selector: 'app-ball',
@@ -67,6 +68,7 @@ export class Ball {
 			</ngt-object3D>
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [Ball, NgtrRigidBody, NgtArgs],

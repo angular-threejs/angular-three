@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, vie
 import { ActiveCollisionTypes } from '@dimforge/rapier3d-compat';
 import { injectBeforeRender, NgtArgs } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Component({
 	selector: 'app-ball',
@@ -63,6 +64,7 @@ export class Wall {}
 			<app-wall />
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [Ball, Wall],

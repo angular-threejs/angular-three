@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { injectBeforeRender, NgtArgs, NgtVector3 } from 'angular-three';
 import { injectRevoluteJoint, NgtrRigidBody } from 'angular-three-rapier';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Directive({ selector: '[rigidBody][wheel]' })
 export class WheelJoint {
@@ -57,6 +58,7 @@ export class WheelJoint {
 			}
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [NgtrRigidBody, WheelJoint, NgtArgs],

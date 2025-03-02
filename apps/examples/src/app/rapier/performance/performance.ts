@@ -13,6 +13,7 @@ import { NgtrRigidBody } from 'angular-three-rapier';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { Mesh, Vector3Like } from 'three';
 import { GLTF } from 'three-stdlib';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 import { injectSuzanne } from '../suzanne';
 
 @Component({
@@ -136,6 +137,7 @@ export class Bendy {
 			<app-monkey-swarm />
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'performance-rapier' },

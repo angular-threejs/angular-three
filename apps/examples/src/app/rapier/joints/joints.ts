@@ -11,6 +11,7 @@ import {
 import { injectBeforeRender, NgtVector3 } from 'angular-three';
 import { injectPrismaticJoint, injectSphericalJoint, NgtrRigidBody, NgtrRigidBodyType } from 'angular-three-rapier';
 import { Quaternion, Vector3 } from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Component({
 	selector: 'app-rope-segment',
@@ -137,6 +138,7 @@ export class Prismatic {
 			<app-prismatic />
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'joints-rapier' },

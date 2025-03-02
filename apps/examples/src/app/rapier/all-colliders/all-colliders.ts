@@ -15,6 +15,7 @@ import {
 import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three-stdlib';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 import { injectSuzanne } from '../suzanne';
 
 @Component({
@@ -219,6 +220,7 @@ export class Suzanne {
 		NgtsHTML,
 		NgtArgs,
 	],
+	hostDirectives: [ResetOrbitControls],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

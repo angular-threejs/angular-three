@@ -4,6 +4,7 @@ import { injectBeforeRender } from 'angular-three';
 import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import * as THREE from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 const material = new THREE.MeshPhysicalMaterial();
 
@@ -96,6 +97,7 @@ export class Ball {
 			<app-ball />
 		</ngt-group>
 	`,
+	hostDirectives: [ResetOrbitControls],
 	imports: [Goal, Ball],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

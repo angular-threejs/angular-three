@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, i
 import { NgtArgs, NgtVector3, vector3 } from 'angular-three';
 import { injectSpringJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
 import { ColorRepresentation } from 'three';
+import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Component({
 	selector: 'app-box',
@@ -95,6 +96,7 @@ export class BallSpring {
 			</ngt-group>
 		}
 	`,
+	hostDirectives: [ResetOrbitControls],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'spring-rapier' },

@@ -44,7 +44,7 @@ export class Floor {}
 				/>
 
 				<ngts-environment [options]="{ preset: 'apartment' }" />
-				<ngts-orbit-controls />
+				<ngts-orbit-controls [options]="{ makeDefault: true }" />
 
 				<router-outlet #o="outlet" />
 
