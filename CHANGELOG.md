@@ -1,3 +1,21 @@
+## 4.0.0-next.68 (2025-03-02)
+
+### 🚀 Features
+
+- **core:** expose meshes on loaded object graph ([9a0ee1db](https://github.com/angular-threejs/angular-three/commit/9a0ee1db))
+
+### 🩹 Fixes
+
+- **core:** generate rawValue binding ([b22e0d70](https://github.com/angular-threejs/angular-three/commit/b22e0d70))
+- **core:** make sure NgtThreeElements contain correct types for non-mutable props ([1948b34b](https://github.com/angular-threejs/angular-three/commit/1948b34b))
+- **soba/cameras:** adjust NgtsCubeCameraOptions type ([3e0899d9](https://github.com/angular-threejs/angular-three/commit/3e0899d9))
+- **soba/materials:** adjust MeshTransmissionMaterialOptions type ([8073c453](https://github.com/angular-threejs/angular-three/commit/8073c453))
+- **soba/staging:** adjust lightSource type for caustic ([efe1e8ab](https://github.com/angular-threejs/angular-three/commit/efe1e8ab))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.67 (2025-03-01)
 
 ### 🚀 Features
