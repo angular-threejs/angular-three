@@ -1,3 +1,13 @@
+## 4.0.0-next.69 (2025-03-02)
+
+### 🩹 Fixes
+
+- **rapier:** convexHull collider should set shape as convexHull ([9a82fcc9](https://github.com/angular-threejs/angular-three/commit/9a82fcc9))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.68 (2025-03-02)
 
 ### 🚀 Features
