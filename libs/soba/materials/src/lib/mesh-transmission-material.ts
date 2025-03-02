@@ -25,7 +25,10 @@ import { MeshDiscardMaterial, MeshTransmissionMaterial } from 'angular-three-sob
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
-export type MeshTransmissionMaterialOptions = ConstructorParameters<typeof MeshTransmissionMaterial>[0];
+export type MeshTransmissionMaterialOptions = Exclude<
+	ConstructorParameters<typeof MeshTransmissionMaterial>[0],
+	undefined
+>;
 
 export type NgtsMeshTransmissionMaterialOptions = Partial<NgtThreeElements['ngt-mesh-physical-material']> &
 	Omit<MeshTransmissionMaterialOptions, 'buffer' | 'anisotropicBlur' | 'samples' | 'transmissionSampler'> & {
