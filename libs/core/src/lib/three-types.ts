@@ -11,7 +11,7 @@ import type {
 export type NgtNonFunctionKeys<T> = { [K in keyof T]-?: T[K] extends Function ? never : K }[keyof T];
 export type NgtOverwrite<T, O> = Omit<T, NgtNonFunctionKeys<O>> & O;
 export type NgtProperties<T> = Pick<T, NgtNonFunctionKeys<T>>;
-export type NgtMutable<P> = { [K in keyof P]: P[K] | Readonly<P[K]> };
+export type NgtMutable<P> = { [K in keyof P]: P[K] extends Array<any> ? P[K] : P[K] | Readonly<P[K]> };
 
 export interface NgtMathRepresentation {
 	set(...args: number[]): any;
@@ -31,6 +31,15 @@ export type NgtMathType<T extends NgtMathTypes> = T extends THREE.Color
 
 export type NgtMathProperties<P> = {
 	[K in keyof P as P[K] extends NgtMathTypes ? K : never]: P[K] extends NgtMathTypes ? NgtMathType<P[K]> : never;
+};
+
+export type NgtIsProperties<P> = {
+	[K in keyof P as P[K] extends true ? K : never]: true;
+};
+
+export type NgtNonMutableProperties = 'id' | 'uuid' | 'name' | 'type' | 'parent' | 'children';
+export type NgtNonPartialProperties<P> = {
+	[K in keyof P as K extends NgtNonMutableProperties ? K : never]: P[K];
 };
 
 export type NgtNullableRaycast<P> = {
@@ -109,6 +118,8 @@ export type NgtElementProperties<
 	TConstructor extends NgtConstructorRepresentation,
 	TInstance = InstanceType<TConstructor>,
 > = Partial<NgtOverwrite<TInstance, NgtMathProperties<TInstance> & NgtNullableRaycast<TInstance>>> &
+	NgtIsProperties<TInstance> &
+	NgtNonPartialProperties<TInstance> &
 	NgtNodeElement<TConstructor, TInstance>;
 
 export type NgtThreeElement<TConstructor extends NgtConstructorRepresentation> = NgtMutable<
