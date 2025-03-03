@@ -51,7 +51,7 @@ export type NgtsMeshTransmissionMaterialOptions = Partial<NgtThreeElements['ngt-
 		/** Refraction samples, default: 6 */
 		samples: number;
 		/** Buffer scene background (can be a texture, a cubetexture or a color), default: null */
-		background?: THREE.Texture | THREE.Color;
+		background?: THREE.Texture | THREE.Color | null;
 	};
 
 const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
