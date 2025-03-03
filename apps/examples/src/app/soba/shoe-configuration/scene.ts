@@ -8,7 +8,7 @@ import {
 	inject,
 	signal,
 } from '@angular/core';
-import { signalState } from 'angular-three';
+import { NgtArgs, signalState } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsContactShadows, NgtsEnvironment, NgtsFloat } from 'angular-three-soba/staging';
@@ -17,7 +17,7 @@ import shoeGLB from './shoe-draco.glb' with { loader: 'file' };
 
 injectGLTF.preload(() => shoeGLB);
 
-export const state = signalState({
+const state = signalState({
 	current: null as string | null,
 	items: {
 		laces: '#ffffff',
@@ -33,11 +33,25 @@ export const state = signalState({
 
 @Component({
 	selector: 'app-color-picker',
-	template: ``,
+	template: `
+		@let current = state.current();
+		<div class="absolute top-12 left-1/2 -translate-x-1/2" [class]="{ block: !!current, hidden: !current }">
+			@if (current) {
+				@let value = $any(state.items)[current]();
+				<input type="color" [value]="value" (input)="onChange($event, current)" />
+				<h1 class="text-xl font-bold font-mono">{{ current }}</h1>
+			}
+		</div>
+	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorPicker {
 	protected readonly state = state;
+
+	protected onChange(event: Event, current: string) {
+		const target = event.target as HTMLInputElement;
+		this.state.update((state) => ({ items: { ...state.items, [current]: target.value } }));
+	}
 }
 
 @Component({
@@ -156,6 +170,8 @@ export class Shoe {
 @Component({
 	selector: 'app-scene-graph',
 	template: `
+		<ngt-color *args="['#c0c0c0']" attach="background" />
+
 		<ngt-ambient-light [intensity]="Math.PI * 0.7" />
 		<ngt-spot-light
 			[decay]="0"
@@ -174,7 +190,7 @@ export class Shoe {
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [Shoe, NgtsEnvironment, NgtsContactShadows, NgtsOrbitControls],
+	imports: [Shoe, NgtsEnvironment, NgtsContactShadows, NgtsOrbitControls, NgtArgs],
 })
 export class SceneGraph {
 	protected readonly Math = Math;
