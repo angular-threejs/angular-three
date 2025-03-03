@@ -217,6 +217,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'epoxy-resin',
+		loadComponent: () => import('./epoxy-resin/epoxy-resin'),
+		data: {
+			credits: {
+				title: 'Epoxy Resin',
+				link: 'https://pmndrs.github.io/examples/demos/inter-epoxy-resin',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
