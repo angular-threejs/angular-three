@@ -1,3 +1,18 @@
+## 4.0.0-next.70 (2025-03-03)
+
+### 🚀 Features
+
+- **soba/abstractions:** add ngts-text-3D as a selector to text3d ([f048731d](https://github.com/angular-threejs/angular-three/commit/f048731d))
+
+### 🩹 Fixes
+
+- **soba/materials:** add null to meshtransmissionmaterial background option ([d377bc80](https://github.com/angular-threejs/angular-three/commit/d377bc80))
+- **soba/staging:** when temporal is false, set a timeout for PLM update in accumulative shadows ([e7b47551](https://github.com/angular-threejs/angular-three/commit/e7b47551))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.69 (2025-03-02)
 
 ### 🩹 Fixes
