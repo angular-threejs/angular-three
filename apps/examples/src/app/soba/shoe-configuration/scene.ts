@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -65,80 +65,32 @@ export class ColorPicker {
 				(click)="$event.stopPropagation(); state.update({ current: $any($event.object).material.name })"
 			>
 				@if (gltf(); as gltf) {
-					@let nodes = gltf.meshes;
-					@let materials = gltf.materials;
+					<ng-template #mesh let-node="node" let-material="material">
+						<ngt-mesh
+							receiveShadow
+							castShadow
+							[geometry]="gltf.meshes[node].geometry"
+							[material]="gltf.materials[material]"
+						>
+							<ngt-value [rawValue]="$any(state.items)[material]()" attach="material.color" />
+						</ngt-mesh>
+					</ng-template>
 
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe'].geometry"
-						[material]="materials['laces']"
-					>
-						<ngt-value [rawValue]="state.items.laces()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_1'].geometry"
-						[material]="materials['mesh']"
-					>
-						<ngt-value [rawValue]="state.items.mesh()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_2'].geometry"
-						[material]="materials['caps']"
-					>
-						<ngt-value [rawValue]="state.items.caps()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_3'].geometry"
-						[material]="materials['inner']"
-					>
-						<ngt-value [rawValue]="state.items.inner()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_4'].geometry"
-						[material]="materials['sole']"
-					>
-						<ngt-value [rawValue]="state.items.sole()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_5'].geometry"
-						[material]="materials['stripes']"
-					>
-						<ngt-value [rawValue]="state.items.stripes()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_6'].geometry"
-						[material]="materials['band']"
-					>
-						<ngt-value [rawValue]="state.items.band()" attach="material.color" />
-					</ngt-mesh>
-					<ngt-mesh
-						receiveShadow
-						castShadow
-						[geometry]="nodes['shoe_7'].geometry"
-						[material]="materials['patch']"
-					>
-						<ngt-value [rawValue]="state.items.patch()" attach="material.color" />
-					</ngt-mesh>
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe', material: 'laces' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_1', material: 'mesh' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_2', material: 'caps' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_3', material: 'inner' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_4', material: 'sole' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_5', material: 'stripes' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_6', material: 'band' }" />
+					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_7', material: 'patch' }" />
 				}
 			</ngt-group>
 		</ngts-float>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsFloat],
+	imports: [NgtsFloat, NgTemplateOutlet],
 })
 export class Shoe {
 	protected readonly state = state;
