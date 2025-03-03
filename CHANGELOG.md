@@ -1,3 +1,13 @@
+## 4.0.0-next.71 (2025-03-03)
+
+### 🩹 Fixes
+
+- **tweakpane:** use any for binding value instead ([5a09ecab](https://github.com/angular-threejs/angular-three/commit/5a09ecab))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.70 (2025-03-03)
 
 ### 🚀 Features
