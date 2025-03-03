@@ -65,25 +65,22 @@ export class ColorPicker {
 				(click)="$event.stopPropagation(); state.update({ current: $any($event.object).material.name })"
 			>
 				@if (gltf(); as gltf) {
-					<ng-template #mesh let-node="node" let-material="material">
-						<ngt-mesh
-							receiveShadow
-							castShadow
-							[geometry]="gltf.meshes[node].geometry"
-							[material]="gltf.materials[material]"
-						>
-							<ngt-value [rawValue]="$any(state.items)[material]()" attach="material.color" />
+					<ng-template #m let-ctx="ctx">
+						@let geometry = gltf.meshes[ctx[0]].geometry;
+						@let material = gltf.materials[ctx[1]];
+						<ngt-mesh receiveShadow castShadow [geometry]="geometry" [material]="material">
+							<ngt-value [rawValue]="$any(state.items)[ctx[1]]()" attach="material.color" />
 						</ngt-mesh>
 					</ng-template>
 
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe', material: 'laces' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_1', material: 'mesh' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_2', material: 'caps' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_3', material: 'inner' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_4', material: 'sole' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_5', material: 'stripes' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_6', material: 'band' }" />
-					<ng-container *ngTemplateOutlet="mesh; context: { node: 'shoe_7', material: 'patch' }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe', 'laces'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_1', 'mesh'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_2', 'caps'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_3', 'inner'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_4', 'sole'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_5', 'stripes'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_6', 'band'] }" />
+					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe_7', 'patch'] }" />
 				}
 			</ngt-group>
 		</ngts-float>
