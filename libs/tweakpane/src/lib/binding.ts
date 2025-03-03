@@ -38,7 +38,7 @@ export function provideTweakBindingAsHost<TIn, TOut>(inOut?: { in: (value: TIn) 
 	],
 })
 export class NgtTweakBinding<TValue> {
-	value = model.required<TValue>();
+	value = model.required<any>();
 
 	private debounce = inject(NgtTweakDebounce);
 	private label = inject(NgtTweakLabel);
