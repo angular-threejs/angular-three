@@ -141,7 +141,7 @@ export class NgtsAccumulativeShadows {
 			this.pLM().configure(this.planeRef().nativeElement);
 		});
 
-		effect(() => {
+		effect((onCleanup) => {
 			const sceneInstanceState = getInstanceState(this.store.scene());
 			if (!sceneInstanceState) return;
 
@@ -153,7 +153,19 @@ export class NgtsAccumulativeShadows {
 			// Reset internals, buffers, ...
 			this.reset();
 			// Update lightmap
-			if (!this.temporal() && this.frames() !== Infinity) this.update(this.blend());
+
+			// TODO: (chau) this is a hack. not sure why a timeout is needed here. if not PLM.update
+			//  is erroring out on some scenes.
+			let timeout: ReturnType<typeof setTimeout>;
+
+			if (!this.temporal() && this.frames() !== Infinity) {
+				const blend = this.blend();
+				timeout = setTimeout(() => this.update(blend));
+			}
+
+			onCleanup(() => {
+				if (timeout) clearTimeout(timeout);
+			});
 		});
 
 		injectBeforeRender(() => {
@@ -207,7 +219,7 @@ export class NgtsAccumulativeShadows {
 		// Update the lightmap and the accumulative lights
 		for (let i = 0; i < frames; i++) {
 			this.lightsMap.forEach((lightUpdate) => lightUpdate());
-			this.pLM().update(this.store.camera(), this.blend());
+			this.pLM().update(this.store.snapshot.camera, this.blend());
 		}
 		// Switch lights off
 		this.lightsRef().nativeElement.visible = false;
