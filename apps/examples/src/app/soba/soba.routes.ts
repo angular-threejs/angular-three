@@ -227,6 +227,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'shoe-configuration',
+		loadComponent: () => import('./shoe-configuration/shoe-configuration'),
+		data: {
+			credits: {
+				title: 'Shoe Configuration',
+				link: 'https://pmndrs.github.io/examples/demos/shoe-configurator',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
