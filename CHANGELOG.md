@@ -1,3 +1,14 @@
+## 4.0.0-next.75 (2025-03-05)
+
+### 🚀 Features
+
+- **core/dom:** expose host element from NgtCanvasContent ([fc0a6a74](https://github.com/angular-threejs/angular-three/commit/fc0a6a74))
+- **tweakpane:** accept optional container ([2422bfc7](https://github.com/angular-threejs/angular-three/commit/2422bfc7))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.74 (2025-03-05)
 
 ### 🩹 Fixes
