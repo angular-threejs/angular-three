@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
 	afterNextRender,
 	DestroyRef,
@@ -9,6 +10,7 @@ import {
 	isSignal,
 	signal,
 } from '@angular/core';
+import { ClassName } from '@tweakpane/core';
 import { Pane } from 'tweakpane';
 import { PaneConfig } from 'tweakpane/dist/types/pane/pane-config';
 import { NgtTweakFolder } from './folder';
@@ -26,9 +28,11 @@ export class NgtTweakPane {
 	width = input<string | number>('256px');
 	container = input<HTMLElement | ElementRef<HTMLElement | undefined> | undefined>();
 
+	private document = inject(DOCUMENT);
 	private title = inject(NgtTweakTitle, { host: true });
 	private folder = inject(NgtTweakFolder, { host: true });
 	private pane = signal<Pane | null>(null);
+	private paneContainer?: HTMLDivElement;
 
 	constructor() {
 		this.folder.isSelf = false;
@@ -41,7 +45,13 @@ export class NgtTweakPane {
 			};
 
 			if (container) {
-				paneOptions.container = 'nativeElement' in container ? container.nativeElement : container;
+				const containerElement = 'nativeElement' in container ? container.nativeElement : container;
+				if (containerElement) {
+					this.paneContainer = this.document.createElement('div');
+					this.paneContainer.classList.add(ClassName('dfw')());
+					containerElement.appendChild(this.paneContainer);
+					paneOptions.container = this.paneContainer;
+				}
 			}
 
 			const pane = new Pane(paneOptions);
@@ -53,6 +63,10 @@ export class NgtTweakPane {
 		inject(DestroyRef).onDestroy(() => {
 			const pane = this.pane();
 			if (!pane) return;
+
+			if (this.paneContainer) {
+				this.paneContainer.remove();
+			}
 
 			pane.element.remove();
 		});
