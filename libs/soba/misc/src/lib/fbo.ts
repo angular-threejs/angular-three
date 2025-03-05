@@ -14,7 +14,6 @@ import {
 import { injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
-import { TextureEncoding } from './deprecated';
 
 interface FBOSettings {
 	/** Defines the count of MSAA samples. Can only be used with WebGL 2. Default: 0 */
@@ -34,7 +33,6 @@ interface FBOSettings {
 	stencilBuffer?: boolean | undefined; // false;
 	generateMipmaps?: boolean | undefined; // true;
 	depthTexture?: THREE.DepthTexture | undefined;
-	encoding?: TextureEncoding | undefined;
 	colorSpace?: THREE.ColorSpace | undefined;
 }
 
