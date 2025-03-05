@@ -1,7 +1,6 @@
 import { computed, effect, Injector, signal, untracked } from '@angular/core';
 import { GainMapLoader, HDRJPGLoader } from '@monogrid/gainmap-js';
 import { injectLoader, injectStore, is, pick } from 'angular-three';
-import { LinearEncoding, sRGBEncoding, TextureEncoding } from 'angular-three-soba/misc';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { EXRLoader, RGBELoader } from 'three-stdlib';
@@ -28,7 +27,7 @@ export interface NgtsInjectEnvironmentOptions {
 	path: string;
 	preset?: NgtsEnvironmentPresets;
 	extensions?: (loader: THREE.Loader) => void;
-	encoding?: TextureEncoding;
+	colorSpace?: THREE.ColorSpace;
 }
 
 const defaultFiles = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png'];
@@ -39,7 +38,7 @@ export function injectEnvironment(
 ) {
 	return assertInjector(injectEnvironment, injector, () => {
 		const adjustedOptions = computed(() => {
-			const { preset, extensions, encoding, ...rest } = options();
+			const { preset, extensions, colorSpace, ...rest } = options();
 			let { files, path } = rest;
 
 			if (files == null) {
@@ -56,7 +55,7 @@ export function injectEnvironment(
 				path = CUBEMAP_ROOT;
 			}
 
-			return { files, preset, encoding, path, extensions };
+			return { files, preset, colorSpace, path, extensions };
 		});
 
 		const files = pick(adjustedOptions, 'files');
@@ -112,7 +111,7 @@ export function injectEnvironment(
 
 			const { extension, isCubeMap } = untracked(resultOptions);
 			const _multiFile = untracked(multiFile);
-			const { encoding } = untracked(adjustedOptions);
+			const { colorSpace } = untracked(adjustedOptions);
 
 			// @ts-expect-error - ensure textureResult is a Texture or CubeTexture
 			let textureResult = (_multiFile ? loaderResult[0] : loaderResult) as Texture | CubeTexture;
@@ -135,10 +134,7 @@ export function injectEnvironment(
 			}
 
 			textureResult.mapping = isCubeMap ? THREE.CubeReflectionMapping : THREE.EquirectangularReflectionMapping;
-
-			if ('colorSpace' in textureResult)
-				(textureResult as any).colorSpace = encoding ?? (isCubeMap ? 'srgb' : 'srgb-linear');
-			else (textureResult as any).encoding = encoding ?? (isCubeMap ? sRGBEncoding : LinearEncoding);
+			textureResult.colorSpace = colorSpace ?? (isCubeMap ? 'srgb' : 'srgb-linear');
 
 			texture.set(textureResult);
 		});
