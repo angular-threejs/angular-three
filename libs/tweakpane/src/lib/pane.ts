@@ -1,5 +1,16 @@
-import { afterNextRender, DestroyRef, Directive, effect, inject, input, isSignal, signal } from '@angular/core';
+import {
+	afterNextRender,
+	DestroyRef,
+	Directive,
+	effect,
+	ElementRef,
+	inject,
+	input,
+	isSignal,
+	signal,
+} from '@angular/core';
 import { Pane } from 'tweakpane';
+import { PaneConfig } from 'tweakpane/dist/types/pane/pane-config';
 import { NgtTweakFolder } from './folder';
 import { NgtTweakTitle } from './title';
 
@@ -13,6 +24,7 @@ export class NgtTweakPane {
 	left = input<string | number>();
 	bottom = input<string | number>();
 	width = input<string | number>('256px');
+	container = input<HTMLElement | ElementRef<HTMLElement | undefined> | undefined>();
 
 	private title = inject(NgtTweakTitle, { host: true });
 	private folder = inject(NgtTweakFolder, { host: true });
@@ -22,10 +34,17 @@ export class NgtTweakPane {
 		this.folder.isSelf = false;
 
 		afterNextRender(() => {
-			const pane = new Pane({
+			const container = this.container();
+			const paneOptions: PaneConfig = {
 				title: this.title.title(),
 				expanded: this.folder.expanded(),
-			});
+			};
+
+			if (container) {
+				paneOptions.container = 'nativeElement' in container ? container.nativeElement : container;
+			}
+
+			const pane = new Pane(paneOptions);
 
 			this.pane.set(pane);
 			this.folder.parentFolder.set(pane);
@@ -59,7 +78,7 @@ export class NgtTweakPane {
 		});
 	}
 
-	private updateStyleEffect(propertyName: Exclude<keyof NgtTweakPane, 'pane' | 'title' | 'expanded'>) {
+	private updateStyleEffect(propertyName: Exclude<keyof NgtTweakPane, 'pane' | 'title' | 'expanded' | 'container'>) {
 		const pane = this.pane();
 		if (!pane) return;
 
