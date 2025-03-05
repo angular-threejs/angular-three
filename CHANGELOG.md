@@ -1,3 +1,13 @@
+## 4.0.0-next.72 (2025-03-05)
+
+### 🩹 Fixes
+
+- **soba/abstractions:** edges should be segmented ([064944c7](https://github.com/angular-threejs/angular-three/commit/064944c7))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.71 (2025-03-03)
 
 ### 🩹 Fixes
