@@ -29,7 +29,7 @@ export abstract class NgtCommonDirective<TValue> {
 	protected abstract linkedValue: Signal<TValue | null>;
 	protected abstract shouldSkipRender: Signal<boolean>;
 
-	constructor() {
+	protected constructor() {
 		effect(() => {
 			if (this.shouldSkipRender()) return;
 

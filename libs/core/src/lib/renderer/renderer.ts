@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import {
 	inject,
 	Injectable,
+	InjectionToken,
 	Injector,
 	Renderer2,
 	RendererFactory2,
@@ -38,12 +39,17 @@ import {
 } from './state';
 import { attachThreeNodes, internalDestroyNode, kebabToPascal, NgtRendererClassId, removeThreeChild } from './utils';
 
-declare const ngDevMode: boolean;
+export interface NgtRendererFactory2Options {
+	verbose?: boolean;
+}
+
+export const NGT_RENDERER_OPTIONS = new InjectionToken<NgtRendererFactory2Options>('NGT_RENDERER_OPTIONS');
 
 @Injectable()
 export class NgtRendererFactory2 implements RendererFactory2 {
 	private catalogue = injectCatalogue();
 	private document = inject(DOCUMENT);
+	private options = inject(NGT_RENDERER_OPTIONS, { optional: true }) || {};
 	private rendererMap = new Map<string, Renderer2>();
 
 	/**
@@ -90,7 +96,10 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 			return delegateRenderer;
 		}
 
-		this.rendererMap.set(type.id, (renderer = new NgtRenderer2(delegateRenderer, this.catalogue, this.document)));
+		this.rendererMap.set(
+			type.id,
+			(renderer = new NgtRenderer2(delegateRenderer, this.catalogue, this.document, this.options)),
+		);
 		return renderer;
 	}
 }
@@ -104,8 +113,13 @@ export class NgtRenderer2 implements Renderer2 {
 		public delegateRenderer: Renderer2,
 		private catalogue: Record<string, NgtConstructorRepresentation>,
 		private document: Document,
+		private options: NgtRendererFactory2Options,
 		public count = 1,
-	) {}
+	) {
+		if (!this.options.verbose) {
+			this.options.verbose = false;
+		}
+	}
 
 	get data(): { [key: string]: any } {
 		return { ...this.delegateRenderer.data, __ngt_renderer__: true };
@@ -147,7 +161,6 @@ export class NgtRenderer2 implements Renderer2 {
 			if (!instanceState || instanceState.type === 'ngt-primitive') {
 				// if an object isn't already "prepared", we'll prepare it
 				prepare(object, 'ngt-primitive', instanceState);
-				instanceState = getInstanceState(object);
 			}
 
 			const primitiveRendererNode = createRendererNode('three', object, this.document);
@@ -239,13 +252,13 @@ export class NgtRenderer2 implements Renderer2 {
 		const cRS = newChild.__ngt_renderer__;
 
 		if (!pRS || !cRS) {
-			ngDevMode &&
+			this.options.verbose &&
 				console.warn('[NGT dev mode] One of parent or child is not a renderer node.', { parent, newChild });
 			return delegatedFn();
 		}
 
 		if (cRS[NgtRendererClassId.type] === 'comment') {
-			// if chid is a comment, we'll set the parent then bail.
+			// if child is a comment, we'll set the parent then bail.
 			// comment usually means it's part of a templateRef ViewContainerRef or structural directive
 			setRendererParentNode(newChild, parent);
 
@@ -377,7 +390,8 @@ export class NgtRenderer2 implements Renderer2 {
 				// if the child is already destroyed, just skip
 				return;
 			}
-			ngDevMode && console.warn('[NGT dev mode] parent is not found when remove child', { parent, oldChild });
+			this.options.verbose &&
+				console.warn('[NGT dev mode] parent is not found when remove child', { parent, oldChild });
 			return;
 		}
 
@@ -466,7 +480,6 @@ export class NgtRenderer2 implements Renderer2 {
 		return rendererParentNode ?? this.delegateRenderer.parentNode(node);
 	}
 
-	// removeAttribute = this.delegateRenderer.removeAttribute.bind(this.delegateRenderer);
 	removeAttribute(el: NgtRendererNode, name: string, namespace?: string | null): void {
 		const rS = el.__ngt_renderer__;
 		if (!rS || rS[NgtRendererClassId.destroyed]) return this.delegateRenderer.removeAttribute(el, name, namespace);
@@ -482,7 +495,7 @@ export class NgtRenderer2 implements Renderer2 {
 		if (!rS) return this.delegateRenderer.setAttribute(el, name, value, namespace);
 
 		if (rS[NgtRendererClassId.destroyed]) {
-			ngDevMode &&
+			this.options.verbose &&
 				console.warn(`[NGT dev mode] setAttribute is invoked on destroyed renderer node.`, { el, name, value });
 			return;
 		}
@@ -526,7 +539,7 @@ export class NgtRenderer2 implements Renderer2 {
 		const rS = el.__ngt_renderer__;
 
 		if (!rS || rS[NgtRendererClassId.destroyed]) {
-			ngDevMode &&
+			this.options.verbose &&
 				console.warn('[NGT dev mode] setProperty is invoked on destroyed renderer node.', { el, name, value });
 			return;
 		}
@@ -542,7 +555,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 				applyProps(el, value);
 
-				if ('geometry' in value && value['geometry'].isBufferGeometry) {
+				if ('geometry' in value && is.three<THREE.BufferGeometry>(value['geometry'], 'isBufferGeometry')) {
 					untracked(() => {
 						instanceState?.updateGeometryStamp();
 					});
@@ -557,8 +570,6 @@ export class NgtRenderer2 implements Renderer2 {
 			if (instanceState?.type === 'ngt-value' && name === 'rawValue') {
 				rS[NgtRendererClassId.rawValue] = value;
 				if (parent) {
-					// untrack this attach because this is during setProperty which is a reactive context
-					// attaching potentially updates signals which is not allowed
 					untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
 				}
 				return;
@@ -588,7 +599,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 			applyProps(el, { [name]: value });
 
-			if (instanceState && name === 'geometry' && value.isBufferGeometry) {
+			if (instanceState && name === 'geometry' && is.three<THREE.BufferGeometry>(value, 'isBufferGeometry')) {
 				untracked(() => {
 					instanceState.updateGeometryStamp();
 				});
@@ -667,7 +678,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 			const cleanup = iS.setPointerEvent?.(eventName as keyof NgtEventHandlers, callback) || (() => {});
 
-			// this means the object has already been attaached to the parent and has its store propgated
+			// this means the object has already been attached to the parent and has its store propagated
 			if (iS.store) {
 				iS.addInteraction?.(iS.store);
 			}
@@ -679,9 +690,9 @@ export class NgtRenderer2 implements Renderer2 {
 	}
 
 	private appendThreeRendererNodes(parent: NgtRendererNode, child: NgtRendererNode) {
-		// if parent and chlid are the same, skip
+		// if parent and child are the same, skip
 		if (parent === child) {
-			ngDevMode &&
+			this.options.verbose &&
 				console.warn('[NGT dev mode] appending THREE.js parent and child but they are the same', {
 					parent,
 					child,
@@ -693,7 +704,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 		// if child is already attached to a parent, skip
 		if (cIS?.hierarchyStore.snapshot.parent) {
-			ngDevMode &&
+			this.options.verbose &&
 				console.warn('[NGT dev mode] appending THREE.js parent and child but child is already attached', {
 					parent,
 					child,
