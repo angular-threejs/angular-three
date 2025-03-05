@@ -1,3 +1,13 @@
+## 4.0.0-next.76 (2025-03-05)
+
+### 🩹 Fixes
+
+- **tweakpane:** adjust how custom container works ([85a767ff](https://github.com/angular-threejs/angular-three/commit/85a767ff))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.75 (2025-03-05)
 
 ### 🚀 Features
