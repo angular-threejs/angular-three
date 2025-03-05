@@ -1,3 +1,13 @@
+## 4.0.0-next.73 (2025-03-05)
+
+### 🚀 Features
+
+- **core:** allow provideNgtRenderer to accept options ([2bca496b](https://github.com/angular-threejs/angular-three/commit/2bca496b))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.72 (2025-03-05)
 
 ### 🩹 Fixes
