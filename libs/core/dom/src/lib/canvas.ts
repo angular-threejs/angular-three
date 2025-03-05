@@ -49,6 +49,12 @@ import { createPointerEvents } from './events';
 
 @Directive({ selector: 'ng-template[canvasContent]' })
 export class NgtCanvasContent {
+	private canvas = inject(NgtCanvasImpl);
+
+	get host() {
+		return this.canvas['host'].nativeElement;
+	}
+
 	constructor() {
 		const store = injectStore();
 		const vcr = inject(ViewContainerRef);
