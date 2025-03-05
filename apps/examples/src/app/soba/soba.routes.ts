@@ -237,6 +237,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'magic-box',
+		loadComponent: () => import('./magic-box/magic-box'),
+		data: {
+			credits: {
+				title: 'Magic Box',
+				link: 'https://pmndrs.github.io/examples/demos/magic-box',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
