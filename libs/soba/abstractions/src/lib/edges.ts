@@ -34,7 +34,7 @@ export class NgtsEdges {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	private parameters = omit(this.options, ['threshold', 'geometry']);
 
-	protected lineOptions = computed(() => ({ ...this.parameters(), raycast: () => null }));
+	protected lineOptions = computed(() => ({ ...this.parameters(), segments: true, raycast: () => null }));
 	protected tmpPoints = [0, 0, 0, 1, 0, 0];
 
 	line = viewChild.required(NgtsLine);
