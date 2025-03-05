@@ -1,3 +1,13 @@
+## 4.0.0-next.77 (2025-03-05)
+
+### 🩹 Fixes
+
+- **tweakpane:** add tweakpane/core to peer dep ([0411bcfc](https://github.com/angular-threejs/angular-three/commit/0411bcfc))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.76 (2025-03-05)
 
 ### 🩹 Fixes
