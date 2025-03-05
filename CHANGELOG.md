@@ -1,3 +1,14 @@
+## 4.0.0-next.74 (2025-03-05)
+
+### 🩹 Fixes
+
+- **soba/misc:** remove deprecated TextureEncoding ([cb9b676d](https://github.com/angular-threejs/angular-three/commit/cb9b676d))
+- **soba/staging:** remove encoding option in injectEnvironment ([f3205dd6](https://github.com/angular-threejs/angular-three/commit/f3205dd6))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.73 (2025-03-05)
 
 ### 🚀 Features
