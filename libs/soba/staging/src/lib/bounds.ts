@@ -67,10 +67,6 @@ export class NgtsBounds {
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private store = injectStore();
-	// private camera = this.store.select('camera');
-	// private invalidate = this.store.select('invalidate');
-	// private size = this.store.select('size');
-	// private controls = this.store.select('controls') as unknown as Signal<ControlsProto>;
 
 	private clipOption = pick(this.options, 'clip');
 	private fitOption = pick(this.options, 'fit');
@@ -127,7 +123,6 @@ export class NgtsBounds {
 				this.observe(),
 				this.store.size(),
 				this.store.camera(),
-				// TODO: (chau) for some reason, if this effect tracks controls changes, the initial bounds doesn't target properly
 				this.store.controls(),
 			];
 

@@ -87,8 +87,8 @@ const defaultOptions: NgtsCausticsOptions = {
 				<ngt-caustics-projection-material
 					transparent
 					[color]="color()"
-					[causticsTexture]="causticsTarget().texture"
-					[causticsTextureB]="causticsTargetB().texture"
+					[causticsTexture]="causticsTarget.texture"
+					[causticsTextureB]="causticsTargetB.texture"
 					[blending]="CustomBlending"
 					[blendSrc]="OneFactor"
 					[blendDst]="SrcAlphaFactor"
@@ -205,10 +205,10 @@ export class NgtsCaustics {
 						? new THREE.Vector3(...lightSource)
 						: (resolveRef(lightSource) as THREE.Object3D),
 				}),
-				normalTarget: this.normalTarget(),
-				normalTargetB: this.normalTargetB(),
-				causticsTarget: this.causticsTarget(),
-				causticsTargetB: this.causticsTargetB(),
+				normalTarget: this.normalTarget,
+				normalTargetB: this.normalTargetB,
+				causticsTarget: this.causticsTarget,
+				causticsTargetB: this.causticsTargetB,
 				camera: this.cameraRef().nativeElement,
 				scene: this.sceneRef().nativeElement,
 				group: this.groupRef().nativeElement,

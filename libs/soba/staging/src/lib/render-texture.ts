@@ -132,7 +132,7 @@ let incrementId = 0;
 			<ng-template portalContent let-injector="injector">
 				<ng-container
 					renderTextureContainer
-					[fbo]="fbo()"
+					[fbo]="fbo"
 					[renderPriority]="renderPriority()"
 					[frames]="frames()"
 					[ngTemplateOutlet]="content()"
@@ -144,7 +144,7 @@ let incrementId = 0;
 			</ng-template>
 		</ngt-portal>
 
-		<ngt-primitive *args="[fbo().texture]" [attach]="attach()" [parameters]="parameters()" />
+		<ngt-primitive *args="[fbo.texture]" [attach]="attach()" [parameters]="parameters()" />
 	`,
 	imports: [NgtPortal, NgtsRenderTextureContainer, NgtArgs, NgTemplateOutlet],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -201,7 +201,7 @@ export class NgtsRenderTextureImpl {
 	protected compute = computed(() => this.computeFn() || this.uvCompute);
 
 	private uvCompute: NgtComputeFunction = (event, root, previous) => {
-		const fbo = this.fbo();
+		const fbo = this.fbo;
 		if (!fbo) return;
 		const state = root.snapshot;
 		const previousState = previous?.snapshot;
