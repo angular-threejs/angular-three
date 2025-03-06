@@ -1,5 +1,5 @@
 import { computed, Injector } from '@angular/core';
-import { injectBeforeRender, injectStore, pick } from 'angular-three';
+import { injectBeforeRender, injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { injectFBO } from './fbo';
@@ -13,9 +13,6 @@ export function injectDepthBuffer(
 		const frames = computed(() => params().frames || Infinity);
 
 		const store = injectStore();
-		// const width = store.select('size', 'width');
-		// const height = store.select('size', 'height');
-		// const dpr = store.select('viewport', 'dpr');
 
 		const w = computed(() => size() || store.size.width() * store.viewport.dpr());
 		const h = computed(() => size() || store.size.height() * store.viewport.dpr());
@@ -32,13 +29,13 @@ export function injectDepthBuffer(
 		let count = 0;
 		injectBeforeRender(({ gl, scene, camera }) => {
 			if (frames() === Infinity || count < frames()) {
-				gl.setRenderTarget(depthFBO());
+				gl.setRenderTarget(depthFBO);
 				gl.render(scene, camera);
 				gl.setRenderTarget(null);
 				count++;
 			}
 		});
 
-		return pick(depthFBO, 'depthTexture');
+		return depthFBO.depthTexture;
 	});
 }

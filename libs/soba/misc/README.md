@@ -78,7 +78,7 @@ A directive that allows you to render a part of your scene into an FBO using an 
 
 	<ngt-mesh>
 		<ngt-box-geometry *args="[3, 3, 3]" />
-		<ngt-mesh-standard-material [map]="target().texture" />
+		<ngt-mesh-standard-material [map]="target.texture" />
 	</ngt-mesh>
 </ng-template>
 ```
