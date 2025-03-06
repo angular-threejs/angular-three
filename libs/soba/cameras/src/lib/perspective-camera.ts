@@ -45,10 +45,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 		</ngt-perspective-camera>
 
 		<ngt-group #group>
-			<ng-container
-				[ngTemplateOutlet]="cameraContent() ?? null"
-				[ngTemplateOutletContext]="{ $implicit: texture }"
-			/>
+			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: fbo }" />
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],
@@ -70,8 +67,7 @@ export class NgtsPerspectiveCamera {
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
-	private fbo = injectFBO(() => ({ width: this.resolution() }));
-	protected texture = pick(this.fbo, 'texture');
+	protected fbo = injectFBO(() => ({ width: this.resolution() }));
 
 	constructor() {
 		extend({ PerspectiveCamera, Group });
@@ -108,7 +104,7 @@ export class NgtsPerspectiveCamera {
 				this.options(),
 				this.groupRef().nativeElement,
 				this.cameraRef().nativeElement,
-				this.fbo(),
+				this.fbo,
 			];
 			if (this.cameraContent() && group && camera && fbo && (frames === Infinity || count < frames)) {
 				group.visible = false;

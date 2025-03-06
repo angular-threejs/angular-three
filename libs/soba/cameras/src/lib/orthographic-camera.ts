@@ -53,10 +53,7 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 		</ngt-orthographic-camera>
 
 		<ngt-group #group>
-			<ng-container
-				[ngTemplateOutlet]="cameraContent() ?? null"
-				[ngTemplateOutletContext]="{ $implicit: texture }"
-			/>
+			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: fbo }" />
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],
@@ -98,8 +95,7 @@ export class NgtsOrthographicCamera {
 	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
 
-	private fbo = injectFBO(() => ({ width: this.resolution() }));
-	protected texture = pick(this.fbo, 'texture');
+	protected fbo = injectFBO(() => ({ width: this.resolution() }));
 
 	constructor() {
 		extend({ OrthographicCamera, Group });
@@ -132,7 +128,7 @@ export class NgtsOrthographicCamera {
 				this.options(),
 				this.groupRef().nativeElement,
 				this.cameraRef().nativeElement,
-				this.fbo(),
+				this.fbo,
 			];
 			if (this.cameraContent() && group && camera && fbo && (frames === Infinity || count < frames)) {
 				group.visible = false;

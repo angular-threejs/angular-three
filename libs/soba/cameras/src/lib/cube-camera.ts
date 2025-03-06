@@ -98,7 +98,7 @@ const defaultOptions: NgtsCubeCameraOptions = {
 			<ngt-group #group>
 				<ng-container
 					[ngTemplateOutlet]="cameraContent() ?? null"
-					[ngTemplateOutletContext]="{ $implicit: texture }"
+					[ngTemplateOutletContext]="{ $implicit: texture() }"
 				/>
 			</ngt-group>
 		</ngt-group>
