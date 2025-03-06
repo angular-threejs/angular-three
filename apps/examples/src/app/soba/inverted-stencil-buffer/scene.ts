@@ -110,15 +110,13 @@ export class Box {
 				</ngts-float>
 				<ng-container [ngTemplateOutlet]="boxes" />
 			</ngts-bounds>
+			<ngts-orbit-controls [options]="{ makeDefault: true }" />
 		} @else {
 			<ng-container [ngTemplateOutlet]="logos" />
 			<ng-container [ngTemplateOutlet]="boxes" />
 		}
 
 		<ngts-environment [options]="{ preset: 'city' }" />
-		@if (!asRenderTexture()) {
-			<ngts-orbit-controls [options]="{ makeDefault: true }" />
-		}
 
 		<ng-template #logos>
 			@switch (logo()) {

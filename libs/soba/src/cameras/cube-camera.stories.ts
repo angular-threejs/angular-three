@@ -18,7 +18,7 @@ import { storyDecorators, storyFunction } from '../setup-canvas';
 		<ngts-cube-camera [options]="options()">
 			<ngt-mesh *cameraContent="let texture" #mesh>
 				<ngt-sphere-geometry *args="[5, 64, 64]" />
-				<ngt-mesh-standard-material [roughness]="0" [metalness]="1" [envMap]="texture()" />
+				<ngt-mesh-standard-material [roughness]="0" [metalness]="1" [envMap]="texture" />
 			</ngt-mesh>
 		</ngts-cube-camera>
 	`,

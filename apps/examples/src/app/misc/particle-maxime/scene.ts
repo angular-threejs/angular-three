@@ -96,7 +96,7 @@ export class FBOParticles {
 		0,
 		1, // top-left
 	]);
-	protected renderTarget = injectFBO(() => ({
+	private renderTarget = injectFBO(() => ({
 		width: this.size,
 		height: this.size,
 		settings: {
@@ -127,7 +127,7 @@ export class FBOParticles {
 
 	constructor() {
 		injectBeforeRender(({ gl, clock }) => {
-			gl.setRenderTarget(this.renderTarget());
+			gl.setRenderTarget(this.renderTarget);
 			gl.clear();
 			gl.render(this.virtualScene, this.virtualCamera);
 			gl.setRenderTarget(null);
@@ -135,7 +135,7 @@ export class FBOParticles {
 			const simulationMaterial = this.simulationMaterialRef()?.nativeElement;
 			if (!simulationMaterial) return;
 
-			this.uniforms['uPositions'].value = this.renderTarget().texture;
+			this.uniforms['uPositions'].value = this.renderTarget.texture;
 			simulationMaterial.uniforms['uFrequency'].value = this.frequency();
 			simulationMaterial.uniforms['uTime'].value = clock.elapsedTime * this.timeScale();
 		});

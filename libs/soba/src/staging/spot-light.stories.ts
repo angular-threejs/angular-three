@@ -117,13 +117,13 @@ class DefaultSpotLightStory {
 	depthBuffer = injectDepthBuffer();
 
 	spotLightOneOptions = computed(() => ({
-		depthBuffer: this.depthBuffer(),
+		depthBuffer: this.depthBuffer,
 		position: [3, 2, 0],
 		color: '#ff005b',
 		...this.options(),
 	}));
 	spotLightTwoOptions = computed(() => ({
-		depthBuffer: this.depthBuffer(),
+		depthBuffer: this.depthBuffer,
 		position: [-3, 2, 0],
 		color: '#0EEC82',
 		...this.options(),

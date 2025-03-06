@@ -49,7 +49,7 @@ injectLoader.preload(
 								[rotation]="rotation()"
 								[position]="position()"
 							>
-								<ngts-mesh-refraction-material [options]="options()" [envMap]="cameraTexture()" />
+								<ngts-mesh-refraction-material [options]="options()" [envMap]="cameraTexture" />
 							</ngt-mesh>
 						</ngts-caustics>
 					}

@@ -110,8 +110,9 @@ export class Shoe {
 	});
 
 	constructor() {
-		effect(() => {
+		effect((onCleanup) => {
 			this.document.body.style.cursor = `url('data:image/svg+xml;base64,${this.cursor()}'), auto`;
+			onCleanup(() => (this.document.body.style.cursor = 'auto'));
 		});
 	}
 }

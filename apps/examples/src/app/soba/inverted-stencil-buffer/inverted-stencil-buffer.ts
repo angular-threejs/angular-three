@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgtTweakCheckbox, NgtTweakList, NgtTweakPane } from 'angular-three-tweakpane';
 import { NgtCanvas } from 'angular-three/dom';
 import { SceneGraph, invert, logo } from './scene';
 
@@ -7,35 +8,17 @@ import { SceneGraph, invert, logo } from './scene';
 		<ngt-canvas shadows [gl]="{ stencil: true }">
 			<app-inverted-stencil-buffer-scene-graph *canvasContent />
 		</ngt-canvas>
-		<div
-			class="absolute top-2 right-2 p-4 flex flex-col gap-4 items-center rounded border border-black border-dotted font-mono"
-		>
-			<label class="flex gap-2 items-center">
-				<input type="checkbox" [value]="invert()" (change)="onInvertChange($event)" />
-				invert
-			</label>
-			<select [value]="logo()" (change)="onLogoChange($event)">
-				<option value="angular">Angular</option>
-				<option value="nx">Nx</option>
-				<option value="nx-cloud">Nx Cloud</option>
-			</select>
-		</div>
+
+		<ngt-tweak-pane title="Inverted Stencil Buffer">
+			<ngt-tweak-checkbox [(value)]="invert" label="invert" />
+			<ngt-tweak-list [(value)]="logo" [options]="['angular', 'nx', 'nx-cloud']" label="logo" />
+		</ngt-tweak-pane>
 	`,
 	host: { class: 'inverted-stencil-buffer-soba' },
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, SceneGraph],
+	imports: [NgtCanvas, SceneGraph, NgtTweakPane, NgtTweakCheckbox, NgtTweakList],
 })
 export default class InvertedStencilBuffer {
 	protected invert = invert;
 	protected logo = logo;
-
-	onInvertChange(event: Event) {
-		const target = event.target as HTMLInputElement;
-		this.invert.set(target.checked);
-	}
-
-	onLogoChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		this.logo.set(target.value as 'angular' | 'nx' | 'nx-cloud');
-	}
 }

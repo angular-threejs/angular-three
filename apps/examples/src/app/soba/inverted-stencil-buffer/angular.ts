@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { injectGLTF } from 'angular-three-soba/loaders';
 import { mask } from 'angular-three-soba/staging';
 import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
@@ -37,10 +37,4 @@ export class Angular {
 		const stencilParameters = this.stencilParameters();
 		return new MeshPhongMaterial({ color: '#E72BAA', ...stencilParameters });
 	});
-
-	constructor() {
-		effect(() => {
-			console.log(this.gltf());
-		});
-	}
 }
