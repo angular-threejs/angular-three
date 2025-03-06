@@ -130,7 +130,7 @@ export class NgtsMeshTransmissionMaterial {
 	private fboBack = injectFBO(() => ({ width: this.backResolution() }));
 	private fboMain = injectFBO(() => ({ width: this.resolution() }));
 
-	protected bufferTexture = computed(() => this.buffer() || this.fboMain().texture);
+	protected bufferTexture = computed(() => this.buffer() || this.fboMain.texture);
 	protected anisotropicBlurOption = computed(() => this.anisotropicBlur() || this.anisotropy());
 
 	private discardMaterial = new MeshDiscardMaterial();
@@ -177,8 +177,8 @@ export class NgtsMeshTransmissionMaterial {
 				thickness,
 				side,
 			] = [
-				this.fboMain(),
-				this.fboBack(),
+				this.fboMain,
+				this.fboBack,
 				this.transmissionSampler(),
 				this.background(),
 				this.backside(),

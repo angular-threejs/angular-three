@@ -59,8 +59,8 @@ export class ManagePortalScene {
 			const quad = new FullScreenQuad(
 				new THREE.ShaderMaterial({
 					uniforms: {
-						a: { value: buffer1().texture },
-						b: { value: buffer2().texture },
+						a: { value: buffer1.texture },
+						b: { value: buffer2.texture },
 						blend,
 					},
 					vertexShader: /*glsl*/ `
@@ -131,9 +131,9 @@ export class ManagePortalScene {
 						// If blend is ongoing (> 0 and < 1) then we need to render both the root scene
 						// and the portal scene, both will then be mixed in the quad from above
 						blend.value = materialBlend;
-						gl.setRenderTarget(buffer1());
+						gl.setRenderTarget(buffer1);
 						gl.render(scene, camera);
-						gl.setRenderTarget(buffer2());
+						gl.setRenderTarget(buffer2);
 						gl.render(rootScene, camera);
 						gl.setRenderTarget(null);
 						quad.render(gl);
