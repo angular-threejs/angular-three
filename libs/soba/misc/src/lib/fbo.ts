@@ -65,7 +65,7 @@ export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }
 			return _settings;
 		});
 
-		const target = computed(() => {
+		const target = (() => {
 			const [{ samples = 0, depth, ...targetSettings }, _width, _height] = [
 				untracked(settings),
 				untracked(width),
@@ -85,15 +85,15 @@ export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }
 
 			target.samples = samples;
 			return target;
-		});
+		})();
 
 		effect(() => {
-			const [{ samples = 0 }, _width, _height, _target] = [settings(), width(), height(), target()];
-			_target.setSize(_width, _height);
-			if (samples) _target.samples = samples;
+			const [{ samples = 0 }, _width, _height] = [settings(), width(), height()];
+			target.setSize(_width, _height);
+			if (samples) target.samples = samples;
 		});
 
-		inject(DestroyRef).onDestroy(() => target().dispose());
+		inject(DestroyRef).onDestroy(() => target.dispose());
 
 		return target;
 	});
