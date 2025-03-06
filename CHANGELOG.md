@@ -1,3 +1,26 @@
+## 4.0.0-next.78 (2025-03-06)
+
+### 🚀 Features
+
+- ⚠️  **soba/cameras:** update `injectFBO` usage ([efb60cd4](https://github.com/angular-threejs/angular-three/commit/efb60cd4))
+- ⚠️  **soba/misc:** injectFBO no longer recreates the RenderTarget in a computed ([12262c78](https://github.com/angular-threejs/angular-three/commit/12262c78))
+- ⚠️  **soba/misc:** `injectDepthBuffer` returns `DepthTexture` instead of Signal ([53f515dd](https://github.com/angular-threejs/angular-three/commit/53f515dd))
+
+### 🩹 Fixes
+
+- **soba/materials:** update `injectFBO` usages ([c972993e](https://github.com/angular-threejs/angular-three/commit/c972993e))
+- **soba/staging:** update `injectFBO` usages ([6aa59172](https://github.com/angular-threejs/angular-three/commit/6aa59172))
+
+### ⚠️  Breaking Changes
+
+- **soba/cameras:** `NgtsCameraContent` `let-texture` template variable is
+- **soba/misc:** `injectDepthBuffer` returns `DepthTexture | null`
+- **soba/misc:** `injectFBO` now returns a `WebGLRenderTarget` instead
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.77 (2025-03-05)
 
 ### 🩹 Fixes
