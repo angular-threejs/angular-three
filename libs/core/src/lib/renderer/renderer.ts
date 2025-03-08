@@ -158,7 +158,7 @@ export class NgtRenderer2 implements Renderer2 {
 			if (!injectedArgs[0]) throw new Error(`[NGT] ngt-primitive without args is invalid`);
 			const object = injectedArgs[0];
 			let instanceState = getInstanceState(object);
-			if (!instanceState || instanceState.type === 'ngt-primitive') {
+			if (!instanceState || instanceState.type !== 'ngt-primitive') {
 				// if an object isn't already "prepared", we'll prepare it
 				prepare(object, 'ngt-primitive', instanceState);
 			}
