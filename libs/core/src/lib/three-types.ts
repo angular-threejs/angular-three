@@ -94,7 +94,7 @@ export interface NgtNodeElement<
 	attach: string | string[] | NgtAttachFunction;
 	dispose?: (() => void) | null;
 	parameters: Partial<TInstance>;
-	__ngt_args__: NgtArguments<TConstructor>;
+	__ngt_args__?: NgtArguments<TConstructor>;
 }
 
 export interface NgtNodeEventListener<
