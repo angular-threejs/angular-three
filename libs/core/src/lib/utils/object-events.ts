@@ -20,19 +20,19 @@ import { resolveRef } from './resolve-ref';
 /**
  * As host directive:
  * - outputs: [
- * 'click',
- * 'dblclick',
- * 'contextmenu',
- * 'pointerup',
- * 'pointerdown',
- * 'pointerover',
- * 'pointerout',
- * 'pointerenter',
- * 'pointerleave',
- * 'pointermove',
- * 'pointermissed',
- * 'pointercancel',
- * 'wheel',
+ 'click',
+ 'dblclick',
+ 'contextmenu',
+ 'pointerup',
+ 'pointerdown',
+ 'pointerover',
+ 'pointerout',
+ 'pointerenter',
+ 'pointerleave',
+ 'pointermove',
+ 'pointermissed',
+ 'pointercancel',
+ 'wheel',
  * ]
  * - inputs: [
  *   'ngtObjectEvents'

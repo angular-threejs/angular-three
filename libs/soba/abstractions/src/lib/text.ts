@@ -8,7 +8,7 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { NgtArgs, NgtThreeElements, injectStore, omit, pick } from 'angular-three';
+import { NgtArgs, NgtObjectEvents, NgtThreeElements, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 // @ts-expect-error - no type def
@@ -74,6 +74,26 @@ const defaultOptions: NgtsTextOptions = {
 	imports: [NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	hostDirectives: [
+		{
+			directive: NgtObjectEvents,
+			outputs: [
+				'click',
+				'dblclick',
+				'contextmenu',
+				'pointerup',
+				'pointerdown',
+				'pointerover',
+				'pointerout',
+				'pointerenter',
+				'pointerleave',
+				'pointermove',
+				'pointermissed',
+				'pointercancel',
+				'wheel',
+			],
+		},
+	],
 })
 export class NgtsText {
 	text = input.required<string>();
@@ -82,6 +102,7 @@ export class NgtsText {
 
 	synced = output<Text>();
 
+	private objectEvents = inject(NgtObjectEvents, { host: true });
 	private store = injectStore();
 
 	private characters = pick(this.options, 'characters');
@@ -95,6 +116,8 @@ export class NgtsText {
 	troikaMesh = new Text();
 
 	constructor() {
+		this.objectEvents.ngtObjectEvents.set(this.troikaMesh);
+
 		inject(DestroyRef).onDestroy(() => {
 			this.troikaMesh.dispose();
 		});
