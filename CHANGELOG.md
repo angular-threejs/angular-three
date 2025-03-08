@@ -1,3 +1,18 @@
+## 4.0.0-next.81 (2025-03-08)
+
+### 🩹 Fixes
+
+- **core:** check against ngt-primitive type to prepare ngt-primitive ([0bfaab68](https://github.com/angular-threejs/angular-three/commit/0bfaab68))
+- **soba/abstractions:** set ngtObjectEvents for Text in effect ([55f2a2de](https://github.com/angular-threejs/angular-three/commit/55f2a2de))
+
+### 💅 Refactors
+
+- **core:** rename ([2045bd31](https://github.com/angular-threejs/angular-three/commit/2045bd31))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.80 (2025-03-08)
 
 ### 🚀 Features
