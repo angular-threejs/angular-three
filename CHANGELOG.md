@@ -1,3 +1,13 @@
+## 4.0.0-next.80 (2025-03-08)
+
+### 🚀 Features
+
+- **soba/abstractions:** expose NgtObjectEvents on Text ([ed877f20](https://github.com/angular-threejs/angular-three/commit/ed877f20))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.79 (2025-03-08)
 
 ### 🚀 Features
