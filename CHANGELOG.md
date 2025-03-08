@@ -1,3 +1,18 @@
+## 4.0.0-next.79 (2025-03-08)
+
+### 🚀 Features
+
+- **soba/controls:** add TrackballControls ([30ebfb70](https://github.com/angular-threejs/angular-three/commit/30ebfb70))
+
+### 🩹 Fixes
+
+- **core:** make __ngt_args__ optional ([73bd8cbb](https://github.com/angular-threejs/angular-three/commit/73bd8cbb))
+- **soba/controls:** adjust orbit controls ([4bf89340](https://github.com/angular-threejs/angular-three/commit/4bf89340))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.78 (2025-03-06)
 
 ### 🚀 Features
