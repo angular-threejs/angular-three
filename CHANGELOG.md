@@ -1,3 +1,13 @@
+## 4.0.0-next.82 (2025-03-08)
+
+### 🩹 Fixes
+
+- **soba/abstractions:** use viewChild on Text to set NgtObjectEvents ([d8780af3](https://github.com/angular-threejs/angular-three/commit/d8780af3))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.81 (2025-03-08)
 
 ### 🩹 Fixes
