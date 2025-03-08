@@ -1,21 +1,42 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtArgs, NgtCamera, NgtVector3, omit, pick } from 'angular-three';
+import {
+	injectBeforeRender,
+	injectStore,
+	NgtArgs,
+	NgtCamera,
+	NgtOverwrite,
+	NgtThreeElement,
+	NgtVector3,
+	omit,
+	pick,
+} from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 
-export interface NgtsOrbitControlsOptions {
-	camera?: THREE.Camera;
-	domElement?: HTMLElement;
-	target?: NgtVector3;
-	makeDefault: boolean;
-	regress: boolean;
-	enableDamping: boolean;
-	keyEvents: boolean | HTMLElement;
-}
+type ExtractCallback<T, E extends string> = T extends { addEventListener(event: E, callback: infer C): void }
+	? C
+	: never;
 
-const defaultOptions: Partial<Omit<OrbitControls, 'target' | 'enableDamping' | 'domElement'>> &
-	NgtsOrbitControlsOptions = {
+export type OrbitControlsChangeEvent = Parameters<ExtractCallback<OrbitControls, 'change'>>[0];
+
+export type NgtsOrbitControlsOptions = Omit<
+	NgtOverwrite<
+		NgtThreeElement<typeof OrbitControls>,
+		{
+			camera?: THREE.Camera;
+			domElement?: HTMLElement;
+			target?: NgtVector3;
+			makeDefault: boolean;
+			regress: boolean;
+			enableDamping: boolean;
+			keyEvents: boolean | HTMLElement;
+		}
+	>,
+	'attach' | 'addEventListener' | 'removeEventListener' | 'parameters' | '___ngt_args__' | '_domElementKeyEvents'
+>;
+
+const defaultOptions: NgtsOrbitControlsOptions = {
 	enableDamping: true,
 	regress: false,
 	makeDefault: false,
@@ -43,7 +64,7 @@ export class NgtsOrbitControls {
 		'enableDamping',
 	]);
 
-	changed = output<THREE.Event>();
+	changed = output<OrbitControlsChangeEvent>();
 	started = output<THREE.Event>();
 	ended = output<THREE.Event>();
 
@@ -67,9 +88,7 @@ export class NgtsOrbitControls {
 		injectBeforeRender(
 			() => {
 				const controls = this.controls();
-				if (controls?.enabled) {
-					controls.update();
-				}
+				if (controls.enabled) controls.update();
 			},
 			{ priority: -1 },
 		);
@@ -79,18 +98,14 @@ export class NgtsOrbitControls {
 			if (!makeDefault) return;
 
 			const controls = this.controls();
-			if (!controls) return;
-
 			const oldControls = this.store.snapshot.controls;
 			this.store.update({ controls });
 			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 
 		effect((onCleanup) => {
-			const controls = this.controls();
-			if (!controls) return;
-
-			const [keyEvents, domElement] = [
+			const [controls, keyEvents, domElement] = [
+				this.controls(),
 				this.keyEvents(),
 				this.domElement() || this.store.snapshot.events.connected || this.store.gl.domElement(),
 				this.store.invalidate(),
@@ -106,16 +121,14 @@ export class NgtsOrbitControls {
 		});
 
 		effect((onCleanup) => {
-			const controls = this.controls();
-			if (!controls) return;
-
-			const [invalidate, performanceRegress, regress] = [
+			const [controls, invalidate, performanceRegress, regress] = [
+				this.controls(),
 				this.store.invalidate(),
 				this.store.performance.regress(),
 				this.regress(),
 			];
 
-			const changeCallback: (e: THREE.Event) => void = (e) => {
+			const changeCallback: (e: OrbitControlsChangeEvent) => void = (e) => {
 				invalidate();
 				if (regress) performanceRegress();
 				this.changed.emit(e);
