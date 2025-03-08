@@ -102,12 +102,12 @@ export function injectObjectEvents(
 		const cleanUps: Array<() => void> = [];
 
 		effect((onCleanup) => {
-			const targetRef = resolveRef(target());
+			const targetObj = resolveRef(target());
 
-			if (!targetRef || !is.instance(targetRef)) return;
+			if (!targetObj || !is.instance(targetObj)) return;
 
 			Object.entries(events).forEach(([eventName, eventHandler]) => {
-				cleanUps.push(renderer.listen(targetRef, eventName, eventHandler));
+				cleanUps.push(renderer.listen(targetObj, eventName, eventHandler));
 			});
 
 			onCleanup(() => {
