@@ -3,10 +3,13 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	DestroyRef,
+	ElementRef,
+	computed,
 	effect,
 	inject,
 	input,
 	output,
+	viewChild,
 } from '@angular/core';
 import { NgtArgs, NgtObjectEvents, NgtThreeElements, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -59,6 +62,7 @@ const defaultOptions: NgtsTextOptions = {
 	selector: 'ngts-text',
 	template: `
 		<ngt-primitive
+			#textPrimitive
 			*args="[troikaMesh]"
 			[text]="text()"
 			[font]="font()"
@@ -115,13 +119,16 @@ export class NgtsText {
 
 	troikaMesh = new Text();
 
+	// TODO: (chau) we currently need to use this with NgtObjectEvents
+	//  to make sure `ngt-primitive` is instantitated before `injectObjectEvents`
+	private textPrimitiveRef = viewChild<ElementRef<Text>>('textPrimitive');
+	private textPrimitive = computed(() => this.textPrimitiveRef()?.nativeElement);
+
 	constructor() {
+		this.objectEvents.ngtObjectEvents.set(this.textPrimitive);
+
 		inject(DestroyRef).onDestroy(() => {
 			this.troikaMesh.dispose();
-		});
-
-		effect(() => {
-			this.objectEvents.ngtObjectEvents.set(this.troikaMesh);
 		});
 
 		effect(() => {
