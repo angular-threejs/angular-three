@@ -136,7 +136,7 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			return () => {
 				const iS = getInstanceState(instance) as NgtInstanceState;
 				if (iS) {
-					delete iS.handlers[eventName];
+					iS.handlers && delete iS.handlers[eventName];
 					iS.eventCount -= 1;
 				}
 			};
