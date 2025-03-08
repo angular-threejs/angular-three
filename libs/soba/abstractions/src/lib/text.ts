@@ -116,10 +116,12 @@ export class NgtsText {
 	troikaMesh = new Text();
 
 	constructor() {
-		this.objectEvents.ngtObjectEvents.set(this.troikaMesh);
-
 		inject(DestroyRef).onDestroy(() => {
 			this.troikaMesh.dispose();
+		});
+
+		effect(() => {
+			this.objectEvents.ngtObjectEvents.set(this.troikaMesh);
 		});
 
 		effect(() => {
