@@ -1,3 +1,13 @@
+## 4.0.0-next.83 (2025-03-08)
+
+### 🩹 Fixes
+
+- **core:** check for handlers before trying to remove event from it ([a5dfa497](https://github.com/angular-threejs/angular-three/commit/a5dfa497))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.82 (2025-03-08)
 
 ### 🩹 Fixes
