@@ -1,3 +1,13 @@
+## 4.0.0-next.84 (2025-03-09)
+
+### 🩹 Fixes
+
+- **core:** add missing skinned-mesh and bone to three types ([e04fc3d5](https://github.com/angular-threejs/angular-three/commit/e04fc3d5))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.83 (2025-03-08)
 
 ### 🩹 Fixes
