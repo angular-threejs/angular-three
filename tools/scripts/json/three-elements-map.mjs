@@ -3,6 +3,8 @@ export const NGT_THREE_ELEMENTS = {
 	'ngt-lOD': 'LOD',
 	'ngt-mesh': 'Mesh',
 	'ngt-instanced-mesh': 'InstancedMesh',
+	'ngt-skinned-mesh': 'SkinnedMesh',
+	'ngt-bone': 'Bone',
 	'ngt-material': 'Material',
 	'ngt-mesh-basic-material': 'MeshBasicMaterial',
 	'ngt-mesh-physical-material': 'MeshPhysicalMaterial',
