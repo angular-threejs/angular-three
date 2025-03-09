@@ -140,6 +140,8 @@ export interface NgtThreeElements {
 	'ngt-lOD': NgtThreeElementsImpl['LOD'];
 	'ngt-mesh': NgtThreeElementsImpl['Mesh'];
 	'ngt-instanced-mesh': NgtThreeElementsImpl['InstancedMesh'];
+	'ngt-skinned-mesh': NgtThreeElementsImpl['SkinnedMesh'];
+	'ngt-bone': NgtThreeElementsImpl['Bone'];
 	'ngt-material': NgtThreeElementsImpl['Material'];
 	'ngt-mesh-basic-material': NgtThreeElementsImpl['MeshBasicMaterial'];
 	'ngt-mesh-physical-material': NgtThreeElementsImpl['MeshPhysicalMaterial'];
