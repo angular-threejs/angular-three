@@ -1,3 +1,13 @@
+## 4.0.0-next.85 (2025-03-09)
+
+### 🩹 Fixes
+
+- **core:** forgot to update generation ([eb09c7c5](https://github.com/angular-threejs/angular-three/commit/eb09c7c5))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.84 (2025-03-09)
 
 ### 🩹 Fixes
