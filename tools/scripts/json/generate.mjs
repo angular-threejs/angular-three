@@ -31,6 +31,7 @@ import {
 	Vector4,
 	WebGLRenderTarget,
 } from 'three';
+import { getThreeClassProperties } from './analyze-three-types.mjs';
 import { COMMON_ATTRIBUTES, COMMON_EVENTS, OBJECT3D_EVENTS } from './common-attributes.mjs';
 import { EVENT_TYPE_MAP } from './event-types.mjs';
 import { MATH_TYPE_MAP } from './math-types.mjs';
@@ -257,8 +258,18 @@ function buildThreeElementsMap() {
 			accepts: prop.mathType ? prop.accepts : undefined,
 		}));
 
-	if (object3DProperties.every((prop) => prop.name !== 'raycast')) {
-		object3DProperties.push(
+	// Get static type properties for Object3D
+	const object3DTypeProperties = getThreeClassProperties('Object3D').map((prop) => ({
+		name: prop.name,
+		type: prop.type,
+		description: `Property from type definition: ${prop.typeString}`,
+	}));
+
+	// Merge runtime and static properties
+	const mergedObject3DProperties = mergeProperties(object3DProperties, object3DTypeProperties);
+
+	if (mergedObject3DProperties.every((prop) => prop.name !== 'raycast')) {
+		mergedObject3DProperties.push(
 			{ name: 'raycast', type: 'THREE.Raycaster', accepts: ['THREE.Raycaster'] },
 			{ name: '[raycast]', type: 'THREE.Raycaster', accepts: ['THREE.Raycaster'] },
 		);
@@ -273,42 +284,78 @@ function buildThreeElementsMap() {
 		try {
 			const ThreeClass = THREE[threeName];
 			let instance;
+			let runtimeProperties = [];
 
 			try {
 				instance = new ThreeClass();
+				runtimeProperties = analyzeInstanceProperties(instance, ThreeClass);
 			} catch (e) {
-				// If we can't instantiate, check if we have known properties
+				console.log(`Could not instantiate ${threeName}, using only type information`);
+			}
+
+			// Get static type properties
+			const typeProperties = getThreeClassProperties(threeName).map((prop) => ({
+				...prop,
+				name: prop.name,
+				type: prop.type,
+				description: `Property from type definition: ${prop.typeString}`,
+			}));
+
+			// If we couldn't instantiate, check if we have known properties
+			if (!instance) {
 				const knownProps = KNOWN_PROPERTIES[threeName];
 				if (knownProps) {
 					const properties = [...knownProps.properties];
 					if (knownProps.isObject3D) {
-						properties.push(...object3DProperties.map((prop) => prop.name));
+						properties.push(...mergedObject3DProperties.map((prop) => prop.name));
 					}
 					map.set(elementName, {
 						threeName,
 						isObject3D: knownProps.isObject3D,
 						properties: properties.map((prop) => {
-							const object3DProp = object3DProperties.find((p) => p.name === prop);
+							const object3DProp = mergedObject3DProperties.find((p) => p.name === prop);
 							if (object3DProp) {
 								return object3DProp;
 							}
+
+							// Look for the property in type properties
+							const typeProp = typeProperties.find((p) => p.name === prop);
+							if (typeProp) {
+								return typeProp;
+							}
+
 							return { name: prop, type: 'any' };
 						}),
 					});
 				} else {
-					console.warn(`Could not instantiate ${threeName} and no known properties found:`, e);
+					// If we have type properties but no known properties, use the type properties
+					if (typeProperties.length > 0) {
+						const isObject3D = typeProperties.some(
+							(prop) => prop.name === 'isObject3D' && prop.type === 'boolean',
+						);
+
+						map.set(elementName, {
+							threeName,
+							isObject3D,
+							properties: isObject3D ? [...typeProperties, ...mergedObject3DProperties] : typeProperties,
+						});
+					} else {
+						console.warn(`Could not process ${threeName}: no instance or type information available`);
+					}
 				}
 				continue;
 			}
 
 			const isObject3D = instance instanceof Object3D;
-			const properties = analyzeInstanceProperties(instance, ThreeClass);
 
-			if (isObject3D) {
-				properties.push(...object3DProperties);
+			// Merge runtime and type properties
+			const mergedProperties = mergeProperties(runtimeProperties, typeProperties);
+
+			if (isObject3D && threeName !== 'Object3D') {
+				mergedProperties.push(...mergedObject3DProperties);
 			}
 
-			map.set(elementName, { threeName, isObject3D, properties });
+			map.set(elementName, { threeName, isObject3D, properties: mergedProperties });
 		} catch (e) {
 			console.warn(`Could not process ${threeName}:`, e);
 			continue;
@@ -373,6 +420,25 @@ function generateMetadata(threeMap) {
 
 		return element;
 	});
+}
+
+// Add this helper function to merge properties from different sources
+function mergeProperties(runtimeProps, typeProps) {
+	const merged = new Map();
+
+	// Add runtime properties
+	runtimeProps.forEach((prop) => {
+		merged.set(prop.name, prop);
+	});
+
+	// Add type properties that don't exist in runtime
+	typeProps.forEach((prop) => {
+		if (!merged.has(prop.name)) {
+			merged.set(prop.name, prop);
+		}
+	});
+
+	return Array.from(merged.values());
 }
 
 function generateFiles() {
