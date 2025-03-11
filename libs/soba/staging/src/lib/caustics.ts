@@ -155,8 +155,8 @@ export class NgtsCaustics {
 		height: this.resolution(),
 		settings: CAUSTIC_OPTIONS,
 	}));
-	causticsTarget = injectFBO(this.causticsTargetParams);
-	causticsTargetB = injectFBO(this.causticsTargetParams);
+	protected causticsTarget = injectFBO(this.causticsTargetParams);
+	protected causticsTargetB = injectFBO(this.causticsTargetParams);
 
 	private cameraHelper = injectHelper(
 		() => (this.debug() ? this.cameraRef().nativeElement : null),
