@@ -53,7 +53,10 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 		</ngt-orthographic-camera>
 
 		<ngt-group #group>
-			<ng-container [ngTemplateOutlet]="cameraContent() ?? null" [ngTemplateOutletContext]="{ $implicit: fbo }" />
+			<ng-container
+				[ngTemplateOutlet]="cameraContent() ?? null"
+				[ngTemplateOutletContext]="{ $implicit: fbo.texture }"
+			/>
 		</ngt-group>
 	`,
 	imports: [NgTemplateOutlet],
