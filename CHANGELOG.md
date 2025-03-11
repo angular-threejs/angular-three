@@ -1,3 +1,13 @@
+## 4.0.0-next.90 (2025-03-11)
+
+### 💅 Refactors
+
+- **tweakpane:** rename startChangeEffect to sync ([659ff189](https://github.com/angular-threejs/angular-three/commit/659ff189))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.89 (2025-03-11)
 
 ### 💅 Refactors
