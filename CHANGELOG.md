@@ -1,3 +1,18 @@
+## 4.0.0-next.88 (2025-03-11)
+
+### 🩹 Fixes
+
+- **soba/abstractions:** add ngts-text-3D as selector for text3d ([c7d7b5c2](https://github.com/angular-threejs/angular-three/commit/c7d7b5c2))
+- **soba/cameras:** expose fbo.texture as camera content context instead of fbo ([5552d810](https://github.com/angular-threejs/angular-three/commit/5552d810))
+
+### 💅 Refactors
+
+- **soba/staging:** use protected ([efaba5b2](https://github.com/angular-threejs/angular-three/commit/efaba5b2))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.87 (2025-03-09)
 
 This was a version bump only, there were no code changes.
