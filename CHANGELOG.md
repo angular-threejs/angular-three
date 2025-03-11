@@ -1,3 +1,13 @@
+## 4.0.0-next.89 (2025-03-11)
+
+### 💅 Refactors
+
+- **tweakpane:** use computed for a lot of bindings stuff instead of set signal ([5d77340b](https://github.com/angular-threejs/angular-three/commit/5d77340b))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.88 (2025-03-11)
 
 ### 🩹 Fixes
