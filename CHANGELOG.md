@@ -1,3 +1,13 @@
+## 4.0.0-next.91 (2025-03-11)
+
+### 🚀 Features
+
+- **rapier:** update peer deps on rapier3d-compat ([b42e76c6](https://github.com/angular-threejs/angular-three/commit/b42e76c6))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.90 (2025-03-11)
 
 ### 💅 Refactors
