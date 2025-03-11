@@ -47,9 +47,9 @@ export class NgtTweakList<TOptionValue> {
 	});
 
 	constructor() {
-		this.label.startChangeEffect(this.listApi);
-		this.blade.startChangeEffect(this.listApi);
-		this.debounce.startDebounceEffect(this.listApi, (ev) => {
+		this.label.sync(this.listApi);
+		this.blade.sync(this.listApi);
+		this.debounce.sync(this.listApi, (ev) => {
 			this.value.set(ev.value);
 		});
 

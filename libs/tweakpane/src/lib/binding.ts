@@ -69,9 +69,9 @@ export class NgtTweakBinding<TValue> {
 	});
 
 	constructor() {
-		this.blade.startChangeEffect(this.bindingApi);
-		this.label.startChangeEffect(this.bindingApi);
-		this.debounce.startDebounceEffect(this.bindingApi, (ev) => {
+		this.blade.sync(this.bindingApi);
+		this.label.sync(this.bindingApi);
+		this.debounce.sync(this.bindingApi, (ev) => {
 			if (this.asHostDirective && typeof this.asHostDirective === 'object') {
 				this.value.set(this.asHostDirective.out(ev.value) as TValue);
 			} else {

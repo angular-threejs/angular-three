@@ -15,7 +15,7 @@ export class NgtTweakBlade {
 		};
 	}
 
-	startChangeEffect(api: () => BladeApi | null) {
+	sync(api: () => BladeApi | null) {
 		return effect(
 			() => {
 				const _api = api();

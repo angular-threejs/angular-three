@@ -8,7 +8,7 @@ export class NgtTweakDebounce {
 
 	private injector = inject(Injector);
 
-	startDebounceEffect<T>(
+	sync<T>(
 		api: () => {
 			on: (evName: 'change', cb: (ev: TpChangeEvent<T>) => void) => void;
 			off: (evName: 'change', cb: (ev: TpChangeEvent<T>) => void) => void;

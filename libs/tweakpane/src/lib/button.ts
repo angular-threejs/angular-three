@@ -47,9 +47,9 @@ export class NgtTweakButton {
 			});
 		});
 
-		this.label.startChangeEffect(this.buttonApi);
-		this.title.startChangeEffect(this.buttonApi);
-		this.blade.startChangeEffect(this.buttonApi);
+		this.label.sync(this.buttonApi);
+		this.title.sync(this.buttonApi);
+		this.blade.sync(this.buttonApi);
 
 		inject(DestroyRef).onDestroy(() => {
 			this.buttonApi()?.dispose();

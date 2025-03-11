@@ -35,8 +35,8 @@ export class NgtTweakFolder {
 	isSelf = true;
 
 	constructor() {
-		this.title.startChangeEffect(this.folder);
-		this.blade.startChangeEffect(this.folder);
+		this.title.sync(this.folder);
+		this.blade.sync(this.folder);
 
 		effect((onCleanup) => {
 			const folder = this.folder();

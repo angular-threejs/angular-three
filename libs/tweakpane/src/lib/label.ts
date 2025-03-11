@@ -11,7 +11,7 @@ export class NgtTweakLabel {
 		return { label: untracked(this.label), tag: untracked(this.tag) };
 	}
 
-	startChangeEffect(api: () => { label?: string | null; tag?: string | null } | null) {
+	sync(api: () => { label?: string | null; tag?: string | null } | null) {
 		return effect(
 			() => {
 				const _api = api();

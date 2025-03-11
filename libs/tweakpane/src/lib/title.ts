@@ -10,7 +10,7 @@ export class NgtTweakTitle {
 		return untracked(this.title);
 	}
 
-	startChangeEffect(api: () => { title: string | undefined } | null) {
+	sync(api: () => { title: string | undefined } | null) {
 		return effect(
 			() => {
 				const _api = api();
