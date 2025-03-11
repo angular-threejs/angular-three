@@ -13,6 +13,6 @@ export class NgtTweakColor {
 	private binding = inject(NgtTweakBinding);
 
 	constructor() {
-		this.binding.createBindingEffect(this.params);
+		this.binding.syncBindingParams(this.params);
 	}
 }

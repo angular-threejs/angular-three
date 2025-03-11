@@ -1,4 +1,4 @@
-import { computed, DestroyRef, Directive, effect, inject, input, model, signal, untracked } from '@angular/core';
+import { computed, DestroyRef, Directive, effect, inject, input, model, untracked } from '@angular/core';
 import { ListItem } from '@tweakpane/core';
 import { ListBladeApi } from 'tweakpane';
 import { NgtTweakBlade } from './blade';
@@ -23,7 +23,6 @@ export class NgtTweakList<TOptionValue> {
 	private label = inject(NgtTweakLabel);
 	private parent = inject(NgtTweakFolder);
 
-	list = signal<ListBladeApi<TOptionValue> | null>(null);
 	private listOptions = computed(() => {
 		const options = this.options();
 		if (Array.isArray(options)) {
@@ -35,34 +34,34 @@ export class NgtTweakList<TOptionValue> {
 			return { text: key, value } as ListItem<TOptionValue>;
 		});
 	});
+	private listApi = computed(() => {
+		const parent = this.parent.folder();
+		if (!parent) return null;
+
+		return parent.addBlade({
+			view: 'list',
+			options: this.listOptions(),
+			value: untracked(this.value),
+			label: this.label.snapshot.label,
+		}) as ListBladeApi<TOptionValue>;
+	});
 
 	constructor() {
-		this.label.startChangeEffect(this.list);
-		this.blade.startChangeEffect(this.list);
-		this.debounce.startDebounceEffect(this.list, (ev) => {
+		this.label.startChangeEffect(this.listApi);
+		this.blade.startChangeEffect(this.listApi);
+		this.debounce.startDebounceEffect(this.listApi, (ev) => {
 			this.value.set(ev.value);
 		});
 
 		effect((onCleanup) => {
-			const parent = this.parent.folder();
-			if (!parent) return;
-
-			const list = parent.addBlade({
-				view: 'list',
-				options: this.listOptions(),
-				value: untracked(this.value),
-				label: this.label.snapshot.label,
-			}) as ListBladeApi<TOptionValue>;
-
-			this.list.set(list);
-
+			const listApi = this.listApi();
 			onCleanup(() => {
-				list.dispose();
+				listApi?.dispose();
 			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			this.list()?.dispose();
+			this.listApi()?.dispose();
 		});
 	}
 }

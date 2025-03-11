@@ -1,60 +1,58 @@
-import { DestroyRef, Directive, effect, inject, input, output, signal, untracked } from '@angular/core';
+import { computed, DestroyRef, Directive, effect, inject, output } from '@angular/core';
 import { TpMouseEvent } from '@tweakpane/core';
 import { ButtonApi } from 'tweakpane';
 import { NgtTweakBlade } from './blade';
 import { NgtTweakFolder } from './folder';
+import { NgtTweakLabel } from './label';
 import { NgtTweakTitle } from './title';
 
 @Directive({
 	selector: 'ngt-tweak-button',
 	hostDirectives: [
 		{ directive: NgtTweakTitle, inputs: ['title'] },
+		{ directive: NgtTweakLabel, inputs: ['label'] },
 		{ directive: NgtTweakBlade, inputs: ['hidden', 'disabled'] },
 	],
 })
 export class NgtTweakButton {
-	label = input('');
 	click = output<TpMouseEvent<ButtonApi>>();
 
 	private title = inject(NgtTweakTitle);
+	private label = inject(NgtTweakLabel);
 	private blade = inject(NgtTweakBlade);
 	private parent = inject(NgtTweakFolder);
 
-	button = signal<ButtonApi | null>(null);
+	private buttonApi = computed(() => {
+		const parent = this.parent.folder();
+		if (!parent) return null;
+
+		return parent.addButton({
+			title: this.title.snapshot,
+			hidden: this.blade.snapshot.hidden,
+			disabled: this.blade.snapshot.disabled,
+			label: this.label.snapshot.label,
+		});
+	});
 
 	constructor() {
 		effect((onCleanup) => {
-			const parent = this.parent.folder();
-			if (!parent) return;
-
-			const button = parent.addButton({
-				title: this.title.snapshot,
-				hidden: this.blade.snapshot.hidden,
-				disabled: this.blade.snapshot.disabled,
-				label: untracked(this.label),
-			});
+			const buttonApi = this.buttonApi();
+			if (!buttonApi) return;
 
 			const boundEmit = this.click.emit.bind(this.click);
-			button.on('click', boundEmit);
-			this.button.set(button);
+			buttonApi.on('click', boundEmit);
 
 			onCleanup(() => {
-				button.off('click', boundEmit);
+				buttonApi.off('click', boundEmit);
 			});
 		});
 
-		effect(() => {
-			const button = this.button();
-			if (!button) return;
-
-			button.label = this.label();
-		});
-
-		this.title.startChangeEffect(this.button);
-		this.blade.startChangeEffect(this.button);
+		this.label.startChangeEffect(this.buttonApi);
+		this.title.startChangeEffect(this.buttonApi);
+		this.blade.startChangeEffect(this.buttonApi);
 
 		inject(DestroyRef).onDestroy(() => {
-			this.button()?.dispose();
+			this.buttonApi()?.dispose();
 		});
 	}
 }

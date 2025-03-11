@@ -16,11 +16,6 @@ import { NgtTweakDebounce } from './debounce';
 import { NgtTweakFolder } from './folder';
 import { NgtTweakLabel } from './label';
 
-export type NgtTweakBindingParams<TParams extends BindingParams> = Omit<
-	TParams,
-	'tag' | 'label' | 'disabled' | 'hidden'
->;
-
 export const NGT_TWEAK_BINDING_AS_HOST = new InjectionToken<
 	true | { in: (value: unknown) => unknown; out: (value: unknown) => unknown } | null
 >('hostDirective NgtTweakBinding', { factory: () => null });
@@ -47,13 +42,13 @@ export class NgtTweakBinding<TValue> {
 	private injector = inject(Injector);
 	private asHostDirective = inject(NGT_TWEAK_BINDING_AS_HOST);
 
-	binding = signal<BindingApi<unknown, TValue> | null>(null);
 	private bindingBaseParams = computed(() => ({
 		label: this.label.snapshot.label,
 		tag: this.label.snapshot.tag,
 		disabled: this.blade.disabled(),
 		hidden: this.blade.hidden(),
 	}));
+	private bindingParams = signal<Record<string, unknown>>({});
 
 	private get bindableObject() {
 		let value = untracked(this.value);
@@ -65,10 +60,18 @@ export class NgtTweakBinding<TValue> {
 		return { value };
 	}
 
+	private bindingApi = computed(() => {
+		const parent = this.parent.folder();
+		if (!parent) return null;
+
+		const bindingParams = { ...this.bindingBaseParams(), ...this.bindingParams() };
+		return parent.addBinding(this.bindableObject, 'value', bindingParams) as BindingApi<unknown, TValue>;
+	});
+
 	constructor() {
-		this.blade.startChangeEffect(this.binding);
-		this.label.startChangeEffect(this.binding);
-		this.debounce.startDebounceEffect(this.binding, (ev) => {
+		this.blade.startChangeEffect(this.bindingApi);
+		this.label.startChangeEffect(this.bindingApi);
+		this.debounce.startDebounceEffect(this.bindingApi, (ev) => {
 			if (this.asHostDirective && typeof this.asHostDirective === 'object') {
 				this.value.set(this.asHostDirective.out(ev.value) as TValue);
 			} else {
@@ -76,32 +79,45 @@ export class NgtTweakBinding<TValue> {
 			}
 		});
 
-		if (!this.asHostDirective) {
-			this.createBindingEffect(this.bindingBaseParams);
-		}
+		effect((onCleanup) => {
+			const bindingApi = this.bindingApi();
+			if (!bindingApi) return;
+			onCleanup(() => {
+				bindingApi.dispose();
+			});
+		});
 
 		inject(DestroyRef).onDestroy(() => {
-			this.binding()?.dispose();
+			this.bindingApi()?.dispose();
 		});
 	}
 
-	createBindingEffect(params: () => BindingParams) {
+	syncBindingParams(params: () => BindingParams) {
 		return effect(
-			(onCleanup) => {
-				const parent = this.parent.folder();
-				if (!parent) return;
-
-				const bindingParams = { ...this.bindingBaseParams(), ...params() };
-				const binding = parent.addBinding(this.bindableObject, 'value', bindingParams);
-
-				this.binding.set(binding);
-
-				onCleanup(() => {
-					binding.dispose();
-					this.binding.set(null);
-				});
+			() => {
+				this.bindingParams.set(params());
 			},
 			{ injector: this.injector },
 		);
 	}
+
+	// createBindingEffect(params: () => BindingParams) {
+	// 	return effect(
+	// 		(onCleanup) => {
+	// 			const parent = this.parent.folder();
+	// 			if (!parent) return;
+	//
+	// 			const bindingParams = { ...this.bindingBaseParams(), ...params() };
+	// 			const binding = parent.addBinding(this.bindableObject, 'value', bindingParams);
+	//
+	// 			this.bindingApi.set(binding);
+	//
+	// 			onCleanup(() => {
+	// 				binding.dispose();
+	// 				this.bindingApi.set(null);
+	// 			});
+	// 		},
+	// 		{ injector: this.injector },
+	// 	);
+	// }
 }
