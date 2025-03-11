@@ -34,7 +34,7 @@ const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> & NgtsText3DOptions 
 };
 
 @Component({
-	selector: 'ngts-text-3d,ngts-text-3D',
+	selector: 'ngts-text-3d, ngts-text-3D',
 	template: `
 		<ngt-mesh #mesh [parameters]="parameters()">
 			<ngt-text-geometry #textGeometry *args="textArgs()" />
