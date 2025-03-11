@@ -110,7 +110,7 @@
     "@angular/platform-browser-dynamic": "19.2.1",
     "@angular/platform-server": "19.2.1",
     "@angular/router": "19.2.1",
-    "@dimforge/rapier3d-compat": "^0.14.0",
+    "@dimforge/rapier3d-compat": "^0.15.0",
     "@monogrid/gainmap-js": "^3.1.0",
     "@pmndrs/cannon-worker-api": "^2.4.0",
     "@pmndrs/vanilla": "^1.20.2",
