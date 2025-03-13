@@ -124,6 +124,7 @@ export class NgtsBVH {
 			raycaster.firstHitOnly = firstHitOnly;
 
 			let timeoutId: ReturnType<typeof setTimeout> | undefined;
+			group.visible = false;
 			group.traverse((child) => {
 				if (
 					is.three<THREE.Mesh>(child, 'isMesh') &&
@@ -140,6 +141,8 @@ export class NgtsBVH {
 						});
 						return;
 					}
+
+					if (!group.visible) group.visible = true;
 
 					child.raycast = acceleratedRaycast;
 					child.geometry.computeBoundsTree = computeBoundsTree;
@@ -158,6 +161,8 @@ export class NgtsBVH {
 						child.raycast = THREE.Mesh.prototype.raycast;
 					}
 				});
+
+				if (!group.visible) group.visible = true;
 			});
 		});
 
