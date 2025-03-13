@@ -16,13 +16,11 @@ export interface NgtsCameraControlsOptions {
 	camera?: NgtCamera;
 	domElement?: HTMLElement;
 	makeDefault: boolean;
-	events: boolean;
 	regress: boolean;
 }
 
 const defaultOptions: Partial<CameraControls> & NgtsCameraControlsOptions = {
 	makeDefault: false,
-	events: false,
 	regress: false,
 };
 
