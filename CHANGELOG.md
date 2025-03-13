@@ -1,3 +1,17 @@
+## 4.0.0-next.92 (2025-03-13)
+
+### 🚀 Features
+
+- **soba/controls:** remove unused events input from camera controls ([459fd1b0](https://github.com/angular-threejs/angular-three/commit/459fd1b0))
+
+### 🩹 Fixes
+
+- **soba/performances:** hide bvh group when retrying setting up geometries ([bc28579d](https://github.com/angular-threejs/angular-three/commit/bc28579d))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.91 (2025-03-11)
 
 ### 🚀 Features
