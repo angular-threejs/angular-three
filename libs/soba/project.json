@@ -35,7 +35,8 @@
 				"port": 4400,
 				"compodoc": false,
 				"configDir": "libs/soba/.storybook",
-				"browserTarget": "soba:build:development"
+				"browserTarget": "soba:build:development",
+				"experimentalZoneless": true
 			}
 		},
 		"build-storybook": {
@@ -45,7 +46,8 @@
 				"compodoc": false,
 				"configDir": "libs/soba/.storybook",
 				"outputDir": "dist/storybook/soba",
-				"browserTarget": "soba:build:production"
+				"browserTarget": "soba:build:production",
+				"experimentalZoneless": true
 			},
 			"configurations": {
 				"ci": {
