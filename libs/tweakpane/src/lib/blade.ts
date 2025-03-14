@@ -1,8 +1,8 @@
 import { booleanAttribute, Directive, effect, inject, Injector, input, untracked } from '@angular/core';
 import { BladeApi } from 'tweakpane';
 
-@Directive({ selector: 'ngt-tweak-blade' })
-export class NgtTweakBlade {
+@Directive({ selector: 'tweakpane-blade' })
+export class TweakpaneBlade {
 	hidden = input(false, { transform: booleanAttribute });
 	disabled = input(false, { transform: booleanAttribute });
 

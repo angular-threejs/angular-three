@@ -1,16 +1,16 @@
 import { Directive, inject, input } from '@angular/core';
 import { ColorInputParams } from 'tweakpane';
-import { NgtTweakBinding, provideTweakBindingAsHost } from './binding';
+import { TweakpaneBinding, provideTweakBindingAsHost } from './binding';
 
 @Directive({
-	selector: 'ngt-tweak-color',
-	hostDirectives: [{ directive: NgtTweakBinding, inputs: ['value'], outputs: ['valueChange'] }],
+	selector: 'tweakpane-color',
+	hostDirectives: [{ directive: TweakpaneBinding, inputs: ['value'], outputs: ['valueChange'] }],
 	providers: [provideTweakBindingAsHost()],
 })
-export class NgtTweakColor {
+export class TweakpaneColor {
 	params = input<ColorInputParams>({});
 
-	private binding = inject(NgtTweakBinding);
+	private binding = inject(TweakpaneBinding);
 
 	constructor() {
 		this.binding.syncBindingParams(this.params);

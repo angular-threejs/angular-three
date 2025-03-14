@@ -1,16 +1,16 @@
 import { Directive, inject, input } from '@angular/core';
 import { NumberInputParams } from 'tweakpane';
-import { NgtTweakBinding, provideTweakBindingAsHost } from './binding';
+import { TweakpaneBinding, provideTweakBindingAsHost } from './binding';
 
 @Directive({
-	selector: 'ngt-tweak-number',
-	hostDirectives: [{ directive: NgtTweakBinding, inputs: ['value'], outputs: ['valueChange'] }],
+	selector: 'tweakpane-number',
+	hostDirectives: [{ directive: TweakpaneBinding, inputs: ['value'], outputs: ['valueChange'] }],
 	providers: [provideTweakBindingAsHost()],
 })
-export class NgtTweakNumber {
+export class TweakpaneNumber {
 	params = input<NumberInputParams>({});
 
-	private binding = inject(NgtTweakBinding);
+	private binding = inject(TweakpaneBinding);
 
 	constructor() {
 		this.binding.syncBindingParams(this.params);

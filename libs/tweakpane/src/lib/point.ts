@@ -1,14 +1,14 @@
 import { Directive, inject, input } from '@angular/core';
 import { Point2dInputParams, Point3dInputParams, Point4dInputParams } from 'tweakpane';
-import { NgtTweakBinding, provideTweakBindingAsHost } from './binding';
+import { TweakpaneBinding, provideTweakBindingAsHost } from './binding';
 
 type AcceptableTweakPointValue =
 	| [x: number, y: number, z?: number, w?: number]
 	| { x: number; y: number; z?: number; w?: number };
 
 @Directive({
-	selector: 'ngt-tweak-point',
-	hostDirectives: [{ directive: NgtTweakBinding, inputs: ['value'], outputs: ['valueChange'] }],
+	selector: 'tweakpane-point',
+	hostDirectives: [{ directive: TweakpaneBinding, inputs: ['value'], outputs: ['valueChange'] }],
 	providers: [
 		provideTweakBindingAsHost<AcceptableTweakPointValue, { x: number; y: number; z?: number; w?: number }>({
 			in: (value) => {
@@ -25,10 +25,10 @@ type AcceptableTweakPointValue =
 		}),
 	],
 })
-export class NgtTweakPoint {
+export class TweakpanePoint {
 	params = input<Point2dInputParams | Point3dInputParams | Point4dInputParams>({});
 
-	private binding = inject(NgtTweakBinding);
+	private binding = inject(TweakpaneBinding);
 
 	constructor() {
 		this.binding.syncBindingParams(this.params);

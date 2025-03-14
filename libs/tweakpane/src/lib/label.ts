@@ -1,7 +1,7 @@
 import { Directive, effect, inject, Injector, input, untracked } from '@angular/core';
 
 @Directive()
-export class NgtTweakLabel {
+export class TweakpaneLabel {
 	label = input('');
 	tag = input('');
 

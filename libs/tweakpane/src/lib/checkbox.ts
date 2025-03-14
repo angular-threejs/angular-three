@@ -1,16 +1,16 @@
 import { Directive, inject, input } from '@angular/core';
 import { BooleanInputParams } from 'tweakpane';
-import { NgtTweakBinding, provideTweakBindingAsHost } from './binding';
+import { TweakpaneBinding, provideTweakBindingAsHost } from './binding';
 
 @Directive({
-	selector: 'ngt-tweak-checkbox',
-	hostDirectives: [{ directive: NgtTweakBinding, inputs: ['value'], outputs: ['valueChange'] }],
+	selector: 'tweakpane-checkbox',
+	hostDirectives: [{ directive: TweakpaneBinding, inputs: ['value'], outputs: ['valueChange'] }],
 	providers: [provideTweakBindingAsHost()],
 })
-export class NgtTweakCheckbox {
+export class TweakpaneCheckbox {
 	params = input<BooleanInputParams>({});
 
-	private binding = inject(NgtTweakBinding);
+	private binding = inject(TweakpaneBinding);
 
 	constructor() {
 		this.binding.syncBindingParams(this.params);

@@ -13,14 +13,14 @@ import {
 import { ClassName } from '@tweakpane/core';
 import { Pane } from 'tweakpane';
 import { PaneConfig } from 'tweakpane/dist/types/pane/pane-config';
-import { NgtTweakFolder } from './folder';
-import { NgtTweakTitle } from './title';
+import { TweakpaneFolder } from './folder';
+import { TweakpaneTitle } from './title';
 
 @Directive({
-	selector: 'ngt-tweak-pane',
-	hostDirectives: [{ directive: NgtTweakFolder, inputs: ['expanded'], outputs: ['expandedChange'] }],
+	selector: 'tweakpane-pane',
+	hostDirectives: [{ directive: TweakpaneFolder, inputs: ['expanded'], outputs: ['expandedChange'] }],
 })
-export class NgtTweakPane {
+export class TweakpanePane {
 	top = input<string | number>('8px');
 	right = input<string | number>('8px');
 	left = input<string | number>();
@@ -29,8 +29,8 @@ export class NgtTweakPane {
 	container = input<HTMLElement | ElementRef<HTMLElement | undefined> | undefined>();
 
 	private document = inject(DOCUMENT);
-	private title = inject(NgtTweakTitle, { host: true });
-	private folder = inject(NgtTweakFolder, { host: true });
+	private title = inject(TweakpaneTitle, { host: true });
+	private folder = inject(TweakpaneFolder, { host: true });
 	private pane = signal<Pane | null>(null);
 	private paneContainer?: HTMLDivElement;
 
@@ -92,7 +92,7 @@ export class NgtTweakPane {
 		});
 	}
 
-	private updateStyleEffect(propertyName: Exclude<keyof NgtTweakPane, 'pane' | 'title' | 'expanded' | 'container'>) {
+	private updateStyleEffect(propertyName: Exclude<keyof TweakpanePane, 'pane' | 'title' | 'expanded' | 'container'>) {
 		const pane = this.pane();
 		if (!pane) return;
 

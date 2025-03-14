@@ -1,0 +1,16 @@
+{
+	"generators": {
+		"migrate-tweakpane": {
+			"version": "4.0.0",
+			"description": "Migration for v4.0.0",
+			"implementation": "./src/migrations/migrate-tweakpane/migrate-tweakpane"
+		}
+	},
+	"schematics": {
+		"migrate-tweakpane": {
+			"version": "4.0.0",
+			"description": "Migration for v4.0.0",
+			"implementation": "./src/migrations/migrate-tweakpane/compat"
+		}
+	}
+}

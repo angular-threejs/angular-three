@@ -1,26 +1,26 @@
 import { computed, DestroyRef, Directive, effect, inject, output } from '@angular/core';
 import { TpMouseEvent } from '@tweakpane/core';
 import { ButtonApi } from 'tweakpane';
-import { NgtTweakBlade } from './blade';
-import { NgtTweakFolder } from './folder';
-import { NgtTweakLabel } from './label';
-import { NgtTweakTitle } from './title';
+import { TweakpaneBlade } from './blade';
+import { TweakpaneFolder } from './folder';
+import { TweakpaneLabel } from './label';
+import { TweakpaneTitle } from './title';
 
 @Directive({
-	selector: 'ngt-tweak-button',
+	selector: 'tweakpane-button',
 	hostDirectives: [
-		{ directive: NgtTweakTitle, inputs: ['title'] },
-		{ directive: NgtTweakLabel, inputs: ['label'] },
-		{ directive: NgtTweakBlade, inputs: ['hidden', 'disabled'] },
+		{ directive: TweakpaneTitle, inputs: ['title'] },
+		{ directive: TweakpaneLabel, inputs: ['label'] },
+		{ directive: TweakpaneBlade, inputs: ['hidden', 'disabled'] },
 	],
 })
-export class NgtTweakButton {
+export class TweakpaneButton {
 	click = output<TpMouseEvent<ButtonApi>>();
 
-	private title = inject(NgtTweakTitle);
-	private label = inject(NgtTweakLabel);
-	private blade = inject(NgtTweakBlade);
-	private parent = inject(NgtTweakFolder);
+	private title = inject(TweakpaneTitle);
+	private label = inject(TweakpaneLabel);
+	private blade = inject(TweakpaneBlade);
+	private parent = inject(TweakpaneFolder);
 
 	private buttonApi = computed(() => {
 		const parent = this.parent.folder();

@@ -11,10 +11,10 @@ import {
 	untracked,
 } from '@angular/core';
 import { BindingApi, BindingParams } from '@tweakpane/core';
-import { NgtTweakBlade } from './blade';
-import { NgtTweakDebounce } from './debounce';
-import { NgtTweakFolder } from './folder';
-import { NgtTweakLabel } from './label';
+import { TweakpaneBlade } from './blade';
+import { TweakpaneDebounce } from './debounce';
+import { TweakpaneFolder } from './folder';
+import { TweakpaneLabel } from './label';
 
 export const NGT_TWEAK_BINDING_AS_HOST = new InjectionToken<
 	true | { in: (value: unknown) => unknown; out: (value: unknown) => unknown } | null
@@ -25,20 +25,20 @@ export function provideTweakBindingAsHost<TIn, TOut>(inOut?: { in: (value: TIn) 
 }
 
 @Directive({
-	selector: 'ngt-tweak-binding',
+	selector: 'tweakpane-binding',
 	hostDirectives: [
-		{ directive: NgtTweakBlade, inputs: ['disabled', 'hidden'] },
-		{ directive: NgtTweakDebounce, inputs: ['debounce'] },
-		{ directive: NgtTweakLabel, inputs: ['label', 'tag'] },
+		{ directive: TweakpaneBlade, inputs: ['disabled', 'hidden'] },
+		{ directive: TweakpaneDebounce, inputs: ['debounce'] },
+		{ directive: TweakpaneLabel, inputs: ['label', 'tag'] },
 	],
 })
-export class NgtTweakBinding<TValue> {
+export class TweakpaneBinding<TValue> {
 	value = model.required<any>();
 
-	private debounce = inject(NgtTweakDebounce);
-	private label = inject(NgtTweakLabel);
-	private blade = inject(NgtTweakBlade);
-	private parent = inject(NgtTweakFolder);
+	private debounce = inject(TweakpaneDebounce);
+	private label = inject(TweakpaneLabel);
+	private blade = inject(TweakpaneBlade);
+	private parent = inject(TweakpaneFolder);
 	private injector = inject(Injector);
 	private asHostDirective = inject(NGT_TWEAK_BINDING_AS_HOST);
 

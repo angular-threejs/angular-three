@@ -3,7 +3,7 @@ import { debounceTime, fromEventPattern } from 'rxjs';
 import { TpChangeEvent } from 'tweakpane';
 
 @Directive()
-export class NgtTweakDebounce {
+export class TweakpaneDebounce {
 	debounce = input(150, { transform: numberAttribute });
 
 	private injector = inject(Injector);

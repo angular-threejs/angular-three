@@ -1,27 +1,27 @@
 import { computed, DestroyRef, Directive, effect, inject, input, model, untracked } from '@angular/core';
 import { ListItem } from '@tweakpane/core';
 import { ListBladeApi } from 'tweakpane';
-import { NgtTweakBlade } from './blade';
-import { NgtTweakDebounce } from './debounce';
-import { NgtTweakFolder } from './folder';
-import { NgtTweakLabel } from './label';
+import { TweakpaneBlade } from './blade';
+import { TweakpaneDebounce } from './debounce';
+import { TweakpaneFolder } from './folder';
+import { TweakpaneLabel } from './label';
 
 @Directive({
-	selector: 'ngt-tweak-list',
+	selector: 'tweakpane-list',
 	hostDirectives: [
-		{ directive: NgtTweakBlade, inputs: ['hidden', 'disabled'] },
-		{ directive: NgtTweakDebounce, inputs: ['debounce'] },
-		{ directive: NgtTweakLabel, inputs: ['label'] },
+		{ directive: TweakpaneBlade, inputs: ['hidden', 'disabled'] },
+		{ directive: TweakpaneDebounce, inputs: ['debounce'] },
+		{ directive: TweakpaneLabel, inputs: ['label'] },
 	],
 })
-export class NgtTweakList<TOptionValue> {
+export class TweakpaneList<TOptionValue> {
 	value = model.required<TOptionValue>();
 	options = input.required<Record<string, TOptionValue> | TOptionValue[]>();
 
-	private blade = inject(NgtTweakBlade);
-	private debounce = inject(NgtTweakDebounce);
-	private label = inject(NgtTweakLabel);
-	private parent = inject(NgtTweakFolder);
+	private blade = inject(TweakpaneBlade);
+	private debounce = inject(TweakpaneDebounce);
+	private label = inject(TweakpaneLabel);
+	private parent = inject(TweakpaneFolder);
 
 	private listOptions = computed(() => {
 		const options = this.options();

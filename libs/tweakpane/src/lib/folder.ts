@@ -1,22 +1,22 @@
 import { computed, DestroyRef, Directive, effect, inject, linkedSignal, model, Signal, untracked } from '@angular/core';
 import { TpFoldEvent } from '@tweakpane/core';
 import { FolderApi } from 'tweakpane';
-import { NgtTweakBlade } from './blade';
-import { NgtTweakTitle } from './title';
+import { TweakpaneBlade } from './blade';
+import { TweakpaneTitle } from './title';
 
 @Directive({
-	selector: 'ngt-tweak-folder',
+	selector: 'tweakpane-folder',
 	hostDirectives: [
-		{ directive: NgtTweakTitle, inputs: ['title'] },
-		{ directive: NgtTweakBlade, inputs: ['hidden', 'disabled'] },
+		{ directive: TweakpaneTitle, inputs: ['title'] },
+		{ directive: TweakpaneBlade, inputs: ['hidden', 'disabled'] },
 	],
 })
-export class NgtTweakFolder {
+export class TweakpaneFolder {
 	expanded = model(false);
 
-	private title = inject(NgtTweakTitle);
-	private blade = inject(NgtTweakBlade);
-	private parent = inject(NgtTweakFolder, { skipSelf: true, optional: true });
+	private title = inject(TweakpaneTitle);
+	private blade = inject(TweakpaneBlade);
+	private parent = inject(TweakpaneFolder, { skipSelf: true, optional: true });
 	parentFolder = linkedSignal(() => this.parent?.folder());
 	folder: Signal<FolderApi | null> = computed(() => {
 		const parent = this.parentFolder();

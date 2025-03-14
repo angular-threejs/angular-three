@@ -1,7 +1,7 @@
 import { Directive, effect, inject, Injector, input, untracked } from '@angular/core';
 
 @Directive()
-export class NgtTweakTitle {
+export class TweakpaneTitle {
 	title = input('TweakPane Title');
 
 	private injector = inject(Injector);

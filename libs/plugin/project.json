@@ -33,6 +33,11 @@
 						"input": "./libs/plugin",
 						"glob": "executors.json",
 						"output": "."
+					},
+					{
+						"input": "./libs/plugin",
+						"glob": "migrations.json",
+						"output": "."
 					}
 				]
 			}

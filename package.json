@@ -115,6 +115,8 @@
     "@pmndrs/cannon-worker-api": "^2.4.0",
     "@pmndrs/vanilla": "^1.20.2",
     "@swc/helpers": "0.5.15",
+    "@theatre/core": "^0.7.2",
+    "@theatre/studio": "^0.7.2",
     "camera-controls": "^2.10.0",
     "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
