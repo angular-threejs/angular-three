@@ -35,7 +35,8 @@
 			"angular-three-soba",
 			"angular-three-postprocessing",
 			"angular-three-cannon",
-			"angular-three-rapier"
+			"angular-three-rapier",
+			"angular-three-tweakpane"
 		]
 	},
 	"ng-update": {
@@ -45,7 +46,8 @@
 			"angular-three-soba",
 			"angular-three-postprocessing",
 			"angular-three-cannon",
-			"angular-three-rapier"
+			"angular-three-rapier",
+			"angular-three-tweakpane"
 		]
 	}
 }
