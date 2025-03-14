@@ -16,7 +16,8 @@
 			"description": "aux generator"
 		},
 		"migrate-tweakpane": {
-			"factory": "./src/migrations/migrate-tweakpane/migrate-tweakpane",
+			"factory": "./src/generators/migrate-tweakpane/migrate-tweakpane",
+			"schema": "./src/generators/migrate-tweakpane/schema.json",
 			"description": "Migration tweakpane"
 		}
 	},
@@ -37,7 +38,8 @@
 			"description": "aux generator"
 		},
 		"migrate-tweakpane": {
-			"factory": "./src/migrations/migrate-tweakpane/compat",
+			"factory": "./src/generators/migrate-tweakpane/compat",
+			"schema": "./src/generators/migrate-tweakpane/schema.json",
 			"description": "Migration tweakpane"
 		}
 	}

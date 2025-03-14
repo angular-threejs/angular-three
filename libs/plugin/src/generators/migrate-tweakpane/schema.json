@@ -1,0 +1,14 @@
+{
+	"cli": "nx",
+	"$id": "MigrateTweakpane",
+	"title": "Migrate angular-three-tweakpane selectors and symbols",
+	"type": "object",
+	"properties": {
+		"project": {
+			"type": "string",
+			"description": "The project to run migration for.",
+			"x-prompt": "Which project to run 'migrate-tweakpane'?",
+			"x-dropdown": "projects"
+		}
+	}
+}
