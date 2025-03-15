@@ -36,7 +36,8 @@
 			"angular-three-postprocessing",
 			"angular-three-cannon",
 			"angular-three-rapier",
-			"angular-three-tweakpane"
+			"angular-three-tweakpane",
+			"angular-three-theatre"
 		]
 	},
 	"ng-update": {
@@ -47,7 +48,8 @@
 			"angular-three-postprocessing",
 			"angular-three-cannon",
 			"angular-three-rapier",
-			"angular-three-tweakpane"
+			"angular-three-tweakpane",
+			"angular-three-theatre"
 		]
 	}
 }
