@@ -1,3 +1,13 @@
+## 4.0.0-next.94 (2025-03-15)
+
+### 🩹 Fixes
+
+- **theatre:** use studio to initialize ([1b517a30](https://github.com/angular-threejs/angular-three/commit/1b517a30))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.93 (2025-03-15)
 
 ### 🚀 Features
