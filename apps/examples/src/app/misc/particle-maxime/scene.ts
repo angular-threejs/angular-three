@@ -16,7 +16,7 @@ import * as THREE from 'three';
 
 import { SimulationMaterial } from './simulation-material';
 
-import { NgtTweakNumber, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneNumber, TweakpanePane } from 'angular-three-tweakpane';
 import fragmentShader from './fragment.glsl' with { loader: 'text' };
 import vertexShader from './vertex.glsl' with { loader: 'text' };
 
@@ -158,10 +158,10 @@ export class FBOParticles {
 
 		<ngts-orbit-controls [options]="{ enablePan: false, autoRotate: true }" />
 
-		<ngt-tweak-pane title="Particles" [top]="48" [expanded]="true">
-			<ngt-tweak-number [(value)]="frequency" label="frequency" [params]="{ min: 0.25, max: 1, step: 0.01 }" />
-			<ngt-tweak-number [(value)]="timeScale" label="timeScale" [params]="{ min: 0.5, max: 1.5, step: 0.01 }" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Particles" [top]="48" [expanded]="true">
+			<tweakpane-number [(value)]="frequency" label="frequency" [params]="{ min: 0.25, max: 1, step: 0.01 }" />
+			<tweakpane-number [(value)]="timeScale" label="timeScale" [params]="{ min: 0.5, max: 1.5, step: 0.01 }" />
+		</tweakpane-pane>
 	`,
 	imports: [
 		NgtsPerspectiveCamera,
@@ -170,8 +170,8 @@ export class FBOParticles {
 		FBOParticles,
 		NgtpEffectComposer,
 		NgtpBloom,
-		NgtTweakPane,
-		NgtTweakNumber,
+		TweakpanePane,
+		TweakpaneNumber,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

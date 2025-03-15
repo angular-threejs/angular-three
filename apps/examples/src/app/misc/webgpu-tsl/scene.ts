@@ -13,7 +13,7 @@ import { extend, injectBeforeRender, injectLoader, injectStore } from 'angular-t
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { injectGLTF } from 'angular-three-soba/loaders';
-import { NgtTweakCheckbox, NgtTweakColor, NgtTweakNumber, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneCheckbox, TweakpaneColor, TweakpaneNumber, TweakpanePane } from 'angular-three-tweakpane';
 import { GLTF, RGBELoader } from 'three-stdlib';
 import * as THREE from 'three/webgpu';
 import { DirectionalLight, MeshPhysicalNodeMaterial } from 'three/webgpu';
@@ -96,32 +96,32 @@ interface GearsGLB extends GLTF {
 
 		<ngts-orbit-controls [options]="{ zoomSpeed: 0.2 }" />
 
-		<ngt-tweak-pane title="Slice Material" left="8px">
-			<ngt-tweak-checkbox [(value)]="rotate" label="rotate" />
-			<ngt-tweak-color [(value)]="sliceColor" label="slice color" />
-			<ngt-tweak-number
+		<tweakpane-pane title="Slice Material" left="8px">
+			<tweakpane-checkbox [(value)]="rotate" label="rotate" />
+			<tweakpane-color [(value)]="sliceColor" label="slice color" />
+			<tweakpane-number
 				[(value)]="startAngleDegrees"
 				label="start angle degrees"
 				debounce="0"
 				[params]="{ min: 0, max: 360, step: 1 }"
 			/>
-			<ngt-tweak-number
+			<tweakpane-number
 				[(value)]="arcAngleDegrees"
 				label="arc angle degrees"
 				debounce="0"
 				[params]="{ min: 0, max: 360, step: 1 }"
 			/>
-		</ngt-tweak-pane>
+		</tweakpane-pane>
 	`,
 	imports: [
 		NgtsPerspectiveCamera,
 		NgtsOrbitControls,
 		NgTemplateOutlet,
 		SliceMaterial,
-		NgtTweakPane,
-		NgtTweakColor,
-		NgtTweakCheckbox,
-		NgtTweakNumber,
+		TweakpanePane,
+		TweakpaneColor,
+		TweakpaneCheckbox,
+		TweakpaneNumber,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

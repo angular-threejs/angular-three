@@ -1,66 +1,66 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import {
-	NgtTweakCheckbox,
-	NgtTweakColor,
-	NgtTweakFolder,
-	NgtTweakNumber,
-	NgtTweakPane,
-	NgtTweakText,
+	TweakpaneCheckbox,
+	TweakpaneColor,
+	TweakpaneFolder,
+	TweakpaneNumber,
+	TweakpanePane,
+	TweakpaneText,
 } from 'angular-three-tweakpane';
 
 @Component({
 	selector: 'app-tweaks',
 	template: `
-		<ngt-tweak-pane title="Epoxy Resin" left="8px">
-			<ngt-tweak-text [(value)]="text" label="text" />
-			<ngt-tweak-color [(value)]="shadow" label="Shadow Color" />
-			<ngt-tweak-checkbox [(value)]="autoRotate" label="Auto Rotate" />
-			<ngt-tweak-folder title="Text Material">
-				<ngt-tweak-checkbox [(value)]="backside" label="Backside" />
-				<ngt-tweak-number
+		<tweakpane-pane title="Epoxy Resin" left="8px">
+			<tweakpane-text [(value)]="text" label="text" />
+			<tweakpane-color [(value)]="shadow" label="Shadow Color" />
+			<tweakpane-checkbox [(value)]="autoRotate" label="Auto Rotate" />
+			<tweakpane-folder title="Text Material">
+				<tweakpane-checkbox [(value)]="backside" label="Backside" />
+				<tweakpane-number
 					[(value)]="backsideThickness"
 					label="Backside Thickness"
 					[params]="{ min: 0, max: 2 }"
 				/>
-				<ngt-tweak-number [(value)]="samples" label="Samples" [params]="{ min: 1, max: 32, step: 1 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="samples" label="Samples" [params]="{ min: 1, max: 32, step: 1 }" />
+				<tweakpane-number
 					[(value)]="resolution"
 					label="Resolution"
 					[params]="{ min: 64, max: 2048, step: 64 }"
 				/>
-				<ngt-tweak-number [(value)]="transmission" label="Transmission" [params]="{ min: 0, max: 1 }" />
-				<ngt-tweak-number [(value)]="clearcoat" label="Clearcoat" [params]="{ min: 0.1, max: 1 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="transmission" label="Transmission" [params]="{ min: 0, max: 1 }" />
+				<tweakpane-number [(value)]="clearcoat" label="Clearcoat" [params]="{ min: 0.1, max: 1 }" />
+				<tweakpane-number
 					[(value)]="clearcoatRoughness"
 					label="Clearcoat Roughness"
 					[params]="{ min: 0, max: 1 }"
 				/>
-				<ngt-tweak-number [(value)]="thickness" label="Thickness" [params]="{ min: 0, max: 5 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="thickness" label="Thickness" [params]="{ min: 0, max: 5 }" />
+				<tweakpane-number
 					[(value)]="chromaticAberration"
 					label="Chromatic Aberration"
 					[params]="{ min: 0, max: 5 }"
 				/>
-				<ngt-tweak-number [(value)]="anisotropy" label="Anisotropy" [params]="{ min: 0, max: 1, step: 0.01 }" />
-				<ngt-tweak-number [(value)]="roughness" label="Roughness" [params]="{ min: 0, max: 1, step: 0.01 }" />
-				<ngt-tweak-number [(value)]="distortion" label="Distortion" [params]="{ min: 0, max: 4, step: 0.01 }" />
-				<ngt-tweak-number
+				<tweakpane-number [(value)]="anisotropy" label="Anisotropy" [params]="{ min: 0, max: 1, step: 0.01 }" />
+				<tweakpane-number [(value)]="roughness" label="Roughness" [params]="{ min: 0, max: 1, step: 0.01 }" />
+				<tweakpane-number [(value)]="distortion" label="Distortion" [params]="{ min: 0, max: 4, step: 0.01 }" />
+				<tweakpane-number
 					[(value)]="distortionScale"
 					label="Distortion Scale"
 					[params]="{ min: 0.01, max: 1, step: 0.01 }"
 				/>
-				<ngt-tweak-number
+				<tweakpane-number
 					[(value)]="temporalDistortion"
 					label="Temporal Distortion"
 					[params]="{ min: 0, max: 1, step: 0.01 }"
 				/>
-				<ngt-tweak-number [(value)]="ior" label="IOR" [params]="{ min: 0, max: 2, step: 0.01 }" />
-				<ngt-tweak-color [(value)]="color" label="Color" />
-			</ngt-tweak-folder>
-		</ngt-tweak-pane>
+				<tweakpane-number [(value)]="ior" label="IOR" [params]="{ min: 0, max: 2, step: 0.01 }" />
+				<tweakpane-color [(value)]="color" label="Color" />
+			</tweakpane-folder>
+		</tweakpane-pane>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtTweakCheckbox, NgtTweakColor, NgtTweakNumber, NgtTweakFolder, NgtTweakText, NgtTweakPane],
+	imports: [TweakpaneCheckbox, TweakpaneColor, TweakpaneNumber, TweakpaneFolder, TweakpaneText, TweakpanePane],
 })
 export class Tweaks<T> {
 	text = signal('Angular');

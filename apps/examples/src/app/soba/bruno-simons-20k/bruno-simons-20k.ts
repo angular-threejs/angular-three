@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgtTweakCheckbox, NgtTweakPane } from 'angular-three-tweakpane';
+import { TweakpaneCheckbox, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas } from 'angular-three/dom';
 import { debug, SceneGraph, withN8ao } from './scene';
 
@@ -14,14 +14,14 @@ import { debug, SceneGraph, withN8ao } from './scene';
 			<app-bruno-scene-graph *canvasContent />
 		</ngt-canvas>
 
-		<ngt-tweak-pane title="Bruno Simons 20k">
-			<ngt-tweak-checkbox [(value)]="debug" label="debug" />
-			<ngt-tweak-checkbox [(value)]="withN8ao" label="withN8ao" />
-		</ngt-tweak-pane>
+		<tweakpane-pane title="Bruno Simons 20k">
+			<tweakpane-checkbox [(value)]="debug" label="debug" />
+			<tweakpane-checkbox [(value)]="withN8ao" label="withN8ao" />
+		</tweakpane-pane>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'bruno-simons-2k-soba' },
-	imports: [NgtCanvas, SceneGraph, NgtTweakPane, NgtTweakCheckbox],
+	imports: [NgtCanvas, SceneGraph, TweakpanePane, TweakpaneCheckbox],
 })
 export default class BrunoSimons20k {
 	protected debug = debug;

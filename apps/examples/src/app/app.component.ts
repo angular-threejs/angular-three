@@ -14,6 +14,7 @@ import { filter } from 'rxjs';
 				<option value="cannon">/cannon</option>
 				<option value="postprocessing">/postprocessing</option>
 				<option value="rapier">/rapier</option>
+				<option value="theatre">/theatre</option>
 				<option value="misc">/misc</option>
 				<option value="routed">/routed</option>
 				<option value="routed-rocks">/routed-rocks</option>
@@ -65,7 +66,7 @@ export class AppComponent {
 		const navigationEnd = this.navigationEnd();
 		if (!navigationEnd) return '';
 		const paths = navigationEnd.urlAfterRedirects.split('/').filter(Boolean);
-		return `https://github.com/angular-threejs/angular-three/tree/main/apps/kitchen-sink/src/app/${paths.join('/')}`;
+		return `https://github.com/angular-threejs/angular-three/tree/v4-next/apps/examples/src/app/${paths.join('/')}`;
 	});
 
 	protected currentActivatedRouteCredits = computed(() => {

@@ -14,6 +14,12 @@ export const appRoutes: Route[] = [
 		title: 'Postprocessing - Angular Three Demo',
 	},
 	{
+		path: 'theatre',
+		loadComponent: () => import('./theatre/theatre'),
+		loadChildren: () => import('./theatre/theatre.routes'),
+		title: 'TheatreJS - Angular Three Demo',
+	},
+	{
 		path: 'soba',
 		loadComponent: () => import('./soba/soba'),
 		loadChildren: () => import('./soba/soba.routes'),

@@ -19,12 +19,12 @@ import { injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
 import {
-	NgtTweakCheckbox,
-	NgtTweakColor,
-	NgtTweakFolder,
-	NgtTweakList,
-	NgtTweakNumber,
-	NgtTweakPane,
+	TweakpaneCheckbox,
+	TweakpaneColor,
+	TweakpaneFolder,
+	TweakpaneList,
+	TweakpaneNumber,
+	TweakpanePane,
 } from 'angular-three-tweakpane';
 import { Bone, Group, MeshStandardMaterial, Object3D, SRGBColorSpace, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -140,32 +140,32 @@ export class Bot {
 
 			<ngts-orbit-controls [options]="{ makeDefault: true, autoRotate: true }" />
 
-			<ngt-tweak-pane title="Soba Basic">
-				<ngt-tweak-folder title="Bloom">
-					<ngt-tweak-checkbox [(value)]="bloom" label="Enabled" />
-					<ngt-tweak-number
+			<tweakpane-pane title="Soba Basic">
+				<tweakpane-folder title="Bloom">
+					<tweakpane-checkbox [(value)]="bloom" label="Enabled" />
+					<tweakpane-number
 						[(value)]="luminanceThreshold"
 						label="luminanceThreshold"
 						[params]="{ min: 0, max: 1, step: 0.01 }"
 					/>
-					<ngt-tweak-number
+					<tweakpane-number
 						[(value)]="luminanceSmoothing"
 						label="luminanceSmoothing"
 						[params]="{ min: 0, max: 1, step: 0.01 }"
 					/>
-					<ngt-tweak-number
+					<tweakpane-number
 						[(value)]="intensity"
 						label="bloomIntensity"
 						[params]="{ min: 0, max: 10, step: 0.5 }"
 					/>
-				</ngt-tweak-folder>
-				<ngt-tweak-folder title="Glitch">
-					<ngt-tweak-checkbox [(value)]="glitch" label="Enabled" />
-				</ngt-tweak-folder>
+				</tweakpane-folder>
+				<tweakpane-folder title="Glitch">
+					<tweakpane-checkbox [(value)]="glitch" label="Enabled" />
+				</tweakpane-folder>
 
-				<ngt-tweak-list [(value)]="selectedAction" [options]="['Strut', 'Dance', 'Idle']" label="Animation" />
-				<ngt-tweak-color [(value)]="backgroundColor" label="Background" />
-			</ngt-tweak-pane>
+				<tweakpane-list [(value)]="selectedAction" [options]="['Strut', 'Dance', 'Idle']" label="Animation" />
+				<tweakpane-color [(value)]="backgroundColor" label="Background" />
+			</tweakpane-pane>
 		}
 	`,
 	imports: [
@@ -175,12 +175,12 @@ export class Bot {
 		NgtpEffectComposer,
 		NgtpBloom,
 		NgtpGlitch,
-		NgtTweakPane,
-		NgtTweakFolder,
-		NgtTweakCheckbox,
-		NgtTweakList,
-		NgtTweakColor,
-		NgtTweakNumber,
+		TweakpanePane,
+		TweakpaneFolder,
+		TweakpaneCheckbox,
+		TweakpaneList,
+		TweakpaneColor,
+		TweakpaneNumber,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
