@@ -1,3 +1,21 @@
+## 4.0.0-next.93 (2025-03-15)
+
+### 🚀 Features
+
+- **core:** remove unused code, expose resolveInstanceKey in applyProps ([0bdd9a7f](https://github.com/angular-threejs/angular-three/commit/0bdd9a7f))
+- **plugin:** add tweakpane to migration group ([3dee9634](https://github.com/angular-threejs/angular-three/commit/3dee9634))
+- **plugin:** add theatre to update groups ([1b5c0559](https://github.com/angular-threejs/angular-three/commit/1b5c0559))
+- **theatre:** add theatrejs integration ([87be9501](https://github.com/angular-threejs/angular-three/commit/87be9501))
+- **tweakpane:** rename tweakpane ([54926538](https://github.com/angular-threejs/angular-three/commit/54926538))
+
+### 🩹 Fixes
+
+- **core:** ignore keys.indexOf in loader (need to revisit why) ([f560747a](https://github.com/angular-threejs/angular-three/commit/f560747a))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.92 (2025-03-13)
 
 ### 🚀 Features
