@@ -15,7 +15,7 @@ export class TheatreStudio {
 	studio = this.Studio.asReadonly();
 
 	constructor() {
-		this.Studio().initialize();
+		Studio.initialize();
 
 		effect((onCleanup) => {
 			const [enabled, studio] = [this.enabled(), this.Studio()];
