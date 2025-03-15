@@ -1,3 +1,13 @@
+## 4.0.0-next.95 (2025-03-15)
+
+### 🩹 Fixes
+
+- **theatre:** fix studio import ([2cb857bf](https://github.com/angular-threejs/angular-three/commit/2cb857bf))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.94 (2025-03-15)
 
 ### 🩹 Fixes
