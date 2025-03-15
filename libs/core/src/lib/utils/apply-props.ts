@@ -35,22 +35,7 @@ const colorMaps = ['map', 'emissiveMap', 'sheenColorMap', 'specularColorMap', 'e
 
 type ClassConstructor = { new (): void };
 
-const MEMOIZED_PROTOTYPES = new Map();
-
-function getMemoizedPrototype(root: any) {
-	let ctor = MEMOIZED_PROTOTYPES.get(root.constructor);
-	try {
-		if (!ctor) {
-			ctor = new root.constructor();
-			MEMOIZED_PROTOTYPES.set(root.constructor, ctor);
-		}
-	} catch (e) {
-		// ...
-	}
-	return ctor;
-}
-
-function resolve(instance: any, key: string): { root: any; targetKey: string; targetProp: any } {
+export function resolveInstanceKey(instance: any, key: string): { root: any; targetKey: string; targetProp: any } {
 	let targetProp = instance[key];
 	if (!key.includes('.')) return { root: instance, targetKey: key, targetProp };
 
@@ -98,7 +83,7 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 		// 	}
 		// }
 
-		const { root, targetKey, targetProp } = resolve(instance, key);
+		const { root, targetKey, targetProp } = resolveInstanceKey(instance, key);
 
 		// we have switched due to pierced props
 		if (root !== instance) {
