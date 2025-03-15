@@ -153,6 +153,7 @@ function _injectLoader<
 					const keys = Object.keys(originalUrls);
 					return keys.reduce(
 						(result, key) => {
+							// @ts-ignore
 							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
 							return result;
 						},
