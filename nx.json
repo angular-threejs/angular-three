@@ -148,7 +148,7 @@
 		}
 	},
 	"release": {
-		"projects": ["core", "cannon", "postprocessing", "soba", "rapier", "plugin", "tweakpane"],
+		"projects": ["core", "cannon", "postprocessing", "soba", "rapier", "plugin", "tweakpane", "theatre"],
 		"version": {
 			"preVersionCommand": "npm run package",
 			"generatorOptions": {
