@@ -1,5 +1,5 @@
 import { booleanAttribute, Directive, effect, input, signal } from '@angular/core';
-import Studio from '@theatre/studio';
+import { type IStudio } from '@theatre/studio';
 import { THEATRE_STUDIO } from './studio-token';
 
 @Directive({
@@ -11,14 +11,22 @@ import { THEATRE_STUDIO } from './studio-token';
 export class TheatreStudio {
 	enabled = input(true, { alias: 'studio', transform: booleanAttribute });
 
-	private Studio = signal(Studio);
+	private Studio = signal<IStudio | null>(null);
 	studio = this.Studio.asReadonly();
 
 	constructor() {
-		Studio.initialize();
+		import('@theatre/studio').then((m) => {
+			const Studio = 'default' in m.default ? (m.default as unknown as { default: IStudio }).default : m.default;
+			Studio.initialize();
+			this.Studio.set(Studio);
+		});
 
 		effect((onCleanup) => {
-			const [enabled, studio] = [this.enabled(), this.Studio()];
+			const studio = this.Studio();
+			if (!studio) return;
+
+			const enabled = this.enabled();
+
 			if (enabled) {
 				studio.ui.restore();
 			} else {
