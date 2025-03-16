@@ -1,3 +1,17 @@
+## 4.0.0-next.96 (2025-03-16)
+
+### 🩹 Fixes
+
+- **theatre:** exportAs; expose sheetObject on transform and sync; ([ac14210e](https://github.com/angular-threejs/angular-three/commit/ac14210e))
+
+### 💅 Refactors
+
+- **soba/cameras:** adjust perspective camera code ([41b94287](https://github.com/angular-threejs/angular-three/commit/41b94287))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.95 (2025-03-15)
 
 ### 🩹 Fixes
