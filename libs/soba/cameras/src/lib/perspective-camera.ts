@@ -75,8 +75,19 @@ export class NgtsPerspectiveCamera {
 	constructor() {
 		extend({ PerspectiveCamera, Group });
 
+		effect((onCleanup) => {
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const camera = this.cameraRef().nativeElement;
+			const oldCam = this.store.snapshot.camera;
+			this.store.update({ camera });
+			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
+		});
+
 		effect(() => {
-			this.cameraRef().nativeElement.updateProjectionMatrix();
+			const camera = this.cameraRef().nativeElement;
+			camera.updateProjectionMatrix();
 		});
 
 		effect(() => {
@@ -89,15 +100,6 @@ export class NgtsPerspectiveCamera {
 			];
 			camera.aspect = width / height;
 			camera.updateProjectionMatrix();
-		});
-
-		effect((onCleanup) => {
-			const makeDefault = this.makeDefault();
-			if (!makeDefault) return;
-
-			const oldCam = this.store.snapshot.camera;
-			this.store.update({ camera: this.cameraRef().nativeElement });
-			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
 
 		let count = 0;
