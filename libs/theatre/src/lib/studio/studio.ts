@@ -4,6 +4,7 @@ import { THEATRE_STUDIO } from './studio-token';
 
 @Directive({
 	selector: 'theatre-project[studio]',
+	exportAs: 'studio',
 	providers: [
 		{ provide: THEATRE_STUDIO, useFactory: (studio: TheatreStudio) => studio.studio, deps: [TheatreStudio] },
 	],

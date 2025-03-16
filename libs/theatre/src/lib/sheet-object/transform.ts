@@ -52,10 +52,11 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
-	private sheetObject = inject(TheatreSheetObject);
+	private theatreSheetObject = inject(TheatreSheetObject);
+	sheetObject = computed(() => this.theatreSheetObject.sheetObject());
 	private studio = inject(THEATRE_STUDIO, { optional: true });
 
-	protected selected = this.sheetObject.selected.asReadonly();
+	protected selected = this.theatreSheetObject.selected.asReadonly();
 	private scrub?: IScrub;
 
 	private positionTransformer = computed(() =>
@@ -82,7 +83,7 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 		if (!this.scrub) return;
 
 		this.scrub.capture((api) => {
-			const sheetObject = this.sheetObject.sheetObject();
+			const sheetObject = this.sheetObject();
 			if (!sheetObject) return;
 
 			const group = this.groupRef().nativeElement;
@@ -109,7 +110,7 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 
 		effect((onCleanup) => {
 			const [sheetObject, key, positionTransformer, rotationTransformer, scaleTransformer, group] = [
-				this.sheetObject.sheetObject(),
+				this.sheetObject(),
 				untracked(this.key),
 				untracked(this.positionTransformer),
 				untracked(this.rotationTransformer),
@@ -140,7 +141,7 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 
 		inject(DestroyRef).onDestroy(() => {
 			const key = this.key();
-			this.sheetObject.removeProps(key ? [key] : ['position', 'rotation', 'scale']);
+			this.theatreSheetObject.removeProps(key ? [key] : ['position', 'rotation', 'scale']);
 		});
 	}
 
@@ -159,11 +160,11 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 		const scale = scaleTransformer.transform(group.scale);
 
 		if (key) {
-			this.sheetObject.addProps({
+			this.theatreSheetObject.addProps({
 				[key]: types.compound({ position, rotation, scale }, { label: label ?? key }),
 			});
 		} else {
-			this.sheetObject.addProps({ position, rotation, scale });
+			this.theatreSheetObject.addProps({ position, rotation, scale });
 		}
 	}
 }

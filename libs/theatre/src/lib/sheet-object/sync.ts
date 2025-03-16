@@ -1,4 +1,4 @@
-import { computed, DestroyRef, Directive, effect, ElementRef, inject, input, signal } from '@angular/core';
+import { computed, DestroyRef, Directive, effect, ElementRef, inject, input } from '@angular/core';
 import { NgtAnyRecord, resolveInstanceKey, resolveRef } from 'angular-three';
 import { THEATRE_STUDIO } from '../studio/studio-token';
 import { getDefaultTransformer } from '../transformers/default-transformer';
@@ -7,7 +7,7 @@ import { TheatreSheetObject } from './sheet-object';
 
 const updateProjectionMatrixKeys = ['fov', 'near', 'far', 'zoom', 'left', 'right', 'top', 'bottom', 'aspect'];
 
-@Directive({ selector: '[sync]' })
+@Directive({ selector: '[sync]', exportAs: 'sync' })
 export class TheatreSheetObjectSync<TObject extends object> {
 	parent = input.required<TObject | ElementRef<TObject> | (() => TObject | ElementRef<TObject> | undefined | null)>({
 		alias: 'sync',
@@ -16,7 +16,8 @@ export class TheatreSheetObjectSync<TObject extends object> {
 		Array<string | [string, string | { label?: string; key?: string; transformer?: TheatreTransformer }]>
 	>([], { alias: 'syncProps' });
 
-	private sheetObject = inject(TheatreSheetObject);
+	private theatreSheetObject = inject(TheatreSheetObject);
+	sheetObject = computed(() => this.theatreSheetObject.sheetObject());
 	private studio = inject(THEATRE_STUDIO, { optional: true });
 
 	private parentRef = computed(() => {
@@ -46,40 +47,44 @@ export class TheatreSheetObjectSync<TObject extends object> {
 		);
 	});
 
-	private init = signal(false);
+	private propsToAdd = computed(() => {
+		const parent = this.parentRef();
+		if (!parent) return null;
+
+		const propsToAdd: NgtAnyRecord = {};
+		const resolvedProps = this.resolvedProps();
+		resolvedProps.forEach(([propName, { key, label, transformer }]) => {
+			const { root, targetKey } = resolveInstanceKey(parent, propName);
+			const rawValue = root[targetKey];
+			const valueTransformer = transformer ?? getDefaultTransformer(root, targetKey, propName);
+			const value = valueTransformer.transform(rawValue);
+
+			value.label = label ?? key;
+
+			this.propsMapping[key] = { path: propName, transformer: valueTransformer };
+			propsToAdd[key] = value;
+		});
+
+		return propsToAdd;
+	});
+
 	private propsMapping: Record<string, { path: string; transformer: TheatreTransformer }> = {};
 
 	constructor() {
 		effect(() => {
-			const parent = this.parentRef();
-			if (!parent) return;
-
-			const propsToAdd: NgtAnyRecord = {};
-			const resolvedProps = this.resolvedProps();
-			resolvedProps.forEach(([propName, { key, label, transformer }]) => {
-				const { root, targetKey, targetProp } = resolveInstanceKey(parent, propName);
-				const rawValue = root[targetKey];
-				const valueTransformer = transformer ?? getDefaultTransformer(root, targetKey, propName);
-				const value = valueTransformer.transform(rawValue);
-
-				value.label = label ?? key;
-
-				this.propsMapping[key] = { path: propName, transformer: valueTransformer };
-				propsToAdd[key] = value;
-			});
-
-			this.sheetObject.addProps(propsToAdd);
-			this.init.set(true);
+			const propsToAdd = this.propsToAdd();
+			if (!propsToAdd) return;
+			this.theatreSheetObject.addProps(propsToAdd);
 		});
 
 		effect((onCleanup) => {
 			const parent = this.parentRef();
 			if (!parent) return;
 
-			const init = this.init();
-			if (!init) return;
+			const propsToAdd = this.propsToAdd();
+			if (!propsToAdd) return;
 
-			const sheetObject = this.sheetObject.sheetObject();
+			const sheetObject = this.sheetObject();
 			const cleanup = sheetObject.onValuesChange((newValues) => {
 				Object.keys(newValues).forEach((key) => {
 					// first, check if the prop is mapped in this component
@@ -87,7 +92,7 @@ export class TheatreSheetObjectSync<TObject extends object> {
 					if (!propMapping) return;
 
 					// we're using the addedProps map to infer the target property name from the property name on values
-					const { root, targetProp, targetKey } = resolveInstanceKey(parent, propMapping.path);
+					const { root, targetKey } = resolveInstanceKey(parent, propMapping.path);
 
 					// use a transformer to apply value
 					const transformer = propMapping.transformer;
@@ -103,8 +108,37 @@ export class TheatreSheetObjectSync<TObject extends object> {
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			this.sheetObject.removeProps(Object.keys(this.propsMapping));
+			this.theatreSheetObject.removeProps(Object.keys(this.propsMapping));
 		});
+	}
+
+	capture() {
+		const studio = this.studio?.();
+		if (!studio) return;
+
+		const parent = this.parentRef();
+		if (!parent) return;
+
+		const sheetObject = this.sheetObject();
+		if (!sheetObject) return;
+
+		const scrub = studio.scrub();
+
+		Object.keys(sheetObject.value).forEach((key) => {
+			// first, check if the prop is mapped in this component
+			const propMapping = this.propsMapping[key];
+			if (!propMapping) return;
+
+			// we're using the addedProps map to infer the target property name from the property name on values
+			const { targetProp } = resolveInstanceKey(parent, propMapping.path);
+			const value = propMapping.transformer.transform(targetProp).default;
+
+			scrub.capture(({ set }) => {
+				set(sheetObject.props[key], value);
+			});
+		});
+
+		scrub.commit();
 	}
 
 	private resolvePropertyPath(propPath: string) {

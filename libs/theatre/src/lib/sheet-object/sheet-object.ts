@@ -17,12 +17,12 @@ import { injectStore } from 'angular-three';
 import { TheatreSheet } from '../sheet';
 import { THEATRE_STUDIO } from '../studio/studio-token';
 
-@Directive({ selector: 'ng-template[sheetObject]' })
+@Directive({ selector: 'ng-template[sheetObject]', exportAs: 'sheetObject' })
 export class TheatreSheetObject {
 	key = input.required<string>({ alias: 'sheetObject' });
-	props = input<UnknownShorthandCompoundProps>({});
-	detach = input(false, { transform: booleanAttribute });
-	selected = model<boolean>(false);
+	props = input<UnknownShorthandCompoundProps>({}, { alias: 'sheetObjectProps' });
+	detach = input(false, { transform: booleanAttribute, alias: 'sheetObjectDetach' });
+	selected = model<boolean>(false, { alias: 'sheetObjectSelected' });
 
 	private templateRef = inject(TemplateRef);
 	private vcr = inject(ViewContainerRef);
