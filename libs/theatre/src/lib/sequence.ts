@@ -34,7 +34,7 @@ const defaultOptions: TheatreSequenceOptions = {
 	delay: 0,
 };
 
-@Directive({ selector: 'theatre-sheet[sequence]', exportAs: 'sequence' })
+@Directive({ selector: '[sheet][sequence]', exportAs: 'sequence' })
 export class TheatreSequence {
 	options = input(defaultOptions, { alias: 'sequence', transform: mergeInputs(defaultOptions) });
 	audioOptions = input<AttachAudioOptions | undefined>(undefined, { alias: 'sequenceAudio' });

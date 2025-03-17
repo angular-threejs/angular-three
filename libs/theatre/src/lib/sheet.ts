@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input } from '@angular/core';
+import { computed, DestroyRef, Directive, inject, input } from '@angular/core';
 import { TheatreProject } from './project';
 
-@Component({
-	selector: 'theatre-sheet',
-	template: `
-		<ng-content />
-	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+@Directive({ selector: '[sheet]', exportAs: 'sheet' })
 export class TheatreSheet {
-	name = input('default-theatre-sheet');
+	name = input('default-theatre-sheet', {
+		transform: (value: string) => {
+			if (value === '') return 'default-theatre-sheet';
+			return value;
+		},
+		alias: 'sheet',
+	});
 
 	private project = inject(TheatreProject);
 
