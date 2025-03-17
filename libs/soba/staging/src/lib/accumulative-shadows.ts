@@ -81,8 +81,8 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsAccumulativeShadows {
-	nullTraversal = () => null;
-	Math = Math;
+	protected readonly nullTraversal = () => null;
+	protected readonly Math = Math;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	parameters = omit(this.options, [

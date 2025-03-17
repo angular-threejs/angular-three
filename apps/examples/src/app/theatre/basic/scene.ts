@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { injectBeforeRender } from 'angular-three';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { TheatreSheetObject, TheatreSheetObjectTransform } from 'angular-three-theatre';
@@ -46,7 +46,7 @@ import { TheatreSheetObject, TheatreSheetObjectTransform } from 'angular-three-t
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	imports: [NgtArgs, TheatreSheetObject, NgtsRoundedBox, NgtsPerspectiveCamera],
+	imports: [TheatreSheetObject, NgtsRoundedBox, NgtsPerspectiveCamera],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: { class: 'experience-basic-theatre', '(document:keyup)': 'onKeyup($event)' },
 })

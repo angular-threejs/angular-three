@@ -172,8 +172,6 @@ export class NgtsSampler {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['weight', 'transform', 'count']);
 
-	// NOTE: this could have been a viewChild.required, but we need to _try_ to consume
-	//  this Signal earlier than when a viewChild.required would resolve.
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private count = pick(this.options, 'count');
@@ -209,9 +207,9 @@ export class NgtsSampler {
 			) as unknown as THREE.InstancedMesh;
 		});
 
-		// NOTE: because injectSurfaceSampler returns a computed, we need to consume
+		// NOTE: because surfaceSampler returns a computed, we need to consume
 		//  this computed in a Reactive Context (an effect) to ensure the inner logic of
-		//  injectSurfaceSampler is run properly.
+		//  surfaceSampler is run properly.
 		const sampler = surfaceSampler(meshToSample, {
 			count: this.count,
 			transform: this.transform,

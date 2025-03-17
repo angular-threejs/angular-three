@@ -8,9 +8,7 @@ import stateJson from './state.json';
 	template: `
 		<ngt-canvas shadows>
 			<theatre-project *canvasContent studio [config]="{ state }">
-				<theatre-sheet [sequence]="{ autoplay: true, iterationCount: Infinity }">
-					<app-scene-graph />
-				</theatre-sheet>
+				<app-scene-graph sheet [sequence]="{ autoplay: true, iterationCount: Infinity }" />
 			</theatre-project>
 		</ngt-canvas>
 	`,
