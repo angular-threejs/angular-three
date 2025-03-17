@@ -35,9 +35,7 @@ const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> &
 	template: `
 		<ngt-mesh #mesh [frustumCulled]="false" [parameters]="parameters()">
 			<ngt-plane-geometry *args="planeArgs()" />
-			<ngt-grid-material transparent [side]="side()" [parameters]="uniforms()">
-				<ngt-value attach="extensions.derivatives" [rawValue]="true" />
-			</ngt-grid-material>
+			<ngt-grid-material transparent [side]="side()" [parameters]="uniforms()" extensions.derivatives />
 			<ng-content />
 		</ngt-mesh>
 	`,
