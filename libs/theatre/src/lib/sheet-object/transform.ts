@@ -26,13 +26,7 @@ import { TheatreSheetObject } from './sheet-object';
 	selector: 'theatre-transform',
 	template: `
 		@if (selected()) {
-			<ngts-transform-controls
-				[object]="$any(group)"
-				[options]="options()"
-				(mouseDown)="onMouseDown()"
-				(mouseUp)="onMouseUp()"
-				(change)="onChange()"
-			/>
+			<ngts-transform-controls [object]="$any(group)" [options]="options()" />
 		}
 
 		<ngt-group #group>
@@ -51,6 +45,7 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 	);
 
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	private controlsRef = viewChild(NgtsTransformControls);
 
 	private theatreSheetObject = inject(TheatreSheetObject);
 	sheetObject = computed(() => this.theatreSheetObject.sheetObject());
@@ -137,6 +132,22 @@ export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
 			});
 
 			onCleanup(cleanup);
+		});
+
+		// TODO: (chau) use event binding when they no longer trigger change detection
+		effect((onCleanup) => {
+			const controls = this.controlsRef();
+			if (!controls) return;
+
+			const subs = [
+				controls.change.subscribe(this.onChange.bind(this)),
+				controls.mouseDown.subscribe(this.onMouseDown.bind(this)),
+				controls.mouseUp.subscribe(this.onMouseUp.bind(this)),
+			];
+
+			onCleanup(() => {
+				subs.forEach((sub) => sub.unsubscribe());
+			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {
