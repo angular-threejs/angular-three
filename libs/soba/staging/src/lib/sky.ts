@@ -39,12 +39,16 @@ const defaultOptions: NgtsSkyOptions = {
 @Component({
 	selector: 'ngts-sky',
 	template: `
-		<ngt-primitive *args="[sky]" [parameters]="parameters()" [scale]="scale()">
-			<ngt-value attach="material.uniforms.mieCoefficient.value" [rawValue]="mieCoefficient()" />
-			<ngt-value attach="material.uniforms.mieDirectionalG.value" [rawValue]="mieDirectionalG()" />
-			<ngt-value attach="material.uniforms.rayleigh.value" [rawValue]="rayleigh()" />
-			<ngt-value attach="material.uniforms.sunPosition.value" [rawValue]="calculatedSunPosition()" />
-			<ngt-value attach="material.uniforms.turbidity.value" [rawValue]="turbidity()" />
+		<ngt-primitive
+			*args="[sky]"
+			[parameters]="parameters()"
+			[scale]="scale()"
+			[material.uniforms.mieCoefficient.value]="mieCoefficient()"
+			[material.uniforms.mieDirectionalG.value]="mieDirectionalG()"
+			[material.uniforms.rayleigh.value]="rayleigh()"
+			[material.uniforms.sunPosition.value]="calculatedSunPosition()"
+			[material.uniforms.turbidity.value]="turbidity()"
+		>
 			<ng-content />
 		</ngt-primitive>
 	`,
