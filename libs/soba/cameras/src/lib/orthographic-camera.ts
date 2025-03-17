@@ -103,6 +103,15 @@ export class NgtsOrthographicCamera {
 	constructor() {
 		extend({ OrthographicCamera, Group });
 
+		effect((onCleanup) => {
+			const makeDefault = this.makeDefault();
+			if (!makeDefault) return;
+
+			const oldCam = this.store.snapshot.camera;
+			this.store.update({ camera: this.cameraRef().nativeElement });
+			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
+		});
+
 		effect(() => {
 			this.cameraRef().nativeElement.updateProjectionMatrix();
 		});
@@ -113,15 +122,6 @@ export class NgtsOrthographicCamera {
 
 			const camera = this.cameraRef().nativeElement;
 			camera.updateProjectionMatrix();
-		});
-
-		effect((onCleanup) => {
-			const makeDefault = this.makeDefault();
-			if (!makeDefault) return;
-
-			const oldCam = this.store.snapshot.camera;
-			this.store.update({ camera: this.cameraRef().nativeElement });
-			onCleanup(() => this.store.update(() => ({ camera: oldCam })));
 		});
 
 		let count = 0;
