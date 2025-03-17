@@ -4,15 +4,18 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
 	inject,
 	input,
 	output,
 	signal,
+	viewChild,
 } from '@angular/core';
 import {
 	extend,
 	getEmitter,
 	hasListener,
+	injectObjectEvents,
 	injectStore,
 	NgtArgs,
 	NgtEuler,
@@ -60,13 +63,7 @@ export class Axis {
 @Component({
 	selector: 'viewport-axis-head',
 	template: `
-		<ngt-sprite
-			[scale]="scale()"
-			[position]="position()"
-			(pointerover)="onPointerOver($any($event))"
-			(pointerout)="onPointerOut($any($event))"
-			(pointerdown)="onPointerDown($any($event))"
-		>
+		<ngt-sprite #sprite [scale]="scale()" [position]="position()">
 			<ngt-sprite-material
 				[map]="texture()"
 				[alphaTest]="0.3"
@@ -88,6 +85,8 @@ export class AxisHead {
 	disabled = input(false);
 	font = input('18px Inter var, Arial, sans-serif');
 	onClick = input<NgtEventHandlers['click']>();
+
+	private spriteRef = viewChild.required<ElementRef<THREE.Sprite>>('sprite');
 
 	private document = inject(DOCUMENT);
 	private gizmoHelper = inject(NgtsGizmoHelperImpl);
@@ -130,16 +129,23 @@ export class AxisHead {
 
 	constructor() {
 		extend({ Sprite, SpriteMaterial });
+
+		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
+		injectObjectEvents(this.spriteRef, {
+			pointerover: this.onPointerOver.bind(this),
+			pointerout: this.onPointerOut.bind(this),
+			pointerdown: this.onPointerDown.bind(this),
+		});
 	}
 
-	onPointerOver(event: NgtThreeEvent<PointerEvent>) {
+	protected onPointerOver(event: NgtThreeEvent<PointerEvent>) {
 		if (this.disabled()) return;
 
 		event.stopPropagation();
 		this.active.set(true);
 	}
 
-	onPointerOut(event: NgtThreeEvent<PointerEvent>) {
+	protected onPointerOut(event: NgtThreeEvent<PointerEvent>) {
 		if (this.disabled()) return;
 
 		const onClick = this.onClick();
@@ -150,7 +156,7 @@ export class AxisHead {
 		}
 	}
 
-	onPointerDown(event: NgtThreeEvent<PointerEvent>) {
+	protected onPointerDown(event: NgtThreeEvent<PointerEvent>) {
 		if (this.disabled()) return;
 		event.stopPropagation();
 		this.gizmoHelper.tweenCamera(event.object.position);

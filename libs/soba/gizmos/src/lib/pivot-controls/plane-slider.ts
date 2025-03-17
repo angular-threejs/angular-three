@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectStore, NgtThreeEvent } from 'angular-three';
+import { extend, injectObjectEvents, injectStore, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
 import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
@@ -57,15 +57,7 @@ const offsetMatrix = new THREE.Matrix4();
 				</ngts-html>
 			}
 			<ngt-group [position]="[pos1() * 1.7, pos1() * 1.7, 0]">
-				<ngt-mesh
-					visible
-					[scale]="length()"
-					[userData]="pivotControls.userData()"
-					(pointerdown)="onPointerDown($any($event))"
-					(pointermove)="onPointerMove($any($event))"
-					(pointerup)="onPointerUp($any($event))"
-					(pointerout)="onPointerOut($any($event))"
-				>
+				<ngt-mesh #mesh visible [scale]="length()" [userData]="pivotControls.userData()">
 					<ngt-plane-geometry />
 					<ngt-mesh-basic-material
 						transparent
@@ -107,6 +99,7 @@ export class NgtsPlaneSlider {
 	axis = input.required<0 | 1 | 2>();
 
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 	annotationRef = viewChild<string, ElementRef<HTMLDivElement>>('annotation', { read: ElementRef });
 
 	protected pivotControls = inject(NgtsPivotControls);
@@ -142,6 +135,14 @@ export class NgtsPlaneSlider {
 
 	constructor() {
 		extend({ Group, Mesh, PlaneGeometry, MeshBasicMaterial });
+
+		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
+		injectObjectEvents(this.meshRef, {
+			pointerdown: this.onPointerDown.bind(this),
+			pointermove: this.onPointerMove.bind(this),
+			pointerup: this.onPointerUp.bind(this),
+			pointerout: this.onPointerOut.bind(this),
+		});
 	}
 
 	onPointerDown(event: NgtThreeEvent<PointerEvent>) {

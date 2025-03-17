@@ -125,6 +125,10 @@ export class NgtsTransformControls {
 	constructor() {
 		extend({ Group });
 		effect((onCleanup) => {
+			const cleanup = this.updateDefaultControlsEffect();
+			onCleanup(() => cleanup?.());
+		});
+		effect((onCleanup) => {
 			const cleanup = this.attachControlsEffect();
 			onCleanup(() => cleanup?.());
 		});
@@ -134,10 +138,6 @@ export class NgtsTransformControls {
 		});
 		effect((onCleanup) => {
 			const cleanup = this.setupControlsEventsEffect();
-			onCleanup(() => cleanup?.());
-		});
-		effect((onCleanup) => {
-			const cleanup = this.updateDefaultControlsEffect();
 			onCleanup(() => cleanup?.());
 		});
 	}

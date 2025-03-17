@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectStore, NgtThreeEvent } from 'angular-three';
+import { extend, injectObjectEvents, injectStore, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
 import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
@@ -76,15 +76,7 @@ const intersection = new THREE.Vector3();
 @Component({
 	selector: 'ngts-axis-rotator',
 	template: `
-		<ngt-group
-			#group
-			[matrix]="matrixL()"
-			[matrixAutoUpdate]="false"
-			(pointerdown)="onPointerDown($any($event))"
-			(pointermove)="onPointerMove($any($event))"
-			(pointerup)="onPointerUp($any($event))"
-			(pointerout)="onPointerOut($any($event))"
-		>
+		<ngt-group #group [matrix]="matrixL()" [matrixAutoUpdate]="false">
 			@if (pivotControls.annotations()) {
 				<ngts-html [options]="{ position: [r(), r(), 0] }">
 					<div
@@ -169,6 +161,14 @@ export class NgtsAxisRotator {
 
 	constructor() {
 		extend({ Group });
+
+		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
+		injectObjectEvents(this.groupRef, {
+			pointerdown: this.onPointerDown.bind(this),
+			pointermove: this.onPointerMove.bind(this),
+			pointerup: this.onPointerUp.bind(this),
+			pointerout: this.onPointerOut.bind(this),
+		});
 	}
 
 	onPointerDown(event: NgtThreeEvent<PointerEvent>) {

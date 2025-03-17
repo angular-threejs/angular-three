@@ -4,15 +4,18 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
 	inject,
 	input,
 	output,
 	signal,
+	viewChild,
 } from '@angular/core';
 import {
 	extend,
 	getEmitter,
 	hasListener,
+	injectObjectEvents,
 	injectStore,
 	NgtArgs,
 	NgtEventHandlers,
@@ -119,11 +122,7 @@ export class FaceMaterial {
 @Component({
 	selector: 'viewcube-face-cube',
 	template: `
-		<ngt-mesh
-			(pointerout)="$any($event).stopPropagation(); hover.set(-1)"
-			(pointermove)="$any($event).stopPropagation(); hover.set(Math.floor($any($event).faceIndex / 2))"
-			(click)="internalOnClick($any($event))"
-		>
+		<ngt-mesh #mesh (click)="internalOnClick($any($event))">
 			<ngt-box-geometry />
 			@for (face of count; track $index) {
 				<viewcube-face-material [index]="$index" [hover]="hover() === $index" [options]="options()" />
@@ -138,6 +137,8 @@ export class FaceCube {
 	options = input({} as Partial<NgtsViewcubeCommonOptions>);
 	onClick = input<NgtEventHandlers['click']>();
 
+	private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
 	private gizmoHelper = inject(NgtsGizmoHelperImpl);
 
 	protected hover = signal(-1);
@@ -145,9 +146,21 @@ export class FaceCube {
 
 	constructor() {
 		extend({ Mesh, BoxGeometry });
+
+		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
+		injectObjectEvents(this.meshRef, {
+			pointerout: (ev) => {
+				ev.stopPropagation();
+				this.hover.set(-1);
+			},
+			pointermove: (ev) => {
+				ev.stopPropagation();
+				ev.faceIndex != null && this.hover.set(Math.floor(ev.faceIndex / 2));
+			},
+		});
 	}
 
-	internalOnClick(event: NgtThreeEvent<MouseEvent>) {
+	protected internalOnClick(event: NgtThreeEvent<MouseEvent>) {
 		const onClick = this.onClick();
 		if (onClick) onClick(event);
 		else {
@@ -162,13 +175,7 @@ export class FaceCube {
 @Component({
 	selector: 'viewcube-edge-cube',
 	template: `
-		<ngt-mesh
-			[scale]="1.01"
-			[position]="position()"
-			(pointerout)="$any($event).stopPropagation(); hover.set(false)"
-			(pointerover)="$any($event).stopPropagation(); hover.set(true)"
-			(click)="internalOnClick($any($event))"
-		>
+		<ngt-mesh #mesh [scale]="1.01" [position]="position()" (click)="internalOnClick($any($event))">
 			<ngt-mesh-basic-material transparent [opacity]="0.6" [color]="color()" [visible]="hover()" />
 			<ngt-box-geometry *args="dimensions()" />
 		</ngt-mesh>
@@ -188,6 +195,8 @@ export class EdgeCube {
 	});
 	onClick = input<NgtEventHandlers['click']>();
 
+	private meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
 	private gizmoHelper = inject(NgtsGizmoHelperImpl);
 
 	protected hover = signal(false);
@@ -195,9 +204,21 @@ export class EdgeCube {
 
 	constructor() {
 		extend({ Mesh, BoxGeometry, MeshBasicMaterial });
+
+		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
+		injectObjectEvents(this.meshRef, {
+			pointerout: (ev) => {
+				ev.stopPropagation();
+				this.hover.set(false);
+			},
+			pointerover: (ev) => {
+				ev.stopPropagation();
+				this.hover.set(true);
+			},
+		});
 	}
 
-	internalOnClick(event: NgtThreeEvent<MouseEvent>) {
+	protected internalOnClick(event: NgtThreeEvent<MouseEvent>) {
 		const onClick = this.onClick();
 		if (onClick) onClick(event);
 		else {

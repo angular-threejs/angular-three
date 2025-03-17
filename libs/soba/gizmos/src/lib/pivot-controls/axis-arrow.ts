@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { extend, injectObjectEvents, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
 import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
@@ -51,14 +51,7 @@ const offsetMatrix = new THREE.Matrix4();
 	selector: 'ngts-axis-arrow',
 	template: `
 		<ngt-group #group>
-			<ngt-group
-				[matrix]="matrixL()"
-				[matrixAutoUpdate]="false"
-				(pointerdown)="onPointerDown($any($event))"
-				(pointerup)="onPointerUp($any($event))"
-				(pointermove)="onPointerMove($any($event))"
-				(pointerout)="onPointerOut($any($event))"
-			>
+			<ngt-group #innerGroup [matrix]="matrixL()" [matrixAutoUpdate]="false">
 				@if (pivotControls.annotations()) {
 					<ngts-html [options]="{ position: [0, -coneLength(), 0] }">
 						<div
@@ -127,6 +120,7 @@ export class NgtsAxisArrow {
 	axis = input.required<0 | 1 | 2>();
 
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	private innerGroupRef = viewChild.required<ElementRef<THREE.Group>>('innerGroup');
 	private annotationRef = viewChild<'string', ElementRef<HTMLElement>>('annotation', { read: ElementRef });
 
 	protected pivotControls = inject(NgtsPivotControls);
@@ -156,6 +150,14 @@ export class NgtsAxisArrow {
 
 	constructor() {
 		extend({ Group, Mesh, ConeGeometry, CylinderGeometry, MeshBasicMaterial });
+
+		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
+		injectObjectEvents(this.innerGroupRef, {
+			pointerdown: this.onPointerDown.bind(this),
+			pointermove: this.onPointerMove.bind(this),
+			pointerup: this.onPointerUp.bind(this),
+			pointerout: this.onPointerOut.bind(this),
+		});
 	}
 
 	onPointerDown(event: NgtThreeEvent<PointerEvent>) {
