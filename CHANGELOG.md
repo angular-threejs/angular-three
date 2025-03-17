@@ -1,3 +1,23 @@
+## 4.0.0-next.97 (2025-03-17)
+
+### 🚀 Features
+
+- **theatre:** change sheet to a Directive ([99625b16](https://github.com/angular-threejs/angular-three/commit/99625b16))
+
+### 💅 Refactors
+
+- **soba:** clean up ([13815128](https://github.com/angular-threejs/angular-three/commit/13815128))
+- **soba/abstractions:** use pierced props for extensions derivatives on grid ([14a89040](https://github.com/angular-threejs/angular-three/commit/14a89040))
+- **soba/cameras:** bring makeDefault effect on top for orthographic ([52a24031](https://github.com/angular-threejs/angular-three/commit/52a24031))
+- **soba/gizmos:** use injectObjectEvents for all events for optimizing CDR (for now) ([7dc8b027](https://github.com/angular-threejs/angular-three/commit/7dc8b027))
+- **soba/staging:** use pierced props for sky ([c2ad7a69](https://github.com/angular-threejs/angular-three/commit/c2ad7a69))
+- **soba/staging:** use pierced props for spot light volumetric mesh ([d03e5cdd](https://github.com/angular-threejs/angular-three/commit/d03e5cdd))
+- **theatre:** use injectObjectEvents for transform events ([ebcb6f7c](https://github.com/angular-threejs/angular-three/commit/ebcb6f7c))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.96 (2025-03-16)
 
 ### 🩹 Fixes
