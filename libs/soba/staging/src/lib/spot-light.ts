@@ -46,19 +46,18 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 	selector: 'ngts-volumetric-mesh',
 	template: `
 		<ngt-mesh #mesh [geometry]="geometry()" [raycast]="null">
-			<ngt-primitive *args="[material]" attach="material">
-				<ngt-value attach="uniforms.opacity.value" [rawValue]="opacity()" />
-				<ngt-value attach="uniforms.lightColor.value" [rawValue]="color()" />
-				<ngt-value attach="uniforms.attenuation.value" [rawValue]="attenuation()" />
-				<ngt-value attach="uniforms.anglePower.value" [rawValue]="anglePower()" />
-				<ngt-value attach="uniforms.depth.value" [rawValue]="depthBuffer()" />
-				<ngt-value attach="uniforms.cameraNear.value" [rawValue]="camera.near()" />
-				<ngt-value attach="uniforms.cameraFar.value" [rawValue]="camera.far()" />
-				<ngt-value
-					attach="uniforms.resolution.value"
-					[rawValue]="depthBuffer() ? [size.width() * dpr(), size.height() * dpr()] : [0, 0]"
-				/>
-			</ngt-primitive>
+			<ngt-primitive
+				*args="[material]"
+				attach="material"
+				[uniforms.opacity.value]="opacity()"
+				[uniforms.lightColor.value]="color()"
+				[uniforms.attenuation.value]="attenuation()"
+				[uniforms.anglePower.value]="anglePower()"
+				[uniforms.depth.value]="depthBuffer()"
+				[uniforms.cameraNear.value]="camera.near()"
+				[uniforms.cameraFar.value]="camera.far()"
+				[uniforms.resolution.value]="depthBuffer() ? [size.width() * dpr(), size.height() * dpr()] : [0, 0]"
+			/>
 		</ngt-mesh>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
