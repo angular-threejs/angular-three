@@ -25,11 +25,11 @@ export type NgtsFontInput = string | FontData;
 
 let fontLoader: FontLoader | null = null;
 
-async function loadFontData(font: NgtsFontInput): Promise<FontData> {
+export async function loadFontData(font: NgtsFontInput): Promise<FontData> {
 	return typeof font === 'string' ? await (await fetch(font)).json() : font;
 }
 
-function parseFontData(fontData: FontData) {
+export function parseFontData(fontData: FontData) {
 	if (!fontLoader) {
 		fontLoader = new FontLoader();
 	}
@@ -38,6 +38,10 @@ function parseFontData(fontData: FontData) {
 
 const cache = new Map<NgtsFontInput, Font>();
 
+/**
+ * @deprecated Use fontResource instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 export function injectFont(input: () => NgtsFontInput, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(injectFont, injector, () => {
 		const font = signal<Font | null>(null);

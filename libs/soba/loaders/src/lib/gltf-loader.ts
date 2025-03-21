@@ -44,6 +44,10 @@ type InjectGLTFObjectMap<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = T
 			? Record<string, _GLTF & NgtObjectMap>
 			: never;
 
+/**
+ * @deprecated Use gltfResource instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 function _injectGLTF<
 	TGltf extends GLTF | GLTF[] | Record<string, GLTF> = GLTF,
 	TUrl extends string | string[] | Record<string, string> = InjectGLTFUrl<TGltf>,
@@ -110,4 +114,9 @@ _injectGLTF.setDecoderPath = (path: string) => {
 };
 
 export type NgtsGLTFLoader = typeof _injectGLTF;
+
+/**
+ * @deprecated Use gltfResource instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 export const injectGLTF: NgtsGLTFLoader = _injectGLTF;

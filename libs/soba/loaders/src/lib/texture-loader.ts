@@ -3,6 +3,10 @@ import { injectLoader, injectStore, is, NgtLoaderResults } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
+/**
+ * @deprecated Use textureResource instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 function _injectTexture<TInput extends string[] | string | Record<string, string>>(
 	input: () => TInput,
 	{ onLoad, injector }: { onLoad?: (texture: THREE.Texture[]) => void; injector?: Injector } = {},
@@ -35,4 +39,9 @@ _injectTexture.preload = <TInput extends string[] | string | Record<string, stri
 };
 
 export type NgtsTextureLoader = typeof _injectTexture;
+
+/**
+ * @deprecated Use textureResource instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 export const injectTexture: NgtsTextureLoader = _injectTexture;

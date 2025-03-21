@@ -1,6 +1,6 @@
 import { computed, effect, Injector, signal, untracked } from '@angular/core';
 import { GainMapLoader, HDRJPGLoader } from '@monogrid/gainmap-js';
-import { injectLoader, injectStore, is, pick } from 'angular-three';
+import { injectStore, is, loaderResource, pick } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { EXRLoader, RGBELoader } from 'three-stdlib';
@@ -22,7 +22,7 @@ export type NgtsEnvironmentPresets = keyof typeof ENVIRONMENT_PRESETS;
 
 const CUBEMAP_ROOT = 'https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/';
 
-export interface NgtsInjectEnvironmentOptions {
+export interface NgtsEnvironmentResourceOptions {
 	files: string | string[];
 	path: string;
 	preset?: NgtsEnvironmentPresets;
@@ -32,15 +32,11 @@ export interface NgtsInjectEnvironmentOptions {
 
 const defaultFiles = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png'];
 
-/**
- * @deprecated use environmentResource instead. Will be removed in v5.0.0
- * @since v4.0.0
- */
-export function injectEnvironment(
-	options: () => Partial<NgtsInjectEnvironmentOptions> = () => ({}),
+export function environmentResource(
+	options: () => Partial<NgtsEnvironmentResourceOptions> = () => ({}),
 	{ injector }: { injector?: Injector } = {},
 ) {
-	return assertInjector(injectEnvironment, injector, () => {
+	return assertInjector(environmentResource, injector, () => {
 		const adjustedOptions = computed(() => {
 			const { preset, extensions, colorSpace, ...rest } = options();
 			let { files, path } = rest;
@@ -74,20 +70,18 @@ export function injectEnvironment(
 
 		effect(() => {
 			const [_extension, _multiFile, _files] = [untracked(extension), untracked(multiFile), files()];
-
 			if (_extension !== 'webp' && _extension !== 'jpg' && _extension !== 'jpeg') return;
-
 			store.gl().domElement.addEventListener(
 				'webglcontextlost',
 				() => {
 					// @ts-expect-error - files is correctly passed
-					injectLoader.clear(multiFile ? [_files] : _files);
+					loaderResource.clear(multiFile ? [_files] : _files);
 				},
 				{ once: true },
 			);
 		});
 
-		const result = injectLoader(
+		const resource = loaderResource(
 			loader,
 			// @ts-expect-error - ensure the files is an array
 			() => {
@@ -110,7 +104,7 @@ export function injectEnvironment(
 		);
 
 		effect(() => {
-			const loaderResult = result();
+			const loaderResult = resource.value();
 			if (!loaderResult) return;
 
 			const { extension, isCubeMap } = untracked(resultOptions);
@@ -134,7 +128,7 @@ export function injectEnvironment(
 				!is.three<THREE.CubeTexture>(textureResult, 'isCubeTexture') &&
 				(extension === 'jpg' || extension === 'jpeg' || extension === 'webp')
 			) {
-				textureResult = (textureResult as any).renderTarget?.texture;
+				textureResult = textureResult.renderTarget?.texture;
 			}
 
 			textureResult.mapping = isCubeMap ? THREE.CubeReflectionMapping : THREE.EquirectangularReflectionMapping;
@@ -143,11 +137,11 @@ export function injectEnvironment(
 			texture.set(textureResult);
 		});
 
-		return texture.asReadonly();
+		return { texture: texture.asReadonly(), resource };
 	});
 }
 
-injectEnvironment.preload = (options: () => Partial<NgtsInjectEnvironmentOptions> = () => ({})) => {
+environmentResource.preload = (options: () => Partial<NgtsEnvironmentResourceOptions> = () => ({})) => {
 	const _options = options();
 	let { files, path } = _options;
 	const { preset, extensions } = _options;
@@ -175,10 +169,10 @@ injectEnvironment.preload = (options: () => Partial<NgtsInjectEnvironmentOptions
 	const loader = getLoader(extension);
 	if (!loader) throw new Error('injectEnvironment: Unrecognized file extension: ' + files);
 
-	injectLoader.preload(
-		() => loader,
+	loaderResource.preload(
+		loader,
 		// @ts-expect-error - files is correctly passed
-		() => (Array.isArray(files) ? [files] : files),
+		Array.isArray(files) ? [files] : files,
 		(loader) => {
 			loader.setPath?.(path);
 			if (extensions) extensions(loader);
@@ -186,7 +180,7 @@ injectEnvironment.preload = (options: () => Partial<NgtsInjectEnvironmentOptions
 	);
 };
 
-injectEnvironment.clear = (clearOptions: { files?: string | string[]; preset?: NgtsEnvironmentPresets }) => {
+environmentResource.clear = (clearOptions: { files?: string | string[]; preset?: NgtsEnvironmentPresets }) => {
 	const options = { files: defaultFiles, ...clearOptions };
 	let { files } = options;
 	const preset = options.preset;
@@ -196,7 +190,7 @@ injectEnvironment.clear = (clearOptions: { files?: string | string[]; preset?: N
 		files = ENVIRONMENT_PRESETS[preset];
 	}
 
-	injectLoader.clear(files);
+	loaderResource.clear(files);
 };
 
 function validatePreset(preset: string) {

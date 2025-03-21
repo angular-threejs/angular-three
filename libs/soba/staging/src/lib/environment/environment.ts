@@ -17,22 +17,13 @@ import {
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import {
-	applyProps,
-	extend,
-	injectBeforeRender,
-	injectStore,
-	is,
-	NgtArgs,
-	NgtEuler,
-	NgtPortal,
-	pick,
-} from 'angular-three';
+import { applyProps, beforeRender, extend, injectStore, is, NgtArgs, NgtEuler, NgtPortal, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { CubeCamera } from 'three';
 import { GroundProjectedEnv } from 'three-stdlib';
-import { injectEnvironment, NgtsEnvironmentPresets, NgtsInjectEnvironmentOptions } from './inject-environment';
+import { environmentResource } from './environment-resource';
+import { NgtsEnvironmentPresets, NgtsInjectEnvironmentOptions } from './inject-environment';
 
 function resolveScene(scene: THREE.Scene | ElementRef<THREE.Scene>) {
 	return is.ref(scene) ? scene.nativeElement : scene;
@@ -174,7 +165,7 @@ export class NgtsEnvironmentCube {
 	});
 
 	constructor() {
-		const _texture = injectEnvironment(this.options);
+		const { texture: _texture } = environmentResource(this.options);
 
 		effect((onCleanup) => {
 			const texture = _texture();
@@ -275,7 +266,7 @@ export class NgtsEnvironmentPortal {
 		});
 
 		let count = 1;
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const frames = this.options().frames;
 			if (frames === Infinity || (frames != null && count < frames)) {
 				const camera = this.cameraRef()?.nativeElement;
@@ -352,12 +343,12 @@ export class NgtsEnvironmentGround {
 	options = input({} as NgtsEnvironmentOptions);
 	envSet = output<void>();
 
-	private defaultTexture = injectEnvironment(this.options);
+	private defaultEnvironment = environmentResource(this.options);
 
 	protected height = computed(() => (this.options().ground as any)?.height);
 	protected radius = computed(() => (this.options().ground as any)?.radius);
 	protected scale = computed(() => (this.options().ground as any)?.scale ?? 1000);
-	protected args = computed(() => [this.options().map || this.defaultTexture()]);
+	protected args = computed(() => [this.options().map || this.defaultEnvironment.texture()]);
 	protected envMapOptions = computed(() => {
 		const { map: _, ...options } = this.options();
 		const [map] = this.args();
@@ -368,7 +359,7 @@ export class NgtsEnvironmentGround {
 		extend({ GroundProjectedEnv });
 
 		inject(DestroyRef).onDestroy(() => {
-			this.defaultTexture()?.dispose();
+			this.defaultEnvironment.texture()?.dispose();
 		});
 	}
 }

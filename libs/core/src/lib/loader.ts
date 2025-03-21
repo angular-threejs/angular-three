@@ -1,12 +1,12 @@
 import { Injector, Signal, effect, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
-import { Loader, Object3D } from 'three';
+import * as THREE from 'three';
 import type { NgtAnyRecord } from './types';
 import { NgtObjectMap, makeObjectGraph } from './utils/make';
 
-export type NgtGLTFLike = { scene: Object3D };
+export type NgtGLTFLike = { scene: THREE.Object3D };
 
-export interface NgtLoader<T> extends Loader {
+export interface NgtLoader<T> extends THREE.Loader {
 	load(
 		url: string,
 		onLoad?: (result: T) => void,
@@ -24,7 +24,6 @@ export type NgtLoaderReturnType<T, L extends NgtLoaderProto<T>> = T extends unkn
 export type NgtLoaderExtensions<T extends { prototype: NgtLoaderProto<any> }> = (loader: T['prototype']) => void;
 export type NgtConditionalType<Child, Parent, Truthy, Falsy> = Child extends Parent ? Truthy : Falsy;
 export type NgtBranchingReturn<T, Parent, Coerced> = NgtConditionalType<T, Parent, Coerced, T>;
-
 export type NgtLoaderResults<
 	TInput extends string | string[] | Record<string, string>,
 	TReturn,
@@ -67,7 +66,7 @@ function load<
 	return (): Array<Promise<any>> => {
 		const urls = normalizeInputs(inputs());
 
-		let loader: Loader<TData> = memoizedLoaders.get(loaderConstructorFactory(urls));
+		let loader: THREE.Loader<TData> = memoizedLoaders.get(loaderConstructorFactory(urls));
 		if (!loader) {
 			loader = new (loaderConstructorFactory(urls))();
 			memoizedLoaders.set(loaderConstructorFactory(urls), loader);
@@ -111,6 +110,10 @@ function load<
 	};
 }
 
+/**
+ * @deprecated Use loaderResource instead. Will be removed in v5.0.0
+ * @since v4.0.0~
+ */
 function _injectLoader<
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
@@ -197,4 +200,9 @@ _injectLoader.clear = (urls: string | string[]) => {
 };
 
 export type NgtInjectedLoader = typeof _injectLoader;
+
+/**
+ * @deprecated Use loaderResource instead. Will be removed in v5.0.0
+ * @since v4.0.0~
+ */
 export const injectLoader: NgtInjectedLoader = _injectLoader;

@@ -15,7 +15,7 @@ import {
 import { NgtArgs } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer, NgtpGlitch } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource, injectGLTF } from 'angular-three-soba/loaders';
 import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
 import { injectMatcapTexture } from 'angular-three-soba/staging';
 import {
@@ -68,7 +68,7 @@ export class BotAnimations {
 	template: `
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />
-			@if (gltf(); as gltf) {
+			@if (resource.value(); as gltf) {
 				<ngt-group [dispose]="null" [animations]="gltf" [referenceRef]="boneRef()">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 						<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
@@ -97,6 +97,9 @@ export class Bot {
 	protected Math = Math;
 
 	protected gltf = injectGLTF<BotGLTF>(() => './ybot.glb');
+
+	protected resource = gltfResource<BotGLTF>(() => './ybot.glb');
+
 	protected matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7', {
 		onLoad: (textures) => {
 			textures[0].colorSpace = SRGBColorSpace;
