@@ -9,7 +9,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { beforeRender, extend, getInstanceState, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
-import { injectHelper, NgtsEdges } from 'angular-three-soba/abstractions';
+import { helper, NgtsEdges } from 'angular-three-soba/abstractions';
 import { fbo } from 'angular-three-soba/misc';
 import { CausticsProjectionMaterial, createCausticsUpdate } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -158,7 +158,7 @@ export class NgtsCaustics {
 	protected causticsTarget = fbo(this.causticsTargetParams);
 	protected causticsTargetB = fbo(this.causticsTargetParams);
 
-	private cameraHelper = injectHelper(
+	private cameraHelper = helper(
 		() => (this.debug() ? this.cameraRef().nativeElement : null),
 		() => THREE.CameraHelper,
 	);

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { beforeRender, NgtArgs, NgtThreeElements } from 'angular-three';
-import { injectHelper } from 'angular-three-soba/abstractions';
+import { helper } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsBVH } from 'angular-three-soba/performances';
 import * as THREE from 'three';
@@ -44,7 +44,7 @@ class TorusBVH {
 	protected color = signal('#ff0000');
 
 	constructor() {
-		injectHelper(this.meshRef, () => MeshBVHHelper);
+		helper(this.meshRef, () => MeshBVHHelper);
 	}
 }
 

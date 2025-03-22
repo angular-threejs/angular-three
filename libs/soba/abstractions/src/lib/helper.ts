@@ -16,7 +16,7 @@ import { Object3D } from 'three';
 
 type HelperArgs<T> = T extends [infer _, ...infer R] ? R : never;
 
-export function injectHelper<
+export function helper<
 	TConstructor extends new (...args: any[]) => THREE.Object3D,
 	THelperInstance extends InstanceType<TConstructor> & { update: () => void; dispose: () => void },
 >(
@@ -27,7 +27,7 @@ export function injectHelper<
 		args = () => [] as unknown as HelperArgs<ConstructorParameters<TConstructor>>,
 	}: { injector?: Injector; args?: () => HelperArgs<ConstructorParameters<TConstructor>> } = {},
 ) {
-	return assertInjector(injectHelper, injector, () => {
+	return assertInjector(helper, injector, () => {
 		const store = injectStore();
 
 		const helper = computed(() => {
@@ -65,6 +65,12 @@ export function injectHelper<
 	});
 }
 
+/**
+ * @deprecated use helper instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectHelper = helper;
+
 @Component({
 	selector: 'ngts-helper',
 	template: `
@@ -89,7 +95,7 @@ export class NgtsHelper<TConstructor extends new (...args: any[]) => THREE.Objec
 		return instanceState.parent() as unknown as THREE.Object3D;
 	});
 
-	helper = injectHelper(this.parent, this.type, { args: this.options });
+	helper = helper(this.parent, this.type, { args: this.options });
 
 	constructor() {
 		extend({ Object3D });
