@@ -33,8 +33,8 @@ export interface CubeCameraOptions {
 	fog?: THREE.Fog | THREE.FogExp2;
 }
 
-export function injectCubeCamera(options: () => CubeCameraOptions, { injector }: { injector?: Injector } = {}) {
-	return assertInjector(injectCubeCamera, injector, () => {
+export function cubeCamera(options: () => CubeCameraOptions, { injector }: { injector?: Injector } = {}) {
+	return assertInjector(cubeCamera, injector, () => {
 		const store = injectStore();
 
 		// backfill the options with default values
@@ -78,6 +78,12 @@ export function injectCubeCamera(options: () => CubeCameraOptions, { injector }:
 	});
 }
 
+/**
+ * @deprecated Use cubeCamera instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectCubeCamera = cubeCamera;
+
 export type NgtsCubeCameraOptions = Partial<NgtThreeElements['ngt-group']> &
 	CubeCameraOptions & {
 		frames: number;
@@ -111,7 +117,7 @@ export class NgtsCubeCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['fog', 'near', 'far', 'envMap', 'resolution', 'frames']);
 
-	private cubeCamera = injectCubeCamera(pick(this.options, ['near', 'far', 'envMap', 'fog', 'resolution']));
+	private cubeCamera = cubeCamera(pick(this.options, ['near', 'far', 'envMap', 'fog', 'resolution']));
 
 	protected camera = this.cubeCamera.camera;
 	protected texture = pick(this.cubeCamera.fbo, 'texture');
