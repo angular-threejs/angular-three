@@ -22,8 +22,11 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { CubeCamera } from 'three';
 import { GroundProjectedEnv } from 'three-stdlib';
-import { environmentResource } from './environment-resource';
-import { NgtsEnvironmentPresets, NgtsInjectEnvironmentOptions } from './inject-environment';
+import {
+	environmentResource,
+	type NgtsEnvironmentPresets,
+	type NgtsEnvironmentResourceOptions,
+} from './environment-resource';
 
 function resolveScene(scene: THREE.Scene | ElementRef<THREE.Scene>) {
 	return is.ref(scene) ? scene.nativeElement : scene;
@@ -64,7 +67,7 @@ function setEnvProps(
 	};
 }
 
-export interface NgtsEnvironmentOptions extends Partial<NgtsInjectEnvironmentOptions> {
+export interface NgtsEnvironmentOptions extends Partial<NgtsEnvironmentResourceOptions> {
 	frames?: number;
 	near?: number;
 	far?: number;
