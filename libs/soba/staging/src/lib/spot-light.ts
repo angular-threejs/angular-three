@@ -123,7 +123,7 @@ export class NgtsVolumetricMesh {
 	}
 }
 
-function injectSpotLightCommon(
+function spotLightCommon(
 	spotLight: () => ElementRef<THREE.SpotLight> | null,
 	mesh: () => ElementRef<Mesh> | null,
 	width: () => number,
@@ -131,7 +131,7 @@ function injectSpotLightCommon(
 	distance: () => number,
 	injector?: Injector,
 ) {
-	assertInjector(injectSpotLightCommon, injector, () => {
+	assertInjector(spotLightCommon, injector, () => {
 		const pos = new THREE.Vector3();
 		const dir = new THREE.Vector3();
 
@@ -261,7 +261,7 @@ export class NgtsSpotLightShadowShader {
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
-		injectSpotLightCommon(this.spotLight.spotLightRef, this.meshRef, this.width, this.height, this.distance);
+		spotLightCommon(this.spotLight.spotLightRef, this.meshRef, this.width, this.height, this.distance);
 
 		effect(() => {
 			this.uniforms.uShadowMap.value = this.map();
@@ -338,7 +338,7 @@ export class NgtsSpotLightShadowNoShader {
 	constructor() {
 		extend({ Mesh, PlaneGeometry, MeshBasicMaterial });
 
-		injectSpotLightCommon(this.spotLight.spotLightRef, this.meshRef, this.width, this.height, this.distance);
+		spotLightCommon(this.spotLight.spotLightRef, this.meshRef, this.width, this.height, this.distance);
 	}
 }
 
