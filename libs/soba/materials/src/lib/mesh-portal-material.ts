@@ -25,7 +25,7 @@ import {
 	omit,
 	pick,
 } from 'angular-three';
-import { fbo, getVersion, injectIntersect } from 'angular-three-soba/misc';
+import { fbo, getVersion, intersect } from 'angular-three-soba/misc';
 import { NgtsRenderTexture } from 'angular-three-soba/staging';
 import {
 	MeshPortalMaterial,
@@ -243,7 +243,7 @@ export class NgtsMeshPortalMaterial {
 	private resolution = pick(this.options, 'resolution');
 
 	private parent = signal<THREE.Mesh | null>(null);
-	private visible = injectIntersect(this.parent, { source: signal(true) });
+	private visible = intersect(this.parent, { source: signal(true) });
 
 	protected renderTextureFrames = computed(() => (this.visible() ? Infinity : 0));
 

@@ -3,11 +3,11 @@ import { addAfterEffect, addEffect, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
-export function injectIntersect<TObject extends THREE.Object3D>(
+export function intersect<TObject extends THREE.Object3D>(
 	object: () => ElementRef<TObject> | TObject | undefined | null,
 	{ injector, source = signal(false) }: { injector?: Injector; source?: WritableSignal<boolean> } = {},
 ) {
-	return assertInjector(injectIntersect, injector, () => {
+	return assertInjector(intersect, injector, () => {
 		let check = false;
 		let temp = false;
 
@@ -42,12 +42,18 @@ export function injectIntersect<TObject extends THREE.Object3D>(
 	});
 }
 
+/**
+ * @deprecated Use `intersect` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectIntersect = intersect;
+
 @Directive({ selector: '[intersect]' })
 export class NgtsIntersect {
 	intersect = model(false);
 
 	constructor() {
 		const host = inject<ElementRef<THREE.Object3D>>(ElementRef);
-		injectIntersect(() => host, { source: this.intersect });
+		intersect(() => host, { source: this.intersect });
 	}
 }
