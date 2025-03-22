@@ -2,7 +2,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	computed,
 	effect,
 	input,
 	signal,
@@ -11,7 +10,7 @@ import {
 } from '@angular/core';
 import { pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
-import { injectProgress } from './progress';
+import { progress } from './progress';
 
 const defaultDataInterpolation = (p: number) => `Loading ${p.toFixed(2)}%`;
 
@@ -59,10 +58,10 @@ const defaultOptions: NgtsLoaderOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsLoader {
-	private progressState = injectProgress();
+	private progressState = progress();
 
-	protected active = computed(() => this.progressState().active);
-	protected progress = computed(() => this.progressState().progress);
+	protected active = this.progressState.active;
+	protected progress = this.progressState.progress;
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 

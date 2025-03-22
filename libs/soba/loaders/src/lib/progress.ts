@@ -1,10 +1,11 @@
-import { DestroyRef, inject, Injector, signal } from '@angular/core';
+import { DestroyRef, inject, Injector } from '@angular/core';
+import { signalState } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
-export function injectProgress(injector?: Injector) {
-	return assertInjector(injectProgress, injector, () => {
-		const progress = signal<{
+export function progress(injector?: Injector) {
+	return assertInjector(progress, injector, () => {
+		const progressState = signalState<{
 			errors: string[];
 			active: boolean;
 			progress: number;
@@ -21,34 +22,32 @@ export function injectProgress(injector?: Injector) {
 		let saveLastTotalLoaded = 0;
 
 		THREE.DefaultLoadingManager.onStart = (item, loaded, total) => {
-			progress.update((prev) => ({
-				...prev,
+			progressState.update({
 				active: true,
 				item,
 				loaded,
 				total,
 				progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100,
-			}));
+			});
 		};
 
 		THREE.DefaultLoadingManager.onLoad = () => {
-			progress.update((prev) => ({ ...prev, active: false }));
+			progressState.update({ active: false });
 		};
 
 		THREE.DefaultLoadingManager.onError = (url) => {
-			progress.update((prev) => ({ ...prev, errors: [...prev.errors, url] }));
+			progressState.update((prev) => ({ errors: [...prev.errors, url] }));
 		};
 
 		THREE.DefaultLoadingManager.onProgress = (item, loaded, total) => {
 			if (loaded === total) saveLastTotalLoaded = total;
 
-			progress.update((prev) => ({
-				...prev,
+			progressState.update({
 				item,
 				loaded,
 				total,
 				progress: ((loaded - saveLastTotalLoaded) / (total - saveLastTotalLoaded)) * 100 || 100,
-			}));
+			});
 		};
 
 		inject(DestroyRef).onDestroy(() => {
@@ -58,6 +57,12 @@ export function injectProgress(injector?: Injector) {
 			THREE.DefaultLoadingManager.onProgress = defaultOnProgress;
 		});
 
-		return progress.asReadonly();
+		return progressState;
 	});
 }
+
+/**
+ * @deprecated Use `progress` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectProgress = progress;
