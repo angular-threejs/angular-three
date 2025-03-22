@@ -42,8 +42,8 @@ export interface NgtsFBOParams {
 	settings?: FBOSettings;
 }
 
-export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
-	return assertInjector(injectFBO, injector, () => {
+export function fbo(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
+	return assertInjector(fbo, injector, () => {
 		const store = injectStore();
 
 		const width = computed(() => {
@@ -99,6 +99,16 @@ export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }
 	});
 }
 
+/**
+ * @deprecated use fbo instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
+	return assertInjector(injectFBO, injector, () => {
+		return fbo(params, { injector });
+	});
+}
+
 @Directive({ selector: 'ng-template[fbo]' })
 export class NgtsFBO {
 	fbo = input({} as { width: NgtsFBOParams['width']; height: NgtsFBOParams['height'] } & FBOSettings);
@@ -107,9 +117,9 @@ export class NgtsFBO {
 	private viewContainerRef = inject(ViewContainerRef);
 
 	constructor() {
-		let ref: EmbeddedViewRef<{ $implicit: ReturnType<typeof injectFBO> }>;
+		let ref: EmbeddedViewRef<{ $implicit: ReturnType<typeof fbo> }>;
 
-		const fboTarget = injectFBO(() => {
+		const fboTarget = fbo(() => {
 			const { width, height, ...settings } = this.fbo();
 			return { width, height, settings };
 		});
@@ -124,7 +134,7 @@ export class NgtsFBO {
 		});
 	}
 
-	static ngTemplateContextGuard(_: NgtsFBO, ctx: unknown): ctx is { $implicit: ReturnType<typeof injectFBO> } {
+	static ngTemplateContextGuard(_: NgtsFBO, ctx: unknown): ctx is { $implicit: ReturnType<typeof fbo> } {
 		return true;
 	}
 }

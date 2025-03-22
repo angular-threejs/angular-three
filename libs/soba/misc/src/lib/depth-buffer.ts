@@ -1,14 +1,14 @@
 import { computed, Injector } from '@angular/core';
-import { injectBeforeRender, injectStore } from 'angular-three';
+import { beforeRender, injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
-import { injectFBO } from './fbo';
+import { fbo } from './fbo';
 
-export function injectDepthBuffer(
+export function depthBuffer(
 	params: () => { size?: number; frames?: number } = () => ({}),
 	{ injector }: { injector?: Injector } = {},
 ) {
-	return assertInjector(injectDepthBuffer, injector, () => {
+	return assertInjector(depthBuffer, injector, () => {
 		const size = computed(() => params().size || 256);
 		const frames = computed(() => params().frames || Infinity);
 
@@ -24,10 +24,10 @@ export function injectDepthBuffer(
 			return { depthTexture };
 		});
 
-		const depthFBO = injectFBO(() => ({ width: w(), height: h(), settings: depthConfig() }));
+		const depthFBO = fbo(() => ({ width: w(), height: h(), settings: depthConfig() }));
 
 		let count = 0;
-		injectBeforeRender(({ gl, scene, camera }) => {
+		beforeRender(({ gl, scene, camera }) => {
 			if (frames() === Infinity || count < frames()) {
 				gl.setRenderTarget(depthFBO);
 				gl.render(scene, camera);
@@ -37,5 +37,18 @@ export function injectDepthBuffer(
 		});
 
 		return depthFBO.depthTexture;
+	});
+}
+
+/**
+ * @deprecated use depthBuffer instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export function injectDepthBuffer(
+	params: () => { size?: number; frames?: number } = () => ({}),
+	{ injector }: { injector?: Injector } = {},
+) {
+	return assertInjector(injectDepthBuffer, injector, () => {
+		return depthBuffer(params, { injector });
 	});
 }

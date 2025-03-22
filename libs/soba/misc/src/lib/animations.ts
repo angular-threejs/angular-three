@@ -1,5 +1,5 @@
 import { computed, effect, ElementRef, Injector, isSignal, signal, untracked } from '@angular/core';
-import { injectBeforeRender, resolveRef } from 'angular-three';
+import { beforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
@@ -38,17 +38,17 @@ export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationCl
 /**
  * Use afterNextRender
  */
-export function injectAnimations<TAnimation extends NgtsAnimationClip>(
-	animations: () => NgtsAnimation<TAnimation> | undefined | null,
+export function animations<TAnimation extends NgtsAnimationClip>(
+	animationsFactory: () => NgtsAnimation<TAnimation> | undefined | null,
 	object:
 		| ElementRef<THREE.Object3D>
 		| THREE.Object3D
 		| (() => ElementRef<THREE.Object3D> | THREE.Object3D | undefined | null),
 	{ injector }: { injector?: Injector } = {},
 ): NgtsAnimationApi<TAnimation> {
-	return assertInjector(injectAnimations, injector, () => {
+	return assertInjector(animations, injector, () => {
 		const mixer = new THREE.AnimationMixer(null!);
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			if (!mixer.getRoot()) return;
 			mixer.update(delta);
 		});
@@ -74,7 +74,7 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 
 			Object.assign(mixer, { _root: obj });
 
-			const maybeAnimationClips = animations();
+			const maybeAnimationClips = animationsFactory();
 			if (!maybeAnimationClips) return;
 
 			const animationClips = Array.isArray(maybeAnimationClips)
@@ -117,10 +117,27 @@ export function injectAnimations<TAnimation extends NgtsAnimationClip>(
 			});
 		});
 
-		const result = { ready, clips, mixer, actions, names } as unknown as NgtsAnimationApi<TAnimation>;
+		const result = { clips, mixer, actions, names } as NgtsAnimationApi<TAnimation>;
 
 		Object.defineProperty(result, 'isReady', { get: ready });
 
 		return result;
+	});
+}
+
+/**
+ * @deprecated use animations instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export function injectAnimations<TAnimation extends NgtsAnimationClip>(
+	animationsFactory: () => NgtsAnimation<TAnimation> | undefined | null,
+	object:
+		| ElementRef<THREE.Object3D>
+		| THREE.Object3D
+		| (() => ElementRef<THREE.Object3D> | THREE.Object3D | undefined | null),
+	{ injector }: { injector?: Injector } = {},
+): NgtsAnimationApi<TAnimation> {
+	return assertInjector(injectAnimations, injector, () => {
+		return animations(animationsFactory, object, { injector });
 	});
 }
