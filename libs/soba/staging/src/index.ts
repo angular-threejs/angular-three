@@ -7,6 +7,7 @@ export * from './lib/caustics';
 export * from './lib/center';
 export * from './lib/contact-shadows';
 export * from './lib/environment/environment';
+export * from './lib/environment/environment-resource';
 export * from './lib/environment/inject-environment';
 export * from './lib/float';
 export * from './lib/lightformer';

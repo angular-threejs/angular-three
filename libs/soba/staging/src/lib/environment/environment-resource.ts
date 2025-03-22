@@ -141,10 +141,9 @@ export function environmentResource(
 	});
 }
 
-environmentResource.preload = (options: () => Partial<NgtsEnvironmentResourceOptions> = () => ({})) => {
-	const _options = options();
-	let { files, path } = _options;
-	const { preset, extensions } = _options;
+environmentResource.preload = (options: Partial<NgtsEnvironmentResourceOptions> = {}) => {
+	let { files, path } = options;
+	const { preset, extensions } = options;
 
 	if (files == null) {
 		files = defaultFiles;
