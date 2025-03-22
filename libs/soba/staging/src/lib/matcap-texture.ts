@@ -3,6 +3,7 @@ import {
 	Directive,
 	EmbeddedViewRef,
 	Injector,
+	ResourceRef,
 	Signal,
 	TemplateRef,
 	ViewContainerRef,
@@ -10,10 +11,9 @@ import {
 	effect,
 	inject,
 	input,
-	output,
 	signal,
 } from '@angular/core';
-import { injectTexture } from 'angular-three-soba/loaders';
+import { injectTexture, textureResource } from 'angular-three-soba/loaders';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
@@ -35,6 +35,10 @@ function getFormatString(format: number) {
 const LIST_URL = 'https://cdn.jsdelivr.net/gh/pmndrs/drei-assets@master/matcaps.json';
 const MATCAP_ROOT = 'https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d';
 
+/**
+ * @deprecated Use matcapTexture instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 export function injectMatcapTexture(
 	id: () => number | string = () => 0,
 	{
@@ -77,6 +81,47 @@ export function injectMatcapTexture(
 	});
 }
 
+export function matcapTextureResource(
+	id: () => number | string = () => 0,
+	{
+		format = () => 1024,
+		onLoad,
+		injector,
+	}: { format?: () => number; onLoad?: (texture: THREE.Texture) => void; injector?: Injector } = {},
+) {
+	return assertInjector(matcapTextureResource, injector, () => {
+		const matcapList = signal<Record<string, string>>({});
+
+		fetch(LIST_URL)
+			.then((res) => res.json())
+			.then((list) => {
+				matcapList.set(list);
+			});
+
+		const DEFAULT_MATCAP = computed(() => matcapList()[0]);
+		const numTot = computed(() => Object.keys(matcapList()).length);
+
+		const fileHash = computed(() => {
+			const idValue = id();
+			if (typeof idValue === 'string') {
+				return idValue;
+			}
+
+			if (typeof idValue === 'number') {
+				return matcapList()[idValue];
+			}
+
+			return null;
+		});
+
+		const fileName = computed(() => `${fileHash() || DEFAULT_MATCAP()}${getFormatString(format())}.png`);
+		const url = computed(() => `${MATCAP_ROOT}/${format()}/${fileName()}`);
+
+		const resource = textureResource(url, { onLoad });
+		return { url, resource, numTot };
+	});
+}
+
 export interface NgtsMatcapTextureOptions {
 	id?: number | string;
 	format?: number;
@@ -85,7 +130,7 @@ export interface NgtsMatcapTextureOptions {
 @Directive({ selector: 'ng-template[matcapTexture]' })
 export class NgtsMatcapTexture {
 	matcapTexture = input<NgtsMatcapTextureOptions>();
-	matcapTextureLoaded = output<THREE.Texture[]>();
+	matcapTextureLoaded = input<(texture: THREE.Texture) => void>();
 
 	private template = inject(TemplateRef);
 	private vcr = inject(ViewContainerRef);
@@ -96,13 +141,13 @@ export class NgtsMatcapTexture {
 	private ref?: EmbeddedViewRef<{ $implicit: Signal<THREE.Texture | null> }>;
 
 	constructor() {
-		const { texture } = injectMatcapTexture(this.id, {
+		const { resource } = matcapTextureResource(this.id, {
 			format: this.format,
-			onLoad: this.matcapTextureLoaded.emit.bind(this.matcapTextureLoaded),
+			onLoad: this.matcapTextureLoaded(),
 		});
 
 		effect(() => {
-			this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: texture });
+			this.ref = this.vcr.createEmbeddedView(this.template, { $implicit: resource });
 			this.ref.detectChanges();
 		});
 
@@ -114,7 +159,7 @@ export class NgtsMatcapTexture {
 	static ngTemplateContextGuard(
 		_: NgtsMatcapTexture,
 		ctx: unknown,
-	): ctx is { $implicit: Signal<THREE.Texture | null> } {
+	): ctx is { $implicit: ResourceRef<THREE.Texture | undefined> } {
 		return true;
 	}
 }
