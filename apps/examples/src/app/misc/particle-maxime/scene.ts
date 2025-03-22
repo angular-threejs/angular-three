@@ -7,11 +7,11 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, NgtPortal } from 'angular-three';
+import { beforeRender, extend, NgtArgs, NgtPortal } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectFBO } from 'angular-three-soba/misc';
+import { fbo } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 
 import { SimulationMaterial } from './simulation-material';
@@ -96,7 +96,7 @@ export class FBOParticles {
 		0,
 		1, // top-left
 	]);
-	private renderTarget = injectFBO(() => ({
+	private renderTarget = fbo(() => ({
 		width: this.size,
 		height: this.size,
 		settings: {
@@ -126,7 +126,7 @@ export class FBOParticles {
 	private simulationMaterialRef = viewChild<ElementRef<SimulationMaterial>>('simulationMaterial');
 
 	constructor() {
-		injectBeforeRender(({ gl, clock }) => {
+		beforeRender(({ gl, clock }) => {
 			gl.setRenderTarget(this.renderTarget);
 			gl.clear();
 			gl.render(this.virtualScene, this.virtualCamera);

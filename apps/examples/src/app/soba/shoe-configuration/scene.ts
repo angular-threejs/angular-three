@@ -10,12 +10,12 @@ import {
 } from '@angular/core';
 import { NgtArgs, signalState } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsContactShadows, NgtsEnvironment, NgtsFloat } from 'angular-three-soba/staging';
 
 import shoeGLB from './shoe-draco.glb' with { loader: 'file' };
 
-injectGLTF.preload(() => shoeGLB);
+gltfResource.preload(shoeGLB);
 
 const state = signalState({
 	current: null as string | null,
@@ -64,7 +64,7 @@ export class ColorPicker {
 				(pointermissed)="state.update({ current: null })"
 				(click)="$event.stopPropagation(); state.update({ current: $any($event.object).material.name })"
 			>
-				@if (gltf(); as gltf) {
+				@if (gltf.value(); as gltf) {
 					<ng-template #m let-ctx="ctx">
 						@let geometry = gltf.meshes[ctx[0]].geometry;
 						@let material = gltf.materials[ctx[1]];
@@ -93,7 +93,7 @@ export class Shoe {
 	protected readonly state = state;
 
 	private document = inject(DOCUMENT);
-	protected gltf = injectGLTF(() => shoeGLB);
+	protected gltf = gltfResource(() => shoeGLB);
 
 	protected hovered = signal<string | null>(null);
 

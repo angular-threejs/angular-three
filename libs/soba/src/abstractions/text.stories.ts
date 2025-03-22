@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtsText, NgtsTextOptions } from 'angular-three-soba/abstractions';
 import { DoubleSide } from 'three';
 import { color, number, storyDecorators, storyObject } from '../setup-canvas';
@@ -24,7 +24,7 @@ class TextContainer {
 	textRef = viewChild.required(NgtsText);
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const text = this.textRef().troikaMesh;
 			text.rotation.y += 0.01;
 		});
@@ -64,7 +64,7 @@ class TextCustomMaterialContainer {
 	textRef = viewChild.required(NgtsText);
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const text = this.textRef().troikaMesh;
 			text.rotation.y += 0.01;
 		});

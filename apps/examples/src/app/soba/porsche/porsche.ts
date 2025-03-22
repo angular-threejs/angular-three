@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, signal } from '@angular/core';
+import { beforeRender } from 'angular-three';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
+import { TweakpaneColor, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas } from 'angular-three/dom';
 import { Vector3 } from 'three';
-import { color, colorAsHex } from './color';
 import { Lightformers } from './lightformers';
 import { Model } from './model';
 
-injectGLTF.preload(() => './911-transformed.glb');
+gltfResource.preload('./911-transformed.glb');
 
 @Component({
 	selector: 'app-scene-graph',
@@ -25,10 +25,22 @@ injectGLTF.preload(() => './911-transformed.glb');
 		</ngt-spot-light>
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
 
-		<app-porsche-model #model [position]="[-0.5, -0.18, 0]" [rotation]="[0, Math.PI / 5, 0]" [scale]="1.6" />
+		<app-porsche-model
+			#model
+			[position]="[-0.5, -0.18, 0]"
+			[rotation]="[0, Math.PI / 5, 0]"
+			[scale]="1.6"
+			[color]="color()"
+		/>
 
 		<ngts-accumulative-shadows
-			[options]="{ position: [0, -1.16, 0], frames: 100, alphaTest: 0.9, scale: 10, visible: !!model.gltf() }"
+			[options]="{
+				position: [0, -1.16, 0],
+				frames: 100,
+				alphaTest: 0.9,
+				scale: 10,
+				visible: !!model.gltf.value(),
+			}"
 		>
 			<ngts-randomized-lights
 				[options]="{ amount: 8, radius: 10, ambient: 0.5, position: [1, 5, -1], intensity: 1.5 * Math.PI }"
@@ -38,19 +50,34 @@ injectGLTF.preload(() => './911-transformed.glb');
 		<ngts-environment [options]="{ background: true, blur: 1, resolution: 256, frames: Infinity }">
 			<app-lightformers * />
 		</ngts-environment>
+
+		<tweakpane-pane title="Porsche">
+			<tweakpane-color [(value)]="color" label="color" />
+		</tweakpane-pane>
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtsAccumulativeShadows, NgtsRandomizedLights, Model, NgtsEnvironment, Lightformers],
+	imports: [
+		NgtsAccumulativeShadows,
+		NgtsRandomizedLights,
+		Model,
+		NgtsEnvironment,
+		Lightformers,
+		TweakpanePane,
+		TweakpaneColor,
+	],
 })
 export class SceneGraph {
 	protected Math = Math;
 	protected Infinity = Infinity;
 
+	protected host = inject(ElementRef);
+	protected color = signal('#85595A');
+
 	constructor() {
 		const v = new Vector3();
 
-		injectBeforeRender(({ clock, camera }) => {
+		beforeRender(({ clock, camera }) => {
 			const t = clock.elapsedTime;
 			camera.position.lerp(v.set(Math.sin(t / 5), 0, 12 + Math.cos(t / 5) / 2), 0.05);
 			camera.lookAt(0, 0, 0);
@@ -63,17 +90,9 @@ export class SceneGraph {
 		<ngt-canvas [camera]="{ position: [5, 0, 15], fov: 30 }" shadows>
 			<app-scene-graph *canvasContent />
 		</ngt-canvas>
-		<input class="absolute top-0 right-0" type="color" [value]="colorAsHex()" (change)="onChange($event)" />
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtCanvas, SceneGraph],
 	host: { class: 'porsche-soba' },
 })
-export default class Porsche {
-	protected colorAsHex = colorAsHex;
-
-	onChange(event: Event): void {
-		const input = event.target as HTMLInputElement;
-		color.set(input.value);
-	}
-}
+export default class Porsche {}

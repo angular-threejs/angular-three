@@ -8,7 +8,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtArgs } from 'angular-three';
-import { injectPlane } from 'angular-three-cannon/body';
+import { plane } from 'angular-three-cannon/body';
 import { Mesh } from 'three';
 import { PositionRotationInput } from './position-rotation-input';
 
@@ -39,7 +39,7 @@ export class UiPlane {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectPlane(
+		plane(
 			() => ({
 				type: 'Static',
 				rotation: this.positionRotationInput.rotation(),

@@ -9,7 +9,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, injectBeforeRender, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
+import { beforeRender, checkUpdate, extend, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { setUpdateRange } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -127,7 +127,7 @@ export class NgtsInstances {
 		let iterations = 0;
 		let count = 0;
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const instancedMesh = this.instancedMeshRef()?.nativeElement;
 			if (!instancedMesh) return;
 			const { frames, limit, range } = this.options();

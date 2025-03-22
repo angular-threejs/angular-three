@@ -8,7 +8,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, beforeRender } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -50,7 +50,7 @@ export class Dodecahedron {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			this.mesh().nativeElement.rotation.x += 0.01;
 		});
 	}
@@ -93,7 +93,7 @@ export class Material {
 	private textRef = viewChild(NgtsText);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const text = this.textRef()?.troikaMesh;
 			if (text) {
 				text.position.x = Math.sin(clock.elapsedTime) * 2;

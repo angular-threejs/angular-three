@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectSuzanne } from '../suzanne';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { suzanneResource } from '../suzanne';
 
 import {
 	NgtrBallCollider,
@@ -14,12 +14,12 @@ import { NgtsHTML } from 'angular-three-soba/misc';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 import offsetTorusGLB from './offset-torus.glb' with { loader: 'file' };
 
-injectGLTF.preload(() => offsetTorusGLB);
+gltfResource.preload(offsetTorusGLB);
 
 @Component({
 	selector: 'app-offset-torus',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh
 				castShadow
 				[geometry]="gltf.meshes['Torus'].geometry"
@@ -31,13 +31,13 @@ injectGLTF.preload(() => offsetTorusGLB);
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OffsetTorus {
-	protected gltf = injectGLTF(() => offsetTorusGLB);
+	protected gltf = gltfResource(() => offsetTorusGLB);
 }
 
 @Component({
 	selector: 'app-suzanne',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh castShadow [geometry]="gltf.nodes.Suzanne.geometry" [material]="gltf.nodes.Suzanne.material" />
 		}
 	`,
@@ -45,7 +45,7 @@ export class OffsetTorus {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Suzanne {
-	protected gltf = injectSuzanne();
+	protected gltf = suzanneResource();
 }
 
 @Component({
@@ -104,7 +104,7 @@ export class Suzanne {
 				</ngts-html>
 			</ngt-object3D>
 
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				@let geometry = gltf.nodes.Suzanne.geometry;
 
 				<ngt-object3D rigidBody [position]="[5, 8, 0]" [options]="{ colliders: false }">
@@ -173,5 +173,5 @@ export class Suzanne {
 	],
 })
 export default class AllShapesExample {
-	protected gltf = injectSuzanne();
+	protected gltf = suzanneResource();
 }

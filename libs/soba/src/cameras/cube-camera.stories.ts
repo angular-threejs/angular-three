@@ -7,7 +7,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, merge, NgtArgs } from 'angular-three';
+import { beforeRender, merge, NgtArgs } from 'angular-three';
 import { NgtsCameraContent, NgtsCubeCamera, NgtsCubeCameraOptions } from 'angular-three-soba/cameras';
 import { Mesh } from 'three';
 import { storyDecorators, storyFunction } from '../setup-canvas';
@@ -33,7 +33,7 @@ class Sphere {
 	mesh = viewChild<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const mesh = this.mesh()?.nativeElement;
 			if (!mesh) return;
 			mesh.position.y = Math.sin(this.offset() + clock.elapsedTime) * 5;

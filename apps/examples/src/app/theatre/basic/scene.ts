@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { TheatreSheetObject, TheatreSheetObjectTransform } from 'angular-three-theatre';
@@ -67,7 +67,7 @@ export class SceneGraph {
 	}
 
 	constructor() {
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const boxSheetObject = this.boxTransform().sheetObject();
 			const position = boxSheetObject.value['position'];
 			camera.lookAt(position.x, position.y, position.z);

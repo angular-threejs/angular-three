@@ -6,7 +6,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtThreeElements, omit } from 'angular-three';
+import { beforeRender, extend, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group } from 'three';
@@ -48,7 +48,7 @@ export class NgtsBillboard {
 		extend({ Group });
 
 		const q = new THREE.Quaternion();
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const [{ follow, lockX, lockY, lockZ }, group, inner] = [
 				this.options(),
 				this.groupRef().nativeElement,

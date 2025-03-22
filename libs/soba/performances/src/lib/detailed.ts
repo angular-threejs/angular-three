@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getInstanceState, injectBeforeRender, NgtThreeElements, omit, pick } from 'angular-three';
+import { beforeRender, extend, getInstanceState, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { LOD } from 'three';
@@ -52,7 +52,7 @@ export class NgtsDetailed {
 			});
 		});
 
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			this.lodRef().nativeElement.update(camera);
 		});
 	}

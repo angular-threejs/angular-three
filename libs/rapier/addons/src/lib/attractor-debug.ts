@@ -1,5 +1,5 @@
 import { computed, effect, inject, Injector } from '@angular/core';
-import { injectBeforeRender, injectStore, pick } from 'angular-three';
+import { beforeRender, injectStore, pick } from 'angular-three';
 import { NgtrPhysics } from 'angular-three-rapier';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -45,7 +45,7 @@ export function injectAttractorDebug(object: THREE.Object3D, options: () => Ngtr
 			});
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			if (!physics['debug']()) return;
 
 			if (mesh) {

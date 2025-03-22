@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { mask } from 'angular-three-soba/staging';
 import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -12,7 +12,7 @@ type AngularGLTF = GLTF & {
 @Component({
 	selector: 'app-angular',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-2.75, -3, 0]" [rotation]="[Math.PI / 2, 0, 0]">
 				<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.Curve.geometry" [material]="material()" />
 				<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.Curve001.geometry" [material]="material()" />
@@ -30,7 +30,7 @@ export class Angular {
 	invert = input(false);
 	scale = input(1);
 
-	protected gltf = injectGLTF<AngularGLTF>(() => './angular.glb');
+	protected gltf = gltfResource<AngularGLTF>(() => './angular.glb');
 	protected stencilParameters = mask(() => 1, this.invert);
 
 	protected material = computed(() => {

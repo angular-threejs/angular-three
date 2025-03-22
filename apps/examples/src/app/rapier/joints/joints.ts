@@ -8,7 +8,7 @@ import {
 	viewChild,
 	viewChildren,
 } from '@angular/core';
-import { injectBeforeRender, NgtVector3 } from 'angular-three';
+import { beforeRender, NgtVector3 } from 'angular-three';
 import { injectPrismaticJoint, injectSphericalJoint, NgtrRigidBody, NgtrRigidBodyType } from 'angular-three-rapier';
 import { Quaternion, Vector3 } from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
@@ -81,7 +81,7 @@ export class Rope {
 		const q = new Quaternion();
 		const v = new Vector3();
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const now = performance.now();
 			const ropeSegments = this.ropeSegments();
 			const firstRope = ropeSegments[0]?.rigidBodyRef()?.rigidBody();

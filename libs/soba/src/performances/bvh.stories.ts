@@ -9,7 +9,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, NgtArgs, NgtThreeElements } from 'angular-three';
+import { beforeRender, NgtArgs, NgtThreeElements } from 'angular-three';
 import { injectHelper } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsBVH } from 'angular-three-soba/performances';
@@ -100,7 +100,7 @@ class RaycastObj {
 		const xDir = Math.random() - 0.5;
 		const yDir = Math.random() - 0.5;
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const [obj, originalMesh, hitMesh, cylinderMesh, group] = [
 				this.objRef().nativeElement,
 				this.originalRef().nativeElement,

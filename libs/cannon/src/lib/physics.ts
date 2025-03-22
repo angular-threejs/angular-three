@@ -14,7 +14,7 @@ import {
 	WorkerFrameMessage,
 	WorkerRayhitEvent,
 } from '@pmndrs/cannon-worker-api';
-import { injectBeforeRender, injectStore, is, pick } from 'angular-three';
+import { beforeRender, injectStore, is, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
@@ -160,7 +160,7 @@ export class NgtcPhysics {
 		});
 
 		let timeSinceLastCalled = 0;
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const [{ isPaused, maxSubSteps, stepSize }, worker] = [this.options(), this.cannonWorker()];
 			if (isPaused || !worker || stepSize == null) return;
 			timeSinceLastCalled += delta;

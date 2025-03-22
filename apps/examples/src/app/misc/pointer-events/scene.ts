@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtThreeElements } from 'angular-three';
+import { beforeRender, NgtArgs, NgtThreeElements } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three';
 
@@ -42,7 +42,7 @@ export class SceneGraph {
 	protected readonly positions = [-2.5, 0, 2.5];
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			this.groupRef().nativeElement.rotation.y += delta * 0.25;
 		});
 	}

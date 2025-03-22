@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtArgs } from 'angular-three';
+import { beforeRender, injectStore, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsEnvironment } from 'angular-three-soba/staging';
 import { Group, Vector3 } from 'three';
@@ -44,7 +44,7 @@ export class Light {
 	private groupRef = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const group = this.groupRef().nativeElement;
 			group.rotation.x = clock.elapsedTime;
 		});
@@ -73,7 +73,7 @@ export class Rig {
 	private store = injectStore();
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const { camera, pointer } = this.store.snapshot;
 			camera.position.lerp(this.vec.set(pointer.x * 2, 1, 60), 0.05);
 		});

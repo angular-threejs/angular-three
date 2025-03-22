@@ -15,9 +15,9 @@ import {
 import { NgtArgs } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer, NgtpGlitch } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { gltfResource, injectGLTF } from 'angular-three-soba/loaders';
-import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
-import { injectMatcapTexture } from 'angular-three-soba/staging';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { NgtsAnimation, animations } from 'angular-three-soba/misc';
+import { matcapTextureResource } from 'angular-three-soba/staging';
 import {
 	TweakpaneCheckbox,
 	TweakpaneColor,
@@ -50,7 +50,7 @@ export class BotAnimations {
 		// NOTE: the consumer controls the timing of injectAnimations. It's not afterNextRender anymore
 		//  but when the reference is resolved which in this particular case, it is the Bone mixamorigHips
 		//  that the animations are referring to.
-		const animationsApi = injectAnimations(this.animations, host);
+		const animationsApi = animations(this.animations, host);
 		effect((onCleanup) => {
 			if (animationsApi.isReady) {
 				const actionName = selectedAction();
@@ -68,7 +68,7 @@ export class BotAnimations {
 	template: `
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />
-			@if (resource.value(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-group [dispose]="null" [animations]="gltf" [referenceRef]="boneRef()">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 						<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
@@ -76,13 +76,13 @@ export class BotAnimations {
 							[geometry]="gltf.nodes.YB_Body.geometry"
 							[skeleton]="gltf.nodes.YB_Body.skeleton"
 						>
-							<ngt-mesh-matcap-material [matcap]="matcapBody.texture()" />
+							<ngt-mesh-matcap-material [matcap]="matcapBody.resource.value()" />
 						</ngt-skinned-mesh>
 						<ngt-skinned-mesh
 							[geometry]="gltf.nodes.YB_Joints.geometry"
 							[skeleton]="gltf.nodes.YB_Joints.skeleton"
 						>
-							<ngt-mesh-matcap-material [matcap]="matcapJoints.texture()" />
+							<ngt-mesh-matcap-material [matcap]="matcapJoints.resource.value()" />
 						</ngt-skinned-mesh>
 					</ngt-group>
 				</ngt-group>
@@ -96,19 +96,12 @@ export class BotAnimations {
 export class Bot {
 	protected Math = Math;
 
-	protected gltf = injectGLTF<BotGLTF>(() => './ybot.glb');
-
-	protected resource = gltfResource<BotGLTF>(() => './ybot.glb');
-
-	protected matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = SRGBColorSpace;
-		},
+	protected gltf = gltfResource<BotGLTF>(() => './ybot.glb');
+	protected matcapBody = matcapTextureResource(() => '293534_B2BFC5_738289_8A9AA7', {
+		onLoad: (texture) => (texture.colorSpace = SRGBColorSpace),
 	});
-	protected matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = SRGBColorSpace;
-		},
+	protected matcapJoints = matcapTextureResource(() => '3A2412_A78B5F_705434_836C47', {
+		onLoad: (texture) => (texture.colorSpace = SRGBColorSpace),
 	});
 
 	protected boneRef = viewChild<ElementRef<Bone>>('bone');

@@ -11,8 +11,8 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
+	beforeRender,
 	getInstanceState,
-	injectBeforeRender,
 	NgtAnyRecord,
 	NgtArgs,
 	NgtAttachable,
@@ -20,7 +20,7 @@ import {
 	omit,
 	pick,
 } from 'angular-three';
-import { injectFBO } from 'angular-three-soba/misc';
+import { fbo } from 'angular-three-soba/misc';
 import { MeshDiscardMaterial, MeshTransmissionMaterial } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -127,8 +127,8 @@ export class NgtsMeshTransmissionMaterial {
 
 	private backResolution = computed(() => this.backsideResolution() || this.resolution());
 
-	private fboBack = injectFBO(() => ({ width: this.backResolution() }));
-	private fboMain = injectFBO(() => ({ width: this.resolution() }));
+	private fboBack = fbo(() => ({ width: this.backResolution() }));
+	private fboMain = fbo(() => ({ width: this.resolution() }));
 
 	protected bufferTexture = computed(() => this.buffer() || this.fboMain.texture);
 	protected anisotropicBlurOption = computed(() => this.anisotropicBlur() || this.anisotropy());
@@ -162,7 +162,7 @@ export class NgtsMeshTransmissionMaterial {
 		let oldEnvMapIntensity: number | undefined;
 		let oldTone: THREE.ToneMapping | undefined;
 		let parent: THREE.Mesh | undefined;
-		injectBeforeRender(({ clock, gl, scene, camera }) => {
+		beforeRender(({ clock, gl, scene, camera }) => {
 			const material = this.materialRef()?.nativeElement;
 			if (!material) return;
 

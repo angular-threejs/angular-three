@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, injectObjectEvents, omit, pick } from 'angular-three';
+import { beforeRender, objectEvents, omit, pick } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsInstance, NgtsInstances } from 'angular-three-soba/performances';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { Color, MathUtils, Mesh, MeshPhongMaterial } from 'three';
@@ -68,7 +68,7 @@ class Shoe {
 		 * />
 		 * ```
 		 */
-		injectObjectEvents(() => this.instance().positionMeshRef(), {
+		objectEvents(() => this.instance().positionMeshRef(), {
 			pointerover: (event) => {
 				event.stopPropagation();
 				this.hovered = true;
@@ -78,7 +78,7 @@ class Shoe {
 			},
 		});
 
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const instance = this.instance().positionMeshRef().nativeElement;
 			const t = clock.elapsedTime + this.random() * 10000;
 
@@ -101,7 +101,7 @@ type ShoeGLTF = GLTF & {
 @Component({
 	selector: 'instances-shoes',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngts-instances
 				[options]="{ range: range(), geometry: gltf.nodes.Shoe.geometry, material: gltf.materials.phong1SG }"
 			>
@@ -119,7 +119,7 @@ class Shoes {
 	data = data;
 	range = input(100);
 
-	gltf = injectGLTF<ShoeGLTF>(() => './shoe.glb');
+	gltf = gltfResource<ShoeGLTF>(() => './shoe.glb');
 }
 
 @Component({

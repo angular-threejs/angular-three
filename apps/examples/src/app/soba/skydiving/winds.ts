@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsInstance, NgtsInstances } from 'angular-three-soba/performances';
 import { AdditiveBlending, DoubleSide, MathUtils, Vector3 } from 'three';
 
@@ -24,7 +24,7 @@ export class WindShape {
 	private instanceRef = viewChild.required(NgtsInstance);
 
 	constructor() {
-		injectBeforeRender(({ camera, viewport }) => {
+		beforeRender(({ camera, viewport }) => {
 			const instance = this.instanceRef().positionMeshRef().nativeElement;
 			if (!instance) return;
 

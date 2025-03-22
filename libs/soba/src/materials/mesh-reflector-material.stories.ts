@@ -9,8 +9,8 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
-import { injectTexture } from 'angular-three-soba/loaders';
+import { beforeRender, NgtArgs } from 'angular-three';
+import { textureResource } from 'angular-three-soba/loaders';
 import { NgtsMeshReflectorMaterial, NgtsMeshReflectorMaterialOptions } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -63,7 +63,7 @@ class MeshReflectorMaterialStory {
 
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
-	private textures = injectTexture(() => ({
+	private textures = textureResource(() => ({
 		roughnessMap: 'roughness_floor.jpeg',
 		normalMap: 'NORM.jpg',
 		distortionMap: 'dist_map.jpeg',
@@ -71,7 +71,7 @@ class MeshReflectorMaterialStory {
 
 	reflectorOptions = computed(() => {
 		const options = this.options();
-		const textures = this.textures();
+		const textures = this.textures.value();
 		if (!textures) return options;
 		return { ...options, ...textures };
 	});
@@ -80,13 +80,13 @@ class MeshReflectorMaterialStory {
 
 	constructor() {
 		effect(() => {
-			const distortionMap = this.textures()?.distortionMap;
+			const distortionMap = this.textures.value()?.distortionMap;
 			if (!distortionMap) return;
 			distortionMap.wrapS = distortionMap.wrapT = RepeatWrapping;
 			distortionMap.repeat.set(4, 4);
 		});
 
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const mesh = this.mesh().nativeElement;
 			mesh.position.y += Math.sin(clock.elapsedTime) / 25;
 			mesh.rotation.y = clock.elapsedTime / 2;

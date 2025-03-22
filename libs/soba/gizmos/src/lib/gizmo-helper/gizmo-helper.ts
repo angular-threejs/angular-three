@@ -14,15 +14,7 @@ import {
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import {
-	extend,
-	hasListener,
-	injectBeforeRender,
-	injectStore,
-	NgtPortal,
-	NgtPortalAutoRender,
-	pick,
-} from 'angular-three';
+import { beforeRender, extend, hasListener, injectStore, NgtPortal, NgtPortalAutoRender, pick } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import CameraControls from 'camera-controls';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -141,7 +133,7 @@ export class NgtsGizmoHelperImpl {
 			this.updateDefaultUpEffect();
 		});
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const [virtualCamera, gizmo] = [
 				this.virtualCameraRef()?.cameraRef()?.nativeElement,
 				this.gizmoRef()?.nativeElement,

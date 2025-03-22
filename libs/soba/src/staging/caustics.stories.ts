@@ -7,8 +7,8 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { beforeRender } from 'angular-three';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import {
 	NgtsAccumulativeShadows,
@@ -25,7 +25,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 @Component({
 	selector: 'caustics-scene',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [dispose]="null">
 				<ngts-center [options]="{ top: true, position: [-1, -0.01, -2], rotation: [0, -0.4, 0] }">
 					<ngt-mesh
@@ -79,7 +79,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 class Scene {
 	debug = input(false);
 
-	gltf = injectGLTF(() => './glass-transformed.glb');
+	gltf = gltfResource(() => './glass-transformed.glb');
 	color = new Color(1, 0.8, 0.8);
 	innerMaterial = new MeshStandardMaterial({
 		transparent: true,
@@ -182,7 +182,7 @@ class Env {
 	groupRef = viewChild<ElementRef<Group>>('group');
 
 	constructor() {
-		injectBeforeRender(({ delta, clock, pointer, camera }) => {
+		beforeRender(({ delta, clock, pointer, camera }) => {
 			const group = this.groupRef()?.nativeElement;
 			if (!group) return;
 

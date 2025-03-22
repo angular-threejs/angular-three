@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtArgs, NgtPortal, NgtVector3 } from 'angular-three';
+import { beforeRender, injectStore, NgtArgs, NgtPortal, NgtVector3 } from 'angular-three';
 import * as THREE from 'three';
 
 @Component({
@@ -215,7 +215,7 @@ export class Scene {
 			this.sphereArgs.update((v) => [v[0] === 0.5 ? 1 : 0.5, v[1], v[2]]);
 		}, 2500);
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const group = this.groupRef().nativeElement;
 			group.rotation.x += delta;
 			group.rotation.y += delta;

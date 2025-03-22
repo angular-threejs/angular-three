@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, i
 import { Meta } from '@storybook/angular';
 import { NgtArgs, merge } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import {
 	NgtsAccumulativeShadows,
 	NgtsAccumulativeShadowsOptions,
@@ -26,10 +26,10 @@ import { color, storyDecorators, storyObject } from '../setup-canvas';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Suzi {
-	gltf = injectGLTF(() => './suzanne-high-poly.gltf');
+	gltf = gltfResource(() => './suzanne-high-poly.gltf');
 
 	scene = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
 		const { scene, materials } = gltf;
 		scene.traverse((obj) => (obj as any).isMesh && (obj.receiveShadow = obj.castShadow = true));

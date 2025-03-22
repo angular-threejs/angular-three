@@ -11,7 +11,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
-	injectBeforeRender,
+	beforeRender,
 	injectStore,
 	NgtArgs,
 	NgtEuler,
@@ -127,7 +127,7 @@ export class Letter {
 	private focused = signal(false);
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const contents = this.contentsRef()?.nativeElement;
 			if (!contents) return;
 			// The letters contents are moved to its whereabouts in world coordinates

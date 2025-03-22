@@ -23,21 +23,21 @@ export interface NgtcBodyOptions<TShape extends BodyShapeType> {
 	injector?: Injector;
 }
 
-function createInjectBody<TShape extends BodyShapeType>(type: TShape) {
+function createBody<TShape extends BodyShapeType>(type: TShape) {
 	return <TObject extends THREE.Object3D>(
 		getPropFn: NgtcGetByIndex<NgtcBodyPropsMap[TShape]>,
 		ref: ElementRef<TObject> | TObject | Signal<ElementRef<TObject> | TObject | undefined>,
 		options?: NgtcBodyOptions<TShape>,
-	) => injectBody<TShape, TObject>(type, getPropFn, ref, options);
+	) => body<TShape, TObject>(type, getPropFn, ref, options);
 }
 
-function injectBody<TShape extends BodyShapeType, TObject extends THREE.Object3D>(
+function body<TShape extends BodyShapeType, TObject extends THREE.Object3D>(
 	type: TShape,
 	getPropFn: NgtcGetByIndex<NgtcBodyPropsMap[TShape]>,
 	ref: ElementRef<TObject> | TObject | Signal<ElementRef<TObject> | TObject | undefined>,
 	{ transformArgs, injector }: NgtcBodyOptions<TShape> = {},
 ): Signal<NgtcBodyPublicApi | null> {
-	return assertInjector(injectBody, injector, () => {
+	return assertInjector(body, injector, () => {
 		const physics = inject(NgtcPhysics, { optional: true });
 
 		if (!physics) {
@@ -133,12 +133,66 @@ function injectBody<TShape extends BodyShapeType, TObject extends THREE.Object3D
 	});
 }
 
-export const injectBox = createInjectBody('Box');
-export const injectConvexPolyhedron = createInjectBody('ConvexPolyhedron');
-export const injectCylinder = createInjectBody('Cylinder');
-export const injectHeightfield = createInjectBody('Heightfield');
-export const injectParticle = createInjectBody('Particle');
-export const injectPlane = createInjectBody('Plane');
-export const injectSphere = createInjectBody('Sphere');
-export const injectTrimesh = createInjectBody('Trimesh');
-export const injectCompound = createInjectBody('Compound');
+export const box = createBody('Box');
+export const convexPolyhedron = createBody('ConvexPolyhedron');
+export const cylinder = createBody('Cylinder');
+export const heightfield = createBody('Heightfield');
+export const particle = createBody('Particle');
+export const plane = createBody('Plane');
+export const sphere = createBody('Sphere');
+export const trimesh = createBody('Trimesh');
+export const compound = createBody('Compound');
+
+/**
+ * @deprecated Use `box` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectBox = box;
+
+/**
+ * @deprecated Use `convexPolyhedron` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectConvexPolyhedron = convexPolyhedron;
+
+/**
+ * @deprecated Use `cylinder` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectCylinder = cylinder;
+
+/**
+ * @deprecated Use `heightfield` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectHeightfield = heightfield;
+
+/**
+ * @deprecated Use `particle` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectParticle = particle;
+
+/**
+ * @deprecated Use `plane` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectPlane = plane;
+
+/**
+ * @deprecated Use `sphere` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectSphere = sphere;
+
+/**
+ * @deprecated Use `trimesh` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectTrimesh = trimesh;
+
+/**
+ * @deprecated Use `compound` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectCompound = compound;

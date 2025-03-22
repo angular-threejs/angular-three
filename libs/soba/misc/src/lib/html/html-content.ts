@@ -12,7 +12,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, is, NgtHTML, pick, resolveRef } from 'angular-three';
+import { beforeRender, injectStore, is, NgtHTML, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { NgtsHTMLImpl } from './html';
@@ -214,7 +214,7 @@ export class NgtsHTMLContent extends NgtHTML {
 		let oldZoom = 0;
 		let oldPosition = [0, 0];
 
-		injectBeforeRender(({ camera: rootCamera }) => {
+		beforeRender(({ camera: rootCamera }) => {
 			const [
 				hostEl,
 				transformOuterEl,

@@ -6,7 +6,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, beforeRender } from 'angular-three';
 import { NgtpEffectComposer, NgtpGodRays } from 'angular-three-postprocessing';
 import { Group, Mesh } from 'three';
 
@@ -66,7 +66,7 @@ export class SceneGraph {
 	private group = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const { nativeElement } = this.group();
 			nativeElement.rotation.x += 0.005;
 			nativeElement.rotation.y += 0.005;

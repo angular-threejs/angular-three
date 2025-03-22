@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsPointMaterial } from 'angular-three-soba/materials';
 import { NgtsPointsBuffer } from 'angular-three-soba/performances';
@@ -35,7 +35,7 @@ export class SceneGraph {
 	private pointsBufferRef = viewChild.required(NgtsPointsBuffer);
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const points = this.pointsBufferRef().pointsRef().nativeElement;
 			points.rotation.x -= delta / 10;
 			points.rotation.y -= delta / 15;

@@ -1,5 +1,5 @@
 import { Directive, effect, input, untracked } from '@angular/core';
-import { injectBeforeRender, injectStore } from 'angular-three';
+import { beforeRender, injectStore } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { SimplexNoise } from 'three-stdlib';
@@ -68,7 +68,7 @@ export class NgtsCameraShake {
 			onCleanup(() => void defaultControls.removeEventListener('change', callback));
 		});
 
-		injectBeforeRender(({ delta, clock }) => {
+		beforeRender(({ delta, clock }) => {
 			const [
 				{ maxYaw, yawFrequency, maxPitch, pitchFrequency, maxRoll, rollFrequency, decay, decayRate },
 				camera,

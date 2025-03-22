@@ -10,7 +10,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, is, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
+import { beforeRender, extend, injectStore, is, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { NgtsHelper } from 'angular-three-soba/abstractions';
 import { SpotLightMaterial } from 'angular-three-soba/vanilla-exports';
 import { assertInjector } from 'ngxtension/assert-injector';
@@ -20,7 +20,7 @@ import { Group, Mesh, MeshBasicMaterial, PlaneGeometry, RepeatWrapping, SpotLigh
 import { FullScreenQuad } from 'three-stdlib';
 
 export interface NgtsSpotLightOptions extends Partial<NgtThreeElements['ngt-spot-light']> {
-	depthBuffer?: THREE.DepthTexture;
+	depthBuffer: THREE.DepthTexture | null;
 	attenuation?: number;
 	anglePower?: number;
 	radiusTop?: number;
@@ -40,6 +40,7 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 	attenuation: 5,
 	anglePower: 5,
 	color: 'white',
+	depthBuffer: null,
 };
 
 @Component({
@@ -110,7 +111,7 @@ export class NgtsVolumetricMesh {
 
 		const vec = new THREE.Vector3();
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const mesh = this.meshRef().nativeElement;
 			const material = this.material;
 
@@ -148,7 +149,7 @@ function injectSpotLightCommon(
 			}
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const [_spotLight, _mesh] = [spotLight()?.nativeElement, mesh()?.nativeElement];
 			if (!_spotLight || !_mesh) return;
 
@@ -281,7 +282,7 @@ export class NgtsSpotLightShadowShader {
 			});
 		});
 
-		injectBeforeRender(({ gl, delta }) => {
+		beforeRender(({ gl, delta }) => {
 			this.uniforms.uTime.value += delta;
 
 			gl.setRenderTarget(this.renderTarget());
@@ -367,6 +368,7 @@ const defaultOptions: NgtsSpotLightOptions = {
 	anglePower: 5,
 	volumetric: true,
 	debug: false,
+	depthBuffer: null,
 };
 
 @Component({

@@ -8,7 +8,7 @@ import {
 	output,
 	viewChild,
 } from '@angular/core';
-import { extend, getInstanceState, injectBeforeRender, injectStore, is, NgtAnyRecord, omit, pick } from 'angular-three';
+import { beforeRender, extend, getInstanceState, injectStore, is, NgtAnyRecord, omit, pick } from 'angular-three';
 import { calculateScaleFactor } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -312,7 +312,7 @@ export class NgtsPivotControls {
 		});
 
 		const vec = new THREE.Vector3();
-		injectBeforeRender(({ camera, size, invalidate }) => {
+		beforeRender(({ camera, size, invalidate }) => {
 			const [{ fixed, scale, matrix }, gizmo, group] = [
 				this.options(),
 				this.gizmoRef().nativeElement,

@@ -3,7 +3,7 @@ import { NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsPivotControls, OnDragParameters } from 'angular-three-soba/gizmos';
-import { injectGLTF, injectTexture } from 'angular-three-soba/loaders';
+import { gltfResource, textureResource } from 'angular-three-soba/loaders';
 import { NgtsDecal } from 'angular-three-soba/misc';
 import { NgtsAccumulativeShadows, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Euler, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
@@ -16,7 +16,7 @@ type CupGLTF = GLTF & {
 @Component({
 	selector: 'app-cup',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh
 				castShadow
 				[geometry]="gltf.nodes.coffee_cup_top_16oz.geometry"
@@ -34,7 +34,7 @@ type CupGLTF = GLTF & {
 				</ngt-group>
 				<ngts-decal
 					[options]="{
-						map: texture(),
+						map: texture.value(),
 						position: position(),
 						rotation: rotation(),
 						scale: scale(),
@@ -53,8 +53,8 @@ export class Cup {
 	protected rotation = signal<NgtEuler>([0, 0, 0]);
 	protected scale = signal<NgtVector3>([0.6, 0.6, 0.6]);
 
-	protected gltf = injectGLTF<CupGLTF>(() => './coffee-transformed.glb');
-	protected texture = injectTexture(() => './1200px-Starbucks_Logo_ab_2011.svg.png');
+	protected gltf = gltfResource<CupGLTF>(() => './coffee-transformed.glb');
+	protected texture = textureResource(() => './1200px-Starbucks_Logo_ab_2011.svg.png');
 
 	private p = new Vector3();
 	private s = new Vector3();

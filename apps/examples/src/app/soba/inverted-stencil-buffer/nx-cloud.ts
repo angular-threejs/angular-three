@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { mask } from 'angular-three-soba/staging';
 import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -20,7 +20,7 @@ type NxCloudGLTF = GLTF & {
 @Component({
 	selector: 'app-nx-cloud',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [dispose]="null" [scale]="scale()" [position]="[-3, -0.5, 0]" [rotation]="[Math.PI / 2, 0, 0]">
 				<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.Curve012.geometry" [material]="material()" />
 				<ngt-mesh castShadow receiveShadow [geometry]="gltf.nodes.Curve013.geometry" [material]="material()" />
@@ -42,7 +42,7 @@ export class NxCloud {
 	invert = input(false);
 	scale = input(1);
 
-	protected gltf = injectGLTF<NxCloudGLTF>(() => './nx-cloud.glb');
+	protected gltf = gltfResource<NxCloudGLTF>(() => './nx-cloud.glb');
 	protected stencilParameters = mask(() => 1, this.invert);
 
 	protected material = computed(() => {

@@ -11,7 +11,7 @@ import { checkUpdate, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three'
 import { NgtrInstancedRigidBodies, NgtrInstancedRigidBodyOptions } from 'angular-three-rapier';
 import { Color, InstancedMesh } from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
-import { injectSuzanne } from '../suzanne';
+import { suzanneResource } from '../suzanne';
 
 const MAX_COUNT = 2000;
 
@@ -19,7 +19,7 @@ const MAX_COUNT = 2000;
 	selector: 'app-rapier-instanced-mesh',
 	template: `
 		<ngt-group>
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-object3D
 					#instancedRigidBodies="instancedRigidBodies"
 					[instancedRigidBodies]="bodies()"
@@ -49,7 +49,7 @@ export default class InstancedMeshExample {
 
 	private instancedMeshRef = viewChild<ElementRef<InstancedMesh>>('instancedMesh');
 
-	protected gltf = injectSuzanne();
+	protected gltf = suzanneResource();
 	private store = injectStore();
 
 	protected bodies = signal(Array.from({ length: 100 }, () => this.createBody()));

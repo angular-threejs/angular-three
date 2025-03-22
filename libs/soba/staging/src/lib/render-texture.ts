@@ -24,7 +24,7 @@ import {
 	omit,
 	pick,
 } from 'angular-three';
-import { injectFBO } from 'angular-three-soba/misc';
+import { fbo } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group } from 'three';
@@ -191,7 +191,7 @@ export class NgtsRenderTextureImpl {
 
 	protected renderPriority = pick(this.options, 'renderPriority');
 	protected frames = pick(this.options, 'frames');
-	protected fbo = injectFBO(this.fboParams);
+	protected fbo = fbo(this.fboParams);
 	protected virtualScene = (() => {
 		const scene = new THREE.Scene();
 		scene.name = `ngts-render-texture-virtual-scene-${incrementId++}`;

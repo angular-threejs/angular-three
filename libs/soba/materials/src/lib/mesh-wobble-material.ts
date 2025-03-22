@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject, input } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtAttachable, NgtThreeElements, omit } from 'angular-three';
+import { beforeRender, NgtArgs, NgtAttachable, NgtThreeElements, omit } from 'angular-three';
 import { MeshWobbleMaterial, MeshWobbleMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
@@ -34,7 +34,7 @@ export class NgtsMeshWobbleMaterial {
 	constructor() {
 		inject(DestroyRef).onDestroy(() => this.material.dispose());
 
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const material = this.material;
 			material.time = clock.elapsedTime * this.options().speed;
 		});

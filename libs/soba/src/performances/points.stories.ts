@@ -11,7 +11,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { extend, injectBeforeRender, injectObjectEvents, injectStore } from 'angular-three';
+import { beforeRender, extend, injectStore, objectEvents } from 'angular-three';
 import { NgtsPoint, NgtsPointsBuffer, NgtsPointsInstances } from 'angular-three-soba/performances';
 import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import { buffer, misc } from 'maath';
@@ -76,7 +76,7 @@ class PointWithEvents {
 	finalSize = computed(() => this.size() * (this.clicked() ? 1.5 : 1));
 
 	constructor() {
-		injectObjectEvents(() => this.pointRef().positionPointRef(), {
+		objectEvents(() => this.pointRef().positionPointRef(), {
 			pointerover: (event) => {
 				event.stopPropagation();
 				this.hovered.set(true);
@@ -152,7 +152,7 @@ class BasicPointsBufferStory {
 	size = Float32Array.from({ length: n }, () => Math.random() * 0.2);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const elapsedTime = clock.elapsedTime;
 			const t = misc.remap(Math.sin(elapsedTime), [-1, 1], [0, 1]);
 

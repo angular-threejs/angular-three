@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
 
 @Component({
@@ -38,7 +38,7 @@ export default class Basic {
 	protected currentCollider = signal(1);
 
 	constructor() {
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const currentCollider = this.currentCollider();
 			if (currentCollider === 2) {
 				camera.position.lerp({ x: 10, y: 10, z: 10 }, 0.1);

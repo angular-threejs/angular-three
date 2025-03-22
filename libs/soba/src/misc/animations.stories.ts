@@ -11,9 +11,9 @@ import {
 	viewChild,
 } from '@angular/core';
 import { NgtArgs } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { NgtsAnimation, injectAnimations } from 'angular-three-soba/misc';
-import { injectMatcapTexture } from 'angular-three-soba/staging';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { NgtsAnimation, animations } from 'angular-three-soba/misc';
+import { matcapTextureResource } from 'angular-three-soba/staging';
 import { Bone, Group, MeshStandardMaterial, Object3D, SRGBColorSpace, SkinnedMesh } from 'three';
 import { GLTF } from 'three-stdlib';
 import { select, storyDecorators, storyObject } from '../setup-canvas';
@@ -36,7 +36,7 @@ export class BotAnimations {
 		// NOTE: the consumer controls the timing of injectAnimations. It's not afterNextRender anymore
 		//  but when the reference is resolved which in this particular case, it is the Bone mixamorigHips
 		//  that the animations are referring to.
-		const animationsApi = injectAnimations(this.animations, host);
+		const animationsApi = animations(this.animations, host);
 		effect((onCleanup) => {
 			if (animationsApi.isReady) {
 				const actionName = this.animation();
@@ -53,7 +53,7 @@ export class BotAnimations {
 	template: `
 		<ngt-group [position]="[0, -1, 0]">
 			<ngt-grid-helper *args="[10, 20]" />
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-group [dispose]="null" [animations]="gltf" [animation]="animation()" [referenceRef]="boneRef()">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]" [scale]="0.01">
 						<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
@@ -61,13 +61,13 @@ export class BotAnimations {
 							[geometry]="gltf.nodes.YB_Body.geometry"
 							[skeleton]="gltf.nodes.YB_Body.skeleton"
 						>
-							<ngt-mesh-matcap-material [matcap]="matcapBody.texture()" />
+							<ngt-mesh-matcap-material [matcap]="matcapBody.resource.value()" />
 						</ngt-skinned-mesh>
 						<ngt-skinned-mesh
 							[geometry]="gltf.nodes.YB_Joints.geometry"
 							[skeleton]="gltf.nodes.YB_Joints.skeleton"
 						>
-							<ngt-mesh-matcap-material [matcap]="matcapJoints.texture()" />
+							<ngt-mesh-matcap-material [matcap]="matcapJoints.resource.value()" />
 						</ngt-skinned-mesh>
 					</ngt-group>
 				</ngt-group>
@@ -83,16 +83,12 @@ class DefaultAnimationsStory {
 
 	animation = input('Strut');
 
-	gltf = injectGLTF<BotGLTF>(() => './ybot.glb');
-	matcapBody = injectMatcapTexture(() => '293534_B2BFC5_738289_8A9AA7', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = SRGBColorSpace;
-		},
+	gltf = gltfResource<BotGLTF>(() => './ybot.glb');
+	matcapBody = matcapTextureResource(() => '293534_B2BFC5_738289_8A9AA7', {
+		onLoad: (texture) => (texture.colorSpace = SRGBColorSpace),
 	});
-	matcapJoints = injectMatcapTexture(() => '3A2412_A78B5F_705434_836C47', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = SRGBColorSpace;
-		},
+	matcapJoints = matcapTextureResource(() => '3A2412_A78B5F_705434_836C47', {
+		onLoad: (texture) => (texture.colorSpace = SRGBColorSpace),
 	});
 
 	boneRef = viewChild<ElementRef<Bone>>('bone');

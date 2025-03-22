@@ -10,7 +10,7 @@ import {
 	model,
 	untracked,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtHTML, pick, provideHTMLDomElement } from 'angular-three';
+import { beforeRender, injectStore, NgtHTML, pick, provideHTMLDomElement } from 'angular-three';
 import { easing } from 'maath';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -219,7 +219,7 @@ export class NgtsScrollControls {
 		});
 
 		let last = 0;
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			last = this.offset;
 			easing.damp(this, 'offset', this.scroll, this.damping(), delta, this.maxSpeed(), undefined, this.eps());
 			easing.damp(
@@ -272,7 +272,7 @@ export class NgtsCanvasScrollContent {
 	private store = injectStore();
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const group = this.host.nativeElement;
 
 			group.position.x = this.scrollControls.horizontal()
@@ -298,7 +298,7 @@ export class NgtsHTMLScrollContent extends NgtHTML {
 	constructor() {
 		super();
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			if (this.scrollControls.delta > this.scrollControls.eps()) {
 				this.host.nativeElement.style.transform = `translate3d(${
 					this.scrollControls.horizontal()

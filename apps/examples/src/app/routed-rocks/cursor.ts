@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, inject } from '@angular/core';
-import { getInstanceState, injectObjectEvents } from 'angular-three';
+import { getInstanceState, objectEvents } from 'angular-three';
 import { Object3D } from 'three';
 
 @Directive({ selector: '[cursor]' })
@@ -16,7 +16,7 @@ export class Cursor {
 
 		const document = inject(DOCUMENT);
 
-		injectObjectEvents(() => nativeElement, {
+		objectEvents(() => nativeElement, {
 			pointerover: () => {
 				document.body.style.cursor = 'pointer';
 			},

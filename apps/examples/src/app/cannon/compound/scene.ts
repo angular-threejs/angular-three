@@ -14,7 +14,7 @@ import {
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
-import { injectCompound, injectPlane } from 'angular-three-cannon/body';
+import { compound, plane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { Group } from 'three';
 
@@ -41,7 +41,7 @@ export class Plane {
 	private group = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
-		injectPlane(() => ({ type: 'Static', rotation: this.rotation() }), this.group);
+		plane(() => ({ type: 'Static', rotation: this.rotation() }), this.group);
 	}
 }
 
@@ -78,7 +78,7 @@ export class CompoundBody {
 	private group = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
-		const compoundApi = injectCompound(
+		const compoundApi = compound(
 			() => ({
 				isTrigger: this.isTrigger(),
 				mass: this.mass(),

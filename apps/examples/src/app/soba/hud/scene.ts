@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, NgtPortalAutoRender, injectBeforeRender, injectStore } from 'angular-three';
+import { NgtArgs, NgtPortal, NgtPortalAutoRender, beforeRender, injectStore } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsOrthographicCamera, NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -109,7 +109,7 @@ export class Box {
 	protected faces = ['front', 'back', 'top', 'bottom', 'left', 'right'];
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			this.mesh().nativeElement.rotation.x += delta;
 		});
 	}
@@ -160,7 +160,7 @@ export class ViewCube {
 
 	constructor() {
 		const matrix = new Matrix4();
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const box = this.box()?.mesh().nativeElement;
 			if (box) {
 				matrix.copy(this.store.snapshot.camera.matrix).invert();

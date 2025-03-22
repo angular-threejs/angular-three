@@ -1,6 +1,6 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, input, output } from '@angular/core';
 import {
-	injectBeforeRender,
+	beforeRender,
 	injectStore,
 	NgtArgs,
 	NgtCamera,
@@ -85,7 +85,7 @@ export class NgtsOrbitControls {
 	protected enableDamping = pick(this.options, 'enableDamping');
 
 	constructor() {
-		injectBeforeRender(
+		beforeRender(
 			() => {
 				const controls = this.controls();
 				if (controls.enabled) controls.update();

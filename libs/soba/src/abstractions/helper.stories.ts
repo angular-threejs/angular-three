@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { BoxHelper, CameraHelper } from 'three';
 import { VertexNormalsHelper } from 'three-stdlib';
@@ -26,7 +26,7 @@ class CameraHelperStory {
 	perspectiveCamera = viewChild.required(NgtsPerspectiveCamera);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const camera = this.perspectiveCamera().cameraRef().nativeElement;
 
 			const t = clock.elapsedTime;

@@ -4,7 +4,7 @@ import { NgtpDepthOfField, NgtpEffectComposer, NgtpToneMapping } from 'angular-t
 import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
 import { NgtrCuboidCollider, NgtrInstancedRigidBodies, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import {
 	NgtsAccumulativeShadows,
 	NgtsEnvironment,
@@ -25,7 +25,7 @@ type HatGLTF = GLTF & {
 @Component({
 	selector: 'app-hats',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-object3D [instancedRigidBodies]="instances" [options]="{ colliders: 'hull' }">
 				<ngt-instanced-mesh
 					*args="[gltf.nodes.Plane006_1.geometry, gltf.materials.boxCap, 80]"
@@ -41,7 +41,7 @@ type HatGLTF = GLTF & {
 	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
 export class Hats {
-	protected gltf = injectGLTF<HatGLTF>(() => './blender-threejs-journey-20k-hat-transformed.glb');
+	protected gltf = gltfResource<HatGLTF>(() => './blender-threejs-journey-20k-hat-transformed.glb');
 
 	protected instances = Array.from({ length: 80 }, (_, index) => ({
 		key: index,
@@ -66,7 +66,7 @@ type ModelGLTF = GLTF & {
 @Component({
 	selector: 'app-model',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [position]="position()" [dispose]="null">
 				<ngt-object3D rigidBody="fixed" [options]="{ colliders: 'trimesh' }">
 					<ngt-mesh
@@ -97,7 +97,7 @@ type ModelGLTF = GLTF & {
 export class Model {
 	position = input<NgtVector3>([0, 0, 0]);
 
-	protected gltf = injectGLTF<ModelGLTF>(() => './blender-threejs-journey-20k-transformed.glb');
+	protected gltf = gltfResource<ModelGLTF>(() => './blender-threejs-journey-20k-transformed.glb');
 }
 
 @Component({

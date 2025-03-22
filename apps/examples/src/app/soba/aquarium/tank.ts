@@ -8,7 +8,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { getInstanceState, NgtVector3 } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import { mask } from 'angular-three-soba/staging';
 import { Group, Mesh } from 'three';
@@ -23,7 +23,7 @@ interface ShapesGLTF extends GLTF {
 @Component({
 	selector: 'app-tank',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			@let nodes = gltf.nodes;
 
 			<ngt-group [position]="position()" [dispose]="null">
@@ -55,13 +55,13 @@ export class Tank {
 
 	private groupRef = viewChild<ElementRef<Group>>('group');
 
-	protected gltf = injectGLTF<ShapesGLTF>(() => shapesGLB);
+	protected gltf = gltfResource<ShapesGLTF>(() => shapesGLB);
 
 	private stencilParameters = mask(() => 1);
 
 	constructor() {
 		effect(() => {
-			const gltf = this.gltf();
+			const gltf = this.gltf.value();
 			if (!gltf) return;
 
 			const group = this.groupRef()?.nativeElement;

@@ -7,7 +7,7 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtVector3 } from 'angular-three';
+import { beforeRender, NgtArgs, NgtVector3 } from 'angular-three';
 import { injectRevoluteJoint, NgtrRigidBody } from 'angular-three-rapier';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
@@ -24,7 +24,7 @@ export class WheelJoint {
 			data: () => ({ body1Anchor: this.bodyAnchor(), body2Anchor: [0, 0, 0], axis: [0, 0, 1] }),
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const joint = revoluteJoint();
 			if (!joint) return;
 			joint.configureMotorVelocity(20, 10);

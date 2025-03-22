@@ -10,7 +10,7 @@ import {
 	inject,
 	input,
 } from '@angular/core';
-import { NgtArgs, NgtVector3, injectBeforeRender, injectStore, is, omit, vector3 } from 'angular-three';
+import { NgtArgs, NgtVector3, beforeRender, injectStore, is, omit, vector3 } from 'angular-three';
 import { easing } from 'maath';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, Effect } from 'postprocessing';
@@ -176,7 +176,7 @@ export class NgtpLensFlare {
 			onCleanup(() => effect.dispose());
 		});
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const [effect] = [this.effect()];
 			if (!effect) return;
 

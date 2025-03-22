@@ -7,11 +7,11 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF, injectTexture } from 'angular-three-soba/loaders';
+import { gltfResource, textureResource } from 'angular-three-soba/loaders';
 import { NgtsDecal } from 'angular-three-soba/misc';
 import {
 	NgtsAccumulativeShadows,
@@ -35,7 +35,7 @@ import { Mesh } from 'three';
 				<ngt-dodecahedron-geometry *args="[0.75]" />
 				<ngt-mesh-standard-material [color]="hovered() ? 'hotpink' : 'goldenrod'" />
 				<ngts-decal
-					[options]="{ polygonOffsetFactor: 0, position: [0, -0.2, 0.5], scale: 0.75, map: texture() }"
+					[options]="{ polygonOffsetFactor: 0, position: [0, -0.2, 0.5], scale: 0.75, map: texture.value() }"
 				/>
 			</ngt-mesh>
 		</ngt-group>
@@ -50,7 +50,7 @@ export class Dodecahedron {
 	scale = input(1);
 	position = input([0, 0, 0]);
 
-	protected texture = injectTexture(() => './three.png');
+	protected texture = textureResource(() => './three.png');
 
 	protected clicked = signal(false);
 	protected hovered = signal(false);
@@ -58,7 +58,7 @@ export class Dodecahedron {
 	private meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const mesh = this.meshRef().nativeElement;
 			mesh.rotation.x += delta;
 			mesh.rotation.y += delta;
@@ -69,7 +69,7 @@ export class Dodecahedron {
 @Component({
 	selector: 'app-bunny',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh castShadow receiveShadow [geometry]="gltf.meshes['bunny'].geometry" [dispose]="null">
 				<ngt-mesh-standard-material color="black" />
 				<ngts-decal
@@ -108,12 +108,12 @@ export class Dodecahedron {
 export class Bunny {
 	protected readonly Math = Math;
 
-	protected gltf = injectGLTF(() => './bunny-transformed.glb');
+	protected gltf = gltfResource(() => './bunny-transformed.glb');
 
 	private textRef = viewChild(NgtsText);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const text = this.textRef()?.troikaMesh;
 			if (text) {
 				text.position.x = Math.sin(clock.elapsedTime) * 6.5;

@@ -15,11 +15,11 @@ import {
 	extend,
 	getEmitter,
 	hasListener,
-	injectObjectEvents,
 	injectStore,
 	NgtArgs,
 	NgtEventHandlers,
 	NgtThreeEvent,
+	objectEvents,
 	pick,
 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
@@ -148,7 +148,7 @@ export class FaceCube {
 		extend({ Mesh, BoxGeometry });
 
 		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
-		injectObjectEvents(this.meshRef, {
+		objectEvents(this.meshRef, {
 			pointerout: (ev) => {
 				ev.stopPropagation();
 				this.hover.set(-1);
@@ -206,7 +206,7 @@ export class EdgeCube {
 		extend({ Mesh, BoxGeometry, MeshBasicMaterial });
 
 		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
-		injectObjectEvents(this.meshRef, {
+		objectEvents(this.meshRef, {
 			pointerout: (ev) => {
 				ev.stopPropagation();
 				this.hover.set(false);

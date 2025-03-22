@@ -13,7 +13,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, NgtObjectEvents, NgtThreeElements } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import type * as THREE from 'three';
 import { Group, Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -26,7 +26,7 @@ export type AstronautGLTFResult = GLTF & {
 @Component({
 	selector: 'app-astronaut',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group #model [parameters]="options()">
 				<ngt-mesh
 					receiveShadow
@@ -69,13 +69,13 @@ export class Astronaut {
 
 	modelRef = viewChild<ElementRef<Group>>('model');
 
-	protected gltf = injectGLTF<AstronautGLTFResult>(() => '/Astronaut-transformed.glb');
+	protected gltf = gltfResource<AstronautGLTFResult>(() => '/Astronaut-transformed.glb');
 
 	constructor() {
 		extend({ Group, Mesh });
 
 		effect(() => {
-			const gltf = this.gltf();
+			const gltf = this.gltf.value();
 			if (!gltf) return;
 
 			for (const materialKey in gltf.materials) {

@@ -13,7 +13,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, merge, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
+import { beforeRender, extend, injectStore, merge, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -123,7 +123,7 @@ export class NgtsCubeCamera {
 		extend({ Group });
 
 		let count = 0;
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const group = this.groupRef().nativeElement;
 			if (!group) return;
 

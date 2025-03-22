@@ -12,10 +12,10 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { beforeRender, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations, NgtsAnimationApi, NgtsAnimationClips } from 'angular-three-soba/misc';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { animations, NgtsAnimationApi, NgtsAnimationClips } from 'angular-three-soba/misc';
 import type * as THREE from 'three';
 import { BufferGeometry, Color, Group, MathUtils, Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -52,7 +52,7 @@ export type ModelGLTFResult = GLTF & {
 @Component({
 	selector: 'app-model',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group #model [dispose]="null">
 				<ngt-group
 					name="Scene"
@@ -140,7 +140,7 @@ export class Model {
 
 	modelRef = viewChild<ElementRef<Group>>('model');
 
-	protected gltf = injectGLTF<ModelGLTFResult>(() => modelUrl, {
+	protected gltf = gltfResource<ModelGLTFResult>(() => modelUrl, {
 		useDraco: true,
 	});
 
@@ -162,11 +162,11 @@ export class Model {
 			});
 		});
 
-		const animations = injectAnimations(this.gltf, this.modelRef);
+		const animationsApi = animations(this.gltf.value, this.modelRef);
 
 		effect(() => {
-			if (!animations.isReady) return;
-			animations.actions['CameraAction.005'].play().paused = true;
+			if (!animationsApi.isReady) return;
+			animationsApi.actions['CameraAction.005'].play().paused = true;
 		});
 
 		effect(() => {
@@ -181,15 +181,15 @@ export class Model {
 			this.document.body.style.cursor = hovered ? 'pointer' : 'auto';
 		});
 
-		injectBeforeRender(({ clock }) => {
-			if (!animations.isReady) return;
+		beforeRender(({ clock }) => {
+			if (!animationsApi.isReady) return;
 
 			const model = this.modelRef()?.nativeElement;
 			if (!model) return;
 
-			animations.actions['CameraAction.005'].time = MathUtils.lerp(
-				animations.actions['CameraAction.005'].time,
-				animations.actions['CameraAction.005'].getClip().duration * this.scroll.value,
+			animationsApi.actions['CameraAction.005'].time = MathUtils.lerp(
+				animationsApi.actions['CameraAction.005'].time,
+				animationsApi.actions['CameraAction.005'].getClip().duration * this.scroll.value,
 				0.05,
 			);
 			model.children[0].children.forEach((child, index) => {

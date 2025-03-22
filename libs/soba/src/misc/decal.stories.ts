@@ -14,7 +14,7 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectTexture } from 'angular-three-soba/loaders';
+import { textureResource } from 'angular-three-soba/loaders';
 import { NgtsDecal, surfaceSampler } from 'angular-three-soba/misc';
 import { Euler, InstancedBufferAttribute, Matrix4, Mesh, Quaternion, Vector3 } from 'three';
 import { storyDecorators, storyFunction } from '../setup-canvas';
@@ -65,7 +65,7 @@ class LoopOverInstancedBufferAttribute {
 			<ngt-mesh-physical-material color="tomato" [roughness]="0.5" />
 		</ngt-mesh>
 
-		@if (decals(); as decals) {
+		@if (decals.value(); as decals) {
 			<decal-loop-over-instanced-buffer-attribute [buffer]="bufferAttribute()">
 				<ngts-decal *="let options" [mesh]="meshRef()" [options]="options">
 					<ngt-mesh-physical-material
@@ -88,7 +88,7 @@ class LoopOverInstancedBufferAttribute {
 class DefaultDecalStory {
 	protected readonly Math = Math;
 
-	decals = injectTexture(() => ({
+	decals = textureResource(() => ({
 		reactMap: './decals/react.png',
 		threeMap: './decals/three.png',
 	}));

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { BufferGeometry, Float32BufferAttribute } from 'three';
 
 @Component({
@@ -45,7 +45,7 @@ export class SceneGraph {
 	})();
 
 	constructor() {
-		injectBeforeRender(({ scene }) => {
+		beforeRender(({ scene }) => {
 			let count = 0;
 			const time = performance.now() / 1000;
 			scene.traverse((child) => {

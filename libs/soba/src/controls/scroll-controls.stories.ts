@@ -10,15 +10,15 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, injectStore, NgtArgs, NgtHTML } from 'angular-three';
+import { beforeRender, injectStore, NgtArgs, NgtHTML } from 'angular-three';
 import {
 	NgtsCanvasScrollContent,
 	NgtsHTMLScrollContent,
 	NgtsScrollControls,
 	NgtsScrollControlsOptions,
 } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations, NgtsIntersect } from 'angular-three-soba/misc';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { animations, NgtsIntersect } from 'angular-three-soba/misc';
 import { NgtsSky } from 'angular-three-soba/staging';
 import { MathUtils, Mesh } from 'three';
 import { storyDecorators, storyFunction, storyObject } from '../setup-canvas';
@@ -33,9 +33,9 @@ import { storyDecorators, storyFunction, storyObject } from '../setup-canvas';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class LittlestTokyo {
-	private gltf = injectGLTF(() => './LittlestTokyo-transformed.glb');
+	private gltf = gltfResource(() => './LittlestTokyo-transformed.glb');
 	scene = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
 
 		const scene = gltf.scene;
@@ -51,12 +51,12 @@ class LittlestTokyo {
 
 	constructor() {
 		const scrollControls = inject(NgtsScrollControls);
-		const animations = injectAnimations(this.gltf, this.scene);
+		const animationsApi = animations(this.gltf.value, this.scene);
 
-		injectBeforeRender(({ delta, camera }) => {
-			if (!animations.isReady) return;
+		beforeRender(({ delta, camera }) => {
+			if (!animationsApi.isReady) return;
 
-			const action = animations.actions['Take 001'];
+			const action = animationsApi.actions['Take 001'];
 
 			if (!action.paused) {
 				action.play().paused = true;
@@ -90,7 +90,7 @@ class LittlestTokyo {
 			<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
 			<ngt-vector2 *args="[2048, 2048]" attach="shadow.mapSize" />
 		</ngt-spot-light>
-		<ngts-sky [options]="{ scale: 1000, sunPosition: [2, 0.4, 10] }" />
+		<ngts-sky [options]="{ sunPosition: [2, 0.4, 10] }" />
 
 		<ngts-scroll-controls [options]="{ pages: 3 }">
 			<scroll-littlest-tokyo />
@@ -108,7 +108,7 @@ class LittlestTokyoStory {
 	selector: 'scroll-suzanne',
 	template: `
 		<ngt-group [position]="position()" [scale]="scale()">
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-mesh
 					#mesh
 					[(intersect)]="isIntersect"
@@ -130,7 +130,7 @@ class Suzanne {
 	position = input([0, 0, 0]);
 	scale = input(1);
 
-	gltf = injectGLTF(() => './suzanne.glb');
+	gltf = gltfResource(() => './suzanne.glb');
 
 	hovered = signal(false);
 	isIntersect = signal(false);
@@ -138,7 +138,7 @@ class Suzanne {
 	meshRef = viewChild<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(({ delta, viewport }) => {
+		beforeRender(({ delta, viewport }) => {
 			const mesh = this.meshRef()?.nativeElement;
 			if (!mesh) return;
 			mesh.rotation.x = MathUtils.damp(

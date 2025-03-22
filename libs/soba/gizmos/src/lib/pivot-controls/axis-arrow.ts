@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectObjectEvents, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { extend, injectStore, NgtArgs, NgtThreeEvent, objectEvents } from 'angular-three';
 import { NgtsLine } from 'angular-three-soba/abstractions';
 import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
@@ -152,7 +152,7 @@ export class NgtsAxisArrow {
 		extend({ Group, Mesh, ConeGeometry, CylinderGeometry, MeshBasicMaterial });
 
 		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
-		injectObjectEvents(this.innerGroupRef, {
+		objectEvents(this.innerGroupRef, {
 			pointerdown: this.onPointerDown.bind(this),
 			pointermove: this.onPointerMove.bind(this),
 			pointerup: this.onPointerUp.bind(this),

@@ -8,9 +8,9 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getInstanceState, injectBeforeRender, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
+import { beforeRender, extend, getInstanceState, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { injectHelper, NgtsEdges } from 'angular-three-soba/abstractions';
-import { injectFBO } from 'angular-three-soba/misc';
+import { fbo } from 'angular-three-soba/misc';
 import { CausticsProjectionMaterial, createCausticsUpdate } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -147,16 +147,16 @@ export class NgtsCaustics {
 	}));
 
 	// Buffers for front and back faces
-	private normalTarget = injectFBO(this.normalTargetParams);
-	private normalTargetB = injectFBO(this.normalTargetParams);
+	private normalTarget = fbo(this.normalTargetParams);
+	private normalTargetB = fbo(this.normalTargetParams);
 
 	private causticsTargetParams = computed(() => ({
 		width: this.resolution(),
 		height: this.resolution(),
 		settings: CAUSTIC_OPTIONS,
 	}));
-	protected causticsTarget = injectFBO(this.causticsTargetParams);
-	protected causticsTargetB = injectFBO(this.causticsTargetParams);
+	protected causticsTarget = fbo(this.causticsTargetParams);
+	protected causticsTargetB = fbo(this.causticsTargetParams);
 
 	private cameraHelper = injectHelper(
 		() => (this.debug() ? this.cameraRef().nativeElement : null),
@@ -217,6 +217,6 @@ export class NgtsCaustics {
 			};
 		});
 
-		injectBeforeRender(({ gl }) => update(gl));
+		beforeRender(({ gl }) => update(gl));
 	}
 }

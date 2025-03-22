@@ -8,15 +8,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import {
-	NgtThreeElements,
-	NgtVector3,
-	extend,
-	getInstanceState,
-	injectBeforeRender,
-	omit,
-	vector3,
-} from 'angular-three';
+import { NgtThreeElements, NgtVector3, beforeRender, extend, getInstanceState, omit, vector3 } from 'angular-three';
 import * as THREE from 'three';
 import { Group } from 'three';
 
@@ -61,7 +53,7 @@ export class NgtsBBAnchor {
 			}
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const parent = this.parent();
 			if (parent) {
 				boundingBox.setFromObject(parent);

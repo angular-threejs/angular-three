@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsCustomShaderMaterial } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import { patchShaders } from 'gl-noise';
@@ -82,7 +82,7 @@ class DefaultCustomShaderMaterialStory {
 	materialRef = viewChild.required(NgtsCustomShaderMaterial);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const material = this.materialRef().material();
 			material.uniforms['uTime'].value = clock.elapsedTime;
 		});

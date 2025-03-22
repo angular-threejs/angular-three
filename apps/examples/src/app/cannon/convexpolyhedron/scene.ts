@@ -12,9 +12,9 @@ import {
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
-import { injectConvexPolyhedron } from 'angular-three-cannon/body';
+import { convexPolyhedron } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { BoxGeometry, BufferGeometry, ConeGeometry, Mesh } from 'three';
 import { GLTF, Geometry } from 'three-stdlib';
 import { UiPlane } from '../ui/plane';
@@ -57,7 +57,7 @@ export class Cone {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectConvexPolyhedron(
+		convexPolyhedron(
 			() => ({
 				args: this.args(),
 				mass: 100,
@@ -98,7 +98,7 @@ export class Cube {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectConvexPolyhedron(
+		convexPolyhedron(
 			() => ({
 				args: this.args(),
 				mass: 100,
@@ -137,9 +137,9 @@ type DiamondGLTF = GLTF & {
 export class Diamond {
 	protected positionRotationInputs = inject(PositionRotationInput, { host: true });
 
-	private gltf = injectGLTF<DiamondGLTF>(() => './diamond.glb');
+	private gltf = gltfResource<DiamondGLTF>(() => './diamond.glb');
 	protected geometry = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
 		return gltf.nodes.Cylinder.geometry;
 	});
@@ -152,7 +152,7 @@ export class Diamond {
 	private mesh = viewChild<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectConvexPolyhedron(
+		convexPolyhedron(
 			() => ({
 				args: this.args(),
 				mass: 100,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { extend, injectBeforeRender, NgtAfterAttach, NgtArgs } from 'angular-three';
+import { beforeRender, extend, NgtAfterAttach, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three/webgpu';
 
@@ -73,7 +73,7 @@ export class SceneGraph {
 	constructor() {
 		extend(THREE);
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const group = this.groupRef().nativeElement;
 			for (const child of group.children) {
 				const { rotationSpeed } = child.userData;

@@ -8,7 +8,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getInstanceState, injectBeforeRender, injectStore, pick } from 'angular-three';
+import { beforeRender, extend, getInstanceState, injectStore, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import {
 	DepthDownsamplingPass,
@@ -214,7 +214,7 @@ export class NgtpEffectComposer {
 			});
 		});
 
-		injectBeforeRender(
+		beforeRender(
 			({ delta }) => {
 				const [composer, { enabled, autoClear, stencilBuffer }, gl] = [
 					this.effectComposer(),

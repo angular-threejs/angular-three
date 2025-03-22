@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, signal, viewChild } from '@angular/core';
 import { RigidBody } from '@dimforge/rapier3d-compat';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import * as THREE from 'three';
@@ -74,7 +74,7 @@ export class Ball {
 			this.restart(rigidBody);
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const rigidBody = this.rigidBody().rigidBody();
 			if (!rigidBody) return;
 			if (rigidBody.translation().z > 10) {

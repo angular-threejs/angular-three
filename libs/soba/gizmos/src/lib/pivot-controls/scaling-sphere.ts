@@ -9,7 +9,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectObjectEvents, injectStore, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { extend, injectStore, NgtArgs, NgtThreeEvent, objectEvents } from 'angular-three';
 import { calculateScaleFactor, NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, SphereGeometry } from 'three';
@@ -126,7 +126,7 @@ export class NgtsScalingSphere {
 		extend({ Group, Mesh, SphereGeometry, MeshBasicMaterial });
 
 		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
-		injectObjectEvents(this.innerGroupRef, {
+		objectEvents(this.innerGroupRef, {
 			pointerdown: this.onPointerDown.bind(this),
 			pointermove: this.onPointerMove.bind(this),
 			pointerup: this.onPointerUp.bind(this),

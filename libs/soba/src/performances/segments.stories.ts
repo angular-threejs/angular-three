@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChildren } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsSegment, NgtsSegments } from 'angular-three-soba/performances';
 import { number, storyDecorators, storyObject } from '../setup-canvas';
@@ -27,7 +27,7 @@ class PerformanceSegmentsStory {
 	segmentsRef = viewChildren(NgtsSegment);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const segments = this.segmentsRef();
 			segments.forEach((segment, index) => {
 				const segmentObject = segment.segmentRef().nativeElement;

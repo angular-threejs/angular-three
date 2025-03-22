@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtPortal, injectBeforeRender } from 'angular-three';
+import { NgtArgs, NgtPortal, beforeRender } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsFBO } from 'angular-three-soba/misc';
 import { Color, Mesh, Scene, WebGLRenderTarget } from 'three';
@@ -29,7 +29,7 @@ class SpinningThing {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const { nativeElement } = this.mesh();
 			nativeElement.rotation.x = nativeElement.rotation.y = nativeElement.rotation.z += 0.01;
 		});
@@ -65,7 +65,7 @@ class TargetWrapper {
 	});
 
 	constructor() {
-		injectBeforeRender(({ gl }) => {
+		beforeRender(({ gl }) => {
 			const [camera, scene, target] = [this.camera().cameraRef().nativeElement, this.scene(), this.target()];
 			if (!target) return;
 			camera.position.z = 5 + Math.sin(Date.now() * 0.001) * 2;

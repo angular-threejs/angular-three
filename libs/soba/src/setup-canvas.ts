@@ -21,7 +21,7 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { applicationConfig, Args, Decorator, moduleMetadata } from '@storybook/angular';
-import { extend, injectBeforeRender, NgtAnyRecord, NgtArgs, NgtCanvasOptions, resolveRef } from 'angular-three';
+import { beforeRender, extend, NgtAnyRecord, NgtArgs, NgtCanvasOptions, resolveRef } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
@@ -316,7 +316,7 @@ export class Turnable {
 }
 
 export function injectTurnable(object: () => THREE.Object3D | ElementRef<THREE.Object3D> | undefined | null) {
-	return injectBeforeRender(() => {
+	return beforeRender(() => {
 		const obj = resolveRef(object());
 		if (!obj) return;
 		obj.rotation.y += 0.01;

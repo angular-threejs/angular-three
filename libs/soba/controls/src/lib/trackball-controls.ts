@@ -8,7 +8,7 @@ import {
 	output,
 } from '@angular/core';
 import {
-	injectBeforeRender,
+	beforeRender,
 	injectStore,
 	NgtArgs,
 	NgtOverwrite,
@@ -67,7 +67,7 @@ export class NgtsTrackballControls {
 	});
 
 	constructor() {
-		injectBeforeRender(
+		beforeRender(
 			() => {
 				const controls = this.controls();
 				if (controls.enabled) controls.update();

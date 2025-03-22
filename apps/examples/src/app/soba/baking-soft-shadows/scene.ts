@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, signal } from '@angular/core';
 import { is, NgtArgs, NgtThreeElements } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import {
 	TweakpaneCheckbox,
@@ -26,10 +26,10 @@ import suziGLTF from './suzi.gltf';
 })
 export class Suzi {
 	options = input<Partial<NgtThreeElements['ngt-group']>>({});
-	protected gltf = injectGLTF<GLTF & { materials: { default: THREE.MeshStandardMaterial } }>(() => suziGLTF);
+	protected gltf = gltfResource<GLTF & { materials: { default: THREE.MeshStandardMaterial } }>(() => suziGLTF);
 
 	protected scene = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
 
 		const { scene, materials } = gltf;

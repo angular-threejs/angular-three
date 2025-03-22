@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
+import { beforeRender, extend, NgtArgs, NgtThreeElements, omit, pick } from 'angular-three';
 import { GridMaterial, GridMaterialOptions } from 'angular-three-soba/shaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -127,7 +127,7 @@ export class NgtsGrid {
 	constructor() {
 		extend({ Mesh, PlaneGeometry, GridMaterial });
 
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const mesh = this.meshRef().nativeElement;
 
 			this.plane.setFromNormalAndCoplanarPoint(this.upVector, this.zeroVector).applyMatrix4(mesh.matrixWorld);

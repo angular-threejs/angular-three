@@ -8,7 +8,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, beforeRender } from 'angular-three';
 import { NgtsContactShadows, NgtsContactShadowsOptions } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { color, storyDecorators, storyFunction, storyObject } from '../setup-canvas';
@@ -46,7 +46,7 @@ class ContactShadowsStory {
 	sphere = viewChild.required<ElementRef<Mesh>>('sphere');
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			this.sphere().nativeElement.position.y = Math.sin(clock.elapsedTime) + 2;
 		});
 	}

@@ -12,8 +12,8 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
+	beforeRender,
 	getInstanceState,
-	injectBeforeRender,
 	injectStore,
 	is,
 	NgtAnyRecord,
@@ -149,7 +149,7 @@ export class NgtsMeshRefractionMaterial {
 			}
 		});
 
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const material = this.materialRef()?.nativeElement;
 			if (material) {
 				Object.assign(material, {

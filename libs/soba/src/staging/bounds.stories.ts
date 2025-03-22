@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, i
 import { Meta } from '@storybook/angular';
 import { NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsBounds, NgtsContactShadows } from 'angular-three-soba/staging';
 import { Mesh, MeshStandardMaterial } from 'three';
 import { storyDecorators, storyFunction } from '../setup-canvas';
@@ -29,17 +29,17 @@ class Model {
 	rotation = input([0, 0, 0]);
 	scale = input(1);
 
-	gltf = injectGLTF(() => './compressed.glb');
+	gltf = gltfResource(() => './compressed.glb');
 
 	geometry = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
 		const node = gltf.nodes[this.name()] as Mesh;
 		return node.geometry;
 	});
 
 	material = computed(() => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return null;
 		const node = gltf.nodes[this.name()] as Mesh;
 		const material = node.material as MeshStandardMaterial;

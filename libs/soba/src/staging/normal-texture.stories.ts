@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsNormalTexture, NgtsNormalTextureOptions } from 'angular-three-soba/staging';
 import { Mesh, SRGBColorSpace, Texture, Vector2 } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -13,17 +13,16 @@ interface SuzyGLTF extends GLTF {
 
 @Component({
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry">
-				<ng-template [normalTexture]="options()" (normalTextureLoaded)="onLoaded($event[0])" let-texture>
-					<ngt-mesh-standard-material
-						color="darkmagenta"
-						[normalMap]="texture()"
-						[normalScale]="normalScale()"
-						[roughness]="0.9"
-						[metalness]="0.1"
-					/>
-				</ng-template>
+				<ngt-mesh-standard-material
+					*normalTexture="options(); loaded: onLoaded; let texture"
+					color="darkmagenta"
+					[normalMap]="texture.value()"
+					[normalScale]="normalScale()"
+					[roughness]="0.9"
+					[metalness]="0.1"
+				/>
 			</ngt-mesh>
 		}
 	`,
@@ -33,17 +32,15 @@ interface SuzyGLTF extends GLTF {
 })
 class DefaultNormalTextureStory {
 	options = input<NgtsNormalTextureOptions>();
-	gltf = injectGLTF<SuzyGLTF>(() => './suzanne.glb', { useDraco: true });
 
-	normalScale = computed(() => {
+	protected gltf = gltfResource<SuzyGLTF>(() => './suzanne.glb', { useDraco: true });
+	protected normalScale = computed(() => {
 		const repeat = this.options()?.repeat;
 		if (!repeat) return undefined;
 		return new Vector2().fromArray(repeat);
 	});
 
-	onLoaded(texture: Texture) {
-		texture.colorSpace = SRGBColorSpace;
-	}
+	protected onLoaded = (texture: Texture) => (texture.colorSpace = SRGBColorSpace);
 }
 
 export default {

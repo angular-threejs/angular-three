@@ -8,7 +8,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectStore, is, NgtThreeElements, pick } from 'angular-three';
+import { beforeRender, extend, injectStore, is, NgtThreeElements, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group } from 'three';
@@ -133,7 +133,7 @@ export class NgtsBounds {
 			}
 		});
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			// This [additional animation step START] is needed to guarantee that delta used in animation isn't absurdly high (2-3 seconds) which is actually possible if rendering happens on demand...
 			if (this.animationState === AnimationState.START) {
 				this.animationState = AnimationState.ACTIVE;

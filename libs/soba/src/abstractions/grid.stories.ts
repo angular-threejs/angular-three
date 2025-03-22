@@ -11,7 +11,7 @@ import { Meta } from '@storybook/angular';
 import { NgtAnyRecord, NgtArgs } from 'angular-three';
 import { NgtsGrid } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -25,7 +25,7 @@ type SuzanneGLTF = GLTF & {
 @Component({
 	selector: 'grid-suzi',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh
 				[geometry]="gltf.nodes.Suzanne.geometry"
 				castShadow
@@ -41,7 +41,7 @@ type SuzanneGLTF = GLTF & {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Suzi {
-	gltf = injectGLTF<SuzanneGLTF>(
+	gltf = gltfResource<SuzanneGLTF>(
 		() => 'https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/suzanne-high-poly/model.gltf',
 	);
 
@@ -51,7 +51,7 @@ class Suzi {
 
 	constructor() {
 		effect(() => {
-			const gltf = this.gltf();
+			const gltf = this.gltf.value();
 			if (gltf) this.loaded.emit();
 		});
 	}

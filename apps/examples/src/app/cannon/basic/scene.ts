@@ -12,7 +12,7 @@ import {
 import { Triplet } from '@pmndrs/cannon-worker-api';
 import { NgtArgs } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
-import { injectBox, injectPlane } from 'angular-three-cannon/body';
+import { box, plane } from 'angular-three-cannon/body';
 import { NgtcDebug } from 'angular-three-cannon/debug';
 import { Mesh } from 'three';
 import { State } from './state';
@@ -35,7 +35,7 @@ export class Plane {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectPlane(() => ({ mass: 0, position: this.position(), args: this.args }), this.mesh);
+		plane(() => ({ mass: 0, position: this.position(), args: this.args }), this.mesh);
 	}
 }
 
@@ -57,7 +57,7 @@ export class Box {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBox(() => ({ mass: 10000, position: this.position(), args: this.args }), this.mesh);
+		box(() => ({ mass: 10000, position: this.position(), args: this.args }), this.mesh);
 	}
 }
 

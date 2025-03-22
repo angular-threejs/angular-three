@@ -8,9 +8,9 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, beforeRender } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
-import { injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
+import { box, plane, sphere } from 'angular-three-cannon/body';
 import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../../colors';
 
@@ -34,7 +34,7 @@ export class Plane {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectPlane(() => ({ position: this.position(), rotation: this.rotation() }), this.mesh);
+		plane(() => ({ position: this.position(), rotation: this.rotation() }), this.mesh);
 	}
 }
 
@@ -56,9 +56,9 @@ export class Box {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		const boxApi = injectBox(() => ({ args: this.args, mass: 1, type: 'Kinematic' }), this.mesh);
+		const boxApi = box(() => ({ args: this.args, mass: 1, type: 'Kinematic' }), this.mesh);
 
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const api = boxApi();
 			if (!api) return;
 			const t = clock.elapsedTime;
@@ -100,7 +100,7 @@ export class InstancedSpheres {
 	});
 
 	constructor() {
-		injectSphere(
+		sphere(
 			(index) => ({
 				args: [1],
 				mass: 1,

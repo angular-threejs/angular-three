@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtpEffectComposer, NgtpTiltShift2 } from 'angular-three-postprocessing';
 import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
 import { NgtsContactShadows, NgtsEnvironment, NgtsFloat, NgtsLightformer } from 'angular-three-soba/staging';
@@ -70,7 +70,7 @@ export class RoutedScene {
 	);
 
 	constructor() {
-		injectBeforeRender(({ camera, pointer, delta }) => {
+		beforeRender(({ camera, pointer, delta }) => {
 			easing.damp3(
 				camera.position,
 				[Math.sin(-pointer.x) * 5, pointer.y * 3.5, 15 + Math.cos(pointer.x) * 10],

@@ -6,7 +6,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { NgtsQuadraticBezierLine } from 'angular-three-soba/abstractions';
 import { Group, Vector3 } from 'three';
 
@@ -28,7 +28,7 @@ export class Cable {
 	constructor() {
 		const [v1, v2] = [new Vector3(), new Vector3()];
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const [bezierLine, start, end] = [
 				this.bezierLine(),
 				this.startRef()?.nativeElement,

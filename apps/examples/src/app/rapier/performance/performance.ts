@@ -8,18 +8,18 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtVector3 } from 'angular-three';
+import { beforeRender, NgtVector3 } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { Mesh, Vector3Like } from 'three';
 import { GLTF } from 'three-stdlib';
 import { ResetOrbitControls } from '../reset-orbit-controls';
-import { injectSuzanne } from '../suzanne';
+import { suzanneResource } from '../suzanne';
 
 @Component({
 	selector: 'app-monkey',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-object3D rigidBody [position]="position()">
 				<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry" castShadow receiveShadow>
 					<ngt-mesh-physical-material
@@ -42,11 +42,11 @@ export class Monkey {
 
 	dead = output<Vector3Like>();
 
-	protected gltf = injectSuzanne();
+	protected gltf = suzanneResource();
 	private rigidBody = viewChild(NgtrRigidBody);
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const rigidBody = this.rigidBody()?.rigidBody();
 			if (!rigidBody) return;
 			if (rigidBody.translation().y < -10) {
@@ -106,7 +106,7 @@ type BendyGLTF = GLTF & {
 	selector: 'app-bendy',
 	template: `
 		<ngt-group [position]="position()" [scale]="scale()">
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-object3D rigidBody="fixed" [options]="{ colliders: 'trimesh' }">
 					<ngt-mesh [geometry]="gltf.nodes.BezierCurve.geometry" castShadow>
 						<ngt-mesh-physical-material [transmission]="0.99" [thickness]="2" [roughness]="0" [ior]="1.5" />
@@ -123,7 +123,7 @@ export class Bendy {
 	position = input<NgtVector3>([0, 0, 0]);
 	scale = input<NgtVector3>([1, 1, 1]);
 
-	protected gltf = injectGLTF<BendyGLTF>(() => './bendy.glb');
+	protected gltf = gltfResource<BendyGLTF>(() => './bendy.glb');
 }
 
 @Component({

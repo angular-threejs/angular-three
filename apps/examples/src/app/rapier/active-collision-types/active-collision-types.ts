@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
 import { ActiveCollisionTypes } from '@dimforge/rapier3d-compat';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
@@ -31,7 +31,7 @@ export class Ball {
 	protected color = signal('blue');
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const rb = this.rigidBodyRef().rigidBody();
 			if (!rb) return;
 

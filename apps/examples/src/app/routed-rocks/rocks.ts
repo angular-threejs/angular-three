@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, inj
 import { Router, RouterOutlet } from '@angular/router';
 import { injectStore, NgtArgs } from 'angular-three';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import CameraControls from 'camera-controls';
 import { DoubleSide, FrontSide, Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -34,7 +34,7 @@ interface RockGLTF extends GLTF {
 			<ngt-value [rawValue]="-0.0005" attach="shadow.bias" />
 		</ngt-point-light>
 
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [position]="[0, 2.6, 0]" [scale]="3">
 				<ngt-group [rotation]="[-Math.PI / 2, 0, 0]">
 					<ngt-group [rotation]="[Math.PI / 2, 0, 0]">
@@ -103,14 +103,14 @@ export default class Rocks {
 	private rockStore = inject(RockStore);
 	private store = injectStore();
 
-	protected gltf = injectGLTF<RockGLTF>(() => './rock2/scene.gltf');
+	protected gltf = gltfResource<RockGLTF>(() => './rock2/scene.gltf');
 
 	constructor() {
 		effect(() => {
 			const controls = this.store.controls() as CameraControls;
 			if (!controls) return;
 
-			const gltf = this.gltf();
+			const gltf = this.gltf.value();
 			if (!gltf) return;
 
 			const scene = this.store.scene();

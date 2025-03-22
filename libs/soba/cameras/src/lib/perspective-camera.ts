@@ -10,8 +10,8 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
-import { injectFBO } from 'angular-three-soba/misc';
+import { NgtThreeElements, beforeRender, extend, injectStore, omit, pick } from 'angular-three';
+import { fbo } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group, PerspectiveCamera } from 'three';
@@ -70,7 +70,7 @@ export class NgtsPerspectiveCamera {
 	private manual = pick(this.options, 'manual');
 	private makeDefault = pick(this.options, 'makeDefault');
 	private resolution = pick(this.options, 'resolution');
-	protected fbo = injectFBO(() => ({ width: this.resolution() }));
+	protected fbo = fbo(() => ({ width: this.resolution() }));
 
 	constructor() {
 		extend({ PerspectiveCamera, Group });
@@ -104,7 +104,7 @@ export class NgtsPerspectiveCamera {
 
 		let count = 0;
 		let oldEnvMap: THREE.Color | THREE.Texture | null = null;
-		injectBeforeRender(({ gl, scene }) => {
+		beforeRender(({ gl, scene }) => {
 			const [{ frames, envMap }, group, camera, fbo] = [
 				this.options(),
 				this.groupRef().nativeElement,

@@ -9,7 +9,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { InstancedMesh, MeshBasicMaterial, Object3D, PlaneGeometry } from 'three';
 import { AudioStore } from './audio.store';
@@ -53,7 +53,7 @@ export class Track {
 		});
 
 		const dummy = new Object3D();
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const instanced = this.instancedRef()?.nativeElement;
 			if (!instanced) return;
 

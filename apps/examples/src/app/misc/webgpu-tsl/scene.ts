@@ -9,10 +9,10 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, injectLoader, injectStore } from 'angular-three';
+import { beforeRender, extend, injectStore, loaderResource } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { TweakpaneCheckbox, TweakpaneColor, TweakpaneNumber, TweakpanePane } from 'angular-three-tweakpane';
 import { GLTF, RGBELoader } from 'three-stdlib';
 import * as THREE from 'three/webgpu';
@@ -22,7 +22,7 @@ import { SliceMaterial } from './slice-material';
 import gearsGLB from './gears.glb' with { loader: 'file' };
 import royalHDR from './royal_esplanade_1k.hdr' with { loader: 'file' };
 
-injectGLTF.preload(() => gearsGLB);
+gltfResource.preload(gearsGLB);
 
 interface GearsGLB extends GLTF {
 	nodes: { axle: THREE.Mesh; gears: THREE.Mesh; outerHull: THREE.Mesh };
@@ -62,7 +62,7 @@ interface GearsGLB extends GLTF {
 		</ng-template>
 
 		<ngt-group #gears>
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				@let gears = gltf.nodes.gears;
 				@let axle = gltf.nodes.axle;
 				@let outerHull = gltf.nodes.outerHull;
@@ -129,11 +129,11 @@ interface GearsGLB extends GLTF {
 export class SceneGraph {
 	private gearsRef = viewChild.required<ElementRef<THREE.Group>>('gears');
 
-	protected environmentMap = injectLoader(
+	protected environmentMap = loaderResource(
 		() => RGBELoader,
 		() => royalHDR,
 	);
-	protected gltf = injectGLTF<GearsGLB>(() => gearsGLB);
+	protected gltf = gltfResource<GearsGLB>(() => gearsGLB);
 
 	private store = injectStore();
 
@@ -153,13 +153,13 @@ export class SceneGraph {
 	constructor() {
 		extend({ MeshPhysicalNodeMaterial, DirectionalLight });
 
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			if (!this.rotate()) return;
 			this.gearsRef().nativeElement.rotation.y += 0.1 * delta;
 		});
 
 		effect((onCleanup) => {
-			const environmentMap = this.environmentMap();
+			const environmentMap = this.environmentMap.value();
 			if (!environmentMap) return;
 
 			const scene = this.store.scene();

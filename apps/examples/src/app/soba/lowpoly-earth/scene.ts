@@ -12,9 +12,9 @@ import {
 	TemplateRef,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtEuler, NgtHTML, NgtVector3 } from 'angular-three';
+import { beforeRender, NgtArgs, NgtEuler, NgtHTML, NgtVector3 } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsHTML } from 'angular-three-soba/misc';
 import { NgtsContactShadows, NgtsEnvironment } from 'angular-three-soba/staging';
 import { Group, Vector3 } from 'three';
@@ -52,7 +52,7 @@ export class Marker {
 
 	constructor() {
 		const v = new Vector3();
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const range = camera.position.distanceTo(this.groupRef().nativeElement.getWorldPosition(v)) <= 10;
 			if (range !== this.isInRange()) this.isInRange.set(range);
 		});
@@ -89,7 +89,7 @@ export class MarkerIcon extends NgtHTML {
 @Component({
 	selector: 'app-model',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [rotation]="[-Math.PI / 2, 0, Math.PI]" [position]="position()" [dispose]="null">
 				<ngt-mesh
 					[geometry]="gltf.meshes['URF-Height_Lampd_Ice_0'].geometry"
@@ -127,7 +127,7 @@ export class Model {
 
 	protected content = contentChild.required(TemplateRef);
 
-	protected gltf = injectGLTF(() => './earth.gltf');
+	protected gltf = gltfResource(() => './earth.gltf');
 }
 
 @Component({
@@ -156,4 +156,4 @@ export class SceneGraph {
 	asRenderTexture = input(false, { transform: booleanAttribute });
 }
 
-injectGLTF.preload(() => './earth.gltf');
+gltfResource.preload('./earth.gltf');

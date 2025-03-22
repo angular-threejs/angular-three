@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial } from 'angular-three-soba/materials';
 import { Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -15,7 +15,7 @@ interface BombGLTF extends GLTF {
 @Component({
 	selector: 'app-bomb',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh
 				[receiveShadow]="true"
 				[castShadow]="true"
@@ -31,15 +31,5 @@ interface BombGLTF extends GLTF {
 	imports: [NgtsMeshTransmissionMaterial],
 })
 export default class Bomb {
-	protected gltf = injectGLTF<BombGLTF>(() => bombUrl);
-
-	constructor() {
-		inject(DestroyRef).onDestroy(() => {
-			// const scene = this.gltf.scene();
-			// if (!scene) return;
-			// scene.traverse((obj) => {
-			// 	dispose(obj);
-			// });
-		});
-	}
+	protected gltf = gltfResource<BombGLTF>(() => bombUrl);
 }

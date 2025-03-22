@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectLoader, NgtArgs } from 'angular-three';
+import { loaderResource, NgtArgs } from 'angular-three';
 import { NgtsText3D } from 'angular-three-soba/abstractions';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsFontInput } from 'angular-three-soba/loaders';
@@ -95,12 +95,12 @@ export class TextAndGrid {
 	text = input('Angular');
 	config = input({} as Partial<NgtsMeshTransmissionMaterialOptions>);
 
-	protected texture = injectLoader(
+	protected texture = loaderResource(
 		() => RGBELoader,
 		() => 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr',
 	);
 
-	protected materialOptions = computed(() => ({ ...this.config(), background: this.texture() }));
+	protected materialOptions = computed(() => ({ ...this.config(), background: this.texture.value() }));
 
 	protected readonly Math = Math;
 }

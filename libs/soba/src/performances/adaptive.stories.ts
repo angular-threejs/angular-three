@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } fro
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsAdaptiveDpr, NgtsAdaptiveEvents } from 'angular-three-soba/performances';
 import { Material, Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -16,7 +16,7 @@ interface ArcherGLTF extends GLTF {
 @Component({
 	selector: 'adaptive-archer',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-group [dispose]="null">
 				<ngt-group [rotation]="[-Math.PI / 2, 0, 0]">
 					<ngt-group [position]="[0, 0, 2]">
@@ -49,7 +49,7 @@ interface ArcherGLTF extends GLTF {
 class Archer {
 	protected readonly Math = Math;
 
-	gltf = injectGLTF<ArcherGLTF>(() => './archer.glb');
+	gltf = gltfResource<ArcherGLTF>(() => './archer.glb');
 }
 
 @Component({

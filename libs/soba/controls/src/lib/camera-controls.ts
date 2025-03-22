@@ -7,7 +7,7 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { injectBeforeRender, injectStore, NgtArgs, NgtCamera, omit, pick } from 'angular-three';
+import { beforeRender, injectStore, NgtArgs, NgtCamera, omit, pick } from 'angular-three';
 import CameraControls from 'camera-controls';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -83,7 +83,7 @@ export class NgtsCameraControls {
 			onCleanup(() => void this.store.update({ controls: oldControls }));
 		});
 
-		injectBeforeRender(
+		beforeRender(
 			({ delta }) => {
 				const controls = this.controls();
 				if (controls?.enabled) {

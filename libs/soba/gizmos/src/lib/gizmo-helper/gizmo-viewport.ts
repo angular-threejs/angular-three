@@ -15,7 +15,6 @@ import {
 	extend,
 	getEmitter,
 	hasListener,
-	injectObjectEvents,
 	injectStore,
 	NgtArgs,
 	NgtEuler,
@@ -23,6 +22,7 @@ import {
 	NgtThreeElements,
 	NgtThreeEvent,
 	NgtVector3,
+	objectEvents,
 	omit,
 	pick,
 } from 'angular-three';
@@ -131,7 +131,7 @@ export class AxisHead {
 		extend({ Sprite, SpriteMaterial });
 
 		// TODO: (chau) remove this when event binding syntax no longer trigger cdr
-		injectObjectEvents(this.spriteRef, {
+		objectEvents(this.spriteRef, {
 			pointerover: this.onPointerOver.bind(this),
 			pointerout: this.onPointerOut.bind(this),
 			pointerdown: this.onPointerDown.bind(this),

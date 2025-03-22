@@ -43,15 +43,15 @@ export type NgtcConstraintOptions<TConstraintType extends 'Hinge' | ConstraintTy
 	options?: NgtcConstraintOptionsMap[TConstraintType];
 };
 
-function createInjectConstraint<TConstraint extends ConstraintTypes | 'Hinge'>(type: TConstraint) {
+function createConstraint<TConstraint extends ConstraintTypes | 'Hinge'>(type: TConstraint) {
 	return <A extends THREE.Object3D = THREE.Object3D, B extends THREE.Object3D = THREE.Object3D>(
 		bodyA: ElementRef<A> | A | Signal<ElementRef<A> | A | undefined>,
 		bodyB: ElementRef<B> | B | Signal<ElementRef<B> | B | undefined>,
 		options?: NgtcConstraintOptions<TConstraint>,
-	) => injectConstraint<TConstraint, A, B>(type, bodyA, bodyB, options);
+	) => constraint<TConstraint, A, B>(type, bodyA, bodyB, options);
 }
 
-function injectConstraint<
+function constraint<
 	TConstraint extends ConstraintTypes | 'Hinge',
 	A extends THREE.Object3D = THREE.Object3D,
 	B extends THREE.Object3D = THREE.Object3D,
@@ -65,7 +65,7 @@ function injectConstraint<
 		disableOnStart = false,
 	}: NgtcConstraintOptions<TConstraint> = {},
 ) {
-	return assertInjector(injectConstraint, injector, () => {
+	return assertInjector(constraint, injector, () => {
 		const physics = inject(NgtcPhysics, { optional: true });
 
 		if (!physics) {
@@ -127,8 +127,38 @@ function injectConstraint<
 	});
 }
 
-export const injectPointToPoint = createInjectConstraint('PointToPoint');
-export const injectConeTwist = createInjectConstraint('ConeTwist');
-export const injectDistance = createInjectConstraint('Distance');
-export const injectLock = createInjectConstraint('Lock');
-export const injectHinge = createInjectConstraint('Hinge');
+export const pointToPoint = createConstraint('PointToPoint');
+export const coneTwist = createConstraint('ConeTwist');
+export const distance = createConstraint('Distance');
+export const lock = createConstraint('Lock');
+export const hinge = createConstraint('Hinge');
+
+/**
+ * @deprecated Use `pointToPoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectPointToPoint = pointToPoint;
+
+/**
+ * @deprecated Use `coneTwist` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectConeTwist = coneTwist;
+
+/**
+ * @deprecated Use `distance` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectDistance = distance;
+
+/**
+ * @deprecated Use `lock` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectLock = lock;
+
+/**
+ * @deprecated Use `hinge` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectHinge = hinge;

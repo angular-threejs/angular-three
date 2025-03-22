@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshTransmissionMaterial, NgtsMeshTransmissionMaterialOptions } from 'angular-three-soba/materials';
 import { NgtsAccumulativeShadows, NgtsCenter, NgtsEnvironment, NgtsRandomizedLights } from 'angular-three-soba/staging';
 import { Color, FrontSide } from 'three';
@@ -11,7 +11,7 @@ import { number, storyDecorators, storyObject } from '../setup-canvas';
 	selector: 'gelatinous-cube',
 	template: `
 		<ngt-group [dispose]="null">
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-mesh [geometry]="gltf.meshes['cube1'].geometry" [position]="[-0.56, 0.38, -0.11]">
 					<ngts-mesh-transmission-material [options]="options()" />
 				</ngt-mesh>
@@ -58,7 +58,7 @@ class GelatinousCube {
 
 	options = input({} as NgtsMeshTransmissionMaterialOptions);
 
-	gltf = injectGLTF(() => './gelatinous_cube.glb');
+	gltf = gltfResource(() => './gelatinous_cube.glb');
 }
 
 @Component({

@@ -1,6 +1,6 @@
 import { Directive, afterNextRender, inject, input } from '@angular/core';
 import { BodyProps, BodyShapeType, propsToBody } from '@pmndrs/cannon-worker-api';
-import { injectBeforeRender, injectStore, is } from 'angular-three';
+import { beforeRender, injectStore, is } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
 import { Body, Quaternion as CQuarternion, Vec3, World } from 'cannon-es';
 import CannonDebugger from 'cannon-es-debugger';
@@ -59,7 +59,7 @@ export class NgtcDebug {
 			});
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			if (!this.cannonDebugger) return;
 
 			const enabled = this.debug().enabled;

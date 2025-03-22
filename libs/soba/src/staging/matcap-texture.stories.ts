@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMatcapTexture, NgtsMatcapTextureOptions } from 'angular-three-soba/staging';
 import { Mesh, SRGBColorSpace, Texture } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -16,11 +16,12 @@ interface SuzyGLTF extends GLTF {
 	template: `
 		<ngt-color attach="background" *args="['#291203']" />
 
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry">
-				<ng-template [matcapTexture]="options()" (matcapTextureLoaded)="onLoaded($event[0])" let-texture>
-					<ngt-mesh-matcap-material [matcap]="texture()" />
-				</ng-template>
+				<ngt-mesh-matcap-material
+					*matcapTexture="options(); loaded: onLoaded; let texture"
+					[matcap]="texture.value()"
+				/>
 			</ngt-mesh>
 		}
 	`,
@@ -30,11 +31,9 @@ interface SuzyGLTF extends GLTF {
 })
 class DefaultMatcapTextureStory {
 	options = input<NgtsMatcapTextureOptions>();
-	gltf = injectGLTF<SuzyGLTF>(() => './suzanne.glb', { useDraco: true });
 
-	onLoaded(texture: Texture) {
-		texture.colorSpace = SRGBColorSpace;
-	}
+	protected gltf = gltfResource<SuzyGLTF>(() => './suzanne.glb', { useDraco: true });
+	protected onLoaded = (texture: Texture) => (texture.colorSpace = SRGBColorSpace);
 }
 
 export default {

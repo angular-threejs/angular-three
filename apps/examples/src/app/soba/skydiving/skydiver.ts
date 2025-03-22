@@ -6,9 +6,9 @@ import {
 	ElementRef,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
-import { injectGLTF, injectTexture } from 'angular-three-soba/loaders';
-import { injectAnimations, NgtsAnimationClips } from 'angular-three-soba/misc';
+import { beforeRender, NgtArgs } from 'angular-three';
+import { gltfResource, textureResource } from 'angular-three-soba/loaders';
+import { animations, NgtsAnimationClips } from 'angular-three-soba/misc';
 import {
 	BufferGeometry,
 	DoubleSide,
@@ -34,17 +34,17 @@ type SkydiverGLTF = GLTF & {
 	selector: 'app-skydiver',
 	template: `
 		<ngt-group [dispose]="null">
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-group #group>
 					<ngt-primitive #bone *args="[gltf.nodes.mixamorigHips]" />
 					<ngt-skinned-mesh
 						[geometry]="gltf.nodes.skydiver_2.geometry"
 						[skeleton]="gltf.nodes.skydiver_2.skeleton"
 					>
-						@let metallic = textures()?.metallic;
-						@let normal = textures()?.normal;
-						@let roughness = textures()?.roughness;
-						@let baseColor = textures()?.baseColor;
+						@let metallic = textures.value()?.metallic;
+						@let normal = textures.value()?.normal;
+						@let roughness = textures.value()?.roughness;
+						@let baseColor = textures.value()?.baseColor;
 
 						<ngt-mesh-standard-material
 							[toneMapped]="false"
@@ -69,8 +69,8 @@ type SkydiverGLTF = GLTF & {
 export class Skydiver {
 	protected DoubleSide = DoubleSide;
 
-	protected gltf = injectGLTF<SkydiverGLTF>(() => './skydiver.glb');
-	protected textures = injectTexture(
+	protected gltf = gltfResource<SkydiverGLTF>(() => './skydiver.glb');
+	protected textures = textureResource(
 		() => ({
 			baseColor: './texture/skydiver_BaseColor.webp',
 			roughness: './texture/skydiver_Roughness.webp',
@@ -80,7 +80,7 @@ export class Skydiver {
 		}),
 		{
 			onLoad: (textures) => {
-				textures.forEach((texture) => {
+				Object.values(textures).forEach((texture) => {
 					texture.flipY = false;
 					texture.colorSpace = SRGBColorSpace;
 				});
@@ -89,10 +89,10 @@ export class Skydiver {
 	);
 
 	private groupRef = viewChild<ElementRef<Group>>('group');
-	private animations = injectAnimations(this.gltf, this.groupRef);
+	private animations = animations(this.gltf.value, this.groupRef);
 
 	protected onBeforeCompile: MeshStandardMaterial['onBeforeCompile'] = (shader) => {
-		const gltf = this.gltf();
+		const gltf = this.gltf.value();
 		if (!gltf) return;
 
 		Object.assign(shader.uniforms, {
@@ -119,10 +119,10 @@ export class Skydiver {
 
 	constructor() {
 		effect(() => {
-			const gltf = this.gltf();
+			const gltf = this.gltf.value();
 			if (!gltf) return;
 
-			const textures = this.textures();
+			const textures = this.textures.value();
 			if (!textures) return;
 
 			gltf.nodes['skydiver_2'].material.uniforms = {
@@ -138,8 +138,8 @@ export class Skydiver {
 			onCleanup(() => actions['animation_0'].stop());
 		});
 
-		injectBeforeRender(({ clock }) => {
-			const skydiver = this.gltf()?.nodes['skydiver_2'];
+		beforeRender(({ clock }) => {
+			const skydiver = this.gltf.value()?.nodes?.skydiver_2;
 			if (skydiver?.material.uniforms?.['uTime']) {
 				skydiver.material.uniforms['uTime'].value = clock.elapsedTime;
 			}

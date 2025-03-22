@@ -7,7 +7,7 @@ import {
 	inject,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, checkUpdate, NgtArgs } from 'angular-three';
 import { NgtrInstancedRigidBodies, NgtrPhysics } from 'angular-three-rapier';
 import { Color, InstancedMesh, Vector3 } from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
@@ -45,7 +45,7 @@ export default class ClusterExample {
 	private physics = inject(NgtrPhysics);
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const paused = this.physics.paused();
 			if (paused) return;
 

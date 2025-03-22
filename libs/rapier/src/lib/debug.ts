@@ -6,7 +6,7 @@ import {
 	inject,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender } from 'angular-three';
+import { beforeRender, extend } from 'angular-three';
 import * as THREE from 'three';
 import { Group, LineBasicMaterial, LineSegments } from 'three';
 import { NgtrPhysics } from './physics';
@@ -31,7 +31,7 @@ export class NgtrDebug {
 	constructor() {
 		extend({ Group, LineSegments, LineBasicMaterial });
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const worldSingleton = this.physics.worldSingleton();
 			if (!worldSingleton) return;
 

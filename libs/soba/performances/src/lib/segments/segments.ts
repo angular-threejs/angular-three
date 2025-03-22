@@ -9,7 +9,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, injectBeforeRender, NgtArgs, NgtVector3, omit, pick, resolveRef, vector3 } from 'angular-three';
+import { beforeRender, extend, NgtArgs, NgtVector3, omit, pick, resolveRef, vector3 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Line2, LineMaterial, LineMaterialParameters, LineSegmentsGeometry } from 'three-stdlib';
@@ -102,7 +102,7 @@ export class NgtsSegments {
 	});
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const [limit, positions, colors] = [this.limit(), this.positions(), this.colors()];
 
 			for (let i = 0; i < limit; i++) {

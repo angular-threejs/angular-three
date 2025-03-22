@@ -9,7 +9,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { extend, NgtArgs, NgtThreeElement, NgtThreeElements, omit, pick } from 'angular-three';
-import { injectFont, NgtsFontInput } from 'angular-three-soba/loaders';
+import { fontResource, type NgtsFontInput } from 'angular-three-soba/loaders';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Mesh } from 'three';
@@ -66,7 +66,7 @@ export class NgtsText3D {
 	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 	private textGeometryRef = viewChild<ElementRef<TextGeometry>>('textGeometry');
 
-	private loadedFont = injectFont(this.font);
+	private loadedFont = fontResource(this.font);
 	private smooth = pick(this.options, 'smooth');
 	private textOptions = pick(this.options, [
 		'letterSpacing',
@@ -82,7 +82,7 @@ export class NgtsText3D {
 	]);
 
 	protected textArgs = computed(() => {
-		const font = this.loadedFont();
+		const font = this.loadedFont.value();
 		if (!font) return null;
 
 		const [text, textOptions] = [this.text(), this.textOptions()];

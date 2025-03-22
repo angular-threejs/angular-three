@@ -6,7 +6,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { BoxGeometry, Mesh, MeshBasicMaterial, SphereGeometry } from 'three';
 import { NgtTestBed } from './test-bed';
 
@@ -49,7 +49,7 @@ describe('test canvas', () => {
 		meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 		constructor() {
-			injectBeforeRender(() => {
+			beforeRender(() => {
 				const mesh = this.meshRef().nativeElement;
 				mesh.rotation.x += 0.01;
 			});

@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtArgs, NgtThreeElements, extend, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { NgtArgs, NgtThreeElements, beforeRender, extend, injectStore, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, OrthographicCamera } from 'three';
@@ -158,7 +158,7 @@ export class NgtsContactShadows {
 		extend({ Group, Mesh, MeshBasicMaterial, OrthographicCamera });
 
 		let count = 0;
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const shadowsCamera = this.shadowsCameraRef()?.nativeElement;
 			if (!shadowsCamera) return;
 

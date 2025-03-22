@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, input } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
-import { injectAnimations, NgtsAnimationClips } from 'angular-three-soba/misc';
+import { beforeRender, NgtArgs, NgtEuler, NgtVector3 } from 'angular-three';
+import { gltfResource } from 'angular-three-soba/loaders';
+import { animations, NgtsAnimationClips } from 'angular-three-soba/misc';
 import { GLTF } from 'three-stdlib';
 
 import turtleGLB from './model_52a_-_kemps_ridley_sea_turtle_no_id-transformed.glb';
@@ -27,9 +27,9 @@ export class Turtle {
 	rotation = input<NgtEuler>([0, 0, 0]);
 	scale = input(1);
 
-	protected gltf = injectGLTF<GLTF & { animations: NgtsAnimationClips<'Swim Cycle'>[] }>(() => turtleGLB);
+	protected gltf = gltfResource<GLTF & { animations: NgtsAnimationClips<'Swim Cycle'>[] }>(() => turtleGLB);
 
-	private animations = injectAnimations(this.gltf, this.gltf.scene);
+	private animations = animations(this.gltf.value, this.gltf.scene);
 
 	constructor() {
 		effect(() => {
@@ -39,7 +39,7 @@ export class Turtle {
 			this.animations.actions['Swim Cycle'].play();
 		});
 
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const scene = this.gltf.scene();
 			if (!scene) return;
 

@@ -16,10 +16,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CylinderArgs, Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
+import { NgtArgs, beforeRender, injectStore } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
-import { injectBox, injectCylinder, injectSphere } from 'angular-three-cannon/body';
-import { injectConeTwist } from 'angular-three-cannon/constraint';
+import { box, cylinder, sphere } from 'angular-three-cannon/body';
+import { coneTwist } from 'angular-three-cannon/constraint';
 import { Color, ColorRepresentation, Mesh, Object3D } from 'three';
 
 interface Handle {
@@ -63,15 +63,12 @@ export class ChainLink {
 	protected mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectCylinder(
-			() => ({ mass: 1, args: this.args(), linearDamping: 0.8, position: this.position() }),
-			this.mesh,
-		);
+		cylinder(() => ({ mass: 1, args: this.args(), linearDamping: 0.8, position: this.position() }), this.mesh);
 
 		const injector = inject(Injector);
 		// NOTE: we want to run this in afterNextRender because we want the input to resolve
 		afterNextRender(() => {
-			injectConeTwist(this.parent.ref, this.mesh, {
+			coneTwist(this.parent.ref, this.mesh, {
 				injector,
 				options: {
 					angle: Math.PI / 8,
@@ -143,9 +140,9 @@ export class PointerHandle {
 	protected mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		const boxApi = injectBox(() => ({ args: this.args, position: this.position, type: 'Kinematic' }), this.mesh);
+		const boxApi = box(() => ({ args: this.args, position: this.position, type: 'Kinematic' }), this.mesh);
 
-		injectBeforeRender(({ pointer: { x, y }, viewport: { width, height } }) => {
+		beforeRender(({ pointer: { x, y }, viewport: { width, height } }) => {
 			boxApi()?.position.set((x * width) / 2, (y * height) / 2, 0);
 		});
 	}
@@ -173,7 +170,7 @@ export class StaticHandle {
 	protected mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectSphere(() => ({ args: [1.5], position: this.position(), type: 'Static' }), this.mesh);
+		sphere(() => ({ args: [1.5], position: this.position(), type: 'Static' }), this.mesh);
 	}
 }
 

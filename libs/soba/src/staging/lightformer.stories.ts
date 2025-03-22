@@ -7,7 +7,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsContactShadows, NgtsEnvironment, NgtsLightformer } from 'angular-three-soba/staging';
 import { Mesh } from 'three';
@@ -61,7 +61,7 @@ class DefaultLightformerStory {
 	cube = viewChild.required<ElementRef<Mesh>>('cube');
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const cube = this.cube().nativeElement;
 			cube.rotation.y += delta * 0.2;
 		});

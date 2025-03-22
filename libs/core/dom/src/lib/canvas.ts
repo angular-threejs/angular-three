@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import {
-	injectCanvasRootInitializer,
+	canvasRootInitializer,
 	injectStore,
 	is,
 	NGT_CANVAS_CONTENT_FLAG,
@@ -92,7 +92,7 @@ export class NgtCanvasContent {
 })
 export class NgtCanvasImpl {
 	private store = injectStore();
-	private initRoot = injectCanvasRootInitializer();
+	private initRoot = canvasRootInitializer();
 
 	private host = inject<ElementRef<HTMLElement>>(ElementRef);
 	private zone = inject(NgZone);

@@ -13,8 +13,8 @@ import {
 } from '@angular/core';
 import {
 	applyProps,
+	beforeRender,
 	getInstanceState,
-	injectBeforeRender,
 	injectStore,
 	NgtAnyRecord,
 	NgtArgs,
@@ -245,7 +245,7 @@ export class NgtsMeshReflectorMaterial {
 			}
 		});
 
-		injectBeforeRender(({ gl, scene }) => {
+		beforeRender(({ gl, scene }) => {
 			const material = this.materialRef()?.nativeElement;
 			if (!material) return;
 

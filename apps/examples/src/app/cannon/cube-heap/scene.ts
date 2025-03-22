@@ -11,9 +11,9 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Triplet } from '@pmndrs/cannon-worker-api';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, beforeRender } from 'angular-three';
 import { NgtcPhysics } from 'angular-three-cannon';
-import { NgtcBodyPublicApi, injectBox, injectPlane, injectSphere } from 'angular-three-cannon/body';
+import { NgtcBodyPublicApi, box, plane, sphere } from 'angular-three-cannon/body';
 import { Color, InstancedMesh, Mesh } from 'three';
 import niceColors from '../../colors';
 import { shape } from './state';
@@ -36,7 +36,7 @@ export class Plane {
 	private mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectPlane(() => ({ rotation: this.rotation() }), this.mesh);
+		plane(() => ({ rotation: this.rotation() }), this.mesh);
 	}
 }
 
@@ -49,7 +49,7 @@ export abstract class InstancesInput {
 	abstract bodyApi: Signal<NgtcBodyPublicApi | null>;
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			this.bodyApi()
 				?.at(Math.floor(Math.random() * this.count()))
 				.position.set(0, Math.random() * 2, 0);
@@ -75,7 +75,7 @@ export class Boxes extends InstancesInput {
 	protected args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
 	private mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
-	bodyApi = injectBox(
+	bodyApi = box(
 		() => ({ args: this.args(), mass: 1, position: [Math.random() - 0.5, Math.random() * 2, Math.random() - 0.5] }),
 		this.mesh,
 	);
@@ -99,7 +99,7 @@ export class Spheres extends InstancesInput {
 	protected args = computed<Triplet>(() => [this.size(), this.size(), this.size()]);
 	private mesh = viewChild<ElementRef<InstancedMesh>>('mesh');
 
-	bodyApi = injectSphere(
+	bodyApi = sphere(
 		() => ({
 			args: [this.size()],
 			mass: 1,

@@ -3,8 +3,8 @@ import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
-import { injectTexture } from 'angular-three-soba/loaders';
-import { injectDepthBuffer } from 'angular-three-soba/misc';
+import { textureResource } from 'angular-three-soba/loaders';
+import { depthBuffer } from 'angular-three-soba/misc';
 import { NgtsEnvironment, NgtsSpotLight, NgtsSpotLightOptions, NgtsSpotLightShadow } from 'angular-three-soba/staging';
 import { MathUtils, RepeatWrapping, SRGBColorSpace } from 'three';
 import { storyDecorators, storyObject } from '../setup-canvas';
@@ -22,10 +22,10 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 		<ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" receiveShadow>
 			<ngt-circle-geometry *args="[5, 64, 64]" />
 			<ngt-mesh-standard-material
-				[map]="textures()?.diffuse"
-				[normalMap]="textures()?.normal"
-				[roughnessMap]="textures()?.roughness"
-				[aoMap]="textures()?.ao"
+				[map]="textures.value()?.diffuse"
+				[normalMap]="textures.value()?.normal"
+				[roughnessMap]="textures.value()?.roughness"
+				[aoMap]="textures.value()?.ao"
 				[envMapIntensity]="0.2"
 			/>
 		</ngt-mesh>
@@ -33,7 +33,7 @@ import { storyDecorators, storyObject } from '../setup-canvas';
 		<ngts-spot-light [options]="options()">
 			<ngts-spot-light-shadow
 				[shader]="shader()"
-				[options]="{ scale: 4, distance: 0.4, width: 2048, height: 2048, map: leafTexture() }"
+				[options]="{ scale: 4, distance: 0.4, width: 2048, height: 2048, map: leafTexture.value() }"
 			/>
 		</ngts-spot-light>
 	`,
@@ -47,7 +47,7 @@ class SpotLightShadowStory {
 	wind = input(false);
 	options = input({} as NgtsSpotLightOptions);
 
-	textures = injectTexture(
+	textures = textureResource(
 		() => ({
 			diffuse: './textures/grassy_cobble/grassy_cobblestone_diff_2k.jpg',
 			normal: './textures/grassy_cobble/grassy_cobblestone_nor_gl_2k.jpg',
@@ -56,7 +56,7 @@ class SpotLightShadowStory {
 		}),
 		{
 			onLoad: (textures) => {
-				textures.forEach((texture) => {
+				Object.values(textures).forEach((texture) => {
 					texture.colorSpace = SRGBColorSpace;
 					texture.wrapS = texture.wrapT = RepeatWrapping;
 					texture.repeat.set(2, 2);
@@ -65,10 +65,8 @@ class SpotLightShadowStory {
 		},
 	);
 
-	leafTexture = injectTexture(() => './textures/other/leaves.jpg', {
-		onLoad: (textures) => {
-			textures[0].colorSpace = SRGBColorSpace;
-		},
+	leafTexture = textureResource(() => './textures/other/leaves.jpg', {
+		onLoad: (texture) => (texture.colorSpace = SRGBColorSpace),
 	});
 	shader = computed(() => {
 		if (!this.wind()) return undefined;
@@ -114,19 +112,19 @@ class DefaultSpotLightStory {
 
 	options = input({} as NgtsSpotLightOptions);
 
-	depthBuffer = injectDepthBuffer();
+	depthBuffer = depthBuffer();
 
 	spotLightOneOptions = computed(() => ({
-		depthBuffer: this.depthBuffer,
-		position: [3, 2, 0],
+		position: [3, 2, 0] as const,
 		color: '#ff005b',
 		...this.options(),
+		depthBuffer: this.depthBuffer,
 	}));
 	spotLightTwoOptions = computed(() => ({
-		depthBuffer: this.depthBuffer,
-		position: [-3, 2, 0],
+		position: [-3, 2, 0] as const,
 		color: '#0EEC82',
 		...this.options(),
+		depthBuffer: this.depthBuffer,
 	}));
 }
 

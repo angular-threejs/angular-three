@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { mask } from 'angular-three-soba/staging';
 import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
@@ -12,7 +12,7 @@ type NxGLTF = GLTF & {
 @Component({
 	selector: 'app-nx',
 	template: `
-		@if (gltf(); as gltf) {
+		@if (gltf.value(); as gltf) {
 			@let nodes = gltf.nodes;
 			@let _material = material();
 			@let meshParameters = { castShadow: true, receiveShadow: true };
@@ -36,7 +36,7 @@ export class Nx {
 	invert = input(false);
 	scale = input(1);
 
-	protected gltf = injectGLTF<NxGLTF>(() => './nx.glb');
+	protected gltf = gltfResource<NxGLTF>(() => './nx.glb');
 	protected stencilParameters = mask(() => 1, this.invert);
 
 	protected material = computed(() => {

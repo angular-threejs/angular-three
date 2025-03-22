@@ -11,7 +11,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { NgtThreeElements, extend, getInstanceState, injectBeforeRender, injectStore, omit, pick } from 'angular-three';
+import { NgtThreeElements, beforeRender, extend, getInstanceState, injectStore, omit, pick } from 'angular-three';
 import { ProgressiveLightMap, SoftShadowMaterial } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -168,7 +168,7 @@ export class NgtsAccumulativeShadows {
 			});
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const [frames, temporal, invalidate, limit] = [
 				this.frames(),
 				!!this.temporal(),

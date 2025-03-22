@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -8,25 +8,20 @@ import {
 	NgtsGizmoViewcube,
 	NgtsGizmoViewport,
 } from 'angular-three-soba/gizmos';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { select, storyDecorators, storyObject } from '../setup-canvas';
 
 @Component({
 	selector: 'gizmo-helper-tokyo',
 	template: `
-		<ngt-primitive *args="[scene()]" [parameters]="{ scale: 0.01 }" />
+		<ngt-primitive *args="[gltf.scene()]" [parameters]="{ scale: 0.01 }" />
 	`,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgtArgs],
 })
 class Tokyo {
-	private gltf = injectGLTF(() => './LittlestTokyo-transformed.glb');
-	protected scene = computed(() => {
-		const gltf = this.gltf();
-		if (!gltf) return null;
-		return gltf.scene;
-	});
+	protected gltf = gltfResource(() => './LittlestTokyo-transformed.glb');
 }
 
 @Component({

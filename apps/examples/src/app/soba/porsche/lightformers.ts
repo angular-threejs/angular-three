@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsFloat, NgtsLightformer } from 'angular-three-soba/staging';
 import { BackSide, Group } from 'three';
 
@@ -66,7 +66,7 @@ export class Lightformers {
 	private group = viewChild.required<ElementRef<Group>>('group');
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const group = this.group().nativeElement;
 			(group.position.z += delta * 10) > 20 && (group.position.z = -60);
 		});

@@ -14,9 +14,9 @@ import {
 	viewChild,
 } from '@angular/core';
 import {
+	beforeRender,
 	extend,
 	getInstanceState,
-	injectBeforeRender,
 	injectStore,
 	is,
 	NgtAttachable,
@@ -25,7 +25,7 @@ import {
 	omit,
 	pick,
 } from 'angular-three';
-import { getVersion, injectFBO, injectIntersect } from 'angular-three-soba/misc';
+import { fbo, getVersion, injectIntersect } from 'angular-three-soba/misc';
 import { NgtsRenderTexture } from 'angular-three-soba/staging';
 import {
 	MeshPortalMaterial,
@@ -50,8 +50,8 @@ export class ManagePortalScene {
 	constructor() {
 		const renderTextureStore = injectStore();
 
-		const buffer1 = injectFBO();
-		const buffer2 = injectFBO();
+		const buffer1 = fbo();
+		const buffer2 = fbo();
 
 		const fullScreenQuad = computed(() => {
 			// This fullscreen-quad is used to blend the two textures
@@ -97,7 +97,7 @@ export class ManagePortalScene {
 			setEvents({ enabled: events });
 		});
 
-		injectBeforeRender(
+		beforeRender(
 			({ gl, camera }) => {
 				const material = this.material();
 
@@ -311,7 +311,7 @@ export class NgtsMeshPortalMaterial {
 			}
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const material = this.materialRef().nativeElement;
 			const priority =
 				'blend' in material && typeof material.blend === 'number' && material.blend > 0

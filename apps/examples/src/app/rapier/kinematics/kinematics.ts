@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
@@ -22,7 +22,7 @@ export class Ball {
 	private rigidBodyRef = viewChild.required(NgtrRigidBody);
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const rigidBody = this.rigidBodyRef().rigidBody();
 			if (!rigidBody) return;
 			if (rigidBody.translation().y < -10) {
@@ -78,7 +78,7 @@ export default class KinematicsExample {
 	private platformRef = viewChild.required('platform', { read: NgtrRigidBody });
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const now = performance.now();
 
 			const torus = this.torusRef().rigidBody();

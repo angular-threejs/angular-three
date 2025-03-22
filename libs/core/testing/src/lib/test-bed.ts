@@ -8,8 +8,8 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ɵDomRendererFactory2 as DomRendererFactory2 } from '@angular/platform-browser';
 import {
+	canvasRootInitializer,
 	getInstanceState,
-	injectCanvasRootInitializer,
 	NGT_STORE,
 	type NgtAnyRecord,
 	type NgtCanvasOptions,
@@ -61,7 +61,7 @@ export class NgtTestBed {
 				{ provide: NGT_STORE, useFactory: storeFactory },
 				provideEnvironmentInitializer(() => {
 					const initializerFn = (() => {
-						const initRoot = injectCanvasRootInitializer();
+						const initRoot = canvasRootInitializer();
 
 						return () => {
 							const configurator = initRoot(mockedCanvas);

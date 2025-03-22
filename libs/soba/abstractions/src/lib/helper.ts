@@ -9,7 +9,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, getInstanceState, injectBeforeRender, injectStore, resolveRef } from 'angular-three';
+import { beforeRender, extend, getInstanceState, injectStore, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { Object3D } from 'three';
@@ -56,7 +56,7 @@ export function injectHelper<
 			});
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const currentHelper = helper();
 			if (currentHelper) currentHelper.update();
 		});

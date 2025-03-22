@@ -7,11 +7,11 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs } from 'angular-three';
+import { beforeRender, NgtArgs } from 'angular-three';
 import { NgtsEdges } from 'angular-three-soba/abstractions';
 import { NgtsCameraControls } from 'angular-three-soba/controls';
 import { NgtsPivotControls } from 'angular-three-soba/gizmos';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshPortalMaterial } from 'angular-three-soba/materials';
 import { NgtsEnvironment } from 'angular-three-soba/staging';
 import * as THREE from 'three';
@@ -33,7 +33,7 @@ type AOBoxGLTF = GLTF & {
 				<ngts-environment [options]="{ preset: 'city' }" />
 
 				<!-- A box with baked AO -->
-				@if (gltf(); as gltf) {
+				@if (gltf.value(); as gltf) {
 					<ngt-mesh castShadow receiveShadow [rotation]="rotation()" [geometry]="gltf.nodes.Cube.geometry">
 						<ngt-mesh-standard-material
 							[aoMapIntensity]="1"
@@ -75,11 +75,11 @@ export class Side {
 
 	protected attach = computed(() => ['material', this.index()]);
 
-	protected gltf = injectGLTF<AOBoxGLTF>(() => aoboxGLB);
+	protected gltf = gltfResource<AOBoxGLTF>(() => aoboxGLB);
 	private shapeRef = viewChild<ElementRef<THREE.Mesh>>('shape');
 
 	constructor() {
-		injectBeforeRender(({ delta }) => {
+		beforeRender(({ delta }) => {
 			const shape = this.shapeRef()?.nativeElement;
 			if (!shape) return;
 			shape.rotation.x = shape.rotation.y += delta;

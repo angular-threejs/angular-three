@@ -9,7 +9,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender, injectStore } from 'angular-three';
+import { NgtArgs, beforeRender, injectStore } from 'angular-three';
 import { NgtsText } from 'angular-three-soba/abstractions';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
@@ -50,7 +50,7 @@ class Dodecahedron {
 	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			this.mesh().nativeElement.rotation.x += 0.01;
 		});
 	}
@@ -97,7 +97,7 @@ class Cube {
 	textRef = viewChild(NgtsText);
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const text = this.textRef()?.troikaMesh;
 			if (text) {
 				text.position.x = Math.sin(clock.elapsedTime) * 2;

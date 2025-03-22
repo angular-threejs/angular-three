@@ -12,8 +12,8 @@ import { checkNeedsUpdate } from './utils/update';
 
 const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
 
-export function injectCanvasRootInitializer(injector?: Injector) {
-	return assertInjector(injectCanvasRootInitializer, injector, () => {
+export function canvasRootInitializer(injector?: Injector) {
+	return assertInjector(canvasRootInitializer, injector, () => {
 		const injectedStore = injectStore();
 		const loop = injectLoop();
 
@@ -292,7 +292,7 @@ export function injectCanvasRootInitializer(injector?: Injector) {
 	});
 }
 
-export type NgtCanvasConfigurator = ReturnType<ReturnType<typeof injectCanvasRootInitializer>>;
+export type NgtCanvasConfigurator = ReturnType<ReturnType<typeof canvasRootInitializer>>;
 
 function computeInitialSize(canvas: NgtCanvasElement, defaultSize?: NgtSize): NgtSize {
 	if (defaultSize) return defaultSize;

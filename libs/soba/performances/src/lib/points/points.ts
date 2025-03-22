@@ -9,7 +9,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { checkUpdate, extend, injectBeforeRender, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
+import { beforeRender, checkUpdate, extend, NgtThreeElements, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
@@ -91,7 +91,7 @@ export class NgtsPointsBuffer {
 	constructor() {
 		extend({ Points, BufferAttribute, BufferGeometry });
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const points = this.pointsRef()?.nativeElement;
 			if (!points) return;
 
@@ -183,7 +183,7 @@ export class NgtsPointsInstances {
 			checkUpdate(points.geometry.attributes['position']);
 		});
 
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const points = this.pointsRef()?.nativeElement;
 			if (!points) return;
 

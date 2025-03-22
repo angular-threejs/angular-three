@@ -1,5 +1,5 @@
 import { Directive, inject, input } from '@angular/core';
-import { injectBeforeRender } from 'angular-three';
+import { beforeRender } from 'angular-three';
 import { PerspectiveCamera } from 'three';
 import { Track } from './track';
 
@@ -10,7 +10,7 @@ export class Zoom {
 	track = inject(Track);
 
 	constructor() {
-		injectBeforeRender(({ camera }) => {
+		beforeRender(({ camera }) => {
 			const enabled = this.enabled();
 			if (!enabled) return;
 

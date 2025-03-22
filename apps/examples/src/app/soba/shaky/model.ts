@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
 import { NgtArgs, NgtVector3 } from 'angular-three';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import { NgtsMeshReflectorMaterial } from 'angular-three-soba/materials';
 import { Color, MeshPhysicalMaterial } from 'three';
 
-injectGLTF.preload(() => './pink-d.glb');
+gltfResource.preload('./pink-d.glb');
 
 @Component({
 	selector: 'app-model',
@@ -27,7 +27,7 @@ injectGLTF.preload(() => './pink-d.glb');
 					}"
 				/>
 			</ngt-mesh>
-			@if (gltf(); as gltf) {
+			@if (gltf.value(); as gltf) {
 				<ngt-mesh
 					receiveShadow
 					castShadow
@@ -180,7 +180,7 @@ export class Model {
 	position = input<NgtVector3>([0, 0, 0]);
 	rotation = input<NgtVector3>([0, 0, 0]);
 
-	protected gltf = injectGLTF(() => './pink-d.glb');
+	protected gltf = gltfResource(() => './pink-d.glb');
 	protected material = new MeshPhysicalMaterial({
 		color: new Color('#bb86a1').convertSRGBToLinear(),
 		roughness: 0,

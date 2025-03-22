@@ -9,7 +9,7 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { injectBeforeRender, NgtArgs, NgtThreeEvent } from 'angular-three';
+import { beforeRender, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer } from 'angular-three-postprocessing';
 import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
 import { Color, InstancedMesh, Object3D } from 'three';
@@ -51,7 +51,7 @@ export class Boxes {
 	protected prev?: number;
 
 	constructor() {
-		injectBeforeRender(({ clock }) => {
+		beforeRender(({ clock }) => {
 			const instanced = this.meshRef()?.nativeElement;
 			if (!instanced) return;
 

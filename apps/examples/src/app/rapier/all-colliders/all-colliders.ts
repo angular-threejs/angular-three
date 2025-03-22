@@ -16,7 +16,7 @@ import { NgtsHTML } from 'angular-three-soba/misc';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three-stdlib';
 import { ResetOrbitControls } from '../reset-orbit-controls';
-import { injectSuzanne } from '../suzanne';
+import { suzanneResource } from '../suzanne';
 
 @Component({
 	selector: 'app-cute-box',
@@ -63,9 +63,9 @@ export class RigidBodyBox {
 export class Suzanne {
 	visible = input(true);
 
-	private suzanne = injectSuzanne();
+	private suzanne = suzanneResource();
 	protected scene = computed(() => {
-		const suzanne = this.suzanne();
+		const suzanne = this.suzanne.value();
 		if (!suzanne) return null;
 		return suzanne.nodes.Suzanne.clone();
 	});

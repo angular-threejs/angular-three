@@ -7,7 +7,7 @@ import {
 	viewChild,
 } from '@angular/core';
 import { Meta } from '@storybook/angular';
-import { NgtArgs, injectBeforeRender } from 'angular-three';
+import { NgtArgs, beforeRender } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsCameraShakeOptions } from 'angular-three-soba/staging';
 import { DoubleSide, Mesh } from 'three';
@@ -36,7 +36,7 @@ class Objects {
 	cube = viewChild.required<ElementRef<Mesh>>('cube');
 
 	constructor() {
-		injectBeforeRender(() => {
+		beforeRender(() => {
 			const cube = this.cube().nativeElement;
 			cube.rotation.x = cube.rotation.y += 0.01;
 		});
