@@ -1,3 +1,33 @@
+## 4.0.0-next.98 (2025-03-22)
+
+### 🚀 Features
+
+- **core:** rename injectObjectEvents to objectEvents ([5a707562](https://github.com/angular-threejs/angular-three/commit/5a707562))
+- **core:** rename injectBeforeRender to beforeRender ([5ab9a3e7](https://github.com/angular-threejs/angular-three/commit/5ab9a3e7))
+- **core,soba/loaders,soba/staging:** implement resources ([79184dce](https://github.com/angular-threejs/angular-three/commit/79184dce))
+- **rapier:** rename joints to remove inject prefix ([739041a2](https://github.com/angular-threejs/angular-three/commit/739041a2))
+- **soba/abstractions:** rename injectHelper to helper ([bcfefe0a](https://github.com/angular-threejs/angular-three/commit/bcfefe0a))
+- **soba/cameras:** rename injectCubeCamera t cubeCamera ([e14e1dd1](https://github.com/angular-threejs/angular-three/commit/e14e1dd1))
+- **soba/loaders:** rename injectProgress to progress ([e2b05920](https://github.com/angular-threejs/angular-three/commit/e2b05920))
+- **soba/misc:** rename inject* to just function name ([450a8c7b](https://github.com/angular-threejs/angular-three/commit/450a8c7b))
+- **soba/misc:** rename injectIntersect to intersect ([d18fa11d](https://github.com/angular-threejs/angular-three/commit/d18fa11d))
+- **soba/staging:** rename injectMatcapTexture to matcapTextureResource; and injectNormalTexture ([5e4b6f67](https://github.com/angular-threejs/angular-three/commit/5e4b6f67))
+
+### 🩹 Fixes
+
+- **soba/staging:** soba build ([920f7566](https://github.com/angular-threejs/angular-three/commit/920f7566))
+
+### 💅 Refactors
+
+- **soba/loaders:** use fontResource in injectFont ([48ba0c7a](https://github.com/angular-threejs/angular-three/commit/48ba0c7a))
+- **soba/loaders:** use fbxResource in injectFbx ([5a0ddd41](https://github.com/angular-threejs/angular-three/commit/5a0ddd41))
+- **soba/staging:** rename injectSpotLightCommon to spotLightCommon ([905dd333](https://github.com/angular-threejs/angular-three/commit/905dd333))
+- **soba/staging:** use environmentResource in injectEnvironment ([eadbf535](https://github.com/angular-threejs/angular-three/commit/eadbf535))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.97 (2025-03-17)
 
 ### 🚀 Features
