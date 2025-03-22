@@ -44,11 +44,4 @@ export function depthBuffer(
  * @deprecated use depthBuffer instead. Will be removed in v5.0.0
  * @since v4.0.0
  */
-export function injectDepthBuffer(
-	params: () => { size?: number; frames?: number } = () => ({}),
-	{ injector }: { injector?: Injector } = {},
-) {
-	return assertInjector(injectDepthBuffer, injector, () => {
-		return depthBuffer(params, { injector });
-	});
-}
+export const injectDepthBuffer = depthBuffer;

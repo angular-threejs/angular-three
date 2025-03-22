@@ -103,11 +103,7 @@ export function fbo(params: () => NgtsFBOParams = () => ({}), { injector }: { in
  * @deprecated use fbo instead. Will be removed in v5.0.0
  * @since v4.0.0
  */
-export function injectFBO(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
-	return assertInjector(injectFBO, injector, () => {
-		return fbo(params, { injector });
-	});
-}
+export const injectFBO = fbo;
 
 @Directive({ selector: 'ng-template[fbo]' })
 export class NgtsFBO {

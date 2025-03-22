@@ -95,15 +95,7 @@ export class NgtObjectEvents {
  * @deprecated use objectEvents instead. Will be removed in v5.0.0
  * @since v4.0.0
  */
-export function injectObjectEvents(
-	target: () => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined,
-	events: NgtEventHandlers,
-	{ injector }: { injector?: Injector } = {},
-) {
-	return assertInjector(injectObjectEvents, injector, () => {
-		return objectEvents(target, events, { injector });
-	});
-}
+export const injectObjectEvents = objectEvents;
 
 export function objectEvents(
 	target: () => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined,

@@ -129,15 +129,4 @@ export function animations<TAnimation extends NgtsAnimationClip>(
  * @deprecated use animations instead. Will be removed in v5.0.0
  * @since v4.0.0
  */
-export function injectAnimations<TAnimation extends NgtsAnimationClip>(
-	animationsFactory: () => NgtsAnimation<TAnimation> | undefined | null,
-	object:
-		| ElementRef<THREE.Object3D>
-		| THREE.Object3D
-		| (() => ElementRef<THREE.Object3D> | THREE.Object3D | undefined | null),
-	{ injector }: { injector?: Injector } = {},
-): NgtsAnimationApi<TAnimation> {
-	return assertInjector(injectAnimations, injector, () => {
-		return animations(animationsFactory, object, { injector });
-	});
-}
+export const injectAnimations = animations;
