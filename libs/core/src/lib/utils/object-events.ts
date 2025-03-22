@@ -69,7 +69,7 @@ export class NgtObjectEvents {
 			return ngtObject;
 		});
 
-		injectObjectEvents(obj, {
+		objectEvents(obj, {
 			click: this.emitEvent('click'),
 			dblclick: this.emitEvent('dblclick'),
 			contextmenu: this.emitEvent('contextmenu'),
@@ -91,12 +91,26 @@ export class NgtObjectEvents {
 	}
 }
 
+/**
+ * @deprecated use objectEvents instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
 export function injectObjectEvents(
 	target: () => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined,
 	events: NgtEventHandlers,
 	{ injector }: { injector?: Injector } = {},
 ) {
 	return assertInjector(injectObjectEvents, injector, () => {
+		return objectEvents(target, events, { injector });
+	});
+}
+
+export function objectEvents(
+	target: () => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined,
+	events: NgtEventHandlers,
+	{ injector }: { injector?: Injector } = {},
+) {
+	return assertInjector(objectEvents, injector, () => {
 		const renderer = inject(Renderer2);
 
 		const cleanUps: Array<() => void> = [];
