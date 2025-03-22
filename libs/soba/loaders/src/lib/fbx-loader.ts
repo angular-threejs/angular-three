@@ -2,6 +2,7 @@ import { Injector } from '@angular/core';
 import { injectLoader } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import { FBXLoader } from 'three-stdlib';
+import { fbxResource } from './fbx-resource';
 
 /**
  * @deprecated Use fbxResource instead. Will be removed in v5.0.0
@@ -12,7 +13,8 @@ function _injectFBX<TUrl extends string | string[] | Record<string, string>>(
 	{ injector }: { injector?: Injector } = {},
 ) {
 	return assertInjector(_injectFBX, injector, () => {
-		return injectLoader(() => FBXLoader, input);
+		const resource = fbxResource(input, { injector });
+		return resource.value.asReadonly();
 	});
 }
 
