@@ -311,11 +311,11 @@ export function storyDecorators(providers: Provider[] = [], ...decorators: Decor
 export class Turnable {
 	constructor() {
 		const element = inject<ElementRef<THREE.Object3D>>(ElementRef);
-		injectTurnable(() => element);
+		turnable(() => element);
 	}
 }
 
-export function injectTurnable(object: () => THREE.Object3D | ElementRef<THREE.Object3D> | undefined | null) {
+export function turnable(object: () => THREE.Object3D | ElementRef<THREE.Object3D> | undefined | null) {
 	return beforeRender(() => {
 		const obj = resolveRef(object());
 		if (!obj) return;

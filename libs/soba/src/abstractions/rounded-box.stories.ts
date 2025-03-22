@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtsRoundedBox } from 'angular-three-soba/abstractions';
-import { injectTurnable, number, storyDecorators, storyObject } from '../setup-canvas';
+import { number, storyDecorators, storyObject, turnable } from '../setup-canvas';
 
 @Component({
 	template: `
@@ -30,7 +30,7 @@ class DefaultRoundedBoxStory {
 	roundedBox = viewChild.required(NgtsRoundedBox);
 
 	constructor() {
-		injectTurnable(() => this.roundedBox().meshRef());
+		turnable(() => this.roundedBox().meshRef());
 	}
 
 	protected readonly Math = Math;
