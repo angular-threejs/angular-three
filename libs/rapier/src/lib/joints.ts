@@ -23,12 +23,12 @@ import type {
 } from './types';
 import { quaternionToRapierQuaternion, vector3ToRapierVector } from './utils';
 
-function injectImpulseJoint<TJoinType extends ImpulseJoint>(
+function impulseJoint<TJoinType extends ImpulseJoint>(
 	bodyA: ElementRef<RigidBody> | RigidBody | (() => ElementRef<RigidBody> | RigidBody | undefined | null),
 	bodyB: ElementRef<RigidBody> | RigidBody | (() => ElementRef<RigidBody> | RigidBody | undefined | null),
 	{ injector, data }: { injector?: Injector; data: JointData | (() => JointData | null) },
 ) {
-	return assertInjector(injectImpulseJoint, injector, () => {
+	return assertInjector(impulseJoint, injector, () => {
 		const physics = inject(NgtrPhysics);
 
 		const newJoint = computed<TJoinType | null>(() => {
@@ -86,7 +86,7 @@ function createJoint<TJointParams, TJoinType extends ImpulseJoint>(
 				return jointDataFn(rapier, untracked(dataFn));
 			});
 
-			return injectImpulseJoint<TJoinType>(bodyA, bodyB, { injector, data: jointData });
+			return impulseJoint<TJoinType>(bodyA, bodyB, { injector, data: jointData });
 		});
 	};
 }
@@ -98,7 +98,7 @@ function createJoint<TJointParams, TJoinType extends ImpulseJoint>(
  *
  * @category Hooks - Joints
  */
-export const injectFixedJoint = createJoint<NgtrFixedJointParams, FixedImpulseJoint>((rapier, data) =>
+export const fixedJoint = createJoint<NgtrFixedJointParams, FixedImpulseJoint>((rapier, data) =>
 	rapier.JointData.fixed(
 		vector3ToRapierVector(data.body1Anchor),
 		quaternionToRapierQuaternion(data.body1LocalFrame),
@@ -106,6 +106,11 @@ export const injectFixedJoint = createJoint<NgtrFixedJointParams, FixedImpulseJo
 		quaternionToRapierQuaternion(data.body2LocalFrame),
 	),
 );
+/**
+ * @deprecated Use `fixedJoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectFixedJoint = fixedJoint;
 
 /**
  * The spherical joint ensures that two points on the local-spaces of two rigid-bodies always coincide (it prevents any relative
@@ -115,9 +120,14 @@ export const injectFixedJoint = createJoint<NgtrFixedJointParams, FixedImpulseJo
  *
  * @category Hooks - Joints
  */
-export const injectSphericalJoint = createJoint<NgtrSphericalJointParams, SphericalImpulseJoint>((rapier, data) =>
+export const sphericalJoint = createJoint<NgtrSphericalJointParams, SphericalImpulseJoint>((rapier, data) =>
 	rapier.JointData.spherical(vector3ToRapierVector(data.body1Anchor), vector3ToRapierVector(data.body2Anchor)),
 );
+/**
+ * @deprecated Use `sphericalJoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectSphericalJoint = sphericalJoint;
 
 /**
  * The revolute joint prevents any relative movement between two rigid-bodies, except for relative
@@ -126,7 +136,7 @@ export const injectSphericalJoint = createJoint<NgtrSphericalJointParams, Spheri
  *
  * @category Hooks - Joints
  */
-export const injectRevoluteJoint = createJoint<NgtrRevoluteJointParams, RevoluteImpulseJoint>((rapier, data) => {
+export const revoluteJoint = createJoint<NgtrRevoluteJointParams, RevoluteImpulseJoint>((rapier, data) => {
 	const jointData = rapier.JointData.revolute(
 		vector3ToRapierVector(data.body1Anchor),
 		vector3ToRapierVector(data.body2Anchor),
@@ -140,6 +150,11 @@ export const injectRevoluteJoint = createJoint<NgtrRevoluteJointParams, Revolute
 
 	return jointData;
 });
+/**
+ * @deprecated Use `revoluteJoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectRevoluteJoint = revoluteJoint;
 
 /**
  * The prismatic joint prevents any relative movement between two rigid-bodies, except for relative translations along one axis.
@@ -148,7 +163,7 @@ export const injectRevoluteJoint = createJoint<NgtrRevoluteJointParams, Revolute
  *
  * @category Hooks - Joints
  */
-export const injectPrismaticJoint = createJoint<NgtrPrismaticJointParams, PrismaticImpulseJoint>((rapier, data) => {
+export const prismaticJoint = createJoint<NgtrPrismaticJointParams, PrismaticImpulseJoint>((rapier, data) => {
 	const jointData = rapier.JointData.prismatic(
 		vector3ToRapierVector(data.body1Anchor),
 		vector3ToRapierVector(data.body2Anchor),
@@ -162,24 +177,34 @@ export const injectPrismaticJoint = createJoint<NgtrPrismaticJointParams, Prisma
 
 	return jointData;
 });
+/**
+ * @deprecated Use `prismaticJoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectPrismaticJoint = prismaticJoint;
 
 /**
  * The rope joint limits the max distance between two bodies.
  * @category Hooks - Joints
  */
-export const injectRopeJoint = createJoint<NgtrRopeJointParams, RopeImpulseJoint>((rapier, data) =>
+export const ropeJoint = createJoint<NgtrRopeJointParams, RopeImpulseJoint>((rapier, data) =>
 	rapier.JointData.rope(
 		data.length,
 		vector3ToRapierVector(data.body1Anchor),
 		vector3ToRapierVector(data.body2Anchor),
 	),
 );
+/**
+ * @deprecated Use `ropeJoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectRopeJoint = ropeJoint;
 
 /**
  * The spring joint applies a force proportional to the distance between two objects.
  * @category Hooks - Joints
  */
-export const injectSpringJoint = createJoint<NgtrSpringJointParams, SpringImpulseJoint>((rapier, data) => {
+export const springJoint = createJoint<NgtrSpringJointParams, SpringImpulseJoint>((rapier, data) => {
 	return rapier.JointData.spring(
 		data.restLength,
 		data.stiffness,
@@ -188,3 +213,8 @@ export const injectSpringJoint = createJoint<NgtrSpringJointParams, SpringImpuls
 		vector3ToRapierVector(data.body2Anchor),
 	);
 });
+/**
+ * @deprecated Use `springJoint` instead. Will be removed in v5.0.0
+ * @since v4.0.0
+ */
+export const injectSpringJoint = springJoint;

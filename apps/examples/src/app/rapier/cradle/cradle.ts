@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { NgtEuler, NgtVector3 } from 'angular-three';
-import { injectSphericalJoint, NgtrBallCollider, NgtrCylinderCollider, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtrBallCollider, NgtrCylinderCollider, NgtrRigidBody, sphericalJoint } from 'angular-three-rapier';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Component({
@@ -45,7 +45,7 @@ export class Rod {
 		const anchor = computed(() => this.anchorRef().rigidBody());
 		const rod = computed(() => this.rodRef().rigidBody());
 
-		injectSphericalJoint(anchor, rod, {
+		sphericalJoint(anchor, rod, {
 			data: { body1Anchor: [0, 0, 0], body2Anchor: [0, 0, 0] },
 		});
 	}

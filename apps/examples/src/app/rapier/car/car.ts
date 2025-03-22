@@ -8,7 +8,7 @@ import {
 	input,
 } from '@angular/core';
 import { beforeRender, NgtArgs, NgtVector3 } from 'angular-three';
-import { injectRevoluteJoint, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtrRigidBody, revoluteJoint } from 'angular-three-rapier';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
 @Directive({ selector: '[rigidBody][wheel]' })
@@ -20,14 +20,14 @@ export class WheelJoint {
 	private rigidBody = computed(() => this.body().rigidBody());
 
 	constructor() {
-		const revoluteJoint = injectRevoluteJoint(this.rigidBody, this.wheel.rigidBody, {
+		const revoluteJointApi = revoluteJoint(this.rigidBody, this.wheel.rigidBody, {
 			data: () => ({ body1Anchor: this.bodyAnchor(), body2Anchor: [0, 0, 0], axis: [0, 0, 1] }),
 		});
 
 		beforeRender(() => {
-			const joint = revoluteJoint();
-			if (!joint) return;
-			joint.configureMotorVelocity(20, 10);
+			const jointApi = revoluteJointApi();
+			if (!jointApi) return;
+			jointApi.configureMotorVelocity(20, 10);
 		});
 	}
 }

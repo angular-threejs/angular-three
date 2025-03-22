@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { NgtArgs, NgtVector3 } from 'angular-three';
-import { injectRopeJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtrBallCollider, NgtrRigidBody, ropeJoint } from 'angular-three-rapier';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
 const WALL_COLORS = ['#50514F', '#CBD4C2', '#FFFCFF', '#247BA0', '#C3B299'];
@@ -90,7 +90,7 @@ export class RopeJoint {
 		const anchorBody = computed(() => this.anchorBody().rigidBody());
 		const ballBody = computed(() => this.ballBody().rigidBody());
 
-		injectRopeJoint(anchorBody, ballBody, {
+		ropeJoint(anchorBody, ballBody, {
 			data: () => ({ body1Anchor: [0, 0, 0], body2Anchor: [0, 0, 0], length: this.length() }),
 		});
 	}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, CUSTOM_ELEMENTS_SCHEMA, input, viewChild } from '@angular/core';
 import { NgtArgs, NgtVector3, vector3 } from 'angular-three';
-import { injectSpringJoint, NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtrBallCollider, NgtrRigidBody, springJoint } from 'angular-three-rapier';
 import { ColorRepresentation } from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
@@ -63,7 +63,7 @@ export class BallSpring {
 		const damping = computed(() => dampingRatio() * criticalDamping());
 		const positionVector = vector3(this.position);
 
-		injectSpringJoint(ballBody, floorBody, {
+		springJoint(ballBody, floorBody, {
 			data: () => ({
 				body1Anchor: [0, 0, 0],
 				body2Anchor: [positionVector().x, positionVector().y - 3, positionVector().z],

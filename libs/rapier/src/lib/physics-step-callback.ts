@@ -3,8 +3,8 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import { NgtrPhysics } from './physics';
 import type { NgtrWorldStepCallback } from './types';
 
-export function injectBeforePhysicsStep(callback: NgtrWorldStepCallback, injector?: Injector) {
-	return assertInjector(injectBeforePhysicsStep, injector, () => {
+export function beforePhysicsStep(callback: NgtrWorldStepCallback, injector?: Injector) {
+	return assertInjector(beforePhysicsStep, injector, () => {
 		const physics = inject(NgtrPhysics);
 
 		physics.beforeStepCallbacks.add(callback);
@@ -15,8 +15,8 @@ export function injectBeforePhysicsStep(callback: NgtrWorldStepCallback, injecto
 	});
 }
 
-export function injectAfterPhysicsStep(callback: NgtrWorldStepCallback, injector?: Injector) {
-	return assertInjector(injectAfterPhysicsStep, injector, () => {
+export function afterPhysicsStep(callback: NgtrWorldStepCallback, injector?: Injector) {
+	return assertInjector(afterPhysicsStep, injector, () => {
 		const physics = inject(NgtrPhysics);
 
 		physics.afterStepCallbacks.add(callback);

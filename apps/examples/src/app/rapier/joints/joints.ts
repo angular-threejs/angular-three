@@ -9,7 +9,7 @@ import {
 	viewChildren,
 } from '@angular/core';
 import { beforeRender, NgtVector3 } from 'angular-three';
-import { injectPrismaticJoint, injectSphericalJoint, NgtrRigidBody, NgtrRigidBodyType } from 'angular-three-rapier';
+import { NgtrRigidBody, NgtrRigidBodyType, prismaticJoint, sphericalJoint } from 'angular-three-rapier';
 import { Quaternion, Vector3 } from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
@@ -39,7 +39,7 @@ export class RopeJoint {
 	constructor() {
 		const bodyA = computed(() => this.bodyA().rigidBody());
 		const bodyB = computed(() => this.bodyB().rigidBody());
-		injectSphericalJoint(bodyA, bodyB, { data: { body1Anchor: [-0.5, 0, 0], body2Anchor: [0.5, 0, 0] } });
+		sphericalJoint(bodyA, bodyB, { data: { body1Anchor: [-0.5, 0, 0], body2Anchor: [0.5, 0, 0] } });
 	}
 }
 
@@ -124,7 +124,7 @@ export class Prismatic {
 	constructor() {
 		const bodyA = computed(() => this.bodyA().rigidBody());
 		const bodyB = computed(() => this.bodyB().rigidBody());
-		injectPrismaticJoint(bodyA, bodyB, {
+		prismaticJoint(bodyA, bodyB, {
 			data: { body1Anchor: [-4, 0, 0], body2Anchor: [0, 4, 0], axis: [1, 0, 0], limits: [-2, 2] },
 		});
 	}

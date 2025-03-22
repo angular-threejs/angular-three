@@ -8,8 +8,8 @@ import { NgtrAttactorOptions } from './attractor';
 
 const _v3 = new THREE.Vector3();
 
-export function injectAttractorDebug(object: THREE.Object3D, options: () => NgtrAttactorOptions, injector?: Injector) {
-	return assertInjector(injectAttractorDebug, injector, () => {
+export function attractorDebug(object: THREE.Object3D, options: () => NgtrAttactorOptions, injector?: Injector) {
+	return assertInjector(attractorDebug, injector, () => {
 		const physics = inject(NgtrPhysics);
 		const store = injectStore();
 

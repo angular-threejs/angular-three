@@ -1,10 +1,10 @@
 import { Directive, effect, ElementRef, inject, input, linkedSignal, untracked } from '@angular/core';
 import { InteractionGroups, RigidBody } from '@dimforge/rapier3d-compat';
 import { applyProps, NgtVector3, pick } from 'angular-three';
-import { COLLISION_GROUPS_HANDLER, injectBeforePhysicsStep } from 'angular-three-rapier';
+import { beforePhysicsStep, COLLISION_GROUPS_HANDLER } from 'angular-three-rapier';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
-import { injectAttractorDebug } from './attractor-debug';
+import { attractorDebug } from './attractor-debug';
 
 const calcForceByType = {
 	static: (s: number, m2: number, r: number, d: number, G: number) => s,
@@ -137,7 +137,7 @@ export class NgtrAttractor {
 			applyProps(this.objectRef.nativeElement, { position: this.position() });
 		});
 
-		injectBeforePhysicsStep((world) => {
+		beforePhysicsStep((world) => {
 			const { strength, range, type, gravitationalConstant } = untracked(this.options);
 			const collisionGroups = untracked(this.linkedCollisionGroups);
 			world.bodies.forEach((body) => {
@@ -154,6 +154,6 @@ export class NgtrAttractor {
 			});
 		});
 
-		injectAttractorDebug(this.objectRef.nativeElement, this.options);
+		attractorDebug(this.objectRef.nativeElement, this.options);
 	}
 }
