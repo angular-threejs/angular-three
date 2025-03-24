@@ -1,4 +1,4 @@
-import { computed, effect, ElementRef, Injector, isSignal, signal, untracked } from '@angular/core';
+import { computed, DestroyRef, ElementRef, inject, Injector, isSignal } from '@angular/core';
 import { beforeRender, resolveRef } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
@@ -58,19 +58,13 @@ export function animations<TAnimation extends NgtsAnimationClip>(
 		const clips = [] as NgtsAnimationApi<TAnimation>['clips'];
 		const names = [] as NgtsAnimationApi<TAnimation>['names'];
 
-		const actualObject = computed(() => {
-			if (isSignal(object) || typeof object === 'function') {
-				return resolveRef(object());
-			}
+		const actualObject = computed(() =>
+			isSignal(object) || typeof object === 'function' ? resolveRef(object()) : resolveRef(object),
+		);
 
-			return resolveRef(object);
-		});
-
-		const ready = signal(false);
-
-		effect((onCleanup) => {
+		const isReady = computed(() => {
 			const obj = actualObject() as THREE.Object3D | undefined;
-			if (!obj) return;
+			if (!obj) return false;
 
 			Object.assign(mixer, { _root: obj });
 
@@ -101,27 +95,31 @@ export function animations<TAnimation extends NgtsAnimationClip>(
 				}
 			}
 
-			if (!untracked(ready)) {
-				ready.set(true);
-			}
+			return true;
+		});
 
-			onCleanup(() => {
-				// clear cached
-				cached = {};
-				// stop all actions
-				mixer.stopAllAction();
-				// uncache actions
-				Object.values(actions).forEach((action) => {
-					mixer.uncacheAction(action as THREE.AnimationClip, obj);
-				});
+		inject(DestroyRef).onDestroy(() => {
+			const obj = actualObject() as THREE.Object3D | undefined;
+
+			// clear cached
+			cached = {};
+			// stop all actions
+			mixer.stopAllAction();
+			// uncache actions
+			Object.values(actions).forEach((action) => {
+				mixer.uncacheAction(action as THREE.AnimationClip, obj);
 			});
 		});
 
-		const result = { clips, mixer, actions, names } as NgtsAnimationApi<TAnimation>;
-
-		Object.defineProperty(result, 'isReady', { get: ready });
-
-		return result;
+		return {
+			clips,
+			mixer,
+			actions,
+			names,
+			get isReady() {
+				return isReady();
+			},
+		} as NgtsAnimationApi<TAnimation>;
 	});
 }
 
