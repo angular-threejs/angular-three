@@ -172,8 +172,20 @@ export class NgtRenderer2 implements Renderer2 {
 			return primitiveRendererNode;
 		}
 
+		if (!name.startsWith('ngt-')) {
+			return createRendererNode('platform', platformElement, this.document);
+		}
+
 		const threeName = kebabToPascal(name.startsWith('ngt-') ? name.slice(4) : name);
-		const threeTarget = this.catalogue[threeName];
+		let threeTarget = this.catalogue[threeName];
+
+		if (!threeTarget && threeName in THREE) {
+			const threeSymbol = THREE[threeName as keyof typeof THREE];
+			if (typeof threeSymbol === 'function') {
+				// we will attempt to prefill the catalogue with symbols from THREE
+				threeTarget = this.catalogue[threeName] = threeSymbol as NgtConstructorRepresentation;
+			}
+		}
 
 		if (threeTarget) {
 			const threeInstance = prepare(new threeTarget(...injectedArgs), name);
