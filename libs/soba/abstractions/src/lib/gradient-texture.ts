@@ -13,7 +13,7 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { CanvasTexture } from 'three';
 
-export interface NgtsGradientTextureOptions extends Partial<Omit<NgtThreeElements['ngt-texture'], 'type'>> {
+export interface NgtsGradientTextureOptions extends Partial<Omit<NgtThreeElements['ngt-canvas-texture'], 'type'>> {
 	size: number;
 	width: number;
 	type: 'linear' | 'radial';
