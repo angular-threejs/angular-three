@@ -1,7 +1,6 @@
 import {
 	DestroyRef,
 	Directive,
-	EmbeddedViewRef,
 	Injector,
 	TemplateRef,
 	ViewContainerRef,
@@ -113,20 +112,15 @@ export class NgtsFBO {
 	private viewContainerRef = inject(ViewContainerRef);
 
 	constructor() {
-		let ref: EmbeddedViewRef<{ $implicit: ReturnType<typeof fbo> }>;
-
 		const fboTarget = fbo(() => {
 			const { width, height, ...settings } = this.fbo();
 			return { width, height, settings };
 		});
 
-		effect(() => {
-			ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });
+		effect((onCleanup) => {
+			const ref = this.viewContainerRef.createEmbeddedView(this.template, { $implicit: fboTarget });
 			ref.detectChanges();
-		});
-
-		inject(DestroyRef).onDestroy(() => {
-			ref?.destroy();
+			onCleanup(() => void ref.destroy());
 		});
 	}
 
