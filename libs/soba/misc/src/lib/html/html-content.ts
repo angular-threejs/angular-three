@@ -76,8 +76,8 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 			<div
 				#transformOuter
 				style="position: absolute; top: 0; left: 0; transform-style: preserve-3d; pointer-events: none;"
-				[style.width.px]="size().width"
-				[style.height.px]="size().height"
+				[style.width.px]="size.width()"
+				[style.height.px]="size.height()"
 			>
 				<div #transformInner style="position: absolute" [style.pointer-events]="pointerEvents()">
 					<div #container [class]="containerClass()" [style]="containerStyle()">
