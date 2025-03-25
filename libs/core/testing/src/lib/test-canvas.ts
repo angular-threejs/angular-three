@@ -10,8 +10,7 @@ import {
 	viewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { extend, injectStore, NGT_CANVAS_CONTENT_FLAG, NGT_RENDERER_NODE_FLAG, NgtAnyRecord } from 'angular-three';
-import * as THREE from 'three';
+import { injectStore, NGT_CANVAS_CONTENT_FLAG, NGT_RENDERER_NODE_FLAG, NgtAnyRecord } from 'angular-three';
 
 @Component({
 	selector: 'ngt-test-canvas',
@@ -31,8 +30,6 @@ export class NgtTestCanvas {
 	sceneRef?: ComponentRef<unknown>;
 
 	constructor() {
-		extend(THREE);
-
 		effect(() => {
 			const anchor = this.anchorRef();
 			const sceneGraph = this.sceneGraph();
