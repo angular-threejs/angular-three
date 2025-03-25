@@ -1,11 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { extend } from 'angular-three';
 import { NgtCanvas } from 'angular-three/dom';
-import * as THREE from 'three';
 import { RoutedScene } from './routed-scene';
-
-extend(THREE);
 
 @Component({
 	template: `

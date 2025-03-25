@@ -4,8 +4,10 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
 	effect,
 	ElementRef,
+	inject,
 	signal,
 	viewChild,
 } from '@angular/core';
@@ -151,7 +153,7 @@ export class SceneGraph {
 	protected startAngle = computed(() => THREE.MathUtils.DEG2RAD * this.startAngleDegrees());
 
 	constructor() {
-		extend({ MeshPhysicalNodeMaterial, DirectionalLight });
+		const remove = extend({ MeshPhysicalNodeMaterial, DirectionalLight });
 
 		beforeRender(({ delta }) => {
 			if (!this.rotate()) return;
@@ -179,6 +181,10 @@ export class SceneGraph {
 				scene.environment = oldEnvironment;
 				scene.backgroundBlurriness = blurriness;
 			});
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			remove();
 		});
 	}
 }

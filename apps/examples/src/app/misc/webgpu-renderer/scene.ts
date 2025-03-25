@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
+	ElementRef,
+	inject,
+	viewChild,
+} from '@angular/core';
 import { beforeRender, extend, NgtAfterAttach, NgtArgs } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import * as THREE from 'three/webgpu';
@@ -71,7 +79,7 @@ export class SceneGraph {
 	private scale = new THREE.Vector3();
 
 	constructor() {
-		extend(THREE);
+		const remove = extend(THREE);
 
 		beforeRender(() => {
 			const group = this.groupRef().nativeElement;
@@ -83,6 +91,10 @@ export class SceneGraph {
 					child.rotation.z + rotationSpeed.z,
 				);
 			}
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			remove();
 		});
 	}
 

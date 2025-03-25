@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { extend } from 'angular-three';
-import * as THREE from 'three';
 import routes from './misc.routes';
-
-extend(THREE);
 
 @Component({
 	template: `

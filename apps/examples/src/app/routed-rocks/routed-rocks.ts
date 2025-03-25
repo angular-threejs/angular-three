@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { extend, NgtRoutedScene } from 'angular-three';
+import { NgtRoutedScene } from 'angular-three';
 import { NgtCanvas } from 'angular-three/dom';
-import * as THREE from 'three';
 import { RockStore } from './store';
-
-extend(THREE);
 
 @Component({
 	template: `

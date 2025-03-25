@@ -66,11 +66,10 @@ export class ColorPicker {
 			>
 				@if (gltf.value(); as gltf) {
 					<ng-template #m let-ctx="ctx">
-						@let geometry = gltf.meshes[ctx[0]].geometry;
-						@let material = gltf.materials[ctx[1]];
-						<ngt-mesh receiveShadow castShadow [geometry]="geometry" [material]="material">
-							<ngt-value [rawValue]="$any(state.items)[ctx[1]]()" attach="material.color" />
-						</ngt-mesh>
+						@let geo = gltf.meshes[ctx[0]].geometry;
+						@let mat = gltf.materials[ctx[1]];
+						@let color = $any(state.items)[ctx[1]]();
+						<ngt-mesh receiveShadow castShadow [geometry]="geo" [material]="mat" [material.color]="color" />
 					</ng-template>
 
 					<ng-container [ngTemplateOutlet]="m" [ngTemplateOutletContext]="{ ctx: ['shoe', 'laces'] }" />
