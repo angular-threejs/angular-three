@@ -21,7 +21,7 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import { applicationConfig, Args, Decorator, moduleMetadata } from '@storybook/angular';
-import { beforeRender, extend, NgtAnyRecord, NgtArgs, NgtCanvasOptions, resolveRef } from 'angular-three';
+import { beforeRender, NgtAnyRecord, NgtArgs, NgtCanvasOptions, resolveRef } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsLoader } from 'angular-three-soba/loaders';
 import { NgtCanvas, NgtCanvasContent, provideNgtRenderer } from 'angular-three/dom';
@@ -41,7 +41,7 @@ import * as THREE from 'three';
 
 		@let makeDefault = setup.controls();
 		@if (makeDefault !== null) {
-			<ngts-orbit-controls [options]="{ makeDefault }" />
+			<ngts-orbit-controls [options]="{ makeDefault: makeDefault }" />
 		}
 	`,
 	imports: [NgtArgs, NgtsOrbitControls],
@@ -135,10 +135,6 @@ export class StorybookSetup {
 	storyOptions = input<NgtAnyRecord>({});
 
 	storyMirror = computed(() => reflectComponentType(this.story()));
-
-	constructor() {
-		extend(THREE);
-	}
 }
 
 type StoryOptions = {

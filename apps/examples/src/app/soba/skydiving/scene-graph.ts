@@ -1,14 +1,10 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { extend } from 'angular-three';
 import { NgtpBloom, NgtpEffectComposer, NgtpVignette } from 'angular-three-postprocessing';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { NgtsCameraShake, NgtsEnvironment } from 'angular-three-soba/staging';
-import * as THREE from 'three';
 import { Skydiver } from './skydiver';
 import { Winds } from './winds';
 import { World } from './world';
-
-extend(THREE);
 
 @Component({
 	selector: 'app-scene-graph',
