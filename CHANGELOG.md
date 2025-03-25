@@ -1,3 +1,25 @@
+## 4.0.0-next.99 (2025-03-25)
+
+### 🚀 Features
+
+- **core:** fill catalogue with symbols from THREE automatically ([3ce752cf](https://github.com/angular-threejs/angular-three/commit/3ce752cf))
+- **core:** add fn to remove keys from catalogue; extend returns a clean up fn ([651cfe2b](https://github.com/angular-threejs/angular-three/commit/651cfe2b))
+
+### 🩹 Fixes
+
+- **core/testing:** remove extend(THREE) from testing ([de0e0db0](https://github.com/angular-threejs/angular-three/commit/de0e0db0))
+- **soba/abstractions:** gradienttexture extends canvas-texture instead of pure texture ([1641396a](https://github.com/angular-threejs/angular-three/commit/1641396a))
+
+### 💅 Refactors
+
+- **soba/misc:** use onCleanup to clean up fbo embedded view ([771d55f2](https://github.com/angular-threejs/angular-three/commit/771d55f2))
+- **soba/misc:** use computed for animations API instead of effect ([3d937816](https://github.com/angular-threejs/angular-three/commit/3d937816))
+- **soba/misc:** use deeply nested signal on htmlContent ([d200e3eb](https://github.com/angular-threejs/angular-three/commit/d200e3eb))
+
+### ❤️ Thank You
+
+- nartc
+
 ## 4.0.0-next.98 (2025-03-22)
 
 ### 🚀 Features
