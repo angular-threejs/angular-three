@@ -21,7 +21,7 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { getInstanceState, prepare } from './instance';
 import { extend } from './renderer/catalogue';
-import { NGT_DOM_PARENT_FLAG, NGT_INTERNAL_ADD_COMMENT_FLAG, NGT_PORTAL_CONTENT_FLAG } from './renderer/constants';
+import { NGT_DOM_PARENT_FLAG, NGT_PORTAL_CONTENT_FLAG } from './renderer/constants';
 import { injectStore, NGT_STORE } from './store';
 import type { NgtComputeFunction, NgtEventManager, NgtSize, NgtState, NgtViewport } from './types';
 import { is } from './utils/is';
@@ -97,11 +97,6 @@ export class NgtPortalContent {
 		commentNode.data = NGT_PORTAL_CONTENT_FLAG;
 		commentNode[NGT_PORTAL_CONTENT_FLAG] = store;
 		commentNode[NGT_DOM_PARENT_FLAG] = host.nativeElement;
-
-		if (commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]) {
-			commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]('portal', injector);
-			delete commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG];
-		}
 	}
 }
 

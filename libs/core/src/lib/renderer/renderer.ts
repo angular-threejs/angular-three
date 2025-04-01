@@ -107,7 +107,6 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 export class NgtRenderer2 implements Renderer2 {
 	private argsInjectors: Array<Injector> = [];
 	private parentInjectors: Array<Injector> = [];
-	private portalInjectors: Array<Injector> = [];
 
 	constructor(
 		public delegateRenderer: Renderer2,
@@ -135,7 +134,6 @@ export class NgtRenderer2 implements Renderer2 {
 		this.count = 0;
 		this.argsInjectors = [];
 		this.parentInjectors = [];
-		this.portalInjectors = [];
 	}
 
 	createElement(name: string, namespace?: string | null) {
@@ -220,7 +218,7 @@ export class NgtRenderer2 implements Renderer2 {
 		//  In our directives, we can call this function to then start tracking the RendererNode
 		//  this is done to limit the amount of Nodes we need to process for getCreationState
 		Object.assign(commentRendererNode, {
-			[NGT_INTERNAL_ADD_COMMENT_FLAG]: (type: 'args' | 'parent' | 'portal', injector: Injector) => {
+			[NGT_INTERNAL_ADD_COMMENT_FLAG]: (type: 'args' | 'parent', injector: Injector) => {
 				if (type === 'args') {
 					this.argsInjectors.push(injector);
 				} else if (type === 'parent') {
@@ -230,8 +228,6 @@ export class NgtRenderer2 implements Renderer2 {
 						},
 					});
 					this.parentInjectors.push(injector);
-				} else if (type === 'portal') {
-					this.portalInjectors.push(injector);
 				}
 
 				commentRendererNode.__ngt_renderer__[NgtRendererClassId.injector] = injector;
