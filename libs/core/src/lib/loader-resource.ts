@@ -111,6 +111,8 @@ export function loaderResource<
 		return resource({
 			request: () => getLoaderRequestParams(input, loaderConstructorFactory, extensions),
 			loader: async ({ request }) => {
+				// TODO: use the abortSignal when THREE.Loader supports it
+
 				const loadedResults = await Promise.all(getLoaderPromises(request, onProgress));
 
 				let results: NgtLoaderResults<
@@ -142,9 +144,7 @@ export function loaderResource<
 					) as NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>>;
 				}
 
-				if (onLoad) {
-					onLoad(results);
-				}
+				if (onLoad) onLoad(results);
 
 				return results;
 			},

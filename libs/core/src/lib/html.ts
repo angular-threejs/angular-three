@@ -1,19 +1,3 @@
-// import {
-// 	AbstractType,
-// 	DestroyRef,
-// 	Directive,
-// 	ElementRef,
-// 	inject,
-// 	InjectionToken,
-// 	Provider,
-// 	ProviderToken,
-// 	Type,
-// } from '@angular/core';
-// import { HTML } from './renderer-old';
-// import { DOM_PARENT } from './renderer-old/constants';
-// import { injectStore } from './store';
-// import { NgtAnyRecord } from './types';
-
 import {
 	AbstractType,
 	DestroyRef,
@@ -29,7 +13,6 @@ import { NGT_DOM_PARENT_FLAG, NGT_HTML_FLAG } from './renderer/constants';
 import { injectStore } from './store';
 import { NgtAnyRecord } from './types';
 
-//
 const NGT_HTML_DOM_ELEMENT = new InjectionToken<'gl' | HTMLElement>('NGT_HTML_DOM_ELEMENT');
 
 export function provideHTMLDomElement(): Provider;
