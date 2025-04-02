@@ -80,8 +80,8 @@ importers:
         specifier: ^3.12.7
         version: 3.12.7
       hls.js:
-        specifier: ^1.5.20
-        version: 1.5.20
+        specifier: ^1.6.0
+        version: 1.6.0
       ionicons:
         specifier: ^7.4.0
         version: 7.4.0
@@ -99,7 +99,7 @@ importers:
         version: 3.3.1(three@0.174.0)
       n8ao:
         specifier: ^1.9.4
-        version: 1.9.4(postprocessing@6.36.7(three@0.174.0))(three@0.174.0)
+        version: 1.9.4(postprocessing@6.37.2(three@0.174.0))(three@0.174.0)
       ngxtension:
         specifier: ^5.0.0
         version: 5.0.0(@angular/common@19.2.1(@angular/core@19.2.1(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.1(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
@@ -345,8 +345,8 @@ importers:
         specifier: ~10.1.3
         version: 10.1.3(postcss@8.5.3)
       postprocessing:
-        specifier: ^6.36.7
-        version: 6.36.7(three@0.174.0)
+        specifier: ^6.37.2
+        version: 6.37.2(three@0.174.0)
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -8363,6 +8363,9 @@ packages:
   hls.js@1.5.20:
     resolution: {integrity: sha512-uu0VXUK52JhihhnN/MVVo1lvqNNuhoxkonqgO3IpjvQiGpJBdIXMGkofjQb/j9zvV7a1SW8U9g1FslWx/1HOiQ==}
 
+  hls.js@1.6.0:
+    resolution: {integrity: sha512-AlW8ymcDKZuKtzXCUmEy4nOcHRkebnShH6t6hC2+QJQP0WXlTUSSO9Kp22uSEYdCgpwkXEJsfOhqxrgO2tDctQ==}
+
   homedir-polyfill@1.0.3:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
@@ -11070,10 +11073,10 @@ packages:
     peerDependencies:
       three: '>= 0.157.0 < 0.173.0'
 
-  postprocessing@6.36.7:
-    resolution: {integrity: sha512-X6B3xt9dy4Osv19kqnVGqV01I2Tm7VwV6rLegRIZkZJPH3ozKLypHSBK1xKx7P/Ols++OkXe6L8dBGTaDUL5aw==}
+  postprocessing@6.37.2:
+    resolution: {integrity: sha512-Xm3n1Usgk2eBkufb1ssYDNGb3EXmV2wdQQIRGAWD9yppOYwsHpb8/w/+Opvnx6uEOFyt3US1dFbET5DTSyrRiA==}
     peerDependencies:
-      three: '>= 0.157.0 < 0.174.0'
+      three: '>= 0.157.0 < 0.176.0'
 
   potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}
@@ -24195,7 +24198,10 @@ snapshots:
 
   he@1.2.0: {}
 
-  hls.js@1.5.20: {}
+  hls.js@1.5.20:
+    optional: true
+
+  hls.js@1.6.0: {}
 
   homedir-polyfill@1.0.3:
     dependencies:
@@ -26617,9 +26623,9 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  n8ao@1.9.4(postprocessing@6.36.7(three@0.174.0))(three@0.174.0):
+  n8ao@1.9.4(postprocessing@6.37.2(three@0.174.0))(three@0.174.0):
     dependencies:
-      postprocessing: 6.36.7(three@0.174.0)
+      postprocessing: 6.37.2(three@0.174.0)
       three: 0.174.0
 
   nanoid@3.3.8: {}
@@ -28088,7 +28094,7 @@ snapshots:
     dependencies:
       three: 0.173.0
 
-  postprocessing@6.36.7(three@0.174.0):
+  postprocessing@6.37.2(three@0.174.0):
     dependencies:
       three: 0.174.0
 
