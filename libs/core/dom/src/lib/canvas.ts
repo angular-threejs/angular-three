@@ -51,10 +51,6 @@ import { createPointerEvents } from './events';
 export class NgtCanvasContent {
 	private canvas = inject(NgtCanvasImpl);
 
-	get host() {
-		return this.canvas['host'].nativeElement;
-	}
-
 	constructor() {
 		const store = injectStore();
 		const vcr = inject(ViewContainerRef);
@@ -63,6 +59,13 @@ export class NgtCanvasContent {
 		// NOTE: flag this canvasContent ng-template comment node as the start
 		commentNode.data = NGT_CANVAS_CONTENT_FLAG;
 		commentNode[NGT_CANVAS_CONTENT_FLAG] = store;
+	}
+
+	static ngTemplateContextGuard(
+		_: NgtCanvasContent,
+		ctx: unknown,
+	): ctx is { $implicit: HTMLCanvasElement; host: HTMLElement } {
+		return true;
 	}
 }
 
@@ -246,7 +249,11 @@ export class NgtCanvasImpl {
 			this.store.snapshot.events.connect?.(canvasElement);
 		}
 
-		this.glRef = canvasVcr.createEmbeddedView(canvasContent, {}, { injector: this.injector });
+		this.glRef = canvasVcr.createEmbeddedView(
+			canvasContent,
+			{ $implicit: canvasElement, host: this.host.nativeElement },
+			{ injector: this.injector },
+		);
 		this.glRef.detectChanges();
 	}
 }
