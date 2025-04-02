@@ -170,9 +170,7 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 	}
 
 	// clearing the intermediate store from the instance
-	if (instance[NGT_APPLY_PROPS]) {
-		delete instance[NGT_APPLY_PROPS];
-	}
+	if (instance[NGT_APPLY_PROPS]) delete instance[NGT_APPLY_PROPS];
 
 	return instance;
 }

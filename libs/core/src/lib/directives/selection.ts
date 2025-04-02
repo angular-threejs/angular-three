@@ -31,8 +31,6 @@ export class NgtSelect {
 			if (!enabled) return;
 
 			const host = elementRef.nativeElement;
-			if (!host) return;
-
 			const localState = getInstanceState(host);
 			if (!localState) return;
 
