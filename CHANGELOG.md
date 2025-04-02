@@ -1,3 +1,14 @@
+## 4.0.0-next.100 (2025-04-02)
+
+### 💅 Refactors
+
+- **core:** remove unnecessary portal injectors handling ([79970722](https://github.com/angular-threejs/angular-three/commit/79970722))
+- **core:** clean up ([e60aa62c](https://github.com/angular-threejs/angular-three/commit/e60aa62c))
+
+### ❤️ Thank You
+
+- Chau
+
 ## 4.0.0-next.99 (2025-03-25)
 
 ### 🚀 Features
