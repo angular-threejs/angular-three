@@ -1,3 +1,13 @@
+## 4.0.0-next.101 (2025-04-02)
+
+### 🚀 Features
+
+- **core/dom:** expose HTMLCanvasElement and host element through template context ([c56de317](https://github.com/angular-threejs/angular-three/commit/c56de317))
+
+### ❤️ Thank You
+
+- Chau
+
 ## 4.0.0-next.100 (2025-04-02)
 
 ### 💅 Refactors
