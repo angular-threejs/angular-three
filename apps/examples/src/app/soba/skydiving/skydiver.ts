@@ -140,9 +140,8 @@ export class Skydiver {
 
 		beforeRender(({ clock }) => {
 			const skydiver = this.gltf.value()?.nodes?.skydiver_2;
-			if (skydiver?.material.uniforms?.['uTime']) {
-				skydiver.material.uniforms['uTime'].value = clock.elapsedTime;
-			}
+			const timeUniform = skydiver?.material.uniforms?.['uTime'];
+			if (timeUniform) timeUniform.value = clock.elapsedTime;
 		});
 	}
 }

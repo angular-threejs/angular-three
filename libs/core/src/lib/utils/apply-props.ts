@@ -40,14 +40,20 @@ export function resolveInstanceKey(instance: any, key: string): { root: any; tar
 	if (!key.includes('.')) return { root: instance, targetKey: key, targetProp };
 
 	// Resolve pierced target
-	const chain = key.split('.');
-	targetProp = chain.reduce((acc, part) => acc[part], instance);
-	const targetKey = chain.pop()!;
+	targetProp = instance;
+	for (const part of key.split('.')) {
+		key = part;
+		instance = targetProp;
+		targetProp = targetProp[key];
+	}
+	// const chain = key.split('.');
+	// targetProp = chain.reduce((acc, part) => acc[part], instance);
+	// const targetKey = chain.pop()!;
+	//
+	// // Switch root if atomic
+	// if (!targetProp?.set) instance = chain.reduce((acc, part) => acc[part], instance);
 
-	// Switch root if atomic
-	if (!targetProp?.set) instance = chain.reduce((acc, part) => acc[part], instance);
-
-	return { root: instance, targetKey, targetProp };
+	return { root: instance, targetKey: key, targetProp };
 }
 
 // This function applies a set of changes to the instance
