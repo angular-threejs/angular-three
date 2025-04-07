@@ -115,6 +115,8 @@ export class NgtsMeshReflectorMaterial {
 		return Array.isArray(blur) ? blur : [blur, blur];
 	});
 	private hasBlur = computed(() => this.normalizedBlur()[0] + this.normalizedBlur()[1] > 0);
+	private blurX = computed(() => this.normalizedBlur()[0]);
+	private blurY = computed(() => this.normalizedBlur()[1]);
 
 	private reflectorPlane = new THREE.Plane();
 	private normal = new THREE.Vector3();
@@ -145,9 +147,10 @@ export class NgtsMeshReflectorMaterial {
 				distortionMap,
 				mixContrast,
 			},
-			blur,
 			hasBlur,
-		] = [this.store.gl(), this.reflectOptions(), this.normalizedBlur(), this.hasBlur()];
+			blurX,
+			blurY,
+		] = [this.store.gl(), this.reflectOptions(), this.hasBlur(), this.blurX(), this.blurY()];
 
 		const renderTargetParameters = {
 			minFilter: THREE.LinearFilter,
@@ -165,8 +168,8 @@ export class NgtsMeshReflectorMaterial {
 		const blurPass = new BlurPass({
 			gl,
 			resolution,
-			width: blur[0],
-			height: blur[1],
+			width: blurX,
+			height: blurY,
 			minDepthThreshold,
 			maxDepthThreshold,
 			depthScale,
