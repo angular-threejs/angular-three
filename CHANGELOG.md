@@ -1,3 +1,13 @@
+## 4.0.0-next.103 (2025-04-07)
+
+### 🩹 Fixes
+
+- **plugin/gltf:** use new symbols for gltf generator ([16492ac5](https://github.com/angular-threejs/angular-three/commit/16492ac5))
+
+### ❤️ Thank You
+
+- Chau
+
 ## 4.0.0-next.102 (2025-04-07)
 
 ### 🩹 Fixes
