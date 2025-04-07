@@ -9,9 +9,9 @@ import type * as THREE from 'three';
 import { Group<%= threeImports %> } from 'three';
 import { extend, type NgtThreeElements, NgtObjectEvents<% if (args) { %>, NgtArgs<% } %>  } from 'angular-three';
 import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject, effect<% if (animations.length) { %>, model<% } %> } from '@angular/core';
-import { injectGLTF } from 'angular-three-soba/loaders';
+import { gltfResource } from 'angular-three-soba/loaders';
 import type { GLTF } from 'three-stdlib';<% if (animations.length) { %>
-import { injectAnimations, type NgtsAnimationClips, type NgtsAnimationApi } from 'angular-three-soba/misc';<% } %><% if (perspective) { %>
+import { animations, type NgtsAnimationClips, type NgtsAnimationApi } from 'angular-three-soba/misc';<% } %><% if (perspective) { %>
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';<% } %><% if (orthographic) { %>
 import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';<% } %>
 <% if (useImportAttribute) { %>
@@ -19,7 +19,7 @@ import { NgtsOrthographicCamera } from 'angular-three-soba/cameras';<% } %>
 import <%= gltfName %> from '<%= gltfPath %>' with { loader: 'file' };
 <% } %>
 <% if (preload) { %>
-injectGLTF.preload(() => <% if (useImportAttribute) { %><%= gltfName %><% } else { %>'<%= gltfPath %>'<% } %>);
+gltfResource.preload(<% if (useImportAttribute) { %><%= gltfName %><% } else { %>'<%= gltfPath %>'<% } %>);
 <% } %>
 <% if (animations.length) { %>
 type ActionName = <% animations.map(clip => "\""+ clip.name + "\"").join(" | ") %>;
@@ -40,7 +40,7 @@ export type <%= gltfResultTypeName %> = GLTF & {
 @Component({
   selector: '<%= selector %>',
   template: `
-    @if (gltf(); as gltf) {
+    @if (gltf.value(); as gltf) {
       @let nodes = gltf.nodes;
       @let materials = gltf.materials;
 
@@ -69,16 +69,16 @@ export class <%= className %> {
 
   modelRef = viewChild<ElementRef<Group>>('model');
 
-  protected gltf = injectGLTF<<%= gltfResultTypeName %>>(() => <% if (useImportAttribute) { %> <%= gltfName %> <% } else { %> '<%= url %>' <% } %><% if (gltfOptions) { %>, <%= gltfOptions %><% } %>);
+  protected gltf = gltfResource<<%= gltfResultTypeName %>>(() => <% if (useImportAttribute) { %> <%= gltfName %> <% } else { %> '<%= url %>' <% } %><% if (gltfOptions) { %>, <%= gltfOptions %><% } %>);
 
   constructor() {
     extend({ Group<%= threeImports %> });
 
     <% if (animations.length) { %>
-    const animations = injectAnimations(this.gltf, this.modelRef);
+    const _animations = animations(this.gltf, this.modelRef);
     effect(() => {
-      if (!animations.isReady) return;
-      this.animations.set(animations);
+      if (!_animations.isReady) return;
+      this.animations.set(_animations);
     });
     <% } %>
 
