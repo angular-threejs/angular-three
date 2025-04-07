@@ -1,3 +1,14 @@
+## 4.0.0-next.102 (2025-04-07)
+
+### 🩹 Fixes
+
+- **core:** set check when resolve pierced props ([5d89ae1c](https://github.com/angular-threejs/angular-three/commit/5d89ae1c))
+- **soba/materials:** granularity with blur signals ([f9726701](https://github.com/angular-threejs/angular-three/commit/f9726701))
+
+### ❤️ Thank You
+
+- Chau
+
 ## 4.0.0-next.101 (2025-04-02)
 
 ### 🚀 Features
