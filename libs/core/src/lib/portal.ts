@@ -39,9 +39,10 @@ export class NgtPortalAutoRender {
 	renderPriority = input(1, { alias: 'autoRender', transform: (value) => numberAttribute(value, 1) });
 
 	constructor() {
-		effect(() => {
-			// this.portalStore.update((state) => ({ events: { ...state.events, priority: this.renderPriority() + 1 } }));
-		});
+		// TODO: (chau) investigate if this is still needed
+		// effect(() => {
+		// this.portalStore.update((state) => ({ events: { ...state.events, priority: this.renderPriority() + 1 } }));
+		// });
 
 		effect((onCleanup) => {
 			const portalRendered = this.portal.portalRendered();

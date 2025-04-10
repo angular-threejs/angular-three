@@ -211,10 +211,7 @@ export function storeFactory() {
 	} = store.snapshot;
 
 	effect(() => {
-		const newCamera = store.camera();
-		const newSize = store.size();
-		const newDpr = store.viewport.dpr();
-		const gl = store.gl();
+		const [newCamera, newSize, newDpr, gl] = [store.camera(), store.size(), store.viewport.dpr(), store.gl()];
 
 		// Resize camera and renderer on changes to size and pixel-ratio
 		if (newSize !== oldSize || newDpr !== oldDpr) {
