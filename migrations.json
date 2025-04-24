@@ -1,34 +1,40 @@
 {
 	"migrations": [
 		{
-			"version": "20.5.0-beta.2",
-			"description": "Install jiti as a devDependency to allow vite to parse TS postcss files.",
-			"implementation": "./src/migrations/update-20-5-0/install-jiti",
-			"package": "@nx/vite",
-			"name": "update-20-5-0-install-jiti"
-		},
-		{
-			"version": "20.5.0-beta.3",
-			"description": "Update resolve.conditions to include defaults that are no longer provided by Vite.",
-			"implementation": "./src/migrations/update-20-5-0/update-resolve-conditions",
-			"package": "@nx/vite",
-			"name": "update-20-5-0-update-resolve-conditions"
-		},
-		{
-			"version": "20.5.0-beta.3",
-			"description": "Add vite config temporary files to the ESLint configuration ignore patterns if ESLint is used.",
-			"implementation": "./src/migrations/update-20-5-0/eslint-ignore-vite-temp-files",
-			"package": "@nx/vite",
-			"name": "eslint-ignore-vite-temp-files"
+			"cli": "nx",
+			"version": "20.8.0-beta.0",
+			"requires": { "cypress": ">=14.0.0" },
+			"description": "Replaces the `experimentalSkipDomainInjection` configuration option with the new `injectDocumentDomain` configuration option.",
+			"implementation": "./src/migrations/update-20-8-0/set-inject-document-domain",
+			"package": "@nx/cypress",
+			"name": "set-inject-document-domain"
 		},
 		{
 			"cli": "nx",
-			"version": "20.5.0-beta.5",
-			"requires": { "@angular/core": ">=19.2.0" },
-			"description": "Update the @angular/cli package version to ~19.2.0.",
-			"factory": "./src/migrations/update-20-5-0/update-angular-cli",
-			"package": "@nx/angular",
-			"name": "update-angular-cli-version-19-2-0"
+			"version": "20.8.0-beta.0",
+			"requires": { "cypress": ">=14.0.0" },
+			"description": "Removes the `experimentalFetchPolyfill` configuration option.",
+			"implementation": "./src/migrations/update-20-8-0/remove-experimental-fetch-polyfill",
+			"package": "@nx/cypress",
+			"name": "remove-experimental-fetch-polyfill"
+		},
+		{
+			"cli": "nx",
+			"version": "20.8.0-beta.0",
+			"requires": { "cypress": ">=14.0.0" },
+			"description": "Replaces the `experimentalJustInTimeCompile` configuration option with the new `justInTimeCompile` configuration option.",
+			"implementation": "./src/migrations/update-20-8-0/replace-experimental-just-in-time-compile",
+			"package": "@nx/cypress",
+			"name": "replace-experimental-just-in-time-compile"
+		},
+		{
+			"cli": "nx",
+			"version": "20.8.0-beta.0",
+			"requires": { "cypress": ">=14.0.0" },
+			"description": "Updates the module specifier for the Component Testing `mount` function.",
+			"implementation": "./src/migrations/update-20-8-0/update-component-testing-mount-imports",
+			"package": "@nx/cypress",
+			"name": "update-component-testing-mount-imports"
 		}
 	]
 }
