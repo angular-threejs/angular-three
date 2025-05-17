@@ -45,13 +45,13 @@ importers:
         version: 0.17.0
       '@monogrid/gainmap-js':
         specifier: ^3.1.0
-        version: 3.1.0(three@0.175.0)
+        version: 3.1.0(three@0.176.0)
       '@pmndrs/cannon-worker-api':
         specifier: ^2.4.0
-        version: 2.4.0(three@0.175.0)
+        version: 2.4.0(three@0.176.0)
       '@pmndrs/vanilla':
         specifier: ^1.20.4
-        version: 1.20.4(three@0.175.0)
+        version: 1.20.4(three@0.176.0)
       '@swc/helpers':
         specifier: 0.5.17
         version: 0.5.17
@@ -63,13 +63,13 @@ importers:
         version: 0.7.2(@theatre/core@0.7.2)
       camera-controls:
         specifier: ^2.10.1
-        version: 2.10.1(three@0.175.0)
+        version: 2.10.1(three@0.176.0)
       cannon-es:
         specifier: ^0.20.0
         version: 0.20.0
       cannon-es-debugger:
         specifier: ^1.0.0
-        version: 1.0.0(cannon-es@0.20.0)(three@0.175.0)(typescript@5.7.3)
+        version: 1.0.0(cannon-es@0.20.0)(three@0.176.0)(typescript@5.7.3)
       front-matter:
         specifier: ^4.0.2
         version: 4.0.2
@@ -84,13 +84,13 @@ importers:
         version: 1.6.2
       maath:
         specifier: ^0.10.8
-        version: 0.10.8(@types/three@0.175.0)(three@0.175.0)
+        version: 0.10.8(@types/three@0.176.0)(three@0.176.0)
       meshline:
         specifier: ^3.3.1
-        version: 3.3.1(three@0.175.0)
+        version: 3.3.1(three@0.176.0)
       n8ao:
         specifier: ^1.9.6
-        version: 1.9.6(postprocessing@6.37.3(three@0.175.0))(three@0.175.0)
+        version: 1.9.6(postprocessing@6.37.3(three@0.176.0))(three@0.176.0)
       ngxtension:
         specifier: ^5.0.0
         version: 5.0.0(@angular/common@19.2.11(@angular/core@19.2.11(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.11(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
@@ -99,19 +99,19 @@ importers:
         version: 7.8.2
       stats-gl:
         specifier: ^3.6.0
-        version: 3.6.0(three@0.175.0)
+        version: 3.6.0(three@0.176.0)
       three-custom-shader-material:
         specifier: ~6.3.6
-        version: 6.3.6(react@18.3.1)(three@0.175.0)
+        version: 6.3.6(react@18.3.1)(three@0.176.0)
       three-mesh-bvh:
         specifier: ^0.9.0
-        version: 0.9.0(three@0.175.0)
+        version: 0.9.0(three@0.176.0)
       three-stdlib:
         specifier: ^2.36.0
-        version: 2.36.0(three@0.175.0)
+        version: 2.36.0(three@0.176.0)
       troika-three-text:
         specifier: ^0.52.4
-        version: 0.52.4(three@0.175.0)
+        version: 0.52.4(three@0.176.0)
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -243,8 +243,8 @@ importers:
         specifier: 20.14.12
         version: 20.14.12
       '@types/three':
-        specifier: ^0.175.0
-        version: 0.175.0
+        specifier: ^0.176.0
+        version: 0.176.0
       '@typescript-eslint/utils':
         specifier: 8.32.1
         version: 8.32.1(eslint@9.27.0(jiti@2.4.2))(typescript@5.7.3)
@@ -304,7 +304,7 @@ importers:
         version: 19.2.2(@angular/compiler-cli@19.2.11(@angular/compiler@19.2.11)(typescript@5.7.3))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@20.14.12)(typescript@5.7.3)))(tslib@2.8.1)(typescript@5.7.3)
       node-three-gltf:
         specifier: ^2.0.2
-        version: 2.0.2(encoding@0.1.13)(three@0.175.0)
+        version: 2.0.2(encoding@0.1.13)(three@0.176.0)
       nx:
         specifier: 21.0.3
         version: 21.0.3(@swc-node/register@1.10.10(@swc/core@1.11.24(@swc/helpers@0.5.17))(@swc/types@0.1.21)(typescript@5.7.3))(@swc/core@1.11.24(@swc/helpers@0.5.17))
@@ -322,7 +322,7 @@ importers:
         version: 10.1.3(postcss@8.5.3)
       postprocessing:
         specifier: ^6.37.3
-        version: 6.37.3(three@0.175.0)
+        version: 6.37.3(three@0.176.0)
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
@@ -339,8 +339,8 @@ importers:
         specifier: ^3.4.17
         version: 3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@20.14.12)(typescript@5.7.3))
       three:
-        specifier: ^0.175.0
-        version: 0.175.0
+        specifier: ^0.176.0
+        version: 0.176.0
       ts-jest:
         specifier: ^29.3.4
         version: 29.3.4(@babel/core@7.26.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.26.0))(esbuild@0.25.4)(jest@29.7.0(@types/node@20.14.12)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@20.14.12)(typescript@5.7.3)))(typescript@5.7.3)
@@ -2074,6 +2074,9 @@ packages:
 
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
+
+  '@dimforge/rapier3d-compat@0.12.0':
+    resolution: {integrity: sha512-uekIGetywIgopfD97oDL5PfeezkFpNhwlzlaEYNOA0N6ghdsOvh/HYjSMek5Q2O1PYvRSDFcqFVJl4r4ZBwOow==}
 
   '@dimforge/rapier3d-compat@0.14.0':
     resolution: {integrity: sha512-/uHrUzS+CRQ+NQrrJCEDUkhwHlNsAAexbNXgbN9sHY+GwR+SFFAFrxRr8Llf5/AJZzqiLANdQIfJ63Cw4gJVqw==}
@@ -5565,8 +5568,8 @@ packages:
   '@types/three@0.173.0':
     resolution: {integrity: sha512-KtNjfI/CRB6JVKIVeZM1R3GYDX2wkoV2itNcQu2j4d7qkhjGOuB+s2oF6jl9mztycDLGMtrAnJQYxInC8Bb20A==}
 
-  '@types/three@0.175.0':
-    resolution: {integrity: sha512-ldMSBgtZOZ3g9kJ3kOZSEtZIEITmJOzu8eKVpkhf036GuNkM4mt0NXecrjCn5tMm1OblOF7dZehlaDypBfNokw==}
+  '@types/three@0.176.0':
+    resolution: {integrity: sha512-FwfPXxCqOtP7EdYMagCFePNKoG1AGBDUEVKtluv2BTVRpSt7b+X27xNsirPCTCqY1pGYsPUzaM3jgWP7dXSxlw==}
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -12677,8 +12680,8 @@ packages:
   three@0.173.0:
     resolution: {integrity: sha512-AUwVmViIEUgBwxJJ7stnF0NkPpZxx1aZ6WiAbQ/Qq61h6I9UR4grXtZDmO8mnlaNORhHnIBlXJ1uBxILEKuVyw==}
 
-  three@0.175.0:
-    resolution: {integrity: sha512-nNE3pnTHxXN/Phw768u0Grr7W4+rumGg/H6PgeseNJojkJtmeHJfZWi41Gp2mpXl1pg1pf1zjwR4McM1jTqkpg==}
+  three@0.176.0:
+    resolution: {integrity: sha512-PWRKYWQo23ojf9oZSlRGH8K09q7nRSWx6LY/HF/UUrMdYgN9i1e2OwJYHoQjwc6HF/4lvvYLC5YC1X8UJL2ZpA==}
 
   throttleit@1.0.1:
     resolution: {integrity: sha512-vDZpf9Chs9mAdfY046mcPt8fg5QSZr37hEH4TXYBnDF+izxgrbRGUAAaBvIk/fJm9aOFCGFd1EsNg5AZCbnQCQ==}
@@ -17598,6 +17601,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@dimforge/rapier3d-compat@0.12.0': {}
+
   '@dimforge/rapier3d-compat@0.14.0': {}
 
   '@dimforge/rapier3d-compat@0.17.0': {}
@@ -19031,10 +19036,10 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  '@monogrid/gainmap-js@3.1.0(three@0.175.0)':
+  '@monogrid/gainmap-js@3.1.0(three@0.176.0)':
     dependencies:
       promise-worker-transferable: 1.0.4
-      three: 0.175.0
+      three: 0.176.0
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     optional: true
@@ -20031,9 +20036,9 @@ snapshots:
     dependencies:
       three: 0.173.0
 
-  '@pmndrs/cannon-worker-api@2.4.0(three@0.175.0)':
+  '@pmndrs/cannon-worker-api@2.4.0(three@0.176.0)':
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   '@pmndrs/vanilla@1.20.2(three@0.173.0)':
     dependencies:
@@ -20041,10 +20046,10 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  '@pmndrs/vanilla@1.20.4(three@0.175.0)':
+  '@pmndrs/vanilla@1.20.4(three@0.176.0)':
     dependencies:
       glsl-noise: 0.0.0
-      three: 0.175.0
+      three: 0.176.0
 
   '@rollup/plugin-json@6.1.0(rollup@4.29.1)':
     dependencies:
@@ -21408,8 +21413,9 @@ snapshots:
       fflate: 0.8.2
       meshoptimizer: 0.18.1
 
-  '@types/three@0.175.0':
+  '@types/three@0.176.0':
     dependencies:
+      '@dimforge/rapier3d-compat': 0.12.0
       '@tweenjs/tween.js': 23.1.3
       '@types/stats.js': 0.17.3
       '@types/webxr': 0.5.19
@@ -22986,9 +22992,9 @@ snapshots:
 
   camelcase@8.0.0: {}
 
-  camera-controls@2.10.1(three@0.175.0):
+  camera-controls@2.10.1(three@0.176.0):
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   camera-controls@2.9.0(three@0.173.0):
     dependencies:
@@ -23018,10 +23024,10 @@ snapshots:
       typescript: 5.7.3
     optional: true
 
-  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.175.0)(typescript@5.7.3):
+  cannon-es-debugger@1.0.0(cannon-es@0.20.0)(three@0.176.0)(typescript@5.7.3):
     dependencies:
       cannon-es: 0.20.0
-      three: 0.175.0
+      three: 0.176.0
     optionalDependencies:
       typescript: 5.7.3
 
@@ -26942,10 +26948,10 @@ snapshots:
       '@types/three': 0.173.0
       three: 0.173.0
 
-  maath@0.10.8(@types/three@0.175.0)(three@0.175.0):
+  maath@0.10.8(@types/three@0.176.0)(three@0.176.0):
     dependencies:
-      '@types/three': 0.175.0
-      three: 0.175.0
+      '@types/three': 0.176.0
+      three: 0.176.0
 
   magic-string@0.30.14:
     dependencies:
@@ -27253,9 +27259,9 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  meshline@3.3.1(three@0.175.0):
+  meshline@3.3.1(three@0.176.0):
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   meshoptimizer@0.18.1: {}
 
@@ -27724,10 +27730,10 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  n8ao@1.9.6(postprocessing@6.37.3(three@0.175.0))(three@0.175.0):
+  n8ao@1.9.6(postprocessing@6.37.3(three@0.176.0))(three@0.176.0):
     dependencies:
-      postprocessing: 6.37.3(three@0.175.0)
-      three: 0.175.0
+      postprocessing: 6.37.3(three@0.176.0)
+      three: 0.176.0
 
   nanoid@3.3.8: {}
 
@@ -27928,13 +27934,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  node-three-gltf@2.0.2(encoding@0.1.13)(three@0.175.0):
+  node-three-gltf@2.0.2(encoding@0.1.13)(three@0.176.0):
     dependencies:
       base64-js: 1.5.1
       jsdom: 26.0.0
       node-fetch: 2.7.0(encoding@0.1.13)
       sharp: 0.33.5
-      three: 0.175.0
+      three: 0.176.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -29198,9 +29204,9 @@ snapshots:
     dependencies:
       three: 0.173.0
 
-  postprocessing@6.37.3(three@0.175.0):
+  postprocessing@6.37.3(three@0.176.0):
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   potpack@1.0.2: {}
 
@@ -30507,9 +30513,9 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  stats-gl@3.6.0(three@0.175.0):
+  stats-gl@3.6.0(three@0.176.0):
     optionalDependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   statuses@1.5.0: {}
 
@@ -30909,9 +30915,9 @@ snapshots:
       react: 18.3.1
     optional: true
 
-  three-custom-shader-material@6.3.6(react@18.3.1)(three@0.175.0):
+  three-custom-shader-material@6.3.6(react@18.3.1)(three@0.176.0):
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
     optionalDependencies:
       react: 18.3.1
 
@@ -30925,9 +30931,9 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  three-mesh-bvh@0.9.0(three@0.175.0):
+  three-mesh-bvh@0.9.0(three@0.176.0):
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   three-stdlib@2.35.13(three@0.173.0):
     dependencies:
@@ -30949,7 +30955,7 @@ snapshots:
       potpack: 1.0.2
       three: 0.173.0
 
-  three-stdlib@2.36.0(three@0.175.0):
+  three-stdlib@2.36.0(three@0.176.0):
     dependencies:
       '@types/draco3d': 1.4.10
       '@types/offscreencanvas': 2019.7.3
@@ -30957,14 +30963,14 @@ snapshots:
       draco3d: 1.5.7
       fflate: 0.6.10
       potpack: 1.0.2
-      three: 0.175.0
+      three: 0.176.0
 
   three@0.157.0:
     optional: true
 
   three@0.173.0: {}
 
-  three@0.175.0: {}
+  three@0.176.0: {}
 
   throttleit@1.0.1: {}
 
@@ -31069,11 +31075,11 @@ snapshots:
       webgl-sdf-generator: 1.1.1
     optional: true
 
-  troika-three-text@0.52.4(three@0.175.0):
+  troika-three-text@0.52.4(three@0.176.0):
     dependencies:
       bidi-js: 1.0.3
-      three: 0.175.0
-      troika-three-utils: 0.52.4(three@0.175.0)
+      three: 0.176.0
+      troika-three-utils: 0.52.4(three@0.176.0)
       troika-worker-utils: 0.52.0
       webgl-sdf-generator: 1.1.1
 
@@ -31082,9 +31088,9 @@ snapshots:
       three: 0.173.0
     optional: true
 
-  troika-three-utils@0.52.4(three@0.175.0):
+  troika-three-utils@0.52.4(three@0.176.0):
     dependencies:
-      three: 0.175.0
+      three: 0.176.0
 
   troika-worker-utils@0.52.0: {}
 
