@@ -1,3 +1,17 @@
+## 4.0.0-next.105 (2025-05-17)
+
+### 🚀 Features
+
+- **core:** configurable max notification skip count ([2554a59e](https://github.com/angular-threejs/angular-three/commit/2554a59e))
+
+### 💅 Refactors
+
+- **core:** some perf improvements ([154e9b97](https://github.com/angular-threejs/angular-three/commit/154e9b97))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.104 (2025-05-17)
 
 ### 🚀 Features
