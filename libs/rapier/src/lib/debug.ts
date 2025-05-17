@@ -39,8 +39,12 @@ export class NgtrDebug {
 			if (!lineSegments) return;
 
 			const buffers = worldSingleton.proxy.debugRender();
-			lineSegments.geometry.setAttribute('position', new THREE.BufferAttribute(buffers.vertices, 3));
-			lineSegments.geometry.setAttribute('color', new THREE.BufferAttribute(buffers.colors, 4));
+			const geometry = new THREE.BufferGeometry();
+			geometry.setAttribute('position', new THREE.BufferAttribute(buffers.vertices, 3));
+			geometry.setAttribute('color', new THREE.BufferAttribute(buffers.colors, 4));
+
+			lineSegments.geometry.dispose();
+			lineSegments.geometry = geometry;
 		});
 	}
 }
