@@ -1,3 +1,24 @@
+## 4.0.0-next.104 (2025-05-17)
+
+### 🚀 Features
+
+- **core:** bump three version ([e7d2f1d0](https://github.com/angular-threejs/angular-three/commit/e7d2f1d0))
+
+### 🩹 Fixes
+
+- **core:** bump threejs 177 ([b2151d77](https://github.com/angular-threejs/angular-three/commit/b2151d77))
+- **plugin:** bump nx 21 ([459feceb](https://github.com/angular-threejs/angular-three/commit/459feceb))
+- **rapier:** debug geometry works with webgpu ([9ef1a1f5](https://github.com/angular-threejs/angular-three/commit/9ef1a1f5))
+- **rapier:** bump dimforge ([02bb4189](https://github.com/angular-threejs/angular-three/commit/02bb4189))
+
+### 💅 Refactors
+
+- **core:** clean up ([e42b7273](https://github.com/angular-threejs/angular-three/commit/e42b7273))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.103 (2025-04-07)
 
 ### 🩹 Fixes
