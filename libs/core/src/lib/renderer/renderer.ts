@@ -41,6 +41,16 @@ import { attachThreeNodes, internalDestroyNode, kebabToPascal, NgtRendererClassI
 
 export interface NgtRendererFactory2Options {
 	verbose?: boolean;
+	/**
+	 * When a change happens to an object's direct children, Angular Three will notify the object's ancestors
+	 * of this change so the ancestors are aware of the updated matrices of the object. In order to reduce the
+	 * number of notifications, Angular Three caches and skips notifications when possible.
+	 *
+	 * However, this can cause missed notifications in some cases. Control the number of skips with this option.
+	 *
+	 * @default 5
+	 */
+	maxNotificationSkipCount?: number;
 }
 
 export const NGT_RENDERER_OPTIONS = new InjectionToken<NgtRendererFactory2Options>('NGT_RENDERER_OPTIONS');

@@ -359,6 +359,8 @@ export interface NgtState {
 	previousRoot: SignalState<NgtState> | null;
 	/** Internals */
 	internal: NgtInternalState;
+	/** maxSkipCount from renderer options */
+	maxNotificationSkipCount?: number;
 }
 
 export interface NgtCanvasOptions {

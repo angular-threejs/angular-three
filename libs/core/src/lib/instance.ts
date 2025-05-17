@@ -228,9 +228,10 @@ function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'no
 	const id = instance.__ngt_id__ || instance['uuid'];
 	if (!id) return;
 
+	const maxNotificationSkipCount = localState.store?.snapshot.maxNotificationSkipCount || 5;
 	const cached = notificationCache.get(id);
 
-	if (!cached || cached.lastType !== type || cached.skipCount > 5) {
+	if (!cached || cached.lastType !== type || cached.skipCount > maxNotificationSkipCount) {
 		notificationCache.set(id, { skipCount: 0, lastType: type });
 
 		if (notificationCache.size === 1) {

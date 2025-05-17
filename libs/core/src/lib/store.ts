@@ -3,6 +3,7 @@ import { ElementRef, InjectOptions, InjectionToken, effect, inject } from '@angu
 import { Subject } from 'rxjs';
 import * as THREE from 'three';
 import { injectLoop } from './loop';
+import { NGT_RENDERER_OPTIONS } from './renderer/renderer';
 import type {
 	NgtBeforeRenderRecord,
 	NgtCamera,
@@ -20,6 +21,7 @@ import { updateCamera } from './utils/update';
 
 export function storeFactory() {
 	const { invalidate, advance } = injectLoop();
+	const rendererOptions = inject(NGT_RENDERER_OPTIONS, { optional: true }) || {};
 	const document = inject(DOCUMENT);
 	const window = document.defaultView || undefined;
 
@@ -47,6 +49,7 @@ export function storeFactory() {
 
 	const store: SignalState<NgtState> = signalState<NgtState>({
 		id: makeId(),
+		maxNotificationSkipCount: rendererOptions.maxNotificationSkipCount || 5,
 		pointerMissed$: pointerMissed$.asObservable(),
 		events: { priority: 1, enabled: true, connected: false },
 
