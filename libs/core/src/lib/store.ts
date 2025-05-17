@@ -34,6 +34,17 @@ export function storeFactory() {
 
 	const pointer = new THREE.Vector2();
 
+	// getCurrentViewport will mutate this instead of creating a new object everytime
+	const tempViewport = {
+		width: 0,
+		height: 0,
+		top: 0,
+		left: 0,
+		factor: 1,
+		distance: 0,
+		aspect: 0,
+	};
+
 	const store: SignalState<NgtState> = signalState<NgtState>({
 		id: makeId(),
 		pointerMissed$: pointerMissed$.asObservable(),
@@ -108,22 +119,28 @@ export function storeFactory() {
 
 				const distance = camera.getWorldPosition(position).distanceTo(tempTarget);
 
+				// Update the pre-allocated viewport object
+				tempViewport.top = top;
+				tempViewport.left = left;
+				tempViewport.aspect = aspect;
+				tempViewport.distance = distance;
+
 				if (is.three<THREE.OrthographicCamera>(camera, 'isOrthographicCamera')) {
-					return {
-						width: width / camera.zoom,
-						height: height / camera.zoom,
-						top,
-						left,
-						factor: 1,
-						distance,
-						aspect,
-					};
+					// For orthographic cameras
+					tempViewport.width = width / camera.zoom;
+					tempViewport.height = height / camera.zoom;
+					tempViewport.factor = 1;
+				} else {
+					// For perspective cameras
+					const fov = (camera.fov * Math.PI) / 180; // convert vertical fov to radians
+					const h = 2 * Math.tan(fov / 2) * distance; // visible height
+					const w = h * aspect; // visible width
+					tempViewport.width = w;
+					tempViewport.height = h;
+					tempViewport.factor = width / w;
 				}
 
-				const fov = (camera.fov * Math.PI) / 180; // convert vertical fov to radians
-				const h = 2 * Math.tan(fov / 2) * distance; // visible height
-				const w = h * (width / height);
-				return { width: w, height: h, top, left, factor: width / w, distance, aspect };
+				return tempViewport;
 			},
 		},
 

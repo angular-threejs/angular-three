@@ -324,6 +324,10 @@ export function createEvents(store: SignalState<NgtState>) {
 				};
 		}
 
+		const isPointerMove = name === 'pointermove';
+		const isClickEvent = name === 'click' || name === 'contextmenu' || name === 'dblclick';
+		const filter = isPointerMove ? filterPointerEvents : undefined;
+
 		// Any other pointer goes here ...
 		return function handleEvent(event: NgtDomEvent) {
 			// NOTE: __pointerMissed$ on NgtStore is private subject since we only expose the Observable
@@ -334,10 +338,6 @@ export function createEvents(store: SignalState<NgtState>) {
 			internal.lastEvent.nativeElement = event;
 
 			// Get fresh intersects
-			const isPointerMove = name === 'pointermove';
-			const isClickEvent = name === 'click' || name === 'contextmenu' || name === 'dblclick';
-			const filter = isPointerMove ? filterPointerEvents : undefined;
-
 			const hits = intersect(event, filter);
 			const delta = isClickEvent ? calculateDistance(event) : 0;
 

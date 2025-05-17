@@ -238,6 +238,7 @@ export interface NgtInstanceState<TObject extends NgtAnyRecord = NgtAnyRecord> {
 }
 
 export type NgtInstanceNode<TObject extends NgtAnyRecord = NgtAnyRecord> = TObject & {
+	__ngt_id__: string;
 	__ngt__: NgtInstanceState<TObject>;
 };
 

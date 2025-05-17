@@ -68,6 +68,7 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			return _nonObjects;
 		});
 
+		instance.__ngt_id__ = crypto.randomUUID();
 		instance.__ngt__ = {
 			previousAttach: null,
 			type,
@@ -195,11 +196,52 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 	return instance;
 }
 
+interface NotificationCacheState {
+	skipCount: number;
+	lastType: 'objects' | 'nonObjects';
+}
+
+const notificationCache = new Map<string, NotificationCacheState>();
+
+/**
+ * Notify ancestors about changes to a THREE.js objects' children
+ *
+ * For example: `NgtsCenter` might have a child that asynchronously loads a 3D model
+ * in which case the model matrices will be settled later. `NgtsCenter` needs to know about this
+ * matrices change to re-center everything inside of it.
+ *
+ * The implementation here uses a naive approach to reduce the number of notifications; we cache
+ * the notifications by the instance ID and the type of the notification.
+ *
+ * 1. If there's no cache or
+ * 2. If the type is different for the same instance or
+ * 3. We've skipped the notifications for this instance more than a certain amount
+ *
+ * then we'll proceed with notification
+ */
 function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'nonObjects') {
 	if (!instance) return;
+
 	const localState = getInstanceState(instance);
 	if (!localState) return;
-	const { parent } = localState.hierarchyStore.snapshot;
-	localState.hierarchyStore.update({ [type]: (localState.hierarchyStore.snapshot[type] || []).slice() });
-	notifyAncestors(parent, type);
+
+	const id = instance.__ngt_id__ || instance['uuid'];
+	if (!id) return;
+
+	const cached = notificationCache.get(id);
+
+	if (!cached || cached.lastType !== type || cached.skipCount > 5) {
+		notificationCache.set(id, { skipCount: 0, lastType: type });
+
+		if (notificationCache.size === 1) {
+			queueMicrotask(() => notificationCache.clear());
+		}
+
+		const { parent } = localState.hierarchyStore.snapshot;
+		localState.hierarchyStore.update({ [type]: (localState.hierarchyStore.snapshot[type] || []).slice() });
+		notifyAncestors(parent, type);
+		return;
+	}
+
+	notificationCache.set(id, { ...cached, skipCount: cached.skipCount + 1 });
 }
