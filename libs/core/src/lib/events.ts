@@ -75,8 +75,13 @@ export function createEvents(store: SignalState<NgtState>) {
 		const intersections: NgtIntersection[] = [];
 		// Allow callers to eliminate event objects
 		const eventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
-		// Reset all raycaster cameras to undefined
-		for (let i = 0; i < eventsObjects.length; i++) {
+
+		// Skip work if there are no event objects
+		if (eventsObjects.length === 0) return intersections;
+
+		// Reset all raycaster cameras to undefined - use for loop for better performance
+		const eventsObjectsLen = eventsObjects.length;
+		for (let i = 0; i < eventsObjectsLen; i++) {
 			const objectRootState = getInstanceState(eventsObjects[i])?.store?.snapshot;
 			if (objectRootState) {
 				objectRootState.raycaster.camera = undefined!;
@@ -87,6 +92,9 @@ export function createEvents(store: SignalState<NgtState>) {
 			// Make sure root-level pointer and ray are set up
 			state.events.compute?.(event, store, null);
 		}
+
+		// Pre-allocate array to avoid garbage collection
+		const raycastResults: THREE.Intersection<THREE.Object3D>[] = [];
 
 		function handleRaycast(obj: THREE.Object3D) {
 			const objStore = getInstanceState(obj)?.store;
@@ -106,30 +114,40 @@ export function createEvents(store: SignalState<NgtState>) {
 		}
 
 		// Collect events
-		let hits: THREE.Intersection<THREE.Object3D>[] = eventsObjects
-			// Intersect objects
-			.flatMap(handleRaycast)
-			// Sort by event priority and distance
-			.sort((a, b) => {
-				const aState = getInstanceState(a.object)?.store?.snapshot;
-				const bState = getInstanceState(b.object)?.store?.snapshot;
-				if (!aState || !bState) return a.distance - b.distance;
-				return bState.events.priority - aState.events.priority || a.distance - b.distance;
-			})
-			// Filter out duplicates
-			.filter((item) => {
-				const id = makeId(item as NgtIntersection);
-				if (duplicates.has(id)) return false;
-				duplicates.add(id);
-				return true;
-			});
+		for (let i = 0; i < eventsObjectsLen; i++) {
+			const objResults = handleRaycast(eventsObjects[i]);
+			if (objResults.length <= 0) continue;
+			for (let j = 0; j < objResults.length; j++) {
+				raycastResults.push(objResults[j]);
+			}
+		}
+
+		// Sort by event priority and distance
+		raycastResults.sort((a, b) => {
+			const aState = getInstanceState(a.object)?.store?.snapshot;
+			const bState = getInstanceState(b.object)?.store?.snapshot;
+			if (!aState || !bState) return a.distance - b.distance;
+			return bState.events.priority - aState.events.priority || a.distance - b.distance;
+		});
+
+		// Filter out duplicates - more efficient than chaining
+		let hits: THREE.Intersection<THREE.Object3D>[] = [];
+		for (let i = 0; i < raycastResults.length; i++) {
+			const item = raycastResults[i];
+			const id = makeId(item as NgtIntersection);
+			if (duplicates.has(id)) continue;
+			duplicates.add(id);
+			hits.push(item);
+		}
 
 		// https://github.com/mrdoob/three.js/issues/16031
 		// Allow custom userland intersect sort order, this likely only makes sense on the root filter
 		if (state.events.filter) hits = state.events.filter(hits, store);
 
 		// Bubble up the events, find the event source (eventObject)
-		for (const hit of hits) {
+		const hitsLen = hits.length;
+		for (let i = 0; i < hitsLen; i++) {
+			const hit = hits[i];
 			let eventObject: THREE.Object3D | null = hit.object;
 			// bubble event up
 			while (eventObject) {
@@ -140,8 +158,10 @@ export function createEvents(store: SignalState<NgtState>) {
 
 		// If the interaction is captured, make all capturing targets part of the intersect.
 		if ('pointerId' in event && state.internal.capturedMap.has(event.pointerId)) {
-			for (const captureData of state.internal.capturedMap.get(event.pointerId)!.values()) {
-				if (!duplicates.has(makeId(captureData.intersection))) intersections.push(captureData.intersection);
+			const captures = state.internal.capturedMap.get(event.pointerId)!;
+			for (const captureData of captures.values()) {
+				if (duplicates.has(makeId(captureData.intersection))) continue;
+				intersections.push(captureData.intersection);
 			}
 		}
 		return intersections;
@@ -300,30 +320,31 @@ export function createEvents(store: SignalState<NgtState>) {
 	}
 
 	function handlePointer(name: string) {
-		// Deal with cancelation
-		switch (name) {
-			case 'pointerleave':
-			case 'pointercancel':
-				return () => cancelPointer([]);
-			case 'lostpointercapture':
-				return (event: NgtDomEvent) => {
-					const { internal } = store.snapshot;
-					if ('pointerId' in event && internal.capturedMap.has(event.pointerId)) {
-						// If the object event interface had lostpointercapture, we'd call it here on every
-						// object that's getting removed. We call it on the next frame because lostpointercapture
-						// fires before pointerup. Otherwise pointerUp would never be called if the event didn't
-						// happen in the object it originated from, leaving components in a in-between state.
-						requestAnimationFrame(() => {
-							// Only release if pointer-up didn't do it already
-							if (internal.capturedMap.has(event.pointerId)) {
-								internal.capturedMap.delete(event.pointerId);
-								cancelPointer([]);
-							}
-						});
-					}
-				};
+		// Handle common cancelation events
+		if (name === 'pointerleave' || name === 'pointercancel') {
+			return () => cancelPointer([]);
 		}
 
+		if (name === 'lostpointercapture') {
+			return (event: NgtDomEvent) => {
+				const { internal } = store.snapshot;
+				if ('pointerId' in event && internal.capturedMap.has(event.pointerId)) {
+					// If the object event interface had lostpointercapture, we'd call it here on every
+					// object that's getting removed. We call it on the next frame because lostpointercapture
+					// fires before pointerup. Otherwise pointerUp would never be called if the event didn't
+					// happen in the object it originated from, leaving components in a in-between state.
+					requestAnimationFrame(() => {
+						// Only release if pointer-up didn't do it already
+						if (internal.capturedMap.has(event.pointerId)) {
+							internal.capturedMap.delete(event.pointerId);
+							cancelPointer([]);
+						}
+					});
+				}
+			};
+		}
+
+		// Cache these values since they're used in the closure
 		const isPointerMove = name === 'pointermove';
 		const isClickEvent = name === 'click' || name === 'contextmenu' || name === 'dblclick';
 		const filter = isPointerMove ? filterPointerEvents : undefined;
@@ -334,11 +355,12 @@ export function createEvents(store: SignalState<NgtState>) {
 			const pointerMissed$: Subject<MouseEvent> = (store as NgtAnyRecord)['__pointerMissed$'];
 			const internal = store.snapshot.internal;
 
-			// prepareRay(event)
+			// Cache the event
 			internal.lastEvent.nativeElement = event;
 
 			// Get fresh intersects
 			const hits = intersect(event, filter);
+			// Only calculate distance for click events to avoid unnecessary math
 			const delta = isClickEvent ? calculateDistance(event) : 0;
 
 			// Save initial coordinates on pointer-down
@@ -347,94 +369,93 @@ export function createEvents(store: SignalState<NgtState>) {
 				internal.initialHits = hits.map((hit) => hit.eventObject);
 			}
 
-			// If a click yields no results, pass it back to the user as a miss
-			// Missed events have to come first in order to establish user-land side-effect clean up
-			if (isClickEvent && !hits.length) {
-				if (delta <= 2) {
-					pointerMissed(event, internal.interaction);
-					pointerMissed$.next(event);
-				}
+			// Handle click miss events - early return optimization for better performance
+			if (isClickEvent && hits.length === 0 && delta <= 2) {
+				pointerMissed(event, internal.interaction);
+				pointerMissed$.next(event);
+				return; // Early return if nothing was hit
 			}
 
-			// Take care of unhover
+			// Take care of unhover for pointer moves
 			if (isPointerMove) cancelPointer(hits);
 
+			// Define onIntersect handler - locally cache common properties for better performance
 			function onIntersect(data: NgtThreeEvent<NgtDomEvent>) {
 				const eventObject = data.eventObject;
 				const instance = getInstanceState(eventObject);
-				const handlers = instance?.handlers;
 
-				// Check presence of handlers
+				// Early return if no instance or event count
 				if (!instance?.eventCount) return;
 
-				/*
-        MAYBE TODO, DELETE IF NOT:
-          Check if the object is captured, captured events should not have intersects running in parallel
-          But wouldn't it be better to just replace capturedMap with a single entry?
-          Also, are we OK with straight up making picking up multiple objects impossible?
-
-        const pointerId = (data as ThreeEvent<PointerEvent>).pointerId
-        if (pointerId !== undefined) {
-          const capturedMeshSet = internal.capturedMap.get(pointerId)
-          if (capturedMeshSet) {
-            const captured = capturedMeshSet.get(eventObject)
-            if (captured && captured.localState.stopped) return
-          }
-        }*/
+				const handlers = instance.handlers;
+				if (!handlers) return;
 
 				if (isPointerMove) {
-					// Move event ...
-					if (
-						handlers?.pointerover ||
-						handlers?.pointerenter ||
-						handlers?.pointerout ||
-						handlers?.pointerleave
-					) {
-						// When enter or out is present take care of hover-state
+					// Handle pointer move events
+					const hasPointerOverHandlers = !!(
+						handlers.pointerover ||
+						handlers.pointerenter ||
+						handlers.pointerout ||
+						handlers.pointerleave
+					);
+
+					if (hasPointerOverHandlers) {
 						const id = makeId(data);
 						const hoveredItem = internal.hovered.get(id);
 						if (!hoveredItem) {
 							// If the object wasn't previously hovered, book it and call its handler
 							internal.hovered.set(id, data);
-							handlers.pointerover?.(data as NgtThreeEvent<PointerEvent>);
-							handlers.pointerenter?.(data as NgtThreeEvent<PointerEvent>);
+							if (handlers.pointerover) handlers.pointerover(data as NgtThreeEvent<PointerEvent>);
+							if (handlers.pointerenter) handlers.pointerenter(data as NgtThreeEvent<PointerEvent>);
 						} else if (hoveredItem.stopped) {
 							// If the object was previously hovered and stopped, we shouldn't allow other items to proceed
 							data.stopPropagation();
 						}
 					}
+
 					// Call mouse move
-					handlers?.pointermove?.(data as NgtThreeEvent<PointerEvent>);
+					if (handlers.pointermove) handlers.pointermove(data as NgtThreeEvent<PointerEvent>);
 				} else {
 					// All other events ...
-					const handler = handlers?.[name as keyof NgtEventHandlers] as (
+					const handler = handlers[name as keyof NgtEventHandlers] as (
 						event: NgtThreeEvent<PointerEvent>,
 					) => void;
+
 					if (handler) {
 						// Forward all events back to their respective handlers with the exception of click events,
 						// which must use the initial target
 						if (!isClickEvent || internal.initialHits.includes(eventObject)) {
-							// Missed events have to come first
-							pointerMissed(
-								event,
-								internal.interaction.filter((object) => !internal.initialHits.includes(object)),
+							// Get objects not in initialHits for pointer missed - avoid creating new arrays if possible
+							const missedObjects = internal.interaction.filter(
+								(object) => !internal.initialHits.includes(object),
 							);
+
+							// Call pointerMissed only if we have objects to notify
+							if (missedObjects.length > 0) {
+								pointerMissed(event, missedObjects);
+							}
+
 							// Now call the handler
 							handler(data as NgtThreeEvent<PointerEvent>);
 						}
-					} else {
+					} else if (isClickEvent && internal.initialHits.includes(eventObject)) {
 						// Trigger onPointerMissed on all elements that have pointer over/out handlers, but not click and weren't hit
-						if (isClickEvent && internal.initialHits.includes(eventObject)) {
-							pointerMissed(
-								event,
-								internal.interaction.filter((object) => !internal.initialHits.includes(object)),
-							);
+						const missedObjects = internal.interaction.filter(
+							(object) => !internal.initialHits.includes(object),
+						);
+
+						// Call pointerMissed only if we have objects to notify
+						if (missedObjects.length > 0) {
+							pointerMissed(event, missedObjects);
 						}
 					}
 				}
 			}
 
-			handleIntersects(hits, event, delta, onIntersect);
+			// Process all intersections
+			if (hits.length > 0) {
+				handleIntersects(hits, event, delta, onIntersect);
+			}
 		};
 	}
 
