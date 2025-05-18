@@ -1,3 +1,13 @@
+## 4.0.0-next.106 (2025-05-18)
+
+### 💅 Refactors
+
+- **core:** perf improvement to events ([a0330e22](https://github.com/angular-threejs/angular-three/commit/a0330e22))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.105 (2025-05-17)
 
 ### 🚀 Features
