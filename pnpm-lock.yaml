@@ -89,8 +89,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(three@0.176.0)
       n8ao:
-        specifier: ^1.9.6
-        version: 1.9.6(postprocessing@6.37.3(three@0.176.0))(three@0.176.0)
+        specifier: ^1.10.0
+        version: 1.10.0(postprocessing@6.37.3(three@0.176.0))(three@0.176.0)
       ngxtension:
         specifier: ^5.0.0
         version: 5.0.0(@angular/common@19.2.11(@angular/core@19.2.11(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.11(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
@@ -10129,14 +10129,14 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  n8ao@1.9.4:
-    resolution: {integrity: sha512-gbpAorQecZn2oGK/rheHxPTNwOxVsEC6216+Jr9tXHUk9L5VCE2q/uxsSrQpfNkZDoCmQHf7oSg3SYFWCAt0wg==}
+  n8ao@1.10.0:
+    resolution: {integrity: sha512-zWdSfXkCUz6E7LM/Occ0JRWcp0HFlS03EUZ/LrqS8WwWFK74V4h7uzwRPugkdaBsJnclab+CJnWzNnlh7ozWVQ==}
     peerDependencies:
       postprocessing: '>=6.30.0'
       three: '>=0.137'
 
-  n8ao@1.9.6:
-    resolution: {integrity: sha512-KV7Xwh79U+PSb2FhmMaCkhQVW9UGQy0moUEPkJmWLYZZuWqjTTWPYCGVRIFg5dd4z8YnUegR8pq4W39NAwV3Dw==}
+  n8ao@1.9.4:
+    resolution: {integrity: sha512-gbpAorQecZn2oGK/rheHxPTNwOxVsEC6216+Jr9tXHUk9L5VCE2q/uxsSrQpfNkZDoCmQHf7oSg3SYFWCAt0wg==}
     peerDependencies:
       postprocessing: '>=6.30.0'
       three: '>=0.137'
@@ -27049,16 +27049,16 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
+  n8ao@1.10.0(postprocessing@6.37.3(three@0.176.0))(three@0.176.0):
+    dependencies:
+      postprocessing: 6.37.3(three@0.176.0)
+      three: 0.176.0
+
   n8ao@1.9.4(postprocessing@6.36.6(three@0.173.0))(three@0.173.0):
     dependencies:
       postprocessing: 6.36.6(three@0.173.0)
       three: 0.173.0
     optional: true
-
-  n8ao@1.9.6(postprocessing@6.37.3(three@0.176.0))(three@0.176.0):
-    dependencies:
-      postprocessing: 6.37.3(three@0.176.0)
-      three: 0.176.0
 
   nanoid@3.3.8: {}
 
