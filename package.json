@@ -125,7 +125,7 @@
 		"ngxtension": "^5.0.0",
 		"rxjs": "~7.8.2",
 		"stats-gl": "^3.6.0",
-		"three-custom-shader-material": "~6.3.6",
+		"three-custom-shader-material": "~6.3.7",
 		"three-mesh-bvh": "^0.9.0",
 		"three-stdlib": "^2.36.0",
 		"troika-three-text": "^0.52.4",
