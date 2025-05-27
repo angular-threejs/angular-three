@@ -91,7 +91,6 @@ export class NgtPortalContent {
 	constructor() {
 		const host = inject<ElementRef<HTMLElement>>(ElementRef, { skipSelf: true });
 		const { element } = inject(ViewContainerRef);
-		const injector = inject(Injector);
 		const commentNode = element.nativeElement;
 		const store = injectStore();
 
@@ -246,11 +245,8 @@ export class NgtPortalImpl {
 				return;
 			}
 
-			this.portalViewRef = anchor.createEmbeddedView(
-				content,
-				{ injector: this.injector },
-				{ injector: this.injector },
-			);
+			const portalViewContext = { injector: this.injector };
+			this.portalViewRef = anchor.createEmbeddedView(content, portalViewContext, portalViewContext);
 			this.portalViewRef.detectChanges();
 			this.portalContentRendered.set(true);
 		});

@@ -697,9 +697,7 @@ export class NgtRenderer2 implements Renderer2 {
 			const cleanup = iS.setPointerEvent?.(eventName as keyof NgtEventHandlers, callback) || (() => {});
 
 			// this means the object has already been attached to the parent and has its store propagated
-			if (iS.store) {
-				iS.addInteraction?.(iS.store);
-			}
+			if (iS.store) iS.addInteraction?.(iS.store);
 
 			return cleanup;
 		}
