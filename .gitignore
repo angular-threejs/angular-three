@@ -48,3 +48,5 @@ vite.config.*.timestamp*
 vitest.config.*.timestamp*
 .aider*
 CLAUDE.md
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
