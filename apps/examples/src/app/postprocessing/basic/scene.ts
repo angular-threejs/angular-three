@@ -42,12 +42,12 @@ export class Sun {
 				<ngt-mesh-basic-material color="pink" />
 			</ngt-mesh>
 
-			<ngt-mesh [position]="[2, 2, 2]">
+			<ngt-mesh [position]="2">
 				<ngt-sphere-geometry />
 				<ngt-mesh-basic-material color="aquamarine" />
 			</ngt-mesh>
 
-			<ngt-mesh [position]="[-2, -2, -2]">
+			<ngt-mesh [position]="-2">
 				<ngt-box-geometry />
 				<ngt-mesh-basic-material color="goldenrod" />
 			</ngt-mesh>

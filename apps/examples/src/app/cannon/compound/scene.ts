@@ -112,9 +112,12 @@ export class CompoundBody {
 	template: `
 		<ngt-color attach="background" *args="['#f6d186']" />
 		<ngt-hemisphere-light [intensity]="0.35" />
-		<ngt-spot-light [position]="[5, 5, 5]" [angle]="0.3" [penumbra]="1" [intensity]="2" castShadow>
+		<ngt-spot-light [position]="5" [angle]="0.3" [penumbra]="1" [intensity]="2" castShadow>
 			<ngt-vector2 *args="[1028, 1028]" attach="shadow.mapSize" />
 		</ngt-spot-light>
+
+		@let copy = this.copy();
+		@let ready = this.ready();
 
 		<ngtc-physics [options]="{ iterations: 6 }" [debug]="{ scale: 1.1 }">
 			<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />
@@ -122,15 +125,15 @@ export class CompoundBody {
 			<app-compound-body
 				[position]="[2.5, 3, 0.25]"
 				[rotation]="[1.25, -1.25, 0]"
-				(positionChanged)="!copy() && (position = $event)"
-				(rotationChanged)="!copy() && (rotation = $event)"
+				(positionChanged)="!copy && (position = $event)"
+				(rotationChanged)="!copy && (rotation = $event)"
 			/>
 
-			@if (ready()) {
+			@if (ready) {
 				<app-compound-body [position]="[2.5, 4, 0.25]" [rotation]="[1.25, -1.25, 0]" />
 			}
 
-			@if (copy()) {
+			@if (copy) {
 				<app-compound-body isTrigger [mass]="0" [position]="position" [rotation]="rotation" />
 			}
 		</ngtc-physics>

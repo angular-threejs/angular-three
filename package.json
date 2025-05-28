@@ -59,7 +59,7 @@
     "cypress": "14.3.3",
     "cz-git": "^1.11.1",
     "czg": "^1.11.1",
-    "dotenv-cli": "^7.4.4",
+    "dotenv-cli": "^8.0.0",
     "enquirer": "^2.4.1",
     "eslint": "9.27.0",
     "eslint-config-prettier": "10.1.5",
@@ -87,7 +87,7 @@
     "tailwindcss": "^3.4.17",
     "three": "^0.176.0",
     "ts-jest": "^29.3.4",
-    "ts-morph": "^25.0.1",
+    "ts-morph": "^26.0.0",
     "ts-node": "10.9.2",
     "tweakpane": "^4.0.5",
     "typescript": "5.7.3",
@@ -105,7 +105,7 @@
     "@angular/platform-browser-dynamic": "19.2.11",
     "@angular/platform-server": "19.2.11",
     "@angular/router": "19.2.11",
-    "@dimforge/rapier3d-compat": "^0.17.0",
+    "@dimforge/rapier3d-compat": "^0.17.1",
     "@monogrid/gainmap-js": "^3.1.0",
     "@pmndrs/cannon-worker-api": "^2.4.0",
     "@pmndrs/vanilla": "^1.20.4",
@@ -130,7 +130,7 @@
     "three-stdlib": "^2.36.0",
     "troika-three-text": "^0.52.4",
     "tslib": "^2.8.1",
-    "zone.js": "0.15.0"
+    "zone.js": "0.15.1"
   },
   "web-types": [
     "node_modules/angular-three/web-types.json",

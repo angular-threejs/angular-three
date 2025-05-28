@@ -93,9 +93,12 @@ const maxMultiplierExamples = [0, 500, 1000, 1500, undefined] as const;
 @Component({
 	selector: 'app-chain',
 	template: `
-		@if (length() > 0) {
-			<app-chain-link [color]="color()" [maxMultiplier]="maxMultiplier()">
-				<app-chain [length]="length() - 1" [maxMultiplier]="maxMultiplier()" />
+		@let length = this.length();
+		@let maxMultiplier = this.maxMultiplier();
+
+		@if (length > 0) {
+			<app-chain-link [color]="color()" [maxMultiplier]="maxMultiplier">
+				<app-chain [length]="length - 1" [maxMultiplier]="maxMultiplier" />
 			</app-chain-link>
 		}
 	`,
@@ -179,15 +182,8 @@ export class StaticHandle {
 	template: `
 		<ngt-color *args="['#171720']" attach="background" />
 		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-		<ngt-point-light [position]="[-10, -10, -10]" [intensity]="Math.PI" [decay]="0" />
-		<ngt-spot-light
-			[position]="[10, 10, 10]"
-			[angle]="0.8"
-			[penumbra]="1"
-			[intensity]="Math.PI"
-			[decay]="0"
-			castShadow
-		/>
+		<ngt-point-light [position]="-10" [intensity]="Math.PI" [decay]="0" />
+		<ngt-spot-light [position]="10" [angle]="0.8" [penumbra]="1" [intensity]="Math.PI" [decay]="0" castShadow />
 
 		<ngtc-physics [options]="{ gravity: [0, -40, 0], allowSleep: false }">
 			<app-pointer-handle>
