@@ -112,40 +112,39 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 		};
 	}
 
-	Object.defineProperty(instance.__ngt__, 'setPointerEvent', {
-		value: <TEvent extends keyof NgtEventHandlers>(
-			eventName: TEvent,
-			callback: NonNullable<NgtEventHandlers[TEvent]>,
-		) => {
-			const iS = getInstanceState(instance) as NgtInstanceState;
-			if (!iS.handlers) iS.handlers = {};
-
-			// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
-			const previousHandler = iS.handlers[eventName];
-			// readjust the callback
-			const updatedCallback: typeof callback = (event: any) => {
-				if (previousHandler) previousHandler(event);
-				callback(event);
-			};
-
-			Object.assign(iS.handlers, { [eventName]: updatedCallback });
-
-			// increment the count everytime
-			iS.eventCount += 1;
-
-			// clean up the event listener by removing the target from the interaction array
-			return () => {
-				const iS = getInstanceState(instance) as NgtInstanceState;
-				if (iS) {
-					iS.handlers && delete iS.handlers[eventName];
-					iS.eventCount -= 1;
-				}
-			};
-		},
-		configurable: true,
-	});
-
 	Object.defineProperties(instance.__ngt__, {
+		setPointerEvent: {
+			value: <TEvent extends keyof NgtEventHandlers>(
+				eventName: TEvent,
+				callback: NonNullable<NgtEventHandlers[TEvent]>,
+			) => {
+				const iS = getInstanceState(instance) as NgtInstanceState;
+				if (!iS.handlers) iS.handlers = {};
+
+				// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
+				const previousHandler = iS.handlers[eventName];
+				// readjust the callback
+				const updatedCallback: typeof callback = (event: any) => {
+					if (previousHandler) previousHandler(event);
+					callback(event);
+				};
+
+				Object.assign(iS.handlers, { [eventName]: updatedCallback });
+
+				// increment the count everytime
+				iS.eventCount += 1;
+
+				// clean up the event listener by removing the target from the interaction array
+				return () => {
+					const iS = getInstanceState(instance) as NgtInstanceState;
+					if (iS) {
+						iS.handlers && delete iS.handlers[eventName];
+						iS.eventCount -= 1;
+					}
+				};
+			},
+			configurable: true,
+		},
 		addInteraction: {
 			value: (store?: SignalState<NgtState>) => {
 				if (!store) return;
