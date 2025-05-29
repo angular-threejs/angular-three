@@ -201,8 +201,8 @@ interface NotificationCacheState {
 	lastType: 'objects' | 'nonObjects';
 }
 
-// Changed Map to WeakMap and key from string to NgtInstanceNode
-const notificationCache = new WeakMap<NgtInstanceNode, NotificationCacheState>();
+// Reverted WeakMap to Map and key from NgtInstanceNode back to string
+const notificationCache = new Map<string, NotificationCacheState>();
 
 /**
  * Notify ancestors about changes to a THREE.js objects' children
@@ -226,20 +226,20 @@ function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'no
 	const localState = getInstanceState(instance);
 	if (!localState) return;
 
-	// Removed ID-based keying; instance object is now the key.
-	// const id = instance.__ngt_id__ || instance['uuid'];
-	// if (!id) return;
+	// Restored ID-based keying
+	const id = instance.__ngt_id__ || instance['uuid'];
+	if (!id) return;
 
 	const maxNotificationSkipCount = localState.store?.snapshot.maxNotificationSkipCount || 5;
-	const cached = notificationCache.get(instance); // Use instance as key
+	const cached = notificationCache.get(id); // Use id as key
 
 	if (!cached || cached.lastType !== type || cached.skipCount > maxNotificationSkipCount) {
-		notificationCache.set(instance, { skipCount: 0, lastType: type }); // Use instance as key
+		notificationCache.set(id, { skipCount: 0, lastType: type }); // Use id as key
 
-		// Removed global cache clearing logic tied to queueMicrotask and cache.size
-		// if (notificationCache.size === 1) {
-		// queueMicrotask(() => notificationCache.clear());
-		// }
+		// Restored global cache clearing logic tied to queueMicrotask and cache.size
+		if (notificationCache.size === 1) {
+			queueMicrotask(() => notificationCache.clear());
+		}
 
 		const { parent } = localState.hierarchyStore.snapshot;
 		localState.hierarchyStore.update({ [type]: (localState.hierarchyStore.snapshot[type] || []).slice() });
@@ -247,5 +247,5 @@ function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'no
 		return;
 	}
 
-	notificationCache.set(instance, { ...cached, skipCount: cached.skipCount + 1 }); // Use instance as key
+	notificationCache.set(id, { ...cached, skipCount: cached.skipCount + 1 }); // Use id as key
 }
