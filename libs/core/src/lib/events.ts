@@ -123,17 +123,37 @@ export function createEvents(store: SignalState<NgtState>) {
 		}
 
 		// Sort by event priority and distance
-		raycastResults.sort((a, b) => {
-			const aState = getInstanceState(a.object)?.store?.snapshot;
-			const bState = getInstanceState(b.object)?.store?.snapshot;
-			if (!aState || !bState) return a.distance - b.distance;
-			return bState.events.priority - aState.events.priority || a.distance - b.distance;
+		// Map to temporary array with pre-fetched values for sorting
+		const sortableRaycastResults = raycastResults.map((item) => {
+			const state = getInstanceState(item.object)?.store?.snapshot;
+			return {
+				originalItem: item,
+				priority: state?.events.priority,
+				distance: item.distance,
+				stateExists: !!state,
+			};
 		});
 
+		// Sort the temporary array
+		sortableRaycastResults.sort((a, b) => {
+			if (a.stateExists && b.stateExists) {
+				// Both items have state, sort by priority then distance
+				// Use a default for priority (e.g., 0) if it might be undefined,
+				// though stateExists should imply it's a number as per original logic.
+				return (b.priority ?? 0) - (a.priority ?? 0) || a.distance - b.distance;
+			}
+			// One or both states don't exist, sort by distance only
+			return a.distance - b.distance;
+		});
+
+		// Map back to the original raycastResults structure
+		const sortedRaycastResults = sortableRaycastResults.map((item) => item.originalItem);
+
 		// Filter out duplicates - more efficient than chaining
+		// Use sortedRaycastResults instead of raycastResults for filtering
 		let hits: THREE.Intersection<THREE.Object3D>[] = [];
-		for (let i = 0; i < raycastResults.length; i++) {
-			const item = raycastResults[i];
+		for (let i = 0; i < sortedRaycastResults.length; i++) {
+			const item = sortedRaycastResults[i];
 			const id = makeId(item as NgtIntersection);
 			if (duplicates.has(id)) continue;
 			duplicates.add(id);

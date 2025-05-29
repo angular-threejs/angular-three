@@ -68,7 +68,7 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			return _nonObjects;
 		});
 
-		instance.__ngt_id__ = crypto.randomUUID();
+		instance.__ngt_id__ = crypto.randomUUID(); // This ID is still used by notifyAncestors for now, will be removed there.
 		instance.__ngt__ = {
 			previousAttach: null,
 			type,
@@ -107,54 +107,36 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			updateGeometryStamp() {
 				instance.__ngt__.hierarchyStore.update({ geometryStamp: Date.now() });
 			},
-			store,
-			...rest,
-		};
-	}
-
-	Object.defineProperty(instance.__ngt__, 'setPointerEvent', {
-		value: <TEvent extends keyof NgtEventHandlers>(
-			eventName: TEvent,
-			callback: NonNullable<NgtEventHandlers[TEvent]>,
-		) => {
-			const iS = getInstanceState(instance) as NgtInstanceState;
-			if (!iS.handlers) iS.handlers = {};
-
-			// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
-			const previousHandler = iS.handlers[eventName];
-			// readjust the callback
-			const updatedCallback: typeof callback = (event: any) => {
-				if (previousHandler) previousHandler(event);
-				callback(event);
-			};
-
-			Object.assign(iS.handlers, { [eventName]: updatedCallback });
-
-			// increment the count everytime
-			iS.eventCount += 1;
-
-			// clean up the event listener by removing the target from the interaction array
-			return () => {
+			setPointerEvent: <TEvent extends keyof NgtEventHandlers>(
+				eventName: TEvent,
+				callback: NonNullable<NgtEventHandlers[TEvent]>,
+			) => {
 				const iS = getInstanceState(instance) as NgtInstanceState;
-				if (iS) {
-					iS.handlers && delete iS.handlers[eventName];
-					iS.eventCount -= 1;
-				}
-			};
-		},
-		configurable: true,
-	});
+				if (!iS.handlers) iS.handlers = {};
 
-	Object.defineProperties(instance.__ngt__, {
-		addInteraction: {
-			value: (store?: SignalState<NgtState>) => {
-				if (!store) return;
+				const previousHandler = iS.handlers[eventName];
+				const updatedCallback: typeof callback = (event: any) => {
+					if (previousHandler) previousHandler(event);
+					callback(event);
+				};
 
+				Object.assign(iS.handlers, { [eventName]: updatedCallback });
+				iS.eventCount += 1;
+
+				return () => {
+					const iS = getInstanceState(instance) as NgtInstanceState;
+					if (iS) {
+						iS.handlers && delete iS.handlers[eventName];
+						iS.eventCount -= 1;
+					}
+				};
+			},
+			addInteraction: (storeParam?: SignalState<NgtState>) => {
+				if (!storeParam) return;
 				const iS = getInstanceState(instance) as NgtInstanceState;
-
 				if (iS.eventCount < 1 || !('raycast' in instance) || !instance['raycast']) return;
 
-				let root = store;
+				let root = storeParam;
 				while (root.snapshot.previousRoot) {
 					root = root.snapshot.previousRoot;
 				}
@@ -164,19 +146,14 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 					const index = interactions.findIndex(
 						(obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid,
 					);
-					// if already exists, do not add to interactions
 					if (index < 0) {
-						root.snapshot.internal.interaction.push(instance as unknown as THREE.Object3D);
+						interactions.push(instance as unknown as THREE.Object3D);
 					}
 				}
 			},
-			configurable: true,
-		},
-		removeInteraction: {
-			value: (store?: SignalState<NgtState>) => {
-				if (!store) return;
-
-				let root = store;
+			removeInteraction: (storeParam?: SignalState<NgtState>) => {
+				if (!storeParam) return;
+				let root = storeParam;
 				while (root.snapshot.previousRoot) {
 					root = root.snapshot.previousRoot;
 				}
@@ -189,9 +166,11 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 					if (index >= 0) interactions.splice(index, 1);
 				}
 			},
-			configurable: true,
-		},
-	});
+			store,
+			...rest,
+		};
+	}
+	// Object.defineProperty and Object.defineProperties calls for setPointerEvent, addInteraction, removeInteraction are removed.
 
 	return instance;
 }
@@ -201,7 +180,8 @@ interface NotificationCacheState {
 	lastType: 'objects' | 'nonObjects';
 }
 
-const notificationCache = new Map<string, NotificationCacheState>();
+// Changed Map to WeakMap and key from string to NgtInstanceNode
+const notificationCache = new WeakMap<NgtInstanceNode, NotificationCacheState>();
 
 /**
  * Notify ancestors about changes to a THREE.js objects' children
@@ -225,18 +205,20 @@ function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'no
 	const localState = getInstanceState(instance);
 	if (!localState) return;
 
-	const id = instance.__ngt_id__ || instance['uuid'];
-	if (!id) return;
+	// Removed ID-based keying; instance object is now the key.
+	// const id = instance.__ngt_id__ || instance['uuid'];
+	// if (!id) return;
 
 	const maxNotificationSkipCount = localState.store?.snapshot.maxNotificationSkipCount || 5;
-	const cached = notificationCache.get(id);
+	const cached = notificationCache.get(instance); // Use instance as key
 
 	if (!cached || cached.lastType !== type || cached.skipCount > maxNotificationSkipCount) {
-		notificationCache.set(id, { skipCount: 0, lastType: type });
+		notificationCache.set(instance, { skipCount: 0, lastType: type }); // Use instance as key
 
-		if (notificationCache.size === 1) {
-			queueMicrotask(() => notificationCache.clear());
-		}
+		// Removed global cache clearing logic tied to queueMicrotask and cache.size
+		// if (notificationCache.size === 1) {
+		// queueMicrotask(() => notificationCache.clear());
+		// }
 
 		const { parent } = localState.hierarchyStore.snapshot;
 		localState.hierarchyStore.update({ [type]: (localState.hierarchyStore.snapshot[type] || []).slice() });
@@ -244,5 +226,5 @@ function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'no
 		return;
 	}
 
-	notificationCache.set(id, { ...cached, skipCount: cached.skipCount + 1 });
+	notificationCache.set(instance, { ...cached, skipCount: cached.skipCount + 1 }); // Use instance as key
 }

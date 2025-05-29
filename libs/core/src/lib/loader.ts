@@ -140,6 +140,8 @@ function _injectLoader<
 			NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 		> | null>(null);
 
+		let previousNormalizedUrls: string[] | null = null;
+
 		const cachedResultPromisesEffect = load(loaderConstructorFactory, inputs, {
 			extensions,
 			onProgress,
@@ -147,18 +149,33 @@ function _injectLoader<
 		});
 
 		effect(() => {
-			const originalUrls = inputs();
-			const cachedResultPromises = cachedResultPromisesEffect();
+			const currentOriginalInputs = inputs();
+			const currentNormalizedUrls = normalizeInputs(currentOriginalInputs);
+
+			if (
+				previousNormalizedUrls &&
+				previousNormalizedUrls.length === currentNormalizedUrls.length &&
+				previousNormalizedUrls.every((url, i) => url === currentNormalizedUrls[i])
+			) {
+				// Normalized URLs are the same as the previous run, skip processing.
+				return;
+			}
+
+			// URLs are different or it's the first run, proceed with loading.
+			previousNormalizedUrls = currentNormalizedUrls;
+
+			const cachedResultPromises = cachedResultPromisesEffect(); // This will use inputs() and re-normalize internally.
 			Promise.all(cachedResultPromises).then((results) => {
+				// originalUrls is used here to determine the structure of the response.
+				// We use currentOriginalInputs which triggered this effect execution.
 				response.update(() => {
-					if (Array.isArray(originalUrls)) return results;
-					if (typeof originalUrls === 'string') return results[0];
-					const keys = Object.keys(originalUrls);
+					if (Array.isArray(currentOriginalInputs)) return results;
+					if (typeof currentOriginalInputs === 'string') return results[0];
+					const keys = Object.keys(currentOriginalInputs);
 					return keys.reduce(
-						(result, key) => {
-							// @ts-ignore
-							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-							return result;
+						(acc, key, index) => {
+							(acc as NgtAnyRecord)[key] = results[index];
+							return acc;
 						},
 						{} as {
 							[key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>;
