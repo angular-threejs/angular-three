@@ -46,9 +46,13 @@ export function kebabToPascal(str: string): string {
 	return pascalStr;
 }
 
-function propagateStoreRecursively(node: NgtInstanceNode, parentNode: NgtInstanceNode) {
+function propagateStoreRecursively(
+	node: NgtInstanceNode,
+	parentNode: NgtInstanceNode,
+	parentInstanceState?: NgtInstanceState,
+) {
 	const iS = getInstanceState(node);
-	const pIS = getInstanceState(parentNode);
+	const pIS = parentInstanceState || getInstanceState(parentNode);
 
 	if (!iS || !pIS) return;
 
@@ -69,7 +73,7 @@ function propagateStoreRecursively(node: NgtInstanceNode, parentNode: NgtInstanc
 
 		// Recursively reassign the store for each child
 		for (const child of children) {
-			propagateStoreRecursively(child, node);
+			propagateStoreRecursively(child, node, iS);
 		}
 	}
 }
@@ -85,8 +89,8 @@ export function attachThreeNodes(parent: NgtInstanceNode, child: NgtInstanceNode
 	// whether the child is added to the parent with parent.add()
 	let added = false;
 
-	// propagate store recursively
-	propagateStoreRecursively(child, parent);
+	// propagate store recursively, passing the already fetched parent instance state
+	propagateStoreRecursively(child, parent, pIS);
 
 	if (cIS.attach) {
 		const attachProp = cIS.attach;
