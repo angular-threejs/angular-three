@@ -123,37 +123,40 @@ export function createEvents(store: SignalState<NgtState>) {
 		}
 
 		// Sort by event priority and distance
-		// Map to temporary array with pre-fetched values for sorting
-		const sortableRaycastResults = raycastResults.map((item) => {
-			const state = getInstanceState(item.object)?.store?.snapshot;
-			return {
-				originalItem: item,
-				priority: state?.events.priority,
-				distance: item.distance,
-				stateExists: !!state,
-			};
-		});
+		// Use a WeakMap to cache sort data associated with each intersection object.
+		const sortDataCache = new WeakMap<
+			THREE.Intersection<THREE.Object3D>,
+			{ priority?: number; stateExists: boolean }
+		>();
 
-		// Sort the temporary array
-		sortableRaycastResults.sort((a, b) => {
-			if (a.stateExists && b.stateExists) {
+		for (const item of raycastResults) {
+			const state = getInstanceState(item.object)?.store?.snapshot;
+			sortDataCache.set(item, {
+				priority: state?.events.priority,
+				stateExists: !!state,
+			});
+		}
+
+		raycastResults.sort((a, b) => {
+			const aData = sortDataCache.get(a);
+			const bData = sortDataCache.get(b);
+
+			// Should always find data, but defensively handle if not.
+			if (!aData || !bData) return a.distance - b.distance;
+
+			if (aData.stateExists && bData.stateExists) {
 				// Both items have state, sort by priority then distance
-				// Use a default for priority (e.g., 0) if it might be undefined,
-				// though stateExists should imply it's a number as per original logic.
-				return (b.priority ?? 0) - (a.priority ?? 0) || a.distance - b.distance;
+				return (bData.priority ?? 0) - (aData.priority ?? 0) || a.distance - b.distance;
 			}
 			// One or both states don't exist, sort by distance only
 			return a.distance - b.distance;
 		});
 
-		// Map back to the original raycastResults structure
-		const sortedRaycastResults = sortableRaycastResults.map((item) => item.originalItem);
-
 		// Filter out duplicates - more efficient than chaining
-		// Use sortedRaycastResults instead of raycastResults for filtering
+		// raycastResults is now sorted in-place.
 		let hits: THREE.Intersection<THREE.Object3D>[] = [];
-		for (let i = 0; i < sortedRaycastResults.length; i++) {
-			const item = sortedRaycastResults[i];
+		for (let i = 0; i < raycastResults.length; i++) {
+			const item = raycastResults[i];
 			const id = makeId(item as NgtIntersection);
 			if (duplicates.has(id)) continue;
 			duplicates.add(id);

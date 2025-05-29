@@ -107,36 +107,54 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			updateGeometryStamp() {
 				instance.__ngt__.hierarchyStore.update({ geometryStamp: Date.now() });
 			},
-			setPointerEvent: <TEvent extends keyof NgtEventHandlers>(
-				eventName: TEvent,
-				callback: NonNullable<NgtEventHandlers[TEvent]>,
-			) => {
+			store,
+			...rest,
+		};
+	}
+
+	Object.defineProperty(instance.__ngt__, 'setPointerEvent', {
+		value: <TEvent extends keyof NgtEventHandlers>(
+			eventName: TEvent,
+			callback: NonNullable<NgtEventHandlers[TEvent]>,
+		) => {
+			const iS = getInstanceState(instance) as NgtInstanceState;
+			if (!iS.handlers) iS.handlers = {};
+
+			// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
+			const previousHandler = iS.handlers[eventName];
+			// readjust the callback
+			const updatedCallback: typeof callback = (event: any) => {
+				if (previousHandler) previousHandler(event);
+				callback(event);
+			};
+
+			Object.assign(iS.handlers, { [eventName]: updatedCallback });
+
+			// increment the count everytime
+			iS.eventCount += 1;
+
+			// clean up the event listener by removing the target from the interaction array
+			return () => {
 				const iS = getInstanceState(instance) as NgtInstanceState;
-				if (!iS.handlers) iS.handlers = {};
+				if (iS) {
+					iS.handlers && delete iS.handlers[eventName];
+					iS.eventCount -= 1;
+				}
+			};
+		},
+		configurable: true,
+	});
 
-				const previousHandler = iS.handlers[eventName];
-				const updatedCallback: typeof callback = (event: any) => {
-					if (previousHandler) previousHandler(event);
-					callback(event);
-				};
+	Object.defineProperties(instance.__ngt__, {
+		addInteraction: {
+			value: (store?: SignalState<NgtState>) => { // Parameter name reverted to 'store'
+				if (!store) return;
 
-				Object.assign(iS.handlers, { [eventName]: updatedCallback });
-				iS.eventCount += 1;
-
-				return () => {
-					const iS = getInstanceState(instance) as NgtInstanceState;
-					if (iS) {
-						iS.handlers && delete iS.handlers[eventName];
-						iS.eventCount -= 1;
-					}
-				};
-			},
-			addInteraction: (storeParam?: SignalState<NgtState>) => {
-				if (!storeParam) return;
 				const iS = getInstanceState(instance) as NgtInstanceState;
+
 				if (iS.eventCount < 1 || !('raycast' in instance) || !instance['raycast']) return;
 
-				let root = storeParam;
+				let root = store;
 				while (root.snapshot.previousRoot) {
 					root = root.snapshot.previousRoot;
 				}
@@ -146,14 +164,19 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 					const index = interactions.findIndex(
 						(obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid,
 					);
+					// if already exists, do not add to interactions
 					if (index < 0) {
-						interactions.push(instance as unknown as THREE.Object3D);
+						root.snapshot.internal.interaction.push(instance as unknown as THREE.Object3D);
 					}
 				}
 			},
-			removeInteraction: (storeParam?: SignalState<NgtState>) => {
-				if (!storeParam) return;
-				let root = storeParam;
+			configurable: true,
+		},
+		removeInteraction: {
+			value: (store?: SignalState<NgtState>) => { // Parameter name reverted to 'store'
+				if (!store) return;
+
+				let root = store;
 				while (root.snapshot.previousRoot) {
 					root = root.snapshot.previousRoot;
 				}
@@ -166,11 +189,9 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 					if (index >= 0) interactions.splice(index, 1);
 				}
 			},
-			store,
-			...rest,
-		};
-	}
-	// Object.defineProperty and Object.defineProperties calls for setPointerEvent, addInteraction, removeInteraction are removed.
+			configurable: true,
+		},
+	});
 
 	return instance;
 }
