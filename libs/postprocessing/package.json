@@ -22,8 +22,8 @@
 	],
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": ">=19.0.0 <20.0.0",
-		"@angular/core": ">=19.0.0 <20.0.0",
+		"@angular/common": ">=19.0.0 <21.0.0",
+		"@angular/core": ">=19.0.0 <21.0.0",
 		"maath": ">=0.10.0 <0.11.0",
 		"n8ao": ">=1.9.4 <2.0.0",
 		"postprocessing": "^6.0.0",
