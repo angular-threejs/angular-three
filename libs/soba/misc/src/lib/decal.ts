@@ -122,7 +122,40 @@ export class NgtsDecal {
 			if (!rotation || typeof rotation === 'number') {
 				const obj = new THREE.Object3D();
 				obj.position.copy(state.position);
-				obj.lookAt(parent.position);
+
+				// Thanks https://x.com/N8Programs !
+				const vertices = parent.geometry.attributes['position'].array;
+				if (parent.geometry.attributes['normal'] === undefined) {
+					parent.geometry.computeVertexNormals();
+				}
+				const normal = parent.geometry.attributes['normal'].array;
+				let distance = Infinity;
+				let closestNormal = new THREE.Vector3();
+				const ox = obj.position.x;
+				const oy = obj.position.y;
+				const oz = obj.position.z;
+				const vLength = vertices.length;
+				let chosenIdx = -1;
+				for (let i = 0; i < vLength; i += 3) {
+					const x = vertices[i];
+					const y = vertices[i + 1];
+					const z = vertices[i + 2];
+					const xDiff = x - ox;
+					const yDiff = y - oy;
+					const zDiff = z - oz;
+					const distSquared = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+					if (distSquared < distance) {
+						distance = distSquared;
+						chosenIdx = i;
+					}
+				}
+				closestNormal.fromArray(normal, chosenIdx);
+
+				// Get vector tangent to normal
+				obj.lookAt(obj.position.clone().add(closestNormal));
+				obj.rotateZ(Math.PI);
+				obj.rotateY(Math.PI);
+
 				if (typeof rotation === 'number') obj.rotateZ(rotation);
 				applyProps(state, { rotation: obj.rotation });
 			} else {
