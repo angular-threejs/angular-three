@@ -41,15 +41,15 @@ const cache = new Map<NgtsFontInput, Font>();
 export function fontResource(input: () => NgtsFontInput, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(fontResource, injector, () => {
 		return resource({
-			request: input,
-			loader: async ({ request }) => {
-				if (cache.has(request)) {
-					return cache.get(request) as Font;
+			params: input,
+			loader: async ({ params }) => {
+				if (cache.has(params)) {
+					return cache.get(params) as Font;
 				}
 
-				const fontData = await loadFontData(request);
+				const fontData = await loadFontData(params);
 				const parsed = parseFontData(fontData);
-				cache.set(request, parsed);
+				cache.set(params, parsed);
 				return parsed;
 			},
 		});
