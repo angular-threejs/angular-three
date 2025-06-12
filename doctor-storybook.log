@@ -1,27 +1,16 @@
 🩺 The doctor is checking the health of your Storybook..
-╭ Incompatible packages found ─────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                              │
-│   You are currently using Storybook 9.0.9 but you have packages which are incompatible with it:              │
-│   - @chromatic-com/storybook@3.2.6 which depends on ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0   │
-│   - @storybook/addon-interactions@8.6.14 which depends on 8.6.14                                             │
-│    Repo: https://github.com/storybookjs/storybook/tree/next/code/addons/interactions                         │
-│   - @storybook/core-server@8.6.14 which depends on ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0    │
-│    Repo: https://github.com/storybookjs/storybook/tree/next/code/lib/core-server                             │
-│   - @storybook/manager-api@8.6.14 which depends on ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0    │
-│    Repo: https://github.com/storybookjs/storybook/tree/next/code/lib/manager-api                             │
-│   - @storybook/test@8.6.14 which depends on 8.6.14                                                           │
-│    Repo: https://github.com/storybookjs/storybook/tree/next/code/lib/test                                    │
-│   - @storybook/theming@8.6.14 which depends on ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0        │
-│    Repo: https://github.com/storybookjs/storybook/tree/next/code/lib/theming                                 │
-│   - storybook-addon-deep-controls@0.9.2 which depends on 7.x.x || 8.x.x                                      │
-│    Repo: https://github.com/eliasm307/storybook-addon-deep-controls#readme                                   │
-│                                                                                                              │
-│                                                                                                              │
-│   Please consider updating your packages or contacting the maintainers for compatibility details.            │
-│   For more on Storybook 9 compatibility, see the linked GitHub issue:                                        │
-│   https://github.com/storybookjs/storybook/issues/30944                                                      │
-│                                                                                                              │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭ Incompatible packages found ────────────────────────────────────────────────────────────────────────╮
+│                                                                                                     │
+│   You are currently using Storybook 9.0.9 but you have packages which are incompatible with it:     │
+│   - storybook-addon-deep-controls@0.9.3 which depends on 7.x.x || 8.x.x                             │
+│    Repo: https://github.com/eliasm307/storybook-addon-deep-controls#readme                          │
+│                                                                                                     │
+│                                                                                                     │
+│   Please consider updating your packages or contacting the maintainers for compatibility details.   │
+│   For more on Storybook 9 compatibility, see the linked GitHub issue:                               │
+│   https://github.com/storybookjs/storybook/issues/30944                                             │
+│                                                                                                     │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 You can always recheck the health of your project by running:
 npx storybook doctor
