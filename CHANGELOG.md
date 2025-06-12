@@ -1,3 +1,14 @@
+## 4.0.0-next.107 (2025-06-12)
+
+### 💅 Refactors
+
+- **core:** do not repeat the same obj in portal ([fb2016c1](https://github.com/angular-threejs/angular-three/commit/fb2016c1))
+- **core:** merge setPointerEvent to defineProperties in instance ([af71414f](https://github.com/angular-threejs/angular-three/commit/af71414f))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.106 (2025-05-18)
 
 ### 💅 Refactors
