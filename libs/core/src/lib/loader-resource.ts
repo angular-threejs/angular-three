@@ -28,7 +28,7 @@ function normalizeInputs(input: string | string[] | Record<string, string>) {
 const cached = new Map();
 const memoizedLoaders = new WeakMap();
 
-function getLoaderRequestParams<
+function getLoaderResourceParams<
 	TData,
 	TUrl extends string | string[] | Record<string, string>,
 	TLoaderConstructor extends NgtLoaderProto<TData>,
@@ -54,16 +54,16 @@ function getLoaderRequestParams<
 }
 
 function getLoaderPromises<TData, TUrl extends string | string[] | Record<string, string>>(
-	request: { loader: THREE.Loader<TData>; normalizedUrls: string[]; urls: TUrl },
+	params: { loader: THREE.Loader<TData>; normalizedUrls: string[]; urls: TUrl },
 	onProgress?: { (event: ProgressEvent<EventTarget>): void },
 ) {
-	return request.normalizedUrls.map((url) => {
+	return params.normalizedUrls.map((url) => {
 		if (url === '') return Promise.resolve(null);
 		const cachedPromise = cached.get(url);
 		if (cachedPromise) return cachedPromise;
 
 		const promise = new Promise<TData>((res, rej) => {
-			request.loader.load(
+			params.loader.load(
 				url,
 				(data) => {
 					if ('scene' in (data as NgtAnyRecord)) {
@@ -109,29 +109,29 @@ export function loaderResource<
 > {
 	return assertInjector(loaderResource, injector, () => {
 		return resource({
-			request: () => getLoaderRequestParams(input, loaderConstructorFactory, extensions),
-			loader: async ({ request }) => {
+			params: () => getLoaderResourceParams(input, loaderConstructorFactory, extensions),
+			loader: async ({ params }) => {
 				// TODO: use the abortSignal when THREE.Loader supports it
 
-				const loadedResults = await Promise.all(getLoaderPromises(request, onProgress));
+				const loadedResults = await Promise.all(getLoaderPromises(params, onProgress));
 
 				let results: NgtLoaderResults<
 					TUrl,
 					NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 				>;
 
-				if (Array.isArray(request.urls)) {
+				if (Array.isArray(params.urls)) {
 					results = loadedResults as NgtLoaderResults<
 						TUrl,
 						NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 					>;
-				} else if (typeof request.urls === 'string') {
+				} else if (typeof params.urls === 'string') {
 					results = loadedResults[0] as NgtLoaderResults<
 						TUrl,
 						NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>
 					>;
 				} else {
-					const keys = Object.keys(request.urls);
+					const keys = Object.keys(params.urls);
 					results = keys.reduce(
 						(result, key) => {
 							// @ts-ignore
@@ -161,7 +161,7 @@ loaderResource.preload = <
 	inputs: TUrl,
 	extensions?: NgtLoaderExtensions<TLoaderConstructor>,
 ) => {
-	const params = getLoaderRequestParams(
+	const params = getLoaderResourceParams(
 		() => inputs,
 		() => loaderConstructor,
 		extensions,
