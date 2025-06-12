@@ -10,7 +10,20 @@ const config: StorybookConfig = {
     ],
 
     staticDirs: ['./public', './public/cube'],
-    framework: '@storybook/angular'
+    framework: '@storybook/angular',
+    
+    webpackFinal: async (config) => {
+        // Handle Node.js polyfills for webpack 5
+        config.resolve = {
+            ...config.resolve,
+            fallback: {
+                ...config.resolve?.fallback,
+                fs: false,
+                path: require.resolve('path-browserify')
+            }
+        };
+        return config;
+    }
 };
 
 export default config;

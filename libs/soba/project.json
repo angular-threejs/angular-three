@@ -36,7 +36,7 @@
 				"compodoc": false,
 				"configDir": "libs/soba/.storybook",
 				"browserTarget": "soba:build:development",
-				"experimentalZoneless": true
+				"experimentalZoneless": false
 			}
 		},
 		"build-storybook": {
@@ -47,7 +47,7 @@
 				"configDir": "libs/soba/.storybook",
 				"outputDir": "dist/storybook/soba",
 				"browserTarget": "soba:build:production",
-				"experimentalZoneless": true
+				"experimentalZoneless": false
 			},
 			"configurations": {
 				"ci": {

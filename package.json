@@ -71,6 +71,7 @@
     "ng-packagr": "20.0.0",
     "node-three-gltf": "^2.0.2",
     "nx": "21.2.0",
+    "path-browserify": "^1.0.1",
     "postcss": "^8.5.3",
     "postcss-import": "~16.1.0",
     "postcss-preset-env": "~9.6.0",
