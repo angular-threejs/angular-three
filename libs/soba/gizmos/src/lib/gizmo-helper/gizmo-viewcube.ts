@@ -1,15 +1,16 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	ElementRef,
-	inject,
-	input,
-	output,
-	signal,
-	viewChild,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+  DOCUMENT
 } from '@angular/core';
 import {
 	extend,

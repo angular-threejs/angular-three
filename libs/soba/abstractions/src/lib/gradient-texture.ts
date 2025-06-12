@@ -1,12 +1,13 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	inject,
-	input,
-	untracked,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  input,
+  untracked,
+  DOCUMENT
 } from '@angular/core';
 import { extend, injectStore, NgtArgs, NgtAttachable, NgtThreeElements, omit } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';

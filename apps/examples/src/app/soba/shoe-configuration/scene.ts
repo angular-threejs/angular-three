@@ -1,12 +1,13 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	effect,
-	inject,
-	signal,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  effect,
+  inject,
+  signal,
+  DOCUMENT
 } from '@angular/core';
 import { NgtArgs, signalState } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';

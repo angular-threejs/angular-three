@@ -3,14 +3,15 @@ Command: npx angular-three-gltf&#64;1.1.11 apps/kitchen-sink/src/app/soba/camera
 **/
 
 import {
-	ChangeDetectionStrategy,
-	Component,
-	CUSTOM_ELEMENTS_SCHEMA,
-	effect,
-	ElementRef,
-	inject,
-	signal,
-	viewChild,
+  ChangeDetectionStrategy,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  effect,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+  DOCUMENT
 } from '@angular/core';
 import { beforeRender, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
@@ -21,7 +22,7 @@ import { BufferGeometry, Color, Group, MathUtils, Mesh, MeshStandardMaterial } f
 import { GLTF } from 'three-stdlib';
 import { SCROLL } from './camera-scroll';
 
-import { DOCUMENT } from '@angular/common';
+
 import modelUrl from './model-transformed.glb';
 
 type ActionName = 'CameraAction.005';

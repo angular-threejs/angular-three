@@ -1,14 +1,15 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	afterNextRender,
-	DestroyRef,
-	Directive,
-	effect,
-	ElementRef,
-	inject,
-	input,
-	isSignal,
-	signal,
+  afterNextRender,
+  DestroyRef,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  isSignal,
+  signal,
+  DOCUMENT
 } from '@angular/core';
 import { ClassName } from '@tweakpane/core';
 import { Pane } from 'tweakpane';

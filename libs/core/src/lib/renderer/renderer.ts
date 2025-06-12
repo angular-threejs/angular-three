@@ -1,14 +1,15 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	inject,
-	Injectable,
-	InjectionToken,
-	Injector,
-	Renderer2,
-	RendererFactory2,
-	RendererType2,
-	Type,
-	untracked,
+  inject,
+  Injectable,
+  InjectionToken,
+  Injector,
+  Renderer2,
+  RendererFactory2,
+  RendererType2,
+  Type,
+  untracked,
+  DOCUMENT
 } from '@angular/core';
 import * as THREE from 'three';
 import { NgtArgs } from '../directives/args';
