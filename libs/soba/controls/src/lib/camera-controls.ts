@@ -39,9 +39,14 @@ export class NgtsCameraControls {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['makeDefault', 'camera', 'regress', 'domElement']);
 
-	changed = output<any>();
-	started = output<any>();
-	ended = output<any>();
+	control = output<any>();
+	controlStart = output<any>();
+	controlEnd = output<any>();
+	transitionStart = output<any>();
+	update = output<any>();
+	wake = output<any>();
+	rest = output<any>();
+	sleep = output<any>();
 
 	private store = injectStore();
 
@@ -86,9 +91,7 @@ export class NgtsCameraControls {
 		beforeRender(
 			({ delta }) => {
 				const controls = this.controls();
-				if (controls?.enabled) {
-					controls.update(delta);
-				}
+				controls?.update(delta);
 			},
 			{ priority: -1 },
 		);
@@ -114,29 +117,58 @@ export class NgtsCameraControls {
 				this.store.invalidate(),
 			];
 
-			const callback = (e: any) => {
+			const invalidateAndRegress = () => {
 				invalidate();
 				if (regress) performanceRegress();
-				this.changed.emit(e);
 			};
 
-			const startCallback = this.started.emit.bind(this.started);
-			const endCallback = this.ended.emit.bind(this.ended);
+			const control = (e: any) => {
+				invalidateAndRegress();
+				this.control.emit(e);
+			};
 
-			controls.addEventListener('update', callback);
-			controls.addEventListener('controlstart', startCallback);
-			controls.addEventListener('controlend', endCallback);
-			controls.addEventListener('control', callback);
-			controls.addEventListener('transitionstart', callback);
-			controls.addEventListener('wake', callback);
+			const controlStart = (e: any) => {
+				invalidateAndRegress();
+				this.controlStart.emit(e);
+			};
+
+			const transitionStart = (e: any) => {
+				invalidateAndRegress();
+				this.transitionStart.emit(e);
+			};
+
+			const update = (e: any) => {
+				invalidateAndRegress();
+				this.update.emit(e);
+			};
+
+			const wake = (e: any) => {
+				invalidateAndRegress();
+				this.wake.emit(e);
+			};
+
+			const controlEnd = this.controlEnd.emit.bind(this.controlEnd);
+			const rest = this.rest.emit.bind(this.rest);
+			const sleep = this.sleep.emit.bind(this.sleep);
+
+			controls.addEventListener('update', update);
+			controls.addEventListener('controlstart', controlStart);
+			controls.addEventListener('controlend', controlEnd);
+			controls.addEventListener('control', control);
+			controls.addEventListener('transitionstart', transitionStart);
+			controls.addEventListener('wake', wake);
+			controls.addEventListener('rest', rest);
+			controls.addEventListener('sleep', sleep);
 
 			onCleanup(() => {
-				controls.removeEventListener('update', callback);
-				controls.removeEventListener('controlstart', startCallback);
-				controls.removeEventListener('controlend', endCallback);
-				controls.removeEventListener('control', callback);
-				controls.removeEventListener('transitionstart', callback);
-				controls.removeEventListener('wake', callback);
+				controls.removeEventListener('update', update);
+				controls.removeEventListener('controlstart', controlStart);
+				controls.removeEventListener('controlend', controlEnd);
+				controls.removeEventListener('control', control);
+				controls.removeEventListener('transitionstart', transitionStart);
+				controls.removeEventListener('wake', wake);
+				controls.removeEventListener('rest', rest);
+				controls.removeEventListener('sleep', sleep);
 			});
 		});
 	}
