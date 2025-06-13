@@ -53,45 +53,47 @@ import { Turtle } from './turtle';
 
 		<!-- custom env map -->
 		<ngts-environment [options]="{ resolution: 1024 }">
-			<ngt-group * [rotation]="[-Math.PI / 3, 0, 0]">
-				<ngts-lightformer
-					[options]="{
-						intensity: 4,
-						rotation: [Math.PI / 2, 0, 0],
-						position: [0, 5, -9],
-						scale: [10, 10, 1],
-					}"
-				/>
-
-				@for (x of lightPositions; track $index) {
+			<ng-template>
+				<ngt-group [rotation.x]="-Math.PI / 3">
 					<ngts-lightformer
 						[options]="{
-							form: 'circle',
 							intensity: 4,
 							rotation: [Math.PI / 2, 0, 0],
-							position: [x, 4, $index * 4],
-							scale: [4, 1, 1],
+							position: [0, 5, -9],
+							scale: [10, 10, 1],
 						}"
 					/>
-				}
 
-				<ngts-lightformer
-					[options]="{
-						intensity: 2,
-						rotation: [Math.PI / 2, 0, 0],
-						position: [-5, 1, -1],
-						scale: [50, 2, 1],
-					}"
-				/>
-				<ngts-lightformer
-					[options]="{
-						intensity: 2,
-						rotation: [-Math.PI / 2, 0, 0],
-						position: [10, 1, 0],
-						scale: [50, 2, 1],
-					}"
-				/>
-			</ngt-group>
+					@for (x of lightPositions; track $index) {
+						<ngts-lightformer
+							[options]="{
+								form: 'circle',
+								intensity: 4,
+								rotation: [Math.PI / 2, 0, 0],
+								position: [x, 4, $index * 4],
+								scale: [4, 1, 1],
+							}"
+						/>
+					}
+
+					<ngts-lightformer
+						[options]="{
+							intensity: 2,
+							rotation: [Math.PI / 2, 0, 0],
+							position: [-5, 1, -1],
+							scale: [50, 2, 1],
+						}"
+					/>
+					<ngts-lightformer
+						[options]="{
+							intensity: 2,
+							rotation: [-Math.PI / 2, 0, 0],
+							position: [10, 1, 0],
+							scale: [50, 2, 1],
+						}"
+					/>
+				</ngt-group>
+			</ng-template>
 		</ngts-environment>
 
 		<ngts-camera-controls

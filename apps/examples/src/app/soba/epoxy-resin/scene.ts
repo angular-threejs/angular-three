@@ -126,48 +126,50 @@ export class TextAndGrid {
 		/>
 
 		<ngts-environment [options]="{ resolution: 32 }">
-			<ngt-group * [rotation]="[-Math.PI / 4, -0.3, 0]">
-				<ngts-lightformer
-					[options]="{
-						intensity: 20,
-						rotation: [Math.PI / 2, 0, 0],
-						position: [0, 5, -9],
-						scale: [10, 10, 1],
-					}"
-				/>
-				<ngts-lightformer
-					[options]="{
-						intensity: 2,
-						rotation: [Math.PI / 2, 0, 0],
-						position: [-10, 1, 5],
-						scale: [10, 10, 1],
-					}"
-				/>
-				<ngts-lightformer
-					[options]="{
-						intensity: 2,
-						rotation: [0, Math.PI / 2, 0],
-						position: [10, 1, 0],
-						scale: [10, 10, 1],
-					}"
-				/>
-				<ngts-lightformer
-					[options]="{
-						intensity: 2,
-						rotation: [-Math.PI / 2, 0, 0],
-						position: [-10, -1, -5],
-						scale: [10, 10, 1],
-					}"
-				/>
-				<ngts-lightformer
-					[options]="{
-						intensity: 2,
-						rotation: [0, Math.PI / 2, 0],
-						position: [-5, 1, -1],
-						scale: [10, 2, 1],
-					}"
-				/>
-			</ngt-group>
+			<ng-template>
+				<ngt-group [rotation]="[-Math.PI / 4, -0.3, 0]">
+					<ngts-lightformer
+						[options]="{
+							intensity: 20,
+							rotation: [Math.PI / 2, 0, 0],
+							position: [0, 5, -9],
+							scale: [10, 10, 1],
+						}"
+					/>
+					<ngts-lightformer
+						[options]="{
+							intensity: 2,
+							rotation: [Math.PI / 2, 0, 0],
+							position: [-10, 1, 5],
+							scale: [10, 10, 1],
+						}"
+					/>
+					<ngts-lightformer
+						[options]="{
+							intensity: 2,
+							rotation: [0, Math.PI / 2, 0],
+							position: [10, 1, 0],
+							scale: [10, 10, 1],
+						}"
+					/>
+					<ngts-lightformer
+						[options]="{
+							intensity: 2,
+							rotation: [-Math.PI / 2, 0, 0],
+							position: [-10, -1, -5],
+							scale: [10, 10, 1],
+						}"
+					/>
+					<ngts-lightformer
+						[options]="{
+							intensity: 2,
+							rotation: [0, Math.PI / 2, 0],
+							position: [-5, 1, -1],
+							scale: [10, 2, 1],
+						}"
+					/>
+				</ngt-group>
+			</ng-template>
 		</ngts-environment>
 
 		<ngts-accumulative-shadows

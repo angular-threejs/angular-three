@@ -48,7 +48,9 @@ gltfResource.preload('./911-transformed.glb');
 		</ngts-accumulative-shadows>
 
 		<ngts-environment [options]="{ background: true, blur: 1, resolution: 256, frames: Infinity }">
-			<app-lightformers * />
+			<ng-template>
+				<app-lightformers />
+			</ng-template>
 		</ngts-environment>
 
 		<tweakpane-pane title="Porsche">

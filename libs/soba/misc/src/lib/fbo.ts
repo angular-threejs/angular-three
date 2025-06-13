@@ -25,7 +25,7 @@ interface FBOSettings {
 	wrapT?: THREE.Wrapping | undefined;
 	magFilter?: THREE.MagnificationTextureFilter | undefined;
 	minFilter?: THREE.MinificationTextureFilter | undefined;
-	format?: number | undefined; // RGBAFormat;
+	format?: THREE.PixelFormat | undefined; // RGBAFormat;
 	type?: THREE.TextureDataType | undefined; // UnsignedByteType;
 	anisotropy?: number | undefined; // 1;
 	depthBuffer?: boolean | undefined; // true;

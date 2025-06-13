@@ -3,15 +3,15 @@ Command: npx angular-three-gltf&#64;1.1.11 apps/kitchen-sink/src/app/soba/camera
 **/
 
 import {
-  ChangeDetectionStrategy,
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  effect,
-  ElementRef,
-  inject,
-  signal,
-  viewChild,
-  DOCUMENT
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	DOCUMENT,
+	effect,
+	ElementRef,
+	inject,
+	signal,
+	viewChild,
 } from '@angular/core';
 import { beforeRender, NgtArgs, NgtThreeEvent } from 'angular-three';
 import { NgtsPerspectiveCamera } from 'angular-three-soba/cameras';
@@ -21,7 +21,6 @@ import type * as THREE from 'three';
 import { BufferGeometry, Color, Group, MathUtils, Mesh, MeshStandardMaterial } from 'three';
 import { GLTF } from 'three-stdlib';
 import { SCROLL } from './camera-scroll';
-
 
 import modelUrl from './model-transformed.glb';
 
@@ -117,14 +116,16 @@ export type ModelGLTFResult = GLTF & {
 					<ngts-perspective-camera
 						[options]="{ makeDefault: true, far: 100, near: 0.1, fov: 28, rotation: [-Math.PI / 2, 0, 0] }"
 					>
-						<ngt-directional-light * [position]="[10, 20, 15]" castShadow [intensity]="Math.PI * 2">
-							<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
-							<ngt-vector2 *args="[1024, 1024]" attach="shadow.mapSize" />
-							<ngt-value [rawValue]="8" attach="shadow.camera.right" />
-							<ngt-value [rawValue]="8" attach="shadow.camera.top" />
-							<ngt-value [rawValue]="-8" attach="shadow.camera.left" />
-							<ngt-value [rawValue]="-8" attach="shadow.camera.bottom" />
-						</ngt-directional-light>
+						<ng-template>
+							<ngt-directional-light [position]="[10, 20, 15]" castShadow [intensity]="Math.PI * 2">
+								<ngt-value [rawValue]="-0.0001" attach="shadow.bias" />
+								<ngt-vector2 *args="[1024, 1024]" attach="shadow.mapSize" />
+								<ngt-value [rawValue]="8" attach="shadow.camera.right" />
+								<ngt-value [rawValue]="8" attach="shadow.camera.top" />
+								<ngt-value [rawValue]="-8" attach="shadow.camera.left" />
+								<ngt-value [rawValue]="-8" attach="shadow.camera.bottom" />
+							</ngt-directional-light>
+						</ng-template>
 					</ngts-perspective-camera>
 				</ngt-group>
 
