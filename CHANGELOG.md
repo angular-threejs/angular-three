@@ -1,3 +1,29 @@
+## 4.0.0-next.108 (2025-06-18)
+
+### 🚀 Features
+
+- **cannon:** bump ng 20 ([273adf00](https://github.com/angular-threejs/angular-three/commit/273adf00))
+- **core:** bump ng 20 ([fca5b470](https://github.com/angular-threejs/angular-three/commit/fca5b470))
+- **postprocessing:** bump ng 20 ([37c2bb1c](https://github.com/angular-threejs/angular-three/commit/37c2bb1c))
+- **rapier:** bump ng 20 ([28ce3ab2](https://github.com/angular-threejs/angular-three/commit/28ce3ab2))
+- **repo:** migrate 21.2 with angular 20 ([6eee3eb9](https://github.com/angular-threejs/angular-three/commit/6eee3eb9))
+- **soba:** bump ng 20 ([6d3fcd44](https://github.com/angular-threejs/angular-three/commit/6d3fcd44))
+- **soba:** pointerlockcontrols ([98d085a9](https://github.com/angular-threejs/angular-three/commit/98d085a9))
+- **theatre:** bump ng 20 ([79195669](https://github.com/angular-threejs/angular-three/commit/79195669))
+- **tweakpane:** bump ng 20 ([e996bbcd](https://github.com/angular-threejs/angular-three/commit/e996bbcd))
+
+### 🩹 Fixes
+
+- **core:** ng20 resource ([3ba5a737](https://github.com/angular-threejs/angular-three/commit/3ba5a737))
+- **soba:** ng20 resource ([7906a906](https://github.com/angular-threejs/angular-three/commit/7906a906))
+- **soba:** add granular camrea controls outputs ([fc58e479](https://github.com/angular-threejs/angular-three/commit/fc58e479))
+- **soba:** update decal ([72f9c1da](https://github.com/angular-threejs/angular-three/commit/72f9c1da))
+- **soba:** PixelFormat for fbo ([d376f54a](https://github.com/angular-threejs/angular-three/commit/d376f54a))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.107 (2025-06-12)
 
 ### 💅 Refactors
