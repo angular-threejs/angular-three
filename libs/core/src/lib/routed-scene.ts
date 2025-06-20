@@ -1,16 +1,15 @@
 import {
-	ChangeDetectorRef,
-	Component,
-	createEnvironmentInjector,
-	Directive,
-	effect,
-	EnvironmentInjector,
-	inject,
-	InjectFlags,
-	InjectOptions,
-	ProviderToken,
-	RendererFactory2,
-	runInInjectionContext,
+  ChangeDetectorRef,
+  Component,
+  createEnvironmentInjector,
+  Directive,
+  effect,
+  EnvironmentInjector,
+  inject,
+  InjectOptions,
+  ProviderToken,
+  RendererFactory2,
+  runInInjectionContext
 } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
@@ -31,7 +30,7 @@ class NgtOutletEnvironmentInjector extends EnvironmentInjector {
 	override get<T>(
 		token: ProviderToken<T>,
 		notFoundValue?: unknown,
-		flags: InjectFlags | InjectOptions = InjectFlags.Default,
+		flags: InjectFlags | InjectOptions = {},
 	): any {
 		const options: InjectOptions = {};
 

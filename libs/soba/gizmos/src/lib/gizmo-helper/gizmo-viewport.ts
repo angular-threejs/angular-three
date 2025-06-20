@@ -1,13 +1,14 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	CUSTOM_ELEMENTS_SCHEMA,
-	inject,
-	input,
-	output,
-	signal,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  input,
+  output,
+  signal,
+  DOCUMENT
 } from '@angular/core';
 import {
 	extend,

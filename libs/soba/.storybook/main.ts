@@ -1,11 +1,23 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { StorybookConfig } from '@storybook/angular';
+
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
 	stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
-	addons: ['@storybook/addon-essentials', 'storybook-addon-deep-controls', '@chromatic-com/storybook'],
+	addons: [
+        getAbsolutePath("storybook-addon-deep-controls"),
+        getAbsolutePath("@chromatic-com/storybook"),
+        getAbsolutePath("@storybook/addon-docs")
+    ],
 	staticDirs: ['./public', './public/cube'],
-	framework: '@storybook/angular',
+	framework: getAbsolutePath("@storybook/angular"),
 	docs: {},
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+    return dirname(require.resolve(join(value, "package.json")));
+}

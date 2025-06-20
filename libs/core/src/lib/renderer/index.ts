@@ -1,14 +1,15 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	DebugNode,
-	Injectable,
-	Renderer2,
-	RendererFactory2,
-	RendererType2,
-	Type,
-	inject,
-	makeEnvironmentProviders,
-	untracked,
+  DebugNode,
+  Injectable,
+  Renderer2,
+  RendererFactory2,
+  RendererType2,
+  Type,
+  inject,
+  makeEnvironmentProviders,
+  untracked,
+  DOCUMENT
 } from '@angular/core';
 import { NgtArgs } from '../directives/args';
 import { NgtParent } from '../directives/parent';

@@ -1,24 +1,25 @@
 import '@nativescript/canvas-three';
 
-import { DOCUMENT } from '@angular/common';
+
 import {
-	booleanAttribute,
-	ChangeDetectionStrategy,
-	Component,
-	ComponentRef,
-	createEnvironmentInjector,
-	DestroyRef,
-	EnvironmentInjector,
-	inject,
-	Injector,
-	input,
-	NgZone,
-	NO_ERRORS_SCHEMA,
-	output,
-	Type,
-	untracked,
-	viewChild,
-	ViewContainerRef,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  ComponentRef,
+  createEnvironmentInjector,
+  DestroyRef,
+  EnvironmentInjector,
+  inject,
+  Injector,
+  input,
+  NgZone,
+  NO_ERRORS_SCHEMA,
+  output,
+  Type,
+  untracked,
+  viewChild,
+  ViewContainerRef,
+  DOCUMENT
 } from '@angular/core';
 import { registerElement } from '@nativescript/angular';
 import { Canvas } from '@nativescript/canvas';

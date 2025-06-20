@@ -1,12 +1,13 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
-	afterNextRender,
-	ChangeDetectionStrategy,
-	Component,
-	DestroyRef,
-	effect,
-	inject,
-	Injector,
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  Injector,
+  DOCUMENT
 } from '@angular/core';
 import { NgtCanvas } from 'angular-three';
 import { Experience } from './experience';
