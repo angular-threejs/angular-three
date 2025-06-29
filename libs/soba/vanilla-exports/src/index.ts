@@ -1,6 +1,7 @@
 import { Type } from '@angular/core';
 import {
 	BlurPass,
+	CameraShake,
 	CausticsMaterial,
 	CausticsProjectionMaterial,
 	CausticsProjectionMaterialType,
@@ -53,6 +54,7 @@ declare global {
 
 export {
 	BlurPass,
+	CameraShake,
 	CausticsMaterial,
 	CausticsProjectionMaterial,
 	CausticsProjectionMaterialType,
