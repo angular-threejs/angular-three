@@ -1,5 +1,4 @@
-
-import { ElementRef, InjectOptions, InjectionToken, effect, inject, DOCUMENT } from '@angular/core';
+import { DOCUMENT, ElementRef, InjectOptions, InjectionToken, effect, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as THREE from 'three';
 import { injectLoop } from './loop';

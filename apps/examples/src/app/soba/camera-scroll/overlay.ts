@@ -1,5 +1,4 @@
-
-import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild, DOCUMENT } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, inject, viewChild } from '@angular/core';
 import { SCROLL } from './camera-scroll';
 
 @Component({

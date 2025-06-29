@@ -1,5 +1,4 @@
-
-import { inject, Pipe, DOCUMENT } from '@angular/core';
+import { DOCUMENT, inject, Pipe } from '@angular/core';
 
 const RGBA_REGEX = /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d*\.?\d+)?\)/;
 const DEFAULT_COLOR = 0x000000;

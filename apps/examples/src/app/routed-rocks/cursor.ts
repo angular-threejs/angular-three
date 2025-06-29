@@ -1,5 +1,4 @@
-
-import { Directive, ElementRef, inject, DOCUMENT } from '@angular/core';
+import { Directive, DOCUMENT, ElementRef, inject } from '@angular/core';
 import { getInstanceState, objectEvents } from 'angular-three';
 import { Object3D } from 'three';
 

@@ -1,85 +1,85 @@
 {
-  "name": "angular-three-soba",
-  "version": "0.0.0-replace",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/angular-threejs/angular-three/tree/main/libs/soba"
-  },
-  "author": {
-    "name": "Chau Tran",
-    "email": "nartc7789@gmail.com",
-    "url": "https://nartc.me"
-  },
-  "description": "Utilities for Angular Three",
-  "keywords": [
-    "angular",
-    "threejs",
-    "renderer",
-    "utilities",
-    "shaders"
-  ],
-  "license": "MIT",
-  "exports": {
-    "./assets/*": "./assets/*"
-  },
-  "peerDependencies": {
-    "@angular/common": ">=19.0.0 <21.0.0",
-    "@angular/core": ">=19.0.0 <21.0.0",
-    "@monogrid/gainmap-js": "^3.0.0",
-    "@pmndrs/vanilla": "^1.19.0",
-    "camera-controls": "^2.8.0",
-    "hls.js": ">=1.5.0",
-    "maath": ">=0.10.0 <0.11.0",
-    "meshline": "^3.1.0",
-    "stats-gl": ">=2.0.0",
-    "three": ">=0.157.0 <0.177.0",
-    "three-custom-shader-material": ">=5.5.0 <6.4.0",
-    "three-mesh-bvh": ">=0.5.0 <0.10.0",
-    "three-stdlib": "^2.0.0",
-    "troika-three-text": ">=0.47.0 <0.53.0"
-  },
-  "peerDependenciesMeta": {
-    "@monogrid/gainmap-js": {
-      "optional": true
-    },
-    "@pmndrs/vanilla": {
-      "optional": true
-    },
-    "hls.js": {
-      "optional": true
-    },
-    "troika-three-text": {
-      "optional": true
-    },
-    "three-custom-shader-material": {
-      "optional": true
-    },
-    "three-mesh-bvh": {
-      "optional": true
-    },
-    "maath": {
-      "optional": true
-    },
-    "meshline": {
-      "optional": true
-    },
-    "camera-controls": {
-      "optional": true
-    },
-    "stats-gl": {
-      "optional": true
-    }
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  },
-  "sideEffects": false,
-  "web-types": [
-    "../../node_modules/angular-three/web-types.json",
-    "../../node_modules/angular-three-soba/web-types.json",
-    "./web-types.json"
-  ]
+	"name": "angular-three-soba",
+	"version": "0.0.0-replace",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/angular-threejs/angular-three/tree/main/libs/soba"
+	},
+	"author": {
+		"name": "Chau Tran",
+		"email": "nartc7789@gmail.com",
+		"url": "https://nartc.me"
+	},
+	"description": "Utilities for Angular Three",
+	"keywords": [
+		"angular",
+		"threejs",
+		"renderer",
+		"utilities",
+		"shaders"
+	],
+	"license": "MIT",
+	"exports": {
+		"./assets/*": "./assets/*"
+	},
+	"peerDependencies": {
+		"@angular/common": ">=19.0.0 <21.0.0",
+		"@angular/core": ">=19.0.0 <21.0.0",
+		"@monogrid/gainmap-js": "^3.0.0",
+		"@pmndrs/vanilla": "^1.19.0",
+		"camera-controls": "^2.8.0",
+		"hls.js": ">=1.5.0",
+		"maath": ">=0.10.0 <0.11.0",
+		"meshline": "^3.1.0",
+		"stats-gl": ">=2.0.0",
+		"three": ">=0.157.0 <0.177.0",
+		"three-custom-shader-material": ">=5.5.0 <6.4.0",
+		"three-mesh-bvh": ">=0.5.0 <0.10.0",
+		"three-stdlib": "^2.0.0",
+		"troika-three-text": ">=0.47.0 <0.53.0"
+	},
+	"peerDependenciesMeta": {
+		"@monogrid/gainmap-js": {
+			"optional": true
+		},
+		"@pmndrs/vanilla": {
+			"optional": true
+		},
+		"hls.js": {
+			"optional": true
+		},
+		"troika-three-text": {
+			"optional": true
+		},
+		"three-custom-shader-material": {
+			"optional": true
+		},
+		"three-mesh-bvh": {
+			"optional": true
+		},
+		"maath": {
+			"optional": true
+		},
+		"meshline": {
+			"optional": true
+		},
+		"camera-controls": {
+			"optional": true
+		},
+		"stats-gl": {
+			"optional": true
+		}
+	},
+	"dependencies": {
+		"tslib": "^2.3.0"
+	},
+	"sideEffects": false,
+	"web-types": [
+		"../../node_modules/angular-three/web-types.json",
+		"../../node_modules/angular-three-soba/web-types.json",
+		"./web-types.json"
+	]
 }

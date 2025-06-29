@@ -1,5 +1,4 @@
-
-import { computed, Directive, effect, ElementRef, inject, input, untracked, DOCUMENT } from '@angular/core';
+import { computed, Directive, DOCUMENT, effect, ElementRef, inject, input, untracked } from '@angular/core';
 import { addAfterEffect, injectStore, omit, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import Stats from 'stats-gl';

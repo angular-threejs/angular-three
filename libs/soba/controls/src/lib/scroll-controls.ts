@@ -1,15 +1,14 @@
-
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Directive,
-  effect,
-  ElementRef,
-  inject,
-  input,
-  model,
-  untracked,
-  DOCUMENT
+	ChangeDetectionStrategy,
+	Component,
+	Directive,
+	DOCUMENT,
+	effect,
+	ElementRef,
+	inject,
+	input,
+	model,
+	untracked,
 } from '@angular/core';
 import { beforeRender, injectStore, NgtHTML, pick, provideHTMLDomElement } from 'angular-three';
 import { easing } from 'maath';
