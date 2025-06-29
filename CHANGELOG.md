@@ -1,3 +1,13 @@
+## 4.0.0-next.109 (2025-06-29)
+
+### 🚀 Features
+
+- **soba:** use CameraShake from pmndrs vanilla ([38dee637](https://github.com/angular-threejs/angular-three/commit/38dee637))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.108 (2025-06-18)
 
 ### 🚀 Features
