@@ -1,16 +1,20 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 import { StorybookConfig } from '@storybook/angular';
+
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
     stories: ['../**/*.mdx', '../**/*.stories.@(js|ts)'],
 
     addons: [
-        'storybook-addon-deep-controls',
-        '@chromatic-com/storybook',
-        '@storybook/addon-docs'
+        getAbsolutePath("storybook-addon-deep-controls"),
+        getAbsolutePath("@chromatic-com/storybook"),
+        getAbsolutePath("@storybook/addon-docs")
     ],
 
     staticDirs: ['./public', './public/cube'],
-    framework: '@storybook/angular',
+    framework: getAbsolutePath("@storybook/angular"),
     
     webpackFinal: async (config) => {
         // Handle Node.js polyfills for webpack 5
@@ -27,3 +31,7 @@ const config: StorybookConfig = {
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+    return dirname(require.resolve(join(value, "package.json")));
+}
