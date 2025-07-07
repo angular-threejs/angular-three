@@ -1,3 +1,22 @@
+## 4.0.0-next.110 (2025-07-07)
+
+### 🚀 Features
+
+- **cannon:** bump three 178 ([d41a6791](https://github.com/angular-threejs/angular-three/commit/d41a6791))
+- **core:** bump three 178 ([83384cdd](https://github.com/angular-threejs/angular-three/commit/83384cdd))
+- **postprocessing:** bump three 178 ([f40f3045](https://github.com/angular-threejs/angular-three/commit/f40f3045))
+- **rapier:** bump three 178 ([b72e9b3c](https://github.com/angular-threejs/angular-three/commit/b72e9b3c))
+- **soba:** bump three 178 ([975ca265](https://github.com/angular-threejs/angular-three/commit/975ca265))
+- **theatre:** bump three 178 ([e68b66ed](https://github.com/angular-threejs/angular-three/commit/e68b66ed))
+
+### 🩹 Fixes
+
+- **soba:** expose NgtsCameraShakeOptions ([16f85abd](https://github.com/angular-threejs/angular-three/commit/16f85abd))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.109 (2025-06-29)
 
 ### 🚀 Features
