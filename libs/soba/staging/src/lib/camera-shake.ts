@@ -11,7 +11,11 @@ interface ControlsProto {
 	removeEventListener: (event: string, callback: (event: any) => void) => void;
 }
 
-const defaultOptions: Partial<Omit<CameraShake, 'object' | 'initialRotation' | 'updateInitialRotation' | 'update'>> = {
+export type NgtsCameraShakeOptions = Partial<
+	Omit<CameraShake, 'object' | 'initialRotation' | 'updateInitialRotation' | 'update'>
+>;
+
+const defaultOptions: NgtsCameraShakeOptions = {
 	intensity: 1,
 	decayRate: 0.65,
 	maxYaw: 0.1,

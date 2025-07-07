@@ -53,7 +53,7 @@ class Objects {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DefaultCameraShakeStory {
-	options = input<Partial<NgtsCameraShakeOptions>>();
+	options = input<NgtsCameraShakeOptions>({});
 }
 
 @Component({
@@ -67,7 +67,7 @@ class DefaultCameraShakeStory {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class WithOrbitControlsCameraShakeStory {
-	options = input<Partial<NgtsCameraShakeOptions>>();
+	options = input<NgtsCameraShakeOptions>({});
 }
 
 export default {
