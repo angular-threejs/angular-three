@@ -1,17 +1,17 @@
-import type { NodeRepresentation, ShaderNodeObject } from 'three/tsl';
+import type { ShaderNodeObject } from 'three/tsl';
 import { Fn, If, PI2, atan, frontFacing, output, positionLocal, vec4 } from 'three/tsl';
 import type { Node } from 'three/webgpu';
 
-type AngleInputs = { startAngle: NodeRepresentation; arcAngle: NodeRepresentation };
+type AngleInputs = { startAngle: ShaderNodeObject<Node>; arcAngle: ShaderNodeObject<Node> };
 
 const inAngle = Fn(
-	([position, startAngle, endAngle]: [ShaderNodeObject<Node>, NodeRepresentation, NodeRepresentation]) => {
+	([position, startAngle, endAngle]: [ShaderNodeObject<Node>, ShaderNodeObject<Node>, ShaderNodeObject<Node>]) => {
 		const angle = atan(position.y, position.x).sub(startAngle).mod(PI2).toVar();
 		return angle.greaterThan(0).and(angle.lessThan(endAngle));
 	},
 );
 
-export const outputNodeFn = Fn(({ startAngle, arcAngle, color }: AngleInputs & { color: NodeRepresentation }) => {
+export const outputNodeFn = Fn(({ startAngle, arcAngle, color }: AngleInputs & { color: ShaderNodeObject<Node> }) => {
 	inAngle(positionLocal.xy, startAngle, arcAngle).discard();
 	const finalOutput = output;
 	If(frontFacing.not(), () => {
