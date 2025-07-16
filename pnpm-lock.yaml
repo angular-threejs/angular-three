@@ -84,13 +84,13 @@ importers:
         version: 1.6.5
       maath:
         specifier: ^0.10.8
-        version: 0.10.8(@types/three@0.178.0)(three@0.178.0)
+        version: 0.10.8(@types/three@0.178.1)(three@0.178.0)
       meshline:
         specifier: ^3.3.1
         version: 3.3.1(three@0.178.0)
       n8ao:
         specifier: ^1.10.1
-        version: 1.10.1(postprocessing@6.37.4(three@0.178.0))(three@0.178.0)
+        version: 1.10.1(postprocessing@6.37.6(three@0.178.0))(three@0.178.0)
       ngxtension:
         specifier: ^5.0.0
         version: 5.0.0(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -213,8 +213,8 @@ importers:
         specifier: 1.10.10
         version: 1.10.10(@swc/core@1.12.7(@swc/helpers@0.5.17))(@swc/types@0.1.23)(typescript@5.8.3)
       '@swc/cli':
-        specifier: 0.7.7
-        version: 0.7.7(@swc/core@1.12.7(@swc/helpers@0.5.17))(chokidar@4.0.1)
+        specifier: 0.7.8
+        version: 0.7.8(@swc/core@1.12.7(@swc/helpers@0.5.17))(chokidar@4.0.1)
       '@swc/core':
         specifier: 1.12.7
         version: 1.12.7(@swc/helpers@0.5.17)
@@ -231,8 +231,8 @@ importers:
         specifier: 20.14.12
         version: 20.14.12
       '@types/three':
-        specifier: ^0.178.0
-        version: 0.178.0
+        specifier: ^0.178.1
+        version: 0.178.1
       '@typescript-eslint/utils':
         specifier: 8.34.0
         version: 8.34.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
@@ -243,11 +243,11 @@ importers:
         specifier: 14.4.1
         version: 14.4.1
       cz-git:
-        specifier: ^1.11.2
-        version: 1.11.2
+        specifier: ^1.12.0
+        version: 1.12.0
       czg:
-        specifier: ^1.11.2
-        version: 1.11.2
+        specifier: ^1.12.0
+        version: 1.12.0
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
@@ -315,8 +315,8 @@ importers:
         specifier: ~10.1.3
         version: 10.1.3(postcss@8.5.6)
       postprocessing:
-        specifier: ^6.37.4
-        version: 6.37.4(three@0.178.0)
+        specifier: ^6.37.6
+        version: 6.37.6(three@0.178.0)
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -3511,8 +3511,8 @@ packages:
   '@swc-node/sourcemap-support@0.5.1':
     resolution: {integrity: sha512-JxIvIo/Hrpv0JCHSyRpetAdQ6lB27oFYhv0PKCNf1g2gUXOjpeR1exrXccRxLMuAV5WAmGFBwRnNOJqN38+qtg==}
 
-  '@swc/cli@0.7.7':
-    resolution: {integrity: sha512-j4yYm9bx3pxWofaJKX1BFwj/3ngUDynN4UIQ2Xd2h0h/7Gt7zkReBTpDN7g5S13mgAYxacaTHTOUsz18097E8w==}
+  '@swc/cli@0.7.8':
+    resolution: {integrity: sha512-27Ov4rm0s2C6LLX+NDXfDVB69LGs8K94sXtFhgeUyQ4DBywZuCgTBu2loCNHRr8JhT9DeQvJM5j9FAu/THbo4w==}
     engines: {node: '>= 16.14.0'}
     hasBin: true
     peerDependencies:
@@ -3922,8 +3922,8 @@ packages:
   '@types/stats.js@0.17.3':
     resolution: {integrity: sha512-pXNfAD3KHOdif9EQXZ9deK82HVNaXP5ZIF5RP2QG6OQFNTaY2YIetfrE9t528vEreGQvEPRDDc8muaoYeK0SxQ==}
 
-  '@types/three@0.178.0':
-    resolution: {integrity: sha512-1IpVbMKbEAAWjyn0VTdVcNvI1h1NlTv3CcnwMr3NNBv/gi3PL0/EsWROnXUEkXBxl94MH5bZvS8h0WnBRmR/pQ==}
+  '@types/three@0.178.1':
+    resolution: {integrity: sha512-WSabew1mgWgRx2RfLfKY+9h4wyg6U94JfLbZEGU245j/WY2kXqU0MUfghS+3AYMV5ET1VlILAgpy77cB6a3Itw==}
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -5184,12 +5184,12 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
-  cz-git@1.11.2:
-    resolution: {integrity: sha512-e54u6yJc80usJCWRQE9z8egpkqEvlM6aC70lTGjIsGI/ggtzeGU6udNAuHSBvLV+hMyss0ZS4KfodfwO9UJpqQ==}
+  cz-git@1.12.0:
+    resolution: {integrity: sha512-LaZ+8whPPUOo6Y0Zy4nIbf6JOleV3ejp41sT6N4RPKiKKA+ICWf4ueeIlxIO8b6JtdlDxRzHH/EcRji07nDxcg==}
     engines: {node: '>=v12.20.0'}
 
-  czg@1.11.2:
-    resolution: {integrity: sha512-39FMIqz6xuelBvNa/jPc918CAgDNABfYnDT7wPbWaQGZ2a+sDBuI+X1pQ71jkFD32DcWkD/pVpZqlyvgtMJdGA==}
+  czg@1.12.0:
+    resolution: {integrity: sha512-LGltcoZ5m7vhe3WNw16QXqd5WurnHegx9V15MwZJtFAU2AVCYLCqDbwxPUgZOnAcdzzooq33ONcU148HOQsjdA==}
     engines: {node: '>=v12.20.0'}
     hasBin: true
 
@@ -8519,10 +8519,10 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postprocessing@6.37.4:
-    resolution: {integrity: sha512-O4dv29MDRSjXgMF1Luz3YHlT7NawKIliCfO2OgUCtIMTLNMCg+v0RLuT9/LQSDtVNXxUHGyy3mucbF3UePcElA==}
+  postprocessing@6.37.6:
+    resolution: {integrity: sha512-KrdKLf1257RkoIk3z3nhRS0aToKrX2xJgtR0lbnOQUjd+1I4GVNv1gQYsQlfRglvEXjpzrwqOA5fXfoDBimadg==}
     peerDependencies:
-      three: '>= 0.157.0 < 0.178.0'
+      three: '>= 0.157.0 < 0.179.0'
 
   potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}
@@ -14828,18 +14828,18 @@ snapshots:
       source-map-support: 0.5.21
       tslib: 2.8.1
 
-  '@swc/cli@0.7.7(@swc/core@1.12.7(@swc/helpers@0.5.17))(chokidar@4.0.1)':
+  '@swc/cli@0.7.8(@swc/core@1.12.7(@swc/helpers@0.5.17))(chokidar@4.0.1)':
     dependencies:
       '@swc/core': 1.12.7(@swc/helpers@0.5.17)
       '@swc/counter': 0.1.3
       '@xhmikosr/bin-wrapper': 13.0.5
       commander: 8.3.0
-      fast-glob: 3.3.3
       minimatch: 9.0.5
       piscina: 4.8.0
       semver: 7.7.2
       slash: 3.0.0
       source-map: 0.7.4
+      tinyglobby: 0.2.13
     optionalDependencies:
       chokidar: 4.0.1
 
@@ -15239,7 +15239,7 @@ snapshots:
 
   '@types/stats.js@0.17.3': {}
 
-  '@types/three@0.178.0':
+  '@types/three@0.178.1':
     dependencies:
       '@dimforge/rapier3d-compat': 0.12.0
       '@tweenjs/tween.js': 23.1.3
@@ -16744,9 +16744,9 @@ snapshots:
       untildify: 4.0.0
       yauzl: 2.10.0
 
-  cz-git@1.11.2: {}
+  cz-git@1.12.0: {}
 
-  czg@1.11.2: {}
+  czg@1.12.0: {}
 
   dashdash@1.14.1:
     dependencies:
@@ -19368,9 +19368,9 @@ snapshots:
 
   lz-string@1.5.0: {}
 
-  maath@0.10.8(@types/three@0.178.0)(three@0.178.0):
+  maath@0.10.8(@types/three@0.178.1)(three@0.178.0):
     dependencies:
-      '@types/three': 0.178.0
+      '@types/three': 0.178.1
       three: 0.178.0
 
   magic-string@0.30.17:
@@ -19613,9 +19613,9 @@ snapshots:
 
   mute-stream@2.0.0: {}
 
-  n8ao@1.10.1(postprocessing@6.37.4(three@0.178.0))(three@0.178.0):
+  n8ao@1.10.1(postprocessing@6.37.6(three@0.178.0))(three@0.178.0):
     dependencies:
-      postprocessing: 6.37.4(three@0.178.0)
+      postprocessing: 6.37.6(three@0.178.0)
       three: 0.178.0
 
   nanoid@3.3.11: {}
@@ -20732,7 +20732,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postprocessing@6.37.4(three@0.178.0):
+  postprocessing@6.37.6(three@0.178.0):
     dependencies:
       three: 0.178.0
 
