@@ -15,7 +15,13 @@ import { NgtArgs } from '../directives/args';
 import { NgtCommonDirective } from '../directives/common';
 import { NgtParent } from '../directives/parent';
 import { getInstanceState, prepare } from '../instance';
-import { NgtConstructorRepresentation, NgtEventHandlers, NgtInstanceNode, NgtInstanceState } from '../types';
+import {
+	NgtAttachable,
+	NgtConstructorRepresentation,
+	NgtEventHandlers,
+	NgtInstanceNode,
+	NgtInstanceState,
+} from '../types';
 import { applyProps } from '../utils/apply-props';
 import { is } from '../utils/is';
 import { injectCatalogue } from './catalogue';
@@ -595,18 +601,8 @@ export class NgtRenderer2 implements Renderer2 {
 
 			// [attach]
 			if (name === 'attach') {
-				if (instanceState)
-					instanceState.attach = Array.isArray(value)
-						? value.map((v) => v.toString())
-						: typeof value === 'function'
-							? value
-							: typeof value === 'string'
-								? value.split('.')
-								: [value];
-				if (parent) {
-					untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
-				}
-
+				if (instanceState) instanceState.attach = this.normalizeAttach(value);
+				if (parent) untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
 				return;
 			}
 
@@ -759,6 +755,12 @@ export class NgtRenderer2 implements Renderer2 {
 		}
 
 		return directiveInstance;
+	}
+
+	private normalizeAttach(attach: NgtAttachable) {
+		if (typeof attach === 'function') return attach;
+		if (typeof attach === 'string') return attach.split('.');
+		return attach.flatMap((item) => item.toString().split('.'));
 	}
 
 	addClass = this.delegateRenderer.addClass.bind(this.delegateRenderer);
