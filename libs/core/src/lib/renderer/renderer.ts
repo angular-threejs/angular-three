@@ -570,6 +570,7 @@ export class NgtRenderer2 implements Renderer2 {
 
 		if (rS[NgtRendererClassId.type] === 'three') {
 			const instanceState = getInstanceState(el);
+			const parent = instanceState?.hierarchyStore.snapshot.parent || rS[NgtRendererClassId.parent];
 
 			if (name === 'parameters') {
 				// NOTE: short-cut for null raycast to prevent upstream from creating a nullRaycast property
@@ -580,22 +581,21 @@ export class NgtRenderer2 implements Renderer2 {
 				applyProps(el, value);
 
 				if ('geometry' in value && is.three<THREE.BufferGeometry>(value['geometry'], 'isBufferGeometry')) {
-					untracked(() => {
-						instanceState?.updateGeometryStamp();
-					});
+					untracked(() => instanceState?.updateGeometryStamp());
+				}
+
+				if ('attach' in value && value['attach'] !== undefined) {
+					if (instanceState) instanceState.attach = this.normalizeAttach(value['attach']);
+					if (parent) untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
 				}
 
 				return;
 			}
 
-			const parent = instanceState?.hierarchyStore.snapshot.parent || rS[NgtRendererClassId.parent];
-
 			// [rawValue]
 			if (instanceState?.type === 'ngt-value' && name === 'rawValue') {
 				rS[NgtRendererClassId.rawValue] = value;
-				if (parent) {
-					untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
-				}
+				if (parent) untracked(() => attachThreeNodes(parent, el as unknown as NgtInstanceNode));
 				return;
 			}
 
