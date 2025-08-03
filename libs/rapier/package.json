@@ -25,8 +25,8 @@
 	"peerDependencies": {
 		"@angular/common": ">=19.0.0 <21.0.0",
 		"@angular/core": ">=19.0.0 <21.0.0",
-		"@dimforge/rapier3d-compat": ">=0.14.0 <0.18.0",
-		"three": ">=0.157.0 <0.178.0",
+		"@dimforge/rapier3d-compat": ">=0.14.0 <0.19.0",
+		"three": ">=0.157.0 <0.179.0",
 		"three-stdlib": "^2.0.0"
 	},
 	"dependencies": {
