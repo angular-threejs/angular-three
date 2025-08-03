@@ -1,3 +1,23 @@
+## 4.0.0-next.111 (2025-08-03)
+
+### 🚀 Features
+
+- **cannon:** bump three ([c3feaad4](https://github.com/angular-threejs/angular-three/commit/c3feaad4))
+- **core:** bump three ([9f0e80da](https://github.com/angular-threejs/angular-three/commit/9f0e80da))
+- **postprocessing:** bump three ([d0434edc](https://github.com/angular-threejs/angular-three/commit/d0434edc))
+- **rapier:** bump three and rapier3d ([aebd8046](https://github.com/angular-threejs/angular-three/commit/aebd8046))
+- **soba:** bump three ([29d263c5](https://github.com/angular-threejs/angular-three/commit/29d263c5))
+- **theatre:** bump three ([1fdc4879](https://github.com/angular-threejs/angular-three/commit/1fdc4879))
+
+### 🩹 Fixes
+
+- **core:** allow using dotted path for attach array ([483fd97d](https://github.com/angular-threejs/angular-three/commit/483fd97d))
+- **core:** support attach in parameters input binding ([2654840b](https://github.com/angular-threejs/angular-three/commit/2654840b))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.110 (2025-07-07)
 
 ### 🚀 Features
