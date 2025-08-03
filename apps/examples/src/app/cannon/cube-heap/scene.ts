@@ -114,14 +114,7 @@ export class Spheres extends InstancesInput {
 	template: `
 		<ngt-color attach="background" *args="['lightblue']" />
 		<ngt-hemisphere-light [intensity]="0.35 * Math.PI" />
-		<ngt-spot-light
-			[angle]="0.3"
-			castShadow
-			[decay]="0"
-			[intensity]="2 * Math.PI"
-			[penumbra]="1"
-			[position]="[10, 10, 10]"
-		/>
+		<ngt-spot-light [angle]="0.3" castShadow [decay]="0" [intensity]="2 * Math.PI" [penumbra]="1" [position]="10" />
 
 		<ngtc-physics [options]="{ broadphase: 'SAP' }">
 			<app-plane [rotation]="[-Math.PI / 2, 0, 0]" />

@@ -53,7 +53,7 @@ export class Plane {
 				<ngt-box-geometry *args="boxSize" />
 				<ngt-mesh-normal-material />
 			</ngt-mesh>
-			<ngt-mesh castShadow [position]="[1, 0, 0]">
+			<ngt-mesh castShadow [position.x]="1">
 				<ngt-sphere-geometry *args="[sphereRadius, 16, 16]" />
 				<ngt-mesh-normal-material />
 			</ngt-mesh>

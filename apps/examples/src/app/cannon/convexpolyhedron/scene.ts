@@ -168,14 +168,7 @@ export class Diamond {
 	selector: 'app-scene-graph',
 	template: `
 		<ngt-color *args="['lightpink']" attach="background" />
-		<ngt-spot-light
-			castShadow
-			[angle]="0.3"
-			[decay]="0"
-			[intensity]="2 * Math.PI"
-			[penumbra]="1"
-			[position]="[15, 15, 15]"
-		>
+		<ngt-spot-light castShadow [angle]="0.3" [decay]="0" [intensity]="2 * Math.PI" [penumbra]="1" [position]="15">
 			<ngt-vector2 *args="[2048, 2048]" attach="shadow.mapSize" />
 		</ngt-spot-light>
 

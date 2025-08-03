@@ -21,7 +21,7 @@ interface RockGLTF extends GLTF {
 
 		<ngt-grid-helper *args="[50, 10]" />
 
-		<ngt-mesh receiveShadow [rotation]="[Math.PI / 2, 0, 0]">
+		<ngt-mesh receiveShadow [rotation.x]="Math.PI / 2">
 			<ngt-plane-geometry *args="[100, 100]" />
 			<ngt-mesh-phong-material color="white" [side]="DoubleSide" [depthWrite]="false" />
 		</ngt-mesh>
@@ -35,9 +35,9 @@ interface RockGLTF extends GLTF {
 		</ngt-point-light>
 
 		@if (gltf.value(); as gltf) {
-			<ngt-group [position]="[0, 2.6, 0]" [scale]="3">
-				<ngt-group [rotation]="[-Math.PI / 2, 0, 0]">
-					<ngt-group [rotation]="[Math.PI / 2, 0, 0]">
+			<ngt-group [position.y]="2.6" [scale]="3">
+				<ngt-group [rotation.x]="-Math.PI / 2">
+					<ngt-group [rotation.x]="Math.PI / 2">
 						<ngt-mesh
 							cursor
 							castShadow
@@ -61,6 +61,8 @@ interface RockGLTF extends GLTF {
 			}"
 		/>
 
+		<!-- NOTE: we can also just create the geometry in typescript class -->
+		<!-- but we're cool and use the template instead. -->
 		<ngt-icosahedron-geometry #geometry attach="none" />
 		@for (menu of menus; track menu.id) {
 			<ngt-group [name]="menu.name" [position]="[15 * Math.cos(menu.angle), 0, 15 * Math.sin(menu.angle)]">
@@ -68,20 +70,22 @@ interface RockGLTF extends GLTF {
 					cursor
 					castShadow
 					receiveShadow
-					[position]="[0, 5, 0]"
+					[position.y]="5"
 					[geometry]="geometry"
 					(click)="router.navigate([menu.path])"
 				>
 					<ngt-mesh-phong-material [color]="menu.color" [side]="FrontSide" />
 
-					<!-- NOTE: we can use ng-template for this use-case as well. -->
-					<!-- @let templateRefs = coloredRockTemplateRefs(); -->
-					<!-- @let template = templateRefs[menu.slug]; -->
-					<!---->
-					<!-- @if (template) { -->
-					<!-- 	<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: menu }" /> -->
-					<!-- } -->
+
 				</ngt-mesh>
+
+                <!-- NOTE: we can use ng-template for this use-case as well. -->
+                <!-- @let templateRefs = coloredRockTemplateRefs(); -->
+                <!-- @let template = templateRefs[menu.slug]; -->
+                <!---->
+                <!-- @if (template) { -->
+                <!-- 	<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: menu }" /> -->
+                <!-- } -->
 			</ngt-group>
 		}
 

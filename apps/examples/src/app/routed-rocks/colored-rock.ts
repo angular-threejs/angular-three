@@ -11,15 +11,15 @@ import { RockStore } from './store';
 				<ngt-mesh
 					castShadow
 					receiveShadow
-					[rotation]="[0, Math.PI / 4, 0]"
-					[position]="[0, 7, 0]"
+					[rotation.y]="Math.PI / 4"
+					[position.y]="7"
 					[scale]="0.5"
 				>
 					<ngt-box-geometry *args="[0.7, 0.7, 0.7]" />
 					<ngt-mesh-phong-material [color]="rock.color" [side]="FrontSide" />
 				</ngt-mesh>
 
-				<ngt-group [position]="[0, 5, 0]">
+				<ngt-group [position.y]="5">
 					@for (text of texts; track $index) {
 						<ngts-text
 							font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"

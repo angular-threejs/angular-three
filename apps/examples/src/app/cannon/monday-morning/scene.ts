@@ -356,32 +356,32 @@ export class Mug {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Table {
-	private seatRef = viewChild('seat', { read: Box });
-	private leg1Ref = viewChild('leg1', { read: Box });
-	private leg2Ref = viewChild('leg2', { read: Box });
-	private leg3Ref = viewChild('leg3', { read: Box });
-	private leg4Ref = viewChild('leg4', { read: Box });
+	private seatRef = viewChild.required('seat', { read: Box });
+	private leg1Ref = viewChild.required('leg1', { read: Box });
+	private leg2Ref = viewChild.required('leg2', { read: Box });
+	private leg3Ref = viewChild.required('leg3', { read: Box });
+	private leg4Ref = viewChild.required('leg4', { read: Box });
 
 	constructor() {
 		box(
 			() => ({ args: [2.5, 0.25, 2.5], position: [9, -0.8, 0], type: 'Static' }),
-			computed(() => this.seatRef()?.meshRef()),
+			computed(() => this.seatRef().meshRef()),
 		);
 		box(
 			() => ({ args: [0.25, 2, 0.25], position: [7.2, -3, 1.8], type: 'Static' }),
-			computed(() => this.leg1Ref()?.meshRef()),
+			computed(() => this.leg1Ref().meshRef()),
 		);
 		box(
 			() => ({ args: [0.25, 2, 0.25], position: [10.8, -3, 1.8], type: 'Static' }),
-			computed(() => this.leg2Ref()?.meshRef()),
+			computed(() => this.leg2Ref().meshRef()),
 		);
 		box(
 			() => ({ args: [0.25, 2, 0.25], position: [7.2, -3, -1.8], type: 'Static' }),
-			computed(() => this.leg3Ref()?.meshRef()),
+			computed(() => this.leg3Ref().meshRef()),
 		);
 		box(
 			() => ({ args: [0.25, 2, 0.25], position: [10.8, -3, -1.8], type: 'Static' }),
-			computed(() => this.leg4Ref()?.meshRef()),
+			computed(() => this.leg4Ref().meshRef()),
 		);
 	}
 }
@@ -441,7 +441,7 @@ export class Cursor {
 				}"
 			/>
 
-			<ngt-object3D #target [position]="[0, -1, 0]" />
+			<ngt-object3D #target [position.y]="-1" />
 		</ngt-mesh>
 	`,
 	imports: [NgtArgs, NgtsSpotLight],
@@ -471,7 +471,7 @@ export class Lamp {
 		<ngt-color attach="background" *args="['#171720']" />
 		<ngt-fog attach="fog" *args="['#171720', 20, 70]" />
 		<ngt-ambient-light [intensity]="0.2 * Math.PI" />
-		<ngt-point-light [decay]="0" [position]="[-10, -10, -10]" color="red" [intensity]="1.5 * Math.PI" />
+		<ngt-point-light [decay]="0" [position]="-10" color="red" [intensity]="1.5 * Math.PI" />
 
 		<ngtc-physics
 			[options]="{ iterations: 15, gravity: [0, -200, 0], allowSleep: false }"
