@@ -8,13 +8,7 @@ import { RockStore } from './store';
 	template: `
 		@if (selectedRock(); as rock) {
 			<ngt-group *parent="rock.name">
-				<ngt-mesh
-					castShadow
-					receiveShadow
-					[rotation.y]="Math.PI / 4"
-					[position.y]="7"
-					[scale]="0.5"
-				>
+				<ngt-mesh castShadow receiveShadow [rotation.y]="Math.PI / 4" [position.y]="7" [scale]="0.5">
 					<ngt-box-geometry *args="[0.7, 0.7, 0.7]" />
 					<ngt-mesh-phong-material [color]="rock.color" [side]="FrontSide" />
 				</ngt-mesh>
