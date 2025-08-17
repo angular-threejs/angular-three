@@ -27,7 +27,7 @@
 						"label": "Generate a SceneGraph component but do not write to template"
 					},
 					{
-						"none": "none",
+						"value": "none",
 						"label": "Do not generate a SceneGraph component"
 					}
 				]
