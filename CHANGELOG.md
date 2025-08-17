@@ -1,3 +1,17 @@
+## 4.0.0-next.114 (2025-08-17)
+
+### 🚀 Features
+
+- **soba:** add sparkles ([da57c2f6](https://github.com/angular-threejs/angular-three/commit/da57c2f6))
+
+### 🩹 Fixes
+
+- **soba:** adjust fbo types ([3f2d5758](https://github.com/angular-threejs/angular-three/commit/3f2d5758))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.113 (2025-08-17)
 
 ### 🩹 Fixes
