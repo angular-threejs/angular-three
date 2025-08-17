@@ -5,11 +5,11 @@ import type * as THREE from 'three';
  */
 export const setUpdateRange = (
 	attribute: THREE.BufferAttribute,
-	updateRange: { offset: number; count: number },
+	updateRange: { start: number; count: number },
 ): void => {
 	if ('updateRanges' in attribute) {
 		// attribute.updateRanges[0] = updateRange;
-		attribute.addUpdateRange(updateRange.offset, updateRange.count);
+		attribute.addUpdateRange(updateRange.start, updateRange.count);
 	} else {
 		Object.assign(attribute, { updateRange });
 	}

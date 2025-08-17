@@ -139,9 +139,9 @@ export class NgtsInstances {
 
 				count = Math.min(limit, range !== undefined ? range : limit, this.instances.length);
 				instancedMesh.count = count;
-				setUpdateRange(instancedMesh.instanceMatrix, { offset: 0, count: count * 16 });
+				setUpdateRange(instancedMesh.instanceMatrix, { start: 0, count: count * 16 });
 				if (instancedMesh.instanceColor) {
-					setUpdateRange(instancedMesh.instanceColor, { offset: 0, count: count * 3 });
+					setUpdateRange(instancedMesh.instanceColor, { start: 0, count: count * 3 });
 				}
 
 				for (let i = 0; i < this.instances.length; i++) {
