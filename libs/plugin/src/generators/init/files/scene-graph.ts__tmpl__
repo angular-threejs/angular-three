@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, viewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-import { extend, injectBeforeRender } from 'angular-three';
+import { extend, beforeRender } from 'angular-three';
 import { Mesh, BoxGeometry, MeshBasicMaterial } from 'three';
 
 @Component({
@@ -19,7 +19,7 @@ export class SceneGraph {
   constructor() {
     extend({ Mesh, BoxGeometry, MeshBasicMaterial });
 
-    injectBeforeRender(({ delta }) => {
+    beforeRender(({ delta }) => {
       const mesh = this.meshRef().nativeElement;
       mesh.rotation.x += delta;
       mesh.rotation.y += delta;

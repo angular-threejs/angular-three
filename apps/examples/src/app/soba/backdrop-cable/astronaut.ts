@@ -84,11 +84,6 @@ export class Astronaut {
 		});
 
 		const objectEvents = inject(NgtObjectEvents, { host: true });
-		effect(() => {
-			const model = this.modelRef()?.nativeElement;
-			if (!model) return;
-
-			objectEvents.ngtObjectEvents.set(model);
-		});
+		objectEvents.ngtObjectEvents.set(this.modelRef);
 	}
 }

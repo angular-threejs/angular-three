@@ -7,8 +7,8 @@
 
 import type * as THREE from 'three';
 import { Group<%= threeImports %> } from 'three';
-import { extend, type NgtThreeElements, NgtObjectEvents<% if (args) { %>, NgtArgs<% } %>  } from 'angular-three';
-import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject, effect<% if (animations.length) { %>, model<% } %> } from '@angular/core';
+import { extend, type NgtThreeElements, NgtElementEvents, NgtObjectEvents<% if (args) { %>, NgtArgs<% } %>  } from 'angular-three';
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, input, viewChild, ElementRef, inject<% if (animations.length) { %>, effect, model<% } %> } from '@angular/core';
 import { gltfResource } from 'angular-three-soba/loaders';
 import type { GLTF } from 'three-stdlib';<% if (animations.length) { %>
 import { animations, type NgtsAnimationClips, type NgtsAnimationApi } from 'angular-three-soba/misc';<% } %><% if (perspective) { %>
@@ -58,6 +58,10 @@ export type <%= gltfResultTypeName %> = GLTF & {
       directive: NgtObjectEvents,
       outputs: ['click', 'dblclick', 'contextmenu', 'pointerup', 'pointerdown', 'pointerover', 'pointerout', 'pointerenter', 'pointerleave', 'pointermove', 'pointermissed', 'pointercancel', 'wheel'],
     },
+    {
+      directive: NgtElementEvents,
+      outputs: ['attached', 'updated', 'created', 'disposed']
+    }
   ],<% if (angularImports.length) { %>
   imports: [<% angularImports.join(', ') %>]<% } %>
 })
@@ -83,11 +87,9 @@ export class <%= className %> {
     <% } %>
 
     const objectEvents = inject(NgtObjectEvents, { host: true });
-    effect(() => {
-        const model = this.modelRef()?.nativeElement;
-        if (!model) return;
+    const elementEvents = inject(NgtElementEvents, { host: true });
 
-        objectEvents.ngtObjectEvents.set(model);
-    });
+    objectEvents.ngtObjectEvents.set(this.modelRef);
+    elementEvents.ngtElementEvents.set(this.modelRef);
   }
 }

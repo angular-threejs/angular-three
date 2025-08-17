@@ -32,7 +32,7 @@ import { Spaceship } from './spaceship';
 
 		<ngts-float [options]="{ scale: 0.75, position: [0, 0.65, 0], rotation: [0, 0.6, 0] }">
 			<ngts-pivot-controls [options]="{ anchor: [0, 0.7, 0], depthTest: true, scale: 0.5, lineWidth: 2 }">
-				<app-spaceship />
+				<app-spaceship (click)="onClick()" />
 			</ngts-pivot-controls>
 		</ngts-float>
 
@@ -82,4 +82,8 @@ export class SceneGraph {
 
 	private spaceship = viewChild.required(Spaceship);
 	protected spaceshipModelRef = computed(() => this.spaceship().modelRef());
+
+	onClick() {
+		console.log('Spaceship clicked!');
+	}
 }
