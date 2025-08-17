@@ -76,6 +76,11 @@ export function createEvents(store: SignalState<NgtState>) {
 		// Allow callers to eliminate event objects
 		const eventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
 
+		if (!state.previousRoot) {
+			// Make sure root-level pointer and ray are set up
+			state.events.compute?.(event, store, null);
+		}
+
 		// Skip work if there are no event objects
 		if (eventsObjects.length === 0) return intersections;
 
@@ -86,11 +91,6 @@ export function createEvents(store: SignalState<NgtState>) {
 			if (objectRootState) {
 				objectRootState.raycaster.camera = undefined!;
 			}
-		}
-
-		if (!state.previousRoot) {
-			// Make sure root-level pointer and ray are set up
-			state.events.compute?.(event, store, null);
 		}
 
 		// Pre-allocate array to avoid garbage collection
