@@ -1,3 +1,13 @@
+## 4.0.0-next.113 (2025-08-17)
+
+### 🩹 Fixes
+
+- **plugin:** update gltf and init generator ([79a73ea7](https://github.com/angular-threejs/angular-three/commit/79a73ea7))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.112 (2025-08-17)
 
 ### 🚀 Features
