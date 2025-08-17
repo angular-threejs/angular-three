@@ -5,6 +5,7 @@ export * from './lib/bounds';
 export * from './lib/camera-shake';
 export * from './lib/caustics';
 export * from './lib/center';
+export * from './lib/cloud';
 export * from './lib/contact-shadows';
 export * from './lib/environment/environment';
 export * from './lib/environment/environment-resource';

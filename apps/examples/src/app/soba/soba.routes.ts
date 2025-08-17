@@ -247,6 +247,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'thunder-clouds',
+		loadComponent: () => import('./thunder-clouds/thunder-clouds'),
+		data: {
+			credits: {
+				title: 'Thunder Clouds',
+				link: 'https://codesandbox.io/p/sandbox/gwthnh?file=%2Fsrc%2FApp.js%3A7%2C1',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
