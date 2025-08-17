@@ -7,10 +7,11 @@ import {
 	TemplateRef,
 	contentChild,
 	effect,
+	inject,
 	input,
 	viewChild,
 } from '@angular/core';
-import { NgtThreeElements, beforeRender, extend, injectStore, omit, pick } from 'angular-three';
+import { NgtElementEvents, NgtThreeElements, beforeRender, extend, injectStore, omit, pick } from 'angular-three';
 import { fbo } from 'angular-three-soba/misc';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -54,6 +55,7 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	imports: [NgTemplateOutlet],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	hostDirectives: [{ directive: NgtElementEvents, outputs: ['created', 'updated', 'attached'] }],
 })
 export class NgtsPerspectiveCamera {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
@@ -65,6 +67,7 @@ export class NgtsPerspectiveCamera {
 	cameraRef = viewChild.required<ElementRef<THREE.PerspectiveCamera>>('camera');
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
+	private elementEvents = inject(NgtElementEvents, { host: true });
 	private store = injectStore();
 
 	private manual = pick(this.options, 'manual');
@@ -74,6 +77,7 @@ export class NgtsPerspectiveCamera {
 
 	constructor() {
 		extend({ PerspectiveCamera, Group });
+		this.elementEvents.ngtElementEvents.set(this.cameraRef);
 
 		effect((onCleanup) => {
 			const makeDefault = this.makeDefault();
