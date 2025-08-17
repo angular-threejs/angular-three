@@ -23,8 +23,8 @@
 	],
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": ">=19.0.0 <21.0.0",
-		"@angular/core": ">=19.0.0 <21.0.0",
+		"@angular/common": ">=20.0.0 <21.0.0",
+		"@angular/core": ">=20.0.0 <21.0.0",
 		"@theatre/core": ">=0.7.0 <0.8.0",
 		"@theatre/studio": ">=0.7.0 <0.8.0",
 		"three": ">=0.157.0 <0.180.0"
