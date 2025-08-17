@@ -1,3 +1,13 @@
+## 4.0.0-next.115 (2025-08-17)
+
+### 🩹 Fixes
+
+- **plugin:** skill issue ([2e034320](https://github.com/angular-threejs/angular-three/commit/2e034320))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.114 (2025-08-17)
 
 ### 🚀 Features
