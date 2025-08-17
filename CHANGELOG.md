@@ -1,3 +1,34 @@
+## 4.0.0-next.112 (2025-08-17)
+
+### 🚀 Features
+
+- **cannon:** bump three179 ([1d29682a](https://github.com/angular-threejs/angular-three/commit/1d29682a))
+- **cannon:** min ng20 ([6c92aedc](https://github.com/angular-threejs/angular-three/commit/6c92aedc))
+- **core:** bump three179 ([c6f6e090](https://github.com/angular-threejs/angular-three/commit/c6f6e090))
+- **core:** add elementEvents for NGT events and THREE native events ([ede5c0b7](https://github.com/angular-threejs/angular-three/commit/ede5c0b7))
+- **core:** min ng20 ([677c1b6e](https://github.com/angular-threejs/angular-three/commit/677c1b6e))
+- **postprocessing:** bump three179 ([1d5c771a](https://github.com/angular-threejs/angular-three/commit/1d5c771a))
+- **postprocessing:** min ng20 ([fb2c8c75](https://github.com/angular-threejs/angular-three/commit/fb2c8c75))
+- **rapier:** bump three179 ([1ab14daa](https://github.com/angular-threejs/angular-three/commit/1ab14daa))
+- **rapier:** min ng20 ([9faa258d](https://github.com/angular-threejs/angular-three/commit/9faa258d))
+- **soba:** bump three179 ([672bee60](https://github.com/angular-threejs/angular-three/commit/672bee60))
+- **soba:** bump vanilla ([380ded6b](https://github.com/angular-threejs/angular-three/commit/380ded6b))
+- **soba:** add clouds ([f1974875](https://github.com/angular-threejs/angular-three/commit/f1974875))
+- **soba:** perspective-camera uses ElementEvents ([de7184d3](https://github.com/angular-threejs/angular-three/commit/de7184d3))
+- **soba:** min ng20 ([263d53dc](https://github.com/angular-threejs/angular-three/commit/263d53dc))
+- **theatre:** bump three179 ([8d7bcaab](https://github.com/angular-threejs/angular-three/commit/8d7bcaab))
+- **theatre:** min ng20 ([1f8777ce](https://github.com/angular-threejs/angular-three/commit/1f8777ce))
+- **tweakpane:** min ng20 ([c209bdff](https://github.com/angular-threejs/angular-three/commit/c209bdff))
+
+### 🩹 Fixes
+
+- **core:** call compute before early return in event management ([90e0b259](https://github.com/angular-threejs/angular-three/commit/90e0b259))
+- **soba:** adjust setUpdateRange to use start instead of offset ([63c4cf8e](https://github.com/angular-threejs/angular-three/commit/63c4cf8e))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.111 (2025-08-03)
 
 ### 🚀 Features
