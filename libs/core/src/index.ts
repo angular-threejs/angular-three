@@ -18,6 +18,7 @@ export * from './lib/store';
 export * from './lib/utils/apply-props';
 export * from './lib/utils/attach';
 export * from './lib/utils/before-render';
+export * from './lib/utils/element-events';
 export * from './lib/utils/is';
 export * from './lib/utils/make';
 export * from './lib/utils/object-events';
