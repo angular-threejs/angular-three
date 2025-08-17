@@ -14,31 +14,10 @@ import { injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
-interface FBOSettings {
-	/** Defines the count of MSAA samples. Can only be used with WebGL 2. Default: 0 */
-	samples?: number;
-	/** If set, the scene depth will be rendered into buffer.depthTexture. Default: false */
-	depth?: boolean;
-
-	// WebGLRenderTargetOptions => RenderTargetOptions
-	wrapS?: THREE.Wrapping | undefined;
-	wrapT?: THREE.Wrapping | undefined;
-	magFilter?: THREE.MagnificationTextureFilter | undefined;
-	minFilter?: THREE.MinificationTextureFilter | undefined;
-	format?: THREE.PixelFormat | undefined; // RGBAFormat;
-	type?: THREE.TextureDataType | undefined; // UnsignedByteType;
-	anisotropy?: number | undefined; // 1;
-	depthBuffer?: boolean | undefined; // true;
-	stencilBuffer?: boolean | undefined; // false;
-	generateMipmaps?: boolean | undefined; // true;
-	depthTexture?: THREE.DepthTexture | undefined;
-	colorSpace?: THREE.ColorSpace | undefined;
-}
-
 export interface NgtsFBOParams {
-	width?: number | FBOSettings;
+	width?: number | THREE.RenderTargetOptions;
 	height?: number;
-	settings?: FBOSettings;
+	settings?: THREE.RenderTargetOptions;
 }
 
 export function fbo(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
@@ -57,7 +36,7 @@ export function fbo(params: () => NgtsFBOParams = () => ({}), { injector }: { in
 
 		const settings = computed(() => {
 			const { width, settings } = params();
-			const _settings = (typeof width === 'number' ? settings : (width as FBOSettings)) || {};
+			const _settings = (typeof width === 'number' ? settings : (width as THREE.RenderTargetOptions)) || {};
 			if (_settings.samples === undefined) {
 				_settings.samples = 0;
 			}
@@ -106,7 +85,7 @@ export const injectFBO = fbo;
 
 @Directive({ selector: 'ng-template[fbo]' })
 export class NgtsFBO {
-	fbo = input({} as { width: NgtsFBOParams['width']; height: NgtsFBOParams['height'] } & FBOSettings);
+	fbo = input({} as { width: NgtsFBOParams['width']; height: NgtsFBOParams['height'] } & THREE.RenderTargetOptions);
 
 	private template = inject(TemplateRef);
 	private viewContainerRef = inject(ViewContainerRef);
