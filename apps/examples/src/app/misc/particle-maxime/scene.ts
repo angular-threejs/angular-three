@@ -26,25 +26,23 @@ extend({ SimulationMaterial });
 	selector: 'app-fbo-particles',
 	template: `
 		<ngt-portal [container]="virtualScene">
-			<ng-template portalContent>
-				<ngt-mesh>
-					<ngt-simulation-material #simulationMaterial *args="[size]" />
-					<ngt-buffer-geometry>
-						<ngt-buffer-attribute
-							attach="attributes.position"
-							[count]="positions.length / 3"
-							[array]="positions"
-							[itemSize]="3"
-						/>
-						<ngt-buffer-attribute
-							attach="attributes.uv"
-							[count]="uvs.length / 2"
-							[array]="uvs"
-							[itemSize]="2"
-						/>
-					</ngt-buffer-geometry>
-				</ngt-mesh>
-			</ng-template>
+			<ngt-mesh *portalContent>
+				<ngt-simulation-material #simulationMaterial *args="[size]" />
+				<ngt-buffer-geometry>
+					<ngt-buffer-attribute
+						attach="attributes.position"
+						[count]="positions.length / 3"
+						[array]="positions"
+						[itemSize]="3"
+					/>
+					<ngt-buffer-attribute
+						attach="attributes.uv"
+						[count]="uvs.length / 2"
+						[array]="uvs"
+						[itemSize]="2"
+					/>
+				</ngt-buffer-geometry>
+			</ngt-mesh>
 		</ngt-portal>
 
 		<ngt-points [position]="[-1, -1, 0]" [rotation]="[0.05, -0.1, 0]">
@@ -78,7 +76,7 @@ export class FBOParticles {
 	frequency = input.required<number>();
 	timeScale = input.required<number>();
 
-	protected size = 128;
+	protected size = 256;
 	protected virtualScene = new THREE.Scene();
 	protected virtualCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1 / Math.pow(2, 53), 1);
 	protected positions = new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0]);

@@ -1,4 +1,5 @@
 import {
+	afterRenderEffect,
 	ChangeDetectionStrategy,
 	Component,
 	CUSTOM_ELEMENTS_SCHEMA,
@@ -118,17 +119,19 @@ export class Skydiver {
 	};
 
 	constructor() {
-		effect(() => {
-			const gltf = this.gltf.value();
-			if (!gltf) return;
+		afterRenderEffect({
+			write: () => {
+				const gltf = this.gltf.value();
+				if (!gltf) return;
 
-			const textures = this.textures.value();
-			if (!textures) return;
+				const textures = this.textures.value();
+				if (!textures) return;
 
-			gltf.nodes['skydiver_2'].material.uniforms = {
-				uTime: { value: 0 },
-				uClothes: { value: textures.clothes },
-			};
+				gltf.nodes['skydiver_2'].material.uniforms = {
+					uTime: { value: 0 },
+					uClothes: { value: textures.clothes },
+				};
+			},
 		});
 
 		effect((onCleanup) => {
