@@ -98,6 +98,10 @@ export interface NgtsPivotControlsOptions {
 	annotationsClass?: string;
 	/** Set this to false if you want the gizmo to be visible through faces */
 	depthTest: boolean;
+	/**
+	 * default: 500
+	 */
+	renderOrder: number;
 	opacity?: number;
 	visible: boolean;
 	userData?: NgtAnyRecord;
@@ -122,6 +126,7 @@ const defaultOptions: NgtsPivotControlsOptions = {
 	annotations: false,
 	opacity: 1,
 	visible: true,
+	renderOrder: 500,
 };
 
 @Component({
@@ -216,6 +221,7 @@ export class NgtsPivotControls {
 		'opacity',
 		'visible',
 		'userData',
+		'renderOrder',
 	]);
 
 	dragStarted = output<OnDragStartParameters>();
@@ -247,6 +253,7 @@ export class NgtsPivotControls {
 	userData = pick(this.options, 'userData');
 	opacity = pick(this.options, 'opacity');
 	depthTest = pick(this.options, 'depthTest');
+	renderOrder = pick(this.options, 'renderOrder');
 
 	protected xDir = xDir;
 	protected yDir = yDir;

@@ -65,7 +65,7 @@ const scaleMatrix = new THREE.Matrix4();
 				<ngt-mesh
 					#mesh
 					[position]="[0, position(), 0]"
-					[renderOrder]="500"
+					[renderOrder]="pivotControls.renderOrder()"
 					[userData]="pivotControls.userData()"
 				>
 					<ngt-sphere-geometry *args="[radius(), 12, 12]" />

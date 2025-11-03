@@ -80,7 +80,7 @@ const offsetMatrix = new THREE.Matrix4();
 						side: DoubleSide,
 						polygonOffset: true,
 						polygonOffsetFactor: -10,
-						renderOrder: 1,
+						renderOrder: pivotControls.renderOrder(),
 						fog: false,
 						transparent: true,
 						lineWidth: pivotControls.lineWidth(),
@@ -93,7 +93,7 @@ const offsetMatrix = new THREE.Matrix4();
 				<ngt-mesh
 					[raycast]="null"
 					[position]="[0, cylinderLength() + coneLength() / 2.0, 0]"
-					[renderOrder]="500"
+					[renderOrder]="pivotControls.renderOrder()"
 				>
 					<ngt-cone-geometry *args="[coneWidth(), coneLength(), 24, 1]" />
 					<ngt-mesh-basic-material

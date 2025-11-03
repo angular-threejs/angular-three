@@ -110,6 +110,7 @@ const intersection = new THREE.Vector3();
 					polygonOffset: true,
 					polygonOffsetFactor: -10,
 					fog: false,
+					renderOrder: pivotControls.renderOrder(),
 				}"
 			/>
 		</ngt-group>

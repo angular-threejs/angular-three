@@ -57,7 +57,13 @@ const offsetMatrix = new THREE.Matrix4();
 				</ngts-html>
 			}
 			<ngt-group [position]="[pos1() * 1.7, pos1() * 1.7, 0]">
-				<ngt-mesh #mesh visible [scale]="length()" [userData]="pivotControls.userData()">
+				<ngt-mesh
+					#mesh
+					visible
+					[scale]="length()"
+					[userData]="pivotControls.userData()"
+					[renderOrder]="pivotControls.renderOrder()"
+				>
 					<ngt-plane-geometry />
 					<ngt-mesh-basic-material
 						transparent
@@ -82,6 +88,7 @@ const offsetMatrix = new THREE.Matrix4();
 						polygonOffsetFactor: -10,
 						userData: pivotControls.userData(),
 						fog: false,
+						renderOrder: pivotControls.renderOrder(),
 					}"
 				/>
 			</ngt-group>
