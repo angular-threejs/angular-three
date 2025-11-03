@@ -10,15 +10,14 @@
 			"executor": "@nx/angular:package",
 			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
-				"project": "libs/theatre/ng-package.json"
+				"project": "libs/theatre/ng-package.json",
+				"tsConfig": "libs/theatre/tsconfig.lib.json"
 			},
 			"configurations": {
 				"production": {
 					"tsConfig": "libs/theatre/tsconfig.lib.prod.json"
 				},
-				"development": {
-					"tsConfig": "libs/theatre/tsconfig.lib.json"
-				}
+				"development": {}
 			},
 			"defaultConfiguration": "production"
 		},

@@ -10,15 +10,14 @@
 			"executor": "@nx/angular:package",
 			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
-				"project": "libs/soba/ng-package.json"
+				"project": "libs/soba/ng-package.json",
+				"tsConfig": "libs/soba/tsconfig.lib.json"
 			},
 			"configurations": {
 				"production": {
 					"tsConfig": "libs/soba/tsconfig.lib.prod.json"
 				},
-				"development": {
-					"tsConfig": "libs/soba/tsconfig.lib.json"
-				}
+				"development": {}
 			},
 			"defaultConfiguration": "production"
 		},
