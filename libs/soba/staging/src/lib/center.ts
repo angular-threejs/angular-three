@@ -48,6 +48,10 @@ export interface NgtsCenterOptions {
 	precise: boolean;
 	/** Optional cacheKey to keep the component from recalculating on every render */
 	cacheKey: any;
+	/*
+	 * object to compute box3d from
+	 */
+	object?: THREE.Object3D | null;
 }
 
 const defaultOptions: Partial<NgtThreeElements['ngt-group']> & NgtsCenterOptions = {
@@ -84,6 +88,7 @@ export class NgtsCenter {
 		'disableZ',
 		'precise',
 		'cacheKey',
+		'object',
 	]);
 
 	centered = output<NgtsCenterState>();
@@ -92,7 +97,7 @@ export class NgtsCenter {
 	private outerRef = viewChild.required<ElementRef<THREE.Group>>('outer');
 	private innerRef = viewChild.required<ElementRef<THREE.Group>>('inner');
 
-	centerOptions = pick(this.options, [
+	private centerOptions = pick(this.options, [
 		'top',
 		'right',
 		'bottom',
@@ -105,7 +110,12 @@ export class NgtsCenter {
 		'disableZ',
 		'precise',
 		'cacheKey',
+		'object',
 	]);
+
+	private box = new THREE.Box3();
+	private center = new THREE.Vector3();
+	private sphere = new THREE.Sphere();
 
 	constructor() {
 		extend({ Group });
@@ -119,31 +129,29 @@ export class NgtsCenter {
 			if (!children?.length) return;
 
 			const [
-				{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX },
+				{ precise, top, bottom, right, left, front, back, disable, disableZ, disableY, disableX, object },
 				group,
 				outer,
 			] = [this.centerOptions(), this.groupRef().nativeElement, this.outerRef().nativeElement];
 
 			outer.matrixWorld.identity();
-			const box3 = new THREE.Box3().setFromObject(inner, precise);
-			const center = new THREE.Vector3();
-			const sphere = new THREE.Sphere();
+			this.box.setFromObject(object ?? inner, precise);
 
-			const width = box3.max.x - box3.min.x;
-			const height = box3.max.y - box3.min.y;
-			const depth = box3.max.z - box3.min.z;
+			const width = this.box.max.x - this.box.min.x;
+			const height = this.box.max.y - this.box.min.y;
+			const depth = this.box.max.z - this.box.min.z;
 
-			box3.getCenter(center);
-			box3.getBoundingSphere(sphere);
+			this.box.getCenter(this.center);
+			this.box.getBoundingSphere(this.sphere);
 
 			const vAlign = top ? height / 2 : bottom ? -height / 2 : 0;
 			const hAlign = left ? -width / 2 : right ? width / 2 : 0;
 			const dAlign = front ? depth / 2 : back ? -depth / 2 : 0;
 
 			outer.position.set(
-				disable || disableX ? 0 : -center.x + hAlign,
-				disable || disableY ? 0 : -center.y + vAlign,
-				disable || disableZ ? 0 : -center.z + dAlign,
+				disable || disableX ? 0 : -this.center.x + hAlign,
+				disable || disableY ? 0 : -this.center.y + vAlign,
+				disable || disableZ ? 0 : -this.center.z + dAlign,
 			);
 
 			this.centered.emit({
@@ -152,9 +160,9 @@ export class NgtsCenter {
 				width,
 				height,
 				depth,
-				boundingBox: box3,
-				boundingSphere: sphere,
-				center,
+				boundingBox: this.box,
+				boundingSphere: this.sphere,
+				center: this.center,
 				verticalAlignment: vAlign,
 				horizontalAlignment: hAlign,
 				depthAlignment: dAlign,
