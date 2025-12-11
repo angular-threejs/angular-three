@@ -1,196 +1,302 @@
-[23:50:49.206] [INFO] Storybook Upgrade - v9.0.14
-[23:50:49.220] [INFO] detect-projects-spinner-start: Detecting projects...
-[23:50:49.222] [INFO] detect-projects-spinner: Detecting projects: 1 projects
-[23:50:49.223] [DEBUG] Getting Storybook data...
-[23:50:49.223] [DEBUG] Getting Storybook info...
-[23:50:49.223] [DEBUG] Loading main config...
-[23:50:49.266] [DEBUG] Getting stories paths...
-[23:50:49.284] [DEBUG] Getting package manager...
-[23:50:49.617] [DEBUG] Getting Storybook version...
-[23:50:49.617] [DEBUG] libs/soba/.storybook - Validating before version... 9.0.14
-[23:50:49.617] [DEBUG] libs/soba/.storybook - Validating upgrade compatibility...
-[23:50:49.617] [DEBUG] libs/soba/.storybook - Fetching NPM version information...
-[23:50:49.617] [DEBUG] Getting CLI versions from NPM for storybook...
-[23:50:49.619] [DEBUG] Getting CLI versions from NPM for storybook@next...
-[23:50:50.241] [DEBUG] libs/soba/.storybook - Evaluating blockers...
-[23:50:50.242] [DEBUG] Getting installed version for @storybook/experimental-addon-test...
-[23:50:50.442] [INFO] detect-projects-spinner-stop: 1 project detected
-[23:50:50.443] [DEBUG] Found 1 valid projects and 0 error projects
-[23:50:50.443] [INFO] Upgrading from 9.0.14 to 9.0.14
-[23:50:50.454] [INFO] upgrade-dependencies-task-start: Fetching versions to update package.json files..
-[23:50:50.454] [DEBUG] Updating dependencies in libs/soba/.storybook...
-[23:50:50.463] [INFO] upgrade-dependencies-task: /libs/soba/package.json
+[15:18:56.773] [INFO] Storybook upgrade - v10.1.6
+[15:18:56.775] [INFO] detect-projects-spinner-start: Detecting projects...
+[15:18:56.776] [DEBUG] Finding Storybook projects...
+[15:18:57.213] [DEBUG] Found 1 Storybook projects
+[15:18:57.214] [INFO] detect-projects-spinner: Detecting projects: 1 projects
+[15:18:57.214] [DEBUG] Getting Storybook data...
+[15:18:57.214] [DEBUG] Getting Storybook info...
+[15:18:57.280] [DEBUG] Loading main config...
+[15:18:57.280] [DEBUG] Getting stories paths...
+[15:18:57.295] [DEBUG] Getting package manager...
+[15:18:57.692] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:18:57.692] [DEBUG] Getting Storybook version...
+[15:18:57.692] [DEBUG] /libs/soba/.storybook - Validating before version... 10.1.6
+[15:18:57.692] [DEBUG] /libs/soba/.storybook - Validating upgrade compatibility...
+[15:18:57.692] [DEBUG] /libs/soba/.storybook - Fetching NPM version information...
+[15:18:57.692] [DEBUG] Getting CLI versions from NPM for storybook...
+[15:18:57.692] [DEBUG] Executing command: pnpm info storybook version
+[15:18:57.694] [DEBUG] Getting CLI versions from NPM for storybook@next...
+[15:18:57.694] [DEBUG] Executing command: pnpm info storybook@next version
+[15:18:58.355] [DEBUG] /libs/soba/.storybook - Evaluating blockers...
+[15:18:58.363] [DEBUG] Getting installed version for @storybook/experimental-addon-test...
+[15:18:58.363] [DEBUG] Executing command: pnpm list "@storybook/experimental-addon-test" --json --depth=99
+[15:18:58.584] [INFO] detect-projects-spinner-stop: 1 project detected
+[15:18:58.584] [DEBUG] Found 1 valid projects and 0 error projects
+[15:18:58.584] [INFO] Upgrading from [1m10.1.6[22m to [1m10.1.6[22m
+[15:18:58.585] [INFO] upgrade-dependencies-task-start: Fetching versions to update package.json files..
+[15:18:58.585] [DEBUG] Updating dependencies in /libs/soba/.storybook...
+[15:18:58.585] [INFO] upgrade-dependencies-task: /libs/soba/package.json
 /package.json
-[23:50:50.463] [DEBUG] {
+[15:18:58.585] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.585] [DEBUG] {
   "upgradedDependencies": []
 }
-[23:50:50.463] [DEBUG] {
+[15:18:58.585] [DEBUG] {
   "upgradedDevDependencies": []
 }
-[23:50:50.463] [DEBUG] {
+[15:18:58.585] [DEBUG] {
   "upgradedPeerDependencies": []
 }
-[23:50:50.464] [DEBUG] Getting CLI versions from NPM for @chromatic-com/storybook...
-[23:50:50.465] [DEBUG] Getting CLI versions from NPM for @storybook/test-runner...
-[23:50:51.593] [DEBUG] {
+[15:18:58.585] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.585] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.586] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.586] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.586] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.586] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:18:58.586] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:18:58.586] [DEBUG] Getting CLI versions from NPM for @chromatic-com/storybook...
+[15:18:58.586] [DEBUG] Executing command: pnpm info @chromatic-com/storybook version
+[15:18:58.588] [DEBUG] Getting CLI versions from NPM for @storybook/test-runner...
+[15:18:58.588] [DEBUG] Executing command: pnpm info @storybook/test-runner version
+[15:19:00.476] [DEBUG] {
   "upgradedDependencies": []
 }
-[23:50:51.593] [DEBUG] {
+[15:19:00.476] [DEBUG] {
   "upgradedDevDependencies": [
-    "@storybook/addon-docs@^9.0.14",
-    "@storybook/angular@9.0.14",
-    "eslint-plugin-storybook@9.0.14",
-    "storybook@9.0.14",
-    "@chromatic-com/storybook@^4.0.1",
-    "@storybook/test-runner@0.23.0"
+    "@storybook/addon-docs@^10.1.6",
+    "@storybook/angular@10.1.6",
+    "eslint-plugin-storybook@10.1.6",
+    "storybook@10.1.6",
+    "@chromatic-com/storybook@^4.1.3",
+    "@storybook/test-runner@0.24.2"
   ]
 }
-[23:50:51.593] [DEBUG] {
+[15:19:00.476] [DEBUG] {
   "upgradedPeerDependencies": []
 }
-[23:50:51.594] [DEBUG] Getting CLI versions from NPM for @storybook/addon-docs...
-[23:50:52.151] [DEBUG] Getting CLI versions from NPM for @storybook/angular...
-[23:50:52.765] [DEBUG] Getting CLI versions from NPM for eslint-plugin-storybook...
-[23:50:53.223] [DEBUG] Using cached version for storybook...
-[23:50:53.223] [DEBUG] Using cached version for @chromatic-com/storybook...
-[23:50:53.223] [DEBUG] Using cached version for @storybook/test-runner...
-[23:50:53.224] [INFO] upgrade-dependencies-task-success: Updated package versions in package.json files
-[23:50:53.224] [INFO] detect-automigrations-task-start: Detecting automigrations...
-[23:50:53.224] [DEBUG] Starting automigration collection across 1 projects and 15 fixes...
-[23:50:53.232] [INFO] detect-automigrations-task: Checking automigrations for libs/soba/.storybook...
-[23:50:53.233] [DEBUG] Processing project: libs/soba/.storybook
-[23:50:53.233] [DEBUG] Checking fix eslintPlugin for project libs/soba/.storybook...
-[23:50:53.235] [DEBUG] Checking fix addon-mdx-gfm-remove for project libs/soba/.storybook...
-[23:50:53.236] [DEBUG] Checking fix addon-storysource-code-panel for project libs/soba/.storybook...
-[23:50:53.236] [DEBUG] Checking fix upgrade-storybook-related-dependencies for project libs/soba/.storybook...
-[23:50:53.236] [DEBUG] Checking for incompatible storybook packages...
-[23:50:53.238] [DEBUG] Getting installed version for @nx/storybook...
-[23:50:53.238] [DEBUG] Getting installed version for storybook-addon-deep-controls...
-[23:50:53.459] [DEBUG] Getting CLI versions from NPM for @nx/storybook...
-[23:50:53.487] [DEBUG] Getting CLI versions from NPM for storybook-addon-deep-controls...
-[23:50:54.242] [DEBUG] Checking fix initial-globals for project libs/soba/.storybook...
-[23:50:54.252] [DEBUG] Checking fix addon-a11y-addon-test for project libs/soba/.storybook...
-[23:50:54.252] [DEBUG] Checking fix consolidated-imports for project libs/soba/.storybook...
-[23:50:54.253] [DEBUG] Checking fix addon-experimental-test for project libs/soba/.storybook...
-[23:50:54.253] [DEBUG] Using cached installed version for @storybook/experimental-addon-test...
-[23:50:54.253] [DEBUG] Checking fix rnstorybook-config for project libs/soba/.storybook...
-[23:50:54.253] [DEBUG] Checking fix remove-addon-interactions for project libs/soba/.storybook...
-[23:50:54.253] [DEBUG] Checking fix renderer-to-framework for project libs/soba/.storybook...
-[23:50:54.254] [DEBUG] Checking fix remove-essential-addons for project libs/soba/.storybook...
-[23:50:54.254] [DEBUG] Checking fix addon-a11y-parameters for project libs/soba/.storybook...
-[23:50:54.254] [DEBUG] Checking fix remove-docs-autodocs for project libs/soba/.storybook...
-[23:50:54.259] [DEBUG] Checking fix wrap-require for project libs/soba/.storybook...
-[23:50:54.272] [INFO] detect-automigrations-task: 
+[15:19:00.476] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:00.476] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:00.476] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:00.476] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:00.476] [DEBUG] Getting CLI versions from NPM for @storybook/addon-docs...
+[15:19:00.476] [DEBUG] Executing command: pnpm info @storybook/addon-docs version
+[15:19:01.362] [DEBUG] Getting CLI versions from NPM for @storybook/angular...
+[15:19:01.362] [DEBUG] Executing command: pnpm info @storybook/angular version
+[15:19:02.329] [DEBUG] Getting CLI versions from NPM for eslint-plugin-storybook...
+[15:19:02.329] [DEBUG] Executing command: pnpm info eslint-plugin-storybook version
+[15:19:02.905] [DEBUG] Using cached version for storybook...
+[15:19:02.905] [DEBUG] Using cached version for @chromatic-com/storybook...
+[15:19:02.905] [DEBUG] Using cached version for @storybook/test-runner...
+[15:19:02.905] [DEBUG] Getting package.json info for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.905] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.906] [INFO] upgrade-dependencies-task-success: Updated package versions in package.json files
+[15:19:02.906] [INFO] detect-automigrations-task-start: Detecting automigrations...
+[15:19:02.906] [DEBUG] Starting automigration collection across 1 projects and 19 fixes...
+[15:19:02.906] [INFO] detect-automigrations-task: Checking automigrations for /libs/soba/.storybook...
+[15:19:02.906] [DEBUG] Processing project: /libs/soba/.storybook
+[15:19:02.906] [DEBUG] Checking fix eslintPlugin for project /libs/soba/.storybook...
+[15:19:02.906] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:02.906] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.906] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.906] [DEBUG] Checking fix addon-mdx-gfm-remove for project /libs/soba/.storybook...
+[15:19:02.906] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:02.906] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.906] [DEBUG] Checking fix addon-storysource-code-panel for project /libs/soba/.storybook...
+[15:19:02.906] [DEBUG] Checking fix upgrade-storybook-related-dependencies for project /libs/soba/.storybook...
+[15:19:02.906] [DEBUG] Checking for incompatible storybook packages...
+[15:19:02.907] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:02.907] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.908] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:02.908] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:02.908] [DEBUG] Getting installed version for @nx/storybook...
+[15:19:02.908] [DEBUG] Executing command: pnpm list "@nx/storybook" --json --depth=99
+[15:19:02.909] [DEBUG] Getting installed version for storybook-addon-deep-controls...
+[15:19:02.909] [DEBUG] Executing command: pnpm list "storybook-addon-deep-controls" --json --depth=99
+[15:19:03.130] [DEBUG] Getting CLI versions from NPM for @nx/storybook...
+[15:19:03.130] [DEBUG] Executing command: pnpm info @nx/storybook version
+[15:19:03.132] [DEBUG] Getting CLI versions from NPM for storybook-addon-deep-controls...
+[15:19:03.132] [DEBUG] Executing command: pnpm info storybook-addon-deep-controls version
+[15:19:04.222] [DEBUG] Checking fix initial-globals for project /libs/soba/.storybook...
+[15:19:04.231] [DEBUG] Checking fix addon-globals-api for project /libs/soba/.storybook...
+[15:19:04.233] [DEBUG] Checking fix addon-a11y-addon-test for project /libs/soba/.storybook...
+[15:19:04.233] [DEBUG] Checking fix consolidated-imports for project /libs/soba/.storybook...
+[15:19:04.233] [DEBUG] Checking fix addon-experimental-test for project /libs/soba/.storybook...
+[15:19:04.233] [DEBUG] Using cached installed version for @storybook/experimental-addon-test...
+[15:19:04.233] [DEBUG] Checking fix rnstorybook-config for project /libs/soba/.storybook...
+[15:19:04.233] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:04.233] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:04.233] [DEBUG] Checking fix migrate-addon-console for project /libs/soba/.storybook...
+[15:19:04.233] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:04.233] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:04.233] [DEBUG] Checking fix nextjs-to-nextjs-vite for project /libs/soba/.storybook...
+[15:19:04.234] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:04.234] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:04.234] [DEBUG] Checking fix remove-addon-interactions for project /libs/soba/.storybook...
+[15:19:04.234] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:04.234] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:04.234] [DEBUG] Checking fix renderer-to-framework for project /libs/soba/.storybook...
+[15:19:04.234] [DEBUG] Checking fix remove-essential-addons for project /libs/soba/.storybook...
+[15:19:04.234] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:04.234] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:04.234] [DEBUG] Checking fix addon-a11y-parameters for project /libs/soba/.storybook...
+[15:19:04.234] [DEBUG] Checking fix remove-docs-autodocs for project /libs/soba/.storybook...
+[15:19:04.239] [DEBUG] Checking fix wrap-getAbsolutePath for project /libs/soba/.storybook...
+[15:19:04.243] [DEBUG] Checking fix fix-faux-esm-require for project /libs/soba/.storybook...
+[15:19:04.243] [INFO] detect-automigrations-task: 
 Automigrations detected:
-[23:50:54.272] [INFO] detect-automigrations-task-success: No automigrations detected
-[23:50:54.272] [DEBUG] Completed automigrations for libs/soba/.storybook
-[23:50:54.272] [INFO] Installing dependencies...
-[23:50:54.272] [INFO] install-dependencies-task-start: Installing dependencies...
-[23:50:54.627] [INFO] Lockfile is up to date, resolution step is skipped
-[23:50:54.637] [INFO] install-dependencies-task: Lockfile is up to date, resolution step is skipped
-[23:50:54.821] [INFO] Already up to date
-[23:50:54.832] [INFO] install-dependencies-task: Already up to date
-[23:50:56.184] [INFO] 
-[23:50:56.193] [INFO] install-dependencies-task: 
-[23:50:56.213] [INFO] Done in 1.8s using pnpm v10.12.1
-[23:50:56.221] [INFO] install-dependencies-task: Done in 1.8s using pnpm v10.12.1
-[23:50:56.224] [INFO] Dependencies installed
-[23:50:56.224] [INFO] install-dependencies-task-success: Dependencies installed
-[23:50:56.224] [WARN] Since you are in a monorepo, we advise you to deduplicate your dependencies. We can do this for you but it might take some time.
-[23:51:21.867] [PROMPT] Execute pnpm run dedupe? {"choice":true}
-[23:51:21.867] [INFO] Deduplicating dependencies...
-[23:51:21.867] [INFO] dedupe-dependencies-task-start: Deduplicating dependencies...
-[23:51:22.253] [INFO] Progress: resolved 1, reused 0, downloaded 0, added 0
-[23:51:22.261] [INFO] dedupe-dependencies-task: Progress: resolved 1, reused 0, downloaded 0, added 0
-[23:51:23.255] [INFO] Progress: resolved 108, reused 108, downloaded 0, added 0
-[23:51:23.264] [INFO] dedupe-dependencies-task: Progress: resolved 108, reused 108, downloaded 0, added 0
-[23:51:24.255] [INFO] Progress: resolved 260, reused 259, downloaded 0, added 0
-[23:51:24.265] [INFO] dedupe-dependencies-task: Progress: resolved 260, reused 259, downloaded 0, added 0
-[23:51:25.255] [INFO] Progress: resolved 506, reused 488, downloaded 0, added 0
-[23:51:25.267] [INFO] dedupe-dependencies-task: Progress: resolved 506, reused 488, downloaded 0, added 0
-[23:51:26.255] [INFO] Progress: resolved 837, reused 770, downloaded 0, added 0
-[23:51:26.263] [INFO] dedupe-dependencies-task: Progress: resolved 837, reused 770, downloaded 0, added 0
-[23:51:27.256] [INFO] Progress: resolved 1174, reused 1069, downloaded 0, added 0
-[23:51:27.266] [INFO] dedupe-dependencies-task: Progress: resolved 1174, reused 1069, downloaded 0, added 0
-[23:51:28.262] [INFO] Progress: resolved 1610, reused 1450, downloaded 0, added 0
-[23:51:28.271] [INFO] dedupe-dependencies-task: Progress: resolved 1610, reused 1450, downloaded 0, added 0
-[23:51:29.263] [INFO] Progress: resolved 2007, reused 1835, downloaded 0, added 0
-[23:51:29.271] [INFO] dedupe-dependencies-task: Progress: resolved 2007, reused 1835, downloaded 0, added 0
-[23:51:29.941] [INFO] WARN  6 deprecated subdependencies found: abab@2.0.6, domexception@4.0.0, glob@7.2.3, inflight@1.0.6, read-pkg-up@11.0.0, rimraf@3.0.2
-[23:51:29.951] [INFO] dedupe-dependencies-task: WARN  6 deprecated subdependencies found: abab@2.0.6, domexception@4.0.0,
-glob@7.2.3, inflight@1.0.6, read-pkg-up@11.0.0, rimraf@3.0.2
-[23:51:29.979] [INFO] Packages: -71
------------------------------------------------------------------------
-[23:51:29.987] [INFO] dedupe-dependencies-task: Packages: -71
------------------------------------------------------------------------
-[23:51:30.143] [INFO] Progress: resolved 2162, reused 1968, downloaded 0, added 2, done
-[23:51:30.152] [INFO] dedupe-dependencies-task: Progress: resolved 2162, reused 1968, downloaded 0, added 2, done
-[23:51:30.751] [INFO] WARN  Issues with peer dependencies found
-.
-├─┬ @angular-devkit/build-angular 20.0.2
-│ └─┬ @angular/build 20.0.2
-│   └── ✕ unmet peer vitest@^3.1.1: found 1.6.0
-├─┬ @angular/build 20.0.2
-│ ├── ✕ unmet peer vitest@^3.1.1: found 1.6.0
-│ └── ✕ unmet peer less@^4.2.0: found 4.1.3
-├─┬ @storybook/types 8.3.6
-│ └── ✕ unmet peer storybook@^8.3.6: found 9.0.14
-├─┬ @storybook/addon-controls 8.6.14
-│ └── ✕ unmet peer storybook@^8.6.14: found 9.0.14
-├─┬ storybook-addon-deep-controls 0.9.3
-│ └── ✕ unmet peer storybook@"7.x.x || 8.x.x": found 9.0.14
-└─┬ @nx/angular 21.2.1
-  └─┬ @nx/rspack 21.2.1
-    └── ✕ unmet peer @module-federation/enhanced@^0.9.0: found 0.10.0
-[23:51:30.767] [INFO] dedupe-dependencies-task: WARN  Issues with peer dependencies found
-.
-├─┬ @angular-devkit/build-angular 20.0.2
-│ └─┬ @angular/build 20.0.2
-│   └── ✕ unmet peer vitest@^3.1.1: found 1.6.0
-├─┬ @angular/build 20.0.2
-│ ├── ✕ unmet peer vitest@^3.1.1: found 1.6.0
-│ └── ✕ unmet peer less@^4.2.0: found 4.1.3
-├─┬ @storybook/types 8.3.6
-│ └── ✕ unmet peer storybook@^8.3.6: found 9.0.14
-├─┬ @storybook/addon-controls 8.6.14
-│ └── ✕ unmet peer storybook@^8.6.14: found 9.0.14
-├─┬ storybook-addon-deep-controls 0.9.3
-│ └── ✕ unmet peer storybook@"7.x.x || 8.x.x": found 9.0.14
-└─┬ @nx/angular 21.2.1
-└─┬ @nx/rspack 21.2.1
-└── ✕ unmet peer @module-federation/enhanced@^0.9.0: found 0.10.0
-[23:51:30.767] [INFO] 
-[23:51:30.776] [INFO] dedupe-dependencies-task: 
-[23:51:30.794] [INFO] Dependencies deduplicated
-[23:51:30.794] [INFO] dedupe-dependencies-task-success: Dependencies deduplicated
-[23:51:30.794] [INFO] Checking the health of your project(s)..
-[23:51:31.014] [WARN] libs/soba/.storybook: 1 issue found
-[23:51:31.023] [INFO] You are currently using Storybook 9.0.14 but you have packages which are incompatible with it:
+[15:19:04.243] [INFO] detect-automigrations-task-success: No automigrations detected
+[15:19:04.243] [DEBUG] Completed automigrations for /libs/soba/.storybook
+[15:19:04.243] [INFO] Installing dependencies...
+[15:19:04.243] [INFO] install-dependencies-spinner-start: Installing dependencies...
+[15:19:04.244] [DEBUG] Executing command: pnpm install
+[15:19:04.635] [INFO] Installing dependencies...: Progress: resolved 0, reused 1, downloaded 0, added 0
 
-- storybook-addon-deep-controls@0.9.3 which depends on 7.x.x || 8.x.x
+[15:19:04.635] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 0, reu
+[15:19:05.635] [INFO] Installing dependencies...: Progress: resolved 948, reused 941, downloaded 2, added 0
+
+[15:19:05.635] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 948, r
+[15:19:06.640] [INFO] Installing dependencies...: Progress: resolved 2074, reused 1853, downloaded 5, added 0
+
+[15:19:06.640] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 2074, 
+[15:19:07.642] [INFO] Installing dependencies...: Progress: resolved 2119, reused 1898, downloaded 6, added 0
+
+[15:19:07.642] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 2119, 
+[15:19:08.660] [INFO] Installing dependencies...: Progress: resolved 2184, reused 1963, downloaded 6, added 0
+
+[15:19:08.660] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 2184, 
+[15:19:09.824] [INFO] Installing dependencies...:  WARN  7 deprecated subdependencies found: expect-playwright@0.8.0, glob@7.2.3, inflight@1.0.6, jest-process-manager@0.4.0, keygrip@1.1.0, read-pkg-up@11.0.0, rimraf@3.0.2
+
+[15:19:09.824] [INFO] install-dependencies-spinner: Installing dependencies...: WARN  7 deprecated subdep
+[15:19:09.842] [INFO] Installing dependencies...: Progress: resolved 2238, reused 1995, downloaded 6, added 0
+
+[15:19:09.842] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 2238, 
+[15:19:09.896] [INFO] Installing dependencies...: Packages: +7 -8
++++++++--------
+
+[15:19:09.896] [INFO] install-dependencies-spinner: Installing dependencies...: Packages: +7 -8
++++++++--
+[15:19:09.961] [INFO] Installing dependencies...: Progress: resolved 2238, reused 1995, downloaded 6, added 7, done
+
+[15:19:09.961] [INFO] install-dependencies-spinner: Installing dependencies...: Progress: resolved 2238, 
+[15:19:10.383] [INFO] Installing dependencies...:  WARN  Issues with peer dependencies found
+.
+├─┬ @angular-devkit/build-angular 20.3.8
+│ ├── ✕ unmet peer jest@"^29.5.0 || ^30.2.0": found 30.0.5
+│ ├── ✕ unmet peer jest-environment-jsdom@"^29.5.0 || ^30.2.0": found 30.0.5
+│ └─┬ @angular/build 20.3.8
+│   ├── ✕ unmet peer vitest@^3.1.1: found 1.6.0
+│   └─┬ vite 7.1.11
+│     └── ✕ unmet peer @types/node@"^20.19.0 || >=22.12.0": found 20.14.12
+├─┬ vite 7.1.9
+│ └── ✕ unmet peer @types/node@"^20.19.0 || >=22.12.0": found 20.14.12
+├─┬ jest-preset-angular 15.0.0
+│ └── ✕ unmet peer jsdom@>=26.0.0: found 24.1.1
+└─┬ storybook-addon-deep-controls 0.9.5
+  └── ✕ unmet peer storybook@">= 7.0.0 < 8.5.0 || >= 9.0.0 < 10.0.0": found 10.1.6
+
+[15:19:10.383] [INFO] install-dependencies-spinner: Installing dependencies...: WARN  Issues with peer de
+[15:19:10.383] [INFO] Installing dependencies...: 
+devDependencies:
+- @chromatic-com/storybook 4.1.2
++ @chromatic-com/storybook 4.1.3
+- @storybook/addon-docs 10.0.5
++ @storybook/addon-docs 10.1.6
+- @storybook/test-runner 0.24.1
++ @storybook/test-runner 0.24.2
+- eslint-plugin-storybook 10.0.5
++ eslint-plugin-storybook 10.1.6
+
+
+[15:19:10.383] [INFO] install-dependencies-spinner: Installing dependencies...: devDependencies:
+- @chrom
+[15:19:10.397] [INFO] Installing dependencies...: Done in 6.1s using pnpm v10.14.0
+
+[15:19:10.397] [INFO] install-dependencies-spinner: Installing dependencies...: Done in 6.1s using pnpm v
+[15:19:10.422] [INFO] Dependencies installed
+[15:19:10.422] [INFO] install-dependencies-spinner-stop: Dependencies installed
+[15:19:10.423] [WARN] Since you are in a monorepo, we advise you to deduplicate your dependencies. We can do this for you but it might take some time.
+[15:19:10.424] [INFO] Deduplicating dependencies...
+[15:19:10.424] [INFO] Deduplicating dependencies...
+[15:19:10.424] [DEBUG] Executing command: pnpm dedupe
+[15:19:10.775] [INFO] Progress: resolved 1, reused 0, downloaded 0, added 0
+[15:19:10.775] [INFO] Progress: resolved 1, reused 0, downloaded 0, added 0
+[15:19:11.776] [INFO] Progress: resolved 84, reused 84, downloaded 0, added 0
+[15:19:11.776] [INFO] Progress: resolved 84, reused 84, downloaded 0, added 0
+[15:19:12.776] [INFO] Progress: resolved 112, reused 112, downloaded 0, added 0
+[15:19:12.776] [INFO] Progress: resolved 112, reused 112, downloaded 0, added 0
+[15:19:13.776] [INFO] Progress: resolved 200, reused 200, downloaded 0, added 0
+[15:19:13.776] [INFO] Progress: resolved 200, reused 200, downloaded 0, added 0
+[15:19:14.776] [INFO] Progress: resolved 282, reused 282, downloaded 0, added 0
+[15:19:14.776] [INFO] Progress: resolved 282, reused 282, downloaded 0, added 0
+[15:19:15.776] [INFO] Progress: resolved 397, reused 387, downloaded 0, added 0
+[15:19:15.776] [INFO] Progress: resolved 397, reused 387, downloaded 0, added 0
+[15:19:16.777] [INFO] Progress: resolved 535, reused 517, downloaded 0, added 0
+[15:19:16.777] [INFO] Progress: resolved 535, reused 517, downloaded 0, added 0
+[15:19:17.777] [INFO] Progress: resolved 691, reused 673, downloaded 0, added 0
+[15:19:17.777] [INFO] Progress: resolved 691, reused 673, downloaded 0, added 0
+[15:19:18.778] [INFO] Progress: resolved 917, reused 847, downloaded 0, added 0
+[15:19:18.778] [INFO] Progress: resolved 917, reused 847, downloaded 0, added 0
+[15:19:19.778] [INFO] Progress: resolved 1120, reused 1009, downloaded 0, added 0
+[15:19:19.778] [INFO] Progress: resolved 1120, reused 1009, downloaded 0, added 0
+[15:19:20.778] [INFO] Progress: resolved 1309, reused 1181, downloaded 0, added 0
+[15:19:20.778] [INFO] Progress: resolved 1309, reused 1181, downloaded 0, added 0
+[15:19:21.779] [INFO] Progress: resolved 1566, reused 1393, downloaded 0, added 0
+[15:19:21.779] [INFO] Progress: resolved 1566, reused 1393, downloaded 0, added 0
+[15:19:22.780] [INFO] Progress: resolved 1762, reused 1561, downloaded 0, added 0
+[15:19:22.780] [INFO] Progress: resolved 1762, reused 1561, downloaded 0, added 0
+[15:19:23.781] [INFO] Progress: resolved 1970, reused 1755, downloaded 0, added 0
+[15:19:23.781] [INFO] Progress: resolved 1970, reused 1755, downloaded 0, added 0
+[15:19:24.783] [INFO] Progress: resolved 2155, reused 1940, downloaded 0, added 0
+[15:19:24.783] [INFO] Progress: resolved 2155, reused 1940, downloaded 0, added 0
+[15:19:25.614] [INFO] WARN  7 deprecated subdependencies found: expect-playwright@0.8.0, glob@7.2.3, inflight@1.0.6, jest-process-manager@0.4.0, keygrip@1.1.0, read-pkg-up@11.0.0, rimraf@3.0.2
+[15:19:25.614] [INFO] WARN  7 deprecated subdependencies found: expect-playwright@0.8.0, glob@7.2.3, inflight@1.0.6, jest-process-manager@0.4.0, keygrip@1.1.0, read-pkg-up@11.0.0, rimraf@3.0.2
+[15:19:25.649] [INFO] Packages: -1
+-
+[15:19:25.649] [INFO] Packages: -1
+-
+[15:19:25.739] [INFO] Progress: resolved 2237, reused 2000, downloaded 0, added 0, done
+[15:19:25.739] [INFO] Progress: resolved 2237, reused 2000, downloaded 0, added 0, done
+[15:19:26.097] [INFO] WARN  Issues with peer dependencies found
+.
+├─┬ @angular-devkit/build-angular 20.3.8
+│ ├── ✕ unmet peer jest@"^29.5.0 || ^30.2.0": found 30.0.5
+│ ├── ✕ unmet peer jest-environment-jsdom@"^29.5.0 || ^30.2.0": found 30.0.5
+│ └─┬ @angular/build 20.3.8
+│   ├── ✕ unmet peer vitest@^3.1.1: found 1.6.0
+│   └─┬ vite 7.1.11
+│     └── ✕ unmet peer @types/node@"^20.19.0 || >=22.12.0": found 20.14.12
+├─┬ vite 7.1.9
+│ └── ✕ unmet peer @types/node@"^20.19.0 || >=22.12.0": found 20.14.12
+├─┬ jest-preset-angular 15.0.0
+│ └── ✕ unmet peer jsdom@>=26.0.0: found 24.1.1
+└─┬ storybook-addon-deep-controls 0.9.5
+  └── ✕ unmet peer storybook@">= 7.0.0 < 8.5.0 || >= 9.0.0 < 10.0.0": found 10.1.6
+[15:19:26.097] [INFO] WARN  Issues with peer dependencies found
+.
+├─┬ @angular-devkit/build-angular 20.3.8
+│ ├── ✕ unmet peer jest@"^29.5.0 || ^30.2.0": found 30.0.5
+│ ├── ✕ unmet peer jest-environment-jsdom@"^29.5.0 || ^30.2.0": found 30.0.5
+│ └─┬ @angular/build 20.3.8
+│   ├── ✕ unmet peer vitest@^3.1.1: found 1.6.0
+│   └─┬ vite 7.1.11
+│     └── ✕ unmet peer @types/node@"^20.19.0 || >=22.12.0": found 20.14.12
+├─┬ vite 7.1.9
+│ └── ✕ unmet peer @types/node@"^20.19.0 || >=22.12.0": found 20.14.12
+├─┬ jest-preset-angular 15.0.0
+│ └── ✕ unmet peer jsdom@>=26.0.0: found 24.1.1
+└─┬ storybook-addon-deep-controls 0.9.5
+  └── ✕ unmet peer storybook@">= 7.0.0 < 8.5.0 || >= 9.0.0 < 10.0.0": found 10.1.6
+[15:19:26.098] [INFO] 
+[15:19:26.098] [INFO] 
+[15:19:26.146] [INFO] Dependencies deduplicated
+[15:19:26.146] [INFO] [32mDependencies deduplicated[39m
+[15:19:26.147] [INFO] Checking the health of your project(s)..
+[15:19:26.147] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/libs/soba/package.json...
+[15:19:26.147] [DEBUG] Using cached package.json for /Users/nartc/code/github/angular-threejs/angular-three/package.json...
+[15:19:26.149] [DEBUG] Executing command: pnpm list "@storybook/*" "storybook" --json --depth=99
+[15:19:26.377] [WARN] /libs/soba/.storybook: 1 issue found
+[15:19:26.377] [INFO] You are currently using Storybook [1m10.1.6[22m but you have packages which are incompatible with it:
+
+- storybook-addon-deep-controls@0.9.5 which depends on >= 7.0.0 < 8.5.0 || >= 9.0.0 < 10.0.0
  Repo: https://github.com/eliasm307/storybook-addon-deep-controls#readme
 
 Please consider updating your packages or contacting the maintainers for compatibility details.
 
-For more on Storybook 9 compatibility, see the linked GitHub issue:
-https://github.com/storybookjs/storybook/issues/30944
-[23:51:31.023] [INFO] Incompatible Packages
-[23:51:31.031] [INFO] You are currently using Storybook 9.0.14 but you have packages which are incompatible with it:
-
-- storybook-addon-deep-controls@0.9.3 which depends on 7.x.x || 8.x.x
- Repo: https://github.com/eliasm307/storybook-addon-deep-controls#readme
-
-Please consider updating your packages or contacting the maintainers for compatibility details.
-
-For more on Storybook 9 compatibility, see the linked GitHub issue:
-https://github.com/storybookjs/storybook/issues/30944
-[23:51:31.040] [INFO] Storybook doctor is complete!
-[23:51:31.048] [INFO] You can always recheck the health of your project(s) by running:
-npx storybook doctor
-[23:51:31.055] [INFO] The upgrade is complete!
-[23:51:31.064] [INFO] Your project(s) have been upgraded successfully, but some issues were found which need your attention, please check Storybook doctor logs above.
-[23:51:31.072] [INFO] For a full list of changes, please check our migration guide: https://storybook.js.org/docs/migration-guide
-[23:51:31.082] [INFO] Attention: Storybook now collects completely anonymous telemetry regarding usage. This information is used to shape Storybook's roadmap and prioritize features.
-[23:51:31.090] [INFO] You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-[23:51:31.099] [INFO] https://storybook.js.org/telemetry
-[23:51:31.106] [INFO] 
+For more details on compatibility guidance, see:
+https://github.com/storybookjs/storybook/issues/32836
+[15:19:26.378] [INFO] Storybook doctor is complete!
+[15:19:26.378] [INFO] You can always recheck the health of your project(s) by running:
+[36mnpx storybook doctor[39m
+[15:19:26.378] [INFO] [33mYour project(s) have been upgraded successfully, but some issues were found which need your attention, please check Storybook doctor logs above.[39m
+[15:19:26.379] [INFO] For a full list of changes, please check our migration guide: [36mhttps://storybook.js.org/docs/releases/migration-guide?ref=upgrade[39m
+[15:19:27.626] [INFO] Storybook upgrade completed!

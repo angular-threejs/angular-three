@@ -77,7 +77,7 @@
 			"dependsOn": ["^build"],
 			"inputs": ["production", "^production"]
 		},
-		"@nx/vite:test": {
+		"@nx/vitest:test": {
 			"cache": true,
 			"inputs": ["default", "^production"]
 		}
