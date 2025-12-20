@@ -10,6 +10,7 @@ import {
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Object3D } from 'three';
+import { NGT_STORE, storeFactory } from '../store';
 import { NgtParent } from './parent';
 
 describe('parent', () => {
@@ -64,7 +65,7 @@ describe('parent', () => {
 
 		expect(fixture.debugElement.queryAll(By.css('div')).length).toEqual(2);
 		const parent = fixture.componentInstance.parent();
-		expect(parent?.value).toEqual(fixture.componentInstance.parentRef());
+		expect(parent?.value).toEqual(fixture.componentInstance.parentRef()?.nativeElement);
 		expect(parent?.value).toEqual(null);
 	});
 });
@@ -74,6 +75,7 @@ describe('parent', () => {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [NgtParent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [{ provide: NGT_STORE, useFactory: storeFactory }],
 })
 class Test {
 	parent = viewChild(NgtParent);
