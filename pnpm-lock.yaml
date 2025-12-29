@@ -50,8 +50,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(three@0.182.0)
       '@pmndrs/vanilla':
-        specifier: ^1.24.1
-        version: 1.24.1(three@0.182.0)
+        specifier: ^1.25.0
+        version: 1.25.0(three@0.182.0)
       '@swc/helpers':
         specifier: 0.5.18
         version: 0.5.18
@@ -3642,8 +3642,8 @@ packages:
     peerDependencies:
       three: '>=0.139'
 
-  '@pmndrs/vanilla@1.24.1':
-    resolution: {integrity: sha512-umKhk/cSKOW9iee5wosM83Olt7elHLIif2sZ51u/MR+zE0LYN4jZsAgUB8TNF+FWrqx1uX6yqcIfsQdrwo7FMg==}
+  '@pmndrs/vanilla@1.25.0':
+    resolution: {integrity: sha512-Dx3dLndPL5ibjyOCtkFMVYBvVK44xe8zxnVG1mjVOEytfBqNvfF8eMuCJyptZUMgiLl04UjXbytNeyIhIE9Shw==}
     peerDependencies:
       three: '>=0.137'
 
@@ -15128,7 +15128,7 @@ snapshots:
     dependencies:
       three: 0.182.0
 
-  '@pmndrs/vanilla@1.24.1(three@0.182.0)':
+  '@pmndrs/vanilla@1.25.0(three@0.182.0)':
     dependencies:
       glsl-noise: 0.0.0
       meshline: 3.3.1(three@0.182.0)

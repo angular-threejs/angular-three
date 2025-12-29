@@ -112,7 +112,7 @@
     "@dimforge/rapier3d-compat": "^0.19.3",
     "@monogrid/gainmap-js": "^3.4.0",
     "@pmndrs/cannon-worker-api": "^2.4.0",
-    "@pmndrs/vanilla": "^1.24.1",
+    "@pmndrs/vanilla": "^1.25.0",
     "@swc/helpers": "0.5.18",
     "@theatre/core": "^0.7.2",
     "@theatre/studio": "^0.7.2",
