@@ -95,7 +95,12 @@ export class NgtsMeshRefractionMaterial {
 		];
 		const isCubeMap = is.three<THREE.CubeTexture>(envMap, 'isCubeTexture');
 
-		const w = (isCubeMap ? envMap.image[0]?.width : envMap.image.width) ?? 1024;
+		const w =
+			('width' in envMap
+				? envMap.width
+				: isCubeMap
+					? (envMap as THREE.CubeTexture<{ width?: number }>).image[0]?.width
+					: (envMap as THREE.Texture<{ width?: number }>).image.width) ?? 1024;
 		const cubeSize = w / 4;
 		const _lodMax = Math.floor(Math.log2(cubeSize));
 		const _cubeSize = Math.pow(2, _lodMax);
