@@ -39,15 +39,6 @@ export interface NgtrPhysicsOptions {
 	numSolverIterations: number;
 
 	/**
-	 * Number of addition friction resolution iteration run during the last solver sub-step.
-	 * The greater this value is, the most realistic friction will be.
-	 * However a greater number of iterations is more computationally intensive.
-	 *
-	 * @defaultValue 4
-	 */
-	numAdditionalFrictionIterations: number;
-
-	/**
 	 * Number of internal Project Gauss Seidel (PGS) iterations run at each solver iteration.
 	 * Increasing this parameter will improve stability of the simulation. It will have a lesser effect than
 	 * increasing `numSolverIterations` but is also less computationally expensive.

@@ -35,7 +35,6 @@ const defaultOptions: NgtrPhysicsOptions = {
 	gravity: [0, -9.81, 0],
 	allowedLinearError: 0.001,
 	numSolverIterations: 4,
-	numAdditionalFrictionIterations: 4,
 	numInternalPgsIterations: 1,
 	predictionDistance: 0.002,
 	minIslandSize: 128,
@@ -93,7 +92,6 @@ export class NgtrPhysics {
 	protected updateLoop = pick(this.options, 'updateLoop');
 
 	private numSolverIterations = pick(this.options, 'numSolverIterations');
-	private numAdditionalFrictionIterations = pick(this.options, 'numAdditionalFrictionIterations');
 	private numInternalPgsIterations = pick(this.options, 'numInternalPgsIterations');
 	private allowedLinearError = pick(this.options, 'allowedLinearError');
 	private minIslandSize = pick(this.options, 'minIslandSize');
@@ -175,7 +173,6 @@ export class NgtrPhysics {
 
 		world.proxy.gravity = this.vGravity();
 		world.proxy.integrationParameters.numSolverIterations = this.numSolverIterations();
-		world.proxy.integrationParameters.numAdditionalFrictionIterations = this.numAdditionalFrictionIterations();
 		world.proxy.integrationParameters.numInternalPgsIterations = this.numInternalPgsIterations();
 		world.proxy.integrationParameters.normalizedAllowedLinearError = this.allowedLinearError();
 		world.proxy.integrationParameters.minIslandSize = this.minIslandSize();
