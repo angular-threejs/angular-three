@@ -128,7 +128,7 @@
     "n8ao": "^1.10.1",
     "ngxtension": "^7.0.2",
     "rxjs": "~7.8.2",
-    "stats-gl": "^3.6.0",
+    "stats-gl": "^3.8.0",
     "three-custom-shader-material": "~6.4.0",
     "three-mesh-bvh": "^0.9.4",
     "three-stdlib": "^2.36.1",
