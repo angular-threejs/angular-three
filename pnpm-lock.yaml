@@ -204,8 +204,8 @@ importers:
         specifier: ^6.1.4
         version: 6.1.4(typescript@5.9.3)
       '@rosskevin/gltfjsx':
-        specifier: ^7.1.5
-        version: 7.1.5(encoding@0.1.13)
+        specifier: ^7.2.0
+        version: 7.2.0(encoding@0.1.13)
       '@schematics/angular':
         specifier: 21.0.4
         version: 21.0.4(chokidar@4.0.1)
@@ -309,8 +309,8 @@ importers:
         specifier: 21.0.1
         version: 21.0.1(@angular/compiler-cli@21.0.6(@angular/compiler@21.0.6)(typescript@5.9.3))(tailwindcss@4.1.18)(tslib@2.8.1)(typescript@5.9.3)
       node-three-gltf:
-        specifier: ^2.0.2
-        version: 2.0.2(encoding@0.1.13)(three@0.182.0)
+        specifier: ^2.1.0
+        version: 2.1.0(encoding@0.1.13)(three@0.182.0)
       nx:
         specifier: 22.3.3
         version: 22.3.3(@swc-node/register@1.11.1(@swc/core@1.15.7(@swc/helpers@0.5.18))(@swc/types@0.1.25)(typescript@5.9.3))(@swc/core@1.15.7(@swc/helpers@0.5.18))
@@ -3866,8 +3866,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  '@rosskevin/gltfjsx@7.1.5':
-    resolution: {integrity: sha512-kiJWv0aCBAA2+aYPzeIlLr4n23BOMno4i7Gng8gZGJGgB2LvpPVYoJ01WmazawkTxjGzAPFaM/uHW21BRlWjFQ==}
+  '@rosskevin/gltfjsx@7.2.0':
+    resolution: {integrity: sha512-LAXc/gymJKPy8YWcURTEW8kBsyD0KIgC86gZcVDQTANlvWKpXnbMNCy+8nro62/W6/38PaiOhM1Bq+ytzzF44Q==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -8574,6 +8574,12 @@ packages:
 
   node-three-gltf@2.0.2:
     resolution: {integrity: sha512-y8QDyAYH9vwV0QU7Hm3VlY5ItlVqlRrakyCxP7Q6ZMmny9NFtstj0ormurvtXg5w+58zL8okus8+7GytK4z7SQ==}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    peerDependencies:
+      three: '>=0.156.0'
+
+  node-three-gltf@2.1.0:
+    resolution: {integrity: sha512-+aOv/Fj844buwxaxCLE16Np2fTOPtjtwzRAMfAG2Nxo5ioOOR7cuBv+oSI0SZcX4E8h7HegorzIN0ZmMCOuymg==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     peerDependencies:
       three: '>=0.156.0'
@@ -13409,12 +13415,12 @@ snapshots:
 
   '@img/sharp-wasm32@0.33.5':
     dependencies:
-      '@emnapi/runtime': 1.7.0
+      '@emnapi/runtime': 1.7.1
     optional: true
 
   '@img/sharp-wasm32@0.34.3':
     dependencies:
-      '@emnapi/runtime': 1.7.0
+      '@emnapi/runtime': 1.7.1
     optional: true
 
   '@img/sharp-win32-arm64@0.34.3':
@@ -15266,7 +15272,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  '@rosskevin/gltfjsx@7.1.5(encoding@0.1.13)':
+  '@rosskevin/gltfjsx@7.2.0(encoding@0.1.13)':
     dependencies:
       '@gltf-transform/core': 4.2.1
       '@gltf-transform/extensions': 4.2.1
@@ -20896,7 +20902,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  node-three-gltf@2.0.2(encoding@0.1.13)(three@0.182.0):
+  node-three-gltf@2.1.0(encoding@0.1.13)(three@0.182.0):
     dependencies:
       base64-js: 1.5.1
       jsdom: 26.1.0
