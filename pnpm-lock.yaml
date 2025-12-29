@@ -104,8 +104,8 @@ importers:
         specifier: ~6.3.7
         version: 6.3.7(react@18.3.1)(three@0.182.0)
       three-mesh-bvh:
-        specifier: ^0.9.1
-        version: 0.9.1(three@0.182.0)
+        specifier: ^0.9.4
+        version: 0.9.4(three@0.182.0)
       three-stdlib:
         specifier: ^2.36.1
         version: 2.36.1(three@0.182.0)
@@ -10401,8 +10401,8 @@ packages:
       react:
         optional: true
 
-  three-mesh-bvh@0.9.1:
-    resolution: {integrity: sha512-WNT+m9jGQgtp4YdtwEnl4oFylNVifRf7iphlwWdJ4bJu7oNkY0xHIyntep9OzHuR1hpe/pyAP840gB/EsYDJfg==}
+  three-mesh-bvh@0.9.4:
+    resolution: {integrity: sha512-+y6xLS6k5LWkNNhYsTgKXBC2D9r/z0swiehVHYhZZ8AOhaKDRCWKsN94ctV5Xy7xA4Xbnv4LKYzf7epRLPT6oQ==}
     peerDependencies:
       three: '>= 0.159.0'
 
@@ -23042,7 +23042,7 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  three-mesh-bvh@0.9.1(three@0.182.0):
+  three-mesh-bvh@0.9.4(three@0.182.0):
     dependencies:
       three: 0.182.0
 
