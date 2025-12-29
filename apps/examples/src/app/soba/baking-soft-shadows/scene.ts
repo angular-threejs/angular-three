@@ -43,7 +43,6 @@ export class Suzi {
 		materials.default.color.set('orange');
 		materials.default.roughness = 0;
 		materials.default.normalMap = new THREE.CanvasTexture(
-			// @ts-expect-error - three-stdlib type
 			new FlakesTexture(),
 			THREE.UVMapping,
 			THREE.RepeatWrapping,
