@@ -1,3 +1,38 @@
+## 4.0.0-next.116 (2025-12-29)
+
+### 🚀 Features
+
+- **cannon:** bump three 182 ([5920c4e6](https://github.com/angular-threejs/angular-three/commit/5920c4e6))
+- **core:** bump three 182 ([ffc690d6](https://github.com/angular-threejs/angular-three/commit/ffc690d6))
+- **plugin:** bump @rosskevin/gltfjsx 7.1.5 to 7.2.0, node-three-gltf 2.0.2 to 2.1.0 ([f9b055f5](https://github.com/angular-threejs/angular-three/commit/f9b055f5))
+- **postprocessing:** bump three 182 ([c84c13d8](https://github.com/angular-threejs/angular-three/commit/c84c13d8))
+- **postprocessing:** bump postprocessing from 6.37.7 to 6.38.2 ([72abdfec](https://github.com/angular-threejs/angular-three/commit/72abdfec))
+- **rapier:** bump three 182 ([9dae6348](https://github.com/angular-threejs/angular-three/commit/9dae6348))
+- ⚠️  **rapier:** remove numAdditionalFrictionIterations and bump @dimforge/rapier3d-compat ([f3b6f81b](https://github.com/angular-threejs/angular-three/commit/f3b6f81b))
+- **soba:** allow custom object for center box3d ([da5a7621](https://github.com/angular-threejs/angular-three/commit/da5a7621))
+- **soba:** bump three 182 ([68706420](https://github.com/angular-threejs/angular-three/commit/68706420))
+- **soba:** bump three-mesh-bvh from 0.9.1 to 0.9.4 ([c52e0478](https://github.com/angular-threejs/angular-three/commit/c52e0478))
+- **soba:** bump three-custom-shader-material from 6.3.7 to 6.4.0 ([d7f9a30a](https://github.com/angular-threejs/angular-three/commit/d7f9a30a))
+- **soba:** bump @monogrid/gainmap-js from 3.1.0 to 3.4.0 ([a359b8b3](https://github.com/angular-threejs/angular-three/commit/a359b8b3))
+- **soba:** bump @pmndrs/vanilla from 1.24.1 to 1.25.0 ([1a760f02](https://github.com/angular-threejs/angular-three/commit/1a760f02))
+- **soba:** export Fisheye from @pmndrs/vanilla ([c29786fe](https://github.com/angular-threejs/angular-three/commit/c29786fe))
+- **soba:** bump stats-gl from 3.6.0 to 3.8.0 ([b3383f98](https://github.com/angular-threejs/angular-three/commit/b3383f98))
+- **theatre:** bump three 182 ([ba8a94fa](https://github.com/angular-threejs/angular-three/commit/ba8a94fa))
+
+### 🩹 Fixes
+
+- **soba:** pass renderOrder properly to pivotcontrols component ([fd7de0a8](https://github.com/angular-threejs/angular-three/commit/fd7de0a8))
+
+### ⚠️  Breaking Changes
+
+- **rapier:** remove numAdditionalFrictionIterations and bump @dimforge/rapier3d-compat  ([f3b6f81b](https://github.com/angular-threejs/angular-three/commit/f3b6f81b))
+  remove `numAdditionalFrictionIterations` input due to
+  Rapier library dropping the property altogether
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.115 (2025-08-17)
 
 ### 🩹 Fixes
