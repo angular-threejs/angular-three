@@ -44,8 +44,8 @@ importers:
         specifier: ^0.19.3
         version: 0.19.3
       '@monogrid/gainmap-js':
-        specifier: ^3.1.0
-        version: 3.1.0(three@0.182.0)
+        specifier: ^3.4.0
+        version: 3.4.0(three@0.182.0)
       '@pmndrs/cannon-worker-api':
         specifier: ^2.4.0
         version: 2.4.0(three@0.182.0)
@@ -3070,8 +3070,8 @@ packages:
   '@module-federation/webpack-bundler-runtime@0.21.6':
     resolution: {integrity: sha512-7zIp3LrcWbhGuFDTUMLJ2FJvcwjlddqhWGxi/MW3ur1a+HaO8v5tF2nl+vElKmbG1DFLU/52l3PElVcWf/YcsQ==}
 
-  '@monogrid/gainmap-js@3.1.0':
-    resolution: {integrity: sha512-Obb0/gEd/HReTlg8ttaYk+0m62gQJmCblMOjHSMHRrBP2zdfKMHLCRbh/6ex9fSUJMKdjjIEiohwkbGD3wj2Nw==}
+  '@monogrid/gainmap-js@3.4.0':
+    resolution: {integrity: sha512-2Z0FATFHaoYJ8b+Y4y4Hgfn3FRFwuU5zRrk+9dFWp4uGAdHGqVEdP7HP+gLA3X469KXHmfupJaUbKo1b/aDKIg==}
     peerDependencies:
       three: '>= 0.159.0'
 
@@ -14261,7 +14261,7 @@ snapshots:
       '@module-federation/runtime': 0.21.6
       '@module-federation/sdk': 0.21.6
 
-  '@monogrid/gainmap-js@3.1.0(three@0.182.0)':
+  '@monogrid/gainmap-js@3.4.0(three@0.182.0)':
     dependencies:
       promise-worker-transferable: 1.0.4
       three: 0.182.0

@@ -110,7 +110,7 @@
     "@angular/platform-server": "21.0.6",
     "@angular/router": "21.0.6",
     "@dimforge/rapier3d-compat": "^0.19.3",
-    "@monogrid/gainmap-js": "^3.1.0",
+    "@monogrid/gainmap-js": "^3.4.0",
     "@pmndrs/cannon-worker-api": "^2.4.0",
     "@pmndrs/vanilla": "^1.24.1",
     "@swc/helpers": "0.5.18",
