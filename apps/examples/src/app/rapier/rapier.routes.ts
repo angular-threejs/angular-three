@@ -87,6 +87,11 @@ const routes: Routes = [
 				loadComponent: () => import('./all-shapes/all-shapes'),
 			},
 			{
+				path: 'one-way-platform',
+				providers: [provideResetOrbitControls(20)],
+				loadComponent: () => import('./one-way-platform/one-way-platform'),
+			},
+			{
 				path: '',
 				redirectTo: 'basic',
 				pathMatch: 'full',

@@ -157,7 +157,7 @@ export class NgtrAnyCollider {
 		return cloned.map((arg, index) => scaleArray[index] * (arg as number));
 	});
 
-	private collider = computed(() => {
+	collider = computed(() => {
 		const worldSingleton = this.physics.worldSingleton();
 		if (!worldSingleton) return null;
 

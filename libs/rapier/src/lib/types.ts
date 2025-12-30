@@ -7,6 +7,7 @@ import type {
 	RigidBody,
 	RigidBodyHandle,
 	Rotation,
+	SolverFlags,
 	TempContactManifold,
 	Vector,
 	World,
@@ -230,7 +231,20 @@ export interface NgtrEventMapValue {
 export type NgtrEventMap = Map<ColliderHandle | RigidBodyHandle, NgtrEventMapValue>;
 
 export type NgtrWorldStepCallback = (world: World) => void;
-export type NgtrWorldStepCallbackSet = Set<NgtrWorldStepCallback>;
+
+export type NgtrFilterContactPairCallback = (
+	collider1: ColliderHandle,
+	collider2: ColliderHandle,
+	body1: RigidBodyHandle,
+	body2: RigidBodyHandle,
+) => SolverFlags | null;
+
+export type NgtrFilterIntersectionPairCallback = (
+	collider1: ColliderHandle,
+	collider2: ColliderHandle,
+	body1: RigidBodyHandle,
+	body2: RigidBodyHandle,
+) => boolean;
 
 export interface NgtrCollisionSource {
 	collider: {

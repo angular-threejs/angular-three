@@ -13,7 +13,7 @@ import {
 	TemplateRef,
 	untracked,
 } from '@angular/core';
-import RAPIER, { ColliderHandle, EventQueue, Rotation, Vector, World } from '@dimforge/rapier3d-compat';
+import RAPIER, { ColliderHandle, EventQueue, PhysicsHooks, Rotation, Vector, World } from '@dimforge/rapier3d-compat';
 import { injectStore, pick, vector3 } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
@@ -25,9 +25,11 @@ import {
 	NgtrCollisionPayload,
 	NgtrCollisionSource,
 	NgtrEventMap,
+	NgtrFilterContactPairCallback,
+	NgtrFilterIntersectionPairCallback,
 	NgtrPhysicsOptions,
 	NgtrRigidBodyStateMap,
-	NgtrWorldStepCallbackSet,
+	NgtrWorldStepCallback,
 } from './types';
 import { createSingletonProxy, rapierQuaternionToQuaternion } from './utils';
 
@@ -125,8 +127,27 @@ export class NgtrPhysics {
 	colliderStates: NgtrColliderStateMap = new Map();
 	rigidBodyEvents: NgtrEventMap = new Map();
 	colliderEvents: NgtrEventMap = new Map();
-	beforeStepCallbacks: NgtrWorldStepCallbackSet = new Set();
-	afterStepCallbacks: NgtrWorldStepCallbackSet = new Set();
+	beforeStepCallbacks = new Set<NgtrWorldStepCallback>();
+	afterStepCallbacks = new Set<NgtrWorldStepCallback>();
+	filterContactPairCallbacks = new Set<NgtrFilterContactPairCallback>();
+	filterIntersectionPairCallbacks = new Set<NgtrFilterIntersectionPairCallback>();
+
+	private hooks: PhysicsHooks = {
+		filterContactPair: (...args) => {
+			for (const callback of this.filterContactPairCallbacks) {
+				const result = callback(...args);
+				if (result !== null) return result;
+			}
+			return null;
+		},
+		filterIntersectionPair: (...args) => {
+			for (const callback of this.filterIntersectionPairCallbacks) {
+				const result = callback(...args);
+				if (result === false) return false;
+			}
+			return true;
+		},
+	};
 
 	private eventQueue = computed(() => {
 		const rapier = this.rapier();
@@ -209,7 +230,8 @@ export class NgtrPhysics {
 			});
 
 			world.timestep = innerDelta;
-			world.step(eventQueue);
+			const hasHooks = this.filterContactPairCallbacks.size > 0 || this.filterIntersectionPairCallbacks.size > 0;
+			world.step(eventQueue, hasHooks ? this.hooks : undefined);
 
 			// Trigger afterStep callbacks
 			this.afterStepCallbacks.forEach((callback) => {
