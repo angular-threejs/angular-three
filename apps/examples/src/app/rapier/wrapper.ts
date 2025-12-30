@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TweakpaneCheckbox, TweakpanePane } from 'angular-three-tweakpane';
+import { TweakpaneAnchor, TweakpaneCheckbox, TweakpanePane } from 'angular-three-tweakpane';
 import { NgtCanvas } from 'angular-three/dom';
 import { RapierWrapperDefault } from './wrapper-default';
 
 @Component({
 	template: `
-		<ngt-canvas shadows [dpr]="1">
+		<ngt-canvas shadows [dpr]="1" tweakpaneAnchor>
 			<ng-template canvasContent>
 				<app-rapier-wrapper-default [debug]="debug()" [interpolate]="interpolate()" [paused]="paused()" />
 				<tweakpane-pane title="Rapier" [expanded]="true">
@@ -17,7 +17,7 @@ import { RapierWrapperDefault } from './wrapper-default';
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgtCanvas, RapierWrapperDefault, TweakpanePane, TweakpaneCheckbox],
+	imports: [NgtCanvas, RapierWrapperDefault, TweakpanePane, TweakpaneCheckbox, TweakpaneAnchor],
 })
 export default class RapierWrapper {
 	protected debug = signal(true);

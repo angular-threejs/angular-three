@@ -1,12 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	CUSTOM_ELEMENTS_SCHEMA,
-	effect,
-	inject,
-	signal,
-	viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, inject, viewChild } from '@angular/core';
 import { RigidBody } from '@dimforge/rapier3d-compat';
 import { injectStore, NgtArgs } from 'angular-three';
 import {
@@ -16,6 +8,7 @@ import {
 	NgtrPhysics,
 	NgtrRigidBody,
 } from 'angular-three-rapier';
+import { tweaks } from 'angular-three-tweakpane';
 import * as THREE from 'three';
 import { ResetOrbitControls } from '../reset-orbit-controls';
 
@@ -40,9 +33,9 @@ import { ResetOrbitControls } from '../reset-orbit-controls';
 			<ngt-mesh>
 				<ngt-box-geometry *args="[10, 0.1, 10]" />
 				<ngt-mesh-standard-material
-					[color]="filteringEnabled() ? 'orange' : 'grey'"
-					[opacity]="0.5"
-					[transparent]="true"
+					[color]="tweaks.filteringEnabled() ? 'orange' : 'grey'"
+					opacity="0.5"
+					transparent
 				/>
 			</ngt-mesh>
 
@@ -59,8 +52,6 @@ import { ResetOrbitControls } from '../reset-orbit-controls';
 	host: { '(document:click)': 'onDocumentClick()' },
 })
 export default class OneWayPlatform {
-	filteringEnabled = signal(true);
-
 	private ballRigidBodyRef = viewChild.required<NgtrRigidBody>('ballRigidBody');
 	private platformRigidBodyRef = viewChild.required<NgtrRigidBody>('platformRigidBody');
 	private platformColliderRef = viewChild.required(NgtrCuboidCollider);
@@ -70,6 +61,8 @@ export default class OneWayPlatform {
 
 	// Cache for storing body states before physics step
 	private bodyStateCache = new Map<number, { position: THREE.Vector3; velocity: THREE.Vector3 }>();
+
+	tweaks = tweaks('One-Way Platform', { filteringEnabled: true });
 
 	constructor() {
 		// Setup camera
@@ -88,7 +81,7 @@ export default class OneWayPlatform {
 			const collider = this.platformColliderRef().collider();
 			if (!collider) return;
 
-			collider.setActiveHooks(this.filteringEnabled() ? rapier.ActiveHooks.FILTER_CONTACT_PAIRS : 0);
+			collider.setActiveHooks(this.tweaks.filteringEnabled() ? rapier.ActiveHooks.FILTER_CONTACT_PAIRS : 0);
 		});
 
 		// Cache body states BEFORE the physics step
@@ -108,7 +101,7 @@ export default class OneWayPlatform {
 			if (!rapier) return null;
 
 			// If filtering is disabled, let default collision behavior happen
-			if (!this.filteringEnabled()) return null;
+			if (!this.tweaks.filteringEnabled()) return null;
 
 			const state1 = this.bodyStateCache.get(b1);
 			const state2 = this.bodyStateCache.get(b2);

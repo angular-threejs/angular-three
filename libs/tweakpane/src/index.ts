@@ -1,3 +1,4 @@
+export * from './lib/anchor';
 export * from './lib/binding';
 export * from './lib/blade';
 export * from './lib/button';
@@ -12,3 +13,4 @@ export * from './lib/pane';
 export * from './lib/point';
 export * from './lib/text';
 export * from './lib/title';
+export * from './lib/tweaks';

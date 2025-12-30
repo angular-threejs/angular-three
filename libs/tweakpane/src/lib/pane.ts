@@ -13,6 +13,7 @@ import {
 import { ClassName } from '@tweakpane/core';
 import { Pane } from 'tweakpane';
 import { PaneConfig } from 'tweakpane/dist/types/pane/pane-config';
+import { TweakpaneAnchor } from './anchor';
 import { TweakpaneFolder } from './folder';
 import { TweakpaneTitle } from './title';
 
@@ -31,6 +32,7 @@ export class TweakpanePane {
 	private document = inject(DOCUMENT);
 	private title = inject(TweakpaneTitle, { host: true });
 	private folder = inject(TweakpaneFolder, { host: true });
+	private tweakpaneAnchor = inject(TweakpaneAnchor, { optional: true });
 	private pane = signal<Pane | null>(null);
 	private paneContainer?: HTMLDivElement;
 
@@ -58,6 +60,11 @@ export class TweakpanePane {
 
 			this.pane.set(pane);
 			this.folder.parentFolder.set(pane);
+
+			// Set the pane's folder for tweaks() to use
+			if (this.tweakpaneAnchor) {
+				this.tweakpaneAnchor.paneFolder.set(this.folder);
+			}
 		});
 
 		inject(DestroyRef).onDestroy(() => {
