@@ -3,8 +3,25 @@ import { NgtArgs, extend } from 'angular-three';
 import { DepthEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
 
+/**
+ * Configuration options for the depth effect.
+ * Derived from DepthEffect constructor parameters.
+ */
 export type DepthEffectOptions = Partial<NonNullable<ConstructorParameters<typeof DepthEffect>[0]>>;
 
+/**
+ * Angular component that visualizes the scene's depth buffer.
+ *
+ * This effect renders the depth information of the scene, which can be useful
+ * for debugging or creating stylized depth-based visualizations.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-depth [options]="{ inverted: true }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-depth',
 	template: `
@@ -19,7 +36,13 @@ export type DepthEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 	hostDirectives: [{ directive: NgtpEffect, inputs: ['blendFunction', 'opacity'] }],
 })
 export class NgtpDepth {
+	/**
+	 * Configuration options for the depth effect.
+	 * @see DepthEffectOptions
+	 */
 	options = input({} as Omit<DepthEffectOptions, 'blendFunction'>);
+
+	/** Reference to the host NgtpEffect directive */
 	protected effect = inject(NgtpEffect, { host: true });
 
 	constructor() {

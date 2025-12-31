@@ -4,6 +4,10 @@ import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import * as THREE from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
+/**
+ * Shader configuration for the water distortion effect.
+ * Creates a rippling, underwater-like distortion.
+ */
 const WaterShader = {
 	fragmentShader: /* language=glsl glsl */ `
   uniform float factor;
@@ -20,7 +24,25 @@ const WaterShader = {
   }`,
 };
 
+/**
+ * A postprocessing effect that simulates an underwater/water distortion.
+ *
+ * Creates animated rippling distortion that makes the scene appear as if
+ * viewed through water or a heat haze.
+ *
+ * @example
+ * ```typescript
+ * const effect = new WaterEffect({ factor: 0.5 });
+ * ```
+ */
 export class WaterEffect extends Effect {
+	/**
+	 * Creates a new WaterEffect instance.
+	 *
+	 * @param options - Configuration options
+	 * @param options.blendFunction - How to blend with the scene
+	 * @param options.factor - Intensity of the water effect (0 = no effect)
+	 */
 	constructor({ blendFunction = BlendFunction.NORMAL, factor = 0 } = {}) {
 		super('WaterEffect', WaterShader.fragmentShader, {
 			blendFunction,
@@ -30,8 +52,25 @@ export class WaterEffect extends Effect {
 	}
 }
 
+/**
+ * Configuration options for the water effect.
+ * Derived from WaterEffect constructor parameters.
+ */
 export type WaterEffectOptions = Partial<NonNullable<ConstructorParameters<typeof WaterEffect>[0]>>;
 
+/**
+ * Angular component that applies a water/ripple distortion effect.
+ *
+ * This effect creates an animated underwater-like distortion that can
+ * simulate viewing through water, heat haze, or a dream-like state.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-water [options]="{ factor: 0.5 }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-water',
 	template: `
@@ -47,7 +86,13 @@ export type WaterEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.NORMAL })],
 })
 export class NgtpWater {
+	/**
+	 * Configuration options for the water effect.
+	 * @see WaterEffectOptions
+	 */
 	options = input({} as Omit<WaterEffectOptions, 'blendFunction'>);
+
+	/** Reference to the host NgtpEffect directive */
 	protected effect = inject(NgtpEffect, { host: true });
 
 	constructor() {

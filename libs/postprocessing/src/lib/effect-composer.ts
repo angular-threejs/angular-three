@@ -24,18 +24,79 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { isWebGL2Available } from 'three-stdlib';
 
+/**
+ * Configuration options for the effect composer.
+ */
 export interface NgtpEffectComposerOptions {
+	/**
+	 * Whether the effect composer is enabled.
+	 * @default true
+	 */
 	enabled: boolean;
+
+	/**
+	 * Whether to use a depth buffer.
+	 * @default undefined
+	 */
 	depthBuffer?: boolean;
-	/** Only used for SSGI currently, leave it disabled for everything else unless it's needed */
+
+	/**
+	 * Whether to enable the normal pass.
+	 * Only used for SSGI currently, leave it disabled for everything else unless it's needed.
+	 * @default undefined
+	 */
 	enableNormalPass?: boolean;
+
+	/**
+	 * Whether to use a stencil buffer.
+	 * @default undefined
+	 */
 	stencilBuffer?: boolean;
+
+	/**
+	 * Whether to auto-clear before rendering.
+	 * @default true
+	 */
 	autoClear: boolean;
+
+	/**
+	 * Resolution scale for the effect composer.
+	 * @default undefined
+	 */
 	resolutionScale?: number;
+
+	/**
+	 * Number of samples for multisampling anti-aliasing.
+	 * Set to 0 to disable multisampling.
+	 * @default 8
+	 */
 	multisampling: number;
+
+	/**
+	 * The texture data type for the frame buffer.
+	 * @default THREE.HalfFloatType
+	 */
 	frameBufferType: THREE.TextureDataType;
+
+	/**
+	 * The render priority for the effect composer.
+	 * Higher values render later.
+	 * @default 1
+	 */
 	renderPriority: number;
+
+	/**
+	 * Custom camera to use for rendering effects.
+	 * If not provided, uses the default camera from the store.
+	 * @default undefined
+	 */
 	camera?: THREE.Camera;
+
+	/**
+	 * Custom scene to use for rendering effects.
+	 * If not provided, uses the default scene from the store.
+	 * @default undefined
+	 */
 	scene?: THREE.Scene;
 }
 
@@ -47,10 +108,40 @@ const defaultOptions: NgtpEffectComposerOptions = {
 	frameBufferType: THREE.HalfFloatType,
 };
 
+/**
+ * Checks if an effect has the convolution attribute.
+ *
+ * @param effect - The effect to check
+ * @returns True if the effect has the convolution attribute
+ */
 function isConvolution(effect: Effect) {
 	return (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION;
 }
 
+/**
+ * Angular component that manages postprocessing effects for a Three.js scene.
+ *
+ * The effect composer wraps the postprocessing library's EffectComposer and provides
+ * a declarative way to add effects to your scene. Effects are added as children of
+ * this component and are automatically composed into an effect pass.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-bloom [options]="{ intensity: 1, luminanceThreshold: 0.9 }" />
+ *   <ngtp-vignette [options]="{ darkness: 0.5 }" />
+ * </ngtp-effect-composer>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With custom options -->
+ * <ngtp-effect-composer [options]="{ multisampling: 4, autoClear: false }">
+ *   <ngtp-smaa />
+ *   <ngtp-tone-mapping />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-effect-composer',
 	template: `
@@ -62,6 +153,10 @@ function isConvolution(effect: Effect) {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpEffectComposer {
+	/**
+	 * Configuration options for the effect composer.
+	 * @see NgtpEffectComposerOptions
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private store = injectStore();
@@ -75,17 +170,34 @@ export class NgtpEffectComposer {
 	private enabled = pick(this.options, 'enabled');
 	private renderPriority = pick(this.options, 'renderPriority');
 
+	/**
+	 * The scene used for rendering effects.
+	 * Uses custom scene from options if provided, otherwise uses the store's scene.
+	 */
 	scene = computed(() => this.options().scene ?? this.store.scene());
+
+	/**
+	 * The camera used for rendering effects.
+	 * Uses custom camera from options if provided, otherwise uses the store's camera.
+	 */
 	camera = computed(() => this.options().camera ?? this.store.camera());
 
 	private groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
+	/**
+	 * Computed render priority based on whether the composer is enabled.
+	 * Returns 0 when disabled, otherwise returns the configured renderPriority.
+	 */
 	private priority = computed(() => {
 		const enabled = this.enabled();
 		if (!enabled) return 0;
 		return this.renderPriority();
 	});
 
+	/**
+	 * Creates and configures the effect composer with render pass, normal pass,
+	 * and depth downsampling pass based on options.
+	 */
 	private composerData = computed(() => {
 		const webGL2Available = isWebGL2Available();
 		const [
@@ -138,6 +250,10 @@ export class NgtpEffectComposer {
 		return { composer, normalPass, downSamplingPass };
 	});
 
+	/**
+	 * The underlying postprocessing EffectComposer instance.
+	 * Can be used to access the composer directly for advanced use cases.
+	 */
 	effectComposer = pick(this.composerData, 'composer');
 
 	constructor() {

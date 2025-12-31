@@ -12,9 +12,35 @@ import { DepthOfFieldEffect, MaskFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
+/**
+ * Configuration options for the depth of field effect.
+ * Extends DepthOfFieldEffect options with additional target and depth texture support.
+ */
 type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1]> &
 	Partial<{ target: NgtVector3; depthTexture: { texture: THREE.Texture; packing: THREE.DepthPackingStrategies } }>;
 
+/**
+ * Angular component that applies a depth of field effect to the scene.
+ *
+ * This effect simulates the focus behavior of real camera lenses, blurring
+ * objects that are outside the focal range. Can be configured for autofocus
+ * by providing a target position.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-depth-of-field [options]="{ focusDistance: 0, focalLength: 0.02, bokehScale: 2 }" />
+ * </ngtp-effect-composer>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With autofocus target -->
+ * <ngtp-effect-composer>
+ *   <ngtp-depth-of-field [options]="{ target: [0, 0, 5], bokehScale: 3 }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-depth-of-field',
 	template: `
@@ -25,10 +51,18 @@ type DOFOptions = NonNullable<ConstructorParameters<typeof DepthOfFieldEffect>[1
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpDepthOfField {
+	/**
+	 * Configuration options for the depth of field effect.
+	 * @see DOFOptions
+	 */
 	options = input({} as DOFOptions);
 
 	private effectComposer = inject(NgtpEffectComposer);
 
+	/**
+	 * Creates the DepthOfFieldEffect instance with the configured options.
+	 * Enables autofocus if a target is provided and applies depth texture settings.
+	 */
 	protected effect = computed(() => {
 		const [camera, options] = [this.effectComposer.camera(), this.options()];
 

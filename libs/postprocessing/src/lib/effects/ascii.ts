@@ -4,6 +4,10 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { Effect } from 'postprocessing';
 import * as THREE from 'three';
 
+/**
+ * Fragment shader for the ASCII effect.
+ * Converts the scene into ASCII character representation based on pixel brightness.
+ */
 const fragment = /* language=glsl glsl */ `
 uniform sampler2D uCharacters;
 uniform float uCharactersCount;
@@ -45,15 +49,62 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 }
 `;
 
+/**
+ * Configuration options for the ASCII effect.
+ */
 interface ASCIIEffectOptions {
+	/**
+	 * The font family to use for rendering characters.
+	 * @default 'arial'
+	 */
 	font?: string;
+
+	/**
+	 * The character set to use for rendering, ordered from darkest to brightest.
+	 * @default " .:,'-^=*+?!|0#X%WM@"
+	 */
 	characters?: string;
+
+	/**
+	 * The font size in pixels for the character texture.
+	 * @default 54
+	 */
 	fontSize?: number;
+
+	/**
+	 * The size of each cell in pixels.
+	 * @default 16
+	 */
 	cellSize?: number;
+
+	/**
+	 * The color of the ASCII characters in hex format.
+	 * @default '#ffffff'
+	 */
 	color?: string;
+
+	/**
+	 * Whether to invert the brightness mapping.
+	 * @default false
+	 */
 	invert?: boolean;
 }
 
+/**
+ * A postprocessing effect that renders the scene as ASCII art.
+ *
+ * This effect converts the rendered scene into a grid of ASCII characters,
+ * where the character used depends on the brightness of the underlying pixels.
+ *
+ * @example
+ * ```typescript
+ * const effect = new ASCIIEffect({
+ *   cellSize: 12,
+ *   color: '#00ff00',
+ *   characters: ' .:-=+*#%@'
+ * });
+ * ```
+ */
 export class ASCIIEffect extends Effect {
 	constructor({
 		font = 'arial',
@@ -80,7 +131,17 @@ export class ASCIIEffect extends Effect {
 		}
 	}
 
-	/** Draws the characters on a Canvas and returns a texture */
+	/**
+	 * Creates a texture containing all the ASCII characters.
+	 *
+	 * Draws each character in the character set onto a canvas and creates
+	 * a texture that can be sampled in the shader.
+	 *
+	 * @param characters - The character set to render
+	 * @param font - The font family to use
+	 * @param fontSize - The font size in pixels
+	 * @returns A Three.js texture containing the rendered characters
+	 */
 	public createCharactersTexture(characters: string, font: string, fontSize: number): THREE.Texture {
 		const canvas = document.createElement('canvas');
 		const SIZE = 1024;
@@ -129,6 +190,19 @@ const defaultOptions: ASCIIEffectOptions = {
 	invert: false,
 };
 
+/**
+ * Angular component that applies an ASCII art postprocessing effect to the scene.
+ *
+ * Renders the scene as ASCII characters, where character selection is based on
+ * the brightness of the underlying pixels.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-ascii [options]="{ cellSize: 12, color: '#00ff00' }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-ascii',
 	template: `
@@ -139,8 +213,13 @@ const defaultOptions: ASCIIEffectOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpASCII {
+	/**
+	 * Configuration options for the ASCII effect.
+	 * @see ASCIIEffectOptions
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
+	/** The underlying ASCIIEffect instance */
 	protected effect = computed(() => new ASCIIEffect(this.options()));
 
 	constructor() {

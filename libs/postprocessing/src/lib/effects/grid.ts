@@ -2,9 +2,29 @@ import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, computed, e
 import { NgtArgs, omit, pick } from 'angular-three';
 import { GridEffect } from 'postprocessing';
 
+/**
+ * Configuration options for the grid effect.
+ * Extends GridEffect options with optional size configuration.
+ */
 type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
-	Partial<{ size: { width: number; height: number } }>;
+	Partial<{
+		/** Custom size for the grid effect */
+		size: { width: number; height: number };
+	}>;
 
+/**
+ * Angular component that applies a grid overlay effect to the scene.
+ *
+ * This effect overlays a grid pattern on the rendered scene, which can be
+ * useful for technical visualization or stylized effects.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-grid [options]="{ scale: 1.5, lineWidth: 0.5 }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-grid',
 	template: `
@@ -15,10 +35,16 @@ type GridOptions = NonNullable<ConstructorParameters<typeof GridEffect>[0]> &
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtpGrid {
+	/**
+	 * Configuration options for the grid effect.
+	 * @see GridOptions
+	 */
 	options = input({} as GridOptions);
+
 	private effectOptions = omit(this.options, ['size']);
 	private size = pick(this.options, 'size');
 
+	/** The underlying GridEffect instance */
 	protected effect = computed(() => new GridEffect(this.effectOptions()));
 
 	constructor() {

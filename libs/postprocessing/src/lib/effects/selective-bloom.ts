@@ -1,6 +1,3 @@
-// const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.enable(effect.selection.layer)
-// const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.disable(effect.selection.layer)
-
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -17,9 +14,27 @@ import { BlendFunction, BloomEffectOptions, SelectiveBloomEffect } from 'postpro
 import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
+/**
+ * Configuration options for the selective bloom effect.
+ * Extends BloomEffectOptions with selection control properties.
+ */
 export type SelectiveBloomOptions = BloomEffectOptions & {
+	/**
+	 * The layer used for selection rendering.
+	 * @default 10
+	 */
 	selectionLayer: number;
+
+	/**
+	 * Whether to invert the selection (bloom everything except selected).
+	 * @default false
+	 */
 	inverted: boolean;
+
+	/**
+	 * Whether to ignore the background in the bloom effect.
+	 * @default false
+	 */
 	ignoreBackground: boolean;
 };
 
@@ -29,6 +44,27 @@ const defaultOptions: SelectiveBloomOptions = {
 	ignoreBackground: false,
 };
 
+/**
+ * Angular component that applies bloom only to selected objects.
+ *
+ * Unlike the standard bloom effect, selective bloom allows you to specify
+ * which objects should glow. Requires light sources to be provided for
+ * proper rendering.
+ *
+ * Can be used with NgtSelectionApi for declarative selection or with
+ * manual selection via the selection input.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-selective-bloom
+ *     [lights]="[ambientLightRef, pointLightRef]"
+ *     [selection]="[glowingMeshRef]"
+ *     [options]="{ intensity: 2, luminanceThreshold: 0 }"
+ *   />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-selective-bloom',
 	template: `
@@ -39,13 +75,29 @@ const defaultOptions: SelectiveBloomOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpSelectiveBloom {
+	/**
+	 * Light sources that should be included in the bloom calculation.
+	 * Required for proper selective bloom rendering.
+	 */
 	lights = input.required<THREE.Object3D[] | ElementRef<THREE.Object3D | undefined>[]>();
+
+	/**
+	 * Objects to apply bloom to.
+	 * Can be a single object, array of objects, or ElementRefs.
+	 * Not needed if using NgtSelectionApi.
+	 * @default []
+	 */
 	selection = input<
 		| THREE.Object3D
 		| THREE.Object3D[]
 		| ElementRef<THREE.Object3D | undefined>
 		| ElementRef<THREE.Object3D | undefined>[]
 	>([]);
+
+	/**
+	 * Configuration options for the selective bloom effect.
+	 * @see SelectiveBloomOptions
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private blendFunction = pick(this.options, 'blendFunction');
@@ -81,6 +133,10 @@ export class NgtpSelectiveBloom {
 		return this.selectionApi.selected().map((selected) => resolveRef(selected));
 	});
 
+	/**
+	 * The underlying SelectiveBloomEffect instance.
+	 * Created with the scene, camera, and configured options.
+	 */
 	protected effect = computed(() => {
 		const effect = new SelectiveBloomEffect(this.effectComposer.scene(), this.effectComposer.camera(), {
 			blendFunction: this.blendFunction() || BlendFunction.ADD,
@@ -161,10 +217,22 @@ export class NgtpSelectiveBloom {
 		});
 	}
 
+	/**
+	 * Enables the selection layer on a light source.
+	 *
+	 * @param effect - The SelectiveBloomEffect instance
+	 * @param light - The light to enable on the selection layer
+	 */
 	private addLight(effect: SelectiveBloomEffect, light: THREE.Object3D) {
 		light.layers.enable(effect.selection.layer);
 	}
 
+	/**
+	 * Disables the selection layer on a light source.
+	 *
+	 * @param effect - The SelectiveBloomEffect instance
+	 * @param light - The light to disable from the selection layer
+	 */
 	private removeLight(effect: SelectiveBloomEffect, light: THREE.Object3D) {
 		light.layers.disable(effect.selection.layer);
 	}

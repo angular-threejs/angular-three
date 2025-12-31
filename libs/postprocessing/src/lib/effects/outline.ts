@@ -15,8 +15,22 @@ import { OutlineEffect } from 'postprocessing';
 import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
+/**
+ * Configuration options for the outline effect.
+ * Extends OutlineEffect options with selection management.
+ */
 export type NgtpOutlineOptions = ConstructorParameters<typeof OutlineEffect>[2] & {
+	/**
+	 * Array of objects to outline.
+	 * Can be Object3D instances or ElementRefs.
+	 * Not needed if using NgtSelectionApi.
+	 */
 	selection?: Array<THREE.Object3D | ElementRef<THREE.Object3D>>;
+
+	/**
+	 * The layer used for selection rendering.
+	 * @default 10
+	 */
 	selectionLayer: number;
 };
 
@@ -24,6 +38,33 @@ const defaultOptions: NgtpOutlineOptions = {
 	selectionLayer: 10,
 };
 
+/**
+ * Angular component that applies an outline effect to selected objects.
+ *
+ * This effect draws an outline around specified objects in the scene.
+ * Can be used with NgtSelectionApi for declarative selection or with
+ * manual selection via the options input.
+ *
+ * @example
+ * ```html
+ * <!-- With NgtSelectionApi (recommended) -->
+ * <ngt-group [select]="hovered()" (pointerenter)="hovered.set(true)">
+ *   <ngt-mesh>...</ngt-mesh>
+ * </ngt-group>
+ *
+ * <ngtp-effect-composer>
+ *   <ngtp-outline [options]="{ edgeStrength: 2.5, blur: true }" />
+ * </ngtp-effect-composer>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With manual selection -->
+ * <ngtp-effect-composer>
+ *   <ngtp-outline [options]="{ selection: [meshRef.nativeElement], edgeStrength: 5 }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-outline',
 	template: `
@@ -34,6 +75,10 @@ const defaultOptions: NgtpOutlineOptions = {
 	imports: [NgtArgs],
 })
 export class NgtpOutline {
+	/**
+	 * Configuration options for the outline effect.
+	 * @see NgtpOutlineOptions
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private selectionApi = inject(NgtSelectionApi, { optional: true });
@@ -68,6 +113,10 @@ export class NgtpOutline {
 		'xRay',
 	]);
 
+	/**
+	 * The underlying OutlineEffect instance.
+	 * Created with the scene, camera, and configured options.
+	 */
 	effect = computed(() => {
 		const [
 			scene,
@@ -162,6 +211,14 @@ export class NgtpOutline {
 		});
 	}
 
+	/**
+	 * Handles changes to the selection and updates the outline effect.
+	 *
+	 * @param selected - Function returning the currently selected objects
+	 * @param _effect - Function returning the OutlineEffect instance
+	 * @param _invalidate - Function returning the invalidate callback
+	 * @returns Cleanup function to clear the selection
+	 */
 	private handleSelectionChangeEffect(
 		selected: () => Array<THREE.Object3D | ElementRef<THREE.Object3D>> | undefined,
 		_effect: () => OutlineEffect,

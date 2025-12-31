@@ -3,8 +3,30 @@ import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, TiltShiftEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
+/**
+ * Configuration options for the tilt-shift effect.
+ * Derived from TiltShiftEffect constructor parameters.
+ */
 export type TiltShiftEffectOptions = Partial<NonNullable<ConstructorParameters<typeof TiltShiftEffect>[0]>>;
 
+/**
+ * Angular component that applies a tilt-shift blur effect.
+ *
+ * This effect simulates the shallow depth of field look from tilt-shift
+ * photography, creating a "miniature" or "diorama" appearance where only
+ * a horizontal band of the image is in focus.
+ *
+ * Uses the postprocessing library's built-in TiltShiftEffect.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-tilt-shift [options]="{ blur: 0.5, offset: 0.5 }" />
+ * </ngtp-effect-composer>
+ * ```
+ *
+ * @see NgtpTiltShift2 for an alternative implementation with different parameters
+ */
 @Component({
 	selector: 'ngtp-tilt-shift',
 	template: `
@@ -20,7 +42,13 @@ export type TiltShiftEffectOptions = Partial<NonNullable<ConstructorParameters<t
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.ADD })],
 })
 export class NgtpTiltShift {
+	/**
+	 * Configuration options for the tilt-shift effect.
+	 * @see TiltShiftEffectOptions
+	 */
 	options = input({} as Omit<TiltShiftEffectOptions, 'blendFunction'>);
+
+	/** Reference to the host NgtpEffect directive */
 	protected effect = inject(NgtpEffect, { host: true });
 
 	constructor() {

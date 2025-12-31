@@ -1,5 +1,8 @@
-// Created by Anderson Mancini 2023
-// React Three Fiber Ultimate LensFlare
+/**
+ * Lens Flare Effect
+ * Created by Anderson Mancini 2023
+ * React Three Fiber Ultimate LensFlare - Ported to Angular Three
+ */
 
 import {
 	CUSTOM_ELEMENTS_SCHEMA,
@@ -17,6 +20,10 @@ import { BlendFunction, Effect } from 'postprocessing';
 import * as THREE from 'three';
 import { NgtpEffectComposer } from '../effect-composer';
 
+/**
+ * Shader configuration for the lens flare effect.
+ * Contains the GLSL fragment shader code.
+ */
 const LensFlareShader = {
 	fragmentShader: /* language=glsl glsl */ `
 
@@ -65,7 +72,46 @@ const LensFlareShader = {
 `,
 };
 
+/**
+ * A postprocessing effect that simulates camera lens flares.
+ *
+ * Creates realistic lens flare effects including glare, ghosts, star bursts,
+ * and anamorphic flares. Can be animated and positioned dynamically.
+ *
+ * @example
+ * ```typescript
+ * const effect = new LensFlareEffect({
+ *   glareSize: 0.3,
+ *   starPoints: 8,
+ *   animated: true
+ * });
+ * ```
+ */
 export class LensFlareEffect extends Effect {
+	/**
+	 * Creates a new LensFlareEffect instance.
+	 *
+	 * @param options - Configuration options for the lens flare
+	 * @param options.blendFunction - How to blend with the scene
+	 * @param options.enabled - Whether the effect is enabled
+	 * @param options.glareSize - Size of the glare
+	 * @param options.lensPosition - Position of the lens on screen
+	 * @param options.iResolution - Resolution of the effect
+	 * @param options.starPoints - Number of points in the star pattern
+	 * @param options.flareSize - Size of individual flares
+	 * @param options.flareSpeed - Animation speed of flares
+	 * @param options.flareShape - Shape parameter for flares
+	 * @param options.animated - Whether to animate the effect
+	 * @param options.anamorphic - Enable anamorphic lens simulation
+	 * @param options.colorGain - Color tint for the effect
+	 * @param options.lensDirtTexture - Texture for lens dirt overlay
+	 * @param options.haloScale - Scale of the halo effect
+	 * @param options.secondaryGhosts - Enable secondary ghost images
+	 * @param options.aditionalStreaks - Enable additional streak effects
+	 * @param options.ghostScale - Scale of ghost images
+	 * @param options.opacity - Opacity of the effect
+	 * @param options.starBurst - Enable star burst effect
+	 */
 	constructor({
 		blendFunction = BlendFunction.NORMAL,
 		enabled = true,
@@ -113,6 +159,13 @@ export class LensFlareEffect extends Effect {
 		});
 	}
 
+	/**
+	 * Updates the effect's time uniform for animation.
+	 *
+	 * @param _renderer - The WebGL renderer (unused)
+	 * @param _inputBuffer - The input render target (unused)
+	 * @param deltaTime - Time elapsed since last frame
+	 */
 	override update(_renderer: THREE.WebGLRenderer, _inputBuffer: THREE.WebGLRenderTarget, deltaTime: number) {
 		const iTime = this.uniforms.get('iTime');
 		if (iTime) {
@@ -121,9 +174,16 @@ export class LensFlareEffect extends Effect {
 	}
 }
 
+/**
+ * Configuration options for the Angular lens flare component.
+ * Extends LensFlareEffect options with position and mouse tracking.
+ */
 export type LensFlareOptions = ConstructorParameters<typeof LensFlareEffect>[0] & {
+	/** World position of the light source for the flare */
 	position: NgtVector3;
+	/** Whether the flare should follow the mouse cursor */
 	followMouse: boolean;
+	/** Smoothing time for opacity transitions */
 	smoothTime: number;
 };
 
@@ -133,6 +193,28 @@ const defaultOptions: LensFlareOptions = {
 	smoothTime: 0.7,
 };
 
+/**
+ * Angular component that applies a lens flare effect to the scene.
+ *
+ * This effect simulates realistic camera lens flares with support for
+ * dynamic positioning, mouse following, and occlusion detection.
+ * The flare automatically fades when occluded by scene objects.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-lens-flare [options]="{ position: [10, 5, -20], glareSize: 0.3 }" />
+ * </ngtp-effect-composer>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- Mouse-following flare -->
+ * <ngtp-effect-composer>
+ *   <ngtp-lens-flare [options]="{ followMouse: true, smoothTime: 0.5 }" />
+ * </ngtp-effect-composer>
+ * ```
+ */
 @Component({
 	selector: 'ngtp-lens-flare',
 	template: `
@@ -143,6 +225,10 @@ const defaultOptions: LensFlareOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtpLensFlare {
+	/**
+	 * Configuration options for the lens flare effect.
+	 * @see LensFlareOptions
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private store = injectStore();
@@ -152,9 +238,13 @@ export class NgtpLensFlare {
 	private effectOptions = omit(this.options, ['position', 'followMouse', 'smoothTime']);
 	private position = vector3(this.options, 'position');
 
+	/** Cached vector for projecting 3D position to screen space */
 	private projectedPosition = new THREE.Vector3();
+
+	/** Cached vector for 2D mouse/raycaster coordinates */
 	private mouse2d = new THREE.Vector2();
 
+	/** The underlying LensFlareEffect instance */
 	protected effect = computed(() => new LensFlareEffect(this.effectOptions()));
 
 	constructor() {

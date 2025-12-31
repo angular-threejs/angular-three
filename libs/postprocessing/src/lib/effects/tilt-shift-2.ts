@@ -4,6 +4,10 @@ import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import * as THREE from 'three';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
 
+/**
+ * Custom tilt-shift shader based on Evan Wallace's implementation.
+ * Provides line-based focus control with customizable blur parameters.
+ */
 const TiltShiftShader = {
 	fragmentShader: /* language=glsl glsl */ `
 
@@ -64,7 +68,35 @@ const TiltShiftShader = {
     `,
 };
 
+/**
+ * A custom tilt-shift effect with line-based focus control.
+ *
+ * This effect provides a different approach to tilt-shift compared to
+ * the standard TiltShiftEffect, allowing you to define a focus line
+ * between two screen-space points.
+ *
+ * @example
+ * ```typescript
+ * const effect = new TiltShift2Effect({
+ *   blur: 0.2,
+ *   start: [0.5, 0.3],
+ *   end: [0.5, 0.7]
+ * });
+ * ```
+ */
 export class TiltShift2Effect extends Effect {
+	/**
+	 * Creates a new TiltShift2Effect instance.
+	 *
+	 * @param options - Configuration options
+	 * @param options.blendFunction - How to blend with the scene
+	 * @param options.blur - Blur intensity [0, 1], can exceed 1 for more blur
+	 * @param options.taper - Taper of the focus area [0, 1]
+	 * @param options.start - Start point of focus line in screen space [x, y]
+	 * @param options.end - End point of focus line in screen space [x, y]
+	 * @param options.samples - Number of blur samples
+	 * @param options.direction - Direction of the blur
+	 */
 	constructor({
 		blendFunction = BlendFunction.NORMAL,
 		blur = 0.15, // [0, 1], can go beyond 1 for extra
@@ -89,10 +121,30 @@ export class TiltShift2Effect extends Effect {
 	}
 }
 
+/**
+ * Configuration options for the TiltShift2 effect.
+ * Derived from TiltShift2Effect constructor parameters.
+ */
 export type TiltShift2EffectOptions = Partial<NonNullable<ConstructorParameters<typeof TiltShift2Effect>[0]>>;
 
 extend({ TiltShift2Effect });
 
+/**
+ * Angular component that applies an alternative tilt-shift effect.
+ *
+ * This effect uses a line-based focus system where you define start and
+ * end points in screen space. The area between these points stays in focus
+ * while the rest of the image is blurred.
+ *
+ * @example
+ * ```html
+ * <ngtp-effect-composer>
+ *   <ngtp-tilt-shift2 [options]="{ blur: 0.2, start: [0.5, 0.3], end: [0.5, 0.7] }" />
+ * </ngtp-effect-composer>
+ * ```
+ *
+ * @see NgtpTiltShift for the standard tilt-shift implementation
+ */
 @Component({
 	selector: 'ngtp-tilt-shift2',
 	template: `
@@ -108,6 +160,12 @@ extend({ TiltShift2Effect });
 	providers: [provideDefaultEffectOptions({ blendFunction: BlendFunction.NORMAL })],
 })
 export class NgtpTiltShift2 {
+	/**
+	 * Configuration options for the tilt-shift effect.
+	 * @see TiltShift2EffectOptions
+	 */
 	options = input({} as Omit<TiltShift2EffectOptions, 'blendFunction'>);
+
+	/** Reference to the host NgtpEffect directive */
 	protected effect = inject(NgtpEffect, { host: true });
 }
