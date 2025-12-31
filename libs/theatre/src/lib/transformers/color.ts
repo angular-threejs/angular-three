@@ -4,6 +4,21 @@ import { createTransformer } from './transformer';
 
 const _color = new THREE.Color();
 
+/**
+ * Transformer for Three.js Color objects.
+ *
+ * Converts Three.js Color to Theatre.js RGBA format for the color picker UI.
+ * Uses sRGB color space for accurate color representation.
+ *
+ * @example
+ * ```typescript
+ * import { color } from 'angular-three-theatre';
+ *
+ * // Used automatically for Color properties, or manually:
+ * [sync]="material"
+ * [syncProps]="[['emissive', { transformer: color }]]"
+ * ```
+ */
 export const color = createTransformer({
 	transform(value) {
 		value.getRGB(_color, THREE.SRGBColorSpace);

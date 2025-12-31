@@ -2,6 +2,23 @@ import { types } from '@theatre/core';
 import * as THREE from 'three';
 import { createTransformer } from './transformer';
 
+/**
+ * Transformer for Three.js Euler rotation objects.
+ *
+ * Converts Euler angles from radians to degrees for display in Theatre.js Studio.
+ * Creates a compound property with x, y, z components shown in degrees.
+ *
+ * Used automatically for properties where `isEuler` is true (e.g., Object3D.rotation).
+ *
+ * @example
+ * ```typescript
+ * import { euler } from 'angular-three-theatre';
+ *
+ * // Used automatically for Euler properties, or manually:
+ * [sync]="mesh"
+ * [syncProps]="[['rotation', { transformer: euler }]]"
+ * ```
+ */
 export const euler = createTransformer({
 	transform(value) {
 		return types.compound({

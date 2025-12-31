@@ -7,16 +7,74 @@ import { TheatreSheetObject } from './sheet-object';
 
 const updateProjectionMatrixKeys = ['fov', 'near', 'far', 'zoom', 'left', 'right', 'top', 'bottom', 'aspect'];
 
+/**
+ * Directive that synchronizes Three.js object properties with Theatre.js animations.
+ *
+ * This directive allows you to expose specific properties of a Three.js object
+ * to Theatre.js for animation. It automatically handles property transformation
+ * (e.g., converting Euler angles to degrees for the UI).
+ *
+ * Must be used within a `TheatreSheetObject` context.
+ *
+ * @example
+ * ```html
+ * <ng-template sheetObject="myMaterial">
+ *   <ngt-mesh-standard-material
+ *     [sync]="material"
+ *     [syncProps]="['opacity', 'roughness', 'metalness']"
+ *     #material
+ *   />
+ * </ng-template>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With custom property mapping -->
+ * <ng-template sheetObject="myLight">
+ *   <ngt-point-light
+ *     [sync]="light"
+ *     [syncProps]="[
+ *       ['intensity', { label: 'Light Intensity', key: 'lightIntensity' }],
+ *       'color'
+ *     ]"
+ *     #light
+ *   />
+ * </ng-template>
+ * ```
+ *
+ * @typeParam TObject - The type of the Three.js object being synchronized
+ */
 @Directive({ selector: '[sync]', exportAs: 'sync' })
 export class TheatreSheetObjectSync<TObject extends object> {
+	/**
+	 * The Three.js object to synchronize with Theatre.js.
+	 * Can be an object reference, ElementRef, or a function returning either.
+	 */
 	parent = input.required<TObject | ElementRef<TObject> | (() => TObject | ElementRef<TObject> | undefined | null)>({
 		alias: 'sync',
 	});
+
+	/**
+	 * Array of property paths to synchronize with Theatre.js.
+	 *
+	 * Each item can be:
+	 * - A string property path (e.g., 'opacity', 'position.x')
+	 * - A tuple of [propertyPath, keyOrOptions] where options can include:
+	 *   - `label`: Display label in Theatre.js Studio
+	 *   - `key`: Unique key for the property in Theatre.js
+	 *   - `transformer`: Custom transformer for the property value
+	 *
+	 * @default []
+	 */
 	props = input<
 		Array<string | [string, string | { label?: string; key?: string; transformer?: TheatreTransformer }]>
 	>([], { alias: 'syncProps' });
 
 	private theatreSheetObject = inject(TheatreSheetObject);
+
+	/**
+	 * Computed signal containing the Theatre.js sheet object instance.
+	 */
 	sheetObject = computed(() => this.theatreSheetObject.sheetObject());
 	private studio = inject(THEATRE_STUDIO, { optional: true });
 
@@ -112,6 +170,13 @@ export class TheatreSheetObjectSync<TObject extends object> {
 		});
 	}
 
+	/**
+	 * Captures the current values of all synchronized properties from the Three.js object
+	 * and commits them to Theatre.js.
+	 *
+	 * This is useful for "baking" the current state of the Three.js object into the
+	 * Theatre.js animation. Requires Theatre.js Studio to be available.
+	 */
 	capture() {
 		const studio = this.studio?.();
 		if (!studio) return;
@@ -141,6 +206,12 @@ export class TheatreSheetObjectSync<TObject extends object> {
 		scrub.commit();
 	}
 
+	/**
+	 * Converts a property path (e.g., 'position.x') to a safe alphanumeric key.
+	 *
+	 * @param propPath - The property path to convert
+	 * @returns A safe alphanumeric key string
+	 */
 	private resolvePropertyPath(propPath: string) {
 		return (
 			propPath

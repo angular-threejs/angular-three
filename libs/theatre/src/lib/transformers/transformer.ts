@@ -1,7 +1,24 @@
 import type { types } from '@theatre/core';
 
 /**
- https://github.com/threlte/threlte/blob/main/packages/theatre/src/lib/sheetObject/transfomers/types.ts
+ * Type definition for a Theatre.js property transformer.
+ *
+ * Transformers are used to convert between Three.js property values and
+ * Theatre.js animation values. This allows for proper representation
+ * in the Theatre.js Studio UI (e.g., showing degrees instead of radians).
+ *
+ * Based on https://github.com/threlte/threlte/blob/main/packages/theatre/src/lib/sheetObject/transfomers/types.ts
+ *
+ * @typeParam Value - The type of the original Three.js property value
+ * @typeParam TransformedValue - The type of the value used in Theatre.js
+ *
+ * @example
+ * ```typescript
+ * const myTransformer: TheatreTransformer<number, number> = {
+ *   transform: (value) => types.number(value * 100),
+ *   apply: (target, property, value) => { target[property] = value / 100; }
+ * };
+ * ```
  */
 export type TheatreTransformer<Value = any, TransformedValue = any> = {
 	/**
@@ -20,6 +37,25 @@ export type TheatreTransformer<Value = any, TransformedValue = any> = {
 	apply: (target: any, property: string, value: TransformedValue) => void;
 };
 
+/**
+ * Factory function for creating a Theatre.js transformer.
+ *
+ * This is a convenience function that provides type inference for transformer creation.
+ *
+ * @param transformer - The transformer configuration object
+ * @returns The same transformer object (identity function with type inference)
+ *
+ * @example
+ * ```typescript
+ * import { createTransformer } from 'angular-three-theatre';
+ * import { types } from '@theatre/core';
+ *
+ * export const percentage = createTransformer({
+ *   transform: (value) => types.number(value * 100, { range: [0, 100] }),
+ *   apply: (target, property, value) => { target[property] = value / 100; }
+ * });
+ * ```
+ */
 export function createTransformer(transformer: TheatreTransformer) {
 	return transformer;
 }

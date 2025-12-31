@@ -1,6 +1,26 @@
 import { types } from '@theatre/core';
 import { createTransformer } from './transformer';
 
+/**
+ * Generic fallback transformer that handles common JavaScript types.
+ *
+ * Automatically detects the value type and applies the appropriate Theatre.js type:
+ * - Numbers → `types.number` (Infinity converted to MAX_VALUE)
+ * - Strings → `types.string`
+ * - Booleans → `types.boolean`
+ * - Objects → `types.compound` (spreads properties)
+ *
+ * Used as the default transformer when no specific transformer matches.
+ *
+ * @example
+ * ```typescript
+ * import { generic } from 'angular-three-theatre';
+ *
+ * // Explicitly use generic transformer:
+ * [sync]="mesh"
+ * [syncProps]="[['customProperty', { transformer: generic }]]"
+ * ```
+ */
 export const generic = createTransformer({
 	transform(value) {
 		if (typeof value === 'number') {

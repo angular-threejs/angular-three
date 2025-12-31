@@ -22,6 +22,40 @@ import { THEATRE_STUDIO } from '../studio/studio-token';
 import { getDefaultTransformer } from '../transformers/default-transformer';
 import { TheatreSheetObject } from './sheet-object';
 
+/**
+ * Component that provides transform controls for animating position, rotation, and scale
+ * of child Three.js objects via Theatre.js.
+ *
+ * When the sheet object is selected in Theatre.js Studio, transform controls appear
+ * allowing direct manipulation of the object's transform. Changes are captured and
+ * committed to Theatre.js.
+ *
+ * Must be used within a `TheatreSheetObject` context.
+ *
+ * @example
+ * ```html
+ * <ng-template sheetObject="myCube">
+ *   <theatre-transform>
+ *     <ngt-mesh>
+ *       <ngt-box-geometry />
+ *       <ngt-mesh-standard-material />
+ *     </ngt-mesh>
+ *   </theatre-transform>
+ * </ng-template>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With custom key and options -->
+ * <ng-template sheetObject="scene">
+ *   <theatre-transform key="cubeTransform" label="Cube" [options]="{ mode: 'rotate' }">
+ *     <ngt-mesh />
+ *   </theatre-transform>
+ * </ng-template>
+ * ```
+ *
+ * @typeParam TLabel - The type of the label string
+ */
 @Component({
 	selector: 'theatre-transform',
 	template: `
@@ -38,16 +72,38 @@ import { TheatreSheetObject } from './sheet-object';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TheatreSheetObjectTransform<TLabel extends string | undefined> {
+	/**
+	 * Display label for the transform properties in Theatre.js Studio.
+	 */
 	label = input<TLabel>();
+
+	/**
+	 * Unique key for grouping the transform properties in Theatre.js.
+	 * If provided, position/rotation/scale will be nested under this key.
+	 */
 	key = input<string>();
+
+	/**
+	 * Options for the transform controls gizmo.
+	 * Allows configuring the transform mode, snap values, and coordinate space.
+	 *
+	 * @default {}
+	 */
 	options = input(
 		{} as Pick<NgtsTransformControlsOptions, 'mode' | 'translationSnap' | 'scaleSnap' | 'rotationSnap' | 'space'>,
 	);
 
+	/**
+	 * Reference to the Three.js Group element that wraps the transformed content.
+	 */
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 	private controlsRef = viewChild(NgtsTransformControls);
 
 	private theatreSheetObject = inject(TheatreSheetObject);
+
+	/**
+	 * Computed signal containing the Theatre.js sheet object instance.
+	 */
 	sheetObject = computed(() => this.theatreSheetObject.sheetObject());
 	private studio = inject(THEATRE_STUDIO, { optional: true });
 

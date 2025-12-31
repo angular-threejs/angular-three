@@ -5,6 +5,12 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import { TheatreProject } from './project';
 import { TheatreSheet } from './sheet';
 
+/**
+ * Options for attaching audio to a Theatre.js sequence.
+ *
+ * When audio is attached, the sequence playback will be synchronized
+ * with the audio playback.
+ */
 export interface AttachAudioOptions {
 	/**
 	 * Either a URL to the audio file (eg "http://localhost:3000/audio.mp3") or an instance of AudioBuffer
@@ -20,10 +26,34 @@ export interface AttachAudioOptions {
 	destinationNode?: AudioNode;
 }
 
+/**
+ * Configuration options for the TheatreSequence directive.
+ *
+ * Extends Theatre.js sequence play options with additional Angular-specific options
+ * for automatic playback control.
+ */
 export type TheatreSequenceOptions = Parameters<ISequence['play']>[0] & {
+	/**
+	 * Whether to automatically start playback when the sequence is initialized.
+	 * @default false
+	 */
 	autoplay: boolean;
+	/**
+	 * Whether to automatically pause playback when the directive is destroyed.
+	 * @default false
+	 */
 	autopause: boolean;
+	/**
+	 * Delay in milliseconds before autoplay starts.
+	 * @default 0
+	 */
 	delay: number;
+	/**
+	 * When to reset the sequence position to 0.
+	 * - 'init': Reset when the directive is initialized
+	 * - 'destroy': Reset when the directive is destroyed
+	 * - 'always': Reset on both init and destroy
+	 */
 	autoreset?: 'init' | 'destroy' | 'always';
 };
 
@@ -34,13 +64,69 @@ const defaultOptions: TheatreSequenceOptions = {
 	delay: 0,
 };
 
+/**
+ * Directive that provides control over a Theatre.js sequence.
+ *
+ * A sequence controls the playback of animations within a sheet. This directive
+ * provides methods to play, pause, and reset the sequence, as well as reactive
+ * signals for the current position, playing state, and length.
+ *
+ * Must be used on an element that also has the `sheet` directive.
+ *
+ * @example
+ * ```html
+ * <ng-container sheet="scene" [sequence]="{ autoplay: true, rate: 1 }" #seq="sequence">
+ *   <p>Position: {{ seq.position() }}</p>
+ *   <button (click)="seq.play()">Play</button>
+ *   <button (click)="seq.pause()">Pause</button>
+ * </ng-container>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With audio synchronization -->
+ * <ng-container
+ *   sheet="scene"
+ *   [sequence]="{ autoplay: true }"
+ *   [sequenceAudio]="{ source: '/audio/soundtrack.mp3' }"
+ * />
+ * ```
+ */
 @Directive({ selector: '[sheet][sequence]', exportAs: 'sequence' })
 export class TheatreSequence {
+	/**
+	 * Sequence configuration options.
+	 * Merged with default options using ngxtension's mergeInputs.
+	 *
+	 * @default { rate: 1, autoplay: false, autopause: false, delay: 0 }
+	 */
 	options = input(defaultOptions, { alias: 'sequence', transform: mergeInputs(defaultOptions) });
+
+	/**
+	 * Audio options for synchronizing playback with an audio file.
+	 * When provided, the sequence will be synchronized with the audio.
+	 */
 	audioOptions = input<AttachAudioOptions | undefined>(undefined, { alias: 'sequenceAudio' });
 
+	/**
+	 * Two-way bindable signal for the current playback position in seconds.
+	 *
+	 * @default 0
+	 */
 	position = model<number>(0);
+
+	/**
+	 * Two-way bindable signal indicating whether the sequence is currently playing.
+	 *
+	 * @default false
+	 */
 	playing = model<boolean>(false);
+
+	/**
+	 * Two-way bindable signal for the total length of the sequence in seconds.
+	 *
+	 * @default 0
+	 */
 	length = model<number>(0);
 
 	private playOptions = omit(this.options, ['autoplay', 'autopause', 'delay', 'autoreset']);
@@ -51,6 +137,10 @@ export class TheatreSequence {
 
 	private project = inject(TheatreProject);
 	private sheet = inject(TheatreSheet, { host: true });
+
+	/**
+	 * Computed signal containing the Theatre.js sequence instance.
+	 */
 	sequence = computed(() => this.sheet.sheet().sequence);
 
 	constructor() {
@@ -121,11 +211,22 @@ export class TheatreSequence {
 		});
 	}
 
+	/**
+	 * Pauses the sequence playback at the current position.
+	 */
 	pause() {
 		const sequence = this.sequence();
 		sequence.pause();
 	}
 
+	/**
+	 * Starts or resumes sequence playback.
+	 *
+	 * Waits for the project to be ready before starting playback.
+	 * Options are merged with the configured play options.
+	 *
+	 * @param options - Optional play options that override the configured options
+	 */
 	play(options: Parameters<ISequence['play']>[0] = {}) {
 		const sequence = this.sequence();
 		const project = this.project.project();
@@ -135,6 +236,12 @@ export class TheatreSequence {
 		});
 	}
 
+	/**
+	 * Resets the sequence position to 0.
+	 *
+	 * If the sequence was playing before reset, it will continue playing
+	 * from the beginning.
+	 */
 	reset() {
 		const sequence = this.sequence();
 		const isPlaying = val(sequence.pointer.playing);
