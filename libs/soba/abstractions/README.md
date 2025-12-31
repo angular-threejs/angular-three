@@ -386,7 +386,7 @@ class MyCmp {
 }
 ```
 
-> **Note:** `injectHelper` is a deprecated alias for `helper` and will be removed in v5.0.0.
+> **Note:** `injectHelper` is deprecated. Use `helper` instead.
 
 ### `NgtsHelper`
 

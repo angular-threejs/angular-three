@@ -33,7 +33,7 @@ function animations<TAnimation extends NgtsAnimationClip>(
 
 Creates an animation API for managing THREE.js animation clips on an object. It takes a Signal of animation clips (an array or an object containing an array), a reference to the object to be animated, and an optional injector.
 
-This function is commonly used together with `injectGLTF` since GLTF files often contain animation data for 3D models. It provides an abstraction around `AnimationMixer`, which simplifies the process of playing and controlling animations.
+This function is commonly used together with `gltfResource` since GLTF files often contain animation data for 3D models. It provides an abstraction around `AnimationMixer`, which simplifies the process of playing and controlling animations.
 
 The `NgtsAnimationApi` object contains the following properties:
 
@@ -44,10 +44,10 @@ The `NgtsAnimationApi` object contains the following properties:
 - `isReady`: A getter indicating if the animations have finished initializing.
 
 ```ts
-const gltf = injectGLTF(() => 'model.glb');
+const gltf = gltfResource(() => 'model.glb');
 const api = animations(
-	() => gltf()?.animations,
-	() => gltf()?.scene,
+	() => gltf.value()?.animations,
+	() => gltf.value()?.scene,
 );
 
 effect(() => {
@@ -213,8 +213,8 @@ or use references when you can't compose declaratively:
 class MyCmp {
 	instancedRef = viewChild<ElementRef<InstancedMesh>>('instanced');
 
-	gltf = injectGLTF(() => 'my/mesh/url');
-	mesh = computed(() => this.gltf()?.scene || null);
+	gltf = gltfResource(() => 'my/mesh/url');
+	mesh = computed(() => this.gltf.value()?.scene || null);
 }
 ```
 
