@@ -66,7 +66,7 @@ const cache = new Map<NgtsFontInput, Font>();
  * It supports loading from URLs (typeface.js JSON format) or pre-loaded font data.
  * Results are cached for efficient reuse.
  *
- * @param input - A function returning the font URL or font data object
+ * @param input - Signal of the font URL or font data object
  * @param options - Configuration options
  * @param options.injector - Optional injector for dependency injection context
  * @returns A ResourceRef containing the loaded Font instance

@@ -12,7 +12,7 @@ import {
  * @deprecated Use `environmentResource` instead. Will be removed in v5.0.0.
  * @since v4.0.0
  *
- * @param options - Reactive function returning environment resource options
+ * @param options - Signal of environment resource options
  * @param config - Configuration object with optional injector
  * @returns A signal containing the loaded texture
  *

@@ -75,7 +75,7 @@ export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationCl
  * API for controlling animations. The mixer is automatically updated each frame
  * and cleaned up on destroy.
  *
- * @param animationsFactory - Factory function returning animation clips or object with animations
+ * @param animationsFactory - Signal of animation clips or object with animations
  * @param object - The Object3D to attach animations to (or ref/factory returning one)
  * @param options - Optional configuration
  * @param options.injector - Custom injector for dependency injection context

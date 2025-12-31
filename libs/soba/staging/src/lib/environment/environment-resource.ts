@@ -65,7 +65,7 @@ const defaultFiles = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/n
  * Creates a reactive resource for loading environment textures.
  * Supports HDR, EXR, cube maps, and gainmap formats.
  *
- * @param options - Reactive function returning environment resource options
+ * @param options - Signal of environment resource options
  * @param config - Configuration object with optional injector
  * @returns Object containing the texture signal and underlying resource
  *

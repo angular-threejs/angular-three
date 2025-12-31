@@ -47,9 +47,9 @@ interface NgtsNormalTextureSettings {
  * @deprecated Use `normalTextureResource` instead. Will be removed in v5.0.0.
  * @since v4.0.0
  *
- * @param id - Reactive function returning normal texture ID (number index or string hash)
+ * @param id - Signal of normal texture ID (number index or string hash)
  * @param config - Configuration options
- * @param config.settings - Reactive function returning texture settings (repeat, anisotropy, offset)
+ * @param config.settings - Signal of texture settings (repeat, anisotropy, offset)
  * @param config.onLoad - Callback when texture is loaded
  * @param config.injector - Optional injector for dependency injection
  * @returns Object with url, texture signal, and numTot (total available normal textures)
@@ -118,9 +118,9 @@ export function injectNormalTexture(
  * Creates a reactive resource for loading normal textures.
  * Normal textures add surface detail without additional geometry.
  *
- * @param id - Reactive function returning normal texture ID (number index or string hash)
+ * @param id - Signal of normal texture ID (number index or string hash)
  * @param config - Configuration options
- * @param config.settings - Reactive function returning texture settings (repeat, anisotropy, offset)
+ * @param config.settings - Signal of texture settings (repeat, anisotropy, offset)
  * @param config.onLoad - Callback when texture is loaded
  * @param config.injector - Optional injector for dependency injection
  * @returns Object with url, resource, and numTot (total available normal textures)

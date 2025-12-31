@@ -10,7 +10,7 @@ import { fbo } from './fbo';
  * Renders the scene to an off-screen FBO with a depth texture attachment,
  * which can be used for effects like soft particles, SSAO, or custom shaders.
  *
- * @param params - Factory function returning configuration options
+ * @param params - Signal of configuration options
  * @param params.size - Resolution of the depth buffer (default: 256, or canvas size if not specified)
  * @param params.frames - Number of frames to render (default: Infinity for continuous)
  * @param options - Optional configuration

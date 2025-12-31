@@ -10,7 +10,7 @@ import { fbxResource } from './fbx-resource';
  * @deprecated Use fbxResource instead. Will be removed in v5.0.0
  * @since v4.0.0
  *
- * @param input - A function returning the URL(s) of the FBX file(s) to load
+ * @param input - Signal of the URL(s) of the FBX file(s) to load
  * @param options - Configuration options
  * @param options.injector - Optional injector for dependency injection context
  * @returns A readonly signal containing the loaded FBX Group(s)

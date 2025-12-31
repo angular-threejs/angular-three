@@ -42,9 +42,9 @@ const MATCAP_ROOT = 'https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24
  * @deprecated Use `matcapTextureResource` instead. Will be removed in v5.0.0.
  * @since v4.0.0
  *
- * @param id - Reactive function returning matcap ID (number index or string hash)
+ * @param id - Signal of matcap ID (number index or string hash)
  * @param config - Configuration options
- * @param config.format - Reactive function returning texture resolution (64, 128, 256, 512, or 1024)
+ * @param config.format - Signal of texture resolution (64, 128, 256, 512, or 1024)
  * @param config.onLoad - Callback when texture is loaded
  * @param config.injector - Optional injector for dependency injection
  * @returns Object with url, texture signal, and numTot (total available matcaps)
@@ -100,9 +100,9 @@ export function injectMatcapTexture(
  * Creates a reactive resource for loading matcap textures.
  * Matcaps provide realistic lighting without actual lights in the scene.
  *
- * @param id - Reactive function returning matcap ID (number index or string hash)
+ * @param id - Signal of matcap ID (number index or string hash)
  * @param config - Configuration options
- * @param config.format - Reactive function returning texture resolution (64, 128, 256, 512, or 1024)
+ * @param config.format - Signal of texture resolution (64, 128, 256, 512, or 1024)
  * @param config.onLoad - Callback when texture is loaded
  * @param config.injector - Optional injector for dependency injection
  * @returns Object with url, resource, and numTot (total available matcaps)

@@ -13,7 +13,7 @@ import * as THREE from 'three';
  * Supports loading single textures, arrays of textures, or record objects mapping
  * keys to URLs.
  *
- * @param input - A function returning the URL(s) of the texture(s) to load
+ * @param input - Signal of the URL(s) of the texture(s) to load
  * @param options - Configuration options
  * @param options.onLoad - Callback fired when textures are loaded
  * @param options.injector - Optional injector for dependency injection context

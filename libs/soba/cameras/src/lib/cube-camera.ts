@@ -58,7 +58,7 @@ export interface CubeCameraOptions {
  * that can be used for environment mapping and reflections. The camera automatically
  * updates when its options change.
  *
- * @param options - A reactive function returning cube camera configuration options
+ * @param options - Signal of cube camera configuration options
  * @param config - Optional configuration object
  * @param config.injector - Optional injector for dependency injection context
  * @returns An object containing the FBO signal, camera signal, and update function

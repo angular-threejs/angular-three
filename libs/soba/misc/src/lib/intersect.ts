@@ -11,7 +11,7 @@ import * as THREE from 'three';
  * this function uses to detect visibility state changes.
  *
  * @typeParam TObject - Type of THREE.Object3D being tracked
- * @param object - Factory function returning the object to track
+ * @param object - Signal of the object to track
  * @param options - Optional configuration
  * @param options.injector - Custom injector for dependency injection context
  * @param options.source - Writable signal to update (default: creates new signal)

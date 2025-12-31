@@ -11,7 +11,7 @@ import { fontResource, type NgtsFontInput } from './font-resource';
  * @deprecated Use fontResource instead. Will be removed in v5.0.0
  * @since v4.0.0
  *
- * @param input - A function returning the font URL or font data object
+ * @param input - Signal of the font URL or font data object
  * @param options - Configuration options
  * @param options.injector - Optional injector for dependency injection context
  * @returns A readonly signal containing the loaded Font instance
@@ -38,7 +38,7 @@ export function injectFont(input: () => NgtsFontInput, { injector }: { injector?
 /**
  * Preloads a font into the cache for faster subsequent loading.
  *
- * @param input - A function returning the font URL or font data to preload
+ * @param input - Signal of the font URL or font data to preload
  */
 injectFont.preload = (input: () => NgtsFontInput) => {
 	fontResource.preload(input());
@@ -47,7 +47,7 @@ injectFont.preload = (input: () => NgtsFontInput) => {
 /**
  * Clears cached font data.
  *
- * @param input - Optional function returning the font to clear. If not provided, clears all cached fonts.
+ * @param input - Optional Signal of the font to clear. If not provided, clears all cached fonts.
  */
 injectFont.clear = (input?: () => NgtsFontInput) => {
 	fontResource.clear(input?.());

@@ -86,7 +86,7 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
  * The returned resource includes a `scene` computed signal for direct access to
  * the loaded scene(s).
  *
- * @param input - A function returning the URL(s) of the GLTF/GLB file(s) to load
+ * @param input - Signal of the URL(s) of the GLTF/GLB file(s) to load
  * @param options - Configuration options
  * @param options.useDraco - Enable Draco compression support. Pass a string to specify custom decoder path
  * @param options.useMeshOpt - Enable Meshopt optimization support

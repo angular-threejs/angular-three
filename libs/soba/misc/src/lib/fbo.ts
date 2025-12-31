@@ -42,7 +42,7 @@ export interface NgtsFBOParams {
  * Automatically sized to the canvas dimensions if width/height not specified.
  * The FBO is disposed on component destroy.
  *
- * @param params - Factory function returning FBO configuration
+ * @param params - Signal of FBO configuration
  * @param options - Optional configuration
  * @param options.injector - Custom injector for dependency injection context
  * @returns A THREE.WebGLRenderTarget instance

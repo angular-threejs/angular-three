@@ -104,8 +104,8 @@ export class NgtsMask {
  * Creates stencil material properties for use with NgtsMask.
  * Apply the returned properties to a material to make it respect mask boundaries.
  *
- * @param id - Reactive function returning the mask ID to match
- * @param inverse - Reactive function returning whether to invert the mask (show outside instead of inside)
+ * @param id - Signal of the mask ID to match
+ * @param inverse - Signal of whether to invert the mask (show outside instead of inside)
  * @returns A computed signal containing stencil properties to spread onto a material
  *
  * @example

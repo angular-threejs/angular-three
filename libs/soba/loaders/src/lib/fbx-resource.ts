@@ -10,7 +10,7 @@ import { FBXLoader } from 'three-stdlib';
  * resource-based approach to loading FBX files. It supports loading single files,
  * arrays of files, or record objects mapping keys to URLs.
  *
- * @param input - A function returning the URL(s) of the FBX file(s) to load
+ * @param input - Signal of the URL(s) of the FBX file(s) to load
  * @param options - Configuration options
  * @param options.injector - Optional injector for dependency injection context
  * @returns A ResourceRef containing the loaded FBX Group(s)

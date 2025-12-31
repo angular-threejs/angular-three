@@ -9,7 +9,7 @@ import * as THREE from 'three';
  * @deprecated Use textureResource instead. Will be removed in v5.0.0
  * @since v4.0.0
  *
- * @param input - A function returning the URL(s) of the texture(s) to load
+ * @param input - Signal of the URL(s) of the texture(s) to load
  * @param options - Configuration options
  * @param options.onLoad - Callback fired when textures are loaded
  * @param options.injector - Optional injector for dependency injection context
