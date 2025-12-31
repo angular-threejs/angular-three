@@ -19,6 +19,11 @@ npm install angular-three-cannon cannon-es @pmndrs/cannon-worker-api
 ## Usage
 
 ```typescript
+import { Component, viewChild, ElementRef } from '@angular/core';
+import { Mesh } from 'three';
+import { NgtcPhysics } from 'angular-three-cannon';
+import { box } from 'angular-three-cannon/body';
+
 @Component({
 	template: `
 		<ngt-mesh #mesh>
@@ -31,7 +36,7 @@ export class Box {
 
 	constructor() {
 		// Make this mesh a Box body in Physics. Only works within ngtc-physics
-		injectBox(() => ({ mass: 10000, position: [0, 0, 0], args: [1, 1, 1] }), this.mesh);
+		box(() => ({ mass: 10000, position: [0, 0, 0], args: [1, 1, 1] }), this.mesh);
 	}
 }
 

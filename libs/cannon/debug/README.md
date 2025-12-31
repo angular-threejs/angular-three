@@ -14,20 +14,9 @@ npm install cannon-es-debugger
 # pnpm add cannon-es-debugger
 ```
 
-## NgtcDebugApi
-
-The `NgtcDebugApi` interface provides methods to interact with the debug renderer:
-
-- `add(uuid: string, props: BodyProps, type: BodyShapeType)`: Adds a physics body to the debug renderer.
-- `remove(uuid: string)`: Removes a physics body from the debug renderer.
-
-### `injectNgtcDebugApi`
-
-The `injectNgtcDebugApi` function is used to inject the `NgtcDebugApi` into your components, enabling you to control the debug visualization.
-
 ## NgtcDebug
 
-The `NgtcDebug` directive is applied to the `ngtc-physics` component to enable physics debugging. It has the following inputs:
+The `NgtcDebug` directive is applied to the `ngtc-physics` component to enable physics debugging. It has the following input:
 
 - `debug`: An object containing the following properties:
     - `enabled`: (boolean) Whether the debug visualization is enabled (default: true).
@@ -38,11 +27,32 @@ The `NgtcDebug` directive is applied to the `ngtc-physics` component to enable p
 ## Usage
 
 ```html
-<ngtc-physics debug></ngtc-physics>
+<ngtc-physics [debug]="{ enabled: true }">
+	<!-- Physics bodies here -->
+</ngtc-physics>
 ```
 
 You can customize the debug visualization by providing input values within the `debug` object:
 
 ```html
-<ngtc-physics [debug]="{enabled: true, color: 'red', scale: 0.5}"></ngtc-physics>
+<ngtc-physics [debug]="{ enabled: true, color: 'red', scale: 0.5 }">
+	<!-- Physics bodies here -->
+</ngtc-physics>
 ```
+
+Toggle debug visualization based on component state:
+
+```html
+<ngtc-physics [debug]="{ enabled: isDebugging() }">
+	<!-- Physics bodies here -->
+</ngtc-physics>
+```
+
+## NgtcDebug Methods
+
+The `NgtcDebug` class provides the following methods for internal use:
+
+- `add(uuid: string, props: BodyProps, type: BodyShapeType)`: Adds a physics body to the debug renderer.
+- `remove(uuid: string)`: Removes a physics body from the debug renderer.
+
+These methods are called automatically by body functions when debug is enabled.
