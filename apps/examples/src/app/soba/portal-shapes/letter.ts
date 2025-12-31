@@ -41,7 +41,7 @@ import boldFont from './bold.blob';
 			<ngts-center>
 				<ngts-text-3d
 					#text3D
-					[ngtObjectEvents]="text3D.meshRef()"
+					[objectEvents]="text3D.meshRef()"
 					[text]="char()"
 					[font]="boldFont"
 					[options]="{

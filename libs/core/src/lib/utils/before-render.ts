@@ -4,14 +4,14 @@ import { injectStore } from '../store';
 import type { NgtBeforeRenderRecord } from '../types';
 
 /**
- * `injectBeforeRender` invokes its callback on every frame. Hence, the notion of tracking
+ * `beforeRender` invokes its callback on every frame. Hence, the notion of tracking
  * changes (i.e: signals) does not really matter since we're getting latest values of the things we need on every frame anyway.
  *
- * If `priority` is a Signal, `injectBeforeRender` will set up an Effect internally and returns the `EffectRef#destroy` instead.
+ * If `priority` is a Signal, `beforeRender` will set up an Effect internally and returns the `EffectRef#destroy` instead.
  *
  * @example
  * ```ts
- * const destroy = injectBeforeRender(
+ * const destroy = beforeRender(
  *  ({ gl, camera }) => {
  *    // before render logic
  *  },

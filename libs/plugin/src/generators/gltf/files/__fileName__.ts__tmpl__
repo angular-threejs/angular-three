@@ -89,7 +89,7 @@ export class <%= className %> {
     const objectEvents = inject(NgtObjectEvents, { host: true });
     const elementEvents = inject(NgtElementEvents, { host: true });
 
-    objectEvents.ngtObjectEvents.set(this.modelRef);
-    elementEvents.ngtElementEvents.set(this.modelRef);
+    objectEvents.events.set(this.modelRef);
+    elementEvents.events.set(this.modelRef);
   }
 }

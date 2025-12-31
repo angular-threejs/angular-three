@@ -106,6 +106,6 @@ export class Spaceship {
 		});
 
 		const objectEvents = inject(NgtObjectEvents, { host: true });
-		objectEvents.ngtObjectEvents.set(this.modelRef);
+		objectEvents.events.set(this.modelRef);
 	}
 }

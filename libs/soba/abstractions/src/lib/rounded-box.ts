@@ -211,7 +211,7 @@ export class NgtsRoundedBox {
 		extend({ ExtrudeGeometry, Mesh });
 
 		const objectEvents = inject(NgtObjectEvents, { host: true });
-		objectEvents.ngtObjectEvents.set(this.meshRef);
+		objectEvents.events.set(this.meshRef);
 
 		effect(() => {
 			const geometry = this.geometryRef()?.nativeElement;

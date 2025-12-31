@@ -262,7 +262,7 @@ export class NgtsText {
 	private textPrimitive = computed(() => this.textPrimitiveRef()?.nativeElement);
 
 	constructor() {
-		this.objectEvents.ngtObjectEvents.set(this.textPrimitive);
+		this.objectEvents.events.set(this.textPrimitive);
 
 		inject(DestroyRef).onDestroy(() => {
 			this.troikaMesh.dispose();

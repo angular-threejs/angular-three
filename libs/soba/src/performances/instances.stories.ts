@@ -53,7 +53,7 @@ class Shoe {
 		const color = new Color();
 
 		/**
-		 * We can also use ngtObjectEvents and Event Bindings
+		 * We can also use objectEvents and Event Bindings
 		 * However, using Event Bindings on the template triggers CD everytime the event fires
 		 * which is not ideal for this case
 		 *
@@ -62,7 +62,7 @@ class Shoe {
 		 * ```html
 		 * <ngts-instance
 		 *   #instance
-		 *   [ngtObjectEvents]="instance.positionMeshRef()"
+		 *   [objectEvents]="instance.positionMeshRef()"
 		 *   (pointerover)="$event.stopPropagation(); this.hovered = true"
 		 *   (pointerout)="this.hovered = false"
 		 * />

@@ -133,7 +133,7 @@ export class NgtsPerspectiveCamera {
 
 	constructor() {
 		extend({ PerspectiveCamera, Group });
-		this.elementEvents.ngtElementEvents.set(this.cameraRef);
+		this.elementEvents.events.set(this.cameraRef);
 
 		effect((onCleanup) => {
 			const makeDefault = this.makeDefault();
