@@ -73,16 +73,7 @@ export default class InstancedMeshExample {
 		});
 	}
 
-	private createBody(): NgtrInstancedRigidBodyOptions {
-		return {
-			key: Math.random(),
-			position: [Math.random() * 20, Math.random() * 20, Math.random() * 20],
-			rotation: [Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2],
-			scale: [0.5 + Math.random(), 0.5 + Math.random(), 0.5 + Math.random()],
-		};
-	}
-
-	onClick(instancedRigidBodies: NgtrInstancedRigidBodies, event: NgtThreeEvent<MouseEvent>) {
+	protected onClick(instancedRigidBodies: NgtrInstancedRigidBodies, event: NgtThreeEvent<MouseEvent>) {
 		if (event.instanceId !== undefined) {
 			instancedRigidBodies
 				.rigidBodyRefs()
@@ -90,5 +81,14 @@ export default class InstancedMeshExample {
 				?.rigidBody()
 				?.applyTorqueImpulse({ x: 0, y: 50, z: 0 }, true);
 		}
+	}
+
+	private createBody(): NgtrInstancedRigidBodyOptions {
+		return {
+			key: Math.random(),
+			position: [Math.random() * 20, Math.random() * 20, Math.random() * 20],
+			rotation: [Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2],
+			scale: [0.5 + Math.random(), 0.5 + Math.random(), 0.5 + Math.random()],
+		};
 	}
 }
