@@ -1,3 +1,14 @@
+## 4.0.0-next.117 (2025-12-31)
+
+### 🚀 Features
+
+- **rapier:** add filterContactPair and filterIntersectionPair hooks ([216f9a93](https://github.com/angular-threejs/angular-three/commit/216f9a93))
+- **tweakpane:** add tweaks() function for declarative control creation ([ec3d7e23](https://github.com/angular-threejs/angular-three/commit/ec3d7e23))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.116 (2025-12-29)
 
 ### 🚀 Features
