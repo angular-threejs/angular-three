@@ -2,6 +2,10 @@
 
 `angular-three-soba` provides a comprehensive set of utilities and abstractions for building 3D applications with Angular Three. It offers components and helpers for various aspects of your projects, including cameras, controls, loaders, materials, shaders, and more. These components are ported from the popular React Three Fiber [`drei`](https://github.com/pmndrs/drei) library, making it easier for developers familiar with `drei` to leverage its functionality within the Angular ecosystem.
 
+## Documentation
+
+All public APIs are documented with JSDoc comments. Your IDE will provide inline documentation, parameter hints, and examples as you code.
+
 ## Installation
 
 ```bash

@@ -2,7 +2,11 @@
 
 A custom Renderer for Angular 19+ that uses Three.js to render 3D scenes.
 
-## Official documentation
+## Documentation
+
+All public APIs are documented with JSDoc comments. Your IDE will provide inline documentation, parameter hints, and examples as you code.
+
+### Official Documentation
 
 Please visit [angularthree-docs-next](https://angularthree-docs-next.netlify.app)
 

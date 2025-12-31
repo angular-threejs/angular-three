@@ -2,6 +2,10 @@
 
 This is the main entry point for post-processing effects in Angular Three. It provides a way to apply various visual effects to your 3D scene after it has been rendered. This library relies on `maath`, `three-stdlib`, and `postprocessing` as dependencies.
 
+## Documentation
+
+All public APIs are documented with JSDoc comments. Your IDE will provide inline documentation, parameter hints, and examples as you code.
+
 ## Installation
 
 ```bash

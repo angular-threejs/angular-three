@@ -2,6 +2,10 @@
 
 This library is a wrapper around the [Cannon.js](https://schteppe.github.io/cannon.js/) physics engine for use with Angular Three.
 
+## Documentation
+
+All public APIs are documented with JSDoc comments. Your IDE will provide inline documentation, parameter hints, and examples as you code.
+
 ## Installation
 
 ```bash
