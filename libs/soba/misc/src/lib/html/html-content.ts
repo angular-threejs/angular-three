@@ -42,17 +42,80 @@ type PointerEventsProperties =
 	| 'inherit';
 
 export interface NgtsHTMLContentOptions {
+	/**
+	 * Epsilon for position/zoom change detection.
+	 * Lower values = more frequent updates.
+	 *
+	 * @default 0.001
+	 */
 	eps: number;
+	/**
+	 * Range for automatic z-index calculation based on camera distance.
+	 * `[max, min]` - closer objects get higher z-index.
+	 *
+	 * @default [16777271, 0]
+	 */
 	zIndexRange: [number, number];
+	/**
+	 * Centers the HTML element on the projected point.
+	 * Applies `transform: translate3d(-50%, -50%, 0)`.
+	 *
+	 * @default false
+	 */
 	center: boolean;
+	/**
+	 * Prepends to parent instead of appending.
+	 * Useful for z-index stacking order control.
+	 *
+	 * @default false
+	 */
 	prepend: boolean;
+	/**
+	 * Makes the container fill the entire canvas size.
+	 * Useful for full-screen overlays anchored to a 3D point.
+	 *
+	 * @default false
+	 */
 	fullscreen: boolean;
+	/**
+	 * CSS class applied to the inner container div.
+	 */
 	containerClass: string;
+	/**
+	 * Inline styles applied to the inner container div.
+	 */
 	containerStyle: Partial<CSSStyleDeclaration>;
+	/**
+	 * CSS `pointer-events` value for the HTML content.
+	 * Set to `'none'` to allow clicking through to the canvas.
+	 *
+	 * @default 'auto'
+	 */
 	pointerEvents: PointerEventsProperties;
+	/**
+	 * Custom function to calculate screen position from 3D coordinates.
+	 *
+	 * @default defaultCalculatePosition
+	 */
 	calculatePosition: CalculatePosition;
+	/**
+	 * When `true` (with `transform: true` on parent), HTML always faces the camera.
+	 * Similar to THREE.Sprite behavior.
+	 *
+	 * @default false
+	 */
 	sprite: boolean;
+	/**
+	 * Scales HTML based on distance from camera.
+	 * Higher values = larger HTML at same distance.
+	 * - In transform mode: affects CSS matrix scaling
+	 * - In non-transform mode: affects CSS scale transform
+	 */
 	distanceFactor?: number;
+	/**
+	 * Custom parent element for the HTML content.
+	 * Defaults to the canvas container or `events.connected` element.
+	 */
 	parent?: HTMLElement | ElementRef<HTMLElement>;
 }
 
@@ -69,6 +132,51 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 	sprite: false,
 };
 
+/**
+ * Renders HTML content positioned relative to a `NgtsHTML` anchor in 3D space.
+ *
+ * This component projects the parent THREE.Group's world position to screen
+ * coordinates and uses CSS absolute positioning/transforms to overlay HTML
+ * on the canvas.
+ *
+ * Must be used as a child of `ngts-html`. The host `div` element is the actual
+ * positioned element. Extends `NgtHTML` to integrate with the custom renderer.
+ *
+ * @example
+ * ```html
+ * <ngts-html [options]="{ transform: true }">
+ *   <!-- Basic label -->
+ *   <div [htmlContent]="{ distanceFactor: 10 }">
+ *     <h1>Title</h1>
+ *   </div>
+ * </ngts-html>
+ *
+ * <!-- With styling and interactivity -->
+ * <ngts-html>
+ *   <div
+ *     [htmlContent]="{
+ *       center: true,
+ *       containerClass: 'tooltip',
+ *       pointerEvents: 'auto'
+ *     }"
+ *     (click)="handleClick()"
+ *   >
+ *     <button>Click me</button>
+ *   </div>
+ * </ngts-html>
+ *
+ * <!-- Custom occlusion handling -->
+ * <ngts-html [options]="{ occlude: true }">
+ *   <div
+ *     [htmlContent]="{}"
+ *     (occluded)="isHidden = $event"
+ *     [class.faded]="isHidden"
+ *   >
+ *     Content with custom occlusion handling
+ *   </div>
+ * </ngts-html>
+ * ```
+ */
 @Component({
 	selector: 'div[htmlContent]',
 	template: `
@@ -114,6 +222,15 @@ export class NgtsHTMLContent extends NgtHTML {
 		transform: mergeInputs(defaultHtmlContentOptions),
 		alias: 'htmlContent',
 	});
+
+	/**
+	 * Emits when occlusion state changes.
+	 * - `true` - HTML is occluded (hidden behind objects)
+	 * - `false` - HTML is visible
+	 *
+	 * If no listener is attached, visibility is handled automatically
+	 * via `display: none/block`. When subscribed, you control visibility.
+	 */
 	occluded = output<boolean>();
 
 	transformOuterRef = viewChild<ElementRef<HTMLDivElement>>('transformOuter');

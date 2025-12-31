@@ -14,9 +14,38 @@ import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import { NgtsHTMLContent } from './html-content';
 
 export interface NgtsHTMLOptions extends Partial<NgtThreeElements['ngt-group']> {
+	/**
+	 * Controls how HTML is hidden when behind other objects.
+	 * - `false` - No occlusion (default)
+	 * - `true` - Raycast against entire scene
+	 * - `'raycast'` - Same as `true`
+	 * - `'blending'` - Uses z-index blending (canvas becomes transparent)
+	 * - `Object3D[]` or `ElementRef<Object3D>[]` - Raycast against specific objects only
+	 */
 	occlude: ElementRef<THREE.Object3D>[] | THREE.Object3D[] | boolean | 'raycast' | 'blending';
+	/**
+	 * When `true`, uses CSS 3D transforms to position HTML in 3D space.
+	 * When `false`, projects 3D position to 2D screen coordinates.
+	 *
+	 * Transform mode enables proper 3D rotation/scaling but may have
+	 * performance implications with many elements.
+	 *
+	 * @default false
+	 */
 	transform: boolean;
+	/**
+	 * Forward shadow casting to occlusion mesh.
+	 * Only used with blending occlusion mode.
+	 *
+	 * @default false
+	 */
 	castShadow: boolean;
+	/**
+	 * Forward shadow receiving to occlusion mesh.
+	 * Only used with blending occlusion mode.
+	 *
+	 * @default false
+	 */
 	receiveShadow: boolean;
 }
 
@@ -27,6 +56,31 @@ const defaultHtmlOptions: NgtsHTMLOptions = {
 	receiveShadow: false,
 };
 
+/**
+ * Creates a THREE.Group anchor point in the 3D scene for HTML overlay positioning.
+ *
+ * This component renders a THREE.Group that serves as the spatial reference
+ * for `NgtsHTMLContent`. It can be placed standalone in the scene or
+ * as a child of any THREE.Object3D (mesh, group, etc.).
+ *
+ * Must contain a `div[htmlContent]` child to render actual HTML content.
+ * The Group's world position is used to calculate screen-space coordinates.
+ *
+ * @example
+ * ```html
+ * <!-- Attached to a mesh -->
+ * <ngt-mesh [position]="[0, 2, 0]">
+ *   <ngts-html [options]="{ transform: true }">
+ *     <div [htmlContent]="{ distanceFactor: 10 }">Label</div>
+ *   </ngts-html>
+ * </ngt-mesh>
+ *
+ * <!-- Standalone in scene -->
+ * <ngts-html [options]="{ position: [5, 5, 0] }">
+ *   <div [htmlContent]="{}">Floating UI</div>
+ * </ngts-html>
+ * ```
+ */
 @Component({
 	selector: 'ngts-html',
 	template: `
