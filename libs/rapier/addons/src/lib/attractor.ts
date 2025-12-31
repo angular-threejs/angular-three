@@ -6,6 +6,12 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { attractorDebug } from './attractor-debug';
 
+/**
+ * Force calculation functions for different gravity types.
+ * - static: Constant force regardless of distance
+ * - linear: Force increases linearly as distance decreases
+ * - newtonian: Force follows Newton's law of universal gravitation
+ */
 const calcForceByType = {
 	static: (s: number, m2: number, r: number, d: number, G: number) => s,
 	linear: (s: number, m2: number, r: number, d: number, G: number) => s * (d / r),
@@ -15,6 +21,30 @@ const calcForceByType = {
 const _position = new THREE.Vector3();
 const _vector3 = new THREE.Vector3();
 
+/**
+ * Applies attractor force to a rigid body based on its distance from the attractor.
+ * Used internally by NgtrAttractor but can be called manually for custom behavior.
+ *
+ * @param rigidBody - The rigid body to apply the force to
+ * @param options - The attractor configuration including position, strength, and type
+ *
+ * @example
+ * ```typescript
+ * beforePhysicsStep((world) => {
+ *   world.bodies.forEach((body) => {
+ *     if (body.isDynamic()) {
+ *       applyAttractorForceOnRigidBody(body, {
+ *         object: attractorMesh,
+ *         strength: 10,
+ *         range: 20,
+ *         type: 'newtonian',
+ *         gravitationalConstant: 6.673e-11
+ *       });
+ *     }
+ *   });
+ * });
+ * ```
+ */
 export function applyAttractorForceOnRigidBody(
 	rigidBody: RigidBody,
 	{
@@ -63,7 +93,17 @@ export function applyAttractorForceOnRigidBody(
 	}
 }
 
+/**
+ * Type of gravity calculation for attractors.
+ * - `'static'` - Constant force regardless of distance
+ * - `'linear'` - Force scales linearly with distance (closer = stronger)
+ * - `'newtonian'` - Force follows Newton's law of universal gravitation (inverse square)
+ */
 export type NgtrAttractorGravityType = 'static' | 'linear' | 'newtonian';
+
+/**
+ * Configuration options for the attractor directive.
+ */
 export interface NgtrAttactorOptions {
 	/**
 	 * The strength of the attractor.
@@ -110,6 +150,32 @@ const defaultOptions: NgtrAttactorOptions = {
 	gravitationalConstant: 6.673e-11,
 };
 
+/**
+ * Directive that creates a gravitational attractor point in the physics world.
+ * All dynamic rigid bodies within range will be attracted (or repelled) towards this point.
+ *
+ * The attractor can use different gravity models:
+ * - Static: constant force
+ * - Linear: force increases as objects get closer
+ * - Newtonian: realistic inverse-square law
+ *
+ * @example
+ * ```html
+ * <!-- Simple attractor at origin -->
+ * <ngt-object3D attractor [options]="{ strength: 5, range: 20 }" />
+ *
+ * <!-- Repeller (negative strength) -->
+ * <ngt-object3D attractor [options]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
+ *
+ * <!-- Newtonian gravity -->
+ * <ngt-object3D attractor [options]="{
+ *   strength: 1000,
+ *   range: 50,
+ *   type: 'newtonian',
+ *   gravitationalConstant: 0.01
+ * }" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[attractor]',
 	providers: [

@@ -51,13 +51,50 @@ const defaultOptions: NgtrPhysicsOptions = {
 	debug: false,
 };
 
+/**
+ * Directive for providing a fallback template when Rapier fails to load.
+ *
+ * @example
+ * ```html
+ * <ngtr-physics>
+ *   <ng-template>
+ *     <!-- Physics scene content -->
+ *   </ng-template>
+ *   <ng-template rapierFallback let-error="error">
+ *     <p>Failed to load physics: {{ error }}</p>
+ *   </ng-template>
+ * </ngtr-physics>
+ * ```
+ */
 @Directive({ selector: 'ng-template[rapierFallback]' })
 export class NgtrPhysicsFallback {
+	/** Type guard for template context */
 	static ngTemplateContextGuard(_: NgtrPhysicsFallback, ctx: unknown): ctx is { error: string } {
 		return true;
 	}
 }
 
+/**
+ * Main physics component that creates and manages a Rapier physics world.
+ * Wrap your 3D scene content in this component to enable physics simulation.
+ *
+ * The component lazily loads the Rapier WASM module and provides the physics
+ * context to all child components.
+ *
+ * @example
+ * ```html
+ * <ngtr-physics [options]="{ gravity: [0, -9.81, 0], debug: true }">
+ *   <ng-template>
+ *     <ngt-object3D rigidBody>
+ *       <ngt-mesh>
+ *         <ngt-box-geometry />
+ *         <ngt-mesh-standard-material />
+ *       </ngt-mesh>
+ *     </ngt-object3D>
+ *   </ng-template>
+ * </ngtr-physics>
+ * ```
+ */
 @Component({
 	selector: 'ngtr-physics',
 	template: `
@@ -85,6 +122,7 @@ export class NgtrPhysicsFallback {
 	imports: [NgtrDebug, NgtrFrameStepper, NgTemplateOutlet],
 })
 export class NgtrPhysics {
+	/** Physics configuration options */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	protected content = contentChild.required(TemplateRef);
@@ -104,8 +142,10 @@ export class NgtrPhysics {
 	private timeStep = pick(this.options, 'timeStep');
 	private interpolate = pick(this.options, 'interpolate');
 
+	/** Whether the physics simulation is paused */
 	paused = pick(this.options, 'paused');
 	protected debug = pick(this.options, 'debug');
+	/** The default collider type for automatic collider generation */
 	colliders = pick(this.options, 'colliders');
 
 	private vGravity = vector3(this.options, 'gravity');
@@ -114,22 +154,32 @@ export class NgtrPhysics {
 
 	protected rapierConstruct = signal<typeof RAPIER | null>(null);
 	protected rapierError = signal<string | null>(null);
+	/** The loaded Rapier module, null if not yet loaded */
 	rapier = this.rapierConstruct.asReadonly();
 
 	protected ready = computed(() => !!this.rapier());
+	/** Singleton proxy to the Rapier physics world */
 	worldSingleton = computed(() => {
 		const rapier = this.rapier();
 		if (!rapier) return null;
 		return createSingletonProxy<World>(() => new rapier.World(untracked(this.vGravity)));
 	});
 
+	/** Map of rigid body states indexed by handle */
 	rigidBodyStates: NgtrRigidBodyStateMap = new Map();
+	/** Map of collider states indexed by handle */
 	colliderStates: NgtrColliderStateMap = new Map();
+	/** Map of rigid body event handlers indexed by handle */
 	rigidBodyEvents: NgtrEventMap = new Map();
+	/** Map of collider event handlers indexed by handle */
 	colliderEvents: NgtrEventMap = new Map();
+	/** Callbacks to run before each physics step */
 	beforeStepCallbacks = new Set<NgtrWorldStepCallback>();
+	/** Callbacks to run after each physics step */
 	afterStepCallbacks = new Set<NgtrWorldStepCallback>();
+	/** Callbacks to filter contact pairs */
 	filterContactPairCallbacks = new Set<NgtrFilterContactPairCallback>();
+	/** Callbacks to filter intersection pairs */
 	filterIntersectionPairCallbacks = new Set<NgtrFilterIntersectionPairCallback>();
 
 	private hooks: PhysicsHooks = {
@@ -182,6 +232,13 @@ export class NgtrPhysics {
 		});
 	}
 
+	/**
+	 * Steps the physics simulation forward by the given delta time.
+	 * This is called automatically by the frame stepper, but can be called manually
+	 * if you need custom control over the simulation timing.
+	 *
+	 * @param delta - Time in seconds since the last step
+	 */
 	step(delta: number) {
 		if (!this.paused()) {
 			this.internalStep(delta);

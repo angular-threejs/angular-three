@@ -92,9 +92,26 @@ function createJoint<TJointParams, TJoinType extends ImpulseJoint>(
 }
 
 /**
- * A fixed joint ensures that two rigid-bodies don't move relative to each other.
+ * Creates a fixed joint that prevents any relative movement between two rigid bodies.
  * Fixed joints are characterized by one local frame (represented by an isometry) on each rigid-body.
  * The fixed-joint makes these frames coincide in world-space.
+ *
+ * @param bodyA - First rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param bodyB - Second rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param options - Joint configuration with data and optional injector
+ * @returns Signal containing the created joint or null
+ *
+ * @example
+ * ```typescript
+ * fixedJoint(bodyA, bodyB, {
+ *   data: {
+ *     body1Anchor: [0, 0, 0],
+ *     body1LocalFrame: [0, 0, 0, 1],
+ *     body2Anchor: [0, 0, 0],
+ *     body2LocalFrame: [0, 0, 0, 1]
+ *   }
+ * });
+ * ```
  *
  * @category Hooks - Joints
  */
@@ -113,10 +130,21 @@ export const fixedJoint = createJoint<NgtrFixedJointParams, FixedImpulseJoint>((
 export const injectFixedJoint = fixedJoint;
 
 /**
- * The spherical joint ensures that two points on the local-spaces of two rigid-bodies always coincide (it prevents any relative
- * translational motion at this points). This is typically used to simulate ragdolls arms, pendulums, etc.
- * They are characterized by one local anchor on each rigid-body. Each anchor represents the location of the
- * points that need to coincide on the local-space of each rigid-body.
+ * Creates a spherical (ball-and-socket) joint that ensures two anchor points always coincide.
+ * This prevents any relative translational motion at these points while allowing rotation.
+ * Typically used to simulate ragdoll arms, pendulums, etc.
+ *
+ * @param bodyA - First rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param bodyB - Second rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param options - Joint configuration with data and optional injector
+ * @returns Signal containing the created joint or null
+ *
+ * @example
+ * ```typescript
+ * sphericalJoint(bodyA, bodyB, {
+ *   data: { body1Anchor: [0, -0.5, 0], body2Anchor: [0, 0.5, 0] }
+ * });
+ * ```
  *
  * @category Hooks - Joints
  */
@@ -130,9 +158,26 @@ export const sphericalJoint = createJoint<NgtrSphericalJointParams, SphericalImp
 export const injectSphericalJoint = sphericalJoint;
 
 /**
- * The revolute joint prevents any relative movement between two rigid-bodies, except for relative
- * rotations along one axis. This is typically used to simulate wheels, fans, etc.
- * They are characterized by one local anchor as well as one local axis on each rigid-body.
+ * Creates a revolute (hinge) joint that allows rotation only around one axis.
+ * Prevents any other relative movement between two rigid bodies.
+ * Typically used to simulate wheels, doors, fans, etc.
+ *
+ * @param bodyA - First rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param bodyB - Second rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param options - Joint configuration with data (including optional limits) and optional injector
+ * @returns Signal containing the created joint or null
+ *
+ * @example
+ * ```typescript
+ * revoluteJoint(bodyA, bodyB, {
+ *   data: {
+ *     body1Anchor: [0, 0, 0],
+ *     body2Anchor: [0, 1, 0],
+ *     axis: [0, 1, 0],
+ *     limits: [-Math.PI / 2, Math.PI / 2]
+ *   }
+ * });
+ * ```
  *
  * @category Hooks - Joints
  */
@@ -157,9 +202,26 @@ export const revoluteJoint = createJoint<NgtrRevoluteJointParams, RevoluteImpuls
 export const injectRevoluteJoint = revoluteJoint;
 
 /**
- * The prismatic joint prevents any relative movement between two rigid-bodies, except for relative translations along one axis.
- * It is characterized by one local anchor as well as one local axis on each rigid-body. In 3D, an optional
- * local tangent axis can be specified for each rigid-body.
+ * Creates a prismatic (slider) joint that allows translation only along one axis.
+ * Prevents any other relative movement between two rigid bodies.
+ * Typically used to simulate pistons, sliding doors, etc.
+ *
+ * @param bodyA - First rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param bodyB - Second rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param options - Joint configuration with data (including optional limits) and optional injector
+ * @returns Signal containing the created joint or null
+ *
+ * @example
+ * ```typescript
+ * prismaticJoint(bodyA, bodyB, {
+ *   data: {
+ *     body1Anchor: [0, 0, 0],
+ *     body2Anchor: [2, 0, 0],
+ *     axis: [1, 0, 0],
+ *     limits: [-1, 1]
+ *   }
+ * });
+ * ```
  *
  * @category Hooks - Joints
  */
@@ -184,7 +246,25 @@ export const prismaticJoint = createJoint<NgtrPrismaticJointParams, PrismaticImp
 export const injectPrismaticJoint = prismaticJoint;
 
 /**
- * The rope joint limits the max distance between two bodies.
+ * Creates a rope joint that limits the maximum distance between two anchor points.
+ * The bodies can move freely as long as the distance doesn't exceed the specified length.
+ *
+ * @param bodyA - First rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param bodyB - Second rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param options - Joint configuration with data and optional injector
+ * @returns Signal containing the created joint or null
+ *
+ * @example
+ * ```typescript
+ * ropeJoint(bodyA, bodyB, {
+ *   data: {
+ *     body1Anchor: [0, 0, 0],
+ *     body2Anchor: [0, 0, 0],
+ *     length: 5
+ *   }
+ * });
+ * ```
+ *
  * @category Hooks - Joints
  */
 export const ropeJoint = createJoint<NgtrRopeJointParams, RopeImpulseJoint>((rapier, data) =>
@@ -201,7 +281,27 @@ export const ropeJoint = createJoint<NgtrRopeJointParams, RopeImpulseJoint>((rap
 export const injectRopeJoint = ropeJoint;
 
 /**
- * The spring joint applies a force proportional to the distance between two objects.
+ * Creates a spring joint that applies a force proportional to the distance between two anchor points.
+ * The spring tries to maintain its rest length through spring forces.
+ *
+ * @param bodyA - First rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param bodyB - Second rigid body (can be RigidBody, ElementRef, or getter function)
+ * @param options - Joint configuration with data and optional injector
+ * @returns Signal containing the created joint or null
+ *
+ * @example
+ * ```typescript
+ * springJoint(bodyA, bodyB, {
+ *   data: {
+ *     body1Anchor: [0, 0, 0],
+ *     body2Anchor: [0, 0, 0],
+ *     restLength: 2,
+ *     stiffness: 100,
+ *     damping: 10
+ *   }
+ * });
+ * ```
+ *
  * @category Hooks - Joints
  */
 export const springJoint = createJoint<NgtrSpringJointParams, SpringImpulseJoint>((rapier, data) => {

@@ -30,19 +30,55 @@ import { NgtrAnyCollider, NgtrRigidBody, rigidBodyDefaultOptions } from './rigid
 import { NgtrRigidBodyOptions, NgtrRigidBodyState, NgtrRigidBodyType } from './types';
 import { createColliderOptions } from './utils';
 
+/**
+ * Configuration options for individual rigid body instances.
+ * Used with NgtrInstancedRigidBodies to define per-instance properties.
+ */
 export interface NgtrInstancedRigidBodyOptions {
+	/** Unique identifier for this instance (required for change tracking) */
 	key: string | number;
+	/** Type of rigid body for this instance */
 	type?: NgtrRigidBodyType;
+	/** Initial position of this instance */
 	position?: NgtVector3;
+	/** Initial rotation of this instance (Euler angles) */
 	rotation?: NgtEuler;
+	/** Scale of this instance */
 	scale?: NgtVector3;
+	/** Initial rotation of this instance (quaternion) */
 	quaternion?: NgtQuaternion;
+	/** Custom user data attached to this instance */
 	userData?: NgtThreeElements['ngt-object3D']['userData'];
+	/** Physics options specific to this instance */
 	options?: NgtrRigidBodyOptions;
 }
 
 const defaultOptions: NgtrRigidBodyOptions = rigidBodyDefaultOptions;
 
+/**
+ * Component for creating multiple rigid bodies from a single InstancedMesh.
+ * This is highly efficient for scenes with many identical physics objects.
+ *
+ * Each instance gets its own rigid body but shares the same geometry for rendering.
+ * The component automatically syncs instance matrices with physics simulation.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [instancedRigidBodies]="instances">
+ *   <ngt-instanced-mesh [count]="instances.length" castShadow receiveShadow>
+ *     <ngt-sphere-geometry [args]="[0.5]" />
+ *     <ngt-mesh-standard-material color="orange" />
+ *   </ngt-instanced-mesh>
+ * </ngt-object3D>
+ * ```
+ *
+ * ```typescript
+ * instances = Array.from({ length: 100 }, (_, i) => ({
+ *   key: i,
+ *   position: [Math.random() * 10, Math.random() * 10, 0] as [number, number, number],
+ * }));
+ * ```
+ */
 @Component({
 	selector: 'ngt-object3D[instancedRigidBodies]',
 	exportAs: 'instancedRigidBodies',

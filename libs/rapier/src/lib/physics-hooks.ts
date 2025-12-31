@@ -3,6 +3,24 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import { NgtrPhysics } from './physics';
 import type { NgtrFilterContactPairCallback, NgtrFilterIntersectionPairCallback, NgtrWorldStepCallback } from './types';
 
+/**
+ * Registers a callback to be executed before each physics world step.
+ * Useful for applying forces, updating kinematic bodies, or other pre-step logic.
+ *
+ * The callback is automatically unregistered when the component is destroyed.
+ *
+ * @param callback - Function to call before each physics step, receives the Rapier World
+ * @param injector - Optional injector for dependency injection context
+ *
+ * @example
+ * ```typescript
+ * beforePhysicsStep((world) => {
+ *   // Apply custom forces or update kinematic bodies
+ *   const body = world.getRigidBody(handle);
+ *   body?.applyImpulse({ x: 0, y: 10, z: 0 }, true);
+ * });
+ * ```
+ */
 export function beforePhysicsStep(callback: NgtrWorldStepCallback, injector?: Injector) {
 	return assertInjector(beforePhysicsStep, injector, () => {
 		const physics = inject(NgtrPhysics);
@@ -15,6 +33,25 @@ export function beforePhysicsStep(callback: NgtrWorldStepCallback, injector?: In
 	});
 }
 
+/**
+ * Registers a callback to be executed after each physics world step.
+ * Useful for reading physics state, updating visuals, or other post-step logic.
+ *
+ * The callback is automatically unregistered when the component is destroyed.
+ *
+ * @param callback - Function to call after each physics step, receives the Rapier World
+ * @param injector - Optional injector for dependency injection context
+ *
+ * @example
+ * ```typescript
+ * afterPhysicsStep((world) => {
+ *   // Read physics state after simulation
+ *   const body = world.getRigidBody(handle);
+ *   const position = body?.translation();
+ *   console.log('Body position:', position);
+ * });
+ * ```
+ */
 export function afterPhysicsStep(callback: NgtrWorldStepCallback, injector?: Injector) {
 	return assertInjector(afterPhysicsStep, injector, () => {
 		const physics = inject(NgtrPhysics);

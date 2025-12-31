@@ -7,9 +7,22 @@ import { NgtrColliderOptions, NgtrColliderShape, NgtrRigidBodyAutoCollider, Ngtr
 
 /**
  * Creates a proxy that will create a singleton instance of the given class
- * when a property is accessed, and not before.
+ * when a property is accessed, and not before. This is useful for lazy initialization
+ * of expensive objects like physics worlds.
  *
- * @returns A proxy and a reset function, so that the instance can created again
+ * @template SingletonClass - The type of the singleton instance
+ * @template CreationFn - The type of the factory function
+ * @param createInstance - A function that returns a new instance of the class
+ * @returns An object containing the proxy, reset function, and set function
+ *
+ * @example
+ * ```typescript
+ * const { proxy, reset } = createSingletonProxy(() => new World(gravity));
+ * // Access the world lazily
+ * proxy.step();
+ * // Reset when done
+ * reset();
+ * ```
  */
 export const createSingletonProxy = <
 	SingletonClass extends object,
@@ -20,8 +33,11 @@ export const createSingletonProxy = <
 	 */
 	createInstance: CreationFn,
 ): {
+	/** The lazy proxy to the singleton instance */
 	proxy: SingletonClass;
+	/** Resets the singleton, allowing a new instance to be created */
 	reset: () => void;
+	/** Sets the singleton to a specific instance */
 	set: (newInstance: SingletonClass) => void;
 } => {
 	let instance: SingletonClass | undefined;
@@ -57,10 +73,30 @@ export const createSingletonProxy = <
 	return { proxy, reset, set };
 };
 
+/**
+ * Converts a Rapier quaternion to a Three.js quaternion.
+ *
+ * @param quaternion - The Rapier quaternion to convert
+ * @returns A Three.js Quaternion with the same values
+ */
 export function rapierQuaternionToQuaternion({ x, y, z, w }: RapierQuaternion) {
 	return _quaternion.set(x, y, z, w);
 }
 
+/**
+ * Converts an Angular Three vector representation to a Rapier Vector3.
+ * Supports arrays, numbers (uniform scale), and objects with x, y, z properties.
+ *
+ * @param v - The vector to convert (can be [x, y, z], a number, or {x, y, z})
+ * @returns A Rapier Vector3 instance
+ *
+ * @example
+ * ```typescript
+ * vector3ToRapierVector([1, 2, 3]); // RapierVector3(1, 2, 3)
+ * vector3ToRapierVector(5); // RapierVector3(5, 5, 5)
+ * vector3ToRapierVector({ x: 1, y: 2, z: 3 }); // RapierVector3(1, 2, 3)
+ * ```
+ */
 export function vector3ToRapierVector(v: NgtVector3) {
 	if (Array.isArray(v)) {
 		return new RapierVector3(v[0], v[1], v[2]);
@@ -73,6 +109,19 @@ export function vector3ToRapierVector(v: NgtVector3) {
 	return new RapierVector3(v.x, v.y, v.z);
 }
 
+/**
+ * Converts an Angular Three quaternion representation to a Rapier Quaternion.
+ * Supports arrays and objects with x, y, z, w properties.
+ *
+ * @param v - The quaternion to convert (can be [x, y, z, w] or {x, y, z, w})
+ * @returns A Rapier Quaternion instance
+ *
+ * @example
+ * ```typescript
+ * quaternionToRapierQuaternion([0, 0, 0, 1]); // Identity quaternion
+ * quaternionToRapierQuaternion({ x: 0, y: 0, z: 0, w: 1 }); // Identity quaternion
+ * ```
+ */
 export function quaternionToRapierQuaternion(v: NgtQuaternion) {
 	if (Array.isArray(v)) {
 		return new RapierQuaternion(v[0], v[1], v[2], v[3]);
@@ -147,6 +196,21 @@ function getColliderArgsFromGeometry(
 	return { args: [], offset: new THREE.Vector3() };
 }
 
+/**
+ * Creates collider options by traversing child meshes of an object and generating
+ * appropriate collider configurations based on their geometries.
+ *
+ * @param object - The parent Object3D to traverse for meshes
+ * @param options - The rigid body options containing collider type and other settings
+ * @param ignoreMeshColliders - Whether to skip meshes that are children of mesh colliders
+ * @returns Array of collider configurations with shape, args, position, rotation, and scale
+ *
+ * @example
+ * ```typescript
+ * const colliderOptions = createColliderOptions(rigidBodyObject, { colliders: 'cuboid' });
+ * // Returns array of collider configs for each mesh child
+ * ```
+ */
 export function createColliderOptions(
 	object: THREE.Object3D,
 	options: NgtrRigidBodyOptions,

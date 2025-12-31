@@ -8,6 +8,19 @@ import { NgtrAttactorOptions } from './attractor';
 
 const _v3 = new THREE.Vector3();
 
+/**
+ * Creates debug visualization for an attractor.
+ * Shows a sphere at the attractor position with normals indicating the range.
+ * Blue indicates attraction, red indicates repulsion.
+ *
+ * This is automatically called by NgtrAttractor when physics debug mode is enabled.
+ *
+ * @param object - The Object3D representing the attractor position
+ * @param options - Getter function for attractor options
+ * @param injector - Optional injector for dependency injection context
+ *
+ * @internal
+ */
 export function attractorDebug(object: THREE.Object3D, options: () => NgtrAttactorOptions, injector?: Injector) {
 	return assertInjector(attractorDebug, injector, () => {
 		const physics = inject(NgtrPhysics);

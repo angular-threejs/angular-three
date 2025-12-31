@@ -59,6 +59,18 @@ const colliderDefaultOptions: NgtrColliderOptions = {
 	contactSkin: 0,
 };
 
+/**
+ * Base directive for creating colliders in the physics simulation.
+ * This directive can be used to create any type of collider by specifying the shape.
+ *
+ * For convenience, use the specific collider directives like `NgtrCuboidCollider`,
+ * `NgtrBallCollider`, etc., which provide type-safe arguments.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [collider]="'cuboid'" [args]="[1, 1, 1]" [position]="[0, 5, 0]" />
+ * ```
+ */
 @Directive({ selector: 'ngt-object3D[collider]' })
 export class NgtrAnyCollider {
 	position = input<NgtVector3>([0, 0, 0]);
@@ -410,6 +422,7 @@ export class NgtrAnyCollider {
 	}
 }
 
+/** Maps rigid body type strings to Rapier body type enum values */
 const RIGID_BODY_TYPE_MAP: Record<NgtrRigidBodyType, number> = {
 	fixed: 1,
 	dynamic: 0,
@@ -417,6 +430,10 @@ const RIGID_BODY_TYPE_MAP: Record<NgtrRigidBodyType, number> = {
 	kinematicVelocity: 3,
 };
 
+/**
+ * Default options for rigid bodies.
+ * These values are used when specific options are not provided.
+ */
 export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 	canSleep: true,
 	linearVelocity: [0, 0, 0],
@@ -428,6 +445,38 @@ export const rigidBodyDefaultOptions: NgtrRigidBodyOptions = {
 	contactSkin: 0,
 };
 
+/**
+ * Component that creates a rigid body in the physics simulation.
+ * Rigid bodies can be dynamic (simulated), fixed (static), or kinematic (user-controlled).
+ *
+ * Child meshes automatically generate colliders based on their geometry.
+ * The collider type can be controlled via the `colliders` option.
+ *
+ * @example
+ * ```html
+ * <!-- Dynamic rigid body with automatic colliders -->
+ * <ngt-object3D rigidBody [position]="[0, 5, 0]">
+ *   <ngt-mesh>
+ *     <ngt-box-geometry />
+ *     <ngt-mesh-standard-material />
+ *   </ngt-mesh>
+ * </ngt-object3D>
+ *
+ * <!-- Fixed (static) rigid body -->
+ * <ngt-object3D rigidBody="fixed" [position]="[0, -1, 0]">
+ *   <ngt-mesh>
+ *     <ngt-plane-geometry [args]="[100, 100]" />
+ *   </ngt-mesh>
+ * </ngt-object3D>
+ *
+ * <!-- Kinematic rigid body -->
+ * <ngt-object3D rigidBody="kinematicPosition" #kinematicBody="rigidBody">
+ *   <ngt-mesh>
+ *     <ngt-sphere-geometry />
+ *   </ngt-mesh>
+ * </ngt-object3D>
+ * ```
+ */
 @Component({
 	selector: 'ngt-object3D[rigidBody]',
 	exportAs: 'rigidBody',

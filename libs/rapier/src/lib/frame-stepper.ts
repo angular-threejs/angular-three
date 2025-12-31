@@ -2,6 +2,12 @@ import { Directive, effect, input } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { NgtrPhysicsOptions } from './types';
 
+/**
+ * Internal directive that manages the physics simulation loop.
+ * Handles both "follow" mode (tied to render loop) and "independent" mode (separate loop).
+ *
+ * This directive is used internally by NgtrPhysics and should not be used directly.
+ */
 @Directive({ selector: 'ngtr-frame-stepper' })
 export class NgtrFrameStepper {
 	ready = input(false);

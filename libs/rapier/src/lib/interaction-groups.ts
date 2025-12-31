@@ -41,10 +41,35 @@ function bitmask(groups: number | number[]): InteractionGroups {
 	return [groups].flat().reduce((acc, layer) => acc | (1 << layer), 0);
 }
 
+/**
+ * Injection token for handlers that set collision groups on colliders.
+ * Used internally by rigid bodies and attractors to apply interaction groups.
+ */
 export const COLLISION_GROUPS_HANDLER = new InjectionToken<
 	() => undefined | ((interactionGroups: InteractionGroups) => void)
 >('COLLISION_GROUPS_HANDLER');
 
+/**
+ * Directive for setting collision/solver groups on a rigid body or collider.
+ * This allows filtering which objects can collide with each other.
+ *
+ * @example
+ * ```html
+ * <!-- Object in group 0, collides with groups 0 and 1 -->
+ * <ngt-object3D rigidBody [interactionGroups]="[[0], [0, 1]]">
+ *   <ngt-mesh>
+ *     <ngt-box-geometry />
+ *   </ngt-mesh>
+ * </ngt-object3D>
+ *
+ * <!-- Object in groups 0 and 1, collides with everything -->
+ * <ngt-object3D rigidBody [interactionGroups]="[[0, 1]]">
+ *   <ngt-mesh>
+ *     <ngt-sphere-geometry />
+ *   </ngt-mesh>
+ * </ngt-object3D>
+ * ```
+ */
 @Directive({ selector: 'ngt-object3D[interactionGroups]' })
 export class NgtrInteractionGroups {
 	inputs = input.required<[number | number[], (number | number[])?]>({ alias: 'interactionGroups' });

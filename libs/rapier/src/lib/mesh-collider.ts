@@ -14,6 +14,25 @@ import { NgtrAnyCollider, NgtrRigidBody } from './rigid-body';
 import type { NgtrRigidBodyAutoCollider } from './types';
 import { createColliderOptions } from './utils';
 
+/**
+ * Component that generates colliders based on child mesh geometries.
+ * Use this when you want specific collider generation for a group of meshes
+ * within a rigid body.
+ *
+ * This is useful when you want different parts of a complex object to have
+ * different collider types than the parent rigid body's automatic colliders.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D rigidBody [options]="{ colliders: false }">
+ *   <ngt-object3D [meshCollider]="'trimesh'">
+ *     <ngt-mesh>
+ *       <ngt-torus-geometry />
+ *     </ngt-mesh>
+ *   </ngt-object3D>
+ * </ngt-object3D>
+ * ```
+ */
 @Component({
 	selector: 'ngt-object3D[meshCollider]',
 	template: `

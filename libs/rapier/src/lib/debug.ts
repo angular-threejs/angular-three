@@ -11,6 +11,22 @@ import * as THREE from 'three';
 import { Group, LineBasicMaterial, LineSegments } from 'three';
 import { NgtrPhysics } from './physics';
 
+/**
+ * Debug visualization component for the physics world.
+ * Renders wireframe outlines of all colliders in the physics simulation.
+ *
+ * This component is automatically rendered when the `debug` option is set to `true`
+ * on the `NgtrPhysics` component. It updates every frame to show current collider positions.
+ *
+ * @example
+ * ```html
+ * <ngtr-physics [options]="{ debug: true }">
+ *   <ng-template>
+ *     <!-- Your physics scene -->
+ *   </ng-template>
+ * </ngtr-physics>
+ * ```
+ */
 @Component({
 	selector: 'ngtr-debug',
 	template: `

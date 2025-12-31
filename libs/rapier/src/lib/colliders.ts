@@ -25,6 +25,14 @@ const ANY_COLLIDER_HOST_DIRECTIVE = {
 	outputs: ['collisionEnter', 'collisionExit', 'intersectionEnter', 'intersectionExit', 'contactForce'],
 };
 
+/**
+ * Creates a cuboid (box) collider with specified half-extents.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [cuboidCollider]="[1, 0.5, 2]" [position]="[0, 0, 0]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[cuboidCollider]',
 	exportAs: 'cuboidCollider',
@@ -44,6 +52,14 @@ export class NgtrCuboidCollider {
 	}
 }
 
+/**
+ * Creates a capsule collider with specified half-height and radius.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [capsuleCollider]="[0.5, 0.25]" [position]="[0, 1, 0]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[capsuleCollider]',
 	exportAs: 'capsuleCollider',
@@ -63,6 +79,14 @@ export class NgtrCapsuleCollider {
 	}
 }
 
+/**
+ * Creates a spherical (ball) collider with specified radius.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [ballCollider]="[0.5]" [position]="[0, 2, 0]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[ballCollider]',
 	exportAs: 'ballCollider',
@@ -82,6 +106,15 @@ export class NgtrBallCollider {
 	}
 }
 
+/**
+ * Creates a convex hull collider from an array of vertices.
+ * The convex hull is computed from the provided points.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [convexHullCollider]="[vertices]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[convexHullCollider]',
 	exportAs: 'convexHullCollider',
@@ -101,6 +134,15 @@ export class NgtrConvexHullCollider {
 	}
 }
 
+/**
+ * Creates a heightfield collider for terrain-like surfaces.
+ * The heightfield is defined by a grid of height values.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [heightfieldCollider]="[width, height, heights, scale]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[heightfieldCollider]',
 	exportAs: 'heightfieldCollider',
@@ -120,6 +162,15 @@ export class NgtrHeightfieldCollider {
 	}
 }
 
+/**
+ * Creates a triangle mesh collider for exact collision shapes.
+ * Note: Trimesh colliders are computationally expensive and should be used sparingly.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [trimeshCollider]="[vertices, indices]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[trimeshCollider]',
 	exportAs: 'trimeshCollider',
@@ -139,6 +190,14 @@ export class NgtrTrimeshCollider {
 	}
 }
 
+/**
+ * Creates a polyline collider from connected line segments.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [polylineCollider]="[vertices, indices]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[polylineCollider]',
 	exportAs: 'polylineCollider',
@@ -158,6 +217,14 @@ export class NgtrPolylineCollider {
 	}
 }
 
+/**
+ * Creates a cuboid collider with rounded corners.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [roundCuboidCollider]="[1, 0.5, 2, 0.1]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[roundCuboidCollider]',
 	exportAs: 'roundCuboidCollider',
@@ -177,6 +244,14 @@ export class NgtrRoundCuboidCollider {
 	}
 }
 
+/**
+ * Creates a cylinder collider with specified half-height and radius.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [cylinderCollider]="[1, 0.5]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[cylinderCollider]',
 	exportAs: 'cylinderCollider',
@@ -196,6 +271,14 @@ export class NgtrCylinderCollider {
 	}
 }
 
+/**
+ * Creates a cylinder collider with rounded edges.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [roundCylinderCollider]="[1, 0.5, 0.05]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[roundCylinderCollider]',
 	exportAs: 'roundCylinderCollider',
@@ -215,6 +298,14 @@ export class NgtrRoundCylinderCollider {
 	}
 }
 
+/**
+ * Creates a cone collider with specified half-height and base radius.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [coneCollider]="[1, 0.5]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[coneCollider]',
 	exportAs: 'coneCollider',
@@ -234,6 +325,14 @@ export class NgtrConeCollider {
 	}
 }
 
+/**
+ * Creates a cone collider with rounded edges.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [roundConeCollider]="[1, 0.5, 0.05]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[roundConeCollider]',
 	exportAs: 'roundConeCollider',
@@ -253,6 +352,14 @@ export class NgtrRoundConeCollider {
 	}
 }
 
+/**
+ * Creates a convex mesh collider from vertices and indices.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [convexMeshCollider]="[vertices, indices]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[convexMeshCollider]',
 	exportAs: 'convexMeshCollider',
@@ -272,6 +379,14 @@ export class NgtrConvexMeshCollider {
 	}
 }
 
+/**
+ * Creates a convex hull collider with rounded edges.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [roundConvexHullCollider]="[vertices, indices, 0.05]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[roundConvexHullCollider]',
 	exportAs: 'roundConvexHullCollider',
@@ -291,6 +406,14 @@ export class NgtrRoundConvexHullCollider {
 	}
 }
 
+/**
+ * Creates a convex mesh collider with rounded edges.
+ *
+ * @example
+ * ```html
+ * <ngt-object3D [roundConvexMeshCollider]="[vertices, indices, 0.05]" />
+ * ```
+ */
 @Directive({
 	selector: 'ngt-object3D[roundConvexMeshCollider]',
 	exportAs: 'roundConvexMeshCollider',
