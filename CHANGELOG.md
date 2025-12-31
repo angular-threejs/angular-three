@@ -1,3 +1,7 @@
+## 4.0.0-next.119 (2025-12-31)
+
+This was a version bump only, there were no code changes.
+
 ## 4.0.0-next.118 (2025-12-31)
 
 ### 🩹 Fixes
