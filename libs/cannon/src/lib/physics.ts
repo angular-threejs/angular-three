@@ -18,19 +18,38 @@ import { beforeRender, injectStore, is, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
+/**
+ * Event types emitted by the Cannon.js physics worker.
+ * Maps event names to their corresponding worker event data types.
+ */
 export interface NgtcCannonWorkerEvents {
+	/** Emitted when two physics bodies collide */
 	collide: WorkerCollideEvent;
+	/** Emitted when two physics bodies begin overlapping */
 	collideBegin: WorkerCollideBeginEvent;
+	/** Emitted when two physics bodies stop overlapping */
 	collideEnd: WorkerCollideEndEvent;
+	/** Emitted each physics simulation frame with updated body positions and rotations */
 	frame: WorkerFrameMessage;
+	/** Emitted when a raycast hits a physics body */
 	rayhit: WorkerRayhitEvent;
 }
 
+/**
+ * Extended Cannon.js worker API with event subscription capabilities.
+ * Combines the base CannonWorkerAPI with typed event handling.
+ */
 export type NgtcCannonWorker = CannonWorkerAPI & {
+	/**
+	 * Subscribe to physics worker events.
+	 * @param event - The event type to listen for
+	 * @param cb - Callback function invoked with event data
+	 */
 	on: <K extends keyof NgtcCannonWorkerEvents>(
 		event: K,
 		cb: (data: NgtcCannonWorkerEvents[K]['data']) => void,
 	) => void;
+	/** Remove all event listeners from the worker */
 	removeAllListeners: () => void;
 };
 
@@ -71,14 +90,44 @@ type NgtcCallbackByType<T extends { type: string }> = {
 	[K in T['type']]?: T extends { type: K } ? (e: T) => void : never;
 };
 
+/**
+ * Map of UUID strings to their associated collision event callbacks.
+ * Used internally to dispatch collision events to the appropriate handlers.
+ */
 export type NgtcCannonEvents = Record<string, Partial<NgtcCallbackByType<NgtcCannonEvent>>>;
 
+/**
+ * Map of UUID strings to custom scale vectors.
+ * Allows overriding the default scale for specific physics bodies.
+ */
 export type ScaleOverrides = Record<string, THREE.Vector3>;
 
+/**
+ * Configuration options for the physics simulation.
+ * Extends CannonWorkerProps with additional Angular-specific options.
+ */
 export interface NgtcPhysicsOptions extends CannonWorkerProps {
+	/**
+	 * Whether the physics simulation is paused.
+	 * @default false
+	 */
 	isPaused?: boolean;
+	/**
+	 * Maximum number of sub-steps per frame for physics calculations.
+	 * Higher values provide more accurate simulation but cost more performance.
+	 * @default 10
+	 */
 	maxSubSteps?: number;
+	/**
+	 * Whether to call invalidate() after each physics frame update.
+	 * Set to true for on-demand rendering, false for continuous rendering.
+	 * @default true
+	 */
 	shouldInvalidate?: boolean;
+	/**
+	 * Fixed time step size for physics simulation in seconds.
+	 * @default 1/60 (60 FPS)
+	 */
 	stepSize?: number;
 }
 
@@ -106,10 +155,37 @@ type NgtsPhysicsUpdatableOptions = Extract<
 	'gravity' | 'iterations' | 'tolerance' | 'broadphase' | 'axisIndex'
 >;
 
+/**
+ * Angular directive that creates and manages a Cannon.js physics simulation.
+ * This directive must wrap all physics bodies and constraints in the scene.
+ *
+ * @example
+ * ```html
+ * <ngtc-physics [options]="{ gravity: [0, -9.81, 0] }">
+ *   <app-floor />
+ *   <app-falling-box />
+ * </ngtc-physics>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With debug visualization -->
+ * <ngtc-physics
+ *   [options]="{ gravity: [0, -9.81, 0], iterations: 10 }"
+ *   [debug]="{ enabled: true, color: 'red' }"
+ * >
+ *   <app-physics-scene />
+ * </ngtc-physics>
+ * ```
+ */
 @Directive({ selector: 'ngtc-physics' })
 export class NgtcPhysics {
 	private store = injectStore();
 
+	/**
+	 * Physics simulation configuration options.
+	 * @see NgtcPhysicsOptions for available options
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	private axisIndex = pick(this.options, 'axisIndex');
@@ -122,11 +198,17 @@ export class NgtcPhysics {
 	// @ts-expect-error - worker is not nullable, and we don't want to use ! operator.
 	private cannonWorker = signal<CannonWorkerAPI>(null);
 
+	/** Map of body UUIDs to their indices in the physics world */
 	bodies: { [uuid: string]: number } = {};
+	/** Map of body UUIDs to their collision event callbacks */
 	events: NgtcCannonEvents = {};
+	/** Map of body UUIDs to their Three.js Object3D references */
 	refs: Refs = {};
+	/** Map of body UUIDs to custom scale overrides */
 	scaleOverrides: ScaleOverrides = {};
+	/** Map of subscription IDs to their callback handlers */
 	subscriptions: Subscriptions = {};
+	/** Read-only signal providing access to the physics worker API */
 	worker = this.cannonWorker.asReadonly();
 
 	constructor() {

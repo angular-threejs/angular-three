@@ -43,6 +43,26 @@ function quaternionToRotation(callback: (v: Triplet) => void) {
 }
 
 let incrementingId = 0;
+
+/**
+ * Creates a subscription function for monitoring physics body property changes.
+ *
+ * @template T - The subscription property name type
+ * @param body - The Three.js Object3D associated with the physics body
+ * @param worker - The Cannon.js worker API instance
+ * @param subscriptions - Map to store active subscriptions
+ * @param type - The property type to subscribe to (e.g., 'position', 'velocity')
+ * @param index - Optional instance index for InstancedMesh bodies
+ * @param target - Subscription target, defaults to 'bodies'
+ * @returns Function that creates a subscription and returns an unsubscribe function
+ *
+ * @example
+ * ```typescript
+ * const subscribe = createSubscribe(body, worker, subscriptions, 'position');
+ * const unsubscribe = subscribe((position) => console.log(position));
+ * // Later: unsubscribe();
+ * ```
+ */
 export function createSubscribe<T extends SubscriptionName>(
 	body: THREE.Object3D,
 	worker: CannonWorkerAPI,
@@ -67,6 +87,18 @@ function makeTriplet(v: THREE.Vector3 | Triplet): Triplet {
 	return is.three<THREE.Vector3>(v, 'isVector3') ? [v.x, v.y, v.z] : v;
 }
 
+/**
+ * Prepares a Three.js Object3D with initial physics body properties.
+ * Sets the object's position, rotation, and userData from body props.
+ *
+ * @param object - The Three.js Object3D to prepare
+ * @param props - Body properties containing position, rotation, and userData
+ *
+ * @example
+ * ```typescript
+ * prepare(mesh, { position: [0, 5, 0], rotation: [0, Math.PI, 0] });
+ * ```
+ */
 export function prepare(
 	object: THREE.Object3D,
 	{ position = [0, 0, 0], rotation = [0, 0, 0], userData = {} }: BodyProps,
@@ -77,6 +109,14 @@ export function prepare(
 	object.updateMatrix();
 }
 
+/**
+ * Sets up collision event handlers for a physics body.
+ * Registers callbacks for collide, collideBegin, and collideEnd events.
+ *
+ * @param events - The events map to register handlers in
+ * @param props - Body props containing collision callback functions
+ * @param uuid - The unique identifier for the physics body
+ */
 export function setupCollision(
 	events: NgtcCannonEvents,
 	{ onCollide, onCollideBegin, onCollideEnd }: Partial<BodyProps>,
@@ -85,6 +125,22 @@ export function setupCollision(
 	events[uuid] = { collide: onCollide, collideBegin: onCollideBegin, collideEnd: onCollideEnd };
 }
 
+/**
+ * Creates the public API for controlling a physics body.
+ * Provides methods for applying forces, setting properties, and subscribing to changes.
+ *
+ * @param body - The Three.js Object3D associated with the physics body
+ * @param worker - The Cannon.js worker API instance
+ * @param context - Physics context containing subscriptions and scale overrides
+ * @returns The body's public API with all available methods
+ *
+ * @example
+ * ```typescript
+ * const api = makeBodyApi(mesh, worker, { subscriptions, scaleOverrides });
+ * api.applyForce([0, 100, 0], [0, 0, 0]);
+ * api.position.subscribe((pos) => console.log(pos));
+ * ```
+ */
 export function makeBodyApi(
 	body: THREE.Object3D,
 	worker: CannonWorkerAPI,
@@ -224,6 +280,21 @@ export function makeBodyApi(
 	return { ...makeApi(), at: (index: number) => cache[index] || (cache[index] = makeApi(index)) };
 }
 
+/**
+ * Default argument transformation functions for each physics body shape type.
+ * These functions convert Three.js-friendly arguments to Cannon.js-compatible formats.
+ *
+ * Each transformer handles the specific requirements of its shape type:
+ * - Plane: No arguments needed
+ * - Box: [width, height, depth], defaults to [1, 1, 1]
+ * - Trimesh: Passes through vertices and indices unchanged
+ * - Cylinder: No arguments needed (uses shape defaults)
+ * - Heightfield: Passes through height data unchanged
+ * - ConvexPolyhedron: Converts Vector3 arrays to triplet arrays
+ * - Particle: No arguments needed
+ * - Sphere: [radius], defaults to [1]
+ * - Compound: Passes through shape array unchanged
+ */
 export const defaultTransformArgs = {
 	Plane: (_: PlaneProps['args']) => [],
 	Box: (args: BoxProps['args'] = [1, 1, 1]) => args,
