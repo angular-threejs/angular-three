@@ -25,20 +25,27 @@ import { resolveRef } from './resolve-ref';
  * Outputs: click, dblclick, contextmenu, pointerup, pointerdown, pointerover,
  * pointerout, pointerenter, pointerleave, pointermove, pointermissed, pointercancel, wheel
  *
- * Input: ngtObjectEvents - The Three.js object to listen for events on
+ * Input: `objectEvents` - The Three.js object to listen for events on
  *
  * @example
  * ```typescript
  * @Component({
  *   hostDirectives: [{
  *     directive: NgtObjectEvents,
+ *     inputs: ['objectEvents: events'],
  *     outputs: ['click', 'pointerover', 'pointerout']
  *   }]
  * })
- * export class MyMesh {}
+ * export class MyMesh {
+ *   objectEvents = inject(NgtObjectEvents, { host: true });
+ *
+ *   constructor() {
+ *     this.objectEvents.events.set(this.meshRef);
+ *   }
+ * }
  * ```
  */
-@Directive({ selector: '[ngtObjectEvents]' })
+@Directive({ selector: '[objectEvents]' })
 export class NgtObjectEvents {
 	click = output<NgtThreeEvent<MouseEvent>>();
 	dblclick = output<NgtThreeEvent<MouseEvent>>();
@@ -55,17 +62,17 @@ export class NgtObjectEvents {
 	wheel = output<NgtThreeEvent<WheelEvent>>();
 
 	// NOTE: we use model here to allow for the hostDirective host to set this value
-	ngtObjectEvents = model<
+	events = model<
 		| ElementRef<THREE.Object3D>
 		| THREE.Object3D
 		| null
 		| undefined
 		| (() => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined)
-	>();
+	>(undefined, { alias: 'objectEvents' });
 
 	constructor() {
 		const obj = computed(() => {
-			const ngtObject = this.ngtObjectEvents();
+			const ngtObject = this.events();
 			if (typeof ngtObject === 'function') return ngtObject();
 			return ngtObject;
 		});

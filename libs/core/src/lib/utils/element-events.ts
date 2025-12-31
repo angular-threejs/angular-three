@@ -26,20 +26,27 @@ import { resolveRef } from './resolve-ref';
  * - Angular Three: created, attached, updated
  * - Three.js: added, removed, childadded, childremoved, change, disposed
  *
- * Input: ngtElementEvents - The element to listen for events on
+ * Input: `elementEvents` - The element to listen for events on
  *
  * @example
  * ```typescript
  * @Component({
  *   hostDirectives: [{
  *     directive: NgtElementEvents,
+ *     inputs: ['elementEvents: events'],
  *     outputs: ['attached', 'updated']
  *   }]
  * })
- * export class MyMesh {}
+ * export class MyMesh {
+ *   elementEvents = inject(NgtElementEvents, { host: true });
+ *
+ *   constructor() {
+ *     this.elementEvents.events.set(this.meshRef);
+ *   }
+ * }
  * ```
  */
-@Directive({ selector: '[ngtElementEvents]' })
+@Directive({ selector: '[elementEvents]' })
 export class NgtElementEvents<TElement extends object> {
 	created = output<TElement>();
 	attached = output<NgtAfterAttach<TElement>>();
@@ -53,13 +60,13 @@ export class NgtElementEvents<TElement extends object> {
 	disposed = output<any>();
 
 	// NOTE: we use model here to allow for the hostDirective host to set this value
-	ngtElementEvents = model<
+	events = model<
 		ElementRef<TElement> | TElement | null | undefined | (() => ElementRef<TElement> | TElement | null | undefined)
-	>();
+	>(undefined, { alias: 'elementEvents' });
 
 	constructor() {
 		const obj = computed(() => {
-			const ngtObject = this.ngtElementEvents();
+			const ngtObject = this.events();
 			if (typeof ngtObject === 'function') return ngtObject();
 			return ngtObject;
 		});
