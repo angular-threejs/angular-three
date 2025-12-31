@@ -14,12 +14,43 @@ import { progress } from './progress';
 
 const defaultDataInterpolation = (p: number) => `Loading ${p.toFixed(2)}%`;
 
+/**
+ * Configuration options for the NgtsLoader component.
+ */
 export interface NgtsLoaderOptions {
+	/**
+	 * CSS class to apply to the outer container element.
+	 * @default ''
+	 */
 	containerClass?: string;
+	/**
+	 * CSS class to apply to the inner wrapper element.
+	 * @default ''
+	 */
 	innerClass?: string;
+	/**
+	 * CSS class to apply to the progress bar element.
+	 * @default ''
+	 */
 	barClass?: string;
+	/**
+	 * CSS class to apply to the data/percentage text element.
+	 * @default ''
+	 */
 	dataClass?: string;
+	/**
+	 * Function to format the progress percentage display text.
+	 * @param value - Current progress value (0-100)
+	 * @returns Formatted string to display
+	 * @default (p) => `Loading ${p.toFixed(2)}%`
+	 */
 	dataInterpolation: (value: number) => string;
+	/**
+	 * Function to determine initial visibility state.
+	 * @param value - Current active loading state
+	 * @returns Whether the loader should be shown initially
+	 * @default (value) => value
+	 */
 	initialState: (value: boolean) => boolean;
 }
 
@@ -32,6 +63,27 @@ const defaultOptions: NgtsLoaderOptions = {
 	initialState: (value) => value,
 };
 
+/**
+ * A loading indicator component that displays asset loading progress.
+ *
+ * This component automatically tracks Three.js asset loading progress using the
+ * DefaultLoadingManager and displays an animated progress bar with percentage.
+ *
+ * The loader fades in when loading starts and fades out when complete.
+ * CSS classes can be customized via options for styling flexibility.
+ *
+ * @example
+ * ```html
+ * <!-- Basic usage -->
+ * <ngts-loader />
+ *
+ * <!-- With custom options -->
+ * <ngts-loader [options]="{
+ *   containerClass: 'my-loader',
+ *   dataInterpolation: (p) => `${Math.round(p)}% loaded`
+ * }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-loader',
 	template: `
@@ -63,6 +115,9 @@ export class NgtsLoader {
 	protected active = this.progressState.active;
 	protected progress = this.progressState.progress;
 
+	/**
+	 * Configuration options for the loader appearance and behavior.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	protected containerClass = pick(this.options, 'containerClass');

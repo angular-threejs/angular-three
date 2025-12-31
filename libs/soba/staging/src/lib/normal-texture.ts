@@ -19,15 +19,47 @@ import * as THREE from 'three';
 const NORMAL_ROOT = 'https://rawcdn.githack.com/pmndrs/drei-assets/7a3104997e1576f83472829815b00880d88b32fb';
 const LIST_URL = 'https://cdn.jsdelivr.net/gh/pmndrs/drei-assets@master/normals/normals.json';
 
+/**
+ * Settings for normal texture configuration.
+ */
 interface NgtsNormalTextureSettings {
+	/**
+	 * Texture repeat values [x, y].
+	 * @default [1, 1]
+	 */
 	repeat?: number[];
+	/**
+	 * Anisotropic filtering level.
+	 * @default 1
+	 */
 	anisotropy?: number;
+	/**
+	 * Texture offset values [x, y].
+	 * @default [0, 0]
+	 */
 	offset?: number[];
 }
 
 /**
- * @deprecated Use normalTexture instead. Will be removed in v5.0.0
+ * Injects a normal texture from the normals library.
+ * Normal textures add surface detail without additional geometry.
+ *
+ * @deprecated Use `normalTextureResource` instead. Will be removed in v5.0.0.
  * @since v4.0.0
+ *
+ * @param id - Reactive function returning normal texture ID (number index or string hash)
+ * @param config - Configuration options
+ * @param config.settings - Reactive function returning texture settings (repeat, anisotropy, offset)
+ * @param config.onLoad - Callback when texture is loaded
+ * @param config.injector - Optional injector for dependency injection
+ * @returns Object with url, texture signal, and numTot (total available normal textures)
+ *
+ * @example
+ * ```typescript
+ * const { texture } = injectNormalTexture(() => 42, {
+ *   settings: () => ({ repeat: [2, 2] })
+ * });
+ * ```
  */
 export function injectNormalTexture(
 	id: () => string | number = () => 0,
@@ -82,6 +114,23 @@ export function injectNormalTexture(
 	});
 }
 
+/**
+ * Creates a reactive resource for loading normal textures.
+ * Normal textures add surface detail without additional geometry.
+ *
+ * @param id - Reactive function returning normal texture ID (number index or string hash)
+ * @param config - Configuration options
+ * @param config.settings - Reactive function returning texture settings (repeat, anisotropy, offset)
+ * @param config.onLoad - Callback when texture is loaded
+ * @param config.injector - Optional injector for dependency injection
+ * @returns Object with url, resource, and numTot (total available normal textures)
+ *
+ * @example
+ * ```typescript
+ * const { resource } = normalTextureResource(() => 42);
+ * // Access texture: resource.value()
+ * ```
+ */
 export function normalTextureResource(
 	id: () => string | number = () => 0,
 	{
@@ -136,10 +185,31 @@ export function normalTextureResource(
 	});
 }
 
+/**
+ * Options for the NgtsNormalTexture structural directive.
+ * Extends NgtsNormalTextureSettings with an ID property.
+ */
 export interface NgtsNormalTextureOptions extends NgtsNormalTextureSettings {
+	/**
+	 * Normal texture ID (number index or string hash).
+	 * @default 0
+	 */
 	id?: number | string;
 }
 
+/**
+ * Structural directive for loading and using normal textures in templates.
+ * Provides the loaded texture resource through the template context.
+ *
+ * @example
+ * ```html
+ * <ng-template [normalTexture]="{ id: 42, repeat: [2, 2] }" let-resource>
+ *   @if (resource.hasValue()) {
+ *     <ngt-mesh-standard-material [normalMap]="resource.value()" />
+ *   }
+ * </ng-template>
+ * ```
+ */
 @Directive({ selector: 'ng-template[normalTexture]' })
 export class NgtsNormalTexture {
 	normalTexture = input<NgtsNormalTextureOptions>();

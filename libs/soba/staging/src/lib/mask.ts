@@ -14,8 +14,19 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Mesh } from 'three';
 
+/**
+ * Configuration options for the NgtsMask component.
+ */
 export interface NgtsMaskOptions extends Partial<NgtThreeElements['ngt-mesh']> {
+	/**
+	 * Whether to write color to the framebuffer.
+	 * @default false
+	 */
 	colorWrite: boolean;
+	/**
+	 * Whether to write depth to the depth buffer.
+	 * @default false
+	 */
 	depthWrite: boolean;
 }
 
@@ -24,6 +35,27 @@ const defaultOptions: NgtsMaskOptions = {
 	depthWrite: false,
 };
 
+/**
+ * Component that creates a stencil mask for selective rendering.
+ * Objects inside the mask can be shown/hidden using the `mask()` function.
+ *
+ * @example
+ * ```html
+ * <ngts-mask [id]="1">
+ *   <ngt-circle-geometry *args="[0.5, 64]" />
+ * </ngts-mask>
+ *
+ * <ngt-mesh [material]="maskedMaterial">
+ *   <ngt-box-geometry />
+ * </ngt-mesh>
+ * ```
+ *
+ * ```typescript
+ * maskedMaterial = new THREE.MeshStandardMaterial({
+ *   ...mask(() => 1)()
+ * });
+ * ```
+ */
 @Component({
 	selector: 'ngts-mask',
 	template: `
@@ -68,6 +100,26 @@ export class NgtsMask {
 	}
 }
 
+/**
+ * Creates stencil material properties for use with NgtsMask.
+ * Apply the returned properties to a material to make it respect mask boundaries.
+ *
+ * @param id - Reactive function returning the mask ID to match
+ * @param inverse - Reactive function returning whether to invert the mask (show outside instead of inside)
+ * @returns A computed signal containing stencil properties to spread onto a material
+ *
+ * @example
+ * ```typescript
+ * // Show content only inside the mask
+ * const insideMask = mask(() => 1);
+ *
+ * // Show content only outside the mask
+ * const outsideMask = mask(() => 1, () => true);
+ *
+ * // Apply to material
+ * Object.assign(myMaterial, insideMask());
+ * ```
+ */
 export function mask(id: () => number, inverse: () => boolean = () => false) {
 	return computed(() => {
 		const [_id, _inverse] = [id(), inverse()];

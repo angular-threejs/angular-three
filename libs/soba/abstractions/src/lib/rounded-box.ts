@@ -18,6 +18,14 @@ import { toCreasedNormals } from 'three-stdlib';
 
 const eps = 0.00001;
 
+/**
+ * Creates a rounded rectangle shape for extrusion.
+ *
+ * @param width - Width of the rectangle
+ * @param height - Height of the rectangle
+ * @param radius0 - Corner radius
+ * @returns A THREE.Shape representing the rounded rectangle
+ */
 function createShape(width: number, height: number, radius0: number) {
 	const shape = new THREE.Shape();
 	const radius = radius0 - eps;
@@ -28,14 +36,49 @@ function createShape(width: number, height: number, radius0: number) {
 	return shape;
 }
 
+/**
+ * Configuration options for the NgtsRoundedBox component.
+ */
 export interface NgtsRoundedBoxOptions extends Partial<NgtThreeElements['ngt-mesh']> {
+	/**
+	 * Width of the box (X-axis).
+	 * @default 1
+	 */
 	width: number;
+	/**
+	 * Height of the box (Y-axis).
+	 * @default 1
+	 */
 	height: number;
+	/**
+	 * Depth of the box (Z-axis).
+	 * @default 1
+	 */
 	depth: number;
+	/**
+	 * Radius of the rounded corners.
+	 * @default 0.05
+	 */
 	radius: number;
+	/**
+	 * Number of curve segments for corner smoothness.
+	 * @default 4
+	 */
 	smoothness: number;
+	/**
+	 * Number of bevel segments.
+	 * @default 4
+	 */
 	bevelSegments: number;
+	/**
+	 * Number of extrusion steps.
+	 * @default 1
+	 */
 	steps: number;
+	/**
+	 * Angle threshold for creased normals calculation (in radians).
+	 * @default 0.4
+	 */
 	creaseAngle: number;
 }
 
@@ -50,6 +93,28 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 	steps: 1,
 };
 
+/**
+ * A component that renders a box with rounded edges.
+ * Creates smooth, beveled corners on all edges of the box.
+ *
+ * @example
+ * ```html
+ * <ngts-rounded-box [options]="{ width: 2, height: 1, depth: 1, radius: 0.1 }">
+ *   <ngt-mesh-standard-material color="orange" />
+ * </ngts-rounded-box>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With higher smoothness for smoother corners -->
+ * <ngts-rounded-box
+ *   [options]="{ width: 1, height: 1, depth: 1, radius: 0.2, smoothness: 8 }"
+ *   (click)="onClick($event)"
+ * >
+ *   <ngt-mesh-basic-material color="blue" />
+ * </ngts-rounded-box>
+ * ```
+ */
 @Component({
 	selector: 'ngts-rounded-box',
 	template: `
@@ -83,7 +148,11 @@ const defaultOptions: NgtsRoundedBoxOptions = {
 	],
 })
 export class NgtsRoundedBox {
+	/**
+	 * Configuration options for the rounded box dimensions and appearance.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
 	protected parameters = omit(this.options, [
 		'width',
 		'height',
@@ -104,7 +173,14 @@ export class NgtsRoundedBox {
 	private steps = pick(this.options, 'steps');
 	private creaseAngle = pick(this.options, 'creaseAngle');
 
+	/**
+	 * Reference to the underlying Mesh Three.js object.
+	 */
 	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
+	/**
+	 * Reference to the underlying ExtrudeGeometry Three.js object.
+	 */
 	geometryRef = viewChild<ElementRef<THREE.ExtrudeGeometry>>('geometry');
 
 	protected shape = computed(() => {

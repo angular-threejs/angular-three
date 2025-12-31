@@ -15,6 +15,23 @@ import * as THREE from 'three';
 import { BufferAttribute, BufferGeometry, Points } from 'three';
 import { NgtPositionPoint, PositionPoint } from './position-point';
 
+/**
+ * A component representing a single point within an NgtsPointsInstances container.
+ *
+ * Each NgtsPoint is a virtual point that contributes to the parent Points object.
+ * Points can be individually positioned, colored, and sized while sharing the same
+ * material for optimal rendering performance.
+ *
+ * @example
+ * ```html
+ * <ngts-points-instances>
+ *   <ngt-points-material [size]="0.1" />
+ *   @for (item of items; track item.id) {
+ *     <ngts-point [options]="{ position: item.position, color: item.color, size: item.size }" />
+ *   }
+ * </ngts-points-instances>
+ * ```
+ */
 @Component({
 	selector: 'ngts-point',
 	template: `
@@ -26,10 +43,17 @@ import { NgtPositionPoint, PositionPoint } from './position-point';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsPoint {
+	/**
+	 * Options passed to the underlying PositionPoint, including position, color, and size.
+	 */
 	options = input({} as Partial<NgtPositionPoint>);
 
+	/**
+	 * Reference to the underlying PositionPoint element.
+	 */
 	positionPointRef = viewChild.required<ElementRef<PositionPoint>>('positionPoint');
 
+	/** @internal */
 	protected points = inject(NgtsPointsInstances);
 
 	constructor() {
@@ -42,6 +66,21 @@ export class NgtsPoint {
 	}
 }
 
+/**
+ * A component for rendering points from pre-computed buffer data.
+ *
+ * This component is optimized for cases where you have large arrays of point data
+ * that you want to render directly without the overhead of individual point components.
+ * Ideal for particle systems, data visualizations, or any scenario with many static
+ * or programmatically-updated points.
+ *
+ * @example
+ * ```html
+ * <ngts-points-buffer [positions]="positionsArray" [colors]="colorsArray" [sizes]="sizesArray">
+ *   <ngt-points-material [vertexColors]="true" />
+ * </ngts-points-buffer>
+ * ```
+ */
 @Component({
 	selector: 'ngts-points-buffer',
 	template: `
@@ -80,12 +119,34 @@ export class NgtsPoint {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsPointsBuffer {
+	/**
+	 * Float32Array containing point positions. Length should be divisible by stride.
+	 * For 3D points (stride=3): [x1, y1, z1, x2, y2, z2, ...]
+	 */
 	positions = input.required<Float32Array>();
+	/**
+	 * Optional Float32Array containing RGB color values for each point.
+	 * Length should be (positions.length / stride) * 3.
+	 */
 	colors = input<Float32Array>();
+	/**
+	 * Optional Float32Array containing size values for each point.
+	 * Length should be positions.length / stride.
+	 */
 	sizes = input<Float32Array>();
+	/**
+	 * The number of components per position (2 for 2D, 3 for 3D).
+	 * @default 3
+	 */
 	stride = input<2 | 3>(3);
+	/**
+	 * Additional options passed to the Points object.
+	 */
 	options = input({} as Partial<NgtPositionPoint>);
 
+	/**
+	 * Reference to the underlying THREE.Points element.
+	 */
 	pointsRef = viewChild.required<ElementRef<THREE.Points>>('points');
 
 	constructor() {
@@ -102,19 +163,49 @@ export class NgtsPointsBuffer {
 		});
 	}
 
+	/** @internal */
 	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 }
 
 const parentMatrix = new THREE.Matrix4();
 const position = new THREE.Vector3();
 
+/**
+ * Configuration options for the NgtsPointsInstances component.
+ */
 export interface NgtsPointsInstancesOptions extends Partial<NgtThreeElements['ngt-points']> {
+	/**
+	 * Limits the number of visible points. When set, only the first `range` points
+	 * are rendered. Useful for dynamic point counts without recreating buffers.
+	 */
 	range?: number;
+	/**
+	 * The maximum number of points that can be rendered.
+	 * This determines the size of the position, color, and size buffers.
+	 * @default 1000
+	 */
 	limit: number;
 }
 
 const defaultInstancesOptions: NgtsPointsInstancesOptions = { limit: 1000 };
 
+/**
+ * A component that efficiently renders many individual points with per-point control.
+ *
+ * Unlike NgtsPointsBuffer which uses pre-computed arrays, NgtsPointsInstances
+ * allows you to add individual NgtsPoint children that can be dynamically
+ * positioned, colored, and sized. Each point supports raycasting for interactivity.
+ *
+ * @example
+ * ```html
+ * <ngts-points-instances [options]="{ limit: 100 }">
+ *   <ngt-points-material [size]="0.1" [vertexColors]="true" />
+ *   @for (i of [0, 1, 2, 3, 4]; track i) {
+ *     <ngts-point [options]="{ position: [i * 2, 0, 0], color: 'red' }" />
+ *   }
+ * </ngts-points-instances>
+ * ```
+ */
 @Component({
 	selector: 'ngts-points-instances',
 	template: `
@@ -155,13 +246,25 @@ const defaultInstancesOptions: NgtsPointsInstancesOptions = { limit: 1000 };
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsPointsInstances {
+	/**
+	 * Configuration options for the points rendering.
+	 */
 	options = input(defaultInstancesOptions, { transform: mergeInputs(defaultInstancesOptions) });
+	/**
+	 * Computed parameters passed to the underlying Points object.
+	 */
 	parameters = omit(this.options, ['limit', 'range']);
 
+	/**
+	 * Reference to the underlying THREE.Points element.
+	 */
 	pointsRef = viewChild.required<ElementRef<THREE.Points>>('points');
 
 	private limit = pick(this.options, 'limit');
 
+	/**
+	 * Computed buffer arrays for positions, colors, and sizes.
+	 */
 	buffers = computed(() => {
 		const limit = this.limit();
 
@@ -172,6 +275,9 @@ export class NgtsPointsInstances {
 		};
 	});
 
+	/**
+	 * Array of registered point references. Used internally to track all points.
+	 */
 	positionPoints: Array<ElementRef<PositionPoint> | PositionPoint> = [];
 
 	constructor() {
@@ -218,6 +324,12 @@ export class NgtsPointsInstances {
 		});
 	}
 
+	/**
+	 * Registers a point with this container.
+	 *
+	 * @param ref - The PositionPoint reference or element to register
+	 * @returns A cleanup function to unregister the point
+	 */
 	subscribe(ref: ElementRef<PositionPoint> | PositionPoint) {
 		this.positionPoints.push(ref);
 		return () => {
@@ -225,5 +337,6 @@ export class NgtsPointsInstances {
 		};
 	}
 
+	/** @internal */
 	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 }

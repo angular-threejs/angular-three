@@ -18,17 +18,47 @@ import { NgtsAxisRotator } from './axis-rotator';
 import { NgtsPlaneSlider } from './plane-slider';
 import { NgtsScalingSphere } from './scaling-sphere';
 
+/**
+ * Parameters passed when a drag operation starts on the pivot controls.
+ */
 export interface OnDragStartParameters {
+	/**
+	 * The type of component being dragged.
+	 */
 	component: 'Arrow' | 'Slider' | 'Rotator' | 'Sphere';
+	/**
+	 * The axis index (0 = X, 1 = Y, 2 = Z).
+	 */
 	axis: 0 | 1 | 2;
+	/**
+	 * The world-space origin of the drag operation.
+	 */
 	origin: THREE.Vector3;
+	/**
+	 * Direction vectors relevant to the drag operation.
+	 */
 	directions: THREE.Vector3[];
 }
 
+/**
+ * Parameters passed during a drag operation on the pivot controls.
+ */
 export interface OnDragParameters {
+	/**
+	 * The current local transformation matrix.
+	 */
 	l: THREE.Matrix4;
+	/**
+	 * The delta (change) in local transformation.
+	 */
 	deltaL: THREE.Matrix4;
+	/**
+	 * The current world transformation matrix.
+	 */
 	w: THREE.Matrix4;
+	/**
+	 * The delta (change) in world transformation.
+	 */
 	deltaW: THREE.Matrix4;
 }
 
@@ -54,56 +84,139 @@ const xDir = new THREE.Vector3(1, 0, 0);
 const yDir = new THREE.Vector3(0, 1, 0);
 const zDir = new THREE.Vector3(0, 0, 1);
 
+/**
+ * Configuration options for the NgtsPivotControls component.
+ *
+ * These options control the behavior, appearance, and constraints of the
+ * interactive pivot gizmo used for manipulating 3D objects.
+ */
 export interface NgtsPivotControlsOptions {
-	/** Enables/disables the control, true */
+	/**
+	 * Enables/disables the control.
+	 * @default true
+	 */
 	enabled: boolean;
-	/** Scale of the gizmo, 1 */
+	/**
+	 * Scale of the gizmo.
+	 * @default 1
+	 */
 	scale: number;
-	/** Width of the gizmo lines, this is a THREE.Line2 prop, 2.5 */
+	/**
+	 * Width of the gizmo lines (THREE.Line2 prop).
+	 * @default 4
+	 */
 	lineWidth: number;
-	/** If fixed is true is remains constant in size, scale is now in pixels, false */
+	/**
+	 * If true, the gizmo remains constant in screen size. Scale is then in pixels.
+	 * @default false
+	 */
 	fixed: boolean;
-	/** Pivot does not act as a group, it won't shift contents but can offset in position */
+	/**
+	 * Position offset of the pivot point. Does not shift content, only the gizmo position.
+	 * @default [0, 0, 0]
+	 */
 	offset: [number, number, number];
-	/** Starting rotation */
+	/**
+	 * Starting rotation of the gizmo in radians [x, y, z].
+	 * @default [0, 0, 0]
+	 */
 	rotation: [number, number, number];
 
-	/** Starting matrix */
+	/**
+	 * Starting transformation matrix. If provided, the group uses this matrix.
+	 */
 	matrix?: THREE.Matrix4;
-	/** BBAnchor, each axis can be between -1/0/+1 */
+	/**
+	 * Bounding box anchor point. Each axis can be -1 (min), 0 (center), or +1 (max).
+	 */
 	anchor?: [number, number, number];
-	/** If autoTransform is true, automatically apply the local transform on drag, true */
+	/**
+	 * If true, automatically applies the local transform on drag.
+	 * @default true
+	 */
 	autoTransform: boolean;
-	/** Allows you to switch individual axes off */
+	/**
+	 * Which axes are active and can be manipulated [x, y, z].
+	 * @default [true, true, true]
+	 */
 	activeAxes: [boolean, boolean, boolean];
 
-	/** Allows you to switch individual transformations off */
+	/**
+	 * Disables all translation arrows.
+	 * @default false
+	 */
 	disableAxes: boolean;
+	/**
+	 * Disables all plane sliders.
+	 * @default false
+	 */
 	disableSliders: boolean;
+	/**
+	 * Disables all rotation handles.
+	 * @default false
+	 */
 	disableRotations: boolean;
+	/**
+	 * Disables all scaling spheres.
+	 * @default false
+	 */
 	disableScaling: boolean;
 
-	/** Limits */
+	/**
+	 * Translation limits for each axis as [min, max] pairs. Undefined means no limit.
+	 */
 	translationLimits?: [[number, number] | undefined, [number, number] | undefined, [number, number] | undefined];
+	/**
+	 * Rotation limits for each axis as [min, max] pairs in radians. Undefined means no limit.
+	 */
 	rotationLimits?: [[number, number] | undefined, [number, number] | undefined, [number, number] | undefined];
+	/**
+	 * Scale limits for each axis as [min, max] pairs. Undefined means no limit.
+	 */
 	scaleLimits?: [[number, number] | undefined, [number, number] | undefined, [number, number] | undefined];
 
-	/** RGB colors */
+	/**
+	 * Colors for the X, Y, and Z axes.
+	 * @default ['#ff2060', '#20df80', '#2080ff']
+	 */
 	axisColors: [string | number, string | number, string | number];
-	/** Color of the hovered item */
+	/**
+	 * Color when a gizmo element is hovered.
+	 * @default '#ffff40'
+	 */
 	hoveredColor: string | number;
-	/** HTML value annotations, default: false */
+	/**
+	 * Whether to show HTML value annotations during drag.
+	 * @default false
+	 */
 	annotations: boolean;
-	/** CSS Classname applied to the HTML annotations */
+	/**
+	 * CSS class name applied to the HTML annotations.
+	 */
 	annotationsClass?: string;
-	/** Set this to false if you want the gizmo to be visible through faces */
+	/**
+	 * Whether the gizmo should be occluded by scene geometry.
+	 * @default true
+	 */
 	depthTest: boolean;
 	/**
-	 * default: 500
+	 * Render order for the gizmo.
+	 * @default 500
 	 */
 	renderOrder: number;
+	/**
+	 * Opacity of the gizmo elements.
+	 * @default 1
+	 */
 	opacity?: number;
+	/**
+	 * Whether the gizmo is visible.
+	 * @default true
+	 */
 	visible: boolean;
+	/**
+	 * Custom user data to attach to gizmo meshes.
+	 */
 	userData?: NgtAnyRecord;
 }
 
@@ -129,6 +242,39 @@ const defaultOptions: NgtsPivotControlsOptions = {
 	renderOrder: 500,
 };
 
+/**
+ * A component that provides an interactive pivot-style gizmo for manipulating 3D objects.
+ *
+ * NgtsPivotControls creates a multi-axis gizmo with arrows for translation, plane sliders
+ * for 2D movement, rotators for rotation, and spheres for scaling. The gizmo can be
+ * customized to enable/disable specific transformation types and constrained with limits.
+ *
+ * @example
+ * ```html
+ * <ngts-pivot-controls [options]="{ scale: 0.5 }">
+ *   <ngt-mesh>
+ *     <ngt-box-geometry />
+ *     <ngt-mesh-standard-material />
+ *   </ngt-mesh>
+ * </ngts-pivot-controls>
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-pivot-controls
+ *   [options]="{
+ *     disableRotations: true,
+ *     disableScaling: true,
+ *     translationLimits: [[-1, 1], undefined, undefined]
+ *   }"
+ *   (dragged)="onDrag($event)"
+ *   (dragStarted)="onDragStart($event)"
+ *   (dragEnded)="onDragEnd()"
+ * >
+ *   <ngt-mesh />
+ * </ngts-pivot-controls>
+ * ```
+ */
 @Component({
 	selector: 'ngts-pivot-controls',
 	template: `
@@ -355,6 +501,11 @@ export class NgtsPivotControls {
 		});
 	}
 
+	/**
+	 * Called when a drag operation starts. Captures the initial transform state.
+	 *
+	 * @param parameters - Information about the drag operation
+	 */
 	onDragStart(parameters: OnDragStartParameters) {
 		const group = this.groupRef().nativeElement;
 		mL0.copy(group.matrix);
@@ -363,6 +514,11 @@ export class NgtsPivotControls {
 		this.store.snapshot.invalidate();
 	}
 
+	/**
+	 * Called during a drag operation. Updates the transform and emits the dragged event.
+	 *
+	 * @param mdW - The world-space delta transformation matrix
+	 */
 	onDrag(mdW: THREE.Matrix4) {
 		const [parent, group, autoTransform] = [
 			this.parentRef().nativeElement,
@@ -386,6 +542,9 @@ export class NgtsPivotControls {
 		this.store.snapshot.invalidate();
 	}
 
+	/**
+	 * Called when a drag operation ends. Emits the dragEnded event.
+	 */
 	onDragEnd() {
 		this.dragEnded.emit();
 		this.store.snapshot.invalidate();

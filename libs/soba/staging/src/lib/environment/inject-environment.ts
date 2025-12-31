@@ -7,8 +7,19 @@ import {
 } from './environment-resource';
 
 /**
- * @deprecated use environmentResource instead. Will be removed in v5.0.0
+ * Injects an environment texture resource into the current injection context.
+ *
+ * @deprecated Use `environmentResource` instead. Will be removed in v5.0.0.
  * @since v4.0.0
+ *
+ * @param options - Reactive function returning environment resource options
+ * @param config - Configuration object with optional injector
+ * @returns A signal containing the loaded texture
+ *
+ * @example
+ * ```typescript
+ * const texture = injectEnvironment(() => ({ preset: 'sunset' }));
+ * ```
  */
 export function injectEnvironment(
 	options: () => Partial<NgtsEnvironmentResourceOptions> = () => ({}),
@@ -20,10 +31,18 @@ export function injectEnvironment(
 	});
 }
 
+/**
+ * Preloads an environment texture.
+ * @deprecated Use `environmentResource.preload` instead. Will be removed in v5.0.0.
+ */
 injectEnvironment.preload = (options: () => Partial<NgtsEnvironmentResourceOptions> = () => ({})) => {
 	environmentResource.preload(options());
 };
 
+/**
+ * Clears a preloaded environment texture from cache.
+ * @deprecated Use `environmentResource.clear` instead. Will be removed in v5.0.0.
+ */
 injectEnvironment.clear = (clearOptions: { files?: string | string[]; preset?: NgtsEnvironmentPresets }) => {
 	environmentResource.clear(clearOptions);
 };

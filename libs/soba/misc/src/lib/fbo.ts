@@ -14,12 +14,59 @@ import { injectStore } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
+/**
+ * Parameters for creating a Frame Buffer Object (FBO).
+ */
 export interface NgtsFBOParams {
+	/**
+	 * Width of the render target in pixels, or RenderTargetOptions if height is not provided.
+	 * Defaults to canvas width × device pixel ratio.
+	 */
 	width?: number | THREE.RenderTargetOptions;
+
+	/**
+	 * Height of the render target in pixels.
+	 * Defaults to canvas height × device pixel ratio.
+	 */
 	height?: number;
+
+	/**
+	 * Additional THREE.RenderTargetOptions for the WebGLRenderTarget.
+	 */
 	settings?: THREE.RenderTargetOptions;
 }
 
+/**
+ * Creates a WebGLRenderTarget (Frame Buffer Object) for off-screen rendering.
+ *
+ * Automatically sized to the canvas dimensions if width/height not specified.
+ * The FBO is disposed on component destroy.
+ *
+ * @param params - Factory function returning FBO configuration
+ * @param options - Optional configuration
+ * @param options.injector - Custom injector for dependency injection context
+ * @returns A THREE.WebGLRenderTarget instance
+ *
+ * @example
+ * ```typescript
+ * // Basic usage - sized to canvas
+ * const renderTarget = fbo();
+ *
+ * // Custom size with multisampling
+ * const target = fbo(() => ({
+ *   width: 512,
+ *   height: 512,
+ *   settings: { samples: 4 }
+ * }));
+ *
+ * // Render to FBO
+ * beforeRender(({ gl, scene, camera }) => {
+ *   gl.setRenderTarget(target);
+ *   gl.render(scene, camera);
+ *   gl.setRenderTarget(null);
+ * });
+ * ```
+ */
 export function fbo(params: () => NgtsFBOParams = () => ({}), { injector }: { injector?: Injector } = {}) {
 	return assertInjector(fbo, injector, () => {
 		const store = injectStore();
@@ -78,13 +125,33 @@ export function fbo(params: () => NgtsFBOParams = () => ({}), { injector }: { in
 }
 
 /**
- * @deprecated use fbo instead. Will be removed in v5.0.0
+ * @deprecated Use `fbo` instead. Will be removed in v5.0.0.
  * @since v4.0.0
+ * @see fbo
  */
 export const injectFBO = fbo;
 
+/**
+ * Structural directive for creating an FBO with template context.
+ *
+ * Provides the created WebGLRenderTarget as implicit context to the template.
+ *
+ * @example
+ * ```html
+ * <ng-template [fbo]="{ width: 512, height: 512 }" let-target>
+ *   <!-- target is the WebGLRenderTarget -->
+ *   <ngt-mesh>
+ *     <ngt-plane-geometry />
+ *     <ngt-mesh-basic-material [map]="target.texture" />
+ *   </ngt-mesh>
+ * </ng-template>
+ * ```
+ */
 @Directive({ selector: 'ng-template[fbo]' })
 export class NgtsFBO {
+	/**
+	 * FBO configuration including width, height, and RenderTargetOptions.
+	 */
 	fbo = input({} as { width: NgtsFBOParams['width']; height: NgtsFBOParams['height'] } & THREE.RenderTargetOptions);
 
 	private template = inject(TemplateRef);
@@ -103,6 +170,10 @@ export class NgtsFBO {
 		});
 	}
 
+	/**
+	 * Type guard for template context.
+	 * Ensures the implicit context is typed as WebGLRenderTarget.
+	 */
 	static ngTemplateContextGuard(_: NgtsFBO, ctx: unknown): ctx is { $implicit: ReturnType<typeof fbo> } {
 		return true;
 	}

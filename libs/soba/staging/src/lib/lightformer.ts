@@ -13,13 +13,42 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Mesh, MeshBasicMaterial, PlaneGeometry, RingGeometry } from 'three';
 
+/**
+ * Configuration options for the NgtsLightformer component.
+ */
 export interface NgtsLightformerOptions {
+	/**
+	 * Texture map to apply to the lightformer.
+	 */
 	map?: THREE.Texture;
+	/**
+	 * Whether the material should be tone mapped.
+	 * @default false
+	 */
 	toneMapped: boolean;
+	/**
+	 * Color of the light emitted by the lightformer.
+	 * @default 'white'
+	 */
 	color: string;
+	/**
+	 * Shape of the lightformer geometry.
+	 * @default 'rect'
+	 */
 	form: 'circle' | 'ring' | 'rect';
+	/**
+	 * Scale of the lightformer. Can be uniform or per-axis.
+	 * @default 1
+	 */
 	scale: number | [number, number, number] | [number, number];
+	/**
+	 * Intensity multiplier for the light color.
+	 * @default 1
+	 */
 	intensity: number;
+	/**
+	 * Target position for the lightformer to look at.
+	 */
 	target?: NgtVector3;
 }
 
@@ -31,6 +60,15 @@ const defaultOptions: Partial<Omit<NgtThreeElements['ngt-mesh'], 'scale'>> & Ngt
 	intensity: 1,
 };
 
+/**
+ * Component for creating area lights in environment maps.
+ * Renders a simple mesh that emits light, useful inside environment portals.
+ *
+ * @example
+ * ```html
+ * <ngts-lightformer [options]="{ form: 'circle', color: 'white', intensity: 2 }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-lightformer',
 	template: `

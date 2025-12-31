@@ -15,10 +15,41 @@ import { Group } from 'three';
 const boundingBox = new THREE.Box3();
 const boundingBoxSize = new THREE.Vector3();
 
+/**
+ * Configuration options for the NgtsBBAnchor component.
+ * Extends the standard ngt-group element options.
+ */
 export interface NgtsBBAnchorOptions extends Partial<NgtThreeElements['ngt-group']> {
+	/**
+	 * The anchor point relative to the parent's bounding box.
+	 * Values range from -1 to 1 for each axis, where:
+	 * - (-1, -1, -1) is the bottom-left-back corner
+	 * - (1, 1, 1) is the top-right-front corner
+	 * - (0, 0, 0) is the center
+	 */
 	anchor: NgtVector3;
 }
 
+/**
+ * A component that anchors its children relative to the parent's bounding box.
+ * The anchor position is updated every frame based on the parent's current bounding box,
+ * making it useful for attaching labels, UI elements, or other objects to dynamic meshes.
+ *
+ * The component automatically reattaches itself to the parent's parent to avoid
+ * affecting the bounding box calculation.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-box-geometry />
+ *   <ngts-bb-anchor [options]="{ anchor: [1, 1, 1] }">
+ *     <ngts-html>
+ *       <span>Top-right-front corner</span>
+ *     </ngts-html>
+ *   </ngts-bb-anchor>
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-bb-anchor',
 	template: `

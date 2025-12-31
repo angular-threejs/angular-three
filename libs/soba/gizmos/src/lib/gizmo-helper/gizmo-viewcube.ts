@@ -27,18 +27,54 @@ import * as THREE from 'three';
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial } from 'three';
 import { NgtsGizmoHelperImpl } from './gizmo-helper';
 
+/**
+ * Tuple type for [x, y, z] coordinates.
+ */
 type XYZ = [number, number, number];
 
 const colors = { bg: '#f0f0f0', hover: '#999', text: 'black', stroke: 'black' };
 const defaultFaces = ['Right', 'Left', 'Top', 'Bottom', 'Front', 'Back'];
 
+/**
+ * Common configuration options shared between viewcube components.
+ *
+ * These options control the visual appearance of the viewcube faces and labels.
+ */
 export interface NgtsViewcubeCommonOptions {
+	/**
+	 * CSS font specification for face labels.
+	 * @default '20px Inter var, Arial, sans-serif'
+	 */
 	font: string;
+	/**
+	 * Opacity of the cube faces.
+	 * @default 1
+	 */
 	opacity: number;
+	/**
+	 * Background color of the cube faces.
+	 * @default '#f0f0f0'
+	 */
 	color: string;
+	/**
+	 * Color when a face is hovered.
+	 * @default '#999'
+	 */
 	hoverColor: string;
+	/**
+	 * Color of the face label text.
+	 * @default 'black'
+	 */
 	textColor: string;
+	/**
+	 * Color of the face border stroke.
+	 * @default 'black'
+	 */
 	strokeColor: string;
+	/**
+	 * Labels for each face in order: Right, Left, Top, Bottom, Front, Back.
+	 * @default ['Right', 'Left', 'Top', 'Bottom', 'Front', 'Back']
+	 */
 	faces: string[];
 }
 
@@ -52,6 +88,12 @@ const defaultFaceMaterialOptions: NgtsViewcubeCommonOptions = {
 	opacity: 1,
 };
 
+/**
+ * Internal component that renders a material for a viewcube face.
+ *
+ * This component creates a canvas texture with the face label and applies it
+ * as a material to one face of the viewcube.
+ */
 @Component({
 	selector: 'viewcube-face-material',
 	template: `
@@ -119,6 +161,12 @@ export class FaceMaterial {
 	}
 }
 
+/**
+ * Internal component that renders the main cube body of the viewcube.
+ *
+ * This component creates a box geometry with labeled faces that respond
+ * to hover and click interactions for camera orientation changes.
+ */
 @Component({
 	selector: 'viewcube-face-cube',
 	template: `
@@ -172,6 +220,12 @@ export class FaceCube {
 	protected readonly Math = Math;
 }
 
+/**
+ * Internal component that renders an interactive edge or corner section of the viewcube.
+ *
+ * This component creates clickable edge and corner regions that allow users
+ * to orient the camera to diagonal viewing angles.
+ */
 @Component({
 	selector: 'viewcube-edge-cube',
 	template: `
@@ -228,8 +282,29 @@ export class EdgeCube {
 	}
 }
 
+/**
+ * Configuration options for the NgtsGizmoViewcube component.
+ *
+ * Extends NgtsViewcubeCommonOptions with all properties optional.
+ */
 export type NgtsGizmoViewcubeOptions = Partial<NgtsViewcubeCommonOptions>;
 
+/**
+ * A component that renders a 3D cube-style orientation gizmo.
+ *
+ * The viewcube displays a cube with labeled faces (Front, Back, Left, Right, Top, Bottom)
+ * and clickable edges and corners for orienting the camera to standard or diagonal views.
+ * It is typically used inside NgtsGizmoHelper.
+ *
+ * @example
+ * ```html
+ * <ngts-gizmo-helper>
+ *   <ng-template gizmoHelperContent>
+ *     <ngts-gizmo-viewcube [options]="{ color: '#fff', hoverColor: '#ccc' }" />
+ *   </ng-template>
+ * </ngts-gizmo-helper>
+ * ```
+ */
 @Component({
 	selector: 'ngts-gizmo-viewcube',
 	template: `

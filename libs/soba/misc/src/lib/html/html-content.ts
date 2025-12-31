@@ -28,6 +28,9 @@ import {
 	objectZIndex,
 } from './utils';
 
+/**
+ * Valid CSS pointer-events property values.
+ */
 type PointerEventsProperties =
 	| 'auto'
 	| 'none'
@@ -41,6 +44,9 @@ type PointerEventsProperties =
 	| 'all'
 	| 'inherit';
 
+/**
+ * Configuration options for the NgtsHTMLContent component.
+ */
 export interface NgtsHTMLContentOptions {
 	/**
 	 * Epsilon for position/zoom change detection.
@@ -218,6 +224,10 @@ const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
 	host: { 'data-ngts-html-content': '' },
 })
 export class NgtsHTMLContent extends NgtHTML {
+	/**
+	 * Content positioning and behavior options.
+	 * Aliased as `htmlContent` for use with the `[htmlContent]` attribute selector.
+	 */
 	options = input(defaultHtmlContentOptions, {
 		transform: mergeInputs(defaultHtmlContentOptions),
 		alias: 'htmlContent',
@@ -233,8 +243,11 @@ export class NgtsHTMLContent extends NgtHTML {
 	 */
 	occluded = output<boolean>();
 
+	/** Reference to outer transform container (transform mode only) */
 	transformOuterRef = viewChild<ElementRef<HTMLDivElement>>('transformOuter');
+	/** Reference to inner transform container (transform mode only) */
 	transformInnerRef = viewChild<ElementRef<HTMLDivElement>>('transformInner');
+	/** Reference to the content container div */
 	containerRef = viewChild<ElementRef<HTMLDivElement>>('container');
 
 	protected html = inject(NgtsHTMLImpl);

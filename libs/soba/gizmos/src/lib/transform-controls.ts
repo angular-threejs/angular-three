@@ -24,30 +24,119 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { TransformControls } from 'three-stdlib';
 
+/**
+ * Internal interface for controls with an enabled property.
+ */
 interface ControlsProto {
 	enabled: boolean;
 }
 
+/**
+ * Type representing the TransformControls Three.js element.
+ */
 export type NgtsTransformControlsObject = NgtThreeElement<typeof TransformControls>;
 
+/**
+ * Configuration options for the NgtsTransformControls component.
+ *
+ * These options control the behavior and appearance of the transform gizmo
+ * used for manipulating 3D objects in the scene.
+ */
 export type NgtsTransformControlsOptions = Partial<NgtsTransformControlsObject> &
 	Partial<NgtThreeElements['ngt-group']> & {
+		/**
+		 * Whether the controls are enabled.
+		 * @default true
+		 */
 		enabled?: boolean;
+		/**
+		 * Restricts transformation to a specific axis ('X', 'Y', 'Z', 'XY', 'YZ', 'XZ', 'XYZ').
+		 */
 		axis?: string | null;
+		/**
+		 * The DOM element to attach controls to.
+		 */
 		domElement?: HTMLElement;
+		/**
+		 * The transformation mode.
+		 * @default 'translate'
+		 */
 		mode?: 'translate' | 'rotate' | 'scale';
+		/**
+		 * Snap increment for translation in units.
+		 */
 		translationSnap?: number | null;
+		/**
+		 * Snap increment for rotation in radians.
+		 */
 		rotationSnap?: number | null;
+		/**
+		 * Snap increment for scaling.
+		 */
 		scaleSnap?: number | null;
+		/**
+		 * The coordinate space for transformations.
+		 * @default 'world'
+		 */
 		space?: 'world' | 'local';
+		/**
+		 * The size of the gizmo.
+		 * @default 1
+		 */
 		size?: number;
+		/**
+		 * Whether to show the X axis handle.
+		 * @default true
+		 */
 		showX?: boolean;
+		/**
+		 * Whether to show the Y axis handle.
+		 * @default true
+		 */
 		showY?: boolean;
+		/**
+		 * Whether to show the Z axis handle.
+		 * @default true
+		 */
 		showZ?: boolean;
+		/**
+		 * The camera to use for the controls.
+		 */
 		camera?: THREE.Camera;
+		/**
+		 * Whether to make these the default controls in the store.
+		 * @default false
+		 */
 		makeDefault?: boolean;
 	};
 
+/**
+ * A component that provides interactive transform controls for manipulating 3D objects.
+ *
+ * NgtsTransformControls wraps Three.js TransformControls to provide an interactive
+ * gizmo for translating, rotating, and scaling objects in the scene. It can be
+ * attached to a specific object or wrap content as a group.
+ *
+ * @example
+ * ```html
+ * <ngts-transform-controls [options]="{ mode: 'translate' }">
+ *   <ngt-mesh>
+ *     <ngt-box-geometry />
+ *     <ngt-mesh-standard-material />
+ *   </ngt-mesh>
+ * </ngts-transform-controls>
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-transform-controls
+ *   [object]="meshRef"
+ *   [options]="{ mode: 'rotate', showX: false }"
+ *   (change)="onTransform($event)"
+ *   (objectChange)="onObjectChange($event)"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-transform-controls',
 	template: `

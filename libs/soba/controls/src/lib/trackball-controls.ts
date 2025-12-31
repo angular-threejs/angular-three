@@ -21,10 +21,39 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { TrackballControls } from 'three-stdlib';
 
+/**
+ * Configuration options for the NgtsTrackballControls component.
+ *
+ * Extends the standard TrackballControls options with Angular-specific
+ * configuration for camera control, DOM element binding, and performance settings.
+ */
 export type NgtsTrackballControlsOptions = Omit<
 	NgtOverwrite<
 		NgtThreeElement<typeof TrackballControls>,
-		{ target?: NgtVector3; camera?: THREE.Camera; domElement?: HTMLElement; regress: boolean; makeDefault: boolean }
+		{
+			/**
+			 * The target point to orbit around.
+			 */
+			target?: NgtVector3;
+			/**
+			 * The camera to control. Defaults to the store's camera.
+			 */
+			camera?: THREE.Camera;
+			/**
+			 * The DOM element to attach controls to. Defaults to the canvas.
+			 */
+			domElement?: HTMLElement;
+			/**
+			 * Whether to trigger performance regression when controls are active.
+			 * @default false
+			 */
+			regress: boolean;
+			/**
+			 * Whether to make these the default controls in the store.
+			 * @default false
+			 */
+			makeDefault: boolean;
+		}
 	>,
 	'attach' | 'addEventListener' | 'removeEventListener' | 'parameters' | '___ngt_args__'
 >;
@@ -34,6 +63,28 @@ const defaultOptions: NgtsTrackballControlsOptions = {
 	makeDefault: false,
 };
 
+/**
+ * A component that provides trackball-style camera controls for the Three.js scene.
+ *
+ * TrackballControls allow users to rotate, zoom, and pan the camera using mouse
+ * or touch input. Unlike OrbitControls, TrackballControls have no restrictions
+ * on vertical rotation, allowing the camera to flip upside down.
+ *
+ * @example
+ * ```html
+ * <ngts-trackball-controls [options]="{ makeDefault: true }" />
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-trackball-controls
+ *   [options]="{ regress: true }"
+ *   (changed)="onControlsChange($event)"
+ *   (started)="onDragStart($event)"
+ *   (ended)="onDragEnd($event)"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-trackball-controls',
 	template: `

@@ -18,16 +18,41 @@ import * as THREE from 'three';
 import { Group, OrthographicCamera } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
+/**
+ * Configuration options for the NgtsOrthographicCamera component.
+ *
+ * Extends Three.js orthographic camera properties with additional features
+ * for automatic aspect ratio handling, render-to-texture capabilities, and system camera registration.
+ */
 export interface NgtsOrthographicCameraOptions extends Partial<NgtThreeElements['ngt-orthographic-camera']> {
-	/** Registers the camera as the system default, fiber will start rendering with it */
+	/**
+	 * When true, registers this camera as the system default camera.
+	 * Angular Three will start rendering with this camera.
+	 * @default false
+	 */
 	makeDefault?: boolean;
-	/** Making it manual will stop responsiveness and you have to calculate aspect ratio yourself. */
+	/**
+	 * When true, disables automatic frustum calculation based on viewport size.
+	 * You must manually set left, right, top, and bottom properties.
+	 * @default false
+	 */
 	manual?: boolean;
-	/** Number of frames to render, Infinity */
+	/**
+	 * Number of frames to render to the FBO when using cameraContent.
+	 * Set to `Infinity` for continuous rendering, or a specific number
+	 * to limit renders (useful for static scenes).
+	 * @default Infinity
+	 */
 	frames: number;
-	/** Resolution of the FBO, 256 */
+	/**
+	 * Resolution of the frame buffer object (FBO) for render-to-texture.
+	 * @default 256
+	 */
 	resolution: number;
-	/** Optional environment map for functional use */
+	/**
+	 * Optional environment map texture to use as the scene background
+	 * during FBO rendering.
+	 */
 	envMap?: THREE.Texture;
 }
 
@@ -38,6 +63,29 @@ const defaultOptions: NgtsOrthographicCameraOptions = {
 	manual: false,
 };
 
+/**
+ * An orthographic camera component with automatic frustum sizing and render-to-texture support.
+ *
+ * This camera automatically calculates its frustum based on the viewport size unless
+ * `manual` mode is enabled. It supports render-to-texture via the `cameraContent` directive,
+ * allowing you to capture the camera's view as a texture.
+ *
+ * @example
+ * ```html
+ * <!-- Basic orthographic camera -->
+ * <ngts-orthographic-camera [options]="{ makeDefault: true, position: [0, 0, 10] }" />
+ *
+ * <!-- With render-to-texture -->
+ * <ngts-orthographic-camera [options]="{ resolution: 512 }">
+ *   <ng-template cameraContent let-texture>
+ *     <ngt-mesh>
+ *       <ngt-plane-geometry />
+ *       <ngt-mesh-basic-material [map]="texture" />
+ *     </ngt-mesh>
+ *   </ng-template>
+ * </ngts-orthographic-camera>
+ * ```
+ */
 @Component({
 	selector: 'ngts-orthographic-camera',
 	template: `
@@ -79,7 +127,13 @@ export class NgtsOrthographicCamera {
 	protected content = contentChild(TemplateRef);
 	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
+	/**
+	 * Reference to the orthographic camera element.
+	 */
 	cameraRef = viewChild.required<ElementRef<THREE.OrthographicCamera>>('camera');
+	/**
+	 * Reference to the group element containing the camera content.
+	 */
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private store = injectStore();

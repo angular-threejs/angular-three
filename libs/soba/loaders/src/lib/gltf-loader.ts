@@ -29,6 +29,9 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 	};
 }
 
+/**
+ * Maps a GLTF type to its corresponding URL input type.
+ */
 type InjectGLTFUrl<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = TGltf extends GLTF
 	? string
 	: TGltf extends GLTF[]
@@ -36,6 +39,10 @@ type InjectGLTFUrl<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = TGltf e
 		: TGltf extends Record<string, GLTF>
 			? Record<string, string>
 			: never;
+
+/**
+ * Maps a GLTF type to its result type with NgtObjectMap for easy access to nodes and materials.
+ */
 type InjectGLTFObjectMap<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = TGltf extends GLTF
 	? TGltf & NgtObjectMap
 	: TGltf extends Array<infer _GLTF extends GLTF>
@@ -45,6 +52,8 @@ type InjectGLTFObjectMap<TGltf extends GLTF | GLTF[] | Record<string, GLTF>> = T
 			: never;
 
 /**
+ * Loads GLTF/GLB 3D models with support for Draco compression and Meshopt optimization.
+ *
  * @deprecated Use gltfResource instead. Will be removed in v5.0.0
  * @since v4.0.0
  */
@@ -113,10 +122,43 @@ _injectGLTF.setDecoderPath = (path: string) => {
 	decoderPath = path;
 };
 
+/**
+ * Type definition for the injectGLTF function, including its static methods.
+ *
+ * @deprecated Use gltfResource instead. Will be removed in v5.0.0
+ */
 export type NgtsGLTFLoader = typeof _injectGLTF;
 
 /**
+ * Injectable function for loading GLTF/GLB 3D models.
+ *
+ * Supports Draco compression and Meshopt optimization out of the box.
+ * Returns a signal with the loaded GLTF data including an NgtObjectMap
+ * for easy access to nodes and materials by name.
+ *
+ * Includes static methods:
+ * - `preload`: Preload models into cache
+ * - `setDecoderPath`: Set custom Draco decoder path
+ *
  * @deprecated Use gltfResource instead. Will be removed in v5.0.0
  * @since v4.0.0
+ *
+ * @example
+ * ```typescript
+ * // Basic usage
+ * const gltf = injectGLTF(() => '/models/robot.glb');
+ *
+ * // With typed nodes
+ * interface RobotGLTF extends GLTF {
+ *   nodes: { Head: THREE.Mesh; Body: THREE.Mesh };
+ * }
+ * const robot = injectGLTF<RobotGLTF>(() => '/models/robot.glb');
+ *
+ * // Access scene directly
+ * const scene = gltf.scene;
+ *
+ * // Preload
+ * injectGLTF.preload(() => '/models/robot.glb');
+ * ```
  */
 export const injectGLTF: NgtsGLTFLoader = _injectGLTF;

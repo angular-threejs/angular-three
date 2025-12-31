@@ -5,13 +5,32 @@ import * as THREE from 'three';
 import { LineMaterialParameters } from 'three-stdlib';
 import { NgtLine2, NgtLineMaterial, NgtsLine } from './line';
 
+/**
+ * Configuration options for the NgtsEdges component.
+ * Combines mesh properties, line material parameters, and edge-specific options.
+ */
 export type NgtsEdgesOptions = Partial<NgtThreeElements['ngt-mesh']> & {
+	/**
+	 * Angle threshold in degrees for edge detection.
+	 * Edges with angles greater than this value will be rendered.
+	 * @default 15
+	 */
 	threshold?: number;
+	/**
+	 * Width of the edge lines.
+	 * @default 1
+	 */
 	lineWidth?: number;
 } & Omit<LineMaterialParameters, 'vertexColors' | 'color'> &
 	Omit<Partial<NgtLine2>, 'geometry'> &
 	Omit<Partial<NgtLineMaterial>, 'color' | 'vertexColors'> & {
+		/**
+		 * Optional geometry to compute edges from. If not provided, uses parent mesh geometry.
+		 */
 		geometry?: THREE.BufferGeometry;
+		/**
+		 * Color of the edge lines.
+		 */
 		color?: THREE.ColorRepresentation;
 	};
 
@@ -20,6 +39,19 @@ const defaultOptions: NgtsEdgesOptions = {
 	threshold: 15,
 };
 
+/**
+ * A component that renders the edges of a mesh geometry as lines.
+ * Must be placed as a child of a mesh to automatically detect its geometry.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-box-geometry />
+ *   <ngt-mesh-basic-material />
+ *   <ngts-edges [options]="{ color: 'black', threshold: 15 }" />
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-edges',
 	template: `

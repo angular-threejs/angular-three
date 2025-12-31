@@ -14,8 +14,34 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { Object3D } from 'three';
 
+/**
+ * Extracts helper constructor arguments, excluding the first argument (the object being helped).
+ */
 type HelperArgs<T> = T extends [infer _, ...infer R] ? R : never;
 
+/**
+ * Creates a Three.js helper object for the given object and manages its lifecycle.
+ * The helper is automatically added to the scene, updated on each frame, and disposed on cleanup.
+ *
+ * @param object - Function returning the target object to attach the helper to
+ * @param helperConstructor - Function returning the helper class constructor
+ * @param options - Optional configuration object
+ * @param options.injector - Optional injector for dependency injection context
+ * @param options.args - Function returning additional constructor arguments for the helper
+ * @returns Signal containing the helper instance or null
+ *
+ * @example
+ * ```typescript
+ * // In a component
+ * meshRef = viewChild<ElementRef<Mesh>>('mesh');
+ *
+ * boxHelper = helper(
+ *   () => this.meshRef(),
+ *   () => BoxHelper,
+ *   { args: () => ['red'] }
+ * );
+ * ```
+ */
 export function helper<
 	TConstructor extends new (...args: any[]) => THREE.Object3D,
 	THelperInstance extends InstanceType<TConstructor> & { update: () => void; dispose: () => void },
@@ -66,11 +92,24 @@ export function helper<
 }
 
 /**
- * @deprecated use helper instead. Will be removed in v5.0.0
+ * @deprecated Use `helper` function instead. Will be removed in v5.0.0.
  * @since v4.0.0
  */
 export const injectHelper = helper;
 
+/**
+ * A component wrapper for attaching Three.js helper objects to their parent mesh.
+ * Automatically detects the parent object and creates the specified helper type.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-box-geometry />
+ *   <ngt-mesh-basic-material />
+ *   <ngts-helper [type]="BoxHelper" [options]="['royalblue']" />
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-helper',
 	template: `

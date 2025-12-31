@@ -29,8 +29,31 @@ const [q1, q2] = [new THREE.Quaternion(), new THREE.Quaternion()];
 const target = new THREE.Vector3();
 const targetPosition = new THREE.Vector3();
 
+/**
+ * A directive that marks a template as gizmo helper content.
+ *
+ * Use this directive on an ng-template to provide custom content for the
+ * gizmo helper. The template context provides access to the container object
+ * and the portal's injector.
+ *
+ * @example
+ * ```html
+ * <ngts-gizmo-helper>
+ *   <ng-template gizmoHelperContent let-container="container">
+ *     <ngts-gizmo-viewport />
+ *   </ng-template>
+ * </ngts-gizmo-helper>
+ * ```
+ */
 @Directive({ selector: 'ng-template[gizmoHelperContent]' })
 export class NgtsGizmoHelperContent {
+	/**
+	 * Type guard for the template context.
+	 *
+	 * @param _ - The directive instance
+	 * @param ctx - The template context
+	 * @returns True if the context matches the expected shape
+	 */
 	static ngTemplateContextGuard(
 		_: NgtsGizmoHelperContent,
 		ctx: unknown,
@@ -39,9 +62,21 @@ export class NgtsGizmoHelperContent {
 	}
 }
 
+/**
+ * Internal interface for controls with update and target capabilities.
+ */
 type ControlsProto = { update(delta?: number): void; target: THREE.Vector3 };
 
+/**
+ * Configuration options for the NgtsGizmoHelper component.
+ *
+ * These options control the positioning and rendering behavior of the gizmo helper.
+ */
 export interface NgtsGizmoHelperOptions {
+	/**
+	 * The position of the gizmo helper in the viewport.
+	 * @default 'bottom-right'
+	 */
 	alignment:
 		| 'top-left'
 		| 'top-right'
@@ -52,8 +87,19 @@ export interface NgtsGizmoHelperOptions {
 		| 'center-left'
 		| 'center-center'
 		| 'top-center';
+	/**
+	 * Margin from the edge of the viewport in pixels [x, y].
+	 * @default [80, 80]
+	 */
 	margin: [number, number];
+	/**
+	 * Render priority for the gizmo portal.
+	 * @default 1
+	 */
 	renderPriority: number;
+	/**
+	 * Whether to auto-clear the renderer before rendering the gizmo.
+	 */
 	autoClear?: boolean;
 }
 
@@ -63,6 +109,31 @@ const defaultOptions: NgtsGizmoHelperOptions = {
 	renderPriority: 1,
 };
 
+/**
+ * A component that displays an orientation gizmo helper in a corner of the viewport.
+ *
+ * The gizmo helper provides a visual indicator of the current camera orientation
+ * and allows users to click on axes to animate the camera to predefined views.
+ * It renders in a separate portal with its own orthographic camera.
+ *
+ * @example
+ * ```html
+ * <ngts-gizmo-helper [options]="{ alignment: 'bottom-right', margin: [80, 80] }">
+ *   <ng-template gizmoHelperContent>
+ *     <ngts-gizmo-viewport />
+ *   </ng-template>
+ * </ngts-gizmo-helper>
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-gizmo-helper [options]="{ alignment: 'top-left' }">
+ *   <ng-template gizmoHelperContent>
+ *     <ngts-gizmo-viewcube />
+ *   </ng-template>
+ * </ngts-gizmo-helper>
+ * ```
+ */
 @Component({
 	selector: 'ngts-gizmo-helper',
 	template: `
@@ -191,6 +262,11 @@ export class NgtsGizmoHelperImpl {
 		});
 	}
 
+	/**
+	 * Animates the main camera to look from a specific direction.
+	 *
+	 * @param direction - The direction vector to look from
+	 */
 	tweenCamera(direction: THREE.Vector3) {
 		const [defaultControls, invalidate, mainCamera] = [
 			this.store.snapshot.controls as unknown as ControlsProto,
@@ -232,4 +308,9 @@ export class NgtsGizmoHelperImpl {
 	}
 }
 
+/**
+ * Combined export of the gizmo helper component and content directive.
+ *
+ * Use this as an import to get both NgtsGizmoHelperImpl and NgtsGizmoHelperContent.
+ */
 export const NgtsGizmoHelper = [NgtsGizmoHelperImpl, NgtsGizmoHelperContent] as const;

@@ -11,6 +11,22 @@ import { is, NgtAnyRecord, NgtArgs, NgtAttachable, omit, pick } from 'angular-th
 import * as THREE from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 
+/**
+ * A wrapper component for three-custom-shader-material that allows extending
+ * existing Three.js materials with custom vertex and fragment shaders.
+ *
+ * @example
+ * ```html
+ * <ngts-custom-shader-material
+ *   [baseMaterial]="MeshStandardMaterial"
+ *   [options]="{
+ *     vertexShader: myVertexShader,
+ *     fragmentShader: myFragmentShader,
+ *     uniforms: { time: { value: 0 } }
+ *   }"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-custom-shader-material',
 	template: `
@@ -23,9 +39,24 @@ import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 	imports: [NgtArgs],
 })
 export class NgtsCustomShaderMaterial {
+	/**
+	 * The base Three.js material to extend. Can be a material instance, material class, or ElementRef to a material.
+	 */
 	baseMaterial = input.required<THREE.Material | typeof THREE.Material | ElementRef<THREE.Material>>();
+
+	/**
+	 * How to attach the material to its parent object.
+	 * @default 'material'
+	 */
 	attach = input<NgtAttachable>('material');
+
+	/**
+	 * Configuration options for the custom shader material including vertex/fragment shaders,
+	 * uniforms, and cache key.
+	 */
 	options = input({} as Omit<ConstructorParameters<typeof CustomShaderMaterial>[0], 'baseMaterial'>);
+
+	/** Material parameters excluding shader-specific options. */
 	parameters = omit(this.options, ['fragmentShader', 'vertexShader', 'uniforms', 'cacheKey']);
 
 	private base = computed(() => {
@@ -38,6 +69,7 @@ export class NgtsCustomShaderMaterial {
 	private uniforms = pick(this.options, 'uniforms');
 	private cacheKey = pick(this.options, 'cacheKey');
 
+	/** The computed CustomShaderMaterial instance that combines the base material with custom shaders. */
 	material = computed(() => {
 		const [base, fragmentShader, vertexShader, uniforms, cacheKey] = [
 			this.base(),

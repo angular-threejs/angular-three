@@ -4,10 +4,32 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { NgtsLine, NgtsLineOptions } from './line';
 
+/**
+ * Configuration options for the NgtsCatmullRomLine component.
+ */
 export interface NgtsCatmullRomLineOptions extends Omit<NgtsLineOptions, 'segments'> {
+	/**
+	 * The type of Catmull-Rom curve interpolation.
+	 * - 'centripetal': Produces smoother curves, avoids cusps and self-intersections
+	 * - 'chordal': Uses chord length parameterization
+	 * - 'catmullrom': Standard Catmull-Rom spline
+	 * @default 'centripetal'
+	 */
 	curveType: 'centripetal' | 'chordal' | 'catmullrom';
+	/**
+	 * Tension parameter for the curve (0 to 1). Higher values create tighter curves.
+	 * @default 0.5
+	 */
 	tension: number;
+	/**
+	 * Number of segments to divide the curve into for rendering.
+	 * @default 20
+	 */
 	segments: number;
+	/**
+	 * Whether the curve should be closed (connect end to start).
+	 * @default false
+	 */
 	closed: boolean;
 }
 
@@ -19,6 +41,18 @@ const defaultOptions: NgtsCatmullRomLineOptions = {
 	lineWidth: 1,
 };
 
+/**
+ * A line component that renders a smooth Catmull-Rom spline curve through given points.
+ * Supports vertex color interpolation and various curve parameterizations.
+ *
+ * @example
+ * ```html
+ * <ngts-catmull-rom-line
+ *   [points]="[[0, 0, 0], [1, 2, 0], [3, 1, 0], [4, 0, 0]]"
+ *   [options]="{ curveType: 'centripetal', tension: 0.5, closed: false, color: 'hotpink' }"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-catmull-rom-line',
 	template: `

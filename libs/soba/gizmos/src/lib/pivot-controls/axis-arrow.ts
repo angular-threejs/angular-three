@@ -19,6 +19,18 @@ import { NgtsPivotControls } from './pivot-controls';
 const vec1 = new THREE.Vector3();
 const vec2 = new THREE.Vector3();
 
+/**
+ * Calculates the offset distance along an axis from a click point to the current ray position.
+ *
+ * This function is used to determine how far the user has dragged along a specific axis
+ * by projecting the ray onto the plane defined by the click point and axis direction.
+ *
+ * @param clickPoint - The initial click point in world space
+ * @param normal - The axis direction vector (normalized)
+ * @param rayStart - The origin of the current pointer ray
+ * @param rayDir - The direction of the current pointer ray
+ * @returns The offset distance along the axis
+ */
 export function calculateOffset(
 	clickPoint: THREE.Vector3,
 	normal: THREE.Vector3,
@@ -47,6 +59,12 @@ export function calculateOffset(
 const upV = new THREE.Vector3(0, 1, 0);
 const offsetMatrix = new THREE.Matrix4();
 
+/**
+ * Internal component that renders an axis arrow handle for the pivot controls.
+ *
+ * This component creates a draggable arrow gizmo that allows translation along
+ * a single axis. It includes visual feedback on hover and optional value annotations.
+ */
 @Component({
 	selector: 'ngts-axis-arrow',
 	template: `

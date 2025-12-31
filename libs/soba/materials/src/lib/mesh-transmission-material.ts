@@ -25,32 +25,74 @@ import { MeshDiscardMaterial, MeshTransmissionMaterial } from 'angular-three-sob
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
+/**
+ * Constructor parameters for MeshTransmissionMaterial.
+ */
 export type MeshTransmissionMaterialOptions = Exclude<
 	ConstructorParameters<typeof MeshTransmissionMaterial>[0],
 	undefined
 >;
 
+/**
+ * Configuration options for the NgtsMeshTransmissionMaterial component.
+ */
 export type NgtsMeshTransmissionMaterialOptions = Partial<NgtThreeElements['ngt-mesh-physical-material']> &
 	Omit<MeshTransmissionMaterialOptions, 'buffer' | 'anisotropicBlur' | 'samples' | 'transmissionSampler'> & {
+		/**
+		 * Anisotropic blur amount for the transmission effect.
+		 */
 		anisotropicBlur?: number;
+
+		/**
+		 * Custom buffer texture. If not provided, an internal FBO is used.
+		 */
 		buffer?: THREE.Texture;
-		/** transmissionSampler, you can use the threejs transmission sampler texture that is
-		 *  generated once for all transmissive materials. The upside is that it can be faster if you
-		 *  use multiple MeshPhysical and Transmission materials, the downside is that transmissive materials
-		 *  using this can't see other transparent or transmissive objects, default: false */
+
+		/**
+		 * Use the Three.js transmission sampler texture that is generated once for all transmissive materials.
+		 * Faster with multiple transmissive materials, but they can't see other transparent objects.
+		 * @default false
+		 */
 		transmissionSampler: boolean;
-		/** Render the backside of the material (more cost, better results), default: false */
+
+		/**
+		 * Render the backside of the material for more accurate results (higher cost).
+		 * @default false
+		 */
 		backside: boolean;
-		/** Backside thickness (when backside is true), default: 0 */
+
+		/**
+		 * Thickness of the backside when backside rendering is enabled.
+		 * @default 0
+		 */
 		backsideThickness: number;
+
+		/**
+		 * Environment map intensity for the backside.
+		 * @default 1
+		 */
 		backsideEnvMapIntensity: number;
-		/** Resolution of the local buffer, default: undefined (fullscreen) */
+
+		/**
+		 * Resolution of the local buffer. Defaults to fullscreen if undefined.
+		 */
 		resolution?: number;
-		/** Resolution of the local buffer for backfaces, default: undefined (fullscreen) */
+
+		/**
+		 * Resolution of the local buffer for backfaces. Defaults to resolution if undefined.
+		 */
 		backsideResolution?: number;
-		/** Refraction samples, default: 6 */
+
+		/**
+		 * Number of refraction samples.
+		 * @default 10
+		 */
 		samples: number;
-		/** Buffer scene background (can be a texture, a cubetexture or a color), default: null */
+
+		/**
+		 * Background for the buffer scene (texture, cubetexture, or color).
+		 * @default null
+		 */
 		background?: THREE.Texture | THREE.Color | null;
 	};
 
@@ -65,6 +107,26 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 	samples: 10,
 };
 
+/**
+ * A physically-based transmission material for realistic glass, water, and other transparent surfaces.
+ * Extends MeshPhysicalMaterial with additional features like backside rendering,
+ * temporal reprojection, and anisotropic blur.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-sphere-geometry />
+ *   <ngts-mesh-transmission-material
+ *     [options]="{
+ *       backside: true,
+ *       thickness: 0.5,
+ *       chromaticAberration: 0.05,
+ *       anisotropicBlur: 0.1
+ *     }"
+ *   />
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-mesh-transmission-material',
 	template: `
@@ -88,7 +150,15 @@ const defaultOptions: NgtsMeshTransmissionMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshTransmissionMaterial {
+	/**
+	 * How to attach the material to its parent object.
+	 * @default 'material'
+	 */
 	attach = input<NgtAttachable>('material');
+
+	/**
+	 * Configuration options for the transmission material.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'buffer',
@@ -123,6 +193,7 @@ export class NgtsMeshTransmissionMaterial {
 	protected thickness = pick(this.options, 'thickness');
 	protected side = pick(this.options, 'side');
 
+	/** Reference to the underlying MeshTransmissionMaterial element. */
 	materialRef = viewChild<ElementRef<MeshTransmissionMaterial & MeshTransmissionMaterialOptions>>('material');
 
 	private backResolution = computed(() => this.backsideResolution() || this.resolution());

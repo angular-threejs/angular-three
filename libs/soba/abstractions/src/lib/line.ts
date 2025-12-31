@@ -20,19 +20,42 @@ import {
 	LineSegmentsGeometry,
 } from 'three-stdlib';
 
+/**
+ * Type definition for the Line2 Three.js element.
+ */
 export type NgtLine2 = NgtThreeElement<typeof Line2>;
+
+/**
+ * Type definition for the LineMaterial Three.js element.
+ */
 export type NgtLineMaterial = NgtThreeElement<typeof LineMaterial>;
 
+/**
+ * Configuration options for the NgtsLine component.
+ */
 export type NgtsLineOptions = Omit<LineMaterialParameters, 'vertexColors' | 'color'> &
 	Omit<Partial<NgtLine2>, '__ngt_args__'> &
 	Omit<Partial<NgtLineMaterial>, 'color' | 'vertexColors' | '__ngt_args__'> & {
-		/** Array of colors, [0, 0, 0] */
+		/**
+		 * Array of colors for vertex coloring. Each color can be a ColorRepresentation,
+		 * RGB tuple, or RGBA tuple (for transparency support).
+		 * @default undefined
+		 */
 		vertexColors?: Array<THREE.ColorRepresentation | [number, number, number] | [number, number, number, number]>;
-		/** Line width, 1 */
+		/**
+		 * Width of the line in pixels.
+		 * @default 1
+		 */
 		lineWidth: number;
-		/** Segments, false */
+		/**
+		 * Whether to render as line segments instead of a continuous line.
+		 * @default false
+		 */
 		segments: boolean;
-		/** Color */
+		/**
+		 * Color of the line.
+		 * @default 0xffffff
+		 */
 		color?: THREE.ColorRepresentation;
 	};
 
@@ -42,6 +65,27 @@ const defaultOptions: NgtsLineOptions = {
 	color: 0xffffff,
 };
 
+/**
+ * A component for rendering lines with configurable width and styling using Line2 from three-stdlib.
+ * Supports both continuous lines and line segments, with optional vertex coloring.
+ *
+ * @example
+ * ```html
+ * <ngts-line
+ *   [points]="[[0, 0, 0], [1, 1, 1], [2, 0, 0]]"
+ *   [options]="{ color: 'red', lineWidth: 2 }"
+ * />
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With vertex colors -->
+ * <ngts-line
+ *   [points]="points"
+ *   [options]="{ vertexColors: ['red', 'green', 'blue'], lineWidth: 3 }"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-line',
 	template: `
@@ -66,9 +110,17 @@ const defaultOptions: NgtsLineOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsLine {
+	/**
+	 * Array of points defining the line path. Accepts Vector3, Vector2, coordinate tuples, or flat numbers.
+	 */
 	points =
 		input.required<Array<THREE.Vector3 | THREE.Vector2 | [number, number, number] | [number, number] | number>>();
+
+	/**
+	 * Configuration options for the line appearance and behavior.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
 	protected parameters = omit(this.options, [
 		'color',
 		'vertexColors',
@@ -78,6 +130,9 @@ export class NgtsLine {
 		'dashed',
 	]);
 
+	/**
+	 * Reference to the underlying Line2 or LineSegments2 Three.js object.
+	 */
 	lineRef = viewChild<ElementRef<Line2 | LineSegments2>>('line');
 
 	private store = injectStore();
@@ -99,7 +154,10 @@ export class NgtsLine {
 	protected actualLineWidth = computed(() => this.linewidth() ?? this.lineWidth() ?? 1);
 	protected itemSize = computed(() => ((this.vertexColors()?.[0] as number[] | undefined)?.length === 4 ? 4 : 3));
 
-	// other Line components access this
+	/**
+	 * Computed LineGeometry or LineSegmentsGeometry based on the points and vertex colors.
+	 * Other line components (like NgtsQuadraticBezierLine) access this to update positions.
+	 */
 	lineGeometry = computed(() => {
 		const geom = this.segments() ? new LineSegmentsGeometry() : new LineGeometry();
 		const pValues = this.points().map((p) => {
@@ -133,7 +191,12 @@ export class NgtsLine {
 		return geom;
 	});
 
-	// NOTE: use attached event to call computeLineDistances to ensure the geometry has been attached
+	/**
+	 * Callback invoked when geometry is attached to the line.
+	 * Computes line distances required for dashed lines to render correctly.
+	 *
+	 * @param event - The attach event containing the parent Line2 or LineSegments2
+	 */
 	onGeometryAttached({ parent }: NgtAfterAttach<LineGeometry, Line2 | LineSegments2>) {
 		parent.computeLineDistances();
 	}

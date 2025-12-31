@@ -18,6 +18,19 @@ import { NgtsPivotControls } from './pivot-controls';
 const vec1 = new THREE.Vector3();
 const vec2 = new THREE.Vector3();
 
+/**
+ * Calculates the offset distance along an axis from a click point to the current ray position.
+ *
+ * This function is used to determine how far the user has dragged along a specific axis
+ * by projecting the ray onto the plane defined by the click point and axis direction.
+ * Used for calculating scale factor based on drag distance.
+ *
+ * @param clickPoint - The initial click point in world space
+ * @param normal - The axis direction vector (normalized)
+ * @param rayStart - The origin of the current pointer ray
+ * @param rayDir - The direction of the current pointer ray
+ * @returns The offset distance along the axis
+ */
 export function calculateOffset(
 	clickPoint: THREE.Vector3,
 	normal: THREE.Vector3,
@@ -47,6 +60,13 @@ const upV = new THREE.Vector3(0, 1, 0);
 const scaleV = new THREE.Vector3();
 const scaleMatrix = new THREE.Matrix4();
 
+/**
+ * Internal component that renders a scaling sphere handle for the pivot controls.
+ *
+ * This component creates a sphere at the end of an axis that allows non-uniform
+ * scaling along that axis. Dragging the sphere away from the origin increases scale,
+ * while dragging toward the origin decreases it. Shift key enables snapping.
+ */
 @Component({
 	selector: 'ngts-scaling-sphere',
 	template: `

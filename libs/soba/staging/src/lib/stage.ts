@@ -21,6 +21,10 @@ import { NgtsEnvironment, NgtsEnvironmentOptions } from './environment/environme
 import { type NgtsEnvironmentPresets } from './environment/environment-resource';
 import { NgtsRandomizedLights, NgtsRandomizedLightsOptions } from './randomized-lights';
 
+/**
+ * Predefined lighting presets for the stage.
+ * Each preset defines main and fill light positions as [x, y, z] multipliers of the scene radius.
+ */
 const presets = {
 	rembrandt: { main: [1, 2, 1], fill: [-2, -0.5, -2] },
 	portrait: { main: [-1, 2, 0.5], fill: [-1, 0.5, -1.5] },
@@ -28,37 +32,87 @@ const presets = {
 	soft: { main: [-2, 4, 4], fill: [-1, 0.5, -1.5] },
 } as const;
 
+/**
+ * Configuration options for stage shadows.
+ * Combines options from both accumulative and contact shadow components.
+ */
 type NgtsStageShadowsOptions = Partial<NgtsAccumulativeShadowsOptions> &
 	Partial<NgtsRandomizedLightsOptions> &
 	Partial<NgtsContactShadowsOptions> & {
+		/**
+		 * Type of shadow to use.
+		 * 'contact' - Fast, simple contact shadows.
+		 * 'accumulative' - Soft, accumulated shadows from multiple samples.
+		 */
 		type: 'contact' | 'accumulative';
-		/** Shadow plane offset, default: 0 */
+		/**
+		 * Vertical offset for the shadow plane.
+		 * @default 0
+		 */
 		offset: number;
-		/** Shadow bias, default: -0.0001 */
+		/**
+		 * Shadow bias to prevent shadow acne.
+		 * @default -0.0001
+		 */
 		bias: number;
-		/** Shadow normal bias, default: 0 */
+		/**
+		 * Shadow normal bias.
+		 * @default 0
+		 */
 		normalBias: number;
-		/** Shadow map size, default: 1024 */
+		/**
+		 * Shadow map size in pixels.
+		 * @default 1024
+		 */
 		size: number;
 	};
 
+/**
+ * Configuration options for the NgtsStage component.
+ * Extends the base group element options from Three.js.
+ */
 export interface NgtsStageOptions extends Partial<NgtThreeElements['ngt-group']> {
-	/** Lighting setup, default: "rembrandt" */
+	/**
+	 * Lighting preset or custom light configuration.
+	 * Available presets: 'rembrandt', 'portrait', 'upfront', 'soft'.
+	 * Or provide custom { main: [x, y, z], fill: [x, y, z] } positions.
+	 * @default 'rembrandt'
+	 */
 	preset:
 		| 'rembrandt'
 		| 'portrait'
 		| 'upfront'
 		| 'soft'
 		| { main: [x: number, y: number, z: number]; fill: [x: number, y: number, z: number] };
-	/** Controls the ground shadows, default: "contact" */
+	/**
+	 * Shadow configuration. Can be:
+	 * - false: No shadows
+	 * - 'contact': Simple contact shadows
+	 * - 'accumulative': Soft accumulated shadows
+	 * - NgtsStageShadowsOptions: Full shadow configuration
+	 * @default 'contact'
+	 */
 	shadows: boolean | 'contact' | 'accumulative' | NgtsStageShadowsOptions;
-	/** Optionally wraps and thereby centers the models using <Bounds>, can also be a margin, default: true */
+	/**
+	 * Whether to automatically adjust the camera to fit the content.
+	 * Can be a boolean or a number representing the margin.
+	 * @default true
+	 */
 	adjustCamera: boolean | number;
-	/** The default environment, default: "city" */
+	/**
+	 * Environment map configuration.
+	 * Can be a preset name, full environment options, or null to disable.
+	 * @default 'city'
+	 */
 	environment: NgtsEnvironmentPresets | Partial<NgtsEnvironmentOptions> | null;
-	/** The lighting intensity, default: 0.5 */
+	/**
+	 * Overall lighting intensity multiplier.
+	 * @default 0.5
+	 */
 	intensity: number;
-	/** To adjust centering, default: undefined */
+	/**
+	 * Options for centering the content within the stage.
+	 */
 	center?: Partial<NgtsCenterOptions>;
 }
 
@@ -70,9 +124,16 @@ const defaultOptions: NgtsStageOptions = {
 	intensity: 0.5,
 };
 
+/**
+ * Internal directive that triggers camera refitting when the stage radius changes.
+ *
+ * @internal
+ */
 @Directive({ selector: 'ngts-stage-refit' })
 export class NgtsStageRefit {
+	/** Current radius of the scene bounds, used to trigger camera refit. */
 	radius = input.required<number>();
+	/** Whether automatic camera adjustment is enabled. */
 	adjustCamera = input.required<boolean>();
 
 	constructor() {
@@ -85,6 +146,27 @@ export class NgtsStageRefit {
 	}
 }
 
+/**
+ * A complete stage setup for presenting 3D models with lighting, shadows, and environment.
+ * Automatically centers content, sets up professional lighting presets, and configures shadows.
+ *
+ * This is a convenience component that combines:
+ * - Bounds for auto-fitting the camera
+ * - Center for centering content
+ * - Environment map for reflections
+ * - Contact or accumulative shadows
+ * - Three-point lighting setup
+ *
+ * @example
+ * ```html
+ * <ngts-stage [options]="{ preset: 'rembrandt', shadows: 'contact', environment: 'city' }">
+ *   <ngt-mesh>
+ *     <ngt-box-geometry />
+ *     <ngt-mesh-standard-material />
+ *   </ngt-mesh>
+ * </ngts-stage>
+ * ```
+ */
 @Component({
 	selector: 'ngts-stage',
 	template: `
@@ -141,6 +223,7 @@ export class NgtsStageRefit {
 	],
 })
 export class NgtsStage {
+	/** Configuration options for the stage setup. */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	private parameters = omit(this.options, [
 		'preset',
@@ -151,6 +234,7 @@ export class NgtsStage {
 		'center',
 	]);
 
+	/** Emits when the content has been centered, providing the calculated dimensions. */
 	centered = output<NgtsCenterState>();
 
 	private dims = signal({ radius: 0, width: 0, height: 0, depth: 0 });
@@ -242,6 +326,12 @@ export class NgtsStage {
 		extend({ AmbientLight, SpotLight, PointLight, Group, Vector2 });
 	}
 
+	/**
+	 * Handles the centered event from NgtsCenter.
+	 * Updates internal dimensions and emits the centered event.
+	 *
+	 * @param $event - The center state containing dimensions and bounding sphere
+	 */
 	onCenter($event: NgtsCenterState) {
 		const { width, height, depth, boundingSphere } = $event;
 		this.dims.set({ radius: boundingSphere.radius, width, height, depth });

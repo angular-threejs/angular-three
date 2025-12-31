@@ -36,8 +36,23 @@ const LIST_URL = 'https://cdn.jsdelivr.net/gh/pmndrs/drei-assets@master/matcaps.
 const MATCAP_ROOT = 'https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d';
 
 /**
- * @deprecated Use matcapTexture instead. Will be removed in v5.0.0
+ * Injects a matcap texture from the matcaps library.
+ * Matcaps provide realistic lighting without actual lights in the scene.
+ *
+ * @deprecated Use `matcapTextureResource` instead. Will be removed in v5.0.0.
  * @since v4.0.0
+ *
+ * @param id - Reactive function returning matcap ID (number index or string hash)
+ * @param config - Configuration options
+ * @param config.format - Reactive function returning texture resolution (64, 128, 256, 512, or 1024)
+ * @param config.onLoad - Callback when texture is loaded
+ * @param config.injector - Optional injector for dependency injection
+ * @returns Object with url, texture signal, and numTot (total available matcaps)
+ *
+ * @example
+ * ```typescript
+ * const { texture } = injectMatcapTexture(() => 42);
+ * ```
  */
 export function injectMatcapTexture(
 	id: () => number | string = () => 0,
@@ -81,6 +96,23 @@ export function injectMatcapTexture(
 	});
 }
 
+/**
+ * Creates a reactive resource for loading matcap textures.
+ * Matcaps provide realistic lighting without actual lights in the scene.
+ *
+ * @param id - Reactive function returning matcap ID (number index or string hash)
+ * @param config - Configuration options
+ * @param config.format - Reactive function returning texture resolution (64, 128, 256, 512, or 1024)
+ * @param config.onLoad - Callback when texture is loaded
+ * @param config.injector - Optional injector for dependency injection
+ * @returns Object with url, resource, and numTot (total available matcaps)
+ *
+ * @example
+ * ```typescript
+ * const { resource } = matcapTextureResource(() => 42);
+ * // Access texture: resource.value()
+ * ```
+ */
 export function matcapTextureResource(
 	id: () => number | string = () => 0,
 	{
@@ -122,11 +154,35 @@ export function matcapTextureResource(
 	});
 }
 
+/**
+ * Options for the NgtsMatcapTexture structural directive.
+ */
 export interface NgtsMatcapTextureOptions {
+	/**
+	 * Matcap ID (number index or string hash).
+	 * @default 0
+	 */
 	id?: number | string;
+	/**
+	 * Texture resolution (64, 128, 256, 512, or 1024).
+	 * @default 1024
+	 */
 	format?: number;
 }
 
+/**
+ * Structural directive for loading and using matcap textures in templates.
+ * Provides the loaded texture resource through the template context.
+ *
+ * @example
+ * ```html
+ * <ng-template [matcapTexture]="{ id: 42, format: 512 }" let-resource>
+ *   @if (resource.hasValue()) {
+ *     <ngt-mesh-matcap-material [matcap]="resource.value()" />
+ *   }
+ * </ng-template>
+ * ```
+ */
 @Directive({ selector: 'ng-template[matcapTexture]' })
 export class NgtsMatcapTexture {
 	matcapTexture = input<NgtsMatcapTextureOptions>();

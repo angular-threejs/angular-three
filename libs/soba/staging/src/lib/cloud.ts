@@ -30,37 +30,114 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group, InstancedBufferAttribute, InstancedMesh, PlaneGeometry } from 'three';
 
+/**
+ * Internal state object representing a single cloud segment.
+ * Used by the cloud system to track individual particle properties.
+ */
 export interface NgtsCloudState {
+	/**
+	 * Unique identifier for this cloud segment.
+	 */
 	uuid: string;
+	/**
+	 * Index of this segment within the cloud.
+	 */
 	index: number;
+	/**
+	 * Total number of segments in the parent cloud.
+	 */
 	segments: number;
+	/**
+	 * Distance from camera (used for depth sorting).
+	 */
 	dist: number;
+	/**
+	 * Transformation matrix for this segment.
+	 */
 	matrix: THREE.Matrix4;
+	/**
+	 * Bounding box dimensions for segment distribution.
+	 */
 	bounds: THREE.Vector3;
+	/**
+	 * Position within the cloud bounds.
+	 */
 	position: THREE.Vector3;
+	/**
+	 * Volume/size of this segment.
+	 */
 	volume: number;
+	/**
+	 * Normalized distance from cloud center (0-1).
+	 */
 	length: number;
+	/**
+	 * Reference to the parent group element.
+	 */
 	ref: ElementRef<THREE.Group>;
+	/**
+	 * Animation speed multiplier.
+	 */
 	speed: number;
+	/**
+	 * Growth animation factor.
+	 */
 	growth: number;
+	/**
+	 * Opacity of this segment.
+	 */
 	opacity: number;
+	/**
+	 * Distance at which the segment starts fading.
+	 */
 	fade: number;
+	/**
+	 * Density factor for animation.
+	 */
 	density: number;
+	/**
+	 * Current rotation angle.
+	 */
 	rotation: number;
+	/**
+	 * Rotation speed multiplier.
+	 */
 	rotationFactor: number;
+	/**
+	 * Color of this segment.
+	 */
 	color: THREE.Color;
 }
 
+/**
+ * Configuration options for the NgtsClouds container component.
+ * Extends the standard ngt-group element options.
+ */
 export interface NgtsCloudsOptions extends Partial<NgtThreeElements['ngt-group']> {
-	/** Optional cloud texture, points to a default hosted on rawcdn.githack */
+	/**
+	 * URL to the cloud texture image.
+	 * @default CLOUD_URL (hosted on rawcdn.githack)
+	 */
 	texture: string;
-	/** Maximum number of segments, default: 200 (make this tight to save memory!) */
+	/**
+	 * Maximum number of cloud segments. Keep this tight to save memory.
+	 * @default 200
+	 */
 	limit: number;
-	/** How many segments it renders, default: undefined (all) */
+	/**
+	 * Number of segments to render. If undefined, renders all segments.
+	 * @default undefined
+	 */
 	range?: number;
-	/** Which material it will override, default: MeshLambertMaterial */
+	/**
+	 * The material class to use for cloud rendering.
+	 * @default THREE.MeshLambertMaterial
+	 */
 	material: typeof THREE.Material;
-	/** Frustum culling, default: true */
+	/**
+	 * Whether to enable frustum culling for the cloud mesh.
+	 * @default true
+	 */
 	frustumCulled: boolean;
 }
 
@@ -78,6 +155,21 @@ const cpos = new THREE.Vector3();
 const cquat = new THREE.Quaternion();
 const scale = new THREE.Vector3();
 
+/**
+ * Container component for rendering volumetric clouds using instanced meshes.
+ * Uses billboarded sprites that always face the camera and are depth-sorted
+ * for correct transparency rendering.
+ *
+ * Should contain NgtsCloudInstance children to define individual cloud formations.
+ *
+ * @example
+ * ```html
+ * <ngts-clouds [options]="{ limit: 400 }">
+ *   <ngts-cloud-instance [options]="{ segments: 40 }" />
+ *   <ngts-cloud-instance [options]="{ segments: 20, position: [5, 0, 0] }" />
+ * </ngts-clouds>
+ * ```
+ */
 @Component({
 	selector: 'ngts-clouds',
 	template: `
@@ -112,6 +204,7 @@ const scale = new THREE.Vector3();
 export class NgtsClouds {
 	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 
+	/** Configuration options for the clouds container. */
 	options = input(defaultCloudsOptions, { transform: mergeInputs(defaultCloudsOptions) });
 	protected parameters = omit(this.options, ['material', 'texture', 'range', 'limit', 'frustumCulled']);
 
@@ -119,6 +212,7 @@ export class NgtsClouds {
 	private material = pick(this.options, 'material');
 	private range = pick(this.options, 'range');
 
+	/** Reference to the container group element. */
 	cloudsRef = viewChild.required<ElementRef<THREE.Group>>('group');
 	private instancesRef = viewChild<ElementRef<THREE.InstancedMesh>>('instances');
 
@@ -175,6 +269,10 @@ export class NgtsClouds {
 		return [w / max, h / max];
 	});
 
+	/**
+	 * Array of cloud segment states managed by this container.
+	 * Updated by NgtsCloudInstance children when they mount/unmount.
+	 */
 	clouds: Array<NgtsCloudState> = [];
 
 	constructor() {
@@ -247,33 +345,78 @@ export class NgtsClouds {
 	}
 }
 
+/**
+ * Configuration options for individual cloud formations.
+ * Extends the standard ngt-group element options.
+ */
 export interface NgtsCloudOptions extends Partial<NgtThreeElements['ngt-group']> {
-	/** A seeded random will show the same cloud consistently, default: Math.random() */
+	/**
+	 * Random seed for consistent cloud generation.
+	 * @default Math.random()
+	 */
 	seed: number;
-	/** How many segments or particles the cloud will have, default: 20 */
+	/**
+	 * Number of segments/particles in the cloud.
+	 * @default 20
+	 */
 	segments: number;
-	/** The box3 bounds of the cloud, default: [5, 1, 1] */
+	/**
+	 * Bounding box dimensions for cloud distribution.
+	 * @default [5, 1, 1]
+	 */
 	bounds: NgtVector3;
-	/** How to arrange segment volume inside the bounds, default: inside (cloud are smaller at the edges) */
+	/**
+	 * How segments are distributed within the bounds.
+	 * - 'inside': Segments are smaller at the edges
+	 * - 'outside': Segments are larger at the edges
+	 * - 'random': Random distribution
+	 * @default 'inside'
+	 */
 	concentrate: 'random' | 'inside' | 'outside';
-	/** The general scale of the segments */
+	/**
+	 * General scale of the cloud segments.
+	 */
 	scale?: NgtVector3;
-	/** The volume/thickness of the segments, default: 6 */
+	/**
+	 * Volume/thickness of the segments.
+	 * @default 6
+	 */
 	volume: number;
-	/** The smallest volume when distributing clouds, default: 0.25 */
+	/**
+	 * Minimum volume when distributing clouds.
+	 * @default 0.25
+	 */
 	smallestVolume: number;
-	/** An optional function that allows you to distribute points and volumes (overriding all settings), default: null
-	 *  Both point and volume are factors, point x/y/z can be between -1 and 1, volume between 0 and 1 */
+	/**
+	 * Custom distribution function for precise control over segment placement.
+	 * Point values range from -1 to 1, volume from 0 to 1.
+	 * @default undefined
+	 */
 	distribute?: (cloud: NgtsCloudState, index: number) => { point: THREE.Vector3; volume?: number };
-	/** Growth factor for animated clouds (speed > 0), default: 4 */
+	/**
+	 * Growth factor for animated clouds (when speed > 0).
+	 * @default 4
+	 */
 	growth: number;
-	/** Animation factor, default: 0 */
+	/**
+	 * Animation speed factor. Set to 0 to disable animation.
+	 * @default 0
+	 */
 	speed: number;
-	/** Camera distance until the segments will fade, default: 10 */
+	/**
+	 * Camera distance at which segments start fading.
+	 * @default 10
+	 */
 	fade: number;
-	/** Opacity, default: 1 */
+	/**
+	 * Opacity of the cloud.
+	 * @default 1
+	 */
 	opacity: number;
-	/** Color, default: white */
+	/**
+	 * Color of the cloud.
+	 * @default '#ffffff'
+	 */
 	color: NgtColor;
 }
 
@@ -291,6 +434,20 @@ const defaultCloudOptions: NgtsCloudOptions = {
 	color: '#ffffff',
 };
 
+/**
+ * A cloud instance component that defines a single cloud formation.
+ * Must be used within a NgtsClouds container.
+ *
+ * Each instance can have its own configuration for segments, bounds,
+ * color, opacity, and animation settings.
+ *
+ * @example
+ * ```html
+ * <ngts-clouds>
+ *   <ngts-cloud-instance [options]="{ segments: 40, color: '#f0f0f0', speed: 0.4 }" />
+ * </ngts-clouds>
+ * ```
+ */
 @Component({
 	selector: 'ngts-cloud-instance',
 	template: `
@@ -302,6 +459,7 @@ const defaultCloudOptions: NgtsCloudOptions = {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class NgtsCloudInstance {
+	/** Configuration options for this cloud formation. */
 	options = input(defaultCloudOptions, { transform: mergeInputs(defaultCloudOptions) });
 	protected parameters = omit(this.options, [
 		'bounds',
@@ -458,6 +616,18 @@ export class NgtsCloudInstance {
 	}
 }
 
+/**
+ * A convenience component that renders a single cloud.
+ * Automatically wraps itself in a NgtsClouds container if not already inside one.
+ *
+ * Use this for simple single-cloud scenarios. For multiple clouds,
+ * use NgtsClouds with NgtsCloudInstance children for better performance.
+ *
+ * @example
+ * ```html
+ * <ngts-cloud [options]="{ segments: 20, bounds: [5, 1, 1], color: 'white' }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-cloud',
 	template: `
@@ -477,8 +647,10 @@ export class NgtsCloudInstance {
 	imports: [NgtsCloudInstance, NgtsClouds],
 })
 export class NgtsCloud {
+	/** Configuration options for the cloud. */
 	options = input<Partial<NgtsCloudOptions>>(defaultCloudOptions);
 	protected parent = inject(NgtsClouds, { optional: true });
 
+	/** Reference to the underlying NgtsCloudInstance component. */
 	cloudRef = viewChild(NgtsCloudInstance);
 }

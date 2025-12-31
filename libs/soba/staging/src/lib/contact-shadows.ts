@@ -13,18 +13,70 @@ import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, OrthographicCamera } from 'three';
 import { HorizontalBlurShader, VerticalBlurShader } from 'three-stdlib';
 
+/**
+ * Configuration options for the NgtsContactShadows component.
+ * Extends the standard ngt-group element options (excluding scale which has custom handling).
+ */
 export interface NgtsContactShadowsOptions extends Partial<Omit<NgtThreeElements['ngt-group'], 'scale'>> {
+	/**
+	 * Opacity of the shadow.
+	 * @default 1
+	 */
 	opacity: number;
+	/**
+	 * Width of the shadow plane (before scaling).
+	 * @default 1
+	 */
 	width: number;
+	/**
+	 * Height of the shadow plane (before scaling).
+	 * @default 1
+	 */
 	height: number;
+	/**
+	 * Blur amount for the shadow. Higher values create softer shadows.
+	 * @default 1
+	 */
 	blur: number;
+	/**
+	 * Near clipping plane for the shadow camera.
+	 * @default 0
+	 */
 	near: number;
+	/**
+	 * Far clipping plane for the shadow camera.
+	 * @default 10
+	 */
 	far: number;
+	/**
+	 * When enabled, applies an additional blur pass for smoother shadows.
+	 * @default true
+	 */
 	smooth: boolean;
+	/**
+	 * Resolution of the shadow render target.
+	 * @default 512
+	 */
 	resolution: number;
+	/**
+	 * Number of frames to render. Use Infinity for continuous updates.
+	 * @default Infinity
+	 */
 	frames: number;
+	/**
+	 * Scale of the shadow plane. Can be a single number or [x, y] tuple.
+	 * @default 10
+	 */
 	scale: number | [x: number, y: number];
+	/**
+	 * Color of the shadow.
+	 * @default '#000000'
+	 */
 	color: THREE.ColorRepresentation;
+	/**
+	 * Whether the shadow writes to the depth buffer.
+	 * @default false
+	 */
 	depthWrite: boolean;
 }
 
@@ -43,6 +95,22 @@ const defaultOptions: NgtsContactShadowsOptions = {
 	depthWrite: false,
 };
 
+/**
+ * A component that renders soft contact shadows on a ground plane.
+ * Uses a depth-based technique to render shadows from objects onto
+ * a horizontal plane, creating realistic grounding effects.
+ *
+ * The shadows are rendered using an orthographic camera from above,
+ * with optional blur passes for softness.
+ *
+ * @example
+ * ```html
+ * <ngts-contact-shadows
+ *   [options]="{ opacity: 0.5, scale: 10, blur: 2, far: 4, resolution: 256 }"
+ *   [position]="[0, -0.5, 0]"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-contact-shadows',
 	template: `

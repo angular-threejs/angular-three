@@ -5,6 +5,10 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { EXRLoader, RGBELoader } from 'three-stdlib';
 
+/**
+ * Available environment preset names mapped to their HDR file names.
+ * These presets are hosted on the drei-assets CDN.
+ */
 export const ENVIRONMENT_PRESETS = {
 	apartment: 'lebombo_1k.hdr',
 	city: 'potsdamer_platz_1k.hdr',
@@ -18,20 +22,59 @@ export const ENVIRONMENT_PRESETS = {
 	warehouse: 'empty_warehouse_01_1k.hdr',
 };
 
+/**
+ * Type representing available environment preset names.
+ */
 export type NgtsEnvironmentPresets = keyof typeof ENVIRONMENT_PRESETS;
 
 const CUBEMAP_ROOT = 'https://raw.githack.com/pmndrs/drei-assets/456060a26bbeb8fdf79326f224b6d99b8bcce736/hdri/';
 
+/**
+ * Options for loading environment textures.
+ */
 export interface NgtsEnvironmentResourceOptions {
+	/**
+	 * Path(s) to environment file(s). Can be a single HDR/EXR file
+	 * or an array of 6 cube map faces.
+	 * @default ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png']
+	 */
 	files: string | string[];
+	/**
+	 * Base path prepended to file paths.
+	 * @default ''
+	 */
 	path: string;
+	/**
+	 * Preset environment name. Overrides `files` and `path` when provided.
+	 */
 	preset?: NgtsEnvironmentPresets;
+	/**
+	 * Callback to configure the loader before loading.
+	 */
 	extensions?: (loader: THREE.Loader) => void;
+	/**
+	 * Color space for the loaded texture.
+	 * @default 'srgb' for cube maps, 'srgb-linear' for equirectangular maps
+	 */
 	colorSpace?: THREE.ColorSpace;
 }
 
 const defaultFiles = ['/px.png', '/nx.png', '/py.png', '/ny.png', '/pz.png', '/nz.png'];
 
+/**
+ * Creates a reactive resource for loading environment textures.
+ * Supports HDR, EXR, cube maps, and gainmap formats.
+ *
+ * @param options - Reactive function returning environment resource options
+ * @param config - Configuration object with optional injector
+ * @returns Object containing the texture signal and underlying resource
+ *
+ * @example
+ * ```typescript
+ * const env = environmentResource(() => ({ preset: 'sunset' }));
+ * // Access texture: env.texture()
+ * ```
+ */
 export function environmentResource(
 	options: () => Partial<NgtsEnvironmentResourceOptions> = () => ({}),
 	{ injector }: { injector?: Injector } = {},
@@ -141,6 +184,13 @@ export function environmentResource(
 	});
 }
 
+/**
+ * Preloads an environment texture for later use.
+ * Note: Gainmap formats (webp, jpg, jpeg) are not supported for preloading.
+ *
+ * @param options - Environment resource options
+ * @throws Error if gainmap format is detected or file extension is unrecognized
+ */
 environmentResource.preload = (options: Partial<NgtsEnvironmentResourceOptions> = {}) => {
 	let { files, path } = options;
 	const { preset, extensions } = options;
@@ -179,6 +229,11 @@ environmentResource.preload = (options: Partial<NgtsEnvironmentResourceOptions> 
 	);
 };
 
+/**
+ * Clears a preloaded environment texture from cache.
+ *
+ * @param clearOptions - Object containing files or preset to clear
+ */
 environmentResource.clear = (clearOptions: { files?: string | string[]; preset?: NgtsEnvironmentPresets }) => {
 	const options = { files: defaultFiles, ...clearOptions };
 	let { files } = options;

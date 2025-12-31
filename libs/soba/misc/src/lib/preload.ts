@@ -2,10 +2,38 @@ import { computed, Directive, effect, ElementRef, model } from '@angular/core';
 import { injectStore, resolveRef } from 'angular-three';
 import * as THREE from 'three';
 
+/**
+ * Pre-compiles shaders and textures to reduce runtime jank.
+ *
+ * When added to a scene, this directive triggers `WebGLRenderer.compile()`
+ * and uses a CubeCamera to ensure environment maps are also compiled.
+ * This helps eliminate shader compilation stutters during initial rendering.
+ *
+ * @example
+ * ```html
+ * <!-- Preload entire scene -->
+ * <ngts-preload [all]="true" />
+ *
+ * <!-- Preload specific scene/camera -->
+ * <ngts-preload [scene]="customScene" [camera]="customCamera" />
+ * ```
+ */
 @Directive({ selector: 'ngts-preload' })
 export class NgtsPreload {
+	/**
+	 * When `true`, temporarily makes all invisible objects visible
+	 * during compilation to ensure everything is preloaded.
+	 */
 	all = model<boolean>();
+
+	/**
+	 * Custom scene to preload. Defaults to the store's scene.
+	 */
 	scene = model<THREE.Object3D | ElementRef<THREE.Object3D>>();
+
+	/**
+	 * Custom camera to use for compilation. Defaults to the store's camera.
+	 */
 	camera = model<THREE.Camera | ElementRef<THREE.Camera>>();
 
 	private store = injectStore();

@@ -28,18 +28,44 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { MeshBVH, MeshBVHUniformStruct, SAH } from 'three-mesh-bvh';
 
+/**
+ * Configuration options for the NgtsMeshRefractionMaterial component.
+ */
 export interface NgtsMeshRefractionMaterialOptions extends Partial<NgtThreeElements['ngt-shader-material']> {
-	/** Number of ray-cast bounces, it can be expensive to have too many, 2 */
+	/**
+	 * Number of ray-cast bounces. Higher values are more expensive.
+	 * @default 2
+	 */
 	bounces: number;
-	/** Refraction index, 2.4 */
+
+	/**
+	 * Index of refraction. Diamond is 2.4, glass is 1.5.
+	 * @default 2.4
+	 */
 	ior: number;
-	/** Fresnel (strip light), 0 */
+
+	/**
+	 * Fresnel effect intensity (strip light reflections).
+	 * @default 0
+	 */
 	fresnel: number;
-	/** RGB shift intensity, can be expensive, 0 */
+
+	/**
+	 * RGB chromatic aberration shift intensity. Can be expensive.
+	 * @default 0
+	 */
 	aberrationStrength: number;
-	/** Color, white */
+
+	/**
+	 * Base color of the refractive material.
+	 * @default 'white'
+	 */
 	color: THREE.ColorRepresentation;
-	/** If this is on it uses fewer ray casts for the RGB shift sacrificing physical accuracy, true */
+
+	/**
+	 * Use fewer ray casts for RGB shift, sacrificing physical accuracy for performance.
+	 * @default true
+	 */
 	fastChroma: boolean;
 }
 
@@ -52,6 +78,22 @@ const defaultOptions: NgtsMeshRefractionMaterialOptions = {
 	fastChroma: true,
 };
 
+/**
+ * A material that simulates realistic light refraction through transparent objects.
+ * Uses ray tracing with BVH acceleration for accurate light bending effects.
+ * Ideal for diamonds, crystals, glass, and other transparent materials.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-dodecahedron-geometry />
+ *   <ngts-mesh-refraction-material
+ *     [envMap]="environmentTexture"
+ *     [options]="{ bounces: 3, ior: 2.4, fresnel: 1, aberrationStrength: 0.02 }"
+ *   />
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-mesh-refraction-material',
 	template: `
@@ -73,14 +115,28 @@ const defaultOptions: NgtsMeshRefractionMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshRefractionMaterial {
+	/**
+	 * Environment map texture for reflections and refractions.
+	 * Required for the material to display properly.
+	 */
 	envMap = input.required<THREE.CubeTexture | THREE.Texture>();
+
+	/**
+	 * How to attach the material to its parent object.
+	 * @default 'material'
+	 */
 	attach = input<NgtAttachable>('material');
+
+	/**
+	 * Configuration options for the refraction material.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['fastChroma', 'aberrationStrength']);
 
 	private fastChroma = pick(this.options, 'fastChroma');
 	protected aberrationStrength = pick(this.options, 'aberrationStrength');
 
+	/** Reference to the underlying MeshRefractionMaterial element. */
 	materialRef = viewChild<ElementRef<InstanceType<typeof MeshRefractionMaterial>>>('material');
 
 	private store = injectStore();

@@ -23,6 +23,24 @@ const translation = new THREE.Vector3();
 const rotation = new THREE.Quaternion();
 const scale = new THREE.Vector3();
 
+/**
+ * A component representing a single instance within an NgtsInstances container.
+ *
+ * Each NgtsInstance is a virtual mesh that contributes to the parent InstancedMesh.
+ * Instances can be individually positioned, rotated, scaled, and colored while
+ * sharing the same geometry and material for optimal rendering performance.
+ *
+ * @example
+ * ```html
+ * <ngts-instances>
+ *   <ngt-box-geometry />
+ *   <ngt-mesh-standard-material />
+ *   @for (item of items; track item.id) {
+ *     <ngts-instance [options]="{ position: item.position, color: item.color }" />
+ *   }
+ * </ngts-instances>
+ * ```
+ */
 @Component({
 	selector: 'ngts-instance',
 	template: `
@@ -34,10 +52,17 @@ const scale = new THREE.Vector3();
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsInstance {
+	/**
+	 * Options passed to the underlying PositionMesh, including position, rotation, scale, and color.
+	 */
 	options = input({} as Partial<NgtPositionMesh>);
 
+	/** @internal */
 	protected instances = inject(NgtsInstances);
 
+	/**
+	 * Reference to the underlying PositionMesh element.
+	 */
 	positionMeshRef = viewChild.required<ElementRef<PositionMesh>>('positionMesh');
 
 	constructor() {
@@ -50,9 +75,27 @@ export class NgtsInstance {
 	}
 }
 
+/**
+ * Configuration options for the NgtsInstances component.
+ */
 export interface NgtsInstancesOptions extends Partial<NgtThreeElements['ngt-instanced-mesh']> {
+	/**
+	 * Limits the number of visible instances. When set, only the first `range` instances
+	 * are rendered. Useful for dynamic instance counts without recreating the buffer.
+	 */
 	range?: number;
+	/**
+	 * The maximum number of instances that can be rendered.
+	 * This determines the size of the instance buffers.
+	 * @default 1000
+	 */
 	limit: number;
+	/**
+	 * The number of frames to update instance transforms.
+	 * Set to Infinity for continuous updates, or a specific number to stop
+	 * updating after that many frames (useful for static instances).
+	 * @default Infinity
+	 */
 	frames: number;
 }
 
@@ -61,6 +104,27 @@ const defaultOptions: NgtsInstancesOptions = {
 	frames: Infinity,
 };
 
+/**
+ * A component that efficiently renders many instances of the same geometry and material.
+ *
+ * This component uses THREE.InstancedMesh under the hood to batch render multiple
+ * objects with a single draw call, providing significant performance improvements
+ * when rendering many similar objects.
+ *
+ * Place geometry and material as direct children, and NgtsInstance components
+ * for each instance you want to render.
+ *
+ * @example
+ * ```html
+ * <ngts-instances [options]="{ limit: 100 }">
+ *   <ngt-box-geometry />
+ *   <ngt-mesh-standard-material />
+ *   @for (i of [0, 1, 2, 3, 4]; track i) {
+ *     <ngts-instance [options]="{ position: [i * 2, 0, 0] }" />
+ *   }
+ * </ngts-instances>
+ * ```
+ */
 @Component({
 	selector: 'ngts-instances',
 	template: `
@@ -92,15 +156,24 @@ const defaultOptions: NgtsInstancesOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsInstances {
+	/** @internal */
 	protected readonly DynamicDrawUsage = THREE.DynamicDrawUsage;
 
+	/**
+	 * Configuration options for the instanced rendering.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+	/** @internal */
 	protected parameters = omit(this.options, ['limit', 'frames', 'range']);
 
+	/**
+	 * Reference to the underlying THREE.InstancedMesh element.
+	 */
 	instancedMeshRef = viewChild.required<ElementRef<THREE.InstancedMesh>>('instancedMesh');
 
 	private limit = pick(this.options, 'limit');
 
+	/** @internal */
 	protected buffers = computed(() => {
 		const limit = this.limit();
 		const matrices = new Float32Array(limit * 16);
@@ -113,6 +186,9 @@ export class NgtsInstances {
 		return { matrices, colors };
 	});
 
+	/**
+	 * Array of registered instance references. Used internally to track all instances.
+	 */
 	instances: Array<ElementRef<PositionMesh> | PositionMesh> = [];
 
 	constructor() {
@@ -162,6 +238,12 @@ export class NgtsInstances {
 		});
 	}
 
+	/**
+	 * Registers an instance with this container.
+	 *
+	 * @param ref - The PositionMesh reference or element to register
+	 * @returns A cleanup function to unregister the instance
+	 */
 	subscribe(ref: ElementRef<PositionMesh> | PositionMesh) {
 		this.instances.push(ref);
 		return () => {

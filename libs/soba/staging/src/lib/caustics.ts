@@ -30,28 +30,67 @@ const CAUSTIC_OPTIONS = {
 	generateMipmaps: true,
 };
 
+/**
+ * Configuration options for the NgtsCaustics component.
+ * Extends the standard ngt-group element options.
+ */
 export interface NgtsCausticsOptions extends Partial<NgtThreeElements['ngt-group']> {
-	/** How many frames it will render, set it to Infinity for runtime, default: 1 */
+	/**
+	 * How many frames to render. Set to Infinity for continuous runtime rendering.
+	 * @default 1
+	 */
 	frames: number;
-	/** Enables visual cues to help you stage your scene, default: false */
+	/**
+	 * Enables visual debugging cues including camera helper to help stage the scene.
+	 * @default false
+	 */
 	debug: boolean;
-	/** Will display caustics only and skip the models, default: false */
+	/**
+	 * When enabled, displays only caustics and hides the models.
+	 * @default false
+	 */
 	causticsOnly: boolean;
-	/** Will include back faces and enable the backsideIOR prop, default: false */
+	/**
+	 * When enabled, includes back face rendering and enables the backsideIOR property.
+	 * @default false
+	 */
 	backside: boolean;
-	/** The IOR refraction index, default: 1.1 */
+	/**
+	 * The Index of Refraction (IOR) value for front faces.
+	 * @default 1.1
+	 */
 	ior: number;
-	/** The IOR refraction index for back faces (only available when backside is enabled), default: 1.1 */
+	/**
+	 * The Index of Refraction (IOR) value for back faces.
+	 * Only used when backside is enabled.
+	 * @default 1.1
+	 */
 	backsideIOR: number;
-	/** The texel size, default: 0.3125 */
+	/**
+	 * The world-space texel size for caustic calculations.
+	 * @default 0.3125
+	 */
 	worldRadius: number;
-	/** Intensity of the prjected caustics, default: 0.05 */
+	/**
+	 * Intensity of the projected caustics effect.
+	 * @default 0.05
+	 */
 	intensity: number;
-	/** Caustics color, default: white */
+	/**
+	 * Color of the caustics effect.
+	 * @default 'white'
+	 */
 	color: THREE.ColorRepresentation;
-	/** Buffer resolution, default: 2048 */
+	/**
+	 * Buffer resolution for caustic texture rendering.
+	 * @default 2024
+	 */
 	resolution: number;
-	/** Camera position, it will point towards the contents bounds center, default: [5, 5, 5] */
+	/**
+	 * Light source position or object. Can be a coordinate array or a reference to a Three.js object.
+	 * The light will point towards the contents' bounding box center.
+	 * @default [5, 5, 5]
+	 */
 	lightSource:
 		| [x: number, y: number, z: number]
 		| ElementRef<THREE.Object3D | NgtThreeElements['ngt-object3D']>
@@ -73,6 +112,24 @@ const defaultOptions: NgtsCausticsOptions = {
 	lightSource: [5, 5, 5],
 };
 
+/**
+ * A component that renders realistic caustic light patterns on surfaces.
+ * Caustics are the light patterns created when light is refracted or reflected
+ * by curved transparent surfaces (like water or glass).
+ *
+ * The component renders the scene from a light's perspective to calculate
+ * where light rays converge, then projects these patterns onto a plane.
+ *
+ * @example
+ * ```html
+ * <ngts-caustics [options]="{ frames: Infinity, intensity: 0.05, color: 'white' }">
+ *   <ngt-mesh>
+ *     <ngt-sphere-geometry />
+ *     <ngt-mesh-physical-material [transmission]="1" [roughness]="0" />
+ *   </ngt-mesh>
+ * </ngts-caustics>
+ * ```
+ */
 @Component({
 	selector: 'ngts-caustics',
 	template: `
@@ -113,6 +170,7 @@ export class NgtsCaustics {
 	protected readonly OneFactor = THREE.OneFactor;
 	protected readonly SrcAlphaFactor = THREE.SrcAlphaFactor;
 
+	/** Configuration options for the caustics effect. */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'frames',
@@ -132,6 +190,7 @@ export class NgtsCaustics {
 	protected color = pick(this.options, 'color');
 	private resolution = pick(this.options, 'resolution');
 
+	/** Reference to the main group element containing the caustics setup. */
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 	private sceneRef = viewChild.required<ElementRef<THREE.Scene>>('scene');
 	private cameraRef = viewChild.required<ElementRef<THREE.OrthographicCamera>>('camera');

@@ -4,7 +4,29 @@ import * as THREE from 'three';
 
 const opaque_fragment = getVersion() >= 154 ? 'opaque_fragment' : 'output_fragment';
 
+/**
+ * An enhanced PointsMaterial that renders points as smooth, anti-aliased circles.
+ * Uses a fragment shader to create soft circular edges instead of the default square points.
+ *
+ * @example
+ * ```typescript
+ * extend({ PointMaterial });
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngt-points>
+ *   <ngt-buffer-geometry />
+ *   <ngt-point-material [size]="0.1" [color]="'red'" />
+ * </ngt-points>
+ * ```
+ */
 export class PointMaterial extends THREE.PointsMaterial {
+	/**
+	 * Creates a new PointMaterial with circular point rendering.
+	 *
+	 * @param props - Standard THREE.PointsMaterialParameters for configuring the material
+	 */
 	constructor(props: THREE.PointsMaterialParameters) {
 		super(props);
 		this.onBeforeCompile = (shader, renderer) => {
@@ -30,6 +52,10 @@ export class PointMaterial extends THREE.PointsMaterial {
 	}
 }
 
+/**
+ * Type definition for the PointMaterial element in Angular Three templates.
+ * Extends NgtThreeElement to provide type-safe template usage.
+ */
 export type NgtPointMaterial = NgtThreeElement<typeof PointMaterial>;
 
 declare global {

@@ -1,8 +1,86 @@
+import { NgtThreeElement } from 'angular-three';
 import { getVersion } from 'angular-three-soba/misc';
 import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import * as THREE from 'three';
 import { MeshBVHUniformStruct, shaderIntersectFunction, shaderStructs } from 'three-mesh-bvh';
 
+/**
+ * Configuration options for the MeshRefractionMaterial shader material.
+ * Controls the refraction behavior and visual appearance of transparent objects.
+ */
+export interface MeshRefractionMaterialOptions {
+	/**
+	 * Environment map used for sampling background reflections and refractions.
+	 * Can be a cube texture or equirectangular texture.
+	 * @default null
+	 */
+	envMap: THREE.CubeTexture | THREE.Texture | null;
+	/**
+	 * Number of internal light bounces to simulate.
+	 * Higher values produce more realistic results but are more computationally expensive.
+	 * @default 3
+	 */
+	bounces: number;
+	/**
+	 * Index of refraction. Common values: air=1.0, water=1.33, glass=1.5, diamond=2.4.
+	 * @default 2.4
+	 */
+	ior: number;
+	/**
+	 * Whether to correct mip levels for smoother texture sampling.
+	 * @default true
+	 */
+	correctMips: boolean;
+	/**
+	 * Strength of chromatic aberration effect (color separation at edges).
+	 * Set to 0 to disable chromatic aberration.
+	 * @default 0.01
+	 */
+	aberrationStrength: number;
+	/**
+	 * Fresnel reflection intensity at grazing angles.
+	 * Higher values increase edge reflectivity.
+	 * @default 0
+	 */
+	fresnel: number;
+	/**
+	 * Base color tint applied to the refracted light.
+	 * @default 'white'
+	 */
+	color: THREE.ColorRepresentation;
+	/**
+	 * Opacity of the material.
+	 * @default 1
+	 */
+	opacity: number;
+}
+
+/**
+ * A shader material that simulates realistic light refraction through transparent objects.
+ * Uses BVH (Bounding Volume Hierarchy) for accurate ray tracing and supports chromatic aberration.
+ *
+ * Features:
+ * - Physically-based refraction using index of refraction (IOR)
+ * - Multiple internal bounces for realistic light paths
+ * - Optional chromatic aberration for prismatic effects
+ * - Fresnel reflection at grazing angles
+ * - Environment map sampling for background reflections
+ *
+ * @example
+ * ```typescript
+ * extend({ MeshRefractionMaterial });
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngt-mesh-refraction-material
+ *   [envMap]="envMap"
+ *   [ior]="2.4"
+ *   [bounces]="3"
+ *   [aberrationStrength]="0.01"
+ * />
+ * ```
+ */
 export const MeshRefractionMaterial = shaderMaterial(
 	{
 		envMap: null,
@@ -163,3 +241,19 @@ export const MeshRefractionMaterial = shaderMaterial(
     #include <${getVersion() >= 154 ? 'colorspace_fragment' : 'encodings_fragment'}>
   }`,
 );
+
+/**
+ * Type definition for the MeshRefractionMaterial element in Angular Three templates.
+ * Extends NgtThreeElement to provide type-safe template usage.
+ */
+export type NgtMeshRefractionMaterial = NgtThreeElement<typeof MeshRefractionMaterial>;
+
+declare global {
+	interface HTMLElementTagNameMap {
+		/**
+		 * @extends ngt-shader-material
+		 * @options MeshRefractionMaterialOptions
+		 */
+		'ngt-mesh-refraction-material': NgtMeshRefractionMaterial;
+	}
+}

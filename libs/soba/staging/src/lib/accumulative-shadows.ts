@@ -17,28 +17,67 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry } from 'three';
 
+/**
+ * Configuration options for the NgtsAccumulativeShadows component.
+ * Extends the standard ngt-group element options.
+ */
 export interface NgtsAccumulativeShadowsOptions extends Partial<NgtThreeElements['ngt-group']> {
-	/** How many frames it can render, more yields cleaner results but takes more time, 40 */
+	/**
+	 * How many frames it can render. More frames yield cleaner results but take more time.
+	 * @default 40
+	 */
 	frames: number;
-	/** If frames === Infinity blend controls the refresh ratio, 100 */
+	/**
+	 * If frames === Infinity, blend controls the refresh ratio.
+	 * @default 20
+	 */
 	blend: number;
-	/** Can limit the amount of frames rendered if frames === Infinity, usually to get some performance back once a movable scene has settled, Infinity */
+	/**
+	 * Limits the amount of frames rendered when frames === Infinity.
+	 * Useful for getting performance back once a movable scene has settled.
+	 * @default Infinity
+	 */
 	limit: number;
-	/** Scale of the plane,  */
+	/**
+	 * Scale of the shadow plane.
+	 * @default 10
+	 */
 	scale: number;
-	/** Temporal accumulates shadows over time which is more performant but has a visual regression over instant results, false  */
+	/**
+	 * When enabled, accumulates shadows over time which is more performant
+	 * but has visual regression compared to instant results.
+	 * @default false
+	 */
 	temporal?: boolean;
-	/** Opacity of the plane, 1 */
+	/**
+	 * Opacity of the shadow plane.
+	 * @default 1
+	 */
 	opacity: number;
-	/** Discards alpha pixels, 0.65 */
+	/**
+	 * Alpha test threshold for discarding pixels.
+	 * @default 0.75
+	 */
 	alphaTest: number;
-	/** Shadow color, black */
+	/**
+	 * Shadow color.
+	 * @default 'black'
+	 */
 	color: string;
-	/** Colorblend, how much colors turn to black, 0 is black, 2 */
+	/**
+	 * Color blend factor. Controls how much colors turn to black (0 is fully black).
+	 * @default 2
+	 */
 	colorBlend: number;
-	/** Buffer resolution, 1024 */
+	/**
+	 * Buffer resolution for shadow rendering.
+	 * @default 1024
+	 */
 	resolution: number;
-	/** Texture tonemapping */
+	/**
+	 * Whether the texture is tone mapped.
+	 * @default true
+	 */
 	toneMapped: boolean;
 }
 
@@ -56,6 +95,20 @@ const defaultOptions: NgtsAccumulativeShadowsOptions = {
 	toneMapped: true,
 };
 
+/**
+ * A component that renders soft, accumulative shadows by rendering the scene
+ * multiple times from the light's perspective and blending the results.
+ *
+ * This creates high-quality soft shadows that can be accumulated over multiple
+ * frames for better visual quality.
+ *
+ * @example
+ * ```html
+ * <ngts-accumulative-shadows [options]="{ temporal: true, frames: 100 }">
+ *   <ngts-randomized-lights [options]="{ amount: 8, position: [5, 5, -10] }" />
+ * </ngts-accumulative-shadows>
+ * ```
+ */
 @Component({
 	selector: 'ngts-accumulative-shadows',
 	template: `
@@ -187,10 +240,19 @@ export class NgtsAccumulativeShadows {
 		});
 	}
 
+	/**
+	 * Gets the shadow plane mesh element.
+	 *
+	 * @returns The Three.js mesh element used for rendering shadows
+	 */
 	getMesh() {
 		return this.planeRef().nativeElement;
 	}
 
+	/**
+	 * Resets the accumulative shadow state.
+	 * Clears buffers, resets opacities, and sets the frame count to 0.
+	 */
 	reset() {
 		// Clear buffers, reset opacities, set frame count to 0
 		untracked(this.pLM).clear();
@@ -200,6 +262,11 @@ export class NgtsAccumulativeShadows {
 		this.count = 0;
 	}
 
+	/**
+	 * Updates the shadow accumulation by rendering additional frames.
+	 *
+	 * @param frames - Number of frames to render in this update cycle
+	 */
 	update(frames = 1) {
 		// Adapt the opacity-blend ratio to the number of frames
 		const material = this.planeRef().nativeElement.material;

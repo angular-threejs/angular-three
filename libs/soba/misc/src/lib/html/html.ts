@@ -13,6 +13,9 @@ import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import { NgtsHTMLContent } from './html-content';
 
+/**
+ * Configuration options for the NgtsHTML component.
+ */
 export interface NgtsHTMLOptions extends Partial<NgtThreeElements['ngt-group']> {
 	/**
 	 * Controls how HTML is hidden when behind other objects.
@@ -107,16 +110,24 @@ const defaultHtmlOptions: NgtsHTMLOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsHTMLImpl {
+	/**
+	 * HTML anchor configuration including position, occlusion, and transform settings.
+	 */
 	options = input(defaultHtmlOptions, { transform: mergeInputs(defaultHtmlOptions) });
 	protected parameters = omit(this.options, ['occlude', 'castShadow', 'receiveShadow', 'transform']);
 
+	/** Reference to the THREE.Group that serves as the 3D anchor point */
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
+	/** Reference to the occlusion mesh (when using blending occlusion mode) */
 	occlusionMeshRef = viewChild<ElementRef<THREE.Mesh>>('occlusionMesh');
+	/** Reference to the occlusion geometry */
 	occlusionGeometryRef = viewChild<ElementRef<THREE.PlaneGeometry>>('occlusionGeometry');
 
 	protected castShadow = pick(this.options, 'castShadow');
 	protected receiveShadow = pick(this.options, 'receiveShadow');
+	/** Current occlusion mode setting */
 	occlude = pick(this.options, 'occlude');
+	/** Whether CSS 3D transform mode is enabled */
 	transform = pick(this.options, 'transform');
 
 	isRaycastOcclusion = computed(() => {
@@ -182,4 +193,16 @@ export class NgtsHTMLImpl {
 	protected readonly DoubleSide = THREE.DoubleSide;
 }
 
+/**
+ * Combined export of NgtsHTMLImpl and NgtsHTMLContent for convenient importing.
+ *
+ * @example
+ * ```typescript
+ * import { NgtsHTML } from 'angular-three-soba/misc';
+ *
+ * @Component({
+ *   imports: [NgtsHTML]
+ * })
+ * ```
+ */
 export const NgtsHTML = [NgtsHTMLImpl, NgtsHTMLContent] as const;

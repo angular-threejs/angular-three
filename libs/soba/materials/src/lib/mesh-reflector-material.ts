@@ -27,19 +27,85 @@ import { BlurPass, MeshReflectorMaterial } from 'angular-three-soba/vanilla-expo
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
+/**
+ * Configuration options for the NgtsMeshReflectorMaterial component.
+ */
 export interface NgtsMeshReflectorMaterialOptions extends Partial<NgtThreeElements['ngt-mesh-standard-material']> {
+	/**
+	 * Resolution of the reflection render target.
+	 * @default 256
+	 */
 	resolution: number;
+
+	/**
+	 * Amount of blur mixing applied to the reflection.
+	 * @default 0
+	 */
 	mixBlur: number;
+
+	/**
+	 * Strength of the reflection mix.
+	 * @default 1
+	 */
 	mixStrength: number;
+
+	/**
+	 * Blur amount as [x, y] or a single value for both axes.
+	 * @default [0, 0]
+	 */
 	blur: [number, number] | number;
+
+	/**
+	 * Mirror reflection intensity (0 = no mirror, 1 = full mirror).
+	 * @default 0
+	 */
 	mirror: number;
+
+	/**
+	 * Minimum depth threshold for depth-based effects.
+	 * @default 0.9
+	 */
 	minDepthThreshold: number;
+
+	/**
+	 * Maximum depth threshold for depth-based effects.
+	 * @default 1
+	 */
 	maxDepthThreshold: number;
+
+	/**
+	 * Scale factor for depth-based effects.
+	 * @default 0
+	 */
 	depthScale: number;
+
+	/**
+	 * Bias ratio between depth and blur effects.
+	 * @default 0.25
+	 */
 	depthToBlurRatioBias: number;
+
+	/**
+	 * Distortion intensity applied to the reflection.
+	 * @default 1
+	 */
 	distortion: number;
+
+	/**
+	 * Contrast adjustment for the reflection mix.
+	 * @default 1
+	 */
 	mixContrast: number;
+
+	/**
+	 * Offset of the reflector plane along its normal.
+	 * @default 0
+	 */
 	reflectorOffset: number;
+
+	/**
+	 * Optional texture to apply distortion effects to the reflection.
+	 */
 	distortionMap?: THREE.Texture;
 }
 
@@ -58,6 +124,28 @@ const defaultOptions: NgtsMeshReflectorMaterialOptions = {
 	reflectorOffset: 0,
 };
 
+/**
+ * A material that creates realistic reflections on a planar surface.
+ * Supports blur, depth-based effects, distortion, and mirror-like reflections.
+ * The parent mesh should be a flat plane for best results.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]">
+ *   <ngt-plane-geometry *args="[10, 10]" />
+ *   <ngts-mesh-reflector-material
+ *     [options]="{
+ *       blur: [300, 100],
+ *       resolution: 1024,
+ *       mixBlur: 1,
+ *       mixStrength: 50,
+ *       mirror: 0.5,
+ *       color: '#a0a0a0'
+ *     }"
+ *   />
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-mesh-reflector-material',
 	template: `
@@ -70,7 +158,15 @@ const defaultOptions: NgtsMeshReflectorMaterialOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsMeshReflectorMaterial {
+	/**
+	 * How to attach the material to its parent object.
+	 * @default 'material'
+	 */
 	attach = input<NgtAttachable>('material');
+
+	/**
+	 * Configuration options for the reflector material.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	private parameters = omit(this.options, [
 		'distortionMap',
@@ -90,6 +186,7 @@ export class NgtsMeshReflectorMaterial {
 
 	private store = injectStore();
 
+	/** Reference to the underlying MeshReflectorMaterial element. */
 	materialRef = viewChild<ElementRef<MeshReflectorMaterial>>('material');
 
 	private reflectOptions = pick(this.options, [
@@ -217,6 +314,7 @@ export class NgtsMeshReflectorMaterial {
 		return Object.entries(defines).reduce((acc, [key, value]) => (value != null ? `${acc} ${key}` : acc), '');
 	});
 
+	/** The computed MeshReflectorMaterial instance. Recreated when defines change. */
 	material = computed(() => {
 		const prevMaterial = untracked(this.materialRef)?.nativeElement;
 

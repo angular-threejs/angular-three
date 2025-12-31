@@ -15,8 +15,20 @@ import * as THREE from 'three';
 import { Mesh } from 'three';
 import { mergeVertices, TextGeometry, TextGeometryParameters } from 'three-stdlib';
 
+/**
+ * Configuration options for the NgtsText3D component.
+ * Controls the geometry generation for 3D extruded text.
+ */
 export interface NgtsText3DOptions extends Omit<TextGeometryParameters, 'font'> {
+	/**
+	 * Number of bevel segments for smoother beveled edges.
+	 * @default 4
+	 */
 	bevelSegments: number;
+	/**
+	 * Threshold for merging vertices to create smooth normals.
+	 * When set, vertices closer than this value are merged.
+	 */
 	smooth?: number;
 }
 
@@ -33,6 +45,39 @@ const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> & NgtsText3DOptions 
 	curveSegments: 8,
 };
 
+/**
+ * A component for rendering 3D extruded text geometry.
+ * Creates text with depth using Three.js TextGeometry with support for beveling and smooth normals.
+ *
+ * @example
+ * ```html
+ * <ngts-text-3d
+ *   font="/fonts/helvetiker_regular.typeface.json"
+ *   text="Hello"
+ *   [options]="{ size: 0.5, height: 0.2 }"
+ * >
+ *   <ngt-mesh-standard-material color="gold" />
+ * </ngts-text-3d>
+ * ```
+ *
+ * @example
+ * ```html
+ * <!-- With beveling and smooth normals -->
+ * <ngts-text-3d
+ *   font="/fonts/font.json"
+ *   text="3D Text"
+ *   [options]="{
+ *     size: 1,
+ *     height: 0.5,
+ *     bevelEnabled: true,
+ *     bevelSize: 0.02,
+ *     smooth: 0.01
+ *   }"
+ * >
+ *   <ngt-mesh-normal-material />
+ * </ngts-text-3d>
+ * ```
+ */
 @Component({
 	selector: 'ngts-text-3d,ngts-text-3D',
 	template: `
@@ -46,9 +91,21 @@ const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> & NgtsText3DOptions 
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsText3D {
+	/**
+	 * Font source for the text. Can be a URL to a typeface.json file or a preloaded font object.
+	 */
 	font = input.required<NgtsFontInput>();
+
+	/**
+	 * The text string to render as 3D geometry.
+	 */
 	text = input.required<string>();
+
+	/**
+	 * Configuration options for the 3D text appearance.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
 	protected parameters = omit(this.options, [
 		'letterSpacing',
 		'lineHeight',
@@ -63,7 +120,11 @@ export class NgtsText3D {
 		'smooth',
 	]);
 
+	/**
+	 * Reference to the underlying Mesh Three.js object.
+	 */
 	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
+
 	private textGeometryRef = viewChild<ElementRef<TextGeometry>>('textGeometry');
 
 	private loadedFont = fontResource(this.font);
@@ -109,6 +170,9 @@ export class NgtsText3D {
 	}
 }
 
+/**
+ * Type definition for the TextGeometry Three.js element.
+ */
 export type NgtTextGeometry = NgtThreeElement<typeof TextGeometry>;
 
 declare global {

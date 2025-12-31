@@ -67,24 +67,86 @@ function setEnvProps(
 	};
 }
 
+/**
+ * Configuration options for the NgtsEnvironment component and related directives.
+ */
 export interface NgtsEnvironmentOptions extends Partial<NgtsEnvironmentResourceOptions> {
+	/**
+	 * Number of frames to render the environment cube camera.
+	 * Use `Infinity` for continuous updates.
+	 * @default 1
+	 */
 	frames?: number;
+	/**
+	 * Near clipping plane for the cube camera.
+	 * @default 1
+	 */
 	near?: number;
+	/**
+	 * Far clipping plane for the cube camera.
+	 * @default 1000
+	 */
 	far?: number;
+	/**
+	 * Resolution of the cube render target.
+	 * @default 256
+	 */
 	resolution?: number;
+	/**
+	 * Whether to use the environment as background.
+	 * Set to `'only'` to only use as background without affecting environment lighting.
+	 * @default false
+	 */
 	background?: boolean | 'only';
 
-	/** deprecated, use backgroundBlurriness */
+	/**
+	 * Background blur amount.
+	 * @deprecated Use `backgroundBlurriness` instead.
+	 */
 	blur?: number;
+	/**
+	 * Background blur amount (0 to 1).
+	 * @default 0
+	 */
 	backgroundBlurriness?: number;
+	/**
+	 * Intensity of the background.
+	 * @default 1
+	 */
 	backgroundIntensity?: number;
+	/**
+	 * Rotation of the background as Euler angles.
+	 * @default [0, 0, 0]
+	 */
 	backgroundRotation?: NgtEuler;
+	/**
+	 * Intensity of the environment lighting.
+	 * @default 1
+	 */
 	environmentIntensity?: number;
+	/**
+	 * Rotation of the environment lighting as Euler angles.
+	 * @default [0, 0, 0]
+	 */
 	environmentRotation?: NgtEuler;
 
+	/**
+	 * Pre-loaded texture to use as environment map.
+	 */
 	map?: THREE.Texture;
+	/**
+	 * Preset environment name from the available presets.
+	 */
 	preset?: NgtsEnvironmentPresets;
+	/**
+	 * Target scene to apply the environment to.
+	 * If not provided, uses the default scene.
+	 */
 	scene?: THREE.Scene | ElementRef<THREE.Scene>;
+	/**
+	 * Configuration for ground-projected environment.
+	 * Set to `true` for defaults, or provide custom radius, height, and scale values.
+	 */
 	ground?: boolean | { radius?: number; height?: number; scale?: number };
 }
 
@@ -92,6 +154,14 @@ const defaultBackground: NgtsEnvironmentOptions = {
 	background: false,
 };
 
+/**
+ * Directive that applies a pre-loaded texture map as the scene environment.
+ *
+ * @example
+ * ```html
+ * <ngts-environment-map [options]="{ map: myTexture, background: true }" />
+ * ```
+ */
 @Directive({ selector: 'ngts-environment-map' })
 export class NgtsEnvironmentMap {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
@@ -136,6 +206,15 @@ export class NgtsEnvironmentMap {
 	}
 }
 
+/**
+ * Directive that loads and applies an environment texture from files or presets.
+ * Supports HDR, EXR, and cube map formats.
+ *
+ * @example
+ * ```html
+ * <ngts-environment-cube [options]="{ preset: 'sunset', background: true }" />
+ * ```
+ */
 @Directive({ selector: 'ngts-environment-cube' })
 export class NgtsEnvironmentCube {
 	options = input(defaultBackground, { transform: mergeInputs(defaultBackground) });
@@ -186,6 +265,22 @@ export class NgtsEnvironmentCube {
 	}
 }
 
+/**
+ * Component that creates a portal-based environment using a cube camera.
+ * Renders custom content into a virtual scene and captures it as an environment map.
+ *
+ * @example
+ * ```html
+ * <ngts-environment-portal [options]="{ frames: Infinity }">
+ *   <ng-template>
+ *     <ngt-mesh>
+ *       <ngt-sphere-geometry />
+ *       <ngt-mesh-basic-material color="red" />
+ *     </ngt-mesh>
+ *   </ng-template>
+ * </ngts-environment-portal>
+ * ```
+ */
 @Component({
 	selector: 'ngts-environment-portal',
 	template: `
@@ -332,6 +427,15 @@ export class NgtsEnvironmentPortal {
 	}
 }
 
+/**
+ * Component that creates a ground-projected environment map.
+ * Projects the environment onto a virtual ground plane for realistic reflections.
+ *
+ * @example
+ * ```html
+ * <ngts-environment-ground [options]="{ preset: 'sunset', ground: { height: 15, radius: 60 } }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-environment-ground',
 	template: `
@@ -367,6 +471,29 @@ export class NgtsEnvironmentGround {
 	}
 }
 
+/**
+ * Main environment component that sets up scene environment and background.
+ * Automatically selects the appropriate sub-component based on provided options.
+ *
+ * @example
+ * ```html
+ * <!-- Using a preset -->
+ * <ngts-environment [options]="{ preset: 'sunset', background: true }" />
+ *
+ * <!-- Using a custom texture -->
+ * <ngts-environment [options]="{ map: myTexture }" />
+ *
+ * <!-- Using ground projection -->
+ * <ngts-environment [options]="{ preset: 'park', ground: { height: 15 } }" />
+ *
+ * <!-- Using portal with custom content -->
+ * <ngts-environment [options]="{ background: true }">
+ *   <ng-template>
+ *     <ngt-mesh><ngt-box-geometry /></ngt-mesh>
+ *   </ng-template>
+ * </ngts-environment>
+ * ```
+ */
 @Component({
 	selector: 'ngts-environment',
 	template: `

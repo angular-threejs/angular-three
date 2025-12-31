@@ -19,14 +19,38 @@ import { NgtsPivotControls } from './pivot-controls';
 const clickDir = new THREE.Vector3();
 const intersectionDir = new THREE.Vector3();
 
+/**
+ * Converts radians to degrees.
+ *
+ * @param radians - Angle in radians
+ * @returns Angle in degrees
+ */
 function toDegrees(radians: number) {
 	return (radians * 180) / Math.PI;
 }
 
+/**
+ * Converts degrees to radians.
+ *
+ * @param degrees - Angle in degrees
+ * @returns Angle in radians
+ */
 function toRadians(degrees: number) {
 	return (degrees * Math.PI) / 180;
 }
 
+/**
+ * Calculates the angle between two points relative to an origin and basis vectors.
+ *
+ * Used to determine rotation angle from initial click to current intersection point.
+ *
+ * @param clickPoint - The initial click point
+ * @param intersectionPoint - The current intersection point
+ * @param origin - The center of rotation
+ * @param e1 - First basis vector
+ * @param e2 - Second basis vector
+ * @returns The angle difference in radians
+ */
 function calculateAngle(
 	clickPoint: THREE.Vector3,
 	intersectionPoint: THREE.Vector3,
@@ -47,6 +71,13 @@ function calculateAngle(
 	return angleIntersection - angleClick;
 }
 
+/**
+ * Floating-point modulo operation that handles negative numbers correctly.
+ *
+ * @param num - The numerator
+ * @param denom - The denominator
+ * @returns The remainder
+ */
 function fmod(num: number, denom: number) {
 	let k = Math.floor(num / denom);
 	k = k < 0 ? k + 1 : k;
@@ -54,6 +85,12 @@ function fmod(num: number, denom: number) {
 	return num - k * denom;
 }
 
+/**
+ * Normalizes an angle to be within [0, 2π) range.
+ *
+ * @param angle - The input angle in radians
+ * @returns The normalized angle
+ */
 function minimizeAngle(angle: number) {
 	let result = fmod(angle, 2 * Math.PI);
 
@@ -73,6 +110,13 @@ const posNew = new THREE.Vector3();
 const ray = new THREE.Ray();
 const intersection = new THREE.Vector3();
 
+/**
+ * Internal component that renders a rotation arc handle for the pivot controls.
+ *
+ * This component creates a quarter-circle arc that allows rotation around a single axis.
+ * Users can drag along the arc to rotate the controlled object, with optional snapping
+ * when holding Shift.
+ */
 @Component({
 	selector: 'ngts-axis-rotator',
 	template: `

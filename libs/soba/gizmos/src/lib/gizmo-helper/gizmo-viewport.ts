@@ -31,6 +31,12 @@ import * as THREE from 'three';
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from 'three';
 import { NgtsGizmoHelperImpl } from './gizmo-helper';
 
+/**
+ * Internal component that renders a single axis line for the gizmo viewport.
+ *
+ * This component creates a colored box representing one axis direction,
+ * used as part of the NgtsGizmoViewport visualization.
+ */
 @Component({
 	selector: 'viewport-axis',
 	template: `
@@ -60,6 +66,12 @@ export class Axis {
 	}
 }
 
+/**
+ * Internal component that renders an interactive axis head (sphere) for the gizmo viewport.
+ *
+ * This component creates a clickable sprite at the end of each axis that displays
+ * an optional label and handles user interaction for camera orientation changes.
+ */
 @Component({
 	selector: 'viewport-axis-head',
 	template: `
@@ -163,15 +175,56 @@ export class AxisHead {
 	}
 }
 
+/**
+ * Configuration options for the NgtsGizmoViewport component.
+ *
+ * These options control the appearance and behavior of the viewport-style
+ * gizmo with axis lines and interactive heads.
+ */
 export interface NgtsGizmoViewportOptions extends Partial<NgtThreeElements['ngt-group']> {
+	/**
+	 * Colors for the X, Y, and Z axes.
+	 * @default ['#ff2060', '#20df80', '#2080ff']
+	 */
 	axisColors: [string, string, string];
+	/**
+	 * Scale of the axis lines [x, y, z].
+	 */
 	axisScale?: [number, number, number];
+	/**
+	 * Labels for the X, Y, and Z axis heads.
+	 * @default ['X', 'Y', 'Z']
+	 */
 	labels: [string, string, string];
+	/**
+	 * Scale factor for the axis head sprites.
+	 * @default 1
+	 */
 	axisHeadScale: number;
+	/**
+	 * Color of the axis labels.
+	 * @default '#000'
+	 */
 	labelColor: string;
+	/**
+	 * Whether to hide the negative axis heads (-X, -Y, -Z).
+	 * @default false
+	 */
 	hideNegativeAxes: boolean;
+	/**
+	 * Whether to hide all axis heads.
+	 * @default false
+	 */
 	hideAxisHeads: boolean;
+	/**
+	 * Whether the gizmo is disabled (non-interactive).
+	 * @default false
+	 */
 	disabled: boolean;
+	/**
+	 * CSS font specification for axis labels.
+	 * @default '18px Inter var, Arial, sans-serif'
+	 */
 	font: string;
 }
 
@@ -186,6 +239,22 @@ const defaultOptions: NgtsGizmoViewportOptions = {
 	font: '18px Inter var, Arial, sans-serif',
 };
 
+/**
+ * A component that renders a viewport-style gizmo with colored axes and interactive heads.
+ *
+ * This gizmo displays three perpendicular axes (X, Y, Z) with labeled heads that
+ * can be clicked to animate the camera to the corresponding view direction.
+ * It is typically used inside NgtsGizmoHelper.
+ *
+ * @example
+ * ```html
+ * <ngts-gizmo-helper>
+ *   <ng-template gizmoHelperContent>
+ *     <ngts-gizmo-viewport [options]="{ axisColors: ['red', 'green', 'blue'] }" />
+ *   </ng-template>
+ * </ngts-gizmo-helper>
+ * ```
+ */
 @Component({
 	selector: 'ngts-gizmo-viewport',
 	template: `

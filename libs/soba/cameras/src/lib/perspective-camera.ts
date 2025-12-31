@@ -18,16 +18,41 @@ import * as THREE from 'three';
 import { Group, PerspectiveCamera } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
+/**
+ * Configuration options for the NgtsPerspectiveCamera component.
+ *
+ * Extends Three.js perspective camera properties with additional features
+ * for automatic aspect ratio handling, render-to-texture capabilities, and system camera registration.
+ */
 export interface NgtsPerspectiveCameraOptions extends Partial<NgtThreeElements['ngt-perspective-camera']> {
-	/** Registers the camera as the system default, fiber will start rendering with it */
+	/**
+	 * When true, registers this camera as the system default camera.
+	 * Angular Three will start rendering with this camera.
+	 * @default false
+	 */
 	makeDefault?: boolean;
-	/** Making it manual will stop responsiveness and you have to calculate aspect ratio yourself. */
+	/**
+	 * When true, disables automatic aspect ratio calculation based on viewport size.
+	 * You must manually set the aspect ratio property.
+	 * @default false
+	 */
 	manual?: boolean;
-	/** Number of frames to render, Infinity */
+	/**
+	 * Number of frames to render to the FBO when using cameraContent.
+	 * Set to `Infinity` for continuous rendering, or a specific number
+	 * to limit renders (useful for static scenes).
+	 * @default Infinity
+	 */
 	frames: number;
-	/** Resolution of the FBO, 256 */
+	/**
+	 * Resolution of the frame buffer object (FBO) for render-to-texture.
+	 * @default 256
+	 */
 	resolution: number;
-	/** Optional environment map for functional use */
+	/**
+	 * Optional environment map texture to use as the scene background
+	 * during FBO rendering.
+	 */
 	envMap?: THREE.Texture;
 }
 
@@ -38,6 +63,31 @@ const defaultOptions: NgtsPerspectiveCameraOptions = {
 	manual: false,
 };
 
+/**
+ * A perspective camera component with automatic aspect ratio handling and render-to-texture support.
+ *
+ * This camera automatically calculates its aspect ratio based on the viewport size unless
+ * `manual` mode is enabled. It supports render-to-texture via the `cameraContent` directive,
+ * allowing you to capture the camera's view as a texture.
+ *
+ * Emits `created`, `updated`, and `attached` events through host directives.
+ *
+ * @example
+ * ```html
+ * <!-- Basic perspective camera -->
+ * <ngts-perspective-camera [options]="{ makeDefault: true, position: [0, 0, 10], fov: 75 }" />
+ *
+ * <!-- With render-to-texture -->
+ * <ngts-perspective-camera [options]="{ resolution: 512 }">
+ *   <ng-template cameraContent let-texture>
+ *     <ngt-mesh>
+ *       <ngt-plane-geometry />
+ *       <ngt-mesh-basic-material [map]="texture" />
+ *     </ngt-mesh>
+ *   </ng-template>
+ * </ngts-perspective-camera>
+ * ```
+ */
 @Component({
 	selector: 'ngts-perspective-camera',
 	template: `
@@ -64,7 +114,13 @@ export class NgtsPerspectiveCamera {
 	protected content = contentChild(TemplateRef);
 	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 
+	/**
+	 * Reference to the perspective camera element.
+	 */
 	cameraRef = viewChild.required<ElementRef<THREE.PerspectiveCamera>>('camera');
+	/**
+	 * Reference to the group element containing the camera content.
+	 */
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 
 	private elementEvents = inject(NgtElementEvents, { host: true });

@@ -4,6 +4,14 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Sky } from 'three-stdlib';
 
+/**
+ * Calculates the sun position from inclination and azimuth angles.
+ *
+ * @param inclination - Vertical angle of the sun (0-1, where 0.5 is horizon)
+ * @param azimuth - Horizontal angle of the sun (0-1, representing full rotation)
+ * @param vector - Optional vector to store the result (creates new if not provided)
+ * @returns The calculated sun position vector
+ */
 export function calcPosFromAngles(inclination: number, azimuth: number, vector: THREE.Vector3 = new THREE.Vector3()) {
 	const theta = Math.PI * (inclination - 0.5);
 	const phi = 2 * Math.PI * (azimuth - 0.5);
@@ -15,14 +23,50 @@ export function calcPosFromAngles(inclination: number, azimuth: number, vector: 
 	return vector;
 }
 
+/**
+ * Configuration options for the NgtsSky component.
+ * Extends the base mesh element options from Three.js.
+ */
 export interface NgtsSkyOptions extends Partial<Omit<NgtThreeElements['ngt-mesh'], 'scale'>> {
+	/**
+	 * Distance of the sky sphere from the camera.
+	 * @default 1000
+	 */
 	distance: number;
+	/**
+	 * Vertical angle of the sun (0-1, where 0.5 is horizon).
+	 * Values above 0.5 place sun above horizon, below places it below.
+	 * @default 0.6
+	 */
 	inclination: number;
+	/**
+	 * Horizontal angle of the sun (0-1, representing full rotation).
+	 * @default 0.1
+	 */
 	azimuth: number;
+	/**
+	 * Mie scattering coefficient. Controls haze and sun disc intensity.
+	 * @default 0.005
+	 */
 	mieCoefficient: number;
+	/**
+	 * Mie scattering directional parameter. Controls sun disc size.
+	 * @default 0.8
+	 */
 	mieDirectionalG: number;
+	/**
+	 * Rayleigh scattering coefficient. Higher values create bluer skies.
+	 * @default 0.5
+	 */
 	rayleigh: number;
+	/**
+	 * Atmospheric turbidity. Higher values create hazier atmospheres.
+	 * @default 10
+	 */
 	turbidity: number;
+	/**
+	 * Direct sun position vector. If provided, overrides inclination/azimuth.
+	 */
 	sunPosition?: NgtVector3;
 }
 
@@ -36,6 +80,15 @@ const defaultOptions: NgtsSkyOptions = {
 	turbidity: 10,
 };
 
+/**
+ * Renders a procedural sky dome using atmospheric scattering simulation.
+ * Based on the Three.js Sky shader which simulates realistic sky colors based on sun position.
+ *
+ * @example
+ * ```html
+ * <ngts-sky [options]="{ turbidity: 10, rayleigh: 2, inclination: 0.5 }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-sky',
 	template: `
@@ -57,6 +110,7 @@ const defaultOptions: NgtsSkyOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsSky {
+	/** Configuration options for the sky appearance. */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'distance',

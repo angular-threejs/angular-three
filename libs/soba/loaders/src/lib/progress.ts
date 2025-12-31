@@ -3,6 +3,46 @@ import { signalState } from 'angular-three';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
+/**
+ * Creates a reactive state object that tracks Three.js asset loading progress.
+ *
+ * This function hooks into THREE.DefaultLoadingManager to monitor all asset
+ * loading operations and provides reactive signals for progress tracking.
+ * The state includes progress percentage, active status, error tracking, and
+ * details about the currently loading item.
+ *
+ * The loading manager hooks are automatically cleaned up when the injection
+ * context is destroyed.
+ *
+ * @param injector - Optional injector for dependency injection context
+ * @returns A signal state object with the following properties:
+ *   - `errors`: Array of URLs that failed to load
+ *   - `active`: Whether loading is currently in progress
+ *   - `progress`: Loading progress percentage (0-100)
+ *   - `item`: URL of the currently loading item
+ *   - `loaded`: Number of items loaded
+ *   - `total`: Total number of items to load
+ *
+ * @example
+ * ```typescript
+ * // In a component or service
+ * const loadingState = progress();
+ *
+ * effect(() => {
+ *   if (loadingState.active()) {
+ *     console.log(`Loading: ${loadingState.progress()}%`);
+ *   }
+ * });
+ *
+ * // Check for errors
+ * effect(() => {
+ *   const errors = loadingState.errors();
+ *   if (errors.length > 0) {
+ *     console.error('Failed to load:', errors);
+ *   }
+ * });
+ * ```
+ */
 export function progress(injector?: Injector) {
 	return assertInjector(progress, injector, () => {
 		const progressState = signalState<{
@@ -62,7 +102,11 @@ export function progress(injector?: Injector) {
 }
 
 /**
+ * Alias for the `progress` function.
+ *
  * @deprecated Use `progress` instead. Will be removed in v5.0.0
  * @since v4.0.0
+ *
+ * @see {@link progress}
  */
 export const injectProgress = progress;

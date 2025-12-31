@@ -13,8 +13,20 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Mesh, PlaneGeometry } from 'three';
 
-const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> &
-	GridMaterialOptions & { planeArgs: ConstructorParameters<typeof THREE.PlaneGeometry> } = {
+/**
+ * Configuration options for the NgtsGrid component.
+ * Combines mesh properties, grid material options, and plane geometry arguments.
+ */
+export type NgtsGridOptions = Partial<NgtThreeElements['ngt-mesh']> &
+	GridMaterialOptions & {
+		/**
+		 * Arguments passed to THREE.PlaneGeometry constructor [width, height, widthSegments, heightSegments].
+		 * @default []
+		 */
+		planeArgs: ConstructorParameters<typeof THREE.PlaneGeometry>;
+	};
+
+const defaultOptions: NgtsGridOptions = {
 	planeArgs: [],
 	cellSize: 0.5,
 	cellThickness: 0.5,
@@ -30,6 +42,24 @@ const defaultOptions: Partial<NgtThreeElements['ngt-mesh']> &
 	side: THREE.BackSide,
 };
 
+/**
+ * A configurable infinite grid component with customizable cells and sections.
+ * Features distance-based fading and optional camera following.
+ *
+ * @example
+ * ```html
+ * <ngts-grid
+ *   [options]="{
+ *     cellSize: 1,
+ *     cellColor: '#6f6f6f',
+ *     sectionSize: 3,
+ *     sectionColor: '#9d4b4b',
+ *     fadeDistance: 50,
+ *     infiniteGrid: true
+ *   }"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-grid',
 	template: `

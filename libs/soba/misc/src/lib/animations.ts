@@ -4,39 +4,97 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 
 /**
- * name: any to allow consumers to pass in type-safe animation clips
+ * Animation clip type with flexible name typing.
+ * Allows consumers to pass in type-safe animation clips with custom name types.
+ * @internal
  */
 type NgtsAnimationClipWithoutName = Omit<THREE.AnimationClip, 'name'> & { name: any };
+
+/**
+ * Extended animation clip type with proper clone signature.
+ * Wraps THREE.AnimationClip with modified name and clone types for type safety.
+ */
 export type NgtsAnimationClip = Omit<NgtsAnimationClipWithoutName, 'clone'> & { clone: () => NgtsAnimationClip };
+
+/**
+ * Type helper for creating a union of animation clips with specific names.
+ * Useful for type-safe access to animations by name.
+ *
+ * @typeParam TAnimationNames - Union of animation name strings
+ */
 export type NgtsAnimationClips<TAnimationNames extends string> = {
 	[Name in TAnimationNames]: Omit<NgtsAnimationClip, 'name'> & { name: Name };
 }[TAnimationNames];
+
+/**
+ * API returned by the `animations` function.
+ * Provides access to clips, mixer, action map, and ready state.
+ *
+ * @typeParam T - The animation clip type
+ */
 export type NgtsAnimationApi<T extends NgtsAnimationClip> = {
+	/** Array of all animation clips */
 	clips: T[];
+	/** The THREE.AnimationMixer instance managing all animations */
 	mixer: THREE.AnimationMixer;
+	/** Array of animation names for easy iteration */
 	names: T['name'][];
 } & (
 	| {
 			/**
-			 * Whether or not the animations finishes initialized
+			 * Whether the animations have finished initializing.
+			 * When `true`, the `actions` property is available.
 			 */
 			get isReady(): true;
+			/** Map of animation names to their corresponding AnimationAction instances */
 			actions: { [key in T['name']]: THREE.AnimationAction };
 	  }
 	| {
 			/**
-			 * Whether or not the animations finishes initialized
+			 * Whether the animations have finished initializing.
+			 * When `false`, the `actions` property is not yet available.
 			 */
 			get isReady(): false;
 	  }
 );
 
+/**
+ * Input type for the `animations` function.
+ * Accepts either an array of clips or an object with an `animations` property.
+ *
+ * @typeParam TAnimation - The animation clip type
+ */
 export type NgtsAnimation<TAnimation extends NgtsAnimationClip = NgtsAnimationClip> =
 	| TAnimation[]
 	| { animations: TAnimation[] };
 
 /**
- * Use afterNextRender
+ * Creates an animation API for managing THREE.js animation clips on an object.
+ *
+ * Sets up an AnimationMixer, processes animation clips, and provides a reactive
+ * API for controlling animations. The mixer is automatically updated each frame
+ * and cleaned up on destroy.
+ *
+ * @param animationsFactory - Factory function returning animation clips or object with animations
+ * @param object - The Object3D to attach animations to (or ref/factory returning one)
+ * @param options - Optional configuration
+ * @param options.injector - Custom injector for dependency injection context
+ * @returns Animation API with clips, mixer, actions, and ready state
+ *
+ * @example
+ * ```typescript
+ * const gltf = injectGLTF(() => 'model.glb');
+ * const api = animations(
+ *   () => gltf()?.animations,
+ *   () => gltf()?.scene
+ * );
+ *
+ * effect(() => {
+ *   if (api.isReady) {
+ *     api.actions['walk'].play();
+ *   }
+ * });
+ * ```
  */
 export function animations<TAnimation extends NgtsAnimationClip>(
 	animationsFactory: () => NgtsAnimation<TAnimation> | undefined | null,
@@ -124,7 +182,8 @@ export function animations<TAnimation extends NgtsAnimationClip>(
 }
 
 /**
- * @deprecated use animations instead. Will be removed in v5.0.0
+ * @deprecated Use `animations` instead. Will be removed in v5.0.0.
  * @since v4.0.0
+ * @see animations
  */
 export const injectAnimations = animations;

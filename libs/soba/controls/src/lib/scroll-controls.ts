@@ -15,27 +15,65 @@ import { easing } from 'maath';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
+/**
+ * Configuration options for the NgtsScrollControls component.
+ *
+ * These options control the behavior and appearance of scroll-based interactions
+ * within a Three.js canvas.
+ */
 export interface NgtsScrollControlsOptions {
-	/** Precision, default 0.00001 */
+	/**
+	 * Precision threshold for detecting scroll changes.
+	 * @default 0.00001
+	 */
 	eps: number;
-	/** Horizontal scroll, default false (vertical) */
+	/**
+	 * Whether to enable horizontal scrolling instead of vertical.
+	 * @default false
+	 */
 	horizontal: boolean;
-	/** Infinite scroll, default false (experimental!) */
+	/**
+	 * Whether to enable infinite/continuous scrolling (experimental).
+	 * @default false
+	 */
 	infinite: boolean;
-	/** Defines the lenght of the scroll area, each page is height:100%, default 1 */
+	/**
+	 * Defines the length of the scroll area. Each page is height:100%.
+	 * @default 1
+	 */
 	pages: number;
-	/** A factor that increases scroll bar travel,default: 1 */
+	/**
+	 * A factor that increases scroll bar travel distance.
+	 * @default 1
+	 */
 	distance: number;
-	/** Friction in seconds, default: 0.25 (1/4 second) */
+	/**
+	 * Friction/smoothing duration in seconds.
+	 * @default 0.25
+	 */
 	damping: number;
-	/** maxSpeed optionally allows you to clamp the maximum speed. If damping is 0.2s and looks OK
-	 *  going between, say, page 1 and 2, but not for pages far apart as it'll move very rapid,
-	 *  then a maxSpeed of e.g. 3 which will clamp the speed to 3 units per second, it may now
-	 *  take much longer than damping to reach the target if it is far away. Default: Infinity */
+	/**
+	 * Maximum scroll speed in units per second.
+	 * Useful for clamping speed when scrolling between distant pages.
+	 * If damping is 0.2s and works well for adjacent pages but moves too fast
+	 * for distant pages, setting maxSpeed to e.g. 3 will cap the speed.
+	 * @default Infinity
+	 */
 	maxSpeed: number;
-	/** If true attaches the scroll container before the canvas */
+	/**
+	 * If true, attaches the scroll container before the canvas element.
+	 * @default false
+	 */
 	prepend: boolean;
+	/**
+	 * Whether scroll controls are enabled.
+	 * @default true
+	 */
 	enabled: boolean;
+	/**
+	 * Additional CSS styles to apply to the scroll container.
+	 * @default {}
+	 */
 	style: Partial<CSSStyleDeclaration>;
 }
 
@@ -52,6 +90,23 @@ const defaultOptions: NgtsScrollControlsOptions = {
 	style: {},
 };
 
+/**
+ * A component that enables scroll-based interactions within a Three.js canvas.
+ *
+ * NgtsScrollControls creates a scrollable container that can be used to control
+ * animations and camera movements based on scroll position. It provides smooth
+ * damping, supports both horizontal and vertical scrolling, and offers utility
+ * methods to query scroll progress.
+ *
+ * @example
+ * ```html
+ * <ngts-scroll-controls [options]="{ pages: 3, damping: 0.1 }">
+ *   <ngt-group canvasScrollContent>
+ *     <!-- 3D content that moves with scroll -->
+ *   </ngt-group>
+ * </ngts-scroll-controls>
+ * ```
+ */
 @Component({
 	selector: 'ngts-scroll-controls',
 	template: `
@@ -236,28 +291,62 @@ export class NgtsScrollControls {
 		});
 	}
 
+	/**
+	 * The main scroll container element.
+	 */
 	get el() {
 		return this._el;
 	}
 
+	/**
+	 * The fill element that creates the scrollable height/width.
+	 */
 	get fill() {
 		return this._fill;
 	}
 
+	/**
+	 * The fixed position container for scroll content.
+	 */
 	get fixed() {
 		return this._fixed;
 	}
 
+	/**
+	 * Calculates a linear progress value (0-1) within a specified scroll range.
+	 *
+	 * @param from - The starting scroll position (0-1)
+	 * @param distance - The length of the active scroll range
+	 * @param margin - Optional margin to extend the range on both ends
+	 * @returns A value between 0 and 1 representing progress through the range
+	 */
 	range(from: number, distance: number, margin = 0): number {
 		const start = from - margin;
 		const end = start + distance + margin * 2;
 		return this.offset < start ? 0 : this.offset > end ? 1 : (this.offset - start) / (end - start);
 	}
 
+	/**
+	 * Calculates a curved (sinusoidal) progress value within a specified scroll range.
+	 * Returns 0 at the start, peaks at 1 in the middle, and returns to 0 at the end.
+	 *
+	 * @param from - The starting scroll position (0-1)
+	 * @param distance - The length of the active scroll range
+	 * @param margin - Optional margin to extend the range on both ends
+	 * @returns A sinusoidal value between 0 and 1
+	 */
 	curve(from: number, distance: number, margin = 0): number {
 		return Math.sin(this.range(from, distance, margin) * Math.PI);
 	}
 
+	/**
+	 * Determines whether the current scroll position is within a specified range.
+	 *
+	 * @param from - The starting scroll position (0-1)
+	 * @param distance - The length of the active scroll range
+	 * @param margin - Optional margin to extend the range on both ends
+	 * @returns True if currently within the specified range
+	 */
 	visible(from: number, distance: number, margin = 0): boolean {
 		const start = from - margin;
 		const end = start + distance + margin * 2;
@@ -265,6 +354,21 @@ export class NgtsScrollControls {
 	}
 }
 
+/**
+ * A directive that automatically positions a group based on scroll progress.
+ *
+ * Apply this directive to an ngt-group element to have it automatically
+ * move in response to scroll position within NgtsScrollControls.
+ *
+ * @example
+ * ```html
+ * <ngts-scroll-controls [options]="{ pages: 3 }">
+ *   <ngt-group canvasScrollContent>
+ *     <!-- Content that moves with scroll -->
+ *   </ngt-group>
+ * </ngts-scroll-controls>
+ * ```
+ */
 @Directive({ selector: 'ngt-group[canvasScrollContent]' })
 export class NgtsCanvasScrollContent {
 	private host = inject<ElementRef<THREE.Group>>(ElementRef);
@@ -285,6 +389,22 @@ export class NgtsCanvasScrollContent {
 	}
 }
 
+/**
+ * A directive that automatically transforms an HTML element based on scroll progress.
+ *
+ * Apply this directive to a div element to have it automatically transform
+ * in response to scroll position within NgtsScrollControls. This is useful
+ * for creating HTML overlays that scroll in sync with the 3D content.
+ *
+ * @example
+ * ```html
+ * <ngts-scroll-controls [options]="{ pages: 3 }">
+ *   <div htmlScrollContent>
+ *     <h1>Scrolling HTML content</h1>
+ *   </div>
+ * </ngts-scroll-controls>
+ * ```
+ */
 @Directive({
 	selector: 'div[htmlScrollContent]',
 	host: { style: 'position: absolute; top: 0; left: 0; will-change: transform;', 'data-html-scroll-content': '' },

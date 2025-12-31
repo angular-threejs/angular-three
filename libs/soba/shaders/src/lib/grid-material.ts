@@ -3,33 +3,92 @@ import { getVersion } from 'angular-three-soba/misc';
 import { shaderMaterial } from 'angular-three-soba/vanilla-exports';
 import * as THREE from 'three';
 
+/**
+ * Configuration options for the GridMaterial shader material.
+ * Controls the appearance, size, and behavior of the infinite grid.
+ */
 export interface GridMaterialOptions {
-	/** Cell size, default: 0.5 */
+	/**
+	 * Size of individual grid cells.
+	 * @default 0.5
+	 */
 	cellSize: number;
-	/** Cell thickness, default: 0.5 */
+	/**
+	 * Thickness of cell grid lines.
+	 * @default 0.5
+	 */
 	cellThickness: number;
-	/** Cell color, default: black */
+	/**
+	 * Color of the cell grid lines.
+	 * @default 'black'
+	 */
 	cellColor: THREE.ColorRepresentation;
-	/** Section size, default: 1 */
+	/**
+	 * Size of section divisions (larger grid squares).
+	 * @default 1
+	 */
 	sectionSize: number;
-	/** Section thickness, default: 1 */
+	/**
+	 * Thickness of section grid lines.
+	 * @default 1
+	 */
 	sectionThickness: number;
-	/** Section color, default: #2080ff */
+	/**
+	 * Color of the section grid lines.
+	 * @default '#2080ff'
+	 */
 	sectionColor: THREE.ColorRepresentation;
-	/** Follow camera, default: false */
+	/**
+	 * Whether the grid should follow the camera position.
+	 * @default false
+	 */
 	followCamera: boolean;
-	/** Display the grid infinitely, default: false */
+	/**
+	 * Whether to display the grid infinitely extending to the horizon.
+	 * @default false
+	 */
 	infiniteGrid: boolean;
-	/** Fade distance, default: 100 */
+	/**
+	 * Distance at which the grid starts to fade out.
+	 * @default 100
+	 */
 	fadeDistance: number;
-	/** Fade strength, default: 1 */
+	/**
+	 * Strength of the fade effect (higher values = sharper fade).
+	 * @default 1
+	 */
 	fadeStrength: number;
-	/** Fade from camera (1) or origin (0), or somewhere in between, default: camera */
+	/**
+	 * Controls the fade origin point: 1 = from camera, 0 = from origin, values in between interpolate.
+	 * @default 1 (camera)
+	 */
 	fadeFrom: number;
-	/** Material side, default: THREE.BackSide */
+	/**
+	 * Which side of the material to render.
+	 * @default THREE.BackSide
+	 */
 	side: THREE.Side;
 }
 
+/**
+ * A shader material that renders an infinite grid with customizable cells and sections.
+ * Supports fading, camera following, and dual-layer grid lines (cells and sections).
+ *
+ * @example
+ * ```typescript
+ * extend({ GridMaterial });
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngt-grid-material
+ *   [cellSize]="0.5"
+ *   [sectionSize]="1"
+ *   [fadeDistance]="100"
+ *   [infiniteGrid]="true"
+ * />
+ * ```
+ */
 export const GridMaterial = shaderMaterial(
 	{
 		cellSize: 0.5,
@@ -110,6 +169,10 @@ export const GridMaterial = shaderMaterial(
   `,
 );
 
+/**
+ * Type definition for the GridMaterial element in Angular Three templates.
+ * Extends NgtThreeElement to provide type-safe template usage.
+ */
 export type NgtGridMaterial = NgtThreeElement<typeof GridMaterial>;
 
 declare global {

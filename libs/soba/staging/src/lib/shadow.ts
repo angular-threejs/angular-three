@@ -12,11 +12,36 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { CanvasTexture, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 
+/**
+ * Configuration options for the NgtsShadow component.
+ * Extends the base mesh element options from Three.js.
+ */
 export interface NgtsShadowOptions extends Partial<NgtThreeElements['ngt-mesh']> {
+	/**
+	 * Position of the color stop in the radial gradient (0-1).
+	 * Lower values create a smaller, sharper shadow center.
+	 * @default 0.0
+	 */
 	colorStop: number;
+	/**
+	 * Whether the shadow is affected by fog.
+	 * @default false
+	 */
 	fog: boolean;
+	/**
+	 * Color of the shadow.
+	 * @default 'black'
+	 */
 	color: NgtColor;
+	/**
+	 * Opacity of the shadow (0-1).
+	 * @default 0.5
+	 */
 	opacity: number;
+	/**
+	 * Whether to write to the depth buffer.
+	 * @default false
+	 */
 	depthWrite: boolean;
 }
 
@@ -28,6 +53,15 @@ const defaultShadowOptions: NgtsShadowOptions = {
 	opacity: 0.5,
 };
 
+/**
+ * Renders a simple circular drop shadow using a canvas-generated radial gradient texture.
+ * Creates a flat plane with a transparent gradient that simulates a soft shadow.
+ *
+ * @example
+ * ```html
+ * <ngts-shadow [options]="{ color: 'black', opacity: 0.5, scale: [2, 2, 1] }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-shadow',
 	template: `
@@ -53,6 +87,7 @@ export class NgtsShadow {
 	protected readonly Math = Math;
 	protected readonly DoubleSide = THREE.DoubleSide;
 
+	/** Configuration options for the shadow appearance. */
 	options = input(defaultShadowOptions, { transform: mergeInputs(defaultShadowOptions) });
 	protected parameters = omit(this.options, ['colorStop', 'fog', 'color', 'opacity', 'depthWrite', 'renderOrder']);
 

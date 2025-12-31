@@ -4,7 +4,14 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { NgtsLine, NgtsLineOptions } from './line';
 
+/**
+ * Configuration options for the NgtsCubicBezierLine component.
+ */
 export interface NgtsCubicBezierLineOptions extends Omit<NgtsLineOptions, 'segments'> {
+	/**
+	 * Number of segments to divide the Bezier curve into for rendering.
+	 * @default 20
+	 */
 	segments?: number;
 }
 
@@ -13,6 +20,21 @@ const defaultOptions: NgtsCubicBezierLineOptions = {
 	segments: 20,
 };
 
+/**
+ * A line component that renders a cubic Bezier curve defined by start, end, and two control points.
+ * Uses THREE.CubicBezierCurve3 internally for smooth curve interpolation.
+ *
+ * @example
+ * ```html
+ * <ngts-cubic-bezier-line
+ *   [start]="[0, 0, 0]"
+ *   [end]="[10, 0, 0]"
+ *   [midA]="[2, 5, 0]"
+ *   [midB]="[8, 5, 0]"
+ *   [options]="{ color: 'red', lineWidth: 2 }"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-cubic-bezier-line',
 	template: `

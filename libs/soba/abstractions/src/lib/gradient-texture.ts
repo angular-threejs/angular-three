@@ -13,11 +13,36 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { CanvasTexture } from 'three';
 
+/**
+ * Configuration options for the NgtsGradientTexture component.
+ */
 export interface NgtsGradientTextureOptions extends Partial<Omit<NgtThreeElements['ngt-canvas-texture'], 'type'>> {
+	/**
+	 * Height of the gradient texture canvas in pixels.
+	 * @default 1024
+	 */
 	size: number;
+	/**
+	 * Width of the gradient texture canvas in pixels.
+	 * @default 16
+	 */
 	width: number;
+	/**
+	 * Type of gradient to generate.
+	 * - 'linear': Creates a linear gradient from top to bottom
+	 * - 'radial': Creates a radial gradient from center outward
+	 * @default 'linear'
+	 */
 	type: 'linear' | 'radial';
+	/**
+	 * Inner circle radius for radial gradients (only applies when type is 'radial').
+	 * @default 0
+	 */
 	innerCircleRadius: number;
+	/**
+	 * Outer circle radius for radial gradients. Use 'auto' to calculate based on canvas size.
+	 * @default 'auto'
+	 */
 	outerCircleRadius: string | number;
 }
 
@@ -29,6 +54,24 @@ const defaultOptions: NgtsGradientTextureOptions = {
 	outerCircleRadius: 'auto',
 };
 
+/**
+ * A texture component that generates a gradient from an array of colors and stops.
+ * Supports both linear and radial gradients, useful for backgrounds, skyboxes, or material maps.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-plane-geometry />
+ *   <ngt-mesh-basic-material>
+ *     <ngts-gradient-texture
+ *       [stops]="[0, 0.5, 1]"
+ *       [colors]="['red', 'green', 'blue']"
+ *       [options]="{ type: 'linear' }"
+ *     />
+ *   </ngt-mesh-basic-material>
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-gradient-texture',
 	template: `

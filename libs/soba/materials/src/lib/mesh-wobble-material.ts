@@ -3,9 +3,15 @@ import { beforeRender, NgtArgs, NgtAttachable, NgtThreeElements, omit } from 'an
 import { MeshWobbleMaterial, MeshWobbleMaterialParameters } from 'angular-three-soba/vanilla-exports';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 
+/**
+ * Configuration options for the NgtsMeshWobbleMaterial component.
+ */
 export interface NgtsMeshWobbleMaterialOptions
-	extends MeshWobbleMaterialParameters,
-		Partial<NgtThreeElements['ngt-mesh-standard-material']> {
+	extends MeshWobbleMaterialParameters, Partial<NgtThreeElements['ngt-mesh-standard-material']> {
+	/**
+	 * Animation speed multiplier for the wobble effect.
+	 * @default 1
+	 */
 	speed: number;
 }
 
@@ -13,6 +19,18 @@ const defaultOptions: NgtsMeshWobbleMaterialOptions = {
 	speed: 1,
 };
 
+/**
+ * A material that applies animated sine-wave wobble distortion to mesh surfaces.
+ * Extends MeshStandardMaterial with vertex displacement for organic, jelly-like motion.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-torus-geometry />
+ *   <ngts-mesh-wobble-material [options]="{ speed: 2, factor: 0.6, color: 'cyan' }" />
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-mesh-wobble-material',
 	template: `
@@ -25,10 +43,21 @@ const defaultOptions: NgtsMeshWobbleMaterialOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsMeshWobbleMaterial {
+	/**
+	 * How to attach the material to its parent object.
+	 * @default 'material'
+	 */
 	attach = input<NgtAttachable>('material');
+
+	/**
+	 * Configuration options for the wobble material.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+
+	/** Parameters excluding animation speed. */
 	protected parameters = omit(this.options, ['speed']);
 
+	/** The underlying MeshWobbleMaterial instance. */
 	protected material = new MeshWobbleMaterial();
 
 	constructor() {

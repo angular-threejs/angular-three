@@ -7,6 +7,9 @@ import { DRACOLoader, type GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib
 let dracoLoader: DRACOLoader | null = null;
 let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
 
+/**
+ * Maps a GLTF type to its corresponding URL input type.
+ */
 type GLTFUrl<TGLTF extends GLTF | GLTF[] | Record<string, GLTF>> = TGLTF extends GLTF
 	? string
 	: TGLTF extends GLTF[]
@@ -14,6 +17,10 @@ type GLTFUrl<TGLTF extends GLTF | GLTF[] | Record<string, GLTF>> = TGLTF extends
 		: TGLTF extends Record<string, GLTF>
 			? Record<string, string>
 			: never;
+
+/**
+ * Maps a GLTF type to its result type with NgtObjectMap for easy access to nodes and materials.
+ */
 type GLTFObjectMap<
 	TGLTF extends GLTF | GLTF[] | Record<string, GLTF>,
 	TUrl extends string | string[] | Record<string, string>,
@@ -28,6 +35,10 @@ type GLTFObjectMap<
 					? Array<TGLTF & NgtObjectMap>
 					: { [K in keyof TUrl]: TGLTF & NgtObjectMap }
 				: never;
+
+/**
+ * Maps a GLTF type to its scene type(s).
+ */
 type GLTFObjectSceneMap<
 	TGLTF extends GLTF | GLTF[] | Record<string, GLTF>,
 	TUrl extends string | string[] | Record<string, string>,
@@ -65,6 +76,46 @@ function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions
 	};
 }
 
+/**
+ * Creates a resource for loading GLTF/GLB 3D models using Angular's resource API.
+ *
+ * This function wraps the GLTFLoader from three-stdlib and provides a reactive
+ * resource-based approach to loading GLTF files. It supports Draco compression
+ * and Meshopt optimization out of the box.
+ *
+ * The returned resource includes a `scene` computed signal for direct access to
+ * the loaded scene(s).
+ *
+ * @param input - A function returning the URL(s) of the GLTF/GLB file(s) to load
+ * @param options - Configuration options
+ * @param options.useDraco - Enable Draco compression support. Pass a string to specify custom decoder path
+ * @param options.useMeshOpt - Enable Meshopt optimization support
+ * @param options.injector - Optional injector for dependency injection context
+ * @param options.extensions - Custom extensions callback for the GLTFLoader
+ * @param options.onLoad - Callback fired when loading completes
+ * @returns A ResourceRef containing the loaded GLTF data with a `scene` signal
+ *
+ * @example
+ * ```typescript
+ * // Basic usage
+ * const gltf = gltfResource(() => '/models/robot.glb');
+ *
+ * // With typed nodes
+ * interface RobotGLTF extends GLTF {
+ *   nodes: { Head: THREE.Mesh; Body: THREE.Mesh };
+ * }
+ * const robot = gltfResource<RobotGLTF>(() => '/models/robot.glb');
+ *
+ * // Access scene directly via computed signal
+ * effect(() => {
+ *   const scene = robot.scene();
+ *   if (scene) { ... }
+ * });
+ *
+ * // Disable Draco
+ * const gltf = gltfResource(() => '/models/simple.glb', { useDraco: false });
+ * ```
+ */
 export function gltfResource<
 	TGLTF extends GLTF | GLTF[] | Record<string, GLTF> = GLTF,
 	TUrl extends string | string[] | Record<string, string> = GLTFUrl<TGLTF>,
@@ -77,10 +128,15 @@ export function gltfResource<
 		extensions,
 		onLoad,
 	}: {
+		/** Enable Draco compression. Pass string for custom decoder path. @default true */
 		useDraco?: boolean | string;
+		/** Enable Meshopt optimization. @default true */
 		useMeshOpt?: boolean;
+		/** Optional injector for DI context */
 		injector?: Injector;
+		/** Custom extensions callback for GLTFLoader */
 		extensions?: (loader: GLTFLoader) => void;
+		/** Callback fired when loading completes */
 		onLoad?: (data: GLTFObjectMap<TGLTF, TUrl>) => void;
 	} = {},
 ) {
@@ -117,6 +173,24 @@ export function gltfResource<
 	});
 }
 
+/**
+ * Preloads GLTF/GLB models into the cache for faster subsequent loading.
+ *
+ * @param input - The URL(s) of the GLTF/GLB file(s) to preload
+ * @param options - Configuration options
+ * @param options.useDraco - Enable Draco compression support
+ * @param options.useMeshOpt - Enable Meshopt optimization support
+ * @param options.extensions - Custom extensions callback for the GLTFLoader
+ *
+ * @example
+ * ```typescript
+ * // Preload a model
+ * gltfResource.preload('/models/robot.glb');
+ *
+ * // Preload with custom Draco decoder path
+ * gltfResource.preload('/models/robot.glb', { useDraco: '/draco/' });
+ * ```
+ */
 gltfResource.preload = <TUrl extends string | string[] | Record<string, string>>(
 	input: TUrl,
 	{
@@ -124,14 +198,28 @@ gltfResource.preload = <TUrl extends string | string[] | Record<string, string>>
 		useMeshOpt = true,
 		extensions,
 	}: {
+		/** Enable Draco compression. Pass string for custom decoder path. @default true */
 		useDraco?: boolean | string;
+		/** Enable Meshopt optimization. @default true */
 		useMeshOpt?: boolean;
+		/** Custom extensions callback for GLTFLoader */
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ) => {
 	loaderResource.preload(GLTFLoader, input, _extensions(useDraco, useMeshOpt, extensions));
 };
 
+/**
+ * Sets the global Draco decoder path for all subsequent GLTF loads.
+ *
+ * @param path - The URL path to the Draco decoder files
+ *
+ * @example
+ * ```typescript
+ * // Use local Draco decoder files
+ * gltfResource.setDecoderPath('/draco/');
+ * ```
+ */
 gltfResource.setDecoderPath = (path: string) => {
 	decoderPath = path;
 };

@@ -2,6 +2,9 @@ import { ElementRef } from '@angular/core';
 import { NgtThreeElement, resolveRef } from 'angular-three';
 import * as THREE from 'three';
 
+/**
+ * Type definition for the PositionMesh element in Angular Three templates.
+ */
 export type NgtPositionMesh = NgtThreeElement<typeof PositionMesh>;
 
 const _instanceLocalMatrix = new THREE.Matrix4();
@@ -9,8 +12,26 @@ const _instanceWorldMatrix = new THREE.Matrix4();
 const _instanceIntersects: THREE.Intersection[] = [];
 const _mesh = new THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>();
 
+/**
+ * A virtual mesh class that represents a single instance within an InstancedMesh.
+ *
+ * PositionMesh extends THREE.Group and provides the ability to position, rotate,
+ * scale, and color individual instances while maintaining proper raycasting support.
+ * Each PositionMesh is linked to a parent InstancedMesh and contributes its transform
+ * to the instance matrix buffer.
+ *
+ * This class enables individual instances to receive pointer events and have bounds
+ * for frustum culling, which is not natively supported by THREE.InstancedMesh.
+ */
 export class PositionMesh extends THREE.Group {
+	/**
+	 * The color of this instance.
+	 * @default new THREE.Color('white')
+	 */
 	color: THREE.Color;
+	/**
+	 * Reference to the parent InstancedMesh that this instance belongs to.
+	 */
 	instance: ElementRef<THREE.InstancedMesh> | THREE.InstancedMesh | null | undefined;
 
 	constructor() {
@@ -19,12 +40,20 @@ export class PositionMesh extends THREE.Group {
 		this.instance = undefined;
 	}
 
-	// This will allow the virtual instance have bounds
+	/**
+	 * Gets the geometry from the parent InstancedMesh.
+	 * This allows the virtual instance to have bounds for frustum culling.
+	 */
 	get geometry() {
 		return resolveRef(this.instance)?.geometry;
 	}
 
-	// And this will allow the virtual instance to receive events
+	/**
+	 * Custom raycast implementation that enables this virtual instance to receive pointer events.
+	 *
+	 * @param raycaster - The raycaster to test against
+	 * @param intersects - Array to populate with intersection results
+	 */
 	override raycast(raycaster: THREE.Raycaster, intersects: THREE.Intersection[]) {
 		const parent = resolveRef(this.instance);
 		if (!parent) return;

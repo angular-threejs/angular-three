@@ -33,12 +33,42 @@ function interpolateFuncDefault(t: number) {
 	return 1 - Math.exp(-5 * t) + 0.007 * t;
 }
 
+/**
+ * Configuration options for the NgtsBounds component.
+ * Extends the standard ngt-group element options.
+ */
 export interface NgtsBoundsOptions extends Partial<NgtThreeElements['ngt-group']> {
+	/**
+	 * Maximum duration of the camera animation in seconds.
+	 * @default 1.0
+	 */
 	maxDuration: number;
+	/**
+	 * Margin factor applied to the calculated camera distance.
+	 * Values > 1 add padding around the bounds.
+	 * @default 1.2
+	 */
 	margin: number;
+	/**
+	 * When enabled, automatically recalculates bounds when children change.
+	 * @default false
+	 */
 	observe: boolean;
+	/**
+	 * When enabled, automatically fits the camera to the bounds on initialization.
+	 * @default false
+	 */
 	fit: boolean;
+	/**
+	 * When enabled, automatically adjusts camera near/far planes to the bounds.
+	 * @default false
+	 */
 	clip: boolean;
+	/**
+	 * Custom interpolation function for camera animation.
+	 * Takes a value from 0 to 1 and returns an interpolated value.
+	 * @default Damping-based interpolation function
+	 */
 	interpolateFunc: (t: number) => number;
 }
 
@@ -51,6 +81,24 @@ const defaultOptions: NgtsBoundsOptions = {
 	observe: false,
 };
 
+/**
+ * A component that calculates the bounding box of its children and provides
+ * methods to animate the camera to fit those bounds. Useful for focusing
+ * the camera on specific objects or automatically framing content.
+ *
+ * Supports both perspective and orthographic cameras with appropriate
+ * handling for each camera type.
+ *
+ * @example
+ * ```html
+ * <ngts-bounds [options]="{ fit: true, clip: true, observe: true }">
+ *   <ngt-mesh>
+ *     <ngt-box-geometry />
+ *     <ngt-mesh-standard-material />
+ *   </ngt-mesh>
+ * </ngts-bounds>
+ * ```
+ */
 @Component({
 	selector: 'ngts-bounds',
 	template: `
@@ -181,6 +229,11 @@ export class NgtsBounds {
 		});
 	}
 
+	/**
+	 * Gets the current size information of the bounds.
+	 *
+	 * @returns An object containing the bounding box, size vector, center point, and calculated camera distance
+	 */
 	getSize() {
 		const [camera, { margin }] = [this.store.snapshot.camera, untracked(this.options)];
 
@@ -196,6 +249,12 @@ export class NgtsBounds {
 		return { box: this.box, size: boxSize, center, distance };
 	}
 
+	/**
+	 * Refreshes the bounding box calculation from the given object or the component's children.
+	 *
+	 * @param object - Optional object or Box3 to calculate bounds from. If not provided, uses the component's group.
+	 * @returns This instance for method chaining
+	 */
 	refresh(object?: THREE.Object3D | THREE.Box3) {
 		const [group, camera] = [untracked(this.groupRef).nativeElement, this.store.snapshot.camera];
 
@@ -224,6 +283,12 @@ export class NgtsBounds {
 		return this;
 	}
 
+	/**
+	 * Resets and animates the camera to fit the current bounds while maintaining
+	 * the current viewing direction.
+	 *
+	 * @returns This instance for method chaining
+	 */
 	reset() {
 		const [camera] = [this.store.snapshot.camera];
 		const { center, distance } = this.getSize();
@@ -240,6 +305,12 @@ export class NgtsBounds {
 		return this;
 	}
 
+	/**
+	 * Animates the camera to a new position.
+	 *
+	 * @param position - Target position as a Vector3 or [x, y, z] array
+	 * @returns This instance for method chaining
+	 */
 	moveTo(position: THREE.Vector3 | [number, number, number]) {
 		this.goal.camPos = Array.isArray(position) ? new THREE.Vector3(...position) : position.clone();
 
@@ -249,6 +320,14 @@ export class NgtsBounds {
 		return this;
 	}
 
+	/**
+	 * Animates the camera to look at a target position with optional up vector.
+	 *
+	 * @param params - Object containing target position and optional up vector
+	 * @param params.target - The point to look at as a Vector3 or [x, y, z] array
+	 * @param params.up - Optional up vector as a Vector3 or [x, y, z] array
+	 * @returns This instance for method chaining
+	 */
 	lookAt({
 		target,
 		up,
@@ -277,6 +356,15 @@ export class NgtsBounds {
 		return this;
 	}
 
+	/**
+	 * Fits the camera to the bounds by adjusting zoom (for orthographic cameras)
+	 * or position (for perspective cameras).
+	 *
+	 * For orthographic cameras, this only adjusts the zoom level while preserving position.
+	 * For perspective cameras, this behaves the same as reset().
+	 *
+	 * @returns This instance for method chaining
+	 */
 	fit() {
 		const [camera, controls, { margin }] = [
 			this.store.snapshot.camera,
@@ -328,6 +416,12 @@ export class NgtsBounds {
 		return this;
 	}
 
+	/**
+	 * Adjusts the camera's near and far clipping planes based on the current bounds.
+	 * Also updates the controls' maxDistance if controls are present.
+	 *
+	 * @returns This instance for method chaining
+	 */
 	clip() {
 		const [camera, controls, invalidate] = [
 			this.store.snapshot.camera,

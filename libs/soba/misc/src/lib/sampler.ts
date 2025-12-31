@@ -14,38 +14,79 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { MeshSurfaceSampler } from 'three-stdlib';
 
+/**
+ * Data provided for each sampled point on a mesh surface.
+ * @internal
+ */
 interface SamplePayload {
-	/**
-	 * The position of the sample.
-	 */
+	/** The world-space position of the sample point */
 	position: THREE.Vector3;
-	/**
-	 * The normal of the mesh at the sampled position.
-	 */
+	/** The interpolated normal at the sample point */
 	normal: THREE.Vector3;
-	/**
-	 * The vertex color of the mesh at the sampled position.
-	 */
+	/** The interpolated vertex color at the sample point */
 	color: THREE.Color;
 }
 
+/**
+ * Transform function signature for customizing instance placement.
+ *
+ * @param payload - Sample data including position, normal, color, and transform objects
+ * @param i - The index of the current sample (0 to count-1)
+ */
 export type TransformFn = (payload: TransformPayload, i: number) => void;
 
+/**
+ * Extended sample payload including transform helpers.
+ * Passed to the transform function for each sampled point.
+ */
 interface TransformPayload extends SamplePayload {
 	/**
-	 * The dummy object used to transform each instance.
-	 * This object's matrix will be updated after transforming & it will be used
-	 * to set the instance's matrix.
+	 * A dummy Object3D for calculating the transform matrix.
+	 * Modify its position, rotation, and scale - the matrix will be
+	 * applied to the corresponding instance automatically.
 	 */
 	dummy: THREE.Object3D;
 	/**
-	 * The mesh that's initially passed to the sampler.
-	 * Use this if you need to apply transforms from your mesh to your instances
-	 * or if you need to grab attributes from the geometry.
+	 * Reference to the source mesh being sampled.
+	 * Useful for accessing geometry attributes or applying parent transforms.
 	 */
 	sampledMesh: THREE.Mesh;
 }
 
+/**
+ * Creates a computed signal that samples points on a mesh surface.
+ *
+ * Uses THREE.MeshSurfaceSampler to distribute points across the mesh geometry.
+ * Returns an InstancedBufferAttribute containing transform matrices for each sample,
+ * suitable for use with InstancedMesh or custom instancing solutions.
+ *
+ * @param mesh - Factory returning the mesh to sample from
+ * @param options - Sampling configuration
+ * @param options.count - Factory returning number of samples (default: 16)
+ * @param options.transform - Factory returning custom transform function
+ * @param options.weight - Factory returning weight attribute name for biased sampling
+ * @param options.instancedMesh - Factory returning InstancedMesh to update directly
+ * @returns Computed signal yielding InstancedBufferAttribute with 4x4 matrices
+ *
+ * @example
+ * ```typescript
+ * const meshRef = viewChild<ElementRef<THREE.Mesh>>('mesh');
+ * const instancesRef = viewChild<ElementRef<THREE.InstancedMesh>>('instances');
+ *
+ * const samples = surfaceSampler(
+ *   () => meshRef()?.nativeElement,
+ *   {
+ *     count: () => 1000,
+ *     instancedMesh: () => instancesRef()?.nativeElement,
+ *     transform: () => ({ dummy, position, normal }) => {
+ *       dummy.position.copy(position);
+ *       dummy.lookAt(position.clone().add(normal));
+ *       dummy.scale.setScalar(Math.random() * 0.5 + 0.5);
+ *     }
+ *   }
+ * );
+ * ```
+ */
 export function surfaceSampler(
 	mesh: () => ElementRef<THREE.Mesh> | THREE.Mesh | null | undefined,
 	{
@@ -132,23 +173,31 @@ export function surfaceSampler(
 	});
 }
 
+/**
+ * Configuration options for the NgtsSampler component.
+ */
 export interface NgtsSamplerOptions extends Partial<NgtThreeElements['ngt-group']> {
 	/**
-	 * The NAME of the weight attribute to use when sampling.
+	 * Name of a vertex attribute to use for weighted sampling.
+	 * Higher values = more likely to be sampled. Useful for concentrating
+	 * instances in specific areas (e.g., based on vertex colors or custom data).
 	 *
 	 * @see https://threejs.org/docs/#examples/en/math/MeshSurfaceSampler.setWeightAttribute
 	 */
 	weight?: string;
+
 	/**
-	 * Transformation to be applied to each instance.
-	 * Receives a dummy object3D with all the sampled data ( @see TransformPayload ).
-	 * It should mutate `transformPayload.dummy`.
-	 *
-	 * @see ( @todo add link to example )
-	 *
-	 * There is no need to update the dummy's matrix
+	 * Custom transform function applied to each sampled instance.
+	 * Receives sample data and should mutate `payload.dummy` to set
+	 * position, rotation, and scale. The dummy's matrix is automatically
+	 * updated and applied after the function returns.
 	 */
 	transform?: TransformFn;
+
+	/**
+	 * Number of samples to distribute across the mesh surface.
+	 * @default 16
+	 */
 	count: number;
 }
 
@@ -156,6 +205,33 @@ const defaultOptions: NgtsSamplerOptions = {
 	count: 16,
 };
 
+/**
+ * Distributes instances across a mesh surface using MeshSurfaceSampler.
+ *
+ * This component samples points on a mesh and automatically updates an
+ * InstancedMesh with the sampled transforms. Both the source mesh and
+ * target instances can be provided as inputs or as children.
+ *
+ * @example
+ * ```html
+ * <!-- External mesh and instances -->
+ * <ngt-mesh #sourceMesh>
+ *   <ngt-torus-knot-geometry />
+ *   <ngt-mesh-standard-material />
+ * </ngt-mesh>
+ *
+ * <ngts-sampler
+ *   [mesh]="sourceMesh"
+ *   [instances]="instancesRef"
+ *   [options]="{ count: 500, transform: scatterTransform }"
+ * >
+ *   <ngt-instanced-mesh #instancesRef [count]="500">
+ *     <ngt-sphere-geometry [args]="[0.02]" />
+ *     <ngt-mesh-basic-material color="red" />
+ *   </ngt-instanced-mesh>
+ * </ngts-sampler>
+ * ```
+ */
 @Component({
 	selector: 'ngts-sampler',
 	template: `
@@ -167,8 +243,21 @@ const defaultOptions: NgtsSamplerOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsSampler {
+	/**
+	 * The mesh to sample points from.
+	 * If not provided, uses the first Mesh child of this component.
+	 */
 	mesh = input<ElementRef<THREE.Mesh> | THREE.Mesh | null>(null);
+
+	/**
+	 * The InstancedMesh to update with sampled transforms.
+	 * If not provided, uses the first InstancedMesh child of this component.
+	 */
 	instances = input<ElementRef<THREE.InstancedMesh> | THREE.InstancedMesh | null>(null);
+
+	/**
+	 * Sampler configuration including count, weight attribute, and transform function.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, ['weight', 'transform', 'count']);
 

@@ -13,10 +13,33 @@ import * as THREE from 'three';
 import { AxesHelper, BoxGeometry, Mesh, MeshNormalMaterial } from 'three';
 import { DecalGeometry } from 'three-stdlib';
 
+/**
+ * Configuration options for the NgtsDecal component.
+ */
 export interface NgtsDecalOptions extends Partial<NgtThreeElements['ngt-mesh']> {
+	/**
+	 * Polygon offset factor to prevent z-fighting with the parent mesh.
+	 * More negative values push the decal further from the surface.
+	 * @default -10
+	 */
 	polygonOffsetFactor: number;
+
+	/**
+	 * Whether to enable depth testing for the decal material.
+	 * Set to `false` to ensure decal is always visible.
+	 * @default false
+	 */
 	depthTest: boolean;
+
+	/**
+	 * Shows a debug helper (box + axes) to visualize decal placement.
+	 * @default false
+	 */
 	debug: boolean;
+
+	/**
+	 * Texture map to apply to the decal.
+	 */
 	map?: THREE.Texture | null;
 }
 
@@ -26,6 +49,33 @@ const defaultOptions: NgtsDecalOptions = {
 	depthTest: false,
 };
 
+/**
+ * Projects a texture decal onto a mesh surface using THREE.DecalGeometry.
+ *
+ * The decal automatically conforms to the parent mesh's geometry and
+ * orients itself based on the surface normal at the specified position.
+ * Can be used as a child of a mesh or reference an external mesh via input.
+ *
+ * @example
+ * ```html
+ * <!-- As child of mesh -->
+ * <ngt-mesh>
+ *   <ngt-sphere-geometry />
+ *   <ngt-mesh-standard-material />
+ *   <ngts-decal
+ *     [options]="{
+ *       position: [0, 0, 1],
+ *       scale: [0.5, 0.5, 0.5],
+ *       map: logoTexture
+ *     }"
+ *   />
+ * </ngt-mesh>
+ *
+ * <!-- With external mesh reference -->
+ * <ngt-mesh #targetMesh>...</ngt-mesh>
+ * <ngts-decal [mesh]="targetMesh" [options]="{ ... }" />
+ * ```
+ */
 @Component({
 	selector: 'ngts-decal',
 	template: `
@@ -53,7 +103,15 @@ const defaultOptions: NgtsDecalOptions = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsDecal {
+	/**
+	 * Optional external mesh to project the decal onto.
+	 * If not provided, uses the parent mesh in the scene graph.
+	 */
 	mesh = input<ElementRef<THREE.Mesh> | THREE.Mesh | null>();
+
+	/**
+	 * Decal configuration options including position, scale, rotation, and material properties.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'debug',

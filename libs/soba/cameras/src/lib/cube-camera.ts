@@ -20,19 +20,61 @@ import * as THREE from 'three';
 import { Group } from 'three';
 import { NgtsCameraContent } from './camera-content';
 
+/**
+ * Configuration options for the cube camera.
+ */
 export interface CubeCameraOptions {
-	/** Resolution of the FBO, 256 */
+	/**
+	 * Resolution of the cube render target (FBO).
+	 * @default 256
+	 */
 	resolution?: number;
-	/** Camera near, 0.1 */
+	/**
+	 * Near clipping plane distance for the cube camera.
+	 * @default 0.1
+	 */
 	near?: number;
-	/** Camera far, 1000 */
+	/**
+	 * Far clipping plane distance for the cube camera.
+	 * @default 1000
+	 */
 	far?: number;
-	/** Custom environment map that is temporarily set as the scenes background */
+	/**
+	 * Custom environment map that is temporarily set as the scene's background
+	 * during cube camera rendering.
+	 */
 	envMap?: THREE.Texture;
-	/** Custom fog that is temporarily set as the scenes fog */
+	/**
+	 * Custom fog that is temporarily set as the scene's fog
+	 * during cube camera rendering.
+	 */
 	fog?: THREE.Fog | THREE.FogExp2;
 }
 
+/**
+ * Creates a reactive cube camera that renders the scene into a cube render target.
+ *
+ * This function creates a `THREE.CubeCamera` with an associated `WebGLCubeRenderTarget`
+ * that can be used for environment mapping and reflections. The camera automatically
+ * updates when its options change.
+ *
+ * @param options - A reactive function returning cube camera configuration options
+ * @param config - Optional configuration object
+ * @param config.injector - Optional injector for dependency injection context
+ * @returns An object containing the FBO signal, camera signal, and update function
+ *
+ * @example
+ * ```typescript
+ * const { fbo, camera, update } = cubeCamera(() => ({
+ *   resolution: 512,
+ *   near: 0.1,
+ *   far: 1000
+ * }));
+ *
+ * // Use fbo().texture as an environment map
+ * // Call update() to re-render the cube camera
+ * ```
+ */
 export function cubeCamera(options: () => CubeCameraOptions, { injector }: { injector?: Injector } = {}) {
 	return assertInjector(cubeCamera, injector, () => {
 		const store = injectStore();
@@ -79,13 +121,27 @@ export function cubeCamera(options: () => CubeCameraOptions, { injector }: { inj
 }
 
 /**
- * @deprecated Use cubeCamera instead. Will be removed in v5.0.0
+ * Creates a reactive cube camera that renders the scene into a cube render target.
+ *
+ * @deprecated Use `cubeCamera` instead. Will be removed in v5.0.0.
  * @since v4.0.0
  */
 export const injectCubeCamera = cubeCamera;
 
+/**
+ * Configuration options for the NgtsCubeCamera component.
+ *
+ * Extends `CubeCameraOptions` with additional component-specific settings
+ * and allows passing through Three.js Group element properties.
+ */
 export type NgtsCubeCameraOptions = Partial<NgtThreeElements['ngt-group']> &
 	CubeCameraOptions & {
+		/**
+		 * Number of frames to render the cube camera.
+		 * Set to `Infinity` for continuous rendering, or a specific number
+		 * to limit renders (useful for static reflections).
+		 * @default Infinity
+		 */
 		frames: number;
 	};
 
@@ -96,6 +152,26 @@ const defaultOptions: NgtsCubeCameraOptions = {
 	far: 1000,
 };
 
+/**
+ * A component that creates a cube camera for rendering environment maps and reflections.
+ *
+ * The cube camera captures the scene from six directions and stores the result
+ * in a cube render target texture that can be used for reflections and environment mapping.
+ *
+ * Use the `cameraContent` directive to access the rendered texture.
+ *
+ * @example
+ * ```html
+ * <ngts-cube-camera [options]="{ resolution: 512, frames: 1 }">
+ *   <ng-template cameraContent let-texture>
+ *     <ngt-mesh>
+ *       <ngt-sphere-geometry />
+ *       <ngt-mesh-standard-material [envMap]="texture" metalness="1" roughness="0" />
+ *     </ngt-mesh>
+ *   </ng-template>
+ * </ngts-cube-camera>
+ * ```
+ */
 @Component({
 	selector: 'ngts-cube-camera',
 	template: `
@@ -122,6 +198,9 @@ export class NgtsCubeCamera {
 	protected camera = this.cubeCamera.camera;
 	protected texture = pick(this.cubeCamera.fbo, 'texture');
 
+	/**
+	 * Reference to the group element containing the camera content.
+	 */
 	groupRef = viewChild.required<ElementRef<THREE.Group>>('group');
 	protected cameraContent = contentChild(NgtsCameraContent, { read: TemplateRef });
 

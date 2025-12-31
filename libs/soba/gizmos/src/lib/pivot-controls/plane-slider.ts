@@ -16,6 +16,17 @@ import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { NgtsPivotControls } from './pivot-controls';
 
+/**
+ * Decomposes an offset vector into components along two basis vectors.
+ *
+ * This function projects a 3D offset onto a plane defined by two basis vectors
+ * and returns the scalar coefficients for each basis vector.
+ *
+ * @param e1 - First basis vector
+ * @param e2 - Second basis vector
+ * @param offset - The offset vector to decompose
+ * @returns Tuple of [coefficient for e1, coefficient for e2]
+ */
 function decomposeIntoBasis(e1: THREE.Vector3, e2: THREE.Vector3, offset: THREE.Vector3) {
 	const i1 =
 		Math.abs(e1.x) >= Math.abs(e1.y) && Math.abs(e1.x) >= Math.abs(e1.z)
@@ -42,6 +53,13 @@ const ray = new THREE.Ray();
 const intersection = new THREE.Vector3();
 const offsetMatrix = new THREE.Matrix4();
 
+/**
+ * Internal component that renders a plane slider handle for the pivot controls.
+ *
+ * This component creates a small square that allows translation along two axes
+ * simultaneously (movement in a plane). It's positioned at the intersection of
+ * two axis arrows.
+ */
 @Component({
 	selector: 'ngts-plane-slider',
 	template: `

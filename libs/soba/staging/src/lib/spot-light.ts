@@ -19,18 +19,62 @@ import * as THREE from 'three';
 import { Group, Mesh, MeshBasicMaterial, PlaneGeometry, RepeatWrapping, SpotLight } from 'three';
 import { FullScreenQuad } from 'three-stdlib';
 
+/**
+ * Configuration options for the NgtsSpotLight component.
+ * Extends the base spot light element options from Three.js.
+ */
 export interface NgtsSpotLightOptions extends Partial<NgtThreeElements['ngt-spot-light']> {
+	/**
+	 * Depth texture for soft volumetric lighting. Set to null to disable.
+	 * @default null
+	 */
 	depthBuffer: THREE.DepthTexture | null;
+	/**
+	 * Light attenuation factor. Controls how quickly light fades.
+	 * @default 5
+	 */
 	attenuation?: number;
+	/**
+	 * Power of the light cone angle falloff.
+	 * @default 5
+	 */
 	anglePower?: number;
+	/**
+	 * Radius of the light cone at the top (near the light source).
+	 * @default 0.1
+	 */
 	radiusTop?: number;
+	/**
+	 * Radius of the light cone at the bottom (far from the light source).
+	 * @default angle * 7
+	 */
 	radiusBottom?: number;
+	/**
+	 * Opacity of the volumetric light cone.
+	 * @default 1
+	 */
 	opacity?: number;
+	/**
+	 * Color of the light.
+	 * @default 'white'
+	 */
 	color?: THREE.ColorRepresentation;
+	/**
+	 * Whether to render the volumetric light cone mesh.
+	 * @default true
+	 */
 	volumetric?: boolean;
+	/**
+	 * Whether to show the SpotLightHelper for debugging.
+	 * @default false
+	 */
 	debug?: boolean;
 }
 
+/**
+ * Configuration options for the volumetric mesh component.
+ * Same as NgtsSpotLightOptions but without the volumetric toggle.
+ */
 export type NgtsVolumetricMeshOptions = Omit<NgtsSpotLightOptions, 'volumetric'>;
 
 const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
@@ -43,6 +87,12 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 	depthBuffer: null,
 };
 
+/**
+ * Renders the volumetric light cone mesh for the spot light effect.
+ * Creates a cylinder geometry that visualizes the light beam with proper attenuation.
+ *
+ * @internal Used internally by NgtsSpotLight
+ */
 @Component({
 	selector: 'ngts-volumetric-mesh',
 	template: `
@@ -66,8 +116,10 @@ const defaultVolumetricMeshOptions: NgtsVolumetricMeshOptions = {
 	imports: [NgtArgs],
 })
 export class NgtsVolumetricMesh {
+	/** Configuration options for the volumetric mesh. */
 	options = input(defaultVolumetricMeshOptions, { transform: mergeInputs(defaultVolumetricMeshOptions) });
 
+	/** Reference to the underlying mesh element. */
 	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	private store = injectStore();
@@ -123,6 +175,19 @@ export class NgtsVolumetricMesh {
 	}
 }
 
+/**
+ * Shared logic for spot light shadow components.
+ * Handles shadow map sizing and mesh positioning to follow the spot light target.
+ *
+ * @param spotLight - Reference to the parent spot light element
+ * @param mesh - Reference to the shadow mesh element
+ * @param width - Shadow map width
+ * @param height - Shadow map height
+ * @param distance - Distance factor for shadow placement
+ * @param injector - Optional injector for dependency injection
+ *
+ * @internal
+ */
 function spotLightCommon(
 	spotLight: () => ElementRef<THREE.SpotLight> | null,
 	mesh: () => ElementRef<Mesh> | null,
@@ -167,12 +232,40 @@ function spotLightCommon(
 	});
 }
 
+/**
+ * Configuration options for shadow mesh components.
+ *
+ * @internal
+ */
 interface NgtsShadowMeshOptions {
+	/**
+	 * Distance factor for shadow placement along the light direction.
+	 * @default 0.4
+	 */
 	distance: number;
+	/**
+	 * Alpha test threshold for shadow transparency.
+	 * @default 0.5
+	 */
 	alphaTest: number;
+	/**
+	 * Scale of the shadow mesh.
+	 * @default 1
+	 */
 	scale: number;
+	/**
+	 * Width of the shadow map in pixels.
+	 * @default 512
+	 */
 	width: number;
+	/**
+	 * Height of the shadow map in pixels.
+	 * @default 512
+	 */
 	height: number;
+	/**
+	 * Texture to use as the shadow alpha map.
+	 */
 	map?: THREE.Texture;
 }
 
@@ -184,6 +277,12 @@ const defaultSpotLightShadowOptions: NgtsShadowMeshOptions = {
 	height: 512,
 };
 
+/**
+ * Shadow component that uses a custom shader to generate procedural shadow patterns.
+ * Renders the shader output to a texture used as an alpha map for the shadow mesh.
+ *
+ * @internal Used internally by NgtsSpotLightShadow
+ */
 @Component({
 	selector: 'ngts-spot-light-shadow-shader',
 	template: `
@@ -206,9 +305,12 @@ const defaultSpotLightShadowOptions: NgtsShadowMeshOptions = {
 export class NgtsSpotLightShadowShader {
 	protected readonly DoubleSide = THREE.DoubleSide;
 
+	/** GLSL shader code for generating the shadow pattern. */
 	shader = input.required<string>();
+	/** Configuration options for the shadow mesh. */
 	options = input(defaultSpotLightShadowOptions, { transform: mergeInputs(defaultSpotLightShadowOptions) });
 
+	/** Reference to the shadow mesh element. */
 	meshRef = viewChild.required<ElementRef<Mesh>>('mesh');
 
 	private spotLight = inject(NgtsSpotLight);
@@ -292,6 +394,12 @@ export class NgtsSpotLightShadowShader {
 	}
 }
 
+/**
+ * Shadow component that uses a provided texture directly as the alpha map.
+ * Simpler alternative to the shader-based shadow when custom patterns aren't needed.
+ *
+ * @internal Used internally by NgtsSpotLightShadow
+ */
 @Component({
 	selector: 'ngts-spot-light-shadow-no-shader',
 	template: `
@@ -314,8 +422,10 @@ export class NgtsSpotLightShadowShader {
 export class NgtsSpotLightShadowNoShader {
 	protected readonly DoubleSide = THREE.DoubleSide;
 
+	/** Configuration options for the shadow mesh. */
 	options = input(defaultSpotLightShadowOptions, { transform: mergeInputs(defaultSpotLightShadowOptions) });
 
+	/** Reference to the shadow mesh element. */
 	meshRef = viewChild.required<ElementRef<THREE.Mesh>>('mesh');
 
 	private spotLight = inject(NgtsSpotLight);
@@ -342,6 +452,17 @@ export class NgtsSpotLightShadowNoShader {
 	}
 }
 
+/**
+ * Casts shaped shadows from a spot light using a projected texture or shader.
+ * Must be used as a child of NgtsSpotLight.
+ *
+ * @example
+ * ```html
+ * <ngts-spot-light>
+ *   <ngts-spot-light-shadow [options]="{ map: shadowTexture, scale: 4 }" />
+ * </ngts-spot-light>
+ * ```
+ */
 @Component({
 	selector: 'ngts-spot-light-shadow',
 	template: `
@@ -355,7 +476,9 @@ export class NgtsSpotLightShadowNoShader {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgtsSpotLightShadow {
+	/** Optional GLSL shader code for custom shadow patterns. If not provided, uses texture-based shadows. */
 	shader = input<string>();
+	/** Configuration options for the shadow. */
 	options = input(defaultSpotLightShadowOptions, { transform: mergeInputs(defaultSpotLightShadowOptions) });
 }
 
@@ -371,6 +494,23 @@ const defaultOptions: NgtsSpotLightOptions = {
 	depthBuffer: null,
 };
 
+/**
+ * Enhanced spot light with optional volumetric lighting effect.
+ * Creates a visible light cone that simulates light scattering through atmosphere or dust.
+ *
+ * @example
+ * ```html
+ * <ngts-spot-light
+ *   [options]="{
+ *     position: [0, 5, 0],
+ *     angle: 0.5,
+ *     intensity: 1,
+ *     color: 'white',
+ *     volumetric: true
+ *   }"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-spot-light',
 	template: `
@@ -401,6 +541,7 @@ const defaultOptions: NgtsSpotLightOptions = {
 export class NgtsSpotLight {
 	protected readonly SpotLightHelper = THREE.SpotLightHelper;
 
+	/** Configuration options for the spot light. */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'opacity',
@@ -428,8 +569,10 @@ export class NgtsSpotLight {
 		'debug',
 	]);
 
+	/** Reference to the underlying spot light element. */
 	spotLightRef = viewChild.required<ElementRef<THREE.SpotLight>>('spotLight');
 
+	/** Whether debug mode is enabled (shows SpotLightHelper). */
 	debug = pick(this.options, 'debug');
 	protected angle = pick(this.options, 'angle');
 	protected color = pick(this.options, 'color');

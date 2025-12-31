@@ -37,14 +37,27 @@ import * as THREE from 'three';
 import { FullScreenQuad } from 'three-stdlib';
 
 /**
- * This directive is used inside of the render texture, hence has access to the render texture store (a portal store)
+ * Internal directive used inside the render texture to manage portal scene rendering.
+ * Handles blending between the portal scene and the world scene, manages scene matrices,
+ * and coordinates the rendering pipeline for portal effects.
+ *
+ * @internal This directive is used internally by NgtsMeshPortalMaterial.
  */
 @Directive({ selector: 'ngts-manage-portal-scene' })
 export class ManagePortalScene {
+	/** Whether events should be enabled inside the portal. */
 	events = input<boolean>();
+
+	/** Reference to the root/world scene for blending. */
 	rootScene = input.required<THREE.Scene>();
+
+	/** Reference to the portal material for accessing blend values. */
 	material = input.required<NgtMeshPortalMaterial>();
+
+	/** Render priority for the portal scene. */
 	priority = input.required<number>();
+
+	/** Whether the portal uses world-space coordinates. */
 	worldUnits = input.required<boolean>();
 
 	constructor() {
@@ -148,21 +161,52 @@ export class ManagePortalScene {
 	}
 }
 
+/**
+ * Configuration options for the NgtsMeshPortalMaterial component.
+ */
 export interface NgtsMeshPortalMaterialOptions extends Partial<NgtThreeElements['ngt-shader-material']> {
-	/** Mix the portals own scene with the world scene, 0 = world scene render,
-	 *  0.5 = both scenes render, 1 = portal scene renders, defaults to 0.   */
+	/**
+	 * Mix the portal's own scene with the world scene.
+	 * 0 = world scene render, 0.5 = both scenes render, 1 = portal scene renders.
+	 * @default 0
+	 */
 	blend: number;
-	/** Edge fade blur, 0 = no blur (default) */
+
+	/**
+	 * Edge fade blur using signed distance field (SDF).
+	 * @default 0
+	 */
 	blur: number;
-	/** SDF resolution, the smaller the faster is the start-up time (default: 512) */
+
+	/**
+	 * SDF resolution. Smaller values result in faster start-up time.
+	 * @default 512
+	 */
 	resolution: number;
-	/** By default portals use relative coordinates, contents are affects by the local matrix transform */
+
+	/**
+	 * Whether portal contents use world-space coordinates.
+	 * When false (default), contents are affected by the local matrix transform.
+	 * @default false
+	 */
 	worldUnits: boolean;
-	/** Optional event priority, defaults to 0 */
+
+	/**
+	 * Event priority for the portal's raycasting.
+	 * @default 0
+	 */
 	eventPriority: number;
-	/** Optional render priority, defaults to 0 */
+
+	/**
+	 * Render priority for the portal scene.
+	 * @default 0
+	 */
 	renderPriority: number;
-	/** Optionally diable events inside the portal, defaults to false */
+
+	/**
+	 * Whether to disable events inside the portal.
+	 * @default false
+	 */
 	events: boolean;
 }
 
@@ -176,6 +220,27 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 	events: false,
 };
 
+/**
+ * A material that creates a portal effect, rendering a separate scene inside a mesh.
+ * Supports smooth blending between the portal scene and the world scene, edge blur,
+ * and automatic visibility culling.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh>
+ *   <ngt-plane-geometry />
+ *   <ngts-mesh-portal-material [options]="{ blend: 1, blur: 0.5 }">
+ *     <ng-template>
+ *       <!-- Portal scene content -->
+ *       <ngt-mesh>
+ *         <ngt-box-geometry />
+ *         <ngt-mesh-basic-material color="red" />
+ *       </ngt-mesh>
+ *     </ng-template>
+ *   </ngts-mesh-portal-material>
+ * </ngt-mesh>
+ * ```
+ */
 @Component({
 	selector: 'ngts-mesh-portal-material',
 	template: `
@@ -213,7 +278,15 @@ const defaultOptions: NgtsMeshPortalMaterialOptions = {
 	imports: [NgtsRenderTexture, ManagePortalScene, NgTemplateOutlet],
 })
 export class NgtsMeshPortalMaterial {
+	/**
+	 * How to attach the material to its parent object.
+	 * @default 'material'
+	 */
 	attach = input<NgtAttachable>('material');
+
+	/**
+	 * Configuration options for the portal material.
+	 */
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 	protected parameters = omit(this.options, [
 		'blur',
@@ -230,7 +303,10 @@ export class NgtsMeshPortalMaterial {
 	protected events = pick(this.options, 'events');
 	protected worldUnits = pick(this.options, 'worldUnits');
 
+	/** Reference to the underlying MeshPortalMaterial element. */
 	materialRef = viewChild.required<ElementRef<InstanceType<typeof MeshPortalMaterial>>>('material');
+
+	/** The content template to render inside the portal. */
 	protected content = contentChild.required(TemplateRef);
 
 	private store = injectStore();

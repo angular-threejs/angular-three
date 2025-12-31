@@ -16,31 +16,72 @@ import * as THREE from 'three';
 import { DirectionalLight, Group, OrthographicCamera, Vector2 } from 'three';
 import { NgtsAccumulativeShadows } from './accumulative-shadows';
 
+/**
+ * Configuration options for the NgtsRandomizedLights component.
+ * Extends the base group element options from Three.js.
+ */
 export interface NgtsRandomizedLightsOptions extends Partial<NgtThreeElements['ngt-group']> {
-	/** How many frames it will jiggle the lights, 1.
-	 *  Frames is context aware, if a provider like AccumulativeShadows exists, frames will be taken from there!  */
+	/**
+	 * How many frames it will jiggle the lights.
+	 * Frames is context aware - if a provider like AccumulativeShadows exists, frames will be taken from there.
+	 * @default 1
+	 */
 	frames: number;
-	/** Light position, [0, 0, 0] */
+	/**
+	 * Light position in 3D space.
+	 * @default [0, 0, 0]
+	 */
 	position: [x: number, y: number, z: number];
-	/** Radius of the jiggle, higher values make softer light, 5 */
+	/**
+	 * Radius of the jiggle. Higher values make softer light.
+	 * @default 1
+	 */
 	radius: number;
-	/** Amount of lights, 8 */
+	/**
+	 * Amount of directional lights to create.
+	 * @default 8
+	 */
 	amount: number;
-	/** Light intensity, 1 */
+	/**
+	 * Light intensity. Distributed among all lights.
+	 * @default Math.PI (for Three.js >= 155) or 1
+	 */
 	intensity: number;
-	/** Ambient occlusion, lower values mean less AO, hight more, you can mix AO and directional light, 0.5 */
+	/**
+	 * Ambient occlusion factor. Lower values mean less AO, higher values mean more.
+	 * You can mix AO and directional light.
+	 * @default 0.5
+	 */
 	ambient: number;
-	/** If the lights cast shadows, this is true by default */
+	/**
+	 * Whether the lights cast shadows.
+	 * @default true
+	 */
 	castShadow: boolean;
-	/** Default shadow bias, 0 */
+	/**
+	 * Shadow bias to prevent shadow acne.
+	 * @default 0.001
+	 */
 	bias: number;
-	/** Default map size, 512 */
+	/**
+	 * Shadow map size in pixels.
+	 * @default 512
+	 */
 	mapSize: number;
-	/** Default size of the shadow camera, 10 */
+	/**
+	 * Size of the shadow camera frustum.
+	 * @default 5
+	 */
 	size: number;
-	/** Default shadow camera near, 0.5 */
+	/**
+	 * Shadow camera near plane distance.
+	 * @default 0.5
+	 */
 	near: number;
-	/** Default shadow camera far, 500 */
+	/**
+	 * Shadow camera far plane distance.
+	 * @default 500
+	 */
 	far: number;
 }
 
@@ -59,6 +100,19 @@ const defaultOptions: NgtsRandomizedLightsOptions = {
 	ambient: 0.5,
 };
 
+/**
+ * Creates multiple randomized directional lights that jiggle their positions each frame.
+ * Used in combination with AccumulativeShadows to create soft, natural-looking shadows.
+ *
+ * Must be used as a child of NgtsAccumulativeShadows.
+ *
+ * @example
+ * ```html
+ * <ngts-accumulative-shadows>
+ *   <ngts-randomized-lights [options]="{ amount: 8, radius: 4, intensity: 1 }" />
+ * </ngts-accumulative-shadows>
+ * ```
+ */
 @Component({
 	selector: 'ngts-randomized-lights',
 	template: `
@@ -119,6 +173,11 @@ export class NgtsRandomizedLights {
 		});
 	}
 
+	/**
+	 * Updates the positions of all randomized lights.
+	 * Called automatically by AccumulativeShadows each frame.
+	 * Randomizes light positions based on ambient and radius settings.
+	 */
 	update() {
 		let light: THREE.Object3D | undefined;
 		const lights = this.lightsRef().nativeElement;
