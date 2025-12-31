@@ -20,7 +20,7 @@ import { NgtpEffectComposer } from '../effect-composer';
 type GodRaysOptions = ConstructorParameters<typeof GodRaysEffect>[2] & {
 	/**
 	 * The light source for the god rays.
-	 * Can be a Mesh, Points, ElementRef, or a function returning any of these.
+	 * Can be a Mesh, Points, ElementRef, or a Signal of any of these.
 	 */
 	sun:
 		| THREE.Mesh

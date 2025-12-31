@@ -48,7 +48,7 @@ const updateProjectionMatrixKeys = ['fov', 'near', 'far', 'zoom', 'left', 'right
 export class TheatreSheetObjectSync<TObject extends object> {
 	/**
 	 * The Three.js object to synchronize with Theatre.js.
-	 * Can be an object reference, ElementRef, or a function returning either.
+	 * Can be an object reference, ElementRef, or a Signal of either.
 	 */
 	parent = input.required<TObject | ElementRef<TObject> | (() => TObject | ElementRef<TObject> | undefined | null)>({
 		alias: 'sync',
