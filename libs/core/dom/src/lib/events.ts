@@ -8,6 +8,13 @@ import {
 	SignalState,
 } from 'angular-three';
 
+/**
+ * @fileoverview DOM event handling for Angular Three canvas.
+ *
+ * This module provides the default pointer event handling system for
+ * Angular Three, translating DOM pointer events to Three.js raycasting events.
+ */
+
 const DOM_EVENTS = {
 	click: false,
 	contextmenu: false,
@@ -21,6 +28,9 @@ const DOM_EVENTS = {
 	lostpointercapture: true,
 } as const;
 
+/**
+ * List of supported pointer event names.
+ */
 export const supportedEvents = [
 	'click',
 	'contextmenu',
@@ -37,6 +47,19 @@ export const supportedEvents = [
 	'wheel',
 ] as const;
 
+/**
+ * Creates the default pointer event manager for an Angular Three canvas.
+ *
+ * This function sets up event listeners on the canvas element and translates
+ * DOM pointer events to Three.js raycasting events. It handles:
+ * - Pointer position calculation
+ * - Raycaster setup
+ * - Event connection/disconnection
+ * - Event propagation
+ *
+ * @param store - The Angular Three store
+ * @returns An event manager for the canvas
+ */
 export function createPointerEvents(store: SignalState<NgtState>): NgtEventManager<HTMLElement> {
 	const { handlePointer } = createEvents(store);
 

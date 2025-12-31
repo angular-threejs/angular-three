@@ -12,6 +12,15 @@ import {
 } from '@angular/core';
 import { injectStore, NGT_CANVAS_CONTENT_FLAG, NGT_RENDERER_NODE_FLAG, NgtAnyRecord } from 'angular-three';
 
+/**
+ * Internal test component used by NgtTestBed.
+ *
+ * This component provides a container for rendering scene graph components
+ * during testing. It automatically sets up the necessary flags and context
+ * for the Angular Three renderer.
+ *
+ * @internal
+ */
 @Component({
 	selector: 'ngt-test-canvas',
 	template: `

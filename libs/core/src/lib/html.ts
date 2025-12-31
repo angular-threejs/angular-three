@@ -15,6 +15,27 @@ import { NgtAnyRecord } from './types';
 
 const NGT_HTML_DOM_ELEMENT = new InjectionToken<'gl' | HTMLElement>('NGT_HTML_DOM_ELEMENT');
 
+/**
+ * Provider function for configuring the DOM element for HTML components in Angular Three.
+ *
+ * This function creates a provider that specifies where HTML content should be rendered
+ * relative to the Three.js canvas. By default, HTML content is appended to the canvas's parent element.
+ *
+ * @returns A provider for the HTML DOM element configuration
+ *
+ * @example
+ * ```typescript
+ * // Default: append to canvas parent
+ * @Component({
+ *   providers: [provideHTMLDomElement()],
+ * })
+ *
+ * // Custom element
+ * @Component({
+ *   providers: [provideHTMLDomElement(() => document.getElementById('my-container')!)],
+ * })
+ * ```
+ */
 export function provideHTMLDomElement(): Provider;
 export function provideHTMLDomElement(factory: () => HTMLElement): Provider;
 export function provideHTMLDomElement<
@@ -37,6 +58,21 @@ export function provideHTMLDomElement(...args: any[]) {
 	return { provide: NGT_HTML_DOM_ELEMENT, useFactory: args.pop(), deps: args };
 }
 
+/**
+ * Abstract base directive for creating HTML components that render alongside the Three.js canvas.
+ *
+ * Extend this class to create components that render DOM elements positioned relative to the
+ * Three.js scene. The DOM element will be appended to either the canvas's parent element
+ * or a custom element specified via `provideHTMLDomElement`.
+ *
+ * @example
+ * ```typescript
+ * @Directive({ selector: '[myHtml]', providers: [provideHTMLDomElement()] })
+ * export class MyHtmlDirective extends NgtHTML {
+ *   // Implementation
+ * }
+ * ```
+ */
 @Directive()
 export abstract class NgtHTML {
 	static [NGT_HTML_FLAG] = true;

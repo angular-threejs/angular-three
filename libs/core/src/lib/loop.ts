@@ -2,6 +2,12 @@ import { inject, InjectionToken } from '@angular/core';
 import type { NgtCanvasElement, NgtGlobalRenderCallback, NgtState } from './types';
 import type { SignalState } from './utils/signal-state';
 
+/**
+ * Global map of canvas elements to their associated stores.
+ *
+ * This map maintains references to all active Angular Three canvas roots,
+ * allowing the render loop to iterate over and render all active scenes.
+ */
 export const roots = new Map<NgtCanvasElement, SignalState<NgtState>>();
 
 type SubItem = { callback: NgtGlobalRenderCallback };
@@ -41,8 +47,20 @@ function run(effects: Set<SubItem>, timestamp: number) {
 	}
 }
 
+/**
+ * Type of global effect in the render loop.
+ * - 'before': Runs before the main render
+ * - 'after': Runs after the main render
+ * - 'tail': Runs when rendering stops
+ */
 export type NgtGlobalEffectType = 'before' | 'after' | 'tail';
 
+/**
+ * Executes all global effects of the specified type.
+ *
+ * @param type - The type of global effects to flush ('before', 'after', or 'tail')
+ * @param timestamp - The current timestamp from requestAnimationFrame
+ */
 export function flushGlobalEffects(type: NgtGlobalEffectType, timestamp: number): void {
 	switch (type) {
 		case 'before':
@@ -155,10 +173,34 @@ function createLoop<TCanvas>(roots: Map<TCanvas, SignalState<NgtState>>) {
 	return { loop, invalidate, advance };
 }
 
+/**
+ * Injection token for the Angular Three render loop.
+ *
+ * Provides access to the render loop controls including invalidate and advance functions.
+ */
 export const NGT_LOOP = new InjectionToken<ReturnType<typeof createLoop>>('NGT_LOOP', {
 	factory: () => createLoop(roots),
 });
 
+/**
+ * Injects the Angular Three render loop controller.
+ *
+ * The loop controller provides methods to control the render loop:
+ * - `invalidate`: Marks the scene as needing a re-render
+ * - `advance`: Manually advances the render loop by one frame
+ * - `loop`: The main animation loop function
+ *
+ * @returns The render loop controller
+ *
+ * @example
+ * ```typescript
+ * const loop = injectLoop();
+ * // Trigger a re-render
+ * loop.invalidate();
+ * // Manually advance one frame
+ * loop.advance(performance.now());
+ * ```
+ */
 export function injectLoop() {
 	return inject(NGT_LOOP);
 }

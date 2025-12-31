@@ -12,6 +12,23 @@ import { checkNeedsUpdate } from './utils/update';
 
 const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
 
+/**
+ * Creates a canvas root initializer function.
+ *
+ * This function sets up the Three.js rendering context including the WebGL renderer,
+ * camera, scene, and all related state. It returns a configurator object that can
+ * be used to update canvas options and destroy the root.
+ *
+ * @param injector - Optional injector for dependency injection
+ * @returns A function that takes a canvas element and returns a configurator
+ *
+ * @example
+ * ```typescript
+ * const initRoot = canvasRootInitializer();
+ * const configurator = initRoot(canvasElement);
+ * configurator.configure({ shadows: true, dpr: [1, 2] });
+ * ```
+ */
 export function canvasRootInitializer(injector?: Injector) {
 	return assertInjector(canvasRootInitializer, injector, () => {
 		const injectedStore = injectStore();
@@ -292,8 +309,15 @@ export function canvasRootInitializer(injector?: Injector) {
 	});
 }
 
+/**
+ * Type representing the canvas configurator returned by canvasRootInitializer.
+ */
 export type NgtCanvasConfigurator = ReturnType<ReturnType<typeof canvasRootInitializer>>;
 
+/**
+ * Computes the initial size for a canvas element.
+ * @internal
+ */
 function computeInitialSize(canvas: NgtCanvasElement, defaultSize?: NgtSize): NgtSize {
 	if (defaultSize) return defaultSize;
 
@@ -308,7 +332,15 @@ function computeInitialSize(canvas: NgtCanvasElement, defaultSize?: NgtSize): Ng
 	return { width: 0, height: 0, top: 0, left: 0 };
 }
 
-// Disposes an object and all its properties
+/**
+ * Disposes an object and all its disposable properties.
+ *
+ * Recursively calls dispose() on the object and all its properties that have
+ * a dispose method, except for Scene objects which are handled separately.
+ *
+ * @typeParam T - The type of the object to dispose
+ * @param obj - The object to dispose
+ */
 export function dispose<T extends NgtDisposable>(obj: T): void {
 	if (obj.type !== 'Scene') obj.dispose?.();
 	for (const p in obj) {

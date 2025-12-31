@@ -1,5 +1,11 @@
-/** ported from ngrx/signals */
-/** Last synced: 08/16/2025 */
+/**
+ * @fileoverview Signal-based state management ported from ngrx/signals.
+ *
+ * This module provides a reactive state management solution using Angular signals.
+ * It supports deep signal access for nested state properties and efficient state updates.
+ *
+ * Ported from ngrx/signals. Last synced: 08/16/2025
+ */
 import { computed, isSignal, type Signal, signal, untracked, type WritableSignal } from '@angular/core';
 
 type NonRecord =
@@ -21,14 +27,23 @@ type IsKnownRecord<T> = IsRecord<T> extends true ? (IsUnknownRecord<T> extends t
 
 const STATE_SOURCE = Symbol('STATE_SOURCE');
 
+/**
+ * Type representing a writable state source with signals for each property.
+ */
 export type WritableStateSource<State extends object> = {
 	[STATE_SOURCE]: { [K in keyof State]: WritableSignal<State[K]> };
 };
 
+/**
+ * Type representing a readonly state source with signals for each property.
+ */
 export type StateSource<State extends object> = {
 	[STATE_SOURCE]: { [K in keyof State]: Signal<State[K]> };
 };
 
+/**
+ * Function type for partial state updates.
+ */
 export type PartialStateUpdater<State extends object> = (state: State) => Partial<State>;
 
 function getState<State extends object>(stateSource: StateSource<State>): State {
@@ -65,6 +80,12 @@ function patchState<State extends object>(
 
 const DEEP_SIGNAL = Symbol('DEEP_SIGNAL');
 
+/**
+ * A signal that provides deep access to nested properties as signals.
+ *
+ * Allows accessing nested properties directly on the signal, e.g., `state.user.name()`
+ * instead of `state().user.name`.
+ */
 export type DeepSignal<T> = Signal<T> &
 	(IsKnownRecord<T> extends true
 		? Readonly<{
@@ -72,6 +93,13 @@ export type DeepSignal<T> = Signal<T> &
 			}>
 		: unknown);
 
+/**
+ * Converts a regular signal to a deep signal that allows nested property access.
+ *
+ * @typeParam T - The type of the signal's value
+ * @param signal - The signal to convert
+ * @returns A DeepSignal with nested property access
+ */
 export function toDeepSignal<T>(signal: Signal<T>): DeepSignal<T> {
 	return new Proxy(signal, {
 		has(target: any, prop) {
@@ -126,12 +154,50 @@ function isIterable(value: any): value is Iterable<any> {
 	return typeof value?.[Symbol.iterator] === 'function';
 }
 
+/**
+ * A reactive state container built on Angular signals.
+ *
+ * Provides deep signal access to nested properties, an update method for
+ * modifying state, and a snapshot getter for non-reactive access.
+ */
 export type SignalState<State extends object> = DeepSignal<State> &
 	WritableStateSource<State> & {
+		/** Updates the state with partial updates or updater functions */
 		update: (...updaters: Array<Partial<Prettify<State>> | PartialStateUpdater<Prettify<State>>>) => void;
+		/** Gets the current state value without triggering reactivity */
 		get snapshot(): State;
 	};
 
+/**
+ * Creates a reactive state container from an initial state object.
+ *
+ * The returned SignalState provides:
+ * - Deep signal access to nested properties (e.g., `state.camera()`)
+ * - An `update` method for modifying state
+ * - A `snapshot` getter for non-reactive access
+ *
+ * @typeParam State - The shape of the state object
+ * @param initialState - The initial state values
+ * @returns A SignalState instance
+ *
+ * @example
+ * ```typescript
+ * const store = signalState({
+ *   camera: null,
+ *   scene: null,
+ *   size: { width: 0, height: 0 }
+ * });
+ *
+ * // Access reactively
+ * const width = store.size.width();
+ *
+ * // Update state
+ * store.update({ camera: new THREE.PerspectiveCamera() });
+ *
+ * // Access snapshot
+ * const { scene } = store.snapshot;
+ * ```
+ */
 export function signalState<State extends object>(initialState: State): SignalState<State> {
 	const stateKeys = Reflect.ownKeys(initialState);
 

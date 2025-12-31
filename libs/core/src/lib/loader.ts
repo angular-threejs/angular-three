@@ -4,8 +4,16 @@ import * as THREE from 'three';
 import type { NgtAnyRecord } from './types';
 import { NgtObjectMap, makeObjectGraph } from './utils/make';
 
+/**
+ * Type representing a GLTF-like object with a scene property.
+ */
 export type NgtGLTFLike = { scene: THREE.Object3D };
 
+/**
+ * Interface for Three.js loaders that support async loading.
+ *
+ * @typeParam T - The type of data the loader returns
+ */
 export interface NgtLoader<T> extends THREE.Loader {
 	load(
 		url: string,
@@ -16,14 +24,39 @@ export interface NgtLoader<T> extends THREE.Loader {
 	loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<T>;
 }
 
+/**
+ * Type representing a loader constructor.
+ */
 export type NgtLoaderProto<T> = new (...args: any) => NgtLoader<T extends unknown ? any : T>;
+
+/**
+ * Utility type to extract the return type of a loader.
+ */
 export type NgtLoaderReturnType<T, L extends NgtLoaderProto<T>> = T extends unknown
 	? Awaited<ReturnType<InstanceType<L>['loadAsync']>>
 	: T;
 
+/**
+ * Type for loader extension functions that configure the loader before use.
+ */
 export type NgtLoaderExtensions<T extends { prototype: NgtLoaderProto<any> }> = (loader: T['prototype']) => void;
+
+/**
+ * Conditional type utility.
+ */
 export type NgtConditionalType<Child, Parent, Truthy, Falsy> = Child extends Parent ? Truthy : Falsy;
+
+/**
+ * Branching return type utility.
+ */
 export type NgtBranchingReturn<T, Parent, Coerced> = NgtConditionalType<T, Parent, Coerced, T>;
+
+/**
+ * Type representing the result of loading based on input type.
+ * - String input returns a single result
+ * - Array input returns an array of results
+ * - Object input returns an object with the same keys and loaded values
+ */
 export type NgtLoaderResults<
 	TInput extends string | string[] | Record<string, string>,
 	TReturn,

@@ -4,6 +4,13 @@ import type { NgtVector2, NgtVector3, NgtVector4 } from '../three-types';
 import type { NgtAnyRecord } from '../types';
 import { is } from './is';
 
+/**
+ * @fileoverview Signal utilities for transforming and accessing object properties.
+ *
+ * This module provides computed signal utilities for working with object properties,
+ * including `omit`, `pick`, `merge`, and vector conversion functions.
+ */
+
 type KeysOfType<TObject extends object, TType> = Exclude<
 	{
 		[K in keyof TObject]: TObject[K] extends TType | undefined | null ? K : never;
@@ -11,6 +18,23 @@ type KeysOfType<TObject extends object, TType> = Exclude<
 	undefined
 >;
 
+/**
+ * Creates a computed signal that omits specified keys from an object.
+ *
+ * @typeParam TObject - The type of the source object
+ * @typeParam TKeys - The keys to omit
+ * @param objFn - Function returning the source object
+ * @param keysToOmit - Array of keys to omit
+ * @param equal - Optional equality function for change detection
+ * @returns A signal containing the object without the omitted keys
+ *
+ * @example
+ * ```typescript
+ * const state = signal({ a: 1, b: 2, c: 3 });
+ * const withoutB = omit(() => state(), ['b']);
+ * // withoutB() => { a: 1, c: 3 }
+ * ```
+ */
 export function omit<TObject extends object, TKeys extends (keyof TObject)[]>(
 	objFn: () => TObject,
 	keysToOmit: TKeys,
@@ -33,6 +57,24 @@ export function omit<TObject extends object, TKeys extends (keyof TObject)[]>(
 	);
 }
 
+/**
+ * Creates a computed signal that picks specified keys from an object.
+ *
+ * Can pick a single key (returning the value) or multiple keys (returning a partial object).
+ *
+ * @example
+ * ```typescript
+ * const state = signal({ a: 1, b: 2, c: 3 });
+ *
+ * // Pick single key
+ * const a = pick(() => state(), 'a');
+ * // a() => 1
+ *
+ * // Pick multiple keys
+ * const ab = pick(() => state(), ['a', 'b']);
+ * // ab() => { a: 1, b: 2 }
+ * ```
+ */
 export function pick<TObject extends object, TKey extends keyof TObject>(
 	objFn: () => TObject,
 	key: TKey,
@@ -66,6 +108,22 @@ export function pick(objFn: () => NgtAnyRecord, keyOrKeys: string | string[], eq
 	return computed(() => objFn()[keyOrKeys], { equal });
 }
 
+/**
+ * Creates a computed signal that merges an object with static values.
+ *
+ * @param objFn - Function returning the source object
+ * @param toMerge - Static values to merge
+ * @param mode - 'override' (default) puts toMerge values on top, 'backfill' puts them underneath
+ * @param equal - Optional equality function
+ * @returns A signal containing the merged object
+ *
+ * @example
+ * ```typescript
+ * const options = signal({ size: 10 });
+ * const withDefaults = merge(() => options(), { color: 'red' }, 'backfill');
+ * // withDefaults() => { color: 'red', size: 10 }
+ * ```
+ */
 export function merge<TObject extends object>(
 	objFn: () => TObject,
 	toMerge: Partial<TObject>,
@@ -136,6 +194,44 @@ function createVectorComputed<TVector extends THREE.Vector2 | THREE.Vector3 | TH
 	}) as NgtVectorComputed<TVector, TNgtVector>;
 }
 
+/**
+ * Creates a computed Vector2 signal from various input formats.
+ *
+ * Accepts: number (scalar), [x, y] array, or Vector2 instance.
+ *
+ * @example
+ * ```typescript
+ * const pos = vector2(input);
+ * // or from options object
+ * const pos = vector2(options, 'position');
+ * ```
+ */
 export const vector2 = createVectorComputed(THREE.Vector2);
+
+/**
+ * Creates a computed Vector3 signal from various input formats.
+ *
+ * Accepts: number (scalar), [x, y, z] array, or Vector3 instance.
+ *
+ * @example
+ * ```typescript
+ * const pos = vector3(input);
+ * // or from options object
+ * const pos = vector3(options, 'position');
+ * ```
+ */
 export const vector3 = createVectorComputed(THREE.Vector3);
+
+/**
+ * Creates a computed Vector4 signal from various input formats.
+ *
+ * Accepts: number (scalar), [x, y, z, w] array, or Vector4 instance.
+ *
+ * @example
+ * ```typescript
+ * const pos = vector4(input);
+ * // or from options object
+ * const pos = vector4(options, 'position');
+ * ```
+ */
 export const vector4 = createVectorComputed(THREE.Vector4);

@@ -4,7 +4,13 @@ import type { NgtAnyRecord, NgtInstanceNode, NgtInstanceState, NgtState } from '
 import { is } from './is';
 import { checkUpdate } from './update';
 
-// This function prepares a set of changes to be applied to the instance
+/**
+ * Prepares a set of changes to be applied to the instance by comparing props.
+ *
+ * @param instance - The Three.js instance to compare against
+ * @param props - The props to diff
+ * @returns An array of [key, value] tuples representing changed properties
+ */
 function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
 	const changes: [key: string, value: unknown][] = [];
 
@@ -25,8 +31,12 @@ function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
 	return changes;
 }
 
-// NOTE: this is a workaround to give the instance a chance to have the store from the parent.
-//  we clear this property after the applyProps is done
+/**
+ * Internal symbol used to temporarily store the parent's store on an instance.
+ * This is a workaround to give the instance access to the store from its parent
+ * during property application. The property is cleared after applyProps completes.
+ * @internal
+ */
 export const NGT_APPLY_PROPS = '__ngt_apply_props__';
 
 // https://github.com/mrdoob/three.js/pull/27042
@@ -35,6 +45,25 @@ const colorMaps = ['map', 'emissiveMap', 'sheenColorMap', 'specularColorMap', 'e
 
 type ClassConstructor = { new (): void };
 
+/**
+ * Resolves a property key that may contain dot notation (pierced props).
+ *
+ * This function handles nested property access like 'position.x' by traversing
+ * the object hierarchy and returning the final target object and key.
+ *
+ * @param instance - The root instance to start from
+ * @param key - The property key, potentially with dot notation
+ * @returns An object containing the root object, target key, and target property value
+ *
+ * @example
+ * ```typescript
+ * const mesh = new THREE.Mesh();
+ * const result = resolveInstanceKey(mesh, 'position.x');
+ * // result.root = mesh.position
+ * // result.targetKey = 'x'
+ * // result.targetProp = mesh.position.x
+ * ```
+ */
 export function resolveInstanceKey(instance: any, key: string): { root: any; targetKey: string; targetProp: any } {
 	let targetProp = instance[key];
 	if (!key.includes('.')) return { root: instance, targetKey: key, targetProp };
@@ -56,7 +85,35 @@ export function resolveInstanceKey(instance: any, key: string): { root: any; tar
 	return { root: instance, targetKey: key, targetProp };
 }
 
-// This function applies a set of changes to the instance
+/**
+ * Applies a set of properties to a Three.js instance.
+ *
+ * This is the core function for updating Three.js objects with new property values.
+ * It handles various property types including:
+ * - Math types (Vector3, Color, Euler, etc.) with automatic conversion
+ * - Pierced props (dot notation like 'position.x')
+ * - Arrays (converted to set/fromArray calls)
+ * - Layers (mask copying)
+ * - Textures (automatic color space management)
+ *
+ * After applying props, the function triggers necessary updates like
+ * camera projection matrix updates and texture needsUpdate flags.
+ *
+ * @typeParam T - The type of the Three.js instance
+ * @param instance - The Three.js instance to update
+ * @param props - An object containing the properties to apply
+ * @returns The updated instance
+ *
+ * @example
+ * ```typescript
+ * const mesh = new THREE.Mesh();
+ * applyProps(mesh, {
+ *   position: [1, 2, 3],
+ *   'rotation.x': Math.PI / 2,
+ *   visible: true
+ * });
+ * ```
+ */
 export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>['object'], props: NgtAnyRecord) {
 	// if props is empty
 	if (!Object.keys(props).length) return instance;

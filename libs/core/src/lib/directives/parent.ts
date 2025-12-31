@@ -10,6 +10,31 @@ import { NgtNullish } from '../types';
 import { resolveRef } from '../utils/resolve-ref';
 import { NgtCommonDirective } from './common';
 
+/**
+ * Structural directive for specifying a custom parent for Three.js objects.
+ *
+ * By default, Three.js objects are parented to the nearest Object3D ancestor in the template.
+ * The `NgtParent` directive allows you to override this behavior and specify a different parent.
+ *
+ * The parent can be specified as:
+ * - A string (name of an object in the scene)
+ * - A THREE.Object3D reference
+ * - An ElementRef containing a THREE.Object3D
+ * - A function returning any of the above
+ *
+ * @example
+ * ```html
+ * <!-- Parent to a named object in the scene -->
+ * <ngt-mesh *parent="'myGroup'">
+ *   <ngt-box-geometry />
+ * </ngt-mesh>
+ *
+ * <!-- Parent to a reference -->
+ * <ngt-mesh *parent="myGroupRef">
+ *   <ngt-box-geometry />
+ * </ngt-mesh>
+ * ```
+ */
 @Directive({ selector: 'ng-template[parent]' })
 export class NgtParent extends NgtCommonDirective<THREE.Object3D | null | undefined> {
 	parent = input.required<

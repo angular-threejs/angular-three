@@ -12,6 +12,14 @@ import type {
 import type { NgtAnyRecord } from './types';
 import { makeObjectGraph, type NgtObjectMap } from './utils/make';
 
+/**
+ * @fileoverview Asset loading utilities using Angular's resource API.
+ *
+ * This module provides the `loaderResource` function for loading Three.js assets
+ * using Angular's resource API, which provides better integration with Angular's
+ * change detection and signal-based reactivity.
+ */
+
 function normalizeInputs(input: string | string[] | Record<string, string>) {
 	let urls: string[] = [];
 	if (Array.isArray(input)) {
@@ -83,6 +91,43 @@ function getLoaderPromises<TData, TUrl extends string | string[] | Record<string
 	});
 }
 
+/**
+ * Loads Three.js assets using Angular's resource API.
+ *
+ * This function provides a signal-based approach to loading Three.js assets like
+ * GLTF models, textures, and other files. It leverages Angular's resource API
+ * for better integration with Angular's reactivity system.
+ *
+ * Features:
+ * - Automatic caching of loaded assets
+ * - Support for single URLs, arrays, or object maps
+ * - GLTF scene graph extraction
+ * - Progress and completion callbacks
+ *
+ * @typeParam TData - The type of data returned by the loader
+ * @typeParam TUrl - The type of URL input (string, string[], or Record<string, string>)
+ * @typeParam TLoaderConstructor - The loader constructor type
+ * @typeParam TReturn - The return type after loading
+ *
+ * @param loaderConstructorFactory - Factory function that returns the loader constructor
+ * @param input - Signal or function returning the URL(s) to load
+ * @param options - Optional configuration including extensions, callbacks, and injector
+ * @returns A ResourceRef containing the loaded data
+ *
+ * @example
+ * ```typescript
+ * // Load a single GLTF model
+ * const model = loaderResource(
+ *   () => GLTFLoader,
+ *   () => '/assets/model.gltf'
+ * );
+ *
+ * // Access in template
+ * @if (model.value(); as gltf) {
+ *   <ngt-primitive *args="[gltf.scene]" />
+ * }
+ * ```
+ */
 export function loaderResource<
 	TData,
 	TUrl extends string | string[] | Record<string, string>,

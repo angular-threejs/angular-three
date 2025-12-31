@@ -47,6 +47,28 @@ import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ng
 import * as THREE from 'three';
 import { createPointerEvents } from './events';
 
+/**
+ * Structural directive for defining the content to render inside the canvas.
+ *
+ * This directive marks the template content that will be rendered as Three.js
+ * scene content. It must be used inside an `ngt-canvas` component.
+ *
+ * The template context provides:
+ * - `$implicit`: The canvas element
+ * - `host`: The host element containing the canvas
+ *
+ * @example
+ * ```html
+ * <ngt-canvas>
+ *   <ng-template canvasContent let-canvas let-host="host">
+ *     <ngt-mesh>
+ *       <ngt-box-geometry />
+ *       <ngt-mesh-basic-material />
+ *     </ngt-mesh>
+ *   </ng-template>
+ * </ngt-canvas>
+ * ```
+ */
 @Directive({ selector: 'ng-template[canvasContent]' })
 export class NgtCanvasContent {
 	private canvas = inject(NgtCanvasImpl);
@@ -69,6 +91,30 @@ export class NgtCanvasContent {
 	}
 }
 
+/**
+ * The main canvas component for rendering Three.js scenes.
+ *
+ * This component creates a WebGL canvas and sets up the Three.js rendering context.
+ * It handles:
+ * - Canvas sizing and resize handling
+ * - WebGL renderer initialization
+ * - Camera and scene setup
+ * - Event handling
+ * - Render loop management
+ *
+ * @example
+ * ```html
+ * <ngt-canvas [shadows]="true" [dpr]="[1, 2]" (created)="onCreated($event)">
+ *   <ng-template canvasContent>
+ *     <ngt-mesh>
+ *       <ngt-box-geometry />
+ *       <ngt-mesh-standard-material />
+ *     </ngt-mesh>
+ *     <ngt-ambient-light />
+ *   </ng-template>
+ * </ngt-canvas>
+ * ```
+ */
 @Component({
 	selector: 'ngt-canvas',
 	template: `
@@ -258,4 +304,15 @@ export class NgtCanvasImpl {
 	}
 }
 
+/**
+ * Array containing NgtCanvasImpl and NgtCanvasContent for convenient importing.
+ *
+ * @example
+ * ```typescript
+ * @Component({
+ *   imports: [NgtCanvas],
+ * })
+ * export class AppComponent {}
+ * ```
+ */
 export const NgtCanvas = [NgtCanvasImpl, NgtCanvasContent] as const;

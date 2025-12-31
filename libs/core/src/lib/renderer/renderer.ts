@@ -45,7 +45,14 @@ import {
 } from './state';
 import { attachThreeNodes, internalDestroyNode, kebabToPascal, NgtRendererClassId, removeThreeChild } from './utils';
 
+/**
+ * Configuration options for the Angular Three renderer factory.
+ */
 export interface NgtRendererFactory2Options {
+	/**
+	 * Enable verbose logging for debugging renderer operations.
+	 * @default false
+	 */
 	verbose?: boolean;
 	/**
 	 * When a change happens to an object's direct children, Angular Three will notify the object's ancestors
@@ -59,8 +66,30 @@ export interface NgtRendererFactory2Options {
 	maxNotificationSkipCount?: number;
 }
 
+/**
+ * Injection token for renderer factory options.
+ */
 export const NGT_RENDERER_OPTIONS = new InjectionToken<NgtRendererFactory2Options>('NGT_RENDERER_OPTIONS');
 
+/**
+ * Angular renderer factory for Three.js elements.
+ *
+ * This factory creates NgtRenderer2 instances for components that use Angular Three.
+ * It intercepts Angular's rendering operations and translates them to Three.js object
+ * creation and manipulation.
+ *
+ * The factory is typically provided via `provideNgtRenderer()` in your application config.
+ *
+ * @example
+ * ```typescript
+ * // In app.config.ts
+ * import { provideNgtRenderer } from 'angular-three/dom';
+ *
+ * export const appConfig: ApplicationConfig = {
+ *   providers: [provideNgtRenderer()]
+ * };
+ * ```
+ */
 @Injectable()
 export class NgtRendererFactory2 implements RendererFactory2 {
 	private catalogue = injectCatalogue();
@@ -120,6 +149,18 @@ export class NgtRendererFactory2 implements RendererFactory2 {
 	}
 }
 
+/**
+ * Custom Angular renderer for Three.js elements.
+ *
+ * This renderer intercepts Angular's DOM operations and translates them to Three.js
+ * object manipulations. It handles:
+ * - Element creation (converting ngt-* elements to Three.js objects)
+ * - Property/attribute setting (applying props to Three.js objects)
+ * - Event listening (setting up Three.js event handlers)
+ * - Parent-child relationships (managing the Three.js scene graph)
+ *
+ * @internal
+ */
 export class NgtRenderer2 implements Renderer2 {
 	private argsInjectors: Array<Injector> = [];
 	private parentInjectors: Array<Injector> = [];

@@ -12,12 +12,33 @@ import { SignalState, signalState } from './utils/signal-state';
 import { checkUpdate } from './utils/update';
 
 /**
- * @deprecated: use `getInstanceState` instead. Will be removed in 5.0.0
+ * @deprecated Use `getInstanceState` instead. Will be removed in 5.0.0
+ * @param obj - The object to get local state from
+ * @returns The instance state if the object has been prepared, undefined otherwise
  */
 export function getLocalState<TInstance extends object>(obj: TInstance | undefined): NgtInstanceState | undefined {
 	return getInstanceState(obj);
 }
 
+/**
+ * Retrieves the Angular Three instance state from a Three.js object.
+ *
+ * Every Three.js object managed by Angular Three has an associated instance state
+ * that contains metadata such as the store reference, parent/child relationships,
+ * event handlers, and attach information.
+ *
+ * @typeParam TInstance - The type of the Three.js object
+ * @param obj - The Three.js object to get instance state from
+ * @returns The instance state if the object has been prepared, undefined otherwise
+ *
+ * @example
+ * ```typescript
+ * const mesh = new THREE.Mesh();
+ * prepare(mesh, 'ngt-mesh');
+ * const state = getInstanceState(mesh);
+ * console.log(state?.type); // 'ngt-mesh'
+ * ```
+ */
 export function getInstanceState<TInstance extends NgtAnyRecord>(
 	obj: TInstance | undefined,
 ): NgtInstanceState<TInstance> | undefined {
@@ -25,6 +46,23 @@ export function getInstanceState<TInstance extends NgtAnyRecord>(
 	return (obj as NgtInstanceNode<TInstance>).__ngt__ || undefined;
 }
 
+/**
+ * Invalidates an instance, triggering a re-render of the scene.
+ *
+ * This function marks the instance as needing an update and triggers the render loop
+ * to re-render the scene. It traverses up to the root store to ensure proper invalidation
+ * even for objects in portals.
+ *
+ * @typeParam TInstance - The type of the Three.js object
+ * @param instance - The instance node to invalidate
+ *
+ * @example
+ * ```typescript
+ * // After modifying a mesh's properties
+ * mesh.position.x = 10;
+ * invalidateInstance(mesh);
+ * ```
+ */
 export function invalidateInstance<TInstance extends NgtAnyRecord>(instance: NgtInstanceNode<TInstance>) {
 	let store = getInstanceState(instance)?.store;
 
@@ -41,6 +79,26 @@ export function invalidateInstance<TInstance extends NgtAnyRecord>(instance: Ngt
 	checkUpdate(instance);
 }
 
+/**
+ * Prepares a Three.js object for use with Angular Three.
+ *
+ * This function attaches the Angular Three instance state to a Three.js object,
+ * enabling it to be managed by the Angular Three renderer. The instance state
+ * includes parent/child relationships, event handlers, and store references.
+ *
+ * @typeParam TInstance - The type of the Three.js object
+ * @param object - The Three.js object to prepare
+ * @param type - The element type name (e.g., 'ngt-mesh', 'ngt-primitive')
+ * @param instanceState - Optional partial instance state to merge with defaults
+ * @returns The prepared instance node
+ *
+ * @example
+ * ```typescript
+ * // Prepare a mesh for Angular Three
+ * const mesh = new THREE.Mesh(geometry, material);
+ * const prepared = prepare(mesh, 'ngt-mesh', { store });
+ * ```
+ */
 export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 	object: TInstance,
 	type: string,

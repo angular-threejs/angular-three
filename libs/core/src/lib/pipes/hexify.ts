@@ -3,6 +3,23 @@ import { DOCUMENT, inject, Pipe } from '@angular/core';
 const RGBA_REGEX = /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d*\.?\d+)?\)/;
 const DEFAULT_COLOR = 0x000000;
 
+/**
+ * Pipe for converting CSS color strings to hexadecimal numbers.
+ *
+ * Supports various color formats:
+ * - Hex strings: '#ff0000' -> 0xff0000
+ * - RGB: 'rgb(255, 0, 0)' -> 0xff0000
+ * - RGBA: 'rgba(255, 0, 0, 0.5)' -> hex with alpha
+ * - CSS color names: 'red' -> 0xff0000
+ *
+ * Returns 0x000000 (black) for invalid or null values.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh-basic-material [color]="'red' | hexify" />
+ * <ngt-mesh-basic-material [color]="'#ff0000' | hexify" />
+ * ```
+ */
 @Pipe({ name: 'hexify', pure: true })
 export class NgtHexify {
 	private document = inject(DOCUMENT, { optional: true });

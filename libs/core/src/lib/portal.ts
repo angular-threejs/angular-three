@@ -30,6 +30,22 @@ import { omit, pick } from './utils/parameters';
 import { signalState, SignalState } from './utils/signal-state';
 import { updateCamera } from './utils/update';
 
+/**
+ * Directive to enable automatic rendering for portal content.
+ *
+ * When applied to an `ngt-portal`, this directive sets up automatic rendering
+ * of the portal's scene on each frame. The render priority can be configured
+ * to control the order of rendering relative to other subscriptions.
+ *
+ * @example
+ * ```html
+ * <ngt-portal [container]="container" [autoRender]="2">
+ *   <ng-template portalContent>
+ *     <ngt-mesh />
+ *   </ng-template>
+ * </ngt-portal>
+ * ```
+ */
 @Directive({ selector: 'ngt-portal[autoRender]' })
 export class NgtPortalAutoRender {
 	private portalStore = injectStore({ host: true });
@@ -82,6 +98,21 @@ export class NgtPortalAutoRender {
 	}
 }
 
+/**
+ * Structural directive for defining portal content.
+ *
+ * This directive marks the template content that will be rendered inside the portal.
+ * It must be used inside an `ngt-portal` component.
+ *
+ * @example
+ * ```html
+ * <ngt-portal [container]="myGroup">
+ *   <ng-template portalContent let-injector="injector">
+ *     <ngt-mesh />
+ *   </ng-template>
+ * </ngt-portal>
+ * ```
+ */
 @Directive({ selector: 'ng-template[portalContent]' })
 export class NgtPortalContent {
 	static ngTemplateContextGuard(_: NgtPortalContent, ctx: unknown): ctx is { injector: Injector } {
@@ -100,11 +131,21 @@ export class NgtPortalContent {
 	}
 }
 
+/**
+ * State interface for portal configuration.
+ *
+ * Extends the base NgtState with customizable event handling configuration.
+ */
 export interface NgtPortalState extends Omit<NgtState, 'events'> {
+	/** Portal-specific event configuration */
 	events: {
+		/** Whether events are enabled for this portal */
 		enabled?: boolean;
+		/** Event handling priority */
 		priority?: number;
+		/** Custom compute function for raycasting */
 		compute?: NgtComputeFunction;
+		/** Connected event target */
 		connected?: any;
 	};
 }
@@ -151,6 +192,26 @@ function mergeState(
 	} as NgtState;
 }
 
+/**
+ * Component for creating a portal to render Three.js content into a different container.
+ *
+ * Portals allow you to render content into a separate Three.js object while maintaining
+ * the React-like declarative structure. Each portal has its own store with separate
+ * raycaster and pointer state.
+ *
+ * @example
+ * ```html
+ * <ngt-group #portalContainer />
+ *
+ * <ngt-portal [container]="portalContainer">
+ *   <ng-template portalContent>
+ *     <ngt-mesh>
+ *       <ngt-box-geometry />
+ *     </ngt-mesh>
+ *   </ng-template>
+ * </ngt-portal>
+ * ```
+ */
 @Component({
 	selector: 'ngt-portal',
 	template: `
@@ -253,4 +314,15 @@ export class NgtPortalImpl {
 	}
 }
 
+/**
+ * Array containing NgtPortalImpl and NgtPortalContent for convenient importing.
+ *
+ * @example
+ * ```typescript
+ * @Component({
+ *   imports: [NgtPortal],
+ * })
+ * export class MyComponent {}
+ * ```
+ */
 export const NgtPortal = [NgtPortalImpl, NgtPortalContent] as const;

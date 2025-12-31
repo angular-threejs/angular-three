@@ -14,8 +14,17 @@ import { makeId } from './utils/make';
 import { SignalState } from './utils/signal-state';
 
 /**
- * Release pointer captures.
- * This is called by releasePointerCapture in the API, and when an object is removed.
+ * @fileoverview Event handling system for Angular Three.
+ *
+ * This module provides the event handling infrastructure for raycasting-based
+ * pointer events in Three.js scenes. It handles event propagation, pointer
+ * capture, and event bubbling through the scene graph.
+ */
+
+/**
+ * Releases pointer captures for an object.
+ * Called by releasePointerCapture in the API, and when an object is removed.
+ * @internal
  */
 function releaseInternalPointerCapture(
 	capturedMap: Map<number, Map<THREE.Object3D, NgtPointerCaptureTarget>>,
@@ -34,6 +43,18 @@ function releaseInternalPointerCapture(
 	}
 }
 
+/**
+ * Removes all traces of an object from the event handling system.
+ *
+ * This function cleans up:
+ * - Interaction array
+ * - Initial hits
+ * - Hovered elements map
+ * - Pointer captures
+ *
+ * @param store - The Angular Three store
+ * @param object - The object to remove from interactivity
+ */
 export function removeInteractivity(store: SignalState<NgtState>, object: THREE.Object3D) {
 	const { internal } = store.snapshot;
 	// Removes every trace of an object from the data store
@@ -50,6 +71,16 @@ export function removeInteractivity(store: SignalState<NgtState>, object: THREE.
 	});
 }
 
+/**
+ * Creates the event handling system for a store.
+ *
+ * Returns an object with a `handlePointer` function that creates event handlers
+ * for different pointer event types. These handlers perform raycasting,
+ * event propagation, and callback invocation.
+ *
+ * @param store - The Angular Three store to create events for
+ * @returns An object containing the handlePointer factory function
+ */
 export function createEvents(store: SignalState<NgtState>) {
 	/** Calculates delta */
 	function calculateDistance(event: NgtDomEvent) {

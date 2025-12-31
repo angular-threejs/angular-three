@@ -24,12 +24,46 @@ import type * as THREE from 'three';
 import { NgtTestCanvas } from './test-canvas';
 import { createMockCanvas } from './utils/mock-canvas';
 
+/**
+ * Represents a node in the graphed scene hierarchy.
+ */
 export interface NgtTestGraphedObject {
+	/** The Three.js object type (e.g., 'Mesh', 'Group') */
 	type: string;
+	/** The object's name property */
 	name: string;
+	/** Child objects in the hierarchy */
 	children: NgtTestGraphedObject[];
 }
 
+/**
+ * Test utilities for Angular Three components.
+ *
+ * NgtTestBed provides a testing environment for Angular Three scene graphs,
+ * similar to Angular's TestBed but specifically designed for Three.js rendering.
+ *
+ * Features:
+ * - Scene graph component testing
+ * - Event firing simulation
+ * - Frame advancement
+ * - Scene hierarchy inspection
+ *
+ * @example
+ * ```typescript
+ * const { fixture, scene, fireEvent, advance, toGraph } = NgtTestBed.create(MySceneComponent);
+ *
+ * // Test the scene structure
+ * const graph = toGraph();
+ * expect(graph).toContainEqual({ type: 'Mesh', name: 'box', children: [] });
+ *
+ * // Simulate events
+ * const mesh = scene.getObjectByName('box');
+ * await fireEvent(mesh, 'click');
+ *
+ * // Advance animation frames
+ * await advance(10, 0.016);
+ * ```
+ */
 export class NgtTestBed {
 	static create<T extends Type<any>>(
 		sceneGraph: T,

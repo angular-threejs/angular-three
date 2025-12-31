@@ -11,6 +11,19 @@ import {
 } from '@angular/core';
 import { is } from '../utils/is';
 
+/**
+ * Abstract base class for Angular Three structural directives.
+ *
+ * This class provides common functionality for structural directives like `NgtArgs` and `NgtParent`,
+ * including view management, value injection, and change detection.
+ *
+ * Subclasses must implement:
+ * - `validate()`: Returns true if the directive has a valid value to inject
+ * - `linkedValue`: A signal containing the current value
+ * - `shouldSkipRender`: A signal indicating whether rendering should be skipped
+ *
+ * @typeParam TValue - The type of value this directive manages
+ */
 @Directive()
 export abstract class NgtCommonDirective<TValue> {
 	private vcr = inject(ViewContainerRef);

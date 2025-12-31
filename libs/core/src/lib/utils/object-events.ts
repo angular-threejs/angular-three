@@ -16,28 +16,29 @@ import type { NgtEventHandlers, NgtThreeEvent } from '../types';
 import { is } from './is';
 import { resolveRef } from './resolve-ref';
 
-@Directive({ selector: '[ngtObjectEvents]' })
 /**
- * As host directive:
- * - outputs: [
- 'click',
- 'dblclick',
- 'contextmenu',
- 'pointerup',
- 'pointerdown',
- 'pointerover',
- 'pointerout',
- 'pointerenter',
- 'pointerleave',
- 'pointermove',
- 'pointermissed',
- 'pointercancel',
- 'wheel',
- * ]
- * - inputs: [
- *   'ngtObjectEvents'
- *   ]
+ * Directive for binding Three.js pointer events to outputs.
+ *
+ * This directive provides outputs for all Three.js pointer events that can be used
+ * with standard Angular event binding syntax. It's designed to be used as a host directive.
+ *
+ * Outputs: click, dblclick, contextmenu, pointerup, pointerdown, pointerover,
+ * pointerout, pointerenter, pointerleave, pointermove, pointermissed, pointercancel, wheel
+ *
+ * Input: ngtObjectEvents - The Three.js object to listen for events on
+ *
+ * @example
+ * ```typescript
+ * @Component({
+ *   hostDirectives: [{
+ *     directive: NgtObjectEvents,
+ *     outputs: ['click', 'pointerover', 'pointerout']
+ *   }]
+ * })
+ * export class MyMesh {}
+ * ```
  */
+@Directive({ selector: '[ngtObjectEvents]' })
 export class NgtObjectEvents {
 	click = output<NgtThreeEvent<MouseEvent>>();
 	dblclick = output<NgtThreeEvent<MouseEvent>>();
@@ -92,11 +93,33 @@ export class NgtObjectEvents {
 }
 
 /**
- * @deprecated use objectEvents instead. Will be removed in v5.0.0
+ * @deprecated Use objectEvents instead. Will be removed in v5.0.0
  * @since v4.0.0
  */
 export const injectObjectEvents = objectEvents;
 
+/**
+ * Sets up event listeners on a Three.js object.
+ *
+ * This function creates reactive event bindings that automatically clean up
+ * when the target changes or the component is destroyed.
+ *
+ * @param target - Signal or function returning the target Object3D
+ * @param events - Object mapping event names to handler functions
+ * @param options - Optional injector for dependency injection
+ * @returns Array of cleanup functions
+ *
+ * @example
+ * ```typescript
+ * objectEvents(
+ *   () => this.meshRef.nativeElement,
+ *   {
+ *     click: (event) => console.log('Clicked!', event),
+ *     pointerover: (event) => console.log('Hover start'),
+ *   }
+ * );
+ * ```
+ */
 export function objectEvents(
 	target: () => ElementRef<THREE.Object3D> | THREE.Object3D | null | undefined,
 	events: NgtEventHandlers,

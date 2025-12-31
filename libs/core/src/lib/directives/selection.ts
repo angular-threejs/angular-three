@@ -2,6 +2,21 @@ import { booleanAttribute, Directive, effect, ElementRef, inject, input, signal,
 import { Group, Mesh, Object3D } from 'three';
 import { getInstanceState } from '../instance';
 
+/**
+ * Directive for managing selection state of Three.js objects.
+ *
+ * This directive creates a selection context that child `NgtSelect` directives can use
+ * to register themselves as selectable. The selection state is exposed as a readonly signal.
+ *
+ * @example
+ * ```html
+ * <ngt-group [selection]="true">
+ *   <ngt-mesh [select]="isSelected()">
+ *     <ngt-box-geometry />
+ *   </ngt-mesh>
+ * </ngt-group>
+ * ```
+ */
 @Directive({ selector: '[selection]' })
 export class NgtSelectionApi {
 	enabled = input(true, { alias: 'selection', transform: booleanAttribute });
@@ -15,6 +30,19 @@ export class NgtSelectionApi {
 	}
 }
 
+/**
+ * Directive for marking Three.js objects as selectable.
+ *
+ * When applied to a mesh or group, this directive registers the object with the parent
+ * `NgtSelectionApi` when enabled. For groups, all child meshes are automatically registered.
+ *
+ * @example
+ * ```html
+ * <ngt-mesh [select]="true">
+ *   <ngt-box-geometry />
+ * </ngt-mesh>
+ * ```
+ */
 @Directive({ selector: 'ngt-group[select], ngt-mesh[select]' })
 export class NgtSelect {
 	enabled = input(false, { transform: booleanAttribute, alias: 'select' });
@@ -59,4 +87,15 @@ export class NgtSelect {
 	}
 }
 
+/**
+ * Array containing NgtSelectionApi and NgtSelect directives for convenient importing.
+ *
+ * @example
+ * ```typescript
+ * @Component({
+ *   imports: [NgtSelection],
+ * })
+ * export class MyComponent {}
+ * ```
+ */
 export const NgtSelection = [NgtSelectionApi, NgtSelect] as const;

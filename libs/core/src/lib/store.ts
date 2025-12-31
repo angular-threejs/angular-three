@@ -18,6 +18,21 @@ import { makeDpr, makeId } from './utils/make';
 import { SignalState, signalState } from './utils/signal-state';
 import { updateCamera } from './utils/update';
 
+/**
+ * Factory function to create the Angular Three store.
+ *
+ * Creates and initializes the central state management store for the Angular Three application.
+ * This store contains all the state needed for rendering including the WebGL renderer, camera, scene,
+ * raycaster, and internal state for managing the render loop and event handling.
+ *
+ * @returns A SignalState containing the NgtState object with reactive signals for all state properties
+ *
+ * @example
+ * ```typescript
+ * // Usually provided automatically by NgtCanvas
+ * providers: [{ provide: NGT_STORE, useFactory: storeFactory }]
+ * ```
+ */
 export function storeFactory() {
 	const { invalidate, advance } = injectLoop();
 	const rendererOptions = inject(NGT_RENDERER_OPTIONS, { optional: true }) || {};
@@ -258,8 +273,43 @@ export function storeFactory() {
 	return store;
 }
 
+/**
+ * Injection token for the Angular Three store.
+ *
+ * Use this token to access the store directly via Angular's dependency injection system.
+ * The store contains the complete state of the Three.js scene including renderer, camera, scene, and more.
+ *
+ * @example
+ * ```typescript
+ * const store = inject(NGT_STORE);
+ * const camera = store.camera();
+ * ```
+ */
 export const NGT_STORE = new InjectionToken<SignalState<NgtState>>('NgtStore Token');
 
+/**
+ * Injects the Angular Three store into the current injection context.
+ *
+ * This is the primary way to access the store in components, directives, and services.
+ * The store provides reactive signals for all Three.js state including the renderer,
+ * camera, scene, raycaster, and more.
+ *
+ * @param options - Optional injection options (e.g., { optional: true, skipSelf: true })
+ * @returns The Angular Three store as a SignalState, or null if optional and not found
+ *
+ * @example
+ * ```typescript
+ * // In a component or directive
+ * const store = injectStore();
+ *
+ * // Access reactive state
+ * const camera = store.camera();
+ * const scene = store.scene();
+ *
+ * // Access snapshot (non-reactive)
+ * const { gl, size } = store.snapshot;
+ * ```
+ */
 export function injectStore(options: InjectOptions & { optional?: false }): SignalState<NgtState>;
 export function injectStore(options: InjectOptions): SignalState<NgtState> | null;
 export function injectStore(): SignalState<NgtState>;

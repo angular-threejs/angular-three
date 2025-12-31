@@ -15,19 +15,31 @@ import type { NgtAfterAttach } from '../types';
 import { is } from './is';
 import { resolveRef } from './resolve-ref';
 
-@Directive({ selector: '[ngtElementEvents]' })
 /**
- * As host directive:
- * - outputs: [
- *   'created',
- *   'attached',
- *   'updated',
- * 'added', 'removed', 'childadded', 'childremoved', 'change', 'disposed'
- * ]
- * - inputs: [
- *   'ngtElementEvents'
- *   ]
+ * Directive for binding Three.js element lifecycle events to outputs.
+ *
+ * This directive provides outputs for Angular Three element events and native
+ * Three.js events like added, removed, and disposed. It's designed to be used
+ * as a host directive.
+ *
+ * Outputs:
+ * - Angular Three: created, attached, updated
+ * - Three.js: added, removed, childadded, childremoved, change, disposed
+ *
+ * Input: ngtElementEvents - The element to listen for events on
+ *
+ * @example
+ * ```typescript
+ * @Component({
+ *   hostDirectives: [{
+ *     directive: NgtElementEvents,
+ *     outputs: ['attached', 'updated']
+ *   }]
+ * })
+ * export class MyMesh {}
+ * ```
  */
+@Directive({ selector: '[ngtElementEvents]' })
 export class NgtElementEvents<TElement extends object> {
 	created = output<TElement>();
 	attached = output<NgtAfterAttach<TElement>>();
@@ -84,6 +96,26 @@ export class NgtElementEvents<TElement extends object> {
 	}
 }
 
+/**
+ * Sets up element lifecycle event listeners on a Three.js element.
+ *
+ * @typeParam TElement - The type of the element
+ * @param target - Signal or function returning the target element
+ * @param events - Object mapping event names to handler functions
+ * @param options - Optional injector for dependency injection
+ * @returns Array of cleanup functions
+ *
+ * @example
+ * ```typescript
+ * elementEvents(
+ *   () => this.meshRef.nativeElement,
+ *   {
+ *     created: (mesh) => console.log('Mesh created'),
+ *     attached: ({ parent, node }) => console.log('Attached to', parent),
+ *   }
+ * );
+ * ```
+ */
 export function elementEvents<TElement extends object>(
 	target: () => ElementRef<TElement> | TElement | null | undefined,
 	events: {

@@ -2,6 +2,24 @@ import { computed, Directive, input, linkedSignal } from '@angular/core';
 import { NGT_ARGS_FLAG, NGT_INTERNAL_ADD_COMMENT_FLAG } from '../renderer/constants';
 import { NgtCommonDirective } from './common';
 
+/**
+ * Structural directive for passing constructor arguments to Three.js elements.
+ *
+ * The `NgtArgs` directive allows you to pass constructor arguments to Three.js objects
+ * when they are created. This is essential for objects that require constructor arguments
+ * like geometries, materials, and custom objects.
+ *
+ * @example
+ * ```html
+ * <!-- Pass arguments to BoxGeometry constructor -->
+ * <ngt-mesh>
+ *   <ngt-box-geometry *args="[1, 2, 3]" />
+ * </ngt-mesh>
+ *
+ * <!-- Use with primitive for external objects -->
+ * <ngt-primitive *args="[myObject]" />
+ * ```
+ */
 @Directive({ selector: 'ng-template[args]' })
 export class NgtArgs extends NgtCommonDirective<any[]> {
 	args = input.required<any[] | null>();
