@@ -107,7 +107,7 @@ export class NgtElementEvents<TElement extends object> {
  * Sets up element lifecycle event listeners on a Three.js element.
  *
  * @typeParam TElement - The type of the element
- * @param target - Signal or function returning the target element
+ * @param target - Signal containing the target element
  * @param events - Object mapping event names to handler functions
  * @param options - Optional injector for dependency injection
  * @returns Array of cleanup functions

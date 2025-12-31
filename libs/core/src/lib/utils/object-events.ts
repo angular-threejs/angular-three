@@ -111,7 +111,7 @@ export const injectObjectEvents = objectEvents;
  * This function creates reactive event bindings that automatically clean up
  * when the target changes or the component is destroyed.
  *
- * @param target - Signal or function returning the target Object3D
+ * @param target - Signal containing the target Object3D
  * @param events - Object mapping event names to handler functions
  * @param options - Optional injector for dependency injection
  * @returns Array of cleanup functions

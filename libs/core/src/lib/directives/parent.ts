@@ -20,7 +20,7 @@ import { NgtCommonDirective } from './common';
  * - A string (name of an object in the scene)
  * - A THREE.Object3D reference
  * - An ElementRef containing a THREE.Object3D
- * - A function returning any of the above
+ * - A Signal of any of the above
  *
  * @example
  * ```html

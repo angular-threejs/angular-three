@@ -110,7 +110,7 @@ function getLoaderPromises<TData, TUrl extends string | string[] | Record<string
  * @typeParam TReturn - The return type after loading
  *
  * @param loaderConstructorFactory - Factory function that returns the loader constructor
- * @param input - Signal or function returning the URL(s) to load
+ * @param input - Signal containing the URL(s) to load
  * @param options - Optional configuration including extensions, callbacks, and injector
  * @returns A ResourceRef containing the loaded data
  *
