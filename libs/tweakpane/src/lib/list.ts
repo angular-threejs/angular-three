@@ -6,6 +6,33 @@ import { TweakpaneDebounce } from './debounce';
 import { TweakpaneFolder } from './folder';
 import { TweakpaneLabel } from './label';
 
+/**
+ * Directive for creating a dropdown list/select control in Tweakpane.
+ *
+ * Provides two-way binding for selecting from a list of options.
+ * Options can be provided as an array or as a key-value object.
+ *
+ * @typeParam TOptionValue - The type of values in the list
+ *
+ * @example
+ * ```html
+ * <tweakpane-pane>
+ *   <!-- Options as array -->
+ *   <tweakpane-list
+ *     label="Mode"
+ *     [(value)]="mode"
+ *     [options]="['normal', 'debug', 'performance']"
+ *   />
+ *
+ *   <!-- Options as object (label: value mapping) -->
+ *   <tweakpane-list
+ *     label="Quality"
+ *     [(value)]="quality"
+ *     [options]="{ 'Low': 1, 'Medium': 2, 'High': 3, 'Ultra': 4 }"
+ *   />
+ * </tweakpane-pane>
+ * ```
+ */
 @Directive({
 	selector: 'tweakpane-list',
 	hostDirectives: [
@@ -15,7 +42,16 @@ import { TweakpaneLabel } from './label';
 	],
 })
 export class TweakpaneList<TOptionValue> {
+	/**
+	 * The currently selected value. Supports two-way binding with `[(value)]`.
+	 */
 	value = model.required<TOptionValue>();
+
+	/**
+	 * The list options. Can be:
+	 * - An array of values (labels will be stringified values)
+	 * - An object mapping display labels to values
+	 */
 	options = input.required<Record<string, TOptionValue> | TOptionValue[]>();
 
 	private blade = inject(TweakpaneBlade);

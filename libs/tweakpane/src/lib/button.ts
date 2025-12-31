@@ -6,6 +6,21 @@ import { TweakpaneFolder } from './folder';
 import { TweakpaneLabel } from './label';
 import { TweakpaneTitle } from './title';
 
+/**
+ * Directive for creating a clickable button in Tweakpane.
+ *
+ * Buttons are used to trigger actions (like reset, randomize, etc.)
+ * and emit click events when pressed.
+ *
+ * @example
+ * ```html
+ * <tweakpane-pane>
+ *   <tweakpane-button title="Reset" (click)="onReset()" />
+ *   <tweakpane-button title="Randomize" label="Action" (click)="onRandomize()" />
+ *   <tweakpane-button title="Save" [disabled]="!canSave" (click)="onSave()" />
+ * </tweakpane-pane>
+ * ```
+ */
 @Directive({
 	selector: 'tweakpane-button',
 	hostDirectives: [
@@ -15,6 +30,10 @@ import { TweakpaneTitle } from './title';
 	],
 })
 export class TweakpaneButton {
+	/**
+	 * Event emitted when the button is clicked.
+	 * Provides the Tweakpane mouse event with the ButtonApi.
+	 */
 	click = output<TpMouseEvent<ButtonApi>>();
 
 	private title = inject(TweakpaneTitle);

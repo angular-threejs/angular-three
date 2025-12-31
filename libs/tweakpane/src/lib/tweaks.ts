@@ -29,66 +29,192 @@ import { TweakpaneText } from './text';
 // Config Types
 // ============================================================================
 
-/** Config for a number input with optional min/max/step */
+/**
+ * Configuration for a number input control.
+ *
+ * @example
+ * ```typescript
+ * const config = {
+ *   gravity: { value: 9.8, min: 0, max: 20, step: 0.1 }
+ * };
+ * ```
+ */
 export interface TweakNumberConfig {
+	/** The initial value or a writable signal for two-way binding */
 	value: number | WritableSignal<number>;
+	/** Minimum allowed value (enables slider display) */
 	min?: number;
+	/** Maximum allowed value (enables slider display) */
 	max?: number;
+	/** Step increment for the value */
 	step?: number;
 }
 
-/** Config for a text input */
+/**
+ * Configuration for a text input control.
+ *
+ * @example
+ * ```typescript
+ * const config = {
+ *   name: { value: 'Object 1' }
+ * };
+ * ```
+ */
 export interface TweakTextConfig {
+	/** The initial value or a writable signal for two-way binding */
 	value: string | WritableSignal<string>;
 }
 
-/** Config for a color input */
+/**
+ * Configuration for a color picker control.
+ *
+ * @example
+ * ```typescript
+ * const config = {
+ *   background: { value: '#ff0000', color: true }
+ * };
+ * ```
+ */
 export interface TweakColorConfig {
+	/** The initial color value (as hex string) or a writable signal */
 	value: string | WritableSignal<string>;
-	/** Mark this as a color input */
+	/** Marker to identify this as a color input (must be `true`) */
 	color: true;
 }
 
-/** Config for a checkbox/boolean input */
+/**
+ * Configuration for a checkbox/boolean control.
+ *
+ * @example
+ * ```typescript
+ * const config = {
+ *   enabled: { value: true }
+ * };
+ * ```
+ */
 export interface TweakCheckboxConfig {
+	/** The initial value or a writable signal for two-way binding */
 	value: boolean | WritableSignal<boolean>;
 }
 
-/** Config for a list/dropdown input */
+/**
+ * Configuration for a dropdown list/select control.
+ *
+ * @typeParam T - The type of option values
+ *
+ * @example
+ * ```typescript
+ * // With array of options
+ * const config = {
+ *   mode: { value: 'normal', options: ['normal', 'debug', 'performance'] }
+ * };
+ *
+ * // With labeled options
+ * const config = {
+ *   quality: { value: 2, options: { 'Low': 1, 'Medium': 2, 'High': 3 } }
+ * };
+ * ```
+ */
 export interface TweakListConfig<T> {
+	/** The initial value or a writable signal for two-way binding */
 	value: T | WritableSignal<T>;
+	/** Array of options or object mapping labels to values */
 	options: T[] | Record<string, T>;
 }
 
-/** Config for a point (2D/3D/4D) input */
+/**
+ * Configuration for a 2D/3D/4D point input control.
+ *
+ * @typeParam TVector - The tuple type for the point dimensions
+ *
+ * @example
+ * ```typescript
+ * // 2D point
+ * const config = {
+ *   position: { value: [0, 0] as [number, number] }
+ * };
+ *
+ * // 3D point with axis constraints
+ * const config = {
+ *   position: {
+ *     value: [0, 0, 0] as [number, number, number],
+ *     x: { min: -10, max: 10 },
+ *     y: { min: 0, max: 100 },
+ *     z: { min: -10, max: 10 }
+ *   }
+ * };
+ * ```
+ */
 export interface TweakPointConfig<
 	TVector extends [number, number] | [number, number, number] | [number, number, number, number] =
 		| [number, number]
 		| [number, number, number]
 		| [number, number, number, number],
 > {
+	/** The initial point value or a writable signal for two-way binding */
 	value: TVector | WritableSignal<TVector>;
+	/** Configuration for the X axis (min, max, step, etc.) */
 	x?: Point2dInputParams['x'];
+	/** Configuration for the Y axis */
 	y?: Point2dInputParams['y'];
+	/** Configuration for the Z axis (3D/4D points only) */
 	z?: Point3dInputParams['z'];
+	/** Configuration for the W axis (4D points only) */
 	w?: Point4dInputParams['w'];
 }
 
-/** Config for a button (action) */
+/**
+ * Configuration for a button/action control.
+ *
+ * @example
+ * ```typescript
+ * const config = {
+ *   reset: { action: () => this.resetSettings(), label: 'Actions' }
+ * };
+ * ```
+ */
 export interface TweakButtonConfig {
+	/** The callback function to execute when the button is clicked */
 	action: () => void;
+	/** Optional label displayed next to the button */
 	label?: string;
 }
 
-/** Config for a nested folder */
+/**
+ * Configuration for a nested folder within the tweaks.
+ * Created using the `tweaks.folder()` helper function.
+ *
+ * @typeParam T - The config type for the folder's contents
+ *
+ * @example
+ * ```typescript
+ * const config = {
+ *   advanced: tweaks.folder('Advanced Settings', {
+ *     iterations: { value: 4, min: 1, max: 10 },
+ *     tolerance: { value: 0.001, min: 0, max: 1 }
+ *   })
+ * };
+ * ```
+ */
 export interface TweakFolderConfig<T extends TweakConfig> {
+	/** Internal marker to identify folder configs */
 	__folder: true;
+	/** The folder title displayed in the UI */
 	name: string;
+	/** The configuration object for controls within the folder */
 	config: T;
+	/** Whether the folder is initially expanded */
 	expanded?: boolean;
 }
 
-/** Union of all possible config values */
+/**
+ * Union of all possible configuration value types for `tweaks()`.
+ *
+ * Includes:
+ * - Primitive values (number, string, boolean)
+ * - Writable signals for two-way binding
+ * - Typed config objects for each control type
+ */
 export type TweakConfigValue =
 	| number
 	| string
@@ -105,7 +231,10 @@ export type TweakConfigValue =
 	| TweakButtonConfig
 	| TweakFolderConfig<TweakConfig>;
 
-/** A config object mapping keys to config values */
+/**
+ * A configuration object for `tweaks()`.
+ * Maps control names to their configuration values.
+ */
 export type TweakConfig = Record<string, TweakConfigValue>;
 
 // ============================================================================
@@ -156,7 +285,14 @@ type InferSignalType<T> =
 													? TweakResult<C>
 													: never;
 
-/** The result type for a config object */
+/**
+ * The result type returned by `tweaks()` for a given configuration.
+ *
+ * Maps each config key to a readonly Signal of the appropriate type.
+ * Button configs are excluded (they don't return values).
+ *
+ * @typeParam T - The configuration object type
+ */
 export type TweakResult<T extends TweakConfig> = {
 	[K in keyof T as T[K] extends TweakButtonConfig ? never : K]: InferSignalType<T[K]>;
 };
@@ -165,6 +301,10 @@ export type TweakResult<T extends TweakConfig> = {
 // Type Guards
 // ============================================================================
 
+/**
+ * Checks if a config value is a TweakNumberConfig.
+ * @internal
+ */
 function isNumberConfig(config: TweakConfigValue): config is TweakNumberConfig {
 	if (typeof config !== 'object' || config === null || !('value' in config)) return false;
 	if ('color' in config || 'options' in config || 'action' in config || '__folder' in config) return false;
@@ -175,6 +315,10 @@ function isNumberConfig(config: TweakConfigValue): config is TweakNumberConfig {
 	return typeof value === 'number';
 }
 
+/**
+ * Checks if a config value is a TweakTextConfig.
+ * @internal
+ */
 function isTextConfig(config: TweakConfigValue): config is TweakTextConfig {
 	if (typeof config !== 'object' || config === null || !('value' in config)) return false;
 	if ('color' in config || 'options' in config || 'action' in config || '__folder' in config) return false;
@@ -186,10 +330,18 @@ function isTextConfig(config: TweakConfigValue): config is TweakTextConfig {
 	return typeof value === 'string';
 }
 
+/**
+ * Checks if a config value is a TweakColorConfig.
+ * @internal
+ */
 function isColorConfig(config: TweakConfigValue): config is TweakColorConfig {
 	return typeof config === 'object' && config !== null && 'color' in config && config.color === true;
 }
 
+/**
+ * Checks if a config value is a TweakCheckboxConfig.
+ * @internal
+ */
 function isCheckboxConfig(config: TweakConfigValue): config is TweakCheckboxConfig {
 	if (typeof config !== 'object' || config === null || !('value' in config)) return false;
 	if ('color' in config || 'options' in config || 'action' in config || '__folder' in config) return false;
@@ -201,10 +353,18 @@ function isCheckboxConfig(config: TweakConfigValue): config is TweakCheckboxConf
 	return typeof value === 'boolean';
 }
 
+/**
+ * Checks if a config value is a TweakListConfig.
+ * @internal
+ */
 function isListConfig(config: TweakConfigValue): config is TweakListConfig<unknown> {
 	return typeof config === 'object' && config !== null && 'options' in config;
 }
 
+/**
+ * Checks if a config value is a TweakPointConfig.
+ * @internal
+ */
 function isPointConfig(config: TweakConfigValue): config is TweakPointConfig {
 	return (
 		typeof config === 'object' &&
@@ -216,10 +376,18 @@ function isPointConfig(config: TweakConfigValue): config is TweakPointConfig {
 	);
 }
 
+/**
+ * Checks if a config value is a TweakButtonConfig.
+ * @internal
+ */
 function isButtonConfig(config: TweakConfigValue): config is TweakButtonConfig {
 	return typeof config === 'object' && config !== null && 'action' in config && typeof config.action === 'function';
 }
 
+/**
+ * Checks if a config value is a TweakFolderConfig.
+ * @internal
+ */
 function isFolderConfig(config: TweakConfigValue): config is TweakFolderConfig<TweakConfig> {
 	return typeof config === 'object' && config !== null && '__folder' in config && config.__folder === true;
 }
@@ -230,6 +398,17 @@ function isFolderConfig(config: TweakConfigValue): config is TweakFolderConfig<T
 
 /**
  * Creates a nested folder configuration for use with `tweaks()`.
+ *
+ * This helper function creates a folder configuration object that can be
+ * used as a value in the `tweaks()` config to organize controls into
+ * collapsible groups.
+ *
+ * @typeParam T - The config type for the folder's contents
+ * @param name - The display name/title of the folder
+ * @param config - The configuration object for controls within the folder
+ * @param options - Optional folder settings
+ * @param options.expanded - Whether the folder starts expanded
+ * @returns A folder configuration object
  *
  * @example
  * ```typescript
@@ -262,10 +441,19 @@ function folder<T extends TweakConfig>(
 // Folder Options
 // ============================================================================
 
+/**
+ * Options for configuring a `tweaks()` folder.
+ */
 export interface TweakFolderOptions {
-	/** Whether the folder is expanded by default */
+	/**
+	 * Whether the folder is expanded by default.
+	 * @default false
+	 */
 	expanded?: boolean;
-	/** Optional injector for use outside injection context */
+	/**
+	 * Optional injector for use outside an injection context.
+	 * Required when calling `tweaks()` from outside a constructor or field initializer.
+	 */
 	injector?: Injector;
 }
 
@@ -404,13 +592,30 @@ export function tweaks<T extends TweakConfig>(
 	});
 }
 
-// Attach folder helper to tweaks
+/**
+ * Attach the folder helper to tweaks for convenient access.
+ * Allows usage like `tweaks.folder('Name', config)`.
+ */
 tweaks.folder = folder;
 
 // ============================================================================
 // Internal: Process config and create components
 // ============================================================================
 
+/**
+ * Processes a configuration object and creates the corresponding Tweakpane controls.
+ * This is an internal function called by `tweaks()` to set up the UI.
+ *
+ * @param config - The configuration object to process
+ * @param result - The result object to populate with signals
+ * @param parentFolder - The parent folder to add controls to
+ * @param vcr - The ViewContainerRef for creating components
+ * @param createdComponents - Array to track created component refs for cleanup
+ * @param anchor - The TweakpaneAnchor for folder management
+ * @param parentInjector - The parent injector for dependency injection
+ *
+ * @internal
+ */
 function processConfig(
 	config: TweakConfig,
 	result: Record<string, Signal<unknown> | Record<string, Signal<unknown>>>,

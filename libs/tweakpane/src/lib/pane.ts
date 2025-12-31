@@ -17,16 +17,75 @@ import { TweakpaneAnchor } from './anchor';
 import { TweakpaneFolder } from './folder';
 import { TweakpaneTitle } from './title';
 
+/**
+ * Main Tweakpane container directive that creates the root pane element.
+ *
+ * This directive creates a floating Tweakpane panel that can be positioned
+ * anywhere on the screen. It serves as the root container for all
+ * Tweakpane controls (folders, bindings, buttons, etc.).
+ *
+ * @example
+ * ```html
+ * <!-- Basic usage with default positioning (top-right) -->
+ * <tweakpane-pane title="Settings">
+ *   <tweakpane-number label="Speed" [(value)]="speed" />
+ *   <tweakpane-checkbox label="Debug" [(value)]="debug" />
+ * </tweakpane-pane>
+ *
+ * <!-- Custom positioning -->
+ * <tweakpane-pane title="Controls" left="8px" bottom="8px" [right]="undefined">
+ *   <tweakpane-folder title="Physics">
+ *     <tweakpane-number label="Gravity" [(value)]="gravity" />
+ *   </tweakpane-folder>
+ * </tweakpane-pane>
+ *
+ * <!-- Embedded in a container element -->
+ * <div #container></div>
+ * <tweakpane-pane [container]="container">
+ *   <!-- controls -->
+ * </tweakpane-pane>
+ * ```
+ */
 @Directive({
 	selector: 'tweakpane-pane',
 	hostDirectives: [{ directive: TweakpaneFolder, inputs: ['expanded'], outputs: ['expandedChange'] }],
 })
 export class TweakpanePane {
+	/**
+	 * CSS top position of the pane.
+	 * @default '8px'
+	 */
 	top = input<string | number>('8px');
+
+	/**
+	 * CSS right position of the pane.
+	 * @default '8px'
+	 */
 	right = input<string | number>('8px');
+
+	/**
+	 * CSS left position of the pane.
+	 * @default undefined
+	 */
 	left = input<string | number>();
+
+	/**
+	 * CSS bottom position of the pane.
+	 * @default undefined
+	 */
 	bottom = input<string | number>();
+
+	/**
+	 * CSS width of the pane.
+	 * @default '256px'
+	 */
 	width = input<string | number>('256px');
+
+	/**
+	 * Optional container element to embed the pane into.
+	 * If not provided, the pane floats freely in the document.
+	 * Can be an HTMLElement or an Angular ElementRef.
+	 */
 	container = input<HTMLElement | ElementRef<HTMLElement | undefined> | undefined>();
 
 	private document = inject(DOCUMENT);
@@ -99,6 +158,10 @@ export class TweakpanePane {
 		});
 	}
 
+	/**
+	 * Updates a CSS style property on the pane's parent element.
+	 * @param propertyName - The name of the style property to update
+	 */
 	private updateStyleEffect(propertyName: Exclude<keyof TweakpanePane, 'pane' | 'title' | 'expanded' | 'container'>) {
 		const pane = this.pane();
 		if (!pane) return;
