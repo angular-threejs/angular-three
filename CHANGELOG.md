@@ -1,3 +1,13 @@
+## 4.0.0-next.118 (2025-12-31)
+
+### 🩹 Fixes
+
+- **core:** rename ngtObjectEvents/ngtElementEvents to objectEvents/elementEvents ([14dec47f](https://github.com/angular-threejs/angular-three/commit/14dec47f))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.117 (2025-12-31)
 
 ### 🚀 Features
