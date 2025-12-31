@@ -15,17 +15,21 @@ npm install @pmndrs/vanilla three-mesh-bvh @monogrid/gainmap-js
 - [NgtsBBAnchor](#ngtsbbanchor)
 - [NgtsCameraShake](#ngtscamerashake)
 - [NgtsCenter](#ngtscenter)
+- [NgtsCloud](#ngtscloud)
 - [NgtsContactShadows](#ngtscontactshadows)
 - [NgtsEnvironment](#ngtsenvironment)
 - [NgtsLightformer](#ngtslightformer)
 - [NgtsFloat](#ngtsfloat)
 - [MatcapTexture](#matcaptexture)
+- [NgtsMask](#ngtsmask)
 - [NormalTexture](#normaltexture)
 - [NgtsRenderTexture](#ngtsrendertexture)
 - [NgtsBounds](#ngtsbounds)
+- [NgtsShadow](#ngtsshadow)
+- [NgtsSparkles](#ngtssparkles)
+- [NgtsSky](#ngtssky)
 - [NgtsStage](#ngtsstage)
 - [NgtsCaustics](#ngtscaustics)
-- [NgtsSky](#ngtssky)
 - [NgtsSpotLight](#ngtsspotlight)
 - [NgtsSpotLightShadow](#ngtsspotlightshadow)
 - [NgtsBackdrop](#ngtsbackdrop)
@@ -70,15 +74,20 @@ A randomized light that internally runs multiple lights and jiggles them. See be
 
 ### Object Inputs (NgtsRandomizedLightsOptions)
 
-| Property    | Description                                                     | Default Value |
-| ----------- | --------------------------------------------------------------- | ------------- |
-| `amount`    | The number of lights to create.                                 | 1             |
-| `radius`    | The radius within which the lights will be randomly positioned. | 1             |
-| `ambient`   | The ambient light intensity.                                    | 0.5           |
-| `position`  | The base position of the lights.                                | [0, 0, 0]     |
-| `intensity` | The intensity of the lights.                                    | 1             |
-| `bias`      | The shadow bias for the lights.                                 | 0.001         |
-| `mapSize`   | The size of the shadow map for the lights.                      | 1024          |
+| Property     | Description                                                     | Default Value           |
+| ------------ | --------------------------------------------------------------- | ----------------------- |
+| `frames`     | How many frames it will jiggle the lights.                      | 1                       |
+| `amount`     | The number of lights to create.                                 | 8                       |
+| `radius`     | The radius within which the lights will be randomly positioned. | 1                       |
+| `ambient`    | The ambient light intensity.                                    | 0.5                     |
+| `position`   | The base position of the lights.                                | [0, 0, 0]               |
+| `intensity`  | The intensity of the lights.                                    | Math.PI (Three.js 155+) |
+| `bias`       | The shadow bias for the lights.                                 | 0.001                   |
+| `mapSize`    | The size of the shadow map for the lights.                      | 512                     |
+| `size`       | Size of the shadow camera frustum.                              | 5                       |
+| `near`       | Shadow camera near plane distance.                              | 0.5                     |
+| `far`        | Shadow camera far plane distance.                               | 500                     |
+| `castShadow` | Whether the lights cast shadows.                                | true                    |
 
 ```html
 <ngts-randomized-lights [options]="{ amount: 8, radius: 4, ambient: 0.5, bias: 0.001, position: [5, 5, -10] }" />
@@ -106,7 +115,7 @@ childrenAnchor = boundingBoxPosition + (boundingBoxSize \* anchor / 2)
 
 ## NgtsCameraShake
 
-A component for applying a configurable camera shake effect. Currently only supports rotational camera shake.
+A directive for applying a configurable camera shake effect. Currently only supports rotational camera shake.
 
 If you use shake in combination with controls make sure to set the `makeDefault` option on your controls, in that case you do not have to pass them via the `controls` option.
 
@@ -115,7 +124,6 @@ If you use shake in combination with controls make sure to set the `makeDefault`
 | Property         | Description                                                           | Default Value |
 | ---------------- | --------------------------------------------------------------------- | ------------- |
 | `intensity`      | Initial intensity of the shake.                                       | 1             |
-| `decay`          | Should the intensity decay over time?                                 | false         |
 | `decayRate`      | If decay is true, this is the rate at which intensity will reduce at. | 0.65          |
 | `maxYaw`         | Max amount camera can yaw in either direction.                        | 0.1           |
 | `maxPitch`       | Max amount camera can pitch in either direction.                      | 0.1           |
@@ -125,7 +133,7 @@ If you use shake in combination with controls make sure to set the `makeDefault`
 | `rollFrequency`  | Frequency of the roll rotation.                                       | 0.1           |
 
 ```html
-<ngts-camera-shake [options]="{ intensity: 1, decay: false, decayRate: 0.65, maxYaw: 0.1, maxPitch: 0.1 }" />
+<ngts-camera-shake [options]="{ intensity: 1, decayRate: 0.65, maxYaw: 0.1, maxPitch: 0.1 }" />
 <ngts-orbit-controls [options]="{ makeDefault: true }" />
 ```
 
@@ -148,11 +156,67 @@ Calculates a boundary box and centers its children accordingly.
 | `disableY` | Disables centering on the Y axis.                                        | false         |
 | `disableZ` | Disables centering on the Z axis.                                        | false         |
 | `precise`  | Precision of the bounding box calculation. See THREE.Box3.setFromObject. | true          |
+| `cacheKey` | Optional cache key to prevent recalculation on every render.             | 0             |
+| `object`   | Optional object to compute the bounding box from instead of children.    |               |
 
 ```html
 <ngts-center [options]="{ top: true, right: true }">
 	<ngt-mesh></ngt-mesh>
 </ngts-center>
+```
+
+## NgtsCloud
+
+Renders volumetric clouds using instanced billboarded sprites. The clouds consist of depth-sorted particles that face the camera.
+
+### NgtsClouds Container
+
+The `NgtsClouds` component is a container that manages multiple cloud instances. It uses instanced mesh rendering for performance.
+
+#### Object Inputs (NgtsCloudsOptions)
+
+| Property        | Description                                                       | Default Value             |
+| --------------- | ----------------------------------------------------------------- | ------------------------- |
+| `texture`       | URL to the cloud texture image.                                   | CLOUD_URL (hosted CDN)    |
+| `limit`         | Maximum number of cloud segments. Keep this tight to save memory. | 200                       |
+| `range`         | Number of segments to render. If undefined, renders all.          |                           |
+| `material`      | The material class to use for cloud rendering.                    | THREE.MeshLambertMaterial |
+| `frustumCulled` | Whether to enable frustum culling for the cloud mesh.             | true                      |
+
+### NgtsCloudInstance
+
+Individual cloud formations that must be placed inside a `NgtsClouds` container.
+
+#### Object Inputs (NgtsCloudOptions)
+
+| Property         | Description                                                  | Default Value |
+| ---------------- | ------------------------------------------------------------ | ------------- |
+| `seed`           | Random seed for consistent cloud generation.                 | Math.random() |
+| `segments`       | Number of segments/particles in the cloud.                   | 20            |
+| `bounds`         | Bounding box dimensions for cloud distribution.              | [5, 1, 1]     |
+| `concentrate`    | How segments are distributed: 'inside', 'outside', 'random'. | 'inside'      |
+| `volume`         | Volume/thickness of the segments.                            | 6             |
+| `smallestVolume` | Minimum volume when distributing clouds.                     | 0.25          |
+| `distribute`     | Custom distribution function for precise control.            |               |
+| `growth`         | Growth factor for animated clouds (when speed > 0).          | 4             |
+| `speed`          | Animation speed factor. Set to 0 to disable.                 | 0             |
+| `fade`           | Camera distance at which segments start fading.              | 10            |
+| `opacity`        | Opacity of the cloud.                                        | 1             |
+| `color`          | Color of the cloud.                                          | '#ffffff'     |
+
+### NgtsCloud (Convenience Component)
+
+A convenience component that renders a single cloud. Automatically wraps itself in a `NgtsClouds` container if not already inside one.
+
+```html
+<!-- Multiple clouds with container -->
+<ngts-clouds [options]="{ limit: 400 }">
+	<ngts-cloud-instance [options]="{ segments: 40, color: '#f0f0f0', speed: 0.4 }" />
+	<ngts-cloud-instance [options]="{ segments: 20, position: [5, 0, 0] }" />
+</ngts-clouds>
+
+<!-- Single cloud (auto-wrapped) -->
+<ngts-cloud [options]="{ segments: 20, bounds: [5, 1, 1], color: 'white' }" />
 ```
 
 ## NgtsContactShadows
@@ -167,25 +231,25 @@ A contact shadow implementation, facing upwards (positive Y) by default. scale c
 | `width`      | Width of the shadow plane.                                                      | 1             |
 | `height`     | Height of the shadow plane.                                                     | 1             |
 | `blur`       | Blur radius of the shadows.                                                     | 1             |
+| `near`       | Near clipping plane for the shadow camera.                                      | 0             |
 | `far`        | Far distance of the shadow camera.                                              | 10            |
 | `resolution` | Resolution of the shadow map.                                                   | 512           |
 | `smooth`     | Whether to apply smoothing to the shadows.                                      | true          |
 | `color`      | Color of the shadows.                                                           | '#000000'     |
 | `depthWrite` | Whether the shadows should write to the depth buffer.                           | false         |
-| `frames`     | How many frames it can render, more yields cleaner results but takes more time. | 40            |
+| `frames`     | How many frames it can render, more yields cleaner results but takes more time. | Infinity      |
+| `scale`      | Scale of the shadow plane. Can be a number or [x, y] tuple.                     | 10            |
 
 ```html
 <ngts-contact-shadows
-	[options]="{ opacity: 1, width: 1, height: 1, blur: 1, far: 10, resolution: 512, smooth: true, color: '#000000', depthWrite: false }"
+	[options]="{ opacity: 1, scale: 10, blur: 1, far: 10, resolution: 512, smooth: true, color: '#000000' }"
 />
 ```
 
 Since this is a rather expensive effect you can limit the amount of frames it renders when your objects are static. For instance making it render only once:
 
 ```html
-<ngts-contact-shadows
-	[options]="{ opacity: 1, width: 1, height: 1, blur: 1, far: 10, resolution: 512, smooth: true, color: '#000000', depthWrite: false, frames: 1 }"
-/>
+<ngts-contact-shadows [options]="{ frames: 1 }" />
 ```
 
 ## NgtsEnvironment
@@ -194,13 +258,25 @@ Sets up a global cubemap, which affects the default `scene.environment`, and opt
 
 ### Object Inputs (NgtsEnvironmentOptions)
 
-| Property     | Description                                                                | Default Value |
-| ------------ | -------------------------------------------------------------------------- | ------------- |
-| `background` | Whether to use the environment map as the background.                      | true          |
-| `files`      | Array of cubemap files OR single equirectangular file.                     |               |
-| `path`       | Path to the cubemap files OR single equirectangular file.                  |               |
-| `preset`     | One of the available presets: sunset, dawn, night, warehouse, forest, etc. |               |
-| `scene`      | Custom scene to apply the environment map to.                              |               |
+| Property               | Description                                                                | Default Value |
+| ---------------------- | -------------------------------------------------------------------------- | ------------- |
+| `background`           | Whether to use the environment map as the background.                      | false         |
+| `files`                | Array of cubemap files OR single equirectangular file.                     |               |
+| `path`                 | Path to the cubemap files OR single equirectangular file.                  |               |
+| `preset`               | One of the available presets: sunset, dawn, night, warehouse, forest, etc. |               |
+| `scene`                | Custom scene to apply the environment map to.                              |               |
+| `map`                  | Pre-loaded texture to use as environment map.                              |               |
+| `blur`                 | Background blur amount (deprecated, use backgroundBlurriness).             | 0             |
+| `backgroundBlurriness` | Background blur amount (0 to 1).                                           | 0             |
+| `backgroundIntensity`  | Intensity of the background.                                               | 1             |
+| `backgroundRotation`   | Rotation of the background as Euler angles.                                | [0, 0, 0]     |
+| `environmentIntensity` | Intensity of the environment lighting.                                     | 1             |
+| `environmentRotation`  | Rotation of the environment lighting as Euler angles.                      | [0, 0, 0]     |
+| `ground`               | Configuration for ground-projected environment.                            |               |
+| `frames`               | Number of frames to render the environment cube camera.                    | 1             |
+| `near`                 | Near clipping plane for the cube camera.                                   | 1             |
+| `far`                  | Far clipping plane for the cube camera.                                    | 1000          |
+| `resolution`           | Resolution of the cube render target.                                      | 256           |
 
 The simplest way to use it is to provide a preset (linking towards common HDRI Haven assets hosted on github). 👉 Note: `preset` property is not meant to be used in production environments and may fail as it relies on CDNs.
 
@@ -260,6 +336,7 @@ This component draws flat rectangles, circles or rings, mimicking the look of a 
 | `scale`      | The scale of the lightformer. Can be a number or an array [x, y, z]. | 1             |
 | `intensity`  | The intensity of the light emitted by the lightformer.               | 1             |
 | `target`     | The target position for the lightformer to look at.                  |               |
+| `map`        | Texture map to apply to the lightformer.                             |               |
 
 ```html
 <ngts-environment>
@@ -277,9 +354,11 @@ A component that simulates floating objects by applying a configurable up and do
 
 | Property            | Description                                                                | Default Value |
 | ------------------- | -------------------------------------------------------------------------- | ------------- |
+| `enabled`           | Whether the floating animation is enabled.                                 | true          |
 | `speed`             | The speed of the floating animation.                                       | 1             |
 | `rotationIntensity` | The intensity of the rotation during the floating animation.               | 1             |
 | `floatIntensity`    | The intensity of the vertical movement during the floating animation.      | 1             |
+| `floatingRange`     | Range of the floating animation [min, max] in world units.                 | [-0.1, 0.1]   |
 | `autoInvalidate`    | Automatically invalidates the scene when the frameloop is set to `demand`. | false         |
 
 ```html
@@ -293,25 +372,27 @@ A component that simulates floating objects by applying a configurable up and do
 
 ## MatcapTexture
 
-### `injectMatcapTexture`
+### `matcapTextureResource`
 
-This function injects a matcap texture (or textures) into your scene. It takes a function matcap that returns the URL of the matcap texture file (or an array of URLs) and returns a signal that holds the loading result.
+Creates a reactive resource for loading matcap textures. Matcaps provide realistic lighting without actual lights in the scene.
 
 > Matcap repository: https://github.com/emmelleppi/matcaps
 
-> Note: `injectMatcapTexture` is not meant to be used in production environments as it relies on third-party CDN.
+> Note: `matcapTextureResource` is not meant to be used in production environments as it relies on third-party CDN.
 
 ```ts
-function injectMatcapTexture(
-	matcap: () => string | string[],
+function matcapTextureResource(
+	id: () => number | string = () => 0,
 	{
+		format,
 		onLoad,
 		injector,
 	}: {
-		onLoad?: (matcapTextures: Texture[]) => void;
+		format?: () => number; // 64, 128, 256, 512, or 1024 (default: 1024)
+		onLoad?: (texture: THREE.Texture) => void;
 		injector?: Injector;
 	} = {},
-): Signal<NgtLoaderResults<string, Texture> | null>;
+): { url: Signal<string>; resource: ResourceRef<THREE.Texture>; numTot: Signal<number> };
 ```
 
 ### `NgtsMatcapTexture`
@@ -319,32 +400,96 @@ function injectMatcapTexture(
 A structural directive that provides a matcap texture to be used with other materials.
 
 ```html
-<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry">
-	<ngt-mesh-matcap-material *matcapTexture="options(); let texture" [matcap]="texture()" />
+<ng-template [matcapTexture]="{ id: 42, format: 512 }" let-resource>
+	@if (resource.hasValue()) {
+	<ngt-mesh-matcap-material [matcap]="resource.value()" />
+	}
+</ng-template>
+```
+
+## NgtsMask
+
+Creates a stencil mask for selective rendering. Objects can be shown/hidden using the `mask()` function.
+
+### Object Inputs (NgtsMaskOptions)
+
+| Property     | Description                                 | Default Value |
+| ------------ | ------------------------------------------- | ------------- |
+| `colorWrite` | Whether to write color to the framebuffer.  | false         |
+| `depthWrite` | Whether to write depth to the depth buffer. | false         |
+
+### Inputs
+
+| Property | Description               | Default Value |
+| -------- | ------------------------- | ------------- |
+| `id`     | The stencil reference ID. | 1             |
+
+### `mask()` Function
+
+Creates stencil material properties for use with NgtsMask. Apply the returned properties to a material to make it respect mask boundaries.
+
+```ts
+function mask(
+	id: () => number,
+	inverse: () => boolean = () => false,
+): Signal<{
+	stencilWrite: boolean;
+	stencilRef: number;
+	stencilFunc: THREE.StencilFunc;
+	stencilFail: THREE.StencilOp;
+	stencilZFail: THREE.StencilOp;
+	stencilZPass: THREE.StencilOp;
+}>;
+```
+
+```html
+<ngts-mask [id]="1">
+	<ngt-circle-geometry *args="[0.5, 64]" />
+</ngts-mask>
+
+<ngt-mesh [material]="maskedMaterial">
+	<ngt-box-geometry />
 </ngt-mesh>
+```
+
+```typescript
+// Show content only inside the mask
+maskedMaterial = new THREE.MeshStandardMaterial({
+	...mask(() => 1)(),
+});
+
+// Show content only outside the mask (inverted)
+outsideMaterial = new THREE.MeshStandardMaterial({
+	...mask(
+		() => 1,
+		() => true,
+	)(),
+});
 ```
 
 ## NormalTexture
 
-### `injectNormalTexture`
+### `normalTextureResource`
 
-This function injects a normal texture (or textures) into your scene. It takes a function normal that returns the URL of the normal texture file (or an array of URLs) and returns a signal that holds the loading result.
+Creates a reactive resource for loading normal textures. Normal textures add surface detail without additional geometry.
 
 > Normal repository: https://github.com/emmelleppi/normal-maps
 
-> Note: `injectNormalTexture` is not meant to be used in production environments as it relies on third-party CDN.
+> Note: `normalTextureResource` is not meant to be used in production environments as it relies on third-party CDN.
 
 ```ts
-function injectNormalTexture(
-	normal: () => string | string[],
+function normalTextureResource(
+	id: () => string | number = () => 0,
 	{
+		settings,
 		onLoad,
 		injector,
 	}: {
-		onLoad?: (normalTextures: Texture[]) => void;
+		settings?: () => { repeat?: number[]; anisotropy?: number; offset?: number[] };
+		onLoad?: (texture: THREE.Texture) => void;
 		injector?: Injector;
-	} = {},
-): Signal<NgtLoaderResults<string, Texture> | null>;
+	},
+): { url: Signal<string>; resource: ResourceRef<THREE.Texture>; numTot: Signal<number> };
 ```
 
 ### `NgtsNormalTexture`
@@ -352,9 +497,11 @@ function injectNormalTexture(
 A structural directive that provides a normal texture to be used with other materials.
 
 ```html
-<ngt-mesh [geometry]="gltf.nodes.Suzanne.geometry">
-	<ngt-mesh-normal-material *normalTexture="options(); let texture" [normal]="texture()" />
-</ngt-mesh>
+<ng-template [normalTexture]="{ id: 42, repeat: [2, 2] }" let-resource>
+	@if (resource.hasValue()) {
+	<ngt-mesh-standard-material [normalMap]="resource.value()" />
+	}
+</ng-template>
 ```
 
 ## NgtsRenderTexture
@@ -363,21 +510,18 @@ This component allows you to render a live scene into a texture which you can th
 
 ### Object Inputs (NgtsRenderTextureOptions)
 
-| Property          | Description                              | Default Value |
-| ----------------- | ---------------------------------------- | ------------- |
-| `resolution`      | Resolution of the render texture.        | 1024          |
-| `scene`           | Custom scene to render into the texture. |               |
-| `camera`          | Custom camera to render the scene with.  |               |
-| `width`           | Width of the texture.                    |               |
-| `height`          | Height of the texture.                   |               |
-| `samples`         | The number of samples for the texture.   | 4             |
-| `stencilBuffer`   | Whether to use a stencil buffer.         | false         |
-| `depthBuffer`     | Whether to use a depth buffer.           | true          |
-| `generateMipmaps` | Whether to generate mipmaps.             | false         |
-| `renderPriority`  | The render priority of the texture.      | 0             |
-| `eventPriority`   | The event priority of the texture.       | 0             |
-| `frames`          | The number of frames to render.          | Infinity      |
-| `compute`         | A function to compute the event.         |               |
+| Property          | Description                            | Default Value   |
+| ----------------- | -------------------------------------- | --------------- |
+| `width`           | Width of the texture.                  | viewport width  |
+| `height`          | Height of the texture.                 | viewport height |
+| `samples`         | The number of samples for the texture. | 8               |
+| `stencilBuffer`   | Whether to use a stencil buffer.       | false           |
+| `depthBuffer`     | Whether to use a depth buffer.         | true            |
+| `generateMipmaps` | Whether to generate mipmaps.           | false           |
+| `renderPriority`  | The render priority of the texture.    | 0               |
+| `eventPriority`   | The event priority of the texture.     | 0               |
+| `frames`          | The number of frames to render.        | Infinity        |
+| `compute`         | A function to compute the event.       |                 |
 
 Required `NgtsRenderTextureContent`
 
@@ -398,12 +542,166 @@ Calculates a boundary box and centers the camera accordingly. If you are using c
 
 ### Object Inputs (NgtsBoundsOptions)
 
-| Property      | Description                            | Default Value |
-| ------------- | -------------------------------------- | ------------- |
-| `fit`         | Fits the current view on first render. | false         |
-| `clip`        | Sets the cameras near/far planes.      | false         |
-| `observe`     | Triggers on window resize.             | false         |
-| `maxDuration` | The animation length in seconds.       | 1             |
+| Property          | Description                                              | Default Value          |
+| ----------------- | -------------------------------------------------------- | ---------------------- |
+| `fit`             | Fits the current view on first render.                   | false                  |
+| `clip`            | Sets the cameras near/far planes.                        | false                  |
+| `observe`         | Triggers on window resize.                               | false                  |
+| `maxDuration`     | The animation length in seconds.                         | 1.0                    |
+| `margin`          | Margin factor applied to the calculated camera distance. | 1.2                    |
+| `interpolateFunc` | Custom interpolation function for camera animation.      | Damping-based function |
+
+```html
+<ngts-bounds [options]="{ fit: true, clip: true, observe: true }">
+	<ngt-mesh>
+		<ngt-box-geometry />
+	</ngt-mesh>
+</ngts-bounds>
+```
+
+## NgtsShadow
+
+Renders a simple circular drop shadow using a canvas-generated radial gradient texture. Creates a flat plane with a transparent gradient that simulates a soft shadow.
+
+### Object Inputs (NgtsShadowOptions)
+
+| Property     | Description                                              | Default Value |
+| ------------ | -------------------------------------------------------- | ------------- |
+| `colorStop`  | Position of the color stop in the radial gradient (0-1). | 0.0           |
+| `fog`        | Whether the shadow is affected by fog.                   | false         |
+| `color`      | Color of the shadow.                                     | 'black'       |
+| `opacity`    | Opacity of the shadow (0-1).                             | 0.5           |
+| `depthWrite` | Whether to write to the depth buffer.                    | false         |
+
+```html
+<ngts-shadow [options]="{ color: 'black', opacity: 0.5, scale: [2, 2, 1] }" />
+```
+
+## NgtsSparkles
+
+Renders animated sparkle particles floating in 3D space. Creates a magical, sparkling effect using GPU-accelerated points.
+
+### Object Inputs (NgtsSparklesOptions)
+
+| Property  | Description                           | Default Value |
+| --------- | ------------------------------------- | ------------- |
+| `count`   | Number of sparkle particles.          | 100           |
+| `speed`   | Animation speed factor.               | 1             |
+| `opacity` | Opacity of the sparkles.              | 1             |
+| `scale`   | Scale of the sparkles distribution.   | 1             |
+| `noise`   | Noise factor for particle movement.   | 1             |
+| `size`    | Size of individual sparkle particles. |               |
+| `color`   | Color of the sparkles.                |               |
+
+```html
+<ngts-sparkles [options]="{ count: 50, scale: 2, size: 6, speed: 0.4, color: 'gold' }" />
+```
+
+## NgtsSky
+
+Renders a procedural sky dome using atmospheric scattering simulation. Based on the Three.js Sky shader which simulates realistic sky colors based on sun position.
+
+### Object Inputs (NgtsSkyOptions)
+
+| Property          | Description                                                        | Default Value |
+| ----------------- | ------------------------------------------------------------------ | ------------- |
+| `distance`        | Distance of the sky sphere from the camera.                        | 1000          |
+| `inclination`     | Vertical angle of the sun (0-1, where 0.5 is horizon).             | 0.6           |
+| `azimuth`         | Horizontal angle of the sun (0-1, representing full rotation).     | 0.1           |
+| `mieCoefficient`  | Mie scattering coefficient. Controls haze and sun disc intensity.  | 0.005         |
+| `mieDirectionalG` | Mie scattering directional parameter. Controls sun disc size.      | 0.8           |
+| `rayleigh`        | Rayleigh scattering coefficient. Higher values create bluer skies. | 0.5           |
+| `turbidity`       | Atmospheric turbidity. Higher values create hazier atmospheres.    | 10            |
+| `sunPosition`     | Direct sun position vector. Overrides inclination/azimuth if set.  |               |
+
+```html
+<ngts-sky [options]="{ turbidity: 10, rayleigh: 2, inclination: 0.5 }" />
+```
+
+## NgtsStage
+
+A complete stage setup for presenting 3D models with lighting, shadows, and environment. Automatically centers content, sets up professional lighting presets, and configures shadows.
+
+### Object Inputs (NgtsStageOptions)
+
+| Property       | Description                                                                    | Default Value |
+| -------------- | ------------------------------------------------------------------------------ | ------------- |
+| `preset`       | Lighting preset: 'rembrandt', 'portrait', 'upfront', 'soft', or custom config. | 'rembrandt'   |
+| `shadows`      | Shadow type: false, 'contact', 'accumulative', or NgtsStageShadowsOptions.     | 'contact'     |
+| `adjustCamera` | Whether to automatically adjust the camera to fit the content.                 | true          |
+| `environment`  | Environment map configuration: preset name, options object, or null.           | 'city'        |
+| `intensity`    | Overall lighting intensity multiplier.                                         | 0.5           |
+| `center`       | Options for centering the content within the stage.                            |               |
+
+```html
+<ngts-stage [options]="{ preset: 'rembrandt', shadows: 'contact', environment: 'city' }">
+	<ngt-mesh>
+		<ngt-box-geometry />
+		<ngt-mesh-standard-material />
+	</ngt-mesh>
+</ngts-stage>
+```
+
+## NgtsCaustics
+
+A component that renders realistic caustic light patterns on surfaces. Caustics are the light patterns created when light is refracted or reflected by curved transparent surfaces (like water or glass).
+
+### Object Inputs (NgtsCausticsOptions)
+
+| Property       | Description                                                | Default Value |
+| -------------- | ---------------------------------------------------------- | ------------- |
+| `frames`       | How many frames to render. Set to Infinity for continuous. | 1             |
+| `debug`        | Enables visual debugging cues including camera helper.     | false         |
+| `causticsOnly` | When enabled, displays only caustics and hides the models. | false         |
+| `backside`     | When enabled, includes back face rendering.                | false         |
+| `ior`          | The Index of Refraction (IOR) value for front faces.       | 1.1           |
+| `backsideIOR`  | The Index of Refraction (IOR) value for back faces.        | 1.1           |
+| `worldRadius`  | The world-space texel size for caustic calculations.       | 0.3125        |
+| `intensity`    | Intensity of the projected caustics effect.                | 0.05          |
+| `color`        | Color of the caustics effect.                              | 'white'       |
+| `resolution`   | Buffer resolution for caustic texture rendering.           | 2024          |
+| `lightSource`  | Light source position or object.                           | [5, 5, 5]     |
+
+```html
+<ngts-caustics [options]="{ frames: Infinity, intensity: 0.05, color: 'white' }">
+	<ngt-mesh>
+		<ngt-sphere-geometry />
+		<ngt-mesh-physical-material [transmission]="1" [roughness]="0" />
+	</ngt-mesh>
+</ngts-caustics>
+```
+
+## NgtsSpotLight
+
+Enhanced spot light with optional volumetric lighting effect. Creates a visible light cone that simulates light scattering through atmosphere or dust.
+
+### Object Inputs (NgtsSpotLightOptions)
+
+| Property       | Description                                                 | Default Value |
+| -------------- | ----------------------------------------------------------- | ------------- |
+| `depthBuffer`  | Depth texture for soft volumetric lighting.                 | null          |
+| `attenuation`  | Light attenuation factor. Controls how quickly light fades. | 5             |
+| `anglePower`   | Power of the light cone angle falloff.                      | 5             |
+| `radiusTop`    | Radius of the light cone at the top.                        | 0.1           |
+| `radiusBottom` | Radius of the light cone at the bottom.                     | angle \* 7    |
+| `opacity`      | Opacity of the volumetric light cone.                       | 1             |
+| `color`        | Color of the light.                                         | 'white'       |
+| `volumetric`   | Whether to render the volumetric light cone mesh.           | true          |
+| `debug`        | Whether to show the SpotLightHelper for debugging.          | false         |
+| `distance`     | Distance of the light.                                      | 5             |
+| `angle`        | Angle of the light cone.                                    | 0.15          |
+
+```html
+<ngts-spot-light
+	[options]="{
+    position: [0, 5, 0],
+    angle: 0.5,
+    intensity: 1,
+    color: 'white',
+    volumetric: true
+  }"
+/>
+```
 
 ## NgtsSpotLightShadow
 
@@ -465,7 +763,7 @@ A curved plane, like a studio backdrop. This is for presentational purposes, to 
 | --------------- | -------------------------------------------- | ------------- |
 | `floor`         | Stretches the floor segment.                 | 0.25          |
 | `segments`      | Mesh-resolution.                             | 20            |
-| `receiveShadow` | Whether the backdrop should receive shadows. | false         |
+| `receiveShadow` | Whether the backdrop should receive shadows. |               |
 
 ```html
 <ngts-backdrop [options]="{ floor: 0.25, segments: 20 }">
