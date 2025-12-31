@@ -31,7 +31,7 @@ function animations<TAnimation extends NgtsAnimationClip>(
 ): NgtsAnimationApi<TAnimation>;
 ```
 
-Creates an animation API for managing THREE.js animation clips on an object. It takes a factory function that returns an array of animation clips or an object containing an array of animation clips, a reference to the object to be animated, and an optional injector.
+Creates an animation API for managing THREE.js animation clips on an object. It takes a Signal of animation clips (an array or an object containing an array), a reference to the object to be animated, and an optional injector.
 
 This function is commonly used together with `injectGLTF` since GLTF files often contain animation data for 3D models. It provides an abstraction around `AnimationMixer`, which simplifies the process of playing and controlling animations.
 
@@ -68,7 +68,7 @@ function fbo(
 ): THREE.WebGLRenderTarget;
 ```
 
-Creates a `WebGLRenderTarget` (Frame Buffer Object) for off-screen rendering. It takes a factory function that returns the parameters for the FBO and an optional injector. The FBO is automatically sized to the canvas dimensions if width/height are not specified, and is disposed on component destroy.
+Creates a `WebGLRenderTarget` (Frame Buffer Object) for off-screen rendering. It takes a Signal of FBO parameters and an optional injector. The FBO is automatically sized to the canvas dimensions if width/height are not specified, and is disposed on component destroy.
 
 The `NgtsFBOParams` object includes the following properties:
 
