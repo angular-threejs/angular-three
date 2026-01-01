@@ -51,24 +51,34 @@ export class Box {
 export class SceneGraph {}
 ```
 
-### Inputs
+### Options
 
-- `allowSleep?: boolean`
-- `axisIndex?: 0 | 1 | 2`
-- `broadphase?: 'Naive' | 'SAP'`
-- `defaultContactMaterial?: ContactMaterialOptions`
-- `frictionGravity?: Vector3 | null`
-- `gravity?: Vector3`
-- `isPaused?: boolean`
-- `iterations?: number`
-- `maxSubSteps?: number`
-- `quatNormalizeFast?: boolean`
-- `quatNormalizeSkip?: number`
-- `shouldInvalidate?: boolean`
-- `size?: number`
-- `solver?: 'GS' | 'Split'`
-- `stepSize?: number`
-- `tolerance?: number`
+The `NgtcPhysics` component accepts an `options` input with the following properties:
+
+```html
+<ngtc-physics [options]="{ gravity: [0, -9.81, 0], iterations: 10 }">
+	<!-- Physics bodies here -->
+</ngtc-physics>
+```
+
+| Property                 | Type                     | Default                             |
+| ------------------------ | ------------------------ | ----------------------------------- |
+| `allowSleep`             | `boolean`                | `false`                             |
+| `axisIndex`              | `0 \| 1 \| 2`            | `0`                                 |
+| `broadphase`             | `'Naive' \| 'SAP'`       | `'Naive'`                           |
+| `defaultContactMaterial` | `ContactMaterialOptions` | `{ contactEquationStiffness: 1e6 }` |
+| `frictionGravity`        | `Vector3 \| null`        | `null`                              |
+| `gravity`                | `Vector3`                | `[0, -9.81, 0]`                     |
+| `isPaused`               | `boolean`                | `false`                             |
+| `iterations`             | `number`                 | `5`                                 |
+| `maxSubSteps`            | `number`                 | `10`                                |
+| `quatNormalizeFast`      | `boolean`                | `false`                             |
+| `quatNormalizeSkip`      | `number`                 | `0`                                 |
+| `shouldInvalidate`       | `boolean`                | `true`                              |
+| `size`                   | `number`                 | `1000`                              |
+| `solver`                 | `'GS' \| 'Split'`        | `'GS'`                              |
+| `stepSize`               | `number`                 | `1/60`                              |
+| `tolerance`              | `number`                 | `0.001`                             |
 
 ## Debug
 

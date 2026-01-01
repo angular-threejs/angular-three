@@ -21,107 +21,162 @@ npm install angular-three-theatre @theatre/core @theatre/studio
 ### Basic Setup
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TheatreProject, TheatreSheet, TheatreSheetObject } from 'angular-three-theatre';
 
 @Component({
 	template: `
 		<theatre-project name="My Project">
-			<ng-template theatreSheet="Scene">
-				<ngt-mesh *theatreSheetObject="'Box'; let values" [position]="[values.x, values.y, values.z]">
-					<ngt-box-geometry />
-					<ngt-mesh-standard-material />
-				</ngt-mesh>
-			</ng-template>
+			<ng-container sheet="Scene">
+				<ng-template sheetObject="Box" [sheetObjectProps]="{ x: 0, y: 0, z: 0 }" let-values="values">
+					<ngt-mesh [position]="[values().x, values().y, values().z]">
+						<ngt-box-geometry />
+						<ngt-mesh-standard-material />
+					</ngt-mesh>
+				</ng-template>
+			</ng-container>
 		</theatre-project>
 	`,
 	imports: [TheatreProject, TheatreSheet, TheatreSheetObject],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SceneGraph {}
 ```
 
 ### Enable Studio (Development)
 
+The `studio` directive is applied to `theatre-project`:
+
 ```typescript
-import { TheatreStudio } from 'angular-three-theatre';
+import { TheatreProject, TheatreStudio } from 'angular-three-theatre';
 
 @Component({
 	template: `
-		<theatre-studio [enabled]="true" />
-		<theatre-project name="My Project">
-			<!-- ... -->
+		<theatre-project name="My Project" [studio]="isDevelopment">
+			<ng-container sheet="Scene">
+				<!-- sheet objects here -->
+			</ng-container>
 		</theatre-project>
 	`,
-	imports: [TheatreStudio, TheatreProject],
+	imports: [TheatreProject, TheatreStudio],
 })
-export class App {}
+export class SceneGraph {
+	isDevelopment = !environment.production;
+}
 ```
 
 ### Sequence Playback
 
+The `sequence` directive must be used together with the `sheet` directive:
+
 ```typescript
-import { TheatreSequence } from 'angular-three-theatre';
+import { TheatreProject, TheatreSheet } from 'angular-three-theatre';
 
 @Component({
 	template: `
 		<theatre-project name="My Project">
-			<ng-template theatreSheet="Scene">
-				<theatre-sequence [options]="{ autoplay: true, loop: true }" [length]="5" />
-				<!-- animated objects -->
-			</ng-template>
+			<ng-container sheet="Scene" [sequence]="{ autoplay: true, rate: 1 }" #seq="sequence">
+				<p>Position: {{ seq.position() }}</p>
+				<button (click)="seq.play()">Play</button>
+				<button (click)="seq.pause()">Pause</button>
+
+				<!-- sheet objects here -->
+			</ng-container>
 		</theatre-project>
 	`,
-	imports: [TheatreProject, TheatreSheet, TheatreSequence],
+	imports: [TheatreProject, TheatreSheet],
 })
 export class SceneGraph {}
 ```
 
 ### Sync Three.js Properties
 
+Use the `sync` directive to synchronize Three.js object properties with Theatre.js:
+
 ```typescript
-import { TheatreSheetObjectSync } from 'angular-three-theatre';
+import { TheatreSheetObject } from 'angular-three-theatre';
 
 @Component({
 	template: `
-		<ngt-mesh #mesh>
-			<theatre-sheet-object-sync [parent]="mesh" [props]="['position', 'rotation', 'scale']" />
-			<ngt-box-geometry />
-		</ngt-mesh>
+		<ng-template sheetObject="myMaterial">
+			<ngt-mesh-standard-material
+				[sync]="material"
+				[syncProps]="['opacity', 'roughness', 'metalness']"
+				#material
+			/>
+		</ng-template>
 	`,
-	imports: [TheatreSheetObjectSync],
+	imports: [TheatreSheetObject],
 })
-export class AnimatedMesh {}
+export class AnimatedMaterial {}
 ```
 
 ### Transform Controls
 
+Use `theatre-transform` component for position, rotation, and scale animation:
+
 ```typescript
-import { TheatreSheetObjectTransform } from 'angular-three-theatre';
+import { TheatreSheetObject } from 'angular-three-theatre';
 
 @Component({
 	template: `
-		<theatre-sheet-object-transform label="My Object">
-			<ngt-mesh>
-				<ngt-box-geometry />
-			</ngt-mesh>
-		</theatre-sheet-object-transform>
+		<ng-template sheetObject="myCube">
+			<theatre-transform>
+				<ngt-mesh>
+					<ngt-box-geometry />
+					<ngt-mesh-standard-material />
+				</ngt-mesh>
+			</theatre-transform>
+		</ng-template>
 	`,
-	imports: [TheatreSheetObjectTransform],
+	imports: [TheatreSheetObject],
 })
 export class TransformableObject {}
 ```
 
-## Components
+## Directives and Components
 
-| Component                     | Description                           |
-| ----------------------------- | ------------------------------------- |
-| `TheatreProject`              | Root container for Theatre.js project |
-| `TheatreSheet`                | Creates an animation sheet            |
-| `TheatreSequence`             | Controls sequence playback            |
-| `TheatreStudio`               | Enables Theatre.js Studio UI          |
-| `TheatreSheetObject`          | Creates animatable properties         |
-| `TheatreSheetObjectSync`      | Syncs Three.js object properties      |
-| `TheatreSheetObjectTransform` | Adds transform controls               |
+| Export                        | Selector                   | Description                                    |
+| ----------------------------- | -------------------------- | ---------------------------------------------- |
+| `TheatreProject`              | `theatre-project`          | Root container for Theatre.js project          |
+| `TheatreSheet`                | `[sheet]`                  | Creates an animation sheet (includes Sequence) |
+| `TheatreSequence`             | `[sheet][sequence]`        | Controls sequence playback                     |
+| `TheatreStudio`               | `theatre-project[studio]`  | Enables Theatre.js Studio UI                   |
+| `TheatreSheetObject`          | `ng-template[sheetObject]` | Creates animatable properties                  |
+| `TheatreSheetObjectSync`      | `[sync]`                   | Syncs Three.js object properties               |
+| `TheatreSheetObjectTransform` | `theatre-transform`        | Adds transform controls                        |
+
+### Convenience Exports
+
+For easier importing, the library provides combined exports:
+
+```typescript
+// TheatreSheet includes both TheatreSheetImpl and TheatreSequence
+import { TheatreSheet } from 'angular-three-theatre';
+
+// TheatreSheetObject includes TheatreSheetObjectImpl, TheatreSheetObjectSync, and TheatreSheetObjectTransform
+import { TheatreSheetObject } from 'angular-three-theatre';
+```
+
+## Sheet Object Template Context
+
+The `sheetObject` directive provides the following template context:
+
+```html
+<ng-template
+	sheetObject="myObject"
+	[sheetObjectProps]="{ opacity: 1 }"
+	let-values="values"
+	let-sheetObject="sheetObject"
+	let-select="select"
+	let-deselect="deselect"
+>
+	<!-- values() returns the current animated values -->
+	<!-- sheetObject() returns the Theatre.js sheet object instance -->
+	<!-- select() selects this object in Studio -->
+	<!-- deselect() deselects this object in Studio -->
+</ng-template>
+```
 
 ## Transformers
 

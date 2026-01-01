@@ -22,45 +22,87 @@ npm install angular-three-tweakpane tweakpane
 
 The recommended way to create controls:
 
+1. Add `tweakpaneAnchor` directive to your `ngt-canvas`
+2. Add `<tweakpane-pane>` somewhere in your scene
+3. Use `tweaks()` in any component within the canvas
+
 ```typescript
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { tweaks, TweakpaneAnchor } from 'angular-three-tweakpane';
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { tweaks, TweakpaneAnchor, TweakpanePane } from 'angular-three-tweakpane';
 
 @Component({
 	template: `
-		<tweakpane-anchor />
 		<ngt-mesh [position]="[params.x(), params.y(), params.z()]">
 			<ngt-box-geometry />
 			<ngt-mesh-standard-material [color]="params.color()" />
 		</ngt-mesh>
+
+		<tweakpane-pane title="Controls" />
 	`,
-	imports: [TweakpaneAnchor],
+	imports: [TweakpanePane],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SceneGraph {
-	params = tweaks({
+	params = tweaks('Position', {
 		x: { value: 0, min: -5, max: 5 },
 		y: { value: 0, min: -5, max: 5 },
 		z: { value: 0, min: -5, max: 5 },
 		color: { value: '#ff0000', color: true },
 	});
 }
+
+@Component({
+	template: `
+		<ngt-canvas tweakpaneAnchor>
+			<app-scene-graph *canvasContent />
+		</ngt-canvas>
+	`,
+	imports: [NgtCanvas, TweakpaneAnchor, SceneGraph],
+})
+export class Experience {}
 ```
 
 ### Nested Folders
 
 ```typescript
-params = tweaks({
-	position: tweaks.folder({
+params = tweaks('Settings', {
+	basic: 42,
+	position: tweaks.folder('Position', {
 		x: { value: 0, min: -5, max: 5 },
 		y: { value: 0, min: -5, max: 5 },
 		z: { value: 0, min: -5, max: 5 },
 	}),
-	material: tweaks.folder({
+	material: tweaks.folder('Material', {
 		color: { value: '#ff0000', color: true },
 		metalness: { value: 0.5, min: 0, max: 1 },
 		roughness: { value: 0.5, min: 0, max: 1 },
 	}),
+});
+
+// Access nested values
+this.params.position.x(); // Signal<number>
+this.params.material.color(); // Signal<string>
+```
+
+### Two-Way Binding with Existing Signals
+
+```typescript
+filteringEnabled = signal(true);
+gravity = signal(9.8);
+
+params = tweaks('Settings', {
+	filteringEnabled: this.filteringEnabled, // two-way binding
+	gravity: this.gravity,
+});
+```
+
+### Buttons (Actions)
+
+```typescript
+params = tweaks('Actions', {
+	reset: { action: () => this.reset(), label: 'Reset All' },
+	randomize: { action: () => this.randomize() },
 });
 ```
 
@@ -80,13 +122,13 @@ import {
 
 @Component({
 	template: `
-		<tweakpane-pane [options]="{ title: 'Controls' }">
-			<tweakpane-folder [options]="{ title: 'Position' }">
-				<tweakpane-number [(value)]="x" [options]="{ label: 'X', min: -5, max: 5 }" />
+		<tweakpane-pane title="Controls">
+			<tweakpane-folder title="Position">
+				<tweakpane-number [(value)]="x" label="X" [params]="{ min: -5, max: 5 }" />
 			</tweakpane-folder>
-			<tweakpane-color [(value)]="color" [options]="{ label: 'Color' }" />
-			<tweakpane-checkbox [(value)]="visible" [options]="{ label: 'Visible' }" />
-			<tweakpane-button [options]="{ title: 'Reset' }" (click)="reset()" />
+			<tweakpane-color [(value)]="color" label="Color" />
+			<tweakpane-checkbox [(value)]="visible" label="Visible" />
+			<tweakpane-button title="Reset" (click)="reset()" />
 		</tweakpane-pane>
 	`,
 	imports: [TweakpanePane, TweakpaneFolder, TweakpaneNumber, TweakpaneColor, TweakpaneCheckbox, TweakpaneButton],
@@ -106,39 +148,23 @@ export class Controls {
 
 ## Control Types
 
-| Component           | Description                        | Config Type             |
-| ------------------- | ---------------------------------- | ----------------------- |
-| `TweakpaneNumber`   | Numeric input with optional slider | `{ min?, max?, step? }` |
-| `TweakpaneText`     | Text input                         | `{ label? }`            |
-| `TweakpaneCheckbox` | Boolean toggle                     | `{ label? }`            |
-| `TweakpaneColor`    | Color picker                       | `{ color: true }`       |
-| `TweakpaneList`     | Dropdown select                    | `{ options: [...] }`    |
-| `TweakpanePoint`    | 2D/3D/4D point input               | `{ x?, y?, z?, w? }`    |
-| `TweakpaneButton`   | Clickable button                   | `{ title }`             |
-| `TweakpaneFolder`   | Collapsible group                  | `{ title, expanded? }`  |
+| Component           | Description                        | Config Type                      |
+| ------------------- | ---------------------------------- | -------------------------------- |
+| `TweakpaneNumber`   | Numeric input with optional slider | `{ value, min?, max?, step? }`   |
+| `TweakpaneText`     | Text input                         | `{ value }`                      |
+| `TweakpaneCheckbox` | Boolean toggle                     | `{ value }`                      |
+| `TweakpaneColor`    | Color picker                       | `{ value, color: true }`         |
+| `TweakpaneList`     | Dropdown select                    | `{ value, options: [...] }`      |
+| `TweakpanePoint`    | 2D/3D/4D point input               | `{ value, x?, y?, z?, w? }`      |
+| `TweakpaneButton`   | Clickable button                   | `{ action: () => void, label? }` |
+| `TweakpaneFolder`   | Collapsible group                  | `tweaks.folder(name, config)`    |
 
 ## Pane Positioning
 
 ```typescript
-<tweakpane-pane [options]="{
-  title: 'Debug',
-  position: 'top-right' // 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
-}">
+<tweakpane-pane title="Debug" top="8px" right="8px">
+  <!-- controls -->
+</tweakpane-pane>
 ```
 
-## Binding to Objects
-
-Use `TweakpaneBinding` to bind directly to object properties:
-
-```typescript
-@Component({
-	template: `
-		<tweakpane-pane>
-			<tweakpane-binding [target]="mesh.position" property="x" [options]="{ min: -5, max: 5 }" />
-		</tweakpane-pane>
-	`,
-})
-export class Controls {
-	mesh = viewChild.required<ElementRef<Mesh>>('mesh');
-}
-```
+Available position inputs: `top`, `right`, `bottom`, `left`, `width`

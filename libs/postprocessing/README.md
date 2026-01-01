@@ -18,7 +18,16 @@ npm install angular-three-postprocessing three-stdlib maath postprocessing
 
 This is a wrapper component that manages and applies post-processing effects to your scene. It takes content children of effects and applies them in the order they are provided.
 
-### Object Inputs (NgtpEffectComposerOptions)
+### Usage
+
+```html
+<ngtp-effect-composer [options]="{ multisampling: 0 }">
+	<ngtp-bloom [options]="{ luminanceThreshold: 0.9, intensity: 0.5 }" />
+	<ngtp-vignette [options]="{ darkness: 0.5 }" />
+</ngtp-effect-composer>
+```
+
+### Options (NgtpEffectComposerOptions)
 
 | Property           | Description                                                                                       | Default Value |
 | ------------------ | ------------------------------------------------------------------------------------------------- | ------------- |
@@ -34,30 +43,76 @@ This is a wrapper component that manages and applies post-processing effects to 
 | `camera`           | The camera to use for rendering. If not provided, the default camera from the store will be used. | undefined     |
 | `scene`            | The scene to render. If not provided, the default scene from the store will be used.              | undefined     |
 
-````html
-<ngtp-effect-composer [options]="{ multisampling: 0, frameBufferType: FloatType, enableNormalPass: true }">
-	<ngtp-bloom />
-</ngtp-effect-composer>
-```
-````
-
-### NgtpEffectComposerApi
-
-This is an interface that provides access to the underlying `NgtpEffectComposer` instance, as well as the `camera` and `scene` being used. It also includes references to the `NormalPass` and `DepthDownsamplingPass` if they are enabled
-
-```ts
-export interface NgtpEffectComposerApi {
-	composer: EffectComposer;
-	camera: Camera;
-	scene: Scene;
-	normalPass: NormalPass | null;
-	downSamplingPass: DepthDownsamplingPass | null;
-	resolutionScale?: number;
-}
-```
-
-To retrieve the `NgtpEffectComposerApi` for components within `<ngtp-effect-composer />`, you can use the `injectEffectComposerApi` function.
-
 ## Effects
 
-TBD
+All effects are available from `angular-three-postprocessing`:
+
+| Effect                    | Selector                    | Description                           |
+| ------------------------- | --------------------------- | ------------------------------------- |
+| `NgtpAscii`               | `ngtp-ascii`                | ASCII art effect                      |
+| `NgtpBloom`               | `ngtp-bloom`                | Bloom/glow effect                     |
+| `NgtpBrightnessContrast`  | `ngtp-brightness-contrast`  | Brightness and contrast adjustment    |
+| `NgtpChromaticAberration` | `ngtp-chromatic-aberration` | Chromatic aberration effect           |
+| `NgtpColorAverage`        | `ngtp-color-average`        | Color averaging effect                |
+| `NgtpColorDepth`          | `ngtp-color-depth`          | Color depth reduction                 |
+| `NgtpDepth`               | `ngtp-depth`                | Depth visualization                   |
+| `NgtpDepthOfField`        | `ngtp-depth-of-field`       | Depth of field effect                 |
+| `NgtpDotScreen`           | `ngtp-dot-screen`           | Dot screen effect                     |
+| `NgtpFXAA`                | `ngtp-fxaa`                 | Fast approximate anti-aliasing        |
+| `NgtpGlitch`              | `ngtp-glitch`               | Glitch effect                         |
+| `NgtpGodRays`             | `ngtp-god-rays`             | God rays/light shafts                 |
+| `NgtpGrid`                | `ngtp-grid`                 | Grid overlay                          |
+| `NgtpHueSaturation`       | `ngtp-hue-saturation`       | Hue and saturation adjustment         |
+| `NgtpLensFlare`           | `ngtp-lens-flare`           | Lens flare effect                     |
+| `NgtpLUT`                 | `ngtp-lut`                  | LUT (Look-Up Table) color grading     |
+| `NgtpNoise`               | `ngtp-noise`                | Noise effect                          |
+| `NgtpOutline`             | `ngtp-outline`              | Outline effect                        |
+| `NgtpPixelation`          | `ngtp-pixelation`           | Pixelation effect                     |
+| `NgtpScanline`            | `ngtp-scanline`             | Scanline effect                       |
+| `NgtpSelectiveBloom`      | `ngtp-selective-bloom`      | Selective bloom on specific objects   |
+| `NgtpSepia`               | `ngtp-sepia`                | Sepia tone effect                     |
+| `NgtpShockWave`           | `ngtp-shock-wave`           | Shock wave distortion                 |
+| `NgtpSMAA`                | `ngtp-smaa`                 | Subpixel morphological anti-aliasing  |
+| `NgtpTiltShift`           | `ngtp-tilt-shift`           | Tilt-shift blur                       |
+| `NgtpTiltShift2`          | `ngtp-tilt-shift-2`         | Alternative tilt-shift implementation |
+| `NgtpToneMapping`         | `ngtp-tone-mapping`         | Tone mapping                          |
+| `NgtpVignette`            | `ngtp-vignette`             | Vignette darkening                    |
+| `NgtpWater`               | `ngtp-water`                | Water effect                          |
+
+### Effect Example
+
+```typescript
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgtpEffectComposer, NgtpBloom, NgtpVignette, NgtpNoise } from 'angular-three-postprocessing';
+
+@Component({
+	template: `
+		<ngtp-effect-composer>
+			<ngtp-bloom [options]="{ luminanceThreshold: 0.9, luminanceSmoothing: 0.025, intensity: 0.5 }" />
+			<ngtp-noise [options]="{ opacity: 0.02 }" />
+			<ngtp-vignette [options]="{ eskil: false, offset: 0.1, darkness: 1.1 }" />
+		</ngtp-effect-composer>
+	`,
+	imports: [NgtpEffectComposer, NgtpBloom, NgtpVignette, NgtpNoise],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class PostProcessing {}
+```
+
+## N8AO (Ambient Occlusion)
+
+A separate sub-library provides N8 Ambient Occlusion:
+
+```bash
+npm install n8ao
+```
+
+```typescript
+import { NgtpN8AO } from 'angular-three-postprocessing/n8ao';
+```
+
+```html
+<ngtp-effect-composer [options]="{ enableNormalPass: true }">
+	<ngtp-n8ao [options]="{ aoRadius: 0.5, intensity: 1 }" />
+</ngtp-effect-composer>
+```
