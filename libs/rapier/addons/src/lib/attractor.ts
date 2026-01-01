@@ -161,14 +161,17 @@ const defaultOptions: NgtrAttactorOptions = {
  *
  * @example
  * ```html
- * <!-- Simple attractor at origin -->
- * <ngt-object3D attractor [options]="{ strength: 5, range: 20 }" />
+ * <!-- Simple attractor at origin with default options -->
+ * <ngt-object3D attractor />
+ *
+ * <!-- Attractor with custom options -->
+ * <ngt-object3D [attractor]="{ strength: 5, range: 20 }" />
  *
  * <!-- Repeller (negative strength) -->
- * <ngt-object3D attractor [options]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
+ * <ngt-object3D [attractor]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
  *
  * <!-- Newtonian gravity -->
- * <ngt-object3D attractor [options]="{
+ * <ngt-object3D [attractor]="{
  *   strength: 1000,
  *   range: 50,
  *   type: 'newtonian',
@@ -192,7 +195,7 @@ const defaultOptions: NgtrAttactorOptions = {
 })
 export class NgtrAttractor {
 	position = input<NgtVector3>([0, 0, 0]);
-	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
+	options = input(defaultOptions, { alias: 'attractor', transform: mergeInputs(defaultOptions) });
 
 	private objectRef = inject<ElementRef<THREE.Object3D>>(ElementRef);
 	private collisionGroups = pick(this.options, 'collisionGroups');

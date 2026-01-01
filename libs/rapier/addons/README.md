@@ -17,11 +17,14 @@ A directive that creates a gravitational attractor point in the physics world. A
 ### Basic Usage
 
 ```html
-<!-- Simple attractor at origin -->
-<ngt-object3D attractor [options]="{ strength: 5, range: 20 }" />
+<!-- Simple attractor at origin with default options -->
+<ngt-object3D attractor />
+
+<!-- Attractor with custom options -->
+<ngt-object3D [attractor]="{ strength: 5, range: 20 }" />
 
 <!-- Repeller (negative strength) -->
-<ngt-object3D attractor [options]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
+<ngt-object3D [attractor]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
 ```
 
 ### Gravity Types
@@ -30,20 +33,19 @@ The attractor supports three different gravity calculation models:
 
 ```html
 <!-- Static: Constant force regardless of distance -->
-<ngt-object3D attractor [options]="{ type: 'static', strength: 5, range: 20 }" />
+<ngt-object3D [attractor]="{ type: 'static', strength: 5, range: 20 }" />
 
 <!-- Linear: Force increases as objects get closer -->
-<ngt-object3D attractor [options]="{ type: 'linear', strength: 5, range: 20 }" />
+<ngt-object3D [attractor]="{ type: 'linear', strength: 5, range: 20 }" />
 
 <!-- Newtonian: Realistic inverse-square law (like real gravity) -->
 <ngt-object3D
-	attractor
-	[options]="{
-  type: 'newtonian',
-  strength: 1000,
-  range: 50,
-  gravitationalConstant: 0.01
-}"
+	[attractor]="{
+		type: 'newtonian',
+		strength: 1000,
+		range: 50,
+		gravitationalConstant: 0.01
+	}"
 />
 ```
 

@@ -388,16 +388,18 @@ import { NgtrAttractor } from 'angular-three-rapier/addons';
 ```
 
 ```html
-<!-- Attractor -->
-<ngt-object3D attractor [options]="{ strength: 10, range: 20, type: 'linear' }" />
+<!-- Attractor with default options -->
+<ngt-object3D attractor />
+
+<!-- Attractor with custom options -->
+<ngt-object3D [attractor]="{ strength: 10, range: 20, type: 'linear' }" />
 
 <!-- Repeller (negative strength) -->
-<ngt-object3D attractor [options]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
+<ngt-object3D [attractor]="{ strength: -10, range: 15 }" [position]="[5, 0, 0]" />
 
 <!-- Newtonian gravity -->
 <ngt-object3D
-	attractor
-	[options]="{
+	[attractor]="{
 		strength: 1000,
 		range: 50,
 		type: 'newtonian',

@@ -59,13 +59,11 @@ export function attractorDebug(object: THREE.Object3D, options: () => NgtrAttact
 		});
 
 		beforeRender(() => {
-			if (!physics['debug']()) return;
+			if (!physics['debug']() || !mesh || !normalsHelper) return;
 
-			if (mesh) {
-				const worldPosition = object.getWorldPosition(_v3);
-				mesh.position.copy(worldPosition);
-				normalsHelper?.update();
-			}
+			const worldPosition = object.getWorldPosition(_v3);
+			mesh.position.copy(worldPosition);
+			normalsHelper.update();
 		});
 	});
 }

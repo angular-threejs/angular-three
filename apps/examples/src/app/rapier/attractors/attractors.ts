@@ -28,18 +28,18 @@ import { ResetOrbitControls } from '../reset-orbit-controls';
 				<ngts-html>
 					<div htmlContent>Nested Attractor</div>
 				</ngts-html>
-				<ngt-object3D attractor [interactionGroups]="[1, 2]" [options]="{ strength: 4 }" />
+				<ngt-object3D [attractor]="{ strength: 4 }" [interactionGroups]="[1, 2]" />
 			</ngt-object3D>
 
 			<ngt-group [position.x]="20">
-				<ngt-object3D attractor [options]="{ strength: -2, range: 20 }" />
+				<ngt-object3D [attractor]="{ strength: -2, range: 20 }" />
 				<ngts-html>
 					<div htmlContent>Repeller</div>
 				</ngts-html>
 			</ngt-group>
 
 			<ngt-group [position.x]="-20">
-				<ngt-object3D attractor [options]="{ strength: 10, range: 20 }" />
+				<ngt-object3D [attractor]="{ strength: 10, range: 20 }" />
 				<ngts-html>
 					<div htmlContent>Attractor</div>
 				</ngts-html>
