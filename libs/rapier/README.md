@@ -19,8 +19,8 @@ npm install angular-three-rapier @dimforge/rapier3d-compat
 ## Usage
 
 ```typescript
-import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
-import { extend } from 'angular-three';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { extend, NgtArgs } from 'angular-three';
 import { NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
 
@@ -46,12 +46,12 @@ export class Box {}
 	template: `
 		<ngt-object3D rigidBody="fixed" [position]="[0, -1, 0]">
 			<ngt-mesh>
-				<ngt-box-geometry [args]="[20, 1, 20]" />
+				<ngt-box-geometry *args="[20, 1, 20]" />
 				<ngt-mesh-standard-material color="gray" />
 			</ngt-mesh>
 		</ngt-object3D>
 	`,
-	imports: [NgtrRigidBody],
+	imports: [NgtrRigidBody, NgtArgs],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Ground {}
@@ -230,13 +230,13 @@ import {
 	`,
 })
 export class JointExample {
-	bodyA = viewChild<NgtrRigidBody>('bodyA');
-	bodyB = viewChild<NgtrRigidBody>('bodyB');
+	bodyA = viewChild.required<NgtrRigidBody>('bodyA');
+	bodyB = viewChild.required<NgtrRigidBody>('bodyB');
 
 	// Spherical joint (ball-and-socket)
 	joint = sphericalJoint(
-		() => this.bodyA()?.rigidBody(),
-		() => this.bodyB()?.rigidBody(),
+		() => this.bodyA().rigidBody(),
+		() => this.bodyB().rigidBody(),
 		{
 			data: {
 				body1Anchor: [0, -0.5, 0],
@@ -247,8 +247,8 @@ export class JointExample {
 
 	// Revolute joint (hinge) with limits
 	hingeJoint = revoluteJoint(
-		() => this.bodyA()?.rigidBody(),
-		() => this.bodyB()?.rigidBody(),
+		() => this.bodyA().rigidBody(),
+		() => this.bodyB().rigidBody(),
 		{
 			data: {
 				body1Anchor: [0, 0, 0],
@@ -261,8 +261,8 @@ export class JointExample {
 
 	// Prismatic joint (slider)
 	sliderJoint = prismaticJoint(
-		() => this.bodyA()?.rigidBody(),
-		() => this.bodyB()?.rigidBody(),
+		() => this.bodyA().rigidBody(),
+		() => this.bodyB().rigidBody(),
 		{
 			data: {
 				body1Anchor: [0, 0, 0],
@@ -275,8 +275,8 @@ export class JointExample {
 
 	// Rope joint (max distance constraint)
 	rope = ropeJoint(
-		() => this.bodyA()?.rigidBody(),
-		() => this.bodyB()?.rigidBody(),
+		() => this.bodyA().rigidBody(),
+		() => this.bodyB().rigidBody(),
 		{
 			data: {
 				body1Anchor: [0, 0, 0],
@@ -288,8 +288,8 @@ export class JointExample {
 
 	// Spring joint
 	spring = springJoint(
-		() => this.bodyA()?.rigidBody(),
-		() => this.bodyB()?.rigidBody(),
+		() => this.bodyA().rigidBody(),
+		() => this.bodyB().rigidBody(),
 		{
 			data: {
 				body1Anchor: [0, 0, 0],
@@ -308,16 +308,19 @@ export class JointExample {
 For efficient physics with many identical objects:
 
 ```typescript
+import { NgtArgs } from 'angular-three';
+import { NgtrInstancedRigidBodies } from 'angular-three-rapier';
+
 @Component({
 	template: `
 		<ngt-object3D [instancedRigidBodies]="instances">
 			<ngt-instanced-mesh [count]="instances.length" castShadow>
-				<ngt-sphere-geometry [args]="[0.5]" />
+				<ngt-sphere-geometry *args="[0.5]" />
 				<ngt-mesh-standard-material color="orange" />
 			</ngt-instanced-mesh>
 		</ngt-object3D>
 	`,
-	imports: [NgtrInstancedRigidBodies],
+	imports: [NgtrInstancedRigidBodies, NgtArgs],
 })
 export class Spheres {
 	instances = Array.from({ length: 100 }, (_, i) => ({
