@@ -1,3 +1,23 @@
+## 4.0.0-next.120 (2026-01-01)
+
+### 🚀 Features
+
+- ⚠️  **rapier:** add alias 'attractor' to NgtrAttractor options input ([787baf12](https://github.com/angular-threejs/angular-three/commit/787baf12))
+
+### ⚠️  Breaking Changes
+
+- **rapier:** add alias 'attractor' to NgtrAttractor options input  ([787baf12](https://github.com/angular-threejs/angular-three/commit/787baf12))
+  NgtrAttractor now uses [attractor] instead of [options]
+  Before:
+  <ngt-object3D attractor [options]="{ strength: 10 }" />
+  After:
+  <ngt-object3D [attractor]="{ strength: 10 }" />
+  <ngt-object3D attractor /> <!-- uses default options -->
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.119 (2025-12-31)
 
 This was a version bump only, there were no code changes.
