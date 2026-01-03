@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, TiltShiftEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
@@ -30,7 +38,7 @@ export type TiltShiftEffectOptions = Partial<NonNullable<ConstructorParameters<t
 @Component({
 	selector: 'ngtp-tilt-shift',
 	template: `
-		<ngt-tilt-shift-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-tilt-shift-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-tilt-shift-effect>
@@ -49,7 +57,9 @@ export class NgtpTiltShift {
 	options = input({} as Omit<TiltShiftEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<TiltShiftEffect>>('effect');
 
 	constructor() {
 		extend({ TiltShiftEffect });

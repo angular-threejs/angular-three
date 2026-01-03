@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BrightnessContrastEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
@@ -25,7 +33,7 @@ export type BrightnessEffectOptions = NonNullable<ConstructorParameters<typeof B
 @Component({
 	selector: 'ngtp-brightness-contrast',
 	template: `
-		<ngt-brightness-contrast-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-brightness-contrast-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-brightness-contrast-effect>
@@ -43,7 +51,9 @@ export class NgtpBrightnessContrast {
 	options = input({} as Omit<BrightnessEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<BrightnessContrastEffect>>('effect');
 
 	constructor() {
 		extend({ BrightnessContrastEffect });

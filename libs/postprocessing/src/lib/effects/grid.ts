@@ -45,7 +45,7 @@ export class NgtpGrid {
 	private size = pick(this.options, 'size');
 
 	/** The underlying GridEffect instance */
-	protected effect = computed(() => new GridEffect(this.effectOptions()));
+	effect = computed(() => new GridEffect(this.effectOptions()));
 
 	constructor() {
 		effect(() => {

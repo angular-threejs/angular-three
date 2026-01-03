@@ -63,7 +63,7 @@ export class NgtpDepthOfField {
 	 * Creates the DepthOfFieldEffect instance with the configured options.
 	 * Enables autofocus if a target is provided and applies depth texture settings.
 	 */
-	protected effect = computed(() => {
+	effect = computed(() => {
 		const [camera, options] = [this.effectComposer.camera(), this.options()];
 
 		const autoFocus = options.target != null;

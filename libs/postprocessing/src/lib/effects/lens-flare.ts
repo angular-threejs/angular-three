@@ -245,7 +245,7 @@ export class NgtpLensFlare {
 	private mouse2d = new THREE.Vector2();
 
 	/** The underlying LensFlareEffect instance */
-	protected effect = computed(() => new LensFlareEffect(this.effectOptions()));
+	effect = computed(() => new LensFlareEffect(this.effectOptions()));
 
 	constructor() {
 		effect(() => {

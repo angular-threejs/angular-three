@@ -137,7 +137,7 @@ export class NgtpSelectiveBloom {
 	 * The underlying SelectiveBloomEffect instance.
 	 * Created with the scene, camera, and configured options.
 	 */
-	protected effect = computed(() => {
+	effect = computed(() => {
 		const effect = new SelectiveBloomEffect(this.effectComposer.scene(), this.effectComposer.camera(), {
 			blendFunction: this.blendFunction() || BlendFunction.ADD,
 			luminanceThreshold: this.luminanceThreshold(),

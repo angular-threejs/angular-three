@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 import * as THREE from 'three';
@@ -74,7 +82,7 @@ export type WaterEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 @Component({
 	selector: 'ngtp-water',
 	template: `
-		<ngt-water-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-water-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-water-effect>
@@ -93,7 +101,9 @@ export class NgtpWater {
 	options = input({} as Omit<WaterEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<WaterEffect>>('effect');
 
 	constructor() {
 		extend({ WaterEffect });

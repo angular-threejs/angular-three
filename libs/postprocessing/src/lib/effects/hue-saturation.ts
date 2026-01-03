@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { HueSaturationEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
@@ -25,7 +33,7 @@ export type HueSaturationEffectOptions = Partial<NonNullable<ConstructorParamete
 @Component({
 	selector: 'ngtp-hue-saturation',
 	template: `
-		<ngt-hue-saturation-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-hue-saturation-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-hue-saturation-effect>
@@ -43,7 +51,9 @@ export class NgtpHueSaturation {
 	options = input({} as Omit<HueSaturationEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<HueSaturationEffect>>('effect');
 
 	constructor() {
 		extend({ HueSaturationEffect });

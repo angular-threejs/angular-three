@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { DotScreenEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
@@ -25,7 +33,7 @@ export type DotScreenEffectOptions = Partial<NonNullable<ConstructorParameters<t
 @Component({
 	selector: 'ngtp-dot-screen',
 	template: `
-		<ngt-dot-screen-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-dot-screen-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-dot-screen-effect>
@@ -43,7 +51,9 @@ export class NgtpDotScreen {
 	options = input({} as Omit<DotScreenEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<DotScreenEffect>>('effect');
 
 	constructor() {
 		extend({ DotScreenEffect });

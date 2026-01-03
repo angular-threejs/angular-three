@@ -84,7 +84,7 @@ export class NgtpGodRays {
 	 * The underlying GodRaysEffect instance.
 	 * Created with the camera, sun element, and configured options.
 	 */
-	protected effect = computed(() => {
+	effect = computed(() => {
 		const [camera, sunElement, options] = [this.effectComposer.camera(), this.sunElement(), this.effectOptions()];
 		return new GodRaysEffect(camera, sunElement, options);
 	});

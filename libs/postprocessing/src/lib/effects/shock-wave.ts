@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { ShockWaveEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
@@ -27,7 +35,7 @@ export type ShockWaveEffectOptions = Partial<NonNullable<ConstructorParameters<t
 @Component({
 	selector: 'ngtp-shock-wave',
 	template: `
-		<ngt-shock-wave-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-shock-wave-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-shock-wave-effect>
@@ -45,7 +53,9 @@ export class NgtpShockWave {
 	options = input({} as Omit<ShockWaveEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<ShockWaveEffect>>('effect');
 
 	constructor() {
 		extend({ ShockWaveEffect });

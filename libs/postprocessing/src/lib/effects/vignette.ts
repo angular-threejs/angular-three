@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { VignetteEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
@@ -26,7 +34,7 @@ export type VignetteEffectOptions = Partial<NonNullable<ConstructorParameters<ty
 @Component({
 	selector: 'ngtp-vignette',
 	template: `
-		<ngt-vignette-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-vignette-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-vignette-effect>
@@ -44,7 +52,9 @@ export class NgtpVignette {
 	options = input({} as Omit<VignetteEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<VignetteEffect>>('effect');
 
 	constructor() {
 		extend({ VignetteEffect });

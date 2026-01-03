@@ -1,4 +1,11 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, ColorAverageEffect } from 'postprocessing';
@@ -27,7 +34,7 @@ import { BlendFunction, ColorAverageEffect } from 'postprocessing';
 @Component({
 	selector: 'ngtp-color-average',
 	template: `
-		<ngt-color-average-effect *args="[options().blendFunction]">
+		<ngt-color-average-effect #effect *args="[options().blendFunction]">
 			<ng-content />
 		</ngt-color-average-effect>
 	`,
@@ -44,6 +51,8 @@ export class NgtpColorAverage {
 		{ blendFunction: BlendFunction.NORMAL },
 		{ transform: mergeInputs({ blendFunction: BlendFunction.NORMAL }) },
 	);
+
+	effectRef = viewChild<ElementRef<ColorAverageEffect>>('effect');
 
 	constructor() {
 		extend({ ColorAverageEffect });

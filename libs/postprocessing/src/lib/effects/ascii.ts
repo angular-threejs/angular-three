@@ -220,7 +220,7 @@ export class NgtpASCII {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	/** The underlying ASCIIEffect instance */
-	protected effect = computed(() => new ASCIIEffect(this.options()));
+	effect = computed(() => new ASCIIEffect(this.options()));
 
 	constructor() {
 		effect((onCleanup) => {

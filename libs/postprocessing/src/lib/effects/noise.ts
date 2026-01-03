@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { BlendFunction, NoiseEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode, provideDefaultEffectOptions } from '../effect';
@@ -25,7 +33,7 @@ export type NoiseEffectOptions = Partial<NonNullable<ConstructorParameters<typeo
 @Component({
 	selector: 'ngtp-noise',
 	template: `
-		<ngt-noise-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-noise-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-noise-effect>
@@ -44,7 +52,9 @@ export class NgtpNoise {
 	options = input({} as Omit<NoiseEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<NoiseEffect>>('effect');
 
 	constructor() {
 		extend({ NoiseEffect });

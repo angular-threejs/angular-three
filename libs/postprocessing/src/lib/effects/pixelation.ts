@@ -47,7 +47,7 @@ export class NgtpPixelation {
 	private granularity = pick(this.options, 'granularity');
 
 	/** The underlying PixelationEffect instance */
-	protected effect = computed(() => new PixelationEffect(this.granularity()));
+	effect = computed(() => new PixelationEffect(this.granularity()));
 
 	constructor() {
 		effect((onCleanup) => {

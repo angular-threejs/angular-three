@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import { BlendFunction, ScanlineEffect } from 'postprocessing';
@@ -30,7 +38,7 @@ const defaultOptions: Omit<ScanlineEffectOptions, 'blendFunction'> = {
 @Component({
 	selector: 'ngtp-scanline',
 	template: `
-		<ngt-scanline-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-scanline-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-scanline-effect>
@@ -50,7 +58,9 @@ export class NgtpScanline {
 	options = input(defaultOptions, { transform: mergeInputs(defaultOptions) });
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<ScanlineEffect>>('effect');
 
 	constructor() {
 		extend({ ScanlineEffect });

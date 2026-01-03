@@ -67,7 +67,7 @@ export class NgtpLUT {
 	private store = injectStore();
 
 	/** The underlying LUT3DEffect instance */
-	protected effect = computed(() => {
+	effect = computed(() => {
 		const { lut, ...options } = this.options();
 		return new LUT3DEffect(lut, options);
 	});

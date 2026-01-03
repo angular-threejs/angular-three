@@ -1,4 +1,12 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	viewChild,
+} from '@angular/core';
 import { NgtArgs, extend } from 'angular-three';
 import { ColorDepthEffect } from 'postprocessing';
 import { NgtpEffect, NgtpEffectBlendMode } from '../effect';
@@ -25,7 +33,7 @@ export type ColorDepthEffectOptions = Partial<NonNullable<ConstructorParameters<
 @Component({
 	selector: 'ngtp-color-depth',
 	template: `
-		<ngt-color-depth-effect *args="[options()]" [camera]="effect.camera()">
+		<ngt-color-depth-effect #effect *args="[options()]" [camera]="hostEffect.camera()">
 			<ngtp-effect-blend-mode />
 			<ng-content />
 		</ngt-color-depth-effect>
@@ -43,7 +51,9 @@ export class NgtpColorDepth {
 	options = input({} as Omit<ColorDepthEffectOptions, 'blendFunction'>);
 
 	/** Reference to the host NgtpEffect directive */
-	protected effect = inject(NgtpEffect, { host: true });
+	protected hostEffect = inject(NgtpEffect, { host: true });
+
+	effectRef = viewChild<ElementRef<ColorDepthEffect>>('effect');
 
 	constructor() {
 		extend({ ColorDepthEffect });
