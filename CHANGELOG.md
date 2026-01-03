@@ -1,3 +1,13 @@
+## 4.0.0-next.121 (2026-01-03)
+
+### 🚀 Features
+
+- **postprocessing:** expose effect instances publicly ([f821f977](https://github.com/angular-threejs/angular-three/commit/f821f977))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.120 (2026-01-01)
 
 ### 🚀 Features
