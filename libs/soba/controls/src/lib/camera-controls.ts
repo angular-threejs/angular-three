@@ -12,10 +12,30 @@ import CameraControls from 'camera-controls';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 
+/**
+ * Configuration options for the NgtsCameraControls component.
+ *
+ * Extends the camera-controls library options with Angular-specific
+ * configuration for camera control, DOM element binding, and performance settings.
+ */
 export interface NgtsCameraControlsOptions {
+	/**
+	 * The camera to control. Defaults to the store's camera.
+	 */
 	camera?: NgtCamera;
+	/**
+	 * The DOM element to attach controls to. Defaults to the canvas.
+	 */
 	domElement?: HTMLElement;
+	/**
+	 * Whether to make these the default controls in the store.
+	 * @default false
+	 */
 	makeDefault: boolean;
+	/**
+	 * Whether to trigger performance regression when controls are active.
+	 * @default false
+	 */
 	regress: boolean;
 }
 
@@ -24,6 +44,36 @@ const defaultOptions: Partial<CameraControls> & NgtsCameraControlsOptions = {
 	regress: false,
 };
 
+/**
+ * A component that provides advanced camera controls using the camera-controls library.
+ *
+ * CameraControls offer smooth, customizable camera movements with features like
+ * dolly, truck, rotate, and various transition animations. It provides more
+ * advanced functionality than OrbitControls, including smooth transitions
+ * and programmatic camera control.
+ *
+ * @see https://github.com/yomotsu/camera-controls
+ *
+ * @example
+ * ```html
+ * <ngts-camera-controls [options]="{ makeDefault: true }" />
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-camera-controls
+ *   [options]="{ regress: true }"
+ *   (control)="onControl($event)"
+ *   (controlStart)="onControlStart($event)"
+ *   (controlEnd)="onControlEnd($event)"
+ *   (transitionStart)="onTransitionStart($event)"
+ *   (update)="onUpdate($event)"
+ *   (wake)="onWake($event)"
+ *   (rest)="onRest($event)"
+ *   (sleep)="onSleep($event)"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-camera-controls',
 	template: `

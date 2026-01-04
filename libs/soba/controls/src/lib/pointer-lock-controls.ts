@@ -15,14 +15,38 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three-stdlib';
 
+/**
+ * Configuration options for the NgtsPointerLockControls component.
+ *
+ * Extends the standard PointerLockControls options with Angular-specific
+ * configuration for camera control, DOM element binding, and pointer lock behavior.
+ */
 export type NgtsPointerLockControlsOptions = Omit<
 	NgtOverwrite<
 		NgtThreeElement<typeof PointerLockControls>,
 		{
+			/**
+			 * The camera to control. Defaults to the store's camera.
+			 */
 			camera?: THREE.Camera;
+			/**
+			 * The DOM element to attach controls to. Defaults to the canvas.
+			 */
 			domElement?: HTMLElement;
+			/**
+			 * Whether to make these the default controls in the store.
+			 * @default false
+			 */
 			makeDefault: boolean;
+			/**
+			 * Whether the controls are enabled.
+			 * @default true
+			 */
 			enabled: boolean;
+			/**
+			 * CSS selector for elements that trigger pointer lock on click.
+			 * If not provided, clicking the document will trigger pointer lock.
+			 */
 			selector?: string;
 		}
 	>,
@@ -34,6 +58,28 @@ const defaultOptions: NgtsPointerLockControlsOptions = {
 	makeDefault: false,
 };
 
+/**
+ * A component that provides first-person style camera controls using the Pointer Lock API.
+ *
+ * PointerLockControls capture the mouse cursor and allow free-look camera movement,
+ * commonly used for first-person games and immersive experiences. The controls
+ * automatically center raycasting while active.
+ *
+ * @example
+ * ```html
+ * <ngts-pointer-lock-controls [options]="{ makeDefault: true }" />
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-pointer-lock-controls
+ *   [options]="{ selector: '#start-button' }"
+ *   (lock)="onPointerLock($event)"
+ *   (unlock)="onPointerUnlock($event)"
+ *   (change)="onCameraChange($event)"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-pointer-lock-controls',
 	template: `

@@ -18,18 +18,52 @@ type ExtractCallback<T, E extends string> = T extends { addEventListener(event: 
 	? C
 	: never;
 
+/**
+ * Event emitted when the OrbitControls change (camera moves).
+ */
 export type OrbitControlsChangeEvent = Parameters<ExtractCallback<OrbitControls, 'change'>>[0];
 
+/**
+ * Configuration options for the NgtsOrbitControls component.
+ *
+ * Extends the standard OrbitControls options with Angular-specific
+ * configuration for camera control, DOM element binding, and performance settings.
+ */
 export type NgtsOrbitControlsOptions = Omit<
 	NgtOverwrite<
 		NgtThreeElement<typeof OrbitControls>,
 		{
+			/**
+			 * The camera to control. Defaults to the store's camera.
+			 */
 			camera?: THREE.Camera;
+			/**
+			 * The DOM element to attach controls to. Defaults to the canvas.
+			 */
 			domElement?: HTMLElement;
+			/**
+			 * The target point to orbit around.
+			 */
 			target?: NgtVector3;
+			/**
+			 * Whether to make these the default controls in the store.
+			 * @default false
+			 */
 			makeDefault: boolean;
+			/**
+			 * Whether to trigger performance regression when controls are active.
+			 * @default false
+			 */
 			regress: boolean;
+			/**
+			 * Whether to enable damping (inertia) for smooth camera movement.
+			 * @default true
+			 */
 			enableDamping: boolean;
+			/**
+			 * Whether to enable keyboard controls, or a specific element to listen for key events.
+			 * @default false
+			 */
 			keyEvents: boolean | HTMLElement;
 		}
 	>,
@@ -43,6 +77,28 @@ const defaultOptions: NgtsOrbitControlsOptions = {
 	keyEvents: false,
 };
 
+/**
+ * A component that provides orbit-style camera controls for the Three.js scene.
+ *
+ * OrbitControls allow users to rotate, zoom, and pan the camera around a target point
+ * using mouse or touch input. The camera is constrained to orbit around the target,
+ * preventing it from flipping upside down.
+ *
+ * @example
+ * ```html
+ * <ngts-orbit-controls [options]="{ makeDefault: true }" />
+ * ```
+ *
+ * @example
+ * ```html
+ * <ngts-orbit-controls
+ *   [options]="{ enableDamping: true, regress: true }"
+ *   (changed)="onControlsChange($event)"
+ *   (started)="onDragStart($event)"
+ *   (ended)="onDragEnd($event)"
+ * />
+ * ```
+ */
 @Component({
 	selector: 'ngts-orbit-controls',
 	template: `

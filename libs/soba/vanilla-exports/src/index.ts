@@ -37,9 +37,28 @@ import {
 } from '@pmndrs/vanilla';
 import { NgtThreeElement } from 'angular-three';
 
+/**
+ * Type definition for the SpotLightMaterial element in Angular Three templates.
+ * Used for volumetric spotlight effects.
+ */
 export type NgtSpotLightMaterial = NgtThreeElement<typeof SpotLightMaterial>;
+
+/**
+ * Type definition for the SoftShadowMaterial element in Angular Three templates.
+ * Used for rendering soft shadow effects.
+ */
 export type NgtSoftShadowMaterial = NgtThreeElement<typeof SoftShadowMaterial>;
+
+/**
+ * Type definition for the CausticsProjectionMaterial element in Angular Three templates.
+ * Used for projecting caustic light patterns.
+ */
 export type NgtCausticsProjectionMaterial = NgtThreeElement<Type<CausticsProjectionMaterialType>>;
+
+/**
+ * Type definition for the MeshPortalMaterial element in Angular Three templates.
+ * Used for creating portal effects that render a different scene inside a mesh.
+ */
 export type NgtMeshPortalMaterial = NgtThreeElement<typeof MeshPortalMaterial>;
 
 declare global {
