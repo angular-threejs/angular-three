@@ -1,3 +1,13 @@
+## 4.0.0-next.124 (2026-01-04)
+
+### 🚀 Features
+
+- **core:** new generate json script ([cb3a6834](https://github.com/angular-threejs/angular-three/commit/cb3a6834))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.123 (2026-01-04)
 
 ### 🚀 Features
