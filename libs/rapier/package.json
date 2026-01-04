@@ -23,8 +23,8 @@
 	],
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": ">=20.0.0 <21.0.0",
-		"@angular/core": ">=20.0.0 <21.0.0",
+		"@angular/common": ">=20.0.0 <22.0.0",
+		"@angular/core": ">=20.0.0 <22.0.0",
 		"@dimforge/rapier3d-compat": ">=0.14.0 <0.20.0",
 		"three": ">=0.157.0 <0.183.0",
 		"three-stdlib": "^2.0.0"
