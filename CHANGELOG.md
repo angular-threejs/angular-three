@@ -1,3 +1,19 @@
+## 4.0.0-next.123 (2026-01-04)
+
+### 🚀 Features
+
+- **cannon:** allow Angular v21 as peer dependency ([67f27003](https://github.com/angular-threejs/angular-three/commit/67f27003))
+- **core:** allow Angular v21 as peer dependency ([0cb56440](https://github.com/angular-threejs/angular-three/commit/0cb56440))
+- **postprocessing:** allow Angular v21 as peer dependency ([d58d8b93](https://github.com/angular-threejs/angular-three/commit/d58d8b93))
+- **rapier:** allow Angular v21 as peer dependency ([f3debc55](https://github.com/angular-threejs/angular-three/commit/f3debc55))
+- **soba:** allow Angular v21 as peer dependency ([cbdcec20](https://github.com/angular-threejs/angular-three/commit/cbdcec20))
+- **theatre:** allow Angular v21 as peer dependency ([9eebc8a8](https://github.com/angular-threejs/angular-three/commit/9eebc8a8))
+- **tweakpane:** allow Angular v21 as peer dependency ([c01cde83](https://github.com/angular-threejs/angular-three/commit/c01cde83))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.122 (2026-01-04)
 
 ### 💅 Refactors
