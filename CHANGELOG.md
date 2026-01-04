@@ -1,3 +1,13 @@
+## 4.0.0-next.122 (2026-01-04)
+
+### 💅 Refactors
+
+- **core:** rewrite web-types and metadata generators ([dd82e329](https://github.com/angular-threejs/angular-three/commit/dd82e329))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.121 (2026-01-03)
 
 ### 🚀 Features
