@@ -183,6 +183,7 @@ export interface NgtThreeElements {
 	'ngt-ring-geometry': NgtThreeElementsImpl['RingGeometry'];
 	'ngt-plane-geometry': NgtThreeElementsImpl['PlaneGeometry'];
 	'ngt-lathe-geometry': NgtThreeElementsImpl['LatheGeometry'];
+	'ngt-line': NgtThreeElementsImpl['Line'];
 	'ngt-line-segments': NgtThreeElementsImpl['LineSegments'];
 	'ngt-line-loop': NgtThreeElementsImpl['LineLoop'];
 	'ngt-points': NgtThreeElementsImpl['Points'];
@@ -224,6 +225,7 @@ export interface NgtThreeElements {
 	'ngt-canvas-texture': NgtThreeElementsImpl['CanvasTexture'];
 	'ngt-depth-texture': NgtThreeElementsImpl['DepthTexture'];
 	'ngt-raycaster': NgtThreeElementsImpl['Raycaster'];
+	'ngt-sprite': NgtThreeElementsImpl['Sprite'];
 	'ngt-vector2': NgtThreeElementsImpl['Vector2'];
 	'ngt-vector3': NgtThreeElementsImpl['Vector3'];
 	'ngt-vector4': NgtThreeElementsImpl['Vector4'];

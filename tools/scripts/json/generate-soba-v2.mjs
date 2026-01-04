@@ -53,7 +53,7 @@ function getAllSobaFiles() {
 	const files = [];
 
 	for (const entryPoint of SOBA_ENTRY_POINTS) {
-		const fullPath = resolve(__dirname, '../..', entryPoint);
+		const fullPath = resolve(__dirname, '../../..', entryPoint);
 		if (!existsSync(fullPath)) continue;
 
 		if (fullPath.endsWith('.ts')) {
@@ -409,7 +409,7 @@ function main() {
 	const coreWebTypesPath = 'node_modules/angular-three/web-types.json';
 	if (!existsSync(coreWebTypesPath)) {
 		console.log('Core web-types not found, generating...');
-		execSync('node tools/scripts/generate-json.mjs', { cwd: resolve(__dirname, '../..') });
+		execSync('node tools/scripts/json/generate-v2.mjs', { cwd: resolve(__dirname, '../../..') });
 	}
 
 	// Analyze soba custom elements

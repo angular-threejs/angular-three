@@ -285,8 +285,8 @@ const COMMON_ATTRIBUTES = [
  */
 function findThreeTypesDir() {
 	const possiblePaths = [
-		resolve(__dirname, '../../node_modules/@types/three'),
-		resolve(__dirname, '../../node_modules/three/types'),
+		resolve(__dirname, '../../../node_modules/@types/three'),
+		resolve(__dirname, '../../../node_modules/three/types'),
 	];
 
 	for (const path of possiblePaths) {
@@ -486,7 +486,7 @@ function toKebabCase(str) {
  * This ensures we use the exact same naming as defined in the library
  */
 function getElementMappingsFromThreeTypes() {
-	const threeTypesPath = resolve(__dirname, '../../libs/core/src/lib/three-types.ts');
+	const threeTypesPath = resolve(__dirname, '../../../libs/core/src/lib/three-types.ts');
 	const content = readFileSync(threeTypesPath, 'utf8');
 
 	const mappings = new Map();
