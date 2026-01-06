@@ -23,44 +23,21 @@ Here, you'll find the source code for the entire `angular-three` ecosystem, the 
 
 ## Documentation
 
-The documentation is available at [angularthree.netlify.app](https://angularthree.netlify.app).
+The documentation is available at [angularthree.org](https://angularthree.org).
 
 ## Examples
 
-The examples are available at [angularthreedemo.netlify.app](https://angularthreedemo.netlify.app).
+The examples are available at [demo.angularthree.org](https://demo.angularthree.org).
 
-## Features
+## Packages
 
-### Pierced Props
-
-Angular Three supports "pierced" property bindings that allow you to set individual components of vector/math properties:
-
-```html
-<!-- Instead of setting the entire rotation vector -->
-<ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" />
-
-<!-- You can set individual components -->
-<ngt-mesh [rotation.x]="-Math.PI / 2" />
-```
-
-This also works for nested properties like shadow configuration on lights:
-
-```html
-<ngt-directional-light
-	[castShadow]="true"
-	[shadow.mapSize.width]="2048"
-	[shadow.mapSize.height]="2048"
-	[shadow.camera.near]="0.5"
-	[shadow.camera.far]="500"
-	[shadow.camera.left]="-10"
-	[shadow.camera.right]="10"
-/>
-```
-
-Supported pierced properties include:
-
-- **Vector2/3/4**: `x`, `y`, `z`, `w`
-- **Euler** (rotation): `x`, `y`, `z`
-- **Quaternion**: `x`, `y`, `z`, `w`
-- **Color**: `r`, `g`, `b`
-- **Shadow** (on lights): `shadow.intensity`, `shadow.bias`, `shadow.mapSize.width`, `shadow.camera.near`, etc.
+| Package                                                         | Description                                        |
+| --------------------------------------------------------------- | -------------------------------------------------- |
+| [angular-three](./libs/core/README.md)                          | Core library - Angular renderer for Three.js       |
+| [angular-three-soba](./libs/soba/README.md)                     | Helpers, abstractions, and ready-to-use components |
+| [angular-three-cannon](./libs/cannon/README.md)                 | Cannon.js physics integration                      |
+| [angular-three-rapier](./libs/rapier/README.md)                 | Rapier physics integration                         |
+| [angular-three-postprocessing](./libs/postprocessing/README.md) | Post-processing effects                            |
+| [angular-three-theatre](./libs/theatre/README.md)               | Theatre.js animation integration                   |
+| [angular-three-tweakpane](./libs/tweakpane/README.md)           | Tweakpane debug controls                           |
+| [angular-three-plugin](./libs/plugin/README.md)                 | Nx plugin with generators and utilities            |
