@@ -98,6 +98,77 @@ const MATH_TYPE_MAP = {
 	},
 };
 
+// ============================================================================
+// Pierced Props Configuration
+// ============================================================================
+
+// Math types that support pierced property access (e.g., position.x, rotation.y)
+const PIERCEABLE_MATH_TYPES = {
+	Vector2: {
+		components: ['x', 'y'],
+		componentType: 'number',
+		description: (prop, comp) => `Set only the ${comp} component of ${prop}`,
+	},
+	Vector3: {
+		components: ['x', 'y', 'z'],
+		componentType: 'number',
+		description: (prop, comp) => `Set only the ${comp} component of ${prop}`,
+	},
+	Vector4: {
+		components: ['x', 'y', 'z', 'w'],
+		componentType: 'number',
+		description: (prop, comp) => `Set only the ${comp} component of ${prop}`,
+	},
+	Euler: {
+		components: ['x', 'y', 'z'],
+		componentType: 'number',
+		description: (prop, comp) => `Set only the ${comp} rotation (radians) of ${prop}`,
+	},
+	Quaternion: {
+		components: ['x', 'y', 'z', 'w'],
+		componentType: 'number',
+		description: (prop, comp) => `Set only the ${comp} component of ${prop}`,
+	},
+	Color: {
+		components: ['r', 'g', 'b'],
+		componentType: 'number',
+		description: (prop, comp) => `Set only the ${comp} channel (0-1) of ${prop}`,
+	},
+};
+
+// Common Object3D properties that support piercing
+const OBJECT3D_PIERCEABLE_PROPS = ['position', 'rotation', 'scale', 'up'];
+
+// Shadow pierced props for lights that cast shadows
+// These are the most commonly used shadow configuration paths
+const SHADOW_PIERCED_PROPS = [
+	// Direct shadow properties
+	{ path: 'shadow.intensity', type: 'number', description: 'Shadow intensity (0-1)' },
+	{ path: 'shadow.bias', type: 'number', description: 'Shadow map bias to reduce artifacts' },
+	{ path: 'shadow.normalBias', type: 'number', description: 'Shadow normal bias for large scenes' },
+	{ path: 'shadow.radius', type: 'number', description: 'Shadow blur radius' },
+	{ path: 'shadow.blurSamples', type: 'number', description: 'Number of samples for VSM shadow blur' },
+	// Shadow map size (Vector2)
+	{ path: 'shadow.mapSize.width', type: 'number', description: 'Shadow map width in pixels' },
+	{ path: 'shadow.mapSize.height', type: 'number', description: 'Shadow map height in pixels' },
+	{ path: 'shadow.mapSize.x', type: 'number', description: 'Shadow map width (alias for width)' },
+	{ path: 'shadow.mapSize.y', type: 'number', description: 'Shadow map height (alias for height)' },
+	// Shadow camera properties (common to all shadow-casting lights)
+	{ path: 'shadow.camera.near', type: 'number', description: 'Shadow camera near plane' },
+	{ path: 'shadow.camera.far', type: 'number', description: 'Shadow camera far plane' },
+	// Orthographic camera props (DirectionalLight)
+	{ path: 'shadow.camera.left', type: 'number', description: 'Shadow camera left plane (orthographic)' },
+	{ path: 'shadow.camera.right', type: 'number', description: 'Shadow camera right plane (orthographic)' },
+	{ path: 'shadow.camera.top', type: 'number', description: 'Shadow camera top plane (orthographic)' },
+	{ path: 'shadow.camera.bottom', type: 'number', description: 'Shadow camera bottom plane (orthographic)' },
+	// Perspective camera props (SpotLight, PointLight)
+	{ path: 'shadow.camera.fov', type: 'number', description: 'Shadow camera field of view (perspective)' },
+	{ path: 'shadow.camera.zoom', type: 'number', description: 'Shadow camera zoom' },
+];
+
+// Lights that support shadow casting
+const SHADOW_CASTING_LIGHTS = new Set(['DirectionalLight', 'SpotLight', 'PointLight']);
+
 // THREE.js class categories for documentation URLs
 const THREE_CATEGORIES = {
 	// Objects
@@ -530,6 +601,76 @@ function getDocUrl(className) {
 	return `${CONFIG.threeDocsBaseUrl}/${category}/${className}`;
 }
 
+// ============================================================================
+// Pierced Props Generation
+// ============================================================================
+
+/**
+ * Get the math type name from a raw type string
+ */
+function getMathTypeName(rawType) {
+	for (const mathTypeName of Object.keys(PIERCEABLE_MATH_TYPES)) {
+		if (rawType && rawType.includes(mathTypeName)) {
+			return mathTypeName;
+		}
+	}
+	return null;
+}
+
+/**
+ * Generate pierced property definitions for a math-type property
+ *
+ * @example
+ * For property "position" of type Vector3, generates:
+ * - position.x, position.y, position.z
+ */
+function generateMathTypePiercedProps(propName, mathTypeName) {
+	const mathTypeInfo = PIERCEABLE_MATH_TYPES[mathTypeName];
+	if (!mathTypeInfo) return [];
+
+	return mathTypeInfo.components.map((component) => ({
+		name: `${propName}.${component}`,
+		type: mathTypeInfo.componentType,
+		description: mathTypeInfo.description(propName, component),
+		isPierced: true,
+	}));
+}
+
+/**
+ * Generate all pierced props for an element based on its properties and type
+ */
+function generatePiercedPropsForElement(element, isObj3D) {
+	const piercedProps = [];
+
+	// Generate pierced props for math-type properties
+	for (const prop of element.properties) {
+		const mathTypeName = getMathTypeName(prop.rawType);
+		if (mathTypeName && PIERCEABLE_MATH_TYPES[mathTypeName]) {
+			// Only generate for common Object3D props or if explicitly a math type
+			if (isObj3D && OBJECT3D_PIERCEABLE_PROPS.includes(prop.name)) {
+				piercedProps.push(...generateMathTypePiercedProps(prop.name, mathTypeName));
+			} else if (prop.isMathType) {
+				// For other math-type properties, still generate pierced props
+				piercedProps.push(...generateMathTypePiercedProps(prop.name, mathTypeName));
+			}
+		}
+	}
+
+	// Add shadow pierced props for shadow-casting lights
+	if (SHADOW_CASTING_LIGHTS.has(element.threeName)) {
+		for (const shadowProp of SHADOW_PIERCED_PROPS) {
+			piercedProps.push({
+				name: shadowProp.path,
+				type: shadowProp.type,
+				description: shadowProp.description,
+				isPierced: true,
+			});
+		}
+	}
+
+	return piercedProps;
+}
+
 /**
  * Build element definitions from THREE classes
  */
@@ -682,13 +823,18 @@ function buildElementDefinitions(threeClasses, inheritance) {
 		const elementName = elementMappings.get(className) || `ngt-${toKebabCase(className)}`;
 		const isObj3D = isObject3D(className, inheritance);
 
-		elements.push({
+		const elementDef = {
 			elementName,
 			threeName: className,
 			isObject3D: isObj3D,
 			properties: classInfo?.properties || [],
 			docUrl: getDocUrl(className),
-		});
+		};
+
+		// Generate pierced props for this element
+		elementDef.piercedProps = generatePiercedPropsForElement(elementDef, isObj3D);
+
+		elements.push(elementDef);
 	}
 
 	// Add special elements
@@ -781,6 +927,18 @@ function generateWebTypes(elements) {
 			htmlElement.js.properties.push(jsProp);
 		}
 
+		// Add pierced props as attributes (e.g., [position.x], [shadow.mapSize.width])
+		if (element.piercedProps && element.piercedProps.length > 0) {
+			for (const piercedProp of element.piercedProps) {
+				// Add as bound attribute [prop.subprop]
+				htmlElement.attributes.push({
+					name: `[${piercedProp.name}]`,
+					description: piercedProp.description,
+					value: { kind: 'expression', type: piercedProp.type },
+				});
+			}
+		}
+
 		// Add events
 		// Node events (available on all elements)
 		for (const event of NODE_EVENTS) {
@@ -863,6 +1021,16 @@ function generateVSCodeMetadata(elements) {
 			});
 		}
 
+		// Add pierced props as attributes (e.g., [position.x], [shadow.mapSize.width])
+		if (element.piercedProps && element.piercedProps.length > 0) {
+			for (const piercedProp of element.piercedProps) {
+				tag.attributes.push({
+					name: `[${piercedProp.name}]`,
+					description: piercedProp.description,
+				});
+			}
+		}
+
 		// Add events
 		for (const event of NODE_EVENTS) {
 			tag.attributes.push({
@@ -929,9 +1097,12 @@ function main() {
 	// Print summary
 	const obj3dCount = elements.filter((e) => e.isObject3D).length;
 	const totalProps = elements.reduce((sum, e) => sum + e.properties.length, 0);
+	const totalPiercedProps = elements.reduce((sum, e) => sum + (e.piercedProps?.length || 0), 0);
+	const shadowLightCount = elements.filter((e) => SHADOW_CASTING_LIGHTS.has(e.threeName)).length;
 	console.log(`\nSummary:`);
 	console.log(`  - ${elements.length} elements (${obj3dCount} Object3D descendants)`);
 	console.log(`  - ${totalProps} total properties`);
+	console.log(`  - ${totalPiercedProps} pierced props (${shadowLightCount} shadow-casting lights)`);
 	console.log(`  - ${OBJECT3D_EVENTS.length} Object3D events`);
 	console.log(`  - ${NODE_EVENTS.length} node events`);
 }
