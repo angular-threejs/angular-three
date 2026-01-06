@@ -1,3 +1,13 @@
+## 4.0.1 (2026-01-06)
+
+### 🚀 Features
+
+- **core:** add pierced props support to web-types and metadata generation ([98fc5923](https://github.com/angular-threejs/angular-three/commit/98fc5923))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 # 4.0.0 (2026-01-06)
 
 ### 🚀 Features
