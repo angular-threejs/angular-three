@@ -1,5 +1,18 @@
 # Angular Three workspace
 
+## Versioning
+
+Angular Three follows a modified semantic versioning scheme to balance stability with the fast-paced Three.js ecosystem:
+
+| Version           | Meaning                                                                                              | Examples          |
+| ----------------- | ---------------------------------------------------------------------------------------------------- | ----------------- |
+| **Patch** (x.x.X) | Bug fixes and new features. **No breaking changes ever.**                                            | `4.0.0` → `4.0.1` |
+| **Minor** (x.X.0) | Breaking changes for Three.js version bumps, or Angular minor updates that require breaking changes. | `4.0.x` → `4.1.0` |
+| **Major** (X.0.0) | True breaking changes: API changes, Angular major bumps, or other peer dependency major bumps.       | `4.x.x` → `5.0.0` |
+
+> **Why this approach?**
+> Three.js releases frequently, and following true semver would exhaust major version numbers quickly. By using minor versions for Three.js breaking changes, we maintain a practical versioning scheme while clearly communicating compatibility boundaries.
+
 ## Netlify Status
 
 - Angular Three: [![Angular Three Netlify Status](https://api.netlify.com/api/v1/badges/63a4face-28af-41d4-8b42-003c80c8cff0/deploy-status)](https://app.netlify.com/sites/angularthree/deploys)
