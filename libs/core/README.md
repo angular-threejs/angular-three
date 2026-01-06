@@ -1,6 +1,6 @@
 # `angular-three`
 
-A custom Renderer for Angular 19+ that uses Three.js to render 3D scenes.
+A custom Renderer for Angular 20+ that uses Three.js to render 3D scenes.
 
 ## Documentation
 
@@ -8,12 +8,12 @@ All public APIs are documented with JSDoc comments. Your IDE will provide inline
 
 ### Official Documentation
 
-Please visit [angularthree-docs-next](https://angularthree-docs-next.netlify.app)
+Please visit [Angular Three Documentation](https://angularthree.netlify.app)
 
 ## Installation
 
 ```bash
-npm install -D angular-three-plugin@next
+npm install -D angular-three-plugin
 npx ng generate angular-three-plugin:init
 ```
 
