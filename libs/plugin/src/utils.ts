@@ -1,5 +1,12 @@
 import { logger, updateJson, writeJson, type Tree } from '@nx/devkit';
 
+/**
+ * Adds a metadata JSON file path to VSCode's html.customData settings.
+ * This enables TypeScript type definitions and IntelliSense for Angular Three elements in templates.
+ *
+ * @param tree - The Nx virtual file system tree
+ * @param metadataJsonPath - Path to the metadata JSON file (e.g., 'angular-three/metadata.json')
+ */
 export function addMetadataJson(tree: Tree, metadataJsonPath: string) {
 	if (!metadataJsonPath.includes('node_modules')) {
 		metadataJsonPath = `./node_modules/${metadataJsonPath}`;

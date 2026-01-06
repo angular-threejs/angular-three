@@ -3,6 +3,27 @@ import { prompt } from 'enquirer';
 import { addMetadataJson } from '../../utils';
 import { PEER_DEPENDENCIES } from '../../versions';
 
+/**
+ * Adds auxiliary Angular Three packages to an existing Angular Three project.
+ *
+ * This generator allows you to add optional packages like:
+ * - angular-three-soba: Utilities and abstractions for 3D scenes
+ * - angular-three-rapier: Rapier physics engine integration
+ * - angular-three-postprocessing: Post-processing effects
+ * - angular-three-cannon: Cannon.js physics engine integration
+ * - angular-three-tweakpane: Tweakpane UI controls
+ * - angular-three-theatre: Theatre.js animation toolkit
+ *
+ * Each package is installed with its required peer dependencies.
+ *
+ * @param tree - The Nx virtual file system tree
+ * @returns A function that triggers package installation, or void if no packages selected
+ *
+ * @example
+ * ```bash
+ * nx g angular-three-plugin:aux
+ * ```
+ */
 export async function auxGenerator(tree: Tree) {
 	logger.info('[NGT] Initialize auxiliary packages');
 

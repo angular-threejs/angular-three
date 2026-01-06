@@ -1,8 +1,16 @@
 import type { Object3D } from 'three';
 import type { GltfGeneratorSchema } from './gltf';
 
+/**
+ * Generates Angular Three template code from an analyzed GLTF model.
+ *
+ * This class traverses the GLTF scene graph and produces Angular template
+ * syntax with proper ngt-* elements, input bindings, and type information.
+ */
 export class GenerateNGT {
+	/** Set of Three.js types used in the model, for generating imports */
 	ngtTypes = new Set<string>();
+	/** Whether NgtArgs directive is needed (for primitives, bones, etc.) */
 	args = false;
 
 	constructor(
@@ -13,10 +21,20 @@ export class GenerateNGT {
 		private options: GltfGeneratorSchema,
 	) {}
 
+	/**
+	 * Generates the Angular template content for the GLTF scene.
+	 *
+	 * @returns Template string containing ngt-* elements for all scene children
+	 */
 	generate() {
 		return this.analyzedGLTF.gltf.scene.children.map((child) => this.print(child)).join('\n');
 	}
 
+	/**
+	 * Collects and returns options needed for the template file generation.
+	 *
+	 * @returns Object containing imports, type definitions, and feature flags
+	 */
 	getGenerateOptions() {
 		const perspective = this.ngtTypes.has('PerspectiveCamera');
 		const orthographic = this.ngtTypes.has('OrthographicCamera');
@@ -67,6 +85,10 @@ export class GenerateNGT {
 		};
 	}
 
+	/**
+	 * Filters ngtTypes to only include types that need explicit imports.
+	 * Excludes Group (always top-level), cameras (use ngts-* components), Bone, and Object3D.
+	 */
 	private get ngtTypesArr() {
 		return Array.from(this.ngtTypes).filter(
 			(t) =>
@@ -83,6 +105,12 @@ export class GenerateNGT {
 		);
 	}
 
+	/**
+	 * Recursively prints an Object3D and its children as Angular template elements.
+	 *
+	 * @param obj - The Three.js Object3D to convert
+	 * @returns Template string for this object and its descendants
+	 */
 	private print(obj: Object3D) {
 		const { nodeName, isRemoved, isTargetedLight, isInstancedMesh, sanitizeName } = this.gltfjsxAPI;
 
@@ -156,6 +184,13 @@ export class GenerateNGT {
 		return result;
 	}
 
+	/**
+	 * Converts Object3D properties to Angular input binding syntax.
+	 *
+	 * @param obj - The Object3D to extract properties from
+	 * @param skipName - Whether to skip the name property
+	 * @returns String of Angular input bindings (e.g., '[position]="..." [rotation]="..."')
+	 */
 	private handleAngularInputs(obj: Object3D, skipName = false) {
 		const properties = this.analyzedGLTF.calculateProps(obj);
 
@@ -182,6 +217,12 @@ export class GenerateNGT {
 		return propertiesString;
 	}
 
+	/**
+	 * Determines the type name for an Object3D, handling special cases.
+	 *
+	 * @param obj - The Object3D to get the type for
+	 * @returns Lowercase type name (e.g., 'mesh', 'group', 'PerspectiveCamera')
+	 */
 	private getType(obj: Object3D) {
 		let type = obj.type.charAt(0).toLowerCase() + obj.type.slice(1);
 
@@ -199,9 +240,10 @@ export class GenerateNGT {
 	}
 
 	/**
-	 * Transforms a type like "mesh" into "ngt-mesh".
-	 * @param {string} type
-	 * @returns
+	 * Transforms a type name into its Angular Three element selector.
+	 *
+	 * @param type - The type name (e.g., 'mesh', 'perspectiveCamera')
+	 * @returns The Angular Three element selector (e.g., 'ngt-mesh', 'ngts-perspective-camera')
 	 */
 	private getAngularThreeElement(type: string) {
 		if (type === 'object3D') {

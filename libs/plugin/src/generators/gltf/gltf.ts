@@ -2,36 +2,74 @@ import { formatFiles, generateFiles, names, Tree } from '@nx/devkit';
 import { dirname, join, relative, resolve } from 'node:path';
 import { GenerateNGT } from './generate-ngt';
 
+/**
+ * Schema options for the GLTF generator.
+ */
 export interface GltfGeneratorSchema {
+	/** Path to the GLTF/GLB model file */
 	modelPath: string;
+	/** Output path for the generated component */
 	output: string;
+	/** Name for the generated component class */
 	className: string;
+	/** Prefix for the component selector */
 	selectorPrefix: string;
+	/** Whether to use DracoLoader for compressed models */
 	draco: boolean;
+	/** Whether to layout bones declaratively */
 	bones: boolean;
+	/** Whether to include metadata as userData */
 	meta: boolean;
+	/** Whether meshes should cast and receive shadows */
 	shadows: boolean;
+	/** Number of fractional digits for numeric values */
 	precision: number;
+	/** Whether to print output to console instead of file */
 	console: boolean;
+	/** Whether to instance re-occurring geometry */
 	instance: boolean;
+	/** Whether to instance every geometry */
 	instanceAll: boolean;
+	/** Whether to transform meshes via gltf-transform */
 	transform: boolean;
+	/** Degrade meshes via gltf-transform */
 	degrade: string;
+	/** Resolution for mesh degradation */
 	degradeResolution: number;
+	/** Resolution for texture resizing */
 	resolution: number;
+	/** Whether to keep meshes separate (don't join) */
 	keepMeshes: boolean;
+	/** Whether to keep materials separate (don't palette join) */
 	keepMaterials: boolean;
+	/** Whether to keep unused vertex attributes */
 	keepAttributes: boolean;
+	/** Whether to keep object names */
 	keepNames: boolean;
+	/** Whether to keep groups */
 	keepGroups: boolean;
+	/** Texture format for transformed models */
 	format: 'jpeg' | 'png' | 'webp' | 'avif';
+	/** Whether to simplify meshes */
 	simplify: boolean;
+	/** Simplifier ratio */
 	ratio: number;
+	/** Simplifier error threshold */
 	error: number;
+	/** Custom header to add to generated file */
 	header: string;
+	/** Whether to enable verbose logging */
 	verbose: boolean;
 }
 
+/**
+ * Normalizes and processes generator options into a format suitable for gltfjsx.
+ *
+ * @param tree - The Nx virtual file system tree
+ * @param options - Raw generator options
+ * @param gltfJsx - The gltfjsx library module
+ * @returns Normalized options including paths, names, and configuration objects
+ */
 // @ts-expect-error - type only import
 function normalizeOptions(tree: Tree, options: GltfGeneratorSchema, gltfJsx: typeof import('@rosskevin/gltfjsx')) {
 	const { Log } = gltfJsx;
@@ -96,6 +134,26 @@ function normalizeOptions(tree: Tree, options: GltfGeneratorSchema, gltfJsx: typ
 	};
 }
 
+/**
+ * Generates an Angular component from a GLTF/GLB 3D model file.
+ *
+ * This generator uses gltfjsx to analyze the model and creates a fully-typed
+ * Angular component with:
+ * - Proper Three.js type definitions for nodes, materials, and bones
+ * - Animation support with typed animation clips and API
+ * - Optional mesh transformation and optimization via gltf-transform
+ * - Draco compression support
+ * - Shadow casting/receiving configuration
+ *
+ * @param tree - The Nx virtual file system tree
+ * @param options - Generator options for model processing and output
+ *
+ * @example
+ * ```bash
+ * nx g angular-three-plugin:gltf --modelPath=src/assets/model.glb --output=src/app/model.ts
+ * nx g angular-three-plugin:gltf path/to/model.gltf --output=src/app/model.ts --transform --shadows
+ * ```
+ */
 export async function gltfGenerator(tree: Tree, options: GltfGeneratorSchema) {
 	const gltfjsx = await import('@rosskevin/gltfjsx');
 	const { loadGLTF, AnalyzedGLTF, gltfTransform, compareFileSizes } = gltfjsx;

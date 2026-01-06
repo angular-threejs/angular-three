@@ -1,8 +1,16 @@
+/** Default version of angular-three to install */
 export const ANGULAR_THREE_VERSION = '^4.0.0';
+/** Default version of three to install */
 export const THREE_VERSION = '^0.182.0';
+/** Default version of @types/three to install */
 export const THREE_TYPE_VERSION = '^0.182.0';
+/** Default version of ngxtension to install */
 export const NGXTENSION_VERSION = '^7.0.0';
 
+/**
+ * Peer dependencies for each auxiliary Angular Three package.
+ * These are installed alongside the main package when using the aux generator.
+ */
 export const PEER_DEPENDENCIES: Record<string, Record<string, string>> = {
 	'angular-three-soba': {
 		'three-stdlib': '^2.36.0',

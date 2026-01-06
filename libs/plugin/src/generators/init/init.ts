@@ -26,11 +26,34 @@ import { addMetadataJson } from '../../utils';
 import { ANGULAR_THREE_VERSION, NGXTENSION_VERSION, THREE_TYPE_VERSION, THREE_VERSION } from '../../versions';
 import { finishSetup, handleAppConfig, stopSetup } from './utils';
 
+/**
+ * Schema options for the init generator.
+ */
 export interface InitGeneratorSchema {
+	/** How to handle SceneGraph component generation */
 	sceneGraph: 'append' | 'replace' | 'generate-only' | 'none';
 }
 
-// TODO: (chau) add tests when there are better testing strategy for prompt
+/**
+ * Initializes Angular Three in an Angular application.
+ *
+ * This generator performs the following steps:
+ * 1. Installs angular-three, three, @types/three, and ngxtension dependencies
+ * 2. Enables skipLibCheck in tsconfig for Three.js compatibility
+ * 3. Adds metadata.json to VSCode settings for template IntelliSense
+ * 4. Adds provideNgtRenderer() to the application's providers
+ * 5. Optionally generates a starter SceneGraph component
+ *
+ * @param tree - The Nx virtual file system tree
+ * @param options - Generator options including sceneGraph generation mode
+ * @returns A function that triggers package installation, or void if already installed
+ *
+ * @example
+ * ```bash
+ * nx g angular-three-plugin:init
+ * nx g angular-three-plugin:init --sceneGraph=append
+ * ```
+ */
 export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	logger.log('[NGT] Initializing Angular Three...');
 
