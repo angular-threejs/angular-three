@@ -1,6 +1,6 @@
 {
 	"$schema": "https://angular-threejs.github.io/schemas/compat-matrix.schema.json",
-	"generated": "2026-01-06T00:00:00.000Z",
+	"updatedAt": "2026-01-06T00:00:00.000Z",
 	"description": "Compatibility matrix for angular-three ecosystem packages",
 	"combined": [
 		{

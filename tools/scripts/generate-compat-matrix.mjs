@@ -343,22 +343,44 @@ function main() {
 	console.log('\nProcessing per-package matrix:');
 	const packages = processPackagesMatrix(existingMatrix, distPackages);
 
-	// Build output
+	// Build output (without updatedAt for comparison)
+	const outputData = {
+		combined,
+		packages,
+	};
+
+	// Check if there are actual changes (compare without metadata fields)
+	const existingData = existingMatrix
+		? { combined: existingMatrix.combined, packages: existingMatrix.packages }
+		: null;
+
+	const hasChanges = JSON.stringify(outputData) !== JSON.stringify(existingData);
+
+	// Build final output with metadata
 	const output = {
 		$schema: 'https://angular-threejs.github.io/schemas/compat-matrix.schema.json',
-		generated: new Date().toISOString(),
+		updatedAt: hasChanges ? new Date().toISOString() : existingMatrix?.updatedAt || new Date().toISOString(),
 		description: 'Compatibility matrix for angular-three ecosystem packages',
 		combined,
 		packages,
 	};
 
-	// Write to both locations
-	writeJson(CONFIG.matrixPath, output);
-	writeJson(CONFIG.outputPath, output);
+	if (hasChanges) {
+		// Write to both locations
+		writeJson(CONFIG.matrixPath, output);
+		writeJson(CONFIG.outputPath, output);
 
-	console.log('\nGenerated files:');
-	console.log(`  - ${CONFIG.matrixPath} (git versioned)`);
-	console.log(`  - ${CONFIG.outputPath} (CDN access)`);
+		console.log('\nChanges detected, updated files:');
+		console.log(`  - ${CONFIG.matrixPath} (git versioned)`);
+		console.log(`  - ${CONFIG.outputPath} (CDN access)`);
+	} else {
+		// Only write to dist (for CDN), don't touch git-versioned file
+		writeJson(CONFIG.outputPath, output);
+
+		console.log('\nNo changes detected');
+		console.log(`  - ${CONFIG.matrixPath} (unchanged)`);
+		console.log(`  - ${CONFIG.outputPath} (copied for CDN)`);
+	}
 
 	console.log('\nSummary:');
 	console.log(`  - ${combined.length} combined matrix entries`);
