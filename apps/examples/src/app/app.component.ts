@@ -66,7 +66,7 @@ export class AppComponent {
 		const navigationEnd = this.navigationEnd();
 		if (!navigationEnd) return '';
 		const paths = navigationEnd.urlAfterRedirects.split('/').filter(Boolean);
-		return `https://github.com/angular-threejs/angular-three/tree/v4-next/apps/examples/src/app/${paths.join('/')}`;
+		return `https://github.com/angular-threejs/angular-three/tree/main/apps/examples/src/app/${paths.join('/')}`;
 	});
 
 	protected currentActivatedRouteCredits = computed(() => {
