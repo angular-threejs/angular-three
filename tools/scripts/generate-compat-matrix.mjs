@@ -109,6 +109,50 @@ function addUpperBound(oldRange, breakingMin) {
 	return `>=${oldMin} <${breakingMin}`;
 }
 
+/**
+ * Normalize a semver range to explicit bounded format
+ * Converts ^ and ~ ranges to >=min <max format for consistency
+ * @param {string} range - Semver range like "^2.0.0" or "~1.5.0"
+ * @returns {string} - Normalized range like ">=2.0.0 <3.0.0"
+ */
+function normalizeRange(range) {
+	if (!range) return range;
+
+	// Already in explicit format
+	if (range.startsWith('>=')) return range;
+
+	const min = semver.minVersion(range);
+	if (!min) return range;
+
+	// For ^ (caret): allows changes that do not modify the left-most non-zero digit
+	// ^1.2.3 := >=1.2.3 <2.0.0
+	// ^0.2.3 := >=0.2.3 <0.3.0
+	// ^0.0.3 := >=0.0.3 <0.0.4
+	if (range.startsWith('^')) {
+		const { major, minor, patch } = min;
+		let maxVersion;
+		if (major !== 0) {
+			maxVersion = `${major + 1}.0.0`;
+		} else if (minor !== 0) {
+			maxVersion = `0.${minor + 1}.0`;
+		} else {
+			maxVersion = `0.0.${patch + 1}`;
+		}
+		return `>=${min.version} <${maxVersion}`;
+	}
+
+	// For ~ (tilde): allows patch-level changes
+	// ~1.2.3 := >=1.2.3 <1.3.0
+	// ~0.2.3 := >=0.2.3 <0.3.0
+	if (range.startsWith('~')) {
+		const { major, minor } = min;
+		return `>=${min.version} <${major}.${minor + 1}.0`;
+	}
+
+	// Fallback: just use >=min
+	return `>=${min.version}`;
+}
+
 // ============================================================================
 // File Helpers
 // ============================================================================
@@ -141,17 +185,19 @@ function writeJson(filePath, data) {
 // ============================================================================
 
 /**
- * Extract peer deps from package.json, excluding common ones
+ * Extract peer deps from package.json, excluding common ones and normalizing ranges
  */
 function extractPeerDeps(packageJson, excludeCommon = true) {
 	if (!packageJson?.peerDependencies) return {};
 
-	const peerDeps = { ...packageJson.peerDependencies };
+	const peerDeps = {};
 
-	if (excludeCommon) {
-		for (const dep of CONFIG.commonPeerDeps) {
-			delete peerDeps[dep];
+	for (const [dep, range] of Object.entries(packageJson.peerDependencies)) {
+		if (excludeCommon && CONFIG.commonPeerDeps.includes(dep)) {
+			continue;
 		}
+		// Normalize all ranges to explicit bounded format
+		peerDeps[dep] = normalizeRange(range);
 	}
 
 	return peerDeps;
@@ -336,6 +382,11 @@ function main() {
 		throw new Error('Core package (angular-three) not found in dist. Run build first.');
 	}
 
+	// Deep clone existing data BEFORE processing (since processing mutates in place)
+	const existingDataSnapshot = existingMatrix
+		? JSON.stringify({ combined: existingMatrix.combined, packages: existingMatrix.packages })
+		: null;
+
 	// Process matrices
 	console.log('\nProcessing combined matrix:');
 	const combined = processCombinedMatrix(existingMatrix, corePackage);
@@ -350,11 +401,7 @@ function main() {
 	};
 
 	// Check if there are actual changes (compare without metadata fields)
-	const existingData = existingMatrix
-		? { combined: existingMatrix.combined, packages: existingMatrix.packages }
-		: null;
-
-	const hasChanges = JSON.stringify(outputData) !== JSON.stringify(existingData);
+	const hasChanges = JSON.stringify(outputData) !== existingDataSnapshot;
 
 	// Build final output with metadata
 	const output = {
