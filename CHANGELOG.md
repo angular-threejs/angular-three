@@ -1,3 +1,14 @@
+## 4.0.3 (2026-01-06)
+
+### 🩹 Fixes
+
+- **plugin:** only update compat-matrix timestamp when content changes ([388e35b4](https://github.com/angular-threejs/angular-three/commit/388e35b4))
+- **plugin:** normalize semver ranges to explicit bounded format ([a7f157b0](https://github.com/angular-threejs/angular-three/commit/a7f157b0))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.2 (2026-01-06)
 
 ### 🚀 Features
