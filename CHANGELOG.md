@@ -1,3 +1,14 @@
+## 4.0.0-next.126 (2026-01-06)
+
+### 🚀 Features
+
+- **plugin:** update versions for v4 release ([422b902d](https://github.com/angular-threejs/angular-three/commit/422b902d))
+- **plugin:** add angular-three-theatre to aux generator ([e79608bd](https://github.com/angular-threejs/angular-three/commit/e79608bd))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.0-next.125 (2026-01-04)
 
 This was a version bump only, there were no code changes.
