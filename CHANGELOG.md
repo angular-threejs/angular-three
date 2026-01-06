@@ -1,3 +1,13 @@
+## 4.0.2 (2026-01-06)
+
+### 🚀 Features
+
+- **plugin:** add compatibility matrix generator ([aa88b7fb](https://github.com/angular-threejs/angular-three/commit/aa88b7fb))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.1 (2026-01-06)
 
 ### 🚀 Features
