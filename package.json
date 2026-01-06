@@ -51,6 +51,7 @@
 		"@tweakpane/core": "^2.0.5",
 		"@types/jest": "30.0.0",
 		"@types/node": "20.14.12",
+		"@types/semver": "^7.7.1",
 		"@types/three": "^0.182.0",
 		"@typescript-eslint/utils": "8.50.1",
 		"@vitest/coverage-v8": "^4.0.16",
@@ -84,6 +85,7 @@
 		"postprocessing": "^6.38.2",
 		"prettier": "^3.7.4",
 		"prettier-plugin-organize-imports": "^4.3.0",
+		"semver": "^7.7.3",
 		"storybook": "10.1.10",
 		"storybook-addon-deep-controls": "^0.10.0",
 		"tailwindcss": "^4.1.18",
@@ -157,6 +159,9 @@
 					],
 					"parallel": true
 				}
+			},
+			"generate-compat": {
+				"command": "node ./tools/scripts/generate-compat-matrix.mjs"
 			}
 		}
 	},

@@ -1,0 +1,110 @@
+{
+	"$schema": "https://angular-threejs.github.io/schemas/compat-matrix.schema.json",
+	"generated": "2026-01-06T00:00:00.000Z",
+	"description": "Compatibility matrix for angular-three ecosystem packages",
+	"combined": [
+		{
+			"angularThree": ">=4.0.0",
+			"three": ">=0.157.0 <0.183.0",
+			"angular": ">=20.0.0 <22.0.0",
+			"ngxtension": ">=3.0.0"
+		}
+	],
+	"packages": {
+		"angular-three": {
+			"displayName": "Core",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"ngxtension": ">=3.0.0"
+					}
+				}
+			]
+		},
+		"angular-three-soba": {
+			"displayName": "Soba",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"@monogrid/gainmap-js": "^3.0.0",
+						"@pmndrs/vanilla": "^1.24.0",
+						"camera-controls": "^2.8.0",
+						"hls.js": ">=1.5.0",
+						"maath": ">=0.10.0 <0.11.0",
+						"meshline": "^3.1.0",
+						"stats-gl": ">=2.0.0",
+						"three-custom-shader-material": ">=5.5.0 <6.5.0",
+						"three-mesh-bvh": ">=0.5.0 <0.10.0",
+						"three-stdlib": "^2.0.0",
+						"troika-three-text": ">=0.47.0 <0.53.0"
+					}
+				}
+			]
+		},
+		"angular-three-cannon": {
+			"displayName": "Cannon",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"@pmndrs/cannon-worker-api": "^2.0.0",
+						"cannon-es": ">=0.20.0 <0.21.0",
+						"cannon-es-debugger": "^1.0.0"
+					}
+				}
+			]
+		},
+		"angular-three-rapier": {
+			"displayName": "Rapier",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"@dimforge/rapier3d-compat": ">=0.14.0 <0.20.0",
+						"three-stdlib": "^2.0.0"
+					}
+				}
+			]
+		},
+		"angular-three-postprocessing": {
+			"displayName": "Postprocessing",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"maath": ">=0.10.0 <0.11.0",
+						"n8ao": ">=1.9.4 <2.0.0",
+						"postprocessing": "^6.0.0",
+						"three-stdlib": "^2.0.0"
+					}
+				}
+			]
+		},
+		"angular-three-theatre": {
+			"displayName": "Theatre",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"@theatre/core": ">=0.7.0 <0.8.0",
+						"@theatre/studio": ">=0.7.0 <0.8.0"
+					}
+				}
+			]
+		},
+		"angular-three-tweakpane": {
+			"displayName": "Tweakpane",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"@tweakpane/core": "^2.0.0",
+						"tweakpane": "^4.0.0"
+					}
+				}
+			]
+		}
+	}
+}

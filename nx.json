@@ -202,7 +202,7 @@
 	"release": {
 		"projects": ["core", "cannon", "postprocessing", "soba", "rapier", "plugin", "tweakpane", "theatre"],
 		"version": {
-			"preVersionCommand": "npm run package",
+			"preVersionCommand": "pnpm package",
 			"currentVersionResolver": "git-tag",
 			"preserveLocalDependencyProtocols": false,
 			"manifestRootsToUpdate": ["dist/libs/{projectName}"]
