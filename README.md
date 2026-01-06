@@ -15,3 +15,39 @@ The documentation is available at [angularthree.netlify.app](https://angularthre
 ## Examples
 
 The examples are available at [angularthreedemo.netlify.app](https://angularthreedemo.netlify.app).
+
+## Features
+
+### Pierced Props
+
+Angular Three supports "pierced" property bindings that allow you to set individual components of vector/math properties:
+
+```html
+<!-- Instead of setting the entire rotation vector -->
+<ngt-mesh [rotation]="[-Math.PI / 2, 0, 0]" />
+
+<!-- You can set individual components -->
+<ngt-mesh [rotation.x]="-Math.PI / 2" />
+```
+
+This also works for nested properties like shadow configuration on lights:
+
+```html
+<ngt-directional-light
+	[castShadow]="true"
+	[shadow.mapSize.width]="2048"
+	[shadow.mapSize.height]="2048"
+	[shadow.camera.near]="0.5"
+	[shadow.camera.far]="500"
+	[shadow.camera.left]="-10"
+	[shadow.camera.right]="10"
+/>
+```
+
+Supported pierced properties include:
+
+- **Vector2/3/4**: `x`, `y`, `z`, `w`
+- **Euler** (rotation): `x`, `y`, `z`
+- **Quaternion**: `x`, `y`, `z`, `w`
+- **Color**: `r`, `g`, `b`
+- **Shadow** (on lights): `shadow.intensity`, `shadow.bias`, `shadow.mapSize.width`, `shadow.camera.near`, etc.
