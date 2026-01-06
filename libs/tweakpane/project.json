@@ -33,6 +33,12 @@
 			"options": {
 				"cwd": "{workspaceRoot}/dist/{projectRoot}"
 			}
+		},
+		"publish": {
+			"command": "npm publish",
+			"options": {
+				"cwd": "{workspaceRoot}/dist/{projectRoot}"
+			}
 		}
 	}
 }
