@@ -36,4 +36,8 @@ export const PEER_DEPENDENCIES: Record<string, Record<string, string>> = {
 		'@tweakpane/core': '^2.0.5',
 		tweakpane: '^4.0.5',
 	},
+	'angular-three-theatre': {
+		'@theatre/core': '^0.7.2',
+		'@theatre/studio': '^0.7.2',
+	},
 };

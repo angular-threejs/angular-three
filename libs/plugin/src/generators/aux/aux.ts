@@ -30,6 +30,7 @@ export async function auxGenerator(tree: Tree) {
 			'angular-three-postprocessing',
 			'angular-three-cannon',
 			'angular-three-tweakpane',
+			'angular-three-theatre',
 		],
 	});
 
