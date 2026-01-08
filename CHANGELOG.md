@@ -1,3 +1,13 @@
+## 4.0.7 (2026-01-08)
+
+### 🩹 Fixes
+
+- **soba:** replace sampler2DShadow with sampler2D for PCSS in Three.js r182+ ([0f9c9871](https://github.com/angular-threejs/angular-three/commit/0f9c9871))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.6 (2026-01-08)
 
 ### 🩹 Fixes
