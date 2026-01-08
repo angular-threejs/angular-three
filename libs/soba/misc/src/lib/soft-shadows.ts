@@ -18,6 +18,7 @@ import { Directive, effect, input } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
+import { getVersion } from './constants';
 
 /**
  * Options for configuring soft shadows using PCSS (Percentage-Closer Soft Shadows).
@@ -39,6 +40,11 @@ const defaultOptions: NgtsSoftShadowsOptions = {
 
 function pcss(options: NgtsSoftShadowsOptions): string {
 	const { focus, size, samples } = options;
+	// Three.js r182 removed unpackRGBAToDepth and switched to native depth textures
+	const useNativeDepth = getVersion() >= 182;
+	const sampleDepth = useNativeDepth
+		? 'texture2D( shadowMap, uv + offset ).r'
+		: 'unpackRGBAToDepth( texture2D( shadowMap, uv + offset ) )';
 	return `
 #define PENUMBRA_FILTER_SIZE float(${size})
 #define RGB_NOISE_FUNCTION(uv) (randRGB(uv))
@@ -96,7 +102,7 @@ float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   #pragma unroll_loop_start
   for(int i = 0; i < ${samples}; i ++) {
     offset = (vogelDiskSample(j, ${samples}, angle) * texelSize) * 2.0 * PENUMBRA_FILTER_SIZE;
-    depth = unpackRGBAToDepth( texture2D( shadowMap, uv + offset));
+    depth = ${sampleDepth};
     if (depth < compare) {
       blockerDepthSum += depth;
       blockers++;
@@ -122,7 +128,7 @@ float vogelFilter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRad
   for (int i = 0; i < ${samples}; i++) {
     vogelSample = vogelDiskSample(j, ${samples}, angle) * texelSize;
     offset = vogelSample * (1.0 + filterRadius * float(${size}));
-    shadow += step( zReceiver, unpackRGBAToDepth( texture2D( shadowMap, uv + offset ) ) );
+    shadow += step( zReceiver, ${sampleDepth} );
     j++;
   }
   #pragma unroll_loop_end
