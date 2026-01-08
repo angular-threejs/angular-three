@@ -1,3 +1,13 @@
+## 4.0.5 (2026-01-08)
+
+### 🩹 Fixes
+
+- **soba:** support Three.js r182+ native depth textures in soft-shadows ([9eb2a58e](https://github.com/angular-threejs/angular-three/commit/9eb2a58e))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.4 (2026-01-08)
 
 ### 🚀 Features
