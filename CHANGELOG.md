@@ -1,3 +1,13 @@
+## 4.0.6 (2026-01-08)
+
+### 🩹 Fixes
+
+- **soba:** rewrite soft-shadows shader injection for Three.js r182+ compatibility ([7f5b01e7](https://github.com/angular-threejs/angular-three/commit/7f5b01e7))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.5 (2026-01-08)
 
 ### 🩹 Fixes
