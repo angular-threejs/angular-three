@@ -8,6 +8,7 @@ This secondary entry point includes miscellaneous utilities and components for a
 - [fbo](#fbo)
 - [NgtsFBO](#ngtsfbo)
 - [NgtsBakeShadows](#ngtsbakeshadows)
+- [NgtsSoftShadows](#ngtssoftshadows)
 - [depthBuffer](#depthbuffer)
 - [NgtsSampler](#ngtssampler)
 - [surfaceSampler](#surfacesampler)
@@ -132,6 +133,24 @@ A directive that bakes shadows in your scene. It sets `gl.shadowMap.autoUpdate` 
 ```html
 <ngts-bake-shadows />
 ```
+
+## NgtsSoftShadows
+
+A directive that injects Percentage-Closer Soft Shadows (PCSS) into the scene. PCSS produces contact-hardening soft shadows where shadows are sharper near the contact point and softer further away, creating more realistic shadow effects.
+
+This works by patching Three.js's shadow shader chunk at runtime. When the directive is destroyed or options change, it restores the original shader and recompiles affected materials.
+
+```html
+<ngts-soft-shadows [options]="{ size: 25, samples: 10, focus: 0 }" />
+```
+
+### Options (NgtsSoftShadowsOptions)
+
+| Property  | Description                                                                                  | Default |
+| --------- | -------------------------------------------------------------------------------------------- | ------- |
+| `size`    | Size of the light source. The larger the value, the softer the shadows.                      | `25`    |
+| `samples` | Number of samples for shadow calculation. More samples = less noise but more expensive.      | `10`    |
+| `focus`   | Depth focus to shift the focal point where the shadow is sharpest. 0 means at the beginning. | `0`     |
 
 ## `depthBuffer`
 
