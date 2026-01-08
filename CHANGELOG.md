@@ -1,3 +1,13 @@
+## 4.0.4 (2026-01-08)
+
+### 🚀 Features
+
+- **soba:** add soft-shadows directive for PCSS ([93b42ca9](https://github.com/angular-threejs/angular-three/commit/93b42ca9))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.0.3 (2026-01-06)
 
 ### 🩹 Fixes
