@@ -188,11 +188,11 @@ vec2 pcssVogelDiskSample(int sampleIndex, int sampleCount, float angle) {
   return vec2(cosine, sine) * r;
 }
 
-float penumbraSize( const in float zReceiver, const in float zBlocker ) {
+float pcssPenumbraSize( const in float zReceiver, const in float zBlocker ) {
   return (zReceiver - zBlocker) / zBlocker;
 }
 
-float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
+float pcssFindBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
   float blockerDepthSum = float(${focus});
   float blockers = 0.0;
@@ -241,30 +241,14 @@ float PCSS (sampler2D shadowMap, vec4 coords, float shadowIntensity) {
   vec2 uv = coords.xy;
   float zReceiver = coords.z;
   float angle = highPassRandRGB(gl_FragCoord.xy).r * PI2;
-  float avgBlockerDepth = findBlocker(shadowMap, uv, zReceiver, angle);
+  float avgBlockerDepth = pcssFindBlocker(shadowMap, uv, zReceiver, angle);
   if (avgBlockerDepth == -1.0) {
     return 1.0;
   }
-  float penumbraRatio = penumbraSize(zReceiver, avgBlockerDepth);
+  float penumbraRatio = pcssPenumbraSize(zReceiver, avgBlockerDepth);
   float shadow = pcssVogelFilter(shadowMap, uv, zReceiver, 1.25 * penumbraRatio, angle);
   return mix( 1.0, shadow, shadowIntensity );
 }`;
-}
-
-/**
- * Generates the replacement getShadow function for r182+
- */
-function getShadowReplacement(): string {
-	return `float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowIntensity, float shadowBias, float shadowRadius, vec4 shadowCoord ) {
-			shadowCoord.xyz /= shadowCoord.w;
-			shadowCoord.z += shadowBias;
-			bool inFrustum = shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 && shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0;
-			bool frustumTest = inFrustum && shadowCoord.z <= 1.0;
-			if ( frustumTest ) {
-				return PCSS( shadowMap, shadowCoord, shadowIntensity );
-			}
-			return 1.0;
-		}`;
 }
 
 function reset(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera): void {
@@ -304,17 +288,52 @@ export class NgtsSoftShadows {
 			const original = THREE.ShaderChunk.shadowmap_pars_fragment;
 
 			if (version >= 182) {
-				// Three.js r182+ uses native depth textures and has a different shader structure
-				// We need to replace the getShadow function entirely
+				// Three.js r182+ uses native depth textures and has a different shader structure.
+				// The PCF path uses sampler2DShadow, but PCSS needs sampler2D for manual depth comparison.
+				// We inject our PCSS code and replace the BASIC shadow type's getShadow function,
+				// then also replace the PCF uniform declarations to use sampler2D instead of sampler2DShadow.
 				const pcssCode = pcssModern(options);
 
-				// Find and replace the PCF getShadow function
-				const getShadowRegex =
-					/(#if defined\( SHADOWMAP_TYPE_PCF \)\s+float getShadow\( sampler2DShadow shadowMap[^}]+\})/s;
+				let shader = THREE.ShaderChunk.shadowmap_pars_fragment;
 
-				THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
-					.replace('#ifdef USE_SHADOWMAP', '#ifdef USE_SHADOWMAP\n' + pcssCode)
-					.replace(getShadowRegex, `#if defined( SHADOWMAP_TYPE_PCF )\n\t\t${getShadowReplacement()}`);
+				// 1. Inject PCSS functions after USE_SHADOWMAP
+				shader = shader.replace('#ifdef USE_SHADOWMAP', '#ifdef USE_SHADOWMAP\n' + pcssCode);
+
+				// 2. Replace sampler2DShadow with sampler2D for directional lights (PCF path)
+				shader = shader.replace(
+					/#if defined\( SHADOWMAP_TYPE_PCF \)\s+uniform sampler2DShadow directionalShadowMap\[ NUM_DIR_LIGHT_SHADOWS \];/,
+					`#if defined( SHADOWMAP_TYPE_PCF )
+			uniform sampler2D directionalShadowMap[ NUM_DIR_LIGHT_SHADOWS ];`,
+				);
+
+				// 3. Replace sampler2DShadow with sampler2D for spot lights (PCF path)
+				shader = shader.replace(
+					/#if defined\( SHADOWMAP_TYPE_PCF \)\s+uniform sampler2DShadow spotShadowMap\[ NUM_SPOT_LIGHT_SHADOWS \];/,
+					`#if defined( SHADOWMAP_TYPE_PCF )
+			uniform sampler2D spotShadowMap[ NUM_SPOT_LIGHT_SHADOWS ];`,
+				);
+
+				// 4. Replace the PCF getShadow function to use our PCSS
+				// Match from the function signature to its closing brace
+				const getShadowPCFRegex =
+					/(#if defined\( SHADOWMAP_TYPE_PCF \)\s+float getShadow\( sampler2DShadow shadowMap, vec2 shadowMapSize, float shadowIntensity, float shadowBias, float shadowRadius, vec4 shadowCoord \) \{[\s\S]*?return mix\( 1\.0, shadow, shadowIntensity \);\s*\})/;
+
+				shader = shader.replace(
+					getShadowPCFRegex,
+					`#if defined( SHADOWMAP_TYPE_PCF )
+		float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowIntensity, float shadowBias, float shadowRadius, vec4 shadowCoord ) {
+			shadowCoord.xyz /= shadowCoord.w;
+			shadowCoord.z += shadowBias;
+			bool inFrustum = shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 && shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0;
+			bool frustumTest = inFrustum && shadowCoord.z <= 1.0;
+			if ( frustumTest ) {
+				return PCSS( shadowMap, shadowCoord, shadowIntensity );
+			}
+			return 1.0;
+		}`,
+				);
+
+				THREE.ShaderChunk.shadowmap_pars_fragment = shader;
 			} else {
 				// Three.js < r182 uses RGBA-packed depth
 				THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
