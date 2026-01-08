@@ -38,13 +38,11 @@ const defaultOptions: NgtsSoftShadowsOptions = {
 	focus: 0,
 };
 
-function pcss(options: NgtsSoftShadowsOptions): string {
+/**
+ * Generates PCSS shader code for Three.js < r182 (uses RGBA-packed depth)
+ */
+function pcssLegacy(options: NgtsSoftShadowsOptions): string {
 	const { focus, size, samples } = options;
-	// Three.js r182 removed unpackRGBAToDepth and switched to native depth textures
-	const useNativeDepth = getVersion() >= 182;
-	const sampleDepth = useNativeDepth
-		? 'texture2D( shadowMap, uv + offset ).r'
-		: 'unpackRGBAToDepth( texture2D( shadowMap, uv + offset ) )';
 	return `
 #define PENUMBRA_FILTER_SIZE float(${size})
 #define RGB_NOISE_FUNCTION(uv) (randRGB(uv))
@@ -57,8 +55,6 @@ vec3 randRGB(vec2 uv) {
 }
 
 vec3 lowPassRandRGB(vec2 uv) {
-  // 3x3 convolution (average)
-  // can be implemented as separable with an extra buffer for a total of 6 samples instead of 9
   vec3 result = vec3(0);
   result += RGB_NOISE_FUNCTION(uv + vec2(-1.0, -1.0));
   result += RGB_NOISE_FUNCTION(uv + vec2(-1.0,  0.0));
@@ -69,32 +65,31 @@ vec3 lowPassRandRGB(vec2 uv) {
   result += RGB_NOISE_FUNCTION(uv + vec2(+1.0, -1.0));
   result += RGB_NOISE_FUNCTION(uv + vec2(+1.0,  0.0));
   result += RGB_NOISE_FUNCTION(uv + vec2(+1.0, +1.0));
-  result *= 0.111111111; // 1.0 / 9.0
+  result *= 0.111111111;
   return result;
 }
+
 vec3 highPassRandRGB(vec2 uv) {
-  // by subtracting the low-pass signal from the original signal, we're being left with the high-pass signal
-  // hp(x) = x - lp(x)
   return RGB_NOISE_FUNCTION(uv) - lowPassRandRGB(uv) + 0.5;
 }
 
-
 vec2 vogelDiskSample(int sampleIndex, int sampleCount, float angle) {
-  const float goldenAngle = 2.399963f; // radians
+  const float goldenAngle = 2.399963f;
   float r = sqrt(float(sampleIndex) + 0.5f) / sqrt(float(sampleCount));
   float theta = float(sampleIndex) * goldenAngle + angle;
   float sine = sin(theta);
   float cosine = cos(theta);
   return vec2(cosine, sine) * r;
 }
-float penumbraSize( const in float zReceiver, const in float zBlocker ) { // Parallel plane estimation
+
+float penumbraSize( const in float zReceiver, const in float zBlocker ) {
   return (zReceiver - zBlocker) / zBlocker;
 }
+
 float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
   float blockerDepthSum = float(${focus});
   float blockers = 0.0;
-
   int j = 0;
   vec2 offset = vec2(0.);
   float depth = 0.;
@@ -102,7 +97,7 @@ float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   #pragma unroll_loop_start
   for(int i = 0; i < ${samples}; i ++) {
     offset = (vogelDiskSample(j, ${samples}, angle) * texelSize) * 2.0 * PENUMBRA_FILTER_SIZE;
-    depth = ${sampleDepth};
+    depth = unpackRGBAToDepth( texture2D( shadowMap, uv + offset ) );
     if (depth < compare) {
       blockerDepthSum += depth;
       blockers++;
@@ -117,27 +112,28 @@ float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   return -1.0;
 }
 
-
 float vogelFilter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRadius, float angle) {
   float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
   float shadow = 0.0f;
   int j = 0;
   vec2 vogelSample = vec2(0.0);
   vec2 offset = vec2(0.0);
+
   #pragma unroll_loop_start
   for (int i = 0; i < ${samples}; i++) {
     vogelSample = vogelDiskSample(j, ${samples}, angle) * texelSize;
     offset = vogelSample * (1.0 + filterRadius * float(${size}));
-    shadow += step( zReceiver, ${sampleDepth} );
+    shadow += step( zReceiver, unpackRGBAToDepth( texture2D( shadowMap, uv + offset ) ) );
     j++;
   }
   #pragma unroll_loop_end
+
   return shadow * 1.0 / ${samples}.0;
 }
 
 float PCSS (sampler2D shadowMap, vec4 coords) {
   vec2 uv = coords.xy;
-  float zReceiver = coords.z; // Assumed to be eye-space z in this code
+  float zReceiver = coords.z;
   float angle = highPassRandRGB(gl_FragCoord.xy).r * PI2;
   float avgBlockerDepth = findBlocker(shadowMap, uv, zReceiver, angle);
   if (avgBlockerDepth == -1.0) {
@@ -146,6 +142,129 @@ float PCSS (sampler2D shadowMap, vec4 coords) {
   float penumbraRatio = penumbraSize(zReceiver, avgBlockerDepth);
   return vogelFilter(shadowMap, uv, zReceiver, 1.25 * penumbraRatio, angle);
 }`;
+}
+
+/**
+ * Generates PCSS shader code for Three.js >= r182 (uses native depth textures)
+ */
+function pcssModern(options: NgtsSoftShadowsOptions): string {
+	const { focus, size, samples } = options;
+	return `
+#define PENUMBRA_FILTER_SIZE float(${size})
+#define RGB_NOISE_FUNCTION(uv) (randRGB(uv))
+vec3 randRGB(vec2 uv) {
+  return vec3(
+    fract(sin(dot(uv, vec2(12.75613, 38.12123))) * 13234.76575),
+    fract(sin(dot(uv, vec2(19.45531, 58.46547))) * 43678.23431),
+    fract(sin(dot(uv, vec2(23.67817, 78.23121))) * 93567.23423)
+  );
+}
+
+vec3 lowPassRandRGB(vec2 uv) {
+  vec3 result = vec3(0);
+  result += RGB_NOISE_FUNCTION(uv + vec2(-1.0, -1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(-1.0,  0.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(-1.0, +1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2( 0.0, -1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2( 0.0,  0.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2( 0.0, +1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(+1.0, -1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(+1.0,  0.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(+1.0, +1.0));
+  result *= 0.111111111;
+  return result;
+}
+
+vec3 highPassRandRGB(vec2 uv) {
+  return RGB_NOISE_FUNCTION(uv) - lowPassRandRGB(uv) + 0.5;
+}
+
+vec2 pcssVogelDiskSample(int sampleIndex, int sampleCount, float angle) {
+  const float goldenAngle = 2.399963f;
+  float r = sqrt(float(sampleIndex) + 0.5f) / sqrt(float(sampleCount));
+  float theta = float(sampleIndex) * goldenAngle + angle;
+  float sine = sin(theta);
+  float cosine = cos(theta);
+  return vec2(cosine, sine) * r;
+}
+
+float penumbraSize( const in float zReceiver, const in float zBlocker ) {
+  return (zReceiver - zBlocker) / zBlocker;
+}
+
+float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
+  float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
+  float blockerDepthSum = float(${focus});
+  float blockers = 0.0;
+  int j = 0;
+  vec2 offset = vec2(0.);
+  float depth = 0.;
+
+  #pragma unroll_loop_start
+  for(int i = 0; i < ${samples}; i ++) {
+    offset = (pcssVogelDiskSample(j, ${samples}, angle) * texelSize) * 2.0 * PENUMBRA_FILTER_SIZE;
+    depth = texture2D( shadowMap, uv + offset ).r;
+    if (depth < compare) {
+      blockerDepthSum += depth;
+      blockers++;
+    }
+    j++;
+  }
+  #pragma unroll_loop_end
+
+  if (blockers > 0.0) {
+    return blockerDepthSum / blockers;
+  }
+  return -1.0;
+}
+
+float pcssVogelFilter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRadius, float angle) {
+  float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
+  float shadow = 0.0f;
+  int j = 0;
+  vec2 vogelSample = vec2(0.0);
+  vec2 offset = vec2(0.0);
+
+  #pragma unroll_loop_start
+  for (int i = 0; i < ${samples}; i++) {
+    vogelSample = pcssVogelDiskSample(j, ${samples}, angle) * texelSize;
+    offset = vogelSample * (1.0 + filterRadius * float(${size}));
+    shadow += step( zReceiver, texture2D( shadowMap, uv + offset ).r );
+    j++;
+  }
+  #pragma unroll_loop_end
+
+  return shadow * 1.0 / ${samples}.0;
+}
+
+float PCSS (sampler2D shadowMap, vec4 coords, float shadowIntensity) {
+  vec2 uv = coords.xy;
+  float zReceiver = coords.z;
+  float angle = highPassRandRGB(gl_FragCoord.xy).r * PI2;
+  float avgBlockerDepth = findBlocker(shadowMap, uv, zReceiver, angle);
+  if (avgBlockerDepth == -1.0) {
+    return 1.0;
+  }
+  float penumbraRatio = penumbraSize(zReceiver, avgBlockerDepth);
+  float shadow = pcssVogelFilter(shadowMap, uv, zReceiver, 1.25 * penumbraRatio, angle);
+  return mix( 1.0, shadow, shadowIntensity );
+}`;
+}
+
+/**
+ * Generates the replacement getShadow function for r182+
+ */
+function getShadowReplacement(): string {
+	return `float getShadow( sampler2D shadowMap, vec2 shadowMapSize, float shadowIntensity, float shadowBias, float shadowRadius, vec4 shadowCoord ) {
+			shadowCoord.xyz /= shadowCoord.w;
+			shadowCoord.z += shadowBias;
+			bool inFrustum = shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 && shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0;
+			bool frustumTest = inFrustum && shadowCoord.z <= 1.0;
+			if ( frustumTest ) {
+				return PCSS( shadowMap, shadowCoord, shadowIntensity );
+			}
+			return 1.0;
+		}`;
 }
 
 function reset(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera): void {
@@ -180,14 +299,31 @@ export class NgtsSoftShadows {
 		effect((onCleanup) => {
 			const { gl, scene, camera } = store.snapshot;
 			const options = this.options();
+			const version = getVersion();
 
 			const original = THREE.ShaderChunk.shadowmap_pars_fragment;
-			THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
-				.replace('#ifdef USE_SHADOWMAP', '#ifdef USE_SHADOWMAP\n' + pcss(options))
-				.replace(
-					'#if defined( SHADOWMAP_TYPE_PCF )',
-					'\nreturn PCSS(shadowMap, shadowCoord);\n#if defined( SHADOWMAP_TYPE_PCF )',
-				);
+
+			if (version >= 182) {
+				// Three.js r182+ uses native depth textures and has a different shader structure
+				// We need to replace the getShadow function entirely
+				const pcssCode = pcssModern(options);
+
+				// Find and replace the PCF getShadow function
+				const getShadowRegex =
+					/(#if defined\( SHADOWMAP_TYPE_PCF \)\s+float getShadow\( sampler2DShadow shadowMap[^}]+\})/s;
+
+				THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
+					.replace('#ifdef USE_SHADOWMAP', '#ifdef USE_SHADOWMAP\n' + pcssCode)
+					.replace(getShadowRegex, `#if defined( SHADOWMAP_TYPE_PCF )\n\t\t${getShadowReplacement()}`);
+			} else {
+				// Three.js < r182 uses RGBA-packed depth
+				THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
+					.replace('#ifdef USE_SHADOWMAP', '#ifdef USE_SHADOWMAP\n' + pcssLegacy(options))
+					.replace(
+						'#if defined( SHADOWMAP_TYPE_PCF )',
+						'\nreturn PCSS(shadowMap, shadowCoord);\n#if defined( SHADOWMAP_TYPE_PCF )',
+					);
+			}
 
 			reset(gl, scene, camera);
 
