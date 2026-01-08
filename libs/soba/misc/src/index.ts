@@ -12,3 +12,4 @@ export * from './lib/intersect';
 export * from './lib/preload';
 export * from './lib/sampler';
 export * from './lib/scale-factor';
+export * from './lib/soft-shadows';
