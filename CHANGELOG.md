@@ -1,3 +1,14 @@
+## 4.0.8 (2026-01-09)
+
+### 🩹 Fixes
+
+- **core:** align ngt-primitive handling with R3F reconciler behavior ([f39e32c9](https://github.com/angular-threejs/angular-three/commit/f39e32c9))
+
+### ❤️ Thank You
+
+- Chau @nartc
+- Claude Opus 4.5
+
 ## 4.0.7 (2026-01-08)
 
 ### 🩹 Fixes
