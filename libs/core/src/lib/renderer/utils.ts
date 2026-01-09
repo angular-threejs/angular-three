@@ -194,7 +194,7 @@ export function removeThreeChild(child: NgtInstanceNode, parent: NgtInstanceNode
 	}
 
 	// dispose
-	const isPrimitive = cIS?.type && cIS.type !== 'ngt-primitive';
+	const isPrimitive = cIS?.type && cIS.type === 'ngt-primitive';
 	if (!isPrimitive && child['dispose'] && !is.three<THREE.Scene>(child, 'isScene')) {
 		queueMicrotask(() => child['dispose']());
 	}
