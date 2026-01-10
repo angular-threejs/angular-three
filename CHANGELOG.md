@@ -1,3 +1,14 @@
+## 4.0.9 (2026-01-10)
+
+### 🩹 Fixes
+
+- **soba:** set active state in onProgress to match R3F Drei behavior ([ad119dc3](https://github.com/angular-threejs/angular-three/commit/ad119dc3))
+
+### ❤️ Thank You
+
+- Chau @nartc
+- Claude Opus 4.5
+
 ## 4.0.8 (2026-01-09)
 
 ### 🩹 Fixes
