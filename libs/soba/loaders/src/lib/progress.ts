@@ -83,6 +83,7 @@ export function progress(injector?: Injector) {
 			if (loaded === total) saveLastTotalLoaded = total;
 
 			progressState.update({
+				active: true,
 				item,
 				loaded,
 				total,
