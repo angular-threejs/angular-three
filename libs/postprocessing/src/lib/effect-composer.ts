@@ -255,6 +255,8 @@ export class NgtpEffectComposer {
 	 * Can be used to access the composer directly for advanced use cases.
 	 */
 	effectComposer = pick(this.composerData, 'composer');
+	normalPass = pick(this.composerData, 'normalPass');
+	downSamplingPass = pick(this.composerData, 'downSamplingPass');
 
 	constructor() {
 		extend({ Group });
