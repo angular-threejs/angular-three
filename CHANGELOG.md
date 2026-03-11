@@ -1,3 +1,19 @@
+## 4.1.0 (2026-03-11)
+
+### 🚀 Features
+
+- **cannon:** support three.js 0.183 ([fcbdb8db](https://github.com/angular-threejs/angular-three/commit/fcbdb8db))
+- **core:** support three.js 0.183 ([06fcf08e](https://github.com/angular-threejs/angular-three/commit/06fcf08e))
+- **postprocessing:** support three.js 0.183 ([67320d5e](https://github.com/angular-threejs/angular-three/commit/67320d5e))
+- **rapier:** support three.js 0.183 ([4f745386](https://github.com/angular-threejs/angular-three/commit/4f745386))
+- **soba:** support three.js 0.183 ([b89f27a3](https://github.com/angular-threejs/angular-three/commit/b89f27a3))
+- **theatre:** support three.js 0.183 ([7de9ea95](https://github.com/angular-threejs/angular-three/commit/7de9ea95))
+
+### ❤️ Thank You
+
+- Chau @nartc
+- Claude Opus 4.6
+
 ## 4.0.10 (2026-03-11)
 
 ### 🩹 Fixes
