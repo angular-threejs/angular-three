@@ -1,9 +1,9 @@
 /** Default version of angular-three to install */
 export const ANGULAR_THREE_VERSION = '^4.0.0';
 /** Default version of three to install */
-export const THREE_VERSION = '^0.182.0';
+export const THREE_VERSION = '^0.183.0';
 /** Default version of @types/three to install */
-export const THREE_TYPE_VERSION = '^0.182.0';
+export const THREE_TYPE_VERSION = '^0.183.0';
 /** Default version of ngxtension to install */
 export const NGXTENSION_VERSION = '^7.0.0';
 
@@ -20,7 +20,7 @@ export const PEER_DEPENDENCIES: Record<string, Record<string, string>> = {
 		'hls.js': '^1.6.0',
 		maath: '^0.10.8',
 		meshline: '^3.3.0',
-		'stats-gl': '^3.8.0',
+		'stats-gl': '^4.1.0',
 		'three-custom-shader-material': '^6.4.0',
 		'three-mesh-bvh': '^0.9.0',
 		'troika-three-text': '^0.52.0',
