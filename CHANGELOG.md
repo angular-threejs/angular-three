@@ -1,3 +1,14 @@
+## 4.1.1 (2026-03-11)
+
+### 🚀 Features
+
+- **postprocessing:** port missing effects from react-postprocessing ([a6b5e783](https://github.com/angular-threejs/angular-three/commit/a6b5e783))
+
+### ❤️ Thank You
+
+- Chau @nartc
+- Claude Opus 4.6
+
 ## 4.1.0 (2026-03-11)
 
 ### 🚀 Features
