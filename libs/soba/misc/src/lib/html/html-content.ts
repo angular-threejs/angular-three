@@ -370,11 +370,32 @@ export class NgtsHTMLContent extends NgtHTML {
 			];
 
 			if (group) {
+				// Check if any ancestor is hidden (e.g., by LOD)
+				let ancestorVisible = true;
+				let ancestor: THREE.Object3D | null = group;
+				while (ancestor) {
+					if (!ancestor.visible) {
+						ancestorVisible = false;
+						break;
+					}
+					ancestor = ancestor.parent;
+				}
+
+				if (!ancestorVisible) {
+					if (visible) {
+						visible = false;
+						if (this.occluded['listeners']) this.occluded.emit(true);
+						else renderer.setStyle(hostEl, 'display', 'none');
+					}
+					return;
+				}
+
 				camera.updateMatrixWorld();
 				group.updateWorldMatrix(true, false);
 				const vec = transform ? oldPosition : calculatePosition(group, camera, size);
 
 				if (
+					!visible ||
 					transform ||
 					Math.abs(oldZoom - camera.zoom) > eps ||
 					Math.abs(oldPosition[0] - vec[0]) > eps ||

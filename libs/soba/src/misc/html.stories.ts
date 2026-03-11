@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } fro
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
 import { NgtsHTML, NgtsHTMLContentOptions, NgtsHTMLOptions } from 'angular-three-soba/misc';
+import { NgtsDetailed } from 'angular-three-soba/performances';
 import { ColorRepresentation } from 'three';
 import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-canvas';
 
@@ -78,12 +79,57 @@ class HtmlTransformScene {
 	htmlContentOptions = input({} as NgtsHTMLContentOptions);
 }
 
+@Component({
+	selector: 'html-lod-scene',
+	template: `
+		<ngts-detailed [distances]="[0, 8, 18]">
+			<ngt-mesh>
+				<ngt-icosahedron-geometry *args="[2, 4]" />
+				<ngt-mesh-basic-material color="hotpink" wireframe />
+
+				<ngts-html [options]="{ position: [2.5, 0, 0] }">
+					<div [htmlContent]="{ center: true }" style="color: white; background: rgba(0,0,0,0.5); padding: 4px 8px; white-space: nowrap;">
+						High Detail
+					</div>
+				</ngts-html>
+			</ngt-mesh>
+
+			<ngt-mesh>
+				<ngt-icosahedron-geometry *args="[2, 2]" />
+				<ngt-mesh-basic-material color="orange" wireframe />
+
+				<ngts-html [options]="{ position: [2.5, 0, 0] }">
+					<div [htmlContent]="{ center: true }" style="color: white; background: rgba(0,0,0,0.5); padding: 4px 8px; white-space: nowrap;">
+						Medium Detail
+					</div>
+				</ngts-html>
+			</ngt-mesh>
+
+			<ngt-mesh>
+				<ngt-icosahedron-geometry *args="[2, 1]" />
+				<ngt-mesh-basic-material color="skyblue" wireframe />
+
+				<ngts-html [options]="{ position: [2.5, 0, 0] }">
+					<div [htmlContent]="{ center: true }" style="color: white; background: rgba(0,0,0,0.5); padding: 4px 8px; white-space: nowrap;">
+						Low Detail
+					</div>
+				</ngts-html>
+			</ngt-mesh>
+		</ngts-detailed>
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs, NgtsHTML, NgtsDetailed],
+})
+class HtmlWithLODScene {}
+
 export default {
 	title: 'Misc/HTML',
 	decorators: storyDecorators(),
 } as Meta;
 
 export const Default = storyFunction(HtmlScene, { camera: { position: [-20, 20, -20] } });
+export const WithLOD = storyFunction(HtmlWithLODScene, { camera: { position: [0, 0, 10] } });
 export const Transform = storyObject(HtmlTransformScene, {
 	camera: { position: [-20, 20, -20] },
 	argsOptions: {
