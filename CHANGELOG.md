@@ -1,3 +1,14 @@
+## 4.0.10 (2026-03-11)
+
+### 🩹 Fixes
+
+- **soba:** hide html overlay when ancestor is hidden by LOD ([f4de1732](https://github.com/angular-threejs/angular-three/commit/f4de1732))
+
+### ❤️ Thank You
+
+- Chau @nartc
+- Claude Opus 4.6
+
 ## 4.0.9 (2026-01-10)
 
 ### 🩹 Fixes
