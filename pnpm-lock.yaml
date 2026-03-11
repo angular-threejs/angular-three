@@ -98,8 +98,8 @@ importers:
         specifier: ~7.8.2
         version: 7.8.2
       stats-gl:
-        specifier: ^3.8.0
-        version: 3.8.0(three@0.183.2)
+        specifier: ^4.1.0
+        version: 4.1.0(three@0.183.2)
       three-custom-shader-material:
         specifier: ~6.4.0
         version: 6.4.0(react@18.3.1)(three@0.183.2)
@@ -9563,8 +9563,8 @@ packages:
   stackframe@1.3.4:
     resolution: {integrity: sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==}
 
-  stats-gl@3.8.0:
-    resolution: {integrity: sha512-e11MQK0vzaiD7dX43McxOoPZfWA1IMq4i7XC6sLXLBfypVXRTXYdvikUmueHVWQn9QPXT8XBDz3SyMArocoAUg==}
+  stats-gl@4.1.0:
+    resolution: {integrity: sha512-A0aw+njfFtowIJ5tCbCxKBRR7oflVmGEjdXfMI7IAc/fDTdms4eIKSaLDWL222XCrfQdT49VE19JgKGDQmz0yw==}
     peerDependencies:
       three: '*'
     peerDependenciesMeta:
@@ -21366,7 +21366,7 @@ snapshots:
 
   stackframe@1.3.4: {}
 
-  stats-gl@3.8.0(three@0.183.2):
+  stats-gl@4.1.0(three@0.183.2):
     optionalDependencies:
       three: 0.183.2
 
