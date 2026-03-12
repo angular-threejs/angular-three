@@ -1,9 +1,9 @@
 /** Default version of angular-three to install */
 export const ANGULAR_THREE_VERSION = '^4.0.0';
 /** Default version of three to install */
-export const THREE_VERSION = '^0.183.0';
+export const THREE_VERSION = '^0.182.0';
 /** Default version of @types/three to install */
-export const THREE_TYPE_VERSION = '^0.183.0';
+export const THREE_TYPE_VERSION = '^0.182.0';
 /** Default version of ngxtension to install */
 export const NGXTENSION_VERSION = '^7.0.0';
 
