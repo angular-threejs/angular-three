@@ -1,3 +1,19 @@
+## 4.2.0 (2026-03-12)
+
+### 🚀 Features
+
+- **cannon:** downgrade three.js peer dep upper bound to <0.183.0 ([995506e8](https://github.com/angular-threejs/angular-three/commit/995506e8))
+- **core:** downgrade three.js peer dep upper bound to <0.183.0 ([eb67ae02](https://github.com/angular-threejs/angular-three/commit/eb67ae02))
+- **postprocessing:** downgrade three.js peer dep upper bound to <0.183.0 ([07f86e3e](https://github.com/angular-threejs/angular-three/commit/07f86e3e))
+- **rapier:** downgrade three.js peer dep upper bound to <0.183.0 ([f7cd2d72](https://github.com/angular-threejs/angular-three/commit/f7cd2d72))
+- **soba:** downgrade three.js peer dep upper bound to <0.183.0 ([d28d7cee](https://github.com/angular-threejs/angular-three/commit/d28d7cee))
+- **theatre:** downgrade three.js peer dep upper bound to <0.183.0 ([5ff02277](https://github.com/angular-threejs/angular-three/commit/5ff02277))
+
+### ❤️ Thank You
+
+- Chau @nartc
+- Claude Opus 4.6
+
 ## 4.1.1 (2026-03-11)
 
 ### 🚀 Features
