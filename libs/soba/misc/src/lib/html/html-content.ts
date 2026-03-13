@@ -123,6 +123,12 @@ export interface NgtsHTMLContentOptions {
 	 * Defaults to the canvas container or `events.connected` element.
 	 */
 	parent?: HTMLElement | ElementRef<HTMLElement>;
+	/**
+	 * Computes z-index with a logarithmic scale, which prevents
+     * near objects from all having the same z-index when
+     * camera.far is very large.
+	 */
+	logarithmicDepth?: boolean;
 }
 
 const defaultHtmlContentOptions: NgtsHTMLContentOptions = {
@@ -354,7 +360,7 @@ export class NgtsHTMLContent extends NgtHTML {
 				occlusionGeometry,
 				isRaycastOcclusion,
 				{ camera, size, viewport, raycaster, scene },
-				{ calculatePosition, eps, zIndexRange, sprite, distanceFactor },
+				{ calculatePosition, eps, zIndexRange, logarithmicDepth, sprite, distanceFactor },
 				{ transform, occlude, scale },
 			] = [
 				this.host.nativeElement,
@@ -432,7 +438,7 @@ export class NgtsHTMLContent extends NgtHTML {
 							: [halfRange - 1, 0]
 						: zIndexRange;
 
-					renderer.setStyle(hostEl, 'z-index', `${objectZIndex(group, camera, zRange)}`);
+					renderer.setStyle(hostEl, 'z-index', `${objectZIndex(group, camera, zRange, logarithmicDepth)}`);
 
 					if (transform) {
 						const [widthHalf, heightHalf] = [size.width / 2, size.height / 2];
