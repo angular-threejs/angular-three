@@ -7,6 +7,34 @@ import { storyDecorators, storyFunction } from '../setup-canvas';
 
 @Component({
 	template: `
+		<ngts-detailed [distances]="[0, 50]">
+			<ngt-group>
+				<ngt-mesh (pointermove)="onHover()">
+					<ngt-icosahedron-geometry *args="[10, 3]" />
+					<ngt-mesh-basic-material color="hotpink" wireframe />
+				</ngt-mesh>
+			</ngt-group>
+
+			<ngt-mesh>
+				<ngt-icosahedron-geometry *args="[10, 1]" />
+				<ngt-mesh-basic-material color="lightblue" wireframe />
+			</ngt-mesh>
+		</ngts-detailed>
+
+		<ngts-orbit-controls [options]="{ enablePan: false, enableRotate: false, zoomSpeed: 0.5 }" />
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtsDetailed, NgtArgs, NgtsOrbitControls],
+})
+class WithEventDetailedStory {
+	protected onHover() {
+		console.log('hovered');
+	}
+}
+
+@Component({
+	template: `
 		<ngts-detailed [distances]="[0, 50, 150]">
 			<ngt-mesh>
 				<ngt-icosahedron-geometry *args="[10, 3]" />
@@ -38,6 +66,11 @@ export default {
 } as Meta;
 
 export const Default = storyFunction(DefaultDetailedStory, {
+	camera: { position: [0, 0, 100] },
+	controls: false,
+});
+
+export const WithEvent = storyFunction(WithEventDetailedStory, {
 	camera: { position: [0, 0, 100] },
 	controls: false,
 });

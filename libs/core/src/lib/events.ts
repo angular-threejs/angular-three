@@ -105,7 +105,19 @@ export function createEvents(store: SignalState<NgtState>) {
 		const duplicates = new Set<string>();
 		const intersections: NgtIntersection[] = [];
 		// Allow callers to eliminate event objects
-		const eventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
+		const allEventsObjects = filter ? filter(state.internal.interaction) : state.internal.interaction;
+
+		// filter out invisible objects
+		const eventsObjects: THREE.Object3D[] = [];
+		for (const eventsObject of allEventsObjects) {
+			let current: THREE.Object3D | null = eventsObject;
+			while (current) {
+				if (!current.visible) break;
+				current = current.parent;
+			}
+
+			if (!current) eventsObjects.push(eventsObject);
+		}
 
 		if (!state.previousRoot) {
 			// Make sure root-level pointer and ray are set up
