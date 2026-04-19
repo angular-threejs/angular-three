@@ -30,9 +30,9 @@ loaderResource.preload(RGBELoader, 'https://dl.polyhaven.org/file/ph-assets/HDRI
 					@if (gltf.value(); as gltf) {
 						<ngts-caustics
 							[options]="{
+								position: [0, -0.5, 0],
 								backside: true,
 								color: 'white',
-								position: [0, -0.5, 0],
 								lightSource: lightSource(),
 								worldRadius: 0.1,
 								ior: 1.8,
@@ -73,9 +73,16 @@ class Diamond {
 
 @Component({
 	template: `
-		<ngt-ambient-light [intensity]="0.5" />
-		<ngt-spot-light #spotLight [position]="[5, 5, -10]" [angle]="0.15" [penumbra]="1" />
-		<ngt-point-light [position]="[-10, -10, -10]" />
+		<ngt-ambient-light [intensity]="0.5 * Math.PI" />
+		<ngt-spot-light
+			#spotLight
+			[position]="[5, 5, -10]"
+			[angle]="0.15"
+			[penumbra]="1"
+			[decay]="0"
+			[intensity]="Math.PI"
+		/>
+		<ngt-point-light [position]="[-10, -10, -10]" [decay]="0" [intensity]="Math.PI" />
 
 		<diamond-flat
 			[lightSource]="spotLight"
@@ -115,13 +122,20 @@ class Diamond {
 				color: 'orange',
 				colorBlend: 2,
 				toneMapped: true,
-				alphaTest: 0.7,
+				alphaTest: 0.65,
 				opacity: 1,
 				scale: 12,
 			}"
 		>
 			<ngts-randomized-lights
-				[options]="{ position: [5, 5, -10], amount: 8, radius: 10, ambient: 0.5, bias: 0.001 }"
+				[options]="{
+					position: [5, 5, -10],
+					amount: 8,
+					radius: 10,
+					ambient: 0.5,
+					intensity: Math.PI,
+					bias: 0.001,
+				}"
 			/>
 		</ngts-accumulative-shadows>
 
@@ -168,6 +182,7 @@ export const Default = storyObject(DefaultRefractionStory, {
 	camera: { position: [-5, 0.5, 5], fov: 45 },
 	background: '#f0f0f0',
 	controls: false,
+	lights: false,
 	argsOptions: {
 		options: {
 			bounces: 3,

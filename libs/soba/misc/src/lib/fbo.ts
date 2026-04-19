@@ -32,8 +32,11 @@ export interface NgtsFBOParams {
 
 	/**
 	 * Additional THREE.RenderTargetOptions for the WebGLRenderTarget.
+	 *
+	 * Note: `depth` accepts a boolean here as a flag to attach a `DepthTexture`
+	 * to the render target (on top of THREE's default number meaning for 3D targets).
 	 */
-	settings?: THREE.RenderTargetOptions;
+	settings?: Omit<THREE.RenderTargetOptions, 'depth'> & { depth?: boolean | number };
 }
 
 /**

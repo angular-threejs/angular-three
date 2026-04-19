@@ -17,7 +17,7 @@ import * as THREE from 'three';
 import { Group, LineBasicMaterial, Mesh, OrthographicCamera, PlaneGeometry, Scene } from 'three';
 
 const NORMAL_OPTIONS = {
-	depthBuffer: true,
+	depth: true,
 	minFilter: THREE.LinearFilter,
 	magFilter: THREE.LinearFilter,
 	type: THREE.UnsignedByteType,
