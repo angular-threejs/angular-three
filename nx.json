@@ -225,5 +225,6 @@
 			}
 		}
 	},
-	"useLegacyCache": false
+	"useLegacyCache": false,
+	"analytics": true
 }

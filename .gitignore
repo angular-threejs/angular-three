@@ -50,3 +50,6 @@ vitest.config.*.timestamp*
 CLAUDE.md
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+.claude/worktrees
+.claude/settings.local.json

@@ -1,65 +1,69 @@
 {
-	"name": "plugin",
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/plugin/src",
-	"projectType": "library",
-	"tags": [],
-	"targets": {
-		"build": {
-			"executor": "@nx/js:tsc",
-			"outputs": ["{options.outputPath}"],
-			"options": {
-				"outputPath": "dist/libs/plugin",
-				"main": "libs/plugin/src/index.ts",
-				"tsConfig": "libs/plugin/tsconfig.lib.json",
-				"assets": [
-					"libs/plugin/*.md",
-					{
-						"input": "./libs/plugin/src",
-						"glob": "**/!(*.ts)",
-						"output": "./src"
-					},
-					{
-						"input": "./libs/plugin/src",
-						"glob": "**/*.d.ts",
-						"output": "./src"
-					},
-					{
-						"input": "./libs/plugin",
-						"glob": "generators.json",
-						"output": "."
-					},
-					{
-						"input": "./libs/plugin",
-						"glob": "executors.json",
-						"output": "."
-					},
-					{
-						"input": "./libs/plugin",
-						"glob": "migrations.json",
-						"output": "."
-					}
-				]
-			}
-		},
-		"test": {
-			"executor": "@nx/vitest:test",
-			"outputs": ["{options.reportsDirectory}"],
-			"options": {
-				"reportsDirectory": "../../coverage/libs/plugin"
-			}
-		},
-		"publish-next": {
-			"command": "npm publish --tag=next",
-			"options": {
-				"cwd": "{workspaceRoot}/dist/{projectRoot}"
-			}
-		},
-		"publish": {
-			"command": "npm publish",
-			"options": {
-				"cwd": "{workspaceRoot}/dist/{projectRoot}"
-			}
-		}
-	}
+  "name": "plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/plugin/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/plugin",
+        "main": "libs/plugin/src/index.ts",
+        "tsConfig": "libs/plugin/tsconfig.lib.json",
+        "assets": [
+          "libs/plugin/*.md",
+          {
+            "input": "./libs/plugin/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./libs/plugin/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./libs/plugin",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./libs/plugin",
+            "glob": "executors.json",
+            "output": "."
+          },
+          {
+            "input": "./libs/plugin",
+            "glob": "migrations.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
+      "options": {
+        "reportsDirectory": "{projectRoot}/../../coverage/libs/plugin"
+      }
+    },
+    "publish-next": {
+      "command": "npm publish --tag=next",
+      "options": {
+        "cwd": "{workspaceRoot}/dist/{projectRoot}"
+      }
+    },
+    "publish": {
+      "command": "npm publish",
+      "options": {
+        "cwd": "{workspaceRoot}/dist/{projectRoot}"
+      }
+    }
+  }
 }
