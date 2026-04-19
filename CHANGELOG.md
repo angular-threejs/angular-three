@@ -1,3 +1,13 @@
+## 4.2.2 (2026-04-19)
+
+### 🩹 Fixes
+
+- **soba:** attach depth texture in caustics normal render targets ([63a185e1](https://github.com/angular-threejs/angular-three/commit/63a185e1))
+
+### ❤️ Thank You
+
+- Chau @nartc
+
 ## 4.2.1 (2026-03-23)
 
 ### 🚀 Features
