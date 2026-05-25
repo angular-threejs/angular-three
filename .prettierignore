@@ -10,3 +10,4 @@ apps/examples/src/assets/**/*.js
 
 /.nx/cache
 /.nx/workspace-data
+.nx/self-healing
