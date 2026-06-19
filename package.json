@@ -38,6 +38,7 @@
 		"@nx/vitest": "23.0.0",
 		"@nx/web": "23.0.0",
 		"@nx/workspace": "23.0.0",
+		"@oxc-project/runtime": "^0.137.0",
 		"@phenomnomnominal/tsquery": "^6.1.4",
 		"@rosskevin/gltfjsx": "^7.2.0",
 		"@schematics/angular": "21.2.7",
