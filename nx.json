@@ -228,5 +228,8 @@
 		}
 	},
 	"useLegacyCache": false,
-	"analytics": true
+  "analytics": true,
+  "migrate": {
+    "agentic": true
+  }
 }
