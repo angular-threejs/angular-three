@@ -228,8 +228,8 @@
 		}
 	},
 	"useLegacyCache": false,
-  "analytics": true,
-  "migrate": {
-    "agentic": true
-  }
+	"analytics": true,
+	"migrate": {
+		"agentic": true
+	}
 }
