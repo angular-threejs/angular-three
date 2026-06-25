@@ -234,8 +234,8 @@ export const fragmentShader = /* glsl */ `
     float normVertical = ((uBoundsMax.z - vObjPos.z) / boundsHeight) * 2.0 - 1.0;
 
     float regenScanY = mix(-1.0, 1.0, fract(uRegenProgress * 0.55));
-    float regenBand = smoothstep(0.18, 0.0, abs(normVertical - regenScanY)) * uRegenStrength;
-    float regenPulse = (0.5 + 0.5 * sin(uTime * 8.0)) * uRegenStrength;
+    float regenFadeIn = smoothstep(0.0, 0.75, uRegenProgress);
+    float regenBand = smoothstep(0.18, 0.0, abs(normVertical - regenScanY)) * uRegenStrength * regenFadeIn;
 
     // ── Combine ───────────────────────────────────────────────────────────────
     vec3  lColor = lifeColor(uLife);
@@ -244,14 +244,12 @@ export const fragmentShader = /* glsl */ `
     float intensity = hex * effectiveHexOpacity * (0.3 + fresnel*0.7)
                     + fresnel*0.4
                     + flash * uShowHex
-                    + regenBand * 0.38
-                    + regenPulse * fresnel * 0.15;
+                    + regenBand * 0.38;
 
     vec3 shieldColor = lColor * intensity * 2.0;
     shieldColor += lColor * (flowNoise * fresnel * uFlowIntensity);
     shieldColor += lColor * ringContrib * uHitIntensity;
     shieldColor += lColor * regenBand * 1.4;
-    shieldColor += lColor * regenPulse * fresnel * 0.5;
 
     vec3 edgeColor = mix(uNoiseEdgeColor, lColor, 1.0 - uLife);
     vec3 edgeGlow  = edgeColor * revealEdge * uNoiseEdgeIntensity;
@@ -259,8 +257,7 @@ export const fragmentShader = /* glsl */ `
     float alpha = clamp(
       intensity*uOpacity*revealMask
       + revealEdge*uNoiseEdgeIntensity
-      + regenBand*0.18
-      + regenPulse*fresnel*0.08,
+      + regenBand*0.18,
       0.0,
       1.0
     );
