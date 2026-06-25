@@ -33,7 +33,7 @@ export class Camera {
 			const camera = this.store.camera();
 			camera.position.set(8, 5, 8);
 			if ('fov' in camera) {
-				camera.fov = 26;
+				camera.fov = 20;
 				camera.updateProjectionMatrix();
 			}
 		});

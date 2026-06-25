@@ -58,6 +58,8 @@ export const fragmentShader = /* glsl */ `
   uniform float uFadeStart;
   uniform vec3  uBoundsMin;
   uniform vec3  uBoundsMax;
+  uniform float uRegenStrength;
+  uniform float uRegenProgress;
 
   varying vec3 vNormal;
   varying vec3 vObjNormal;
@@ -225,27 +227,47 @@ export const fragmentShader = /* glsl */ `
     ringContrib = min(ringContrib, 2.0);
     hexHitBoost = min(hexHitBoost, 1.0);
 
-    // ── Combine ───────────────────────────────────────────────────────────────
-    vec3  lColor = lifeColor(uLife);
-
-    float effectiveHexOpacity = (uHexOpacity + hexHitBoost * uHitIntensity) * uShowHex;
-    float intensity = hex * effectiveHexOpacity * (0.3 + fresnel*0.7) + fresnel*0.4 + flash * uShowHex;
-
-    vec3 shieldColor = lColor * intensity * 2.0;
-    shieldColor += lColor * (flowNoise * fresnel * uFlowIntensity);
-    shieldColor += lColor * ringContrib * uHitIntensity;
-
-    vec3 edgeColor = mix(uNoiseEdgeColor, lColor, 1.0 - uLife);
-    vec3 edgeGlow  = edgeColor * revealEdge * uNoiseEdgeIntensity;
-
-    float alpha = clamp(intensity*uOpacity*revealMask + revealEdge*uNoiseEdgeIntensity, 0.0, 1.0);
-
-    // ── Bottom fade gradient ──────────────────────────────────────────────────
+    // ── Vertical axis + regen scan ────────────────────────────────────────────
     // The logo mesh's local Y is extrusion depth. After the group rotation,
     // local Z is the visible vertical axis, inverted in world space.
     float boundsHeight = max(uBoundsMax.z - uBoundsMin.z, 0.0001);
     float normVertical = ((uBoundsMax.z - vObjPos.z) / boundsHeight) * 2.0 - 1.0;
-    alpha *= smoothstep(-1.0, uFadeStart, normVertical);
+
+    float regenScanY = mix(-1.0, 1.0, fract(uRegenProgress * 0.55));
+    float regenBand = smoothstep(0.18, 0.0, abs(normVertical - regenScanY)) * uRegenStrength;
+    float regenPulse = (0.5 + 0.5 * sin(uTime * 8.0)) * uRegenStrength;
+
+    // ── Combine ───────────────────────────────────────────────────────────────
+    vec3  lColor = lifeColor(uLife);
+
+    float effectiveHexOpacity = (uHexOpacity + hexHitBoost * uHitIntensity) * uShowHex;
+    float intensity = hex * effectiveHexOpacity * (0.3 + fresnel*0.7)
+                    + fresnel*0.4
+                    + flash * uShowHex
+                    + regenBand * 0.38
+                    + regenPulse * fresnel * 0.15;
+
+    vec3 shieldColor = lColor * intensity * 2.0;
+    shieldColor += lColor * (flowNoise * fresnel * uFlowIntensity);
+    shieldColor += lColor * ringContrib * uHitIntensity;
+    shieldColor += lColor * regenBand * 1.4;
+    shieldColor += lColor * regenPulse * fresnel * 0.5;
+
+    vec3 edgeColor = mix(uNoiseEdgeColor, lColor, 1.0 - uLife);
+    vec3 edgeGlow  = edgeColor * revealEdge * uNoiseEdgeIntensity;
+
+    float alpha = clamp(
+      intensity*uOpacity*revealMask
+      + revealEdge*uNoiseEdgeIntensity
+      + regenBand*0.18
+      + regenPulse*fresnel*0.08,
+      0.0,
+      1.0
+    );
+
+    // ── Bottom fade gradient ──────────────────────────────────────────────────
+    float bottomFade = smoothstep(-1.0, uFadeStart, normVertical);
+    alpha *= mix(0.35, 1.0, bottomFade);
 
     gl_FragColor = vec4(shieldColor + edgeGlow, alpha);
   }
@@ -283,9 +305,11 @@ function createUniforms() {
 		uHitDuration: { value: 1.8 },
 		uHitIntensity: { value: 4.1 },
 		uHitImpactRadius: { value: 0.3 },
-		uFadeStart: { value: 0.0 },
+		uFadeStart: { value: -0.75 },
 		uBoundsMin: { value: new THREE.Vector3(-1.8, -1.8, -1.8) },
 		uBoundsMax: { value: new THREE.Vector3(1.8, 1.8, 1.8) },
+		uRegenStrength: { value: 0 },
+		uRegenProgress: { value: 0 },
 	};
 }
 

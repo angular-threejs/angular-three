@@ -18,7 +18,11 @@ interface PolygraphLogoGLTF extends GLTF {
 	template: `
 		@if (gltf.value(); as gltf) {
 			<ngt-group [position]="[0, 2, 0.2]" [rotation.x]="Math.PI / 2">
-				<ngt-mesh (click)="onClick($event)" [geometry]="gltf.nodes.Polygraph_Basic_Extruded_Mark.geometry">
+				<ngt-mesh
+					(click)="onClick($event)"
+					[geometry]="gltf.nodes.Polygraph_Basic_Extruded_Mark.geometry"
+					[renderOrder]="2"
+				>
 					<ngt-shield-material #shieldMaterial />
 				</ngt-mesh>
 			</ngt-group>
@@ -37,6 +41,11 @@ export class ForceShield {
 	private time = 0;
 	private life = 1;
 	private hitDamage = 10;
+	private lastHitTime = Number.NEGATIVE_INFINITY;
+	private regenDelay = 3;
+	private regenRate = 0.2;
+	private regenEffectStrength = 0;
+	private regenEffectProgress = 0;
 	private reveal = 1;
 	private boundsInitialized = false;
 
@@ -61,8 +70,19 @@ export class ForceShield {
 			}
 
 			this.time = clock.elapsedTime;
+			const regenActive = this.time - this.lastHitTime >= this.regenDelay && this.life < 1;
+			if (regenActive) {
+				this.life = Math.min(1, this.life + delta * this.regenRate);
+			}
+			this.regenEffectStrength = THREE.MathUtils.damp(this.regenEffectStrength, regenActive ? 1 : 0, 4, delta);
+			if (regenActive || this.regenEffectStrength > 0.001) {
+				this.regenEffectProgress += delta;
+			}
+
 			material.uniforms['uTime'].value = this.time;
 			material.uniforms['uLife'].value = this.life;
+			material.uniforms['uRegenStrength'].value = this.regenEffectStrength;
+			material.uniforms['uRegenProgress'].value = this.regenEffectProgress;
 
 			const target = 0;
 			this.reveal = THREE.MathUtils.lerp(this.reveal, target, 1 - Math.exp(-3.5 * delta));
@@ -89,6 +109,7 @@ export class ForceShield {
 		u['uHitPos'].value[idx].copy(localPoint);
 		u['uHitTime'].value[idx] = this.time;
 
+		this.lastHitTime = this.time;
 		this.life = Math.max(0, this.life - this.hitDamage / 100);
 	}
 }
