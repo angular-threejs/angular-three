@@ -4,8 +4,14 @@ import { SceneGraph } from './scene';
 
 @Component({
 	template: `
-		<ngt-canvas [camera]="{ fov: 75, position: [0, 0, 3] }" shadows>
-			<app-basic-scene-graph *canvasContent />
+		<ngt-canvas
+			[camera]="{ fov: 50, near: 0.1, far: 200, position: [8, 5, 8] }"
+			[gl]="{ antialias: true, alpha: false }"
+			[dpr]="[1, 1.5]"
+			shadows
+			style="background: #0e0d0c"
+		>
+			<app-flow-shield-scene-graph *canvasContent />
 		</ngt-canvas>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

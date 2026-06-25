@@ -257,6 +257,16 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'flow-shield',
+		loadComponent: () => import('./flow-shield/flow-shield'),
+		data: {
+			credits: {
+				title: 'Flow Shield',
+				link: 'https://pmndrs.github.io/examples/demos/flow-shield',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',
