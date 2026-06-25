@@ -263,6 +263,7 @@ const routes: Routes = [
 			credits: {
 				title: 'Flow Shield',
 				link: 'https://pmndrs.github.io/examples/demos/flow-shield',
+				class: 'left-2 text-white',
 			},
 		},
 	},

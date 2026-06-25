@@ -1,4 +1,5 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
+import type { NgtsEnvironmentPresets } from 'angular-three-soba/staging';
 import { Camera } from './camera';
 import { Environment } from './environment';
 import { ForceShield } from './force-shield';
@@ -11,8 +12,12 @@ import { PostProcessing } from './postprocessing';
 	template: `
 		<app-camera />
 		<app-lighting />
-		<app-environment />
-		<app-grid-floor />
+		<app-environment [preset]="preset()" />
+
+		@if (showGrid()) {
+			<app-grid-floor />
+		}
+
 		<app-force-shield />
 		<app-post-processing />
 	`,
@@ -24,5 +29,6 @@ import { PostProcessing } from './postprocessing';
 export class SceneGraph {
 	protected Math = Math;
 
-	showGrid = input(false, { transform: booleanAttribute });
+	showGrid = input(true);
+	preset = input.required<NgtsEnvironmentPresets>();
 }
