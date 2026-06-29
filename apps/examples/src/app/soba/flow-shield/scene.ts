@@ -1,20 +1,20 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, input } from '@angular/core';
-import type { NgtsEnvironmentPresets } from 'angular-three-soba/staging';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Camera } from './camera';
 import { Environment } from './environment';
 import { ForceShield } from './force-shield';
 import { GridFloor } from './grid-floor';
 import { Lighting } from './lighting';
 import { PostProcessing } from './postprocessing';
+import { FlowShieldState } from './state';
 
 @Component({
 	selector: 'app-flow-shield-scene-graph',
 	template: `
 		<app-camera />
 		<app-lighting />
-		<app-environment [preset]="preset()" />
+		<app-environment />
 
-		@if (showGrid()) {
+		@if (state.grid.show()) {
 			<app-grid-floor />
 		}
 
@@ -28,7 +28,5 @@ import { PostProcessing } from './postprocessing';
 })
 export class SceneGraph {
 	protected Math = Math;
-
-	showGrid = input(true);
-	preset = input.required<NgtsEnvironmentPresets>();
+	protected state = inject(FlowShieldState);
 }
