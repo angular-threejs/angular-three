@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, viewChild } from '@angular/core';
 import { beforeRender, extend, NgtThreeEvent } from 'angular-three';
 import { gltfResource } from 'angular-three-soba/loaders';
 import * as THREE from 'three';
 import { GLTF } from 'three-stdlib';
 import { MAX_HITS, ShieldMaterial } from './shield-material';
+import { FlowShieldState } from './state';
 
 import logoUrl from './polygraph-logo-basic.glb' with { loader: 'file' };
 
@@ -17,11 +18,11 @@ interface PolygraphLogoGLTF extends GLTF {
 	selector: 'app-force-shield',
 	template: `
 		@if (gltf.value(); as gltf) {
-			<ngt-group #shieldGroup [position]="[0, 2, 0.2]" [rotation.x]="Math.PI / 2">
+			<ngt-group #shieldGroup [position]="state.shield.position()" [rotation.x]="state.shield.rotationX()">
 				<ngt-mesh
 					(click)="onClick($event)"
 					[geometry]="gltf.nodes.Polygraph_Basic_Extruded_Mark.geometry"
-					[renderOrder]="2"
+					[renderOrder]="state.shield.renderOrder()"
 				>
 					<ngt-shield-material #shieldMaterial />
 				</ngt-mesh>
@@ -33,6 +34,7 @@ interface PolygraphLogoGLTF extends GLTF {
 })
 export class ForceShield {
 	protected readonly Math = Math;
+	protected state = inject(FlowShieldState);
 	protected readonly gltf = gltfResource<PolygraphLogoGLTF>(() => logoUrl);
 
 	private shieldGroupRef = viewChild<ElementRef<THREE.Group>>('shieldGroup');
@@ -40,11 +42,7 @@ export class ForceShield {
 
 	private hitIndex = 0;
 	private time = 0;
-	private life = 1;
-	private hitDamage = 10;
 	private lastHitTime = Number.NEGATIVE_INFINITY;
-	private regenDelay = 3;
-	private regenRate = 0.2;
 	private regenEffectStrength = 0;
 	private regenEffectProgress = 0;
 	private reveal = 1;
@@ -71,9 +69,10 @@ export class ForceShield {
 			}
 
 			this.time = clock.elapsedTime;
-			const regenActive = this.time - this.lastHitTime >= this.regenDelay && this.life < 1;
+			const shield = this.state.shield;
+			const regenActive = this.time - this.lastHitTime >= shield.regenDelay() && shield.life() < 1;
 			if (regenActive) {
-				this.life = Math.min(1, this.life + delta * this.regenRate);
+				shield.life.set(Math.min(1, shield.life() + delta * shield.regenRate()));
 			}
 			this.regenEffectStrength = THREE.MathUtils.damp(this.regenEffectStrength, regenActive ? 1 : 0, 4, delta);
 			if (regenActive || this.regenEffectStrength > 0.001) {
@@ -82,11 +81,36 @@ export class ForceShield {
 			const heartbeatPhase = this.regenEffectProgress * 0.82;
 			const heartbeat =
 				this.gaussianPulse(heartbeatPhase, 0.12, 0.045) + this.gaussianPulse(heartbeatPhase, 0.28, 0.07) * 0.45;
-			const scale = 1 + heartbeat * this.regenEffectStrength * 0.05;
+			const scale = 1 + heartbeat * this.regenEffectStrength * shield.regenPulseScale();
 			this.shieldGroupRef()?.nativeElement.scale.setScalar(scale);
 
 			material.uniforms['uTime'].value = this.time;
-			material.uniforms['uLife'].value = this.life;
+			material.uniforms['uColor'].value.set(shield.color());
+			material.uniforms['uLife'].value = shield.life();
+			material.uniforms['uHexScale'].value = shield.hexScale();
+			material.uniforms['uEdgeWidth'].value = shield.edgeWidth();
+			material.uniforms['uFresnelPower'].value = shield.fresnelPower();
+			material.uniforms['uFresnelStrength'].value = shield.fresnelStrength();
+			material.uniforms['uOpacity'].value = shield.opacity();
+			material.uniforms['uFlashSpeed'].value = shield.flashSpeed();
+			material.uniforms['uFlashIntensity'].value = shield.flashIntensity();
+			material.uniforms['uNoiseScale'].value = shield.noiseScale();
+			material.uniforms['uNoiseEdgeColor'].value.set(shield.noiseEdgeColor());
+			material.uniforms['uNoiseEdgeWidth'].value = shield.noiseEdgeWidth();
+			material.uniforms['uNoiseEdgeIntensity'].value = shield.noiseEdgeIntensity();
+			material.uniforms['uNoiseEdgeSmoothness'].value = shield.noiseEdgeSmoothness();
+			material.uniforms['uHexOpacity'].value = shield.hexOpacity();
+			material.uniforms['uShowHex'].value = shield.showHex() ? 1 : 0;
+			material.uniforms['uFlowScale'].value = shield.flowScale();
+			material.uniforms['uFlowSpeed'].value = shield.flowSpeed();
+			material.uniforms['uFlowIntensity'].value = shield.flowIntensity();
+			material.uniforms['uHitRingSpeed'].value = shield.hitRingSpeed();
+			material.uniforms['uHitRingWidth'].value = shield.hitRingWidth();
+			material.uniforms['uHitMaxRadius'].value = shield.hitMaxRadius();
+			material.uniforms['uHitDuration'].value = shield.hitDuration();
+			material.uniforms['uHitIntensity'].value = shield.hitIntensity();
+			material.uniforms['uHitImpactRadius'].value = shield.hitImpactRadius();
+			material.uniforms['uFadeStart'].value = shield.fadeStart();
 			material.uniforms['uRegenStrength'].value = this.regenEffectStrength;
 			material.uniforms['uRegenProgress'].value = this.regenEffectProgress;
 
@@ -116,7 +140,8 @@ export class ForceShield {
 		u['uHitTime'].value[idx] = this.time;
 
 		this.lastHitTime = this.time;
-		this.life = Math.max(0, this.life - this.hitDamage / 100);
+		const shield = this.state.shield;
+		shield.life.set(Math.max(0, shield.life() - shield.hitDamage() / 100));
 	}
 
 	private gaussianPulse(phase: number, center: number, width: number) {

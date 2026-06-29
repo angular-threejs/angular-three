@@ -8,10 +8,10 @@ import { FlowShieldState } from './state';
 		<ngts-environment
 			[options]="{
 				preset: state.environment.preset(),
-				background: true,
-				backgroundBlurriness: 0.9,
-				backgroundIntensity: 0.1,
-				environmentIntensity: 0.3,
+				background: state.environment.background(),
+				backgroundBlurriness: state.environment.backgroundBlurriness(),
+				backgroundIntensity: state.environment.backgroundIntensity(),
+				environmentIntensity: state.environment.environmentIntensity(),
 			}"
 		/>
 	`,

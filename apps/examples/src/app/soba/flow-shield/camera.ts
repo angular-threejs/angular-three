@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { injectStore } from 'angular-three';
 import { NgtsOrbitControls } from 'angular-three-soba/controls';
 import { MathUtils } from 'three';
+import { FlowShieldState } from './state';
 
 @Component({
 	selector: 'app-camera',
@@ -26,14 +27,17 @@ import { MathUtils } from 'three';
 })
 export class Camera {
 	protected readonly MathUtils = MathUtils;
+	private state = inject(FlowShieldState);
 	private store = injectStore();
 
 	constructor() {
 		effect(() => {
 			const camera = this.store.camera();
-			camera.position.set(8, 5, 8);
+			camera.position.fromArray(this.state.canvas.position());
 			if ('fov' in camera) {
-				camera.fov = 20;
+				camera.fov = this.state.canvas.fov();
+				camera.near = this.state.canvas.near();
+				camera.far = this.state.canvas.far();
 				camera.updateProjectionMatrix();
 			}
 		});
