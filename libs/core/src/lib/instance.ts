@@ -11,6 +11,16 @@ import type {
 import { SignalState, signalState } from './utils/signal-state';
 import { checkUpdate } from './utils/update';
 
+/** RFC 4122 v4 UUID — safe in non-secure contexts (e.g. http:// on LAN). */
+export function uuidv4Fallback(): string {
+	const bytes = new Uint8Array(16);
+	crypto.getRandomValues(bytes);
+	bytes[6] = (bytes[6] & 0x0f) | 0x40;
+	bytes[8] = (bytes[8] & 0x3f) | 0x80;
+	const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0'));
+	return `${hex.slice(0, 4).join('')}-${hex.slice(4, 6).join('')}-${hex.slice(6, 8).join('')}-${hex.slice(8, 10).join('')}-${hex.slice(10).join('')}`;
+}
+
 /**
  * @deprecated Use `getInstanceState` instead. Will be removed in 5.0.0
  * @param obj - The object to get local state from
@@ -126,7 +136,8 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			return _nonObjects;
 		});
 
-		instance.__ngt_id__ = crypto.randomUUID();
+		instance.__ngt_id__ =
+			typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : uuidv4Fallback();
 		instance.__ngt__ = {
 			previousAttach: null,
 			type,
