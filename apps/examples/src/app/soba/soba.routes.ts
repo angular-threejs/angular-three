@@ -268,6 +268,17 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'keyboard-controls',
+		loadComponent: () => import('./keyboard-controls/keyboard-controls'),
+		data: {
+			credits: {
+				title: 'Keyboard Controls',
+				link: 'https://drei.docs.pmnd.rs/controls/keyboard-controls',
+				class: 'text-white',
+			},
+		},
+	},
+	{
 		path: '',
 		redirectTo: 'stars',
 		pathMatch: 'full',

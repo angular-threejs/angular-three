@@ -16,6 +16,7 @@ npm install camera-controls maath
 ## TOC
 
 - [NgtsCameraControls](#ngtscameracontrols)
+- [NgtsKeyboardControls](#ngtskeyboardcontrols)
 - [NgtsOrbitControls](#ngtsorbitcontrols)
 - [NgtsPointerLockControls](#ngtspointerLockcontrols)
 - [NgtsScrollControls](#ngtsscrollcontrols)
@@ -67,6 +68,96 @@ class DefaultCameraControlsStory {
 				void controls.rotate(theta, phi, animate);
 			} else {
 				void controls.reset(true);
+			}
+		});
+	}
+}
+```
+
+## NgtsKeyboardControls
+
+A renderless attribute directive that turns a user-defined controls map into keyboard state, ported from `@react-three/drei`'s `KeyboardControls`. It attaches `keydown`/`keyup` listeners to `window` (or a custom `domElement`) and distributes the pressed state of named actions to descendants via dependency injection — what happens when an action is pressed is entirely up to consumers of `injectKeyboardControls`.
+
+Multiple physical keys can map to one action. Held keys are reference-counted per action, so OS auto-repeat and overlapping holds of sibling keys never produce duplicate transitions. Prefer `event.code` values (e.g. `'KeyW'`, `'Space'`) in the map — `event.key` values are layout- and case-sensitive.
+
+### Inputs
+
+| Property         | Description                                                                                                                                          | Default Value |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| keyboardControls | The controls map: an array of `{ name, keys, up? }` entries. A `model()` — hostDirective consumers can `inject(NgtsKeyboardControls).map.set(...)`.  | `[]`          |
+| domElement       | The event source the listeners attach to.                                                                                                            | `window`      |
+| preventDefault   | When `true`, listeners are registered non-passively and `preventDefault()` is called for mapped keys (e.g. to stop `Space` from scrolling the page). | `false`       |
+
+Each entry supports two discrete-action modes on top of the default pressed-while-held behavior:
+
+- `up: false` — fire-on-press: the state latches `true` after the first press and only `keyChange` fires on subsequent press edges. Consume via `keyChange`.
+- `toggle: true` — stateful on/off: each press edge flips the state between `true` and `false`; `keyup` is ignored (takes precedence over `up`). Consume via the reactive `select()` signal.
+
+### Outputs
+
+| Output    | Description                                                                                           |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| keyChange | Emits `{ name, pressed, state }` on every action transition (and on each press edge for `up: false`). |
+
+### Usage
+
+Define the map once at module level with `createKeyboardControls` — a runtime identity function that infers the action names as literal types, so the returned `injectKeyboardControls` is fully typed without repeating the generic at every call site:
+
+```ts
+export const { controlsMap, injectKeyboardControls } = createKeyboardControls([
+	{ name: 'forward', keys: ['ArrowUp', 'KeyW'] },
+	{ name: 'back', keys: ['ArrowDown', 'KeyS'] },
+	{ name: 'left', keys: ['ArrowLeft', 'KeyA'] },
+	{ name: 'right', keys: ['ArrowRight', 'KeyD'] },
+	{ name: 'jump', keys: ['Space'], up: false },
+]);
+```
+
+Provide it via the template:
+
+```html
+<ngt-group [keyboardControls]="controlsMap">
+	<app-player />
+</ngt-group>
+```
+
+or via `hostDirectives`, setting the map programmatically:
+
+```ts
+@Component({
+	hostDirectives: [NgtsKeyboardControls],
+	/* ... */
+})
+export class SceneGraph {
+	constructor() {
+		inject(NgtsKeyboardControls).map.set(controlsMap);
+	}
+}
+```
+
+Consume it in any descendant:
+
+```ts
+@Component({
+	/* ... */
+})
+export class Player {
+	private keyboardControls = injectKeyboardControls();
+
+	// reactive form: a memoized Signal<boolean> per action
+	protected jumping = this.keyboardControls.select('jump');
+
+	constructor() {
+		// transient form: poll a non-reactive snapshot in the frame loop
+		beforeRender(({ delta }) => {
+			const { forward, back, left, right } = this.keyboardControls.snapshot;
+			// move things
+		});
+
+		// edge events for discrete actions
+		this.keyboardControls.keyChange.subscribe(({ name, pressed }) => {
+			if (name === 'jump' && pressed) {
+				// jump!
 			}
 		});
 	}

@@ -65,7 +65,7 @@ class DefaultSparklesStory {
 
 export default {
 	title: 'Staging/Sparkles',
-	decorators: storyDecorators(),
+	decorators: storyDecorators() as any,
 } satisfies Meta;
 
 export const Default = storyObject(DefaultSparklesStory, {
