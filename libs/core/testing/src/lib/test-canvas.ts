@@ -10,7 +10,7 @@ import {
 	viewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { injectStore, NGT_CANVAS_CONTENT_FLAG, NGT_RENDERER_NODE_FLAG, NgtAnyRecord } from 'angular-three';
+import { injectStore, NgtAnyRecord, setRendererAnchor } from 'angular-three';
 
 /**
  * Internal test component used by NgtTestBed.
@@ -47,11 +47,7 @@ export class NgtTestCanvas {
 			const sceneGraphInputs = this.sceneGraphInputs();
 
 			const anchorComment = anchor.element.nativeElement;
-			anchorComment.data = NGT_CANVAS_CONTENT_FLAG;
-			anchorComment[NGT_CANVAS_CONTENT_FLAG] = this.store;
-			if (anchorComment[NGT_RENDERER_NODE_FLAG]) {
-				anchorComment[NGT_RENDERER_NODE_FLAG][5] = this.store.snapshot.scene;
-			}
+			setRendererAnchor(anchorComment, { kind: 'canvas', store: this.store });
 
 			this.sceneRef = anchor.createComponent(sceneGraph);
 

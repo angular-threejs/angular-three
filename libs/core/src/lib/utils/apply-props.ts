@@ -24,8 +24,8 @@ function diffProps(instance: NgtAnyRecord, props: NgtAnyRecord) {
 				key = 'outputColorSpace';
 			}
 		}
-		if (is.equ(propValue, instance[key])) continue;
-		changes.push([propKey, propValue]);
+		if (is.equ(propValue, resolveInstanceKey(instance, key).targetProp)) continue;
+		changes.push([key, propValue]);
 	}
 
 	return changes;
@@ -44,6 +44,45 @@ export const NGT_APPLY_PROPS = '__ngt_apply_props__';
 const colorMaps = ['map', 'emissiveMap', 'sheenColorMap', 'specularColorMap', 'envMap'];
 
 type ClassConstructor = { new (): void };
+
+const defaultProperties = new WeakMap<object, Map<string, unknown>>();
+
+function snapshotPropertyValue(value: unknown) {
+	if (value instanceof THREE.Layers) {
+		const snapshot = new THREE.Layers();
+		snapshot.mask = value.mask;
+		return snapshot;
+	}
+	if (ArrayBuffer.isView(value) && 'slice' in value && typeof value.slice === 'function') {
+		return value.slice();
+	}
+	if (
+		value &&
+		typeof value === 'object' &&
+		'clone' in value &&
+		typeof value.clone === 'function' &&
+		'set' in value &&
+		typeof value.set === 'function' &&
+		'copy' in value &&
+		typeof value.copy === 'function'
+	) {
+		// Math-like values are mutated in place by applyProps and need a value
+		// snapshot. Disposable resources and other assigned objects deliberately
+		// retain their original identity for default restoration.
+		return value.clone();
+	}
+	return value;
+}
+
+function resolvePropertyValue(root: object, key: string, currentValue: unknown, nextValue: unknown) {
+	let defaults = defaultProperties.get(root);
+	if (!defaults) {
+		defaults = new Map();
+		defaultProperties.set(root, defaults);
+	}
+	if (!defaults.has(key)) defaults.set(key, snapshotPropertyValue(currentValue));
+	return nextValue === undefined ? snapshotPropertyValue(defaults.get(key)) : nextValue;
+}
 
 /**
  * Resolves a property key that may contain dot notation (pierced props).
@@ -124,11 +163,7 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 	const changes = diffProps(instance, props);
 
 	for (let i = 0; i < changes.length; i++) {
-		let [key, value] = changes[i];
-
-		// Ignore setting undefined props
-		// https://github.com/pmndrs/react-three-fiber/issues/274
-		if (value === undefined) continue;
+		const [key, nextValue] = changes[i];
 
 		// Alias (output)encoding => (output)colorSpace (since r152)
 		// https://github.com/pmndrs/react-three-fiber/pull/2829
@@ -147,11 +182,7 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 		// }
 
 		const { root, targetKey, targetProp } = resolveInstanceKey(instance, key);
-
-		// we have switched due to pierced props
-		if (root !== instance) {
-			return applyProps(root, { [targetKey]: value });
-		}
+		const value = resolvePropertyValue(root, targetKey, targetProp, nextValue);
 
 		// Layers have no copy function, we must therefore copy the mask property
 		if (targetProp instanceof THREE.Layers && value instanceof THREE.Layers) {
@@ -214,23 +245,15 @@ export function applyProps<T extends NgtAnyRecord>(instance: NgtInstanceState<T>
 
 		checkUpdate(root[targetKey]);
 		checkUpdate(targetProp);
-		invalidateInstance(instance as NgtInstanceNode<T>);
 	}
 
-	const instanceHandlersCount = localState?.eventCount;
 	const parent = localState?.hierarchyStore?.snapshot.parent;
-
-	if (parent && rootState.internal && instance['raycast'] && instanceHandlersCount !== localState?.eventCount) {
-		// Pre-emptively remove the instance from the interaction manager
-		const index = rootState.internal.interaction.indexOf(instance);
-		if (index > -1) rootState.internal.interaction.splice(index, 1);
-		// Add the instance to the interaction manager only when it has handlers
-		if (localState?.eventCount) rootState.internal.interaction.push(instance);
-	}
 
 	if (parent && localState?.onUpdate && changes.length) {
 		localState.onUpdate(instance as NgtInstanceNode<T>);
 	}
+
+	if (changes.length) invalidateInstance(instance as NgtInstanceNode<T>);
 
 	// clearing the intermediate store from the instance
 	if (instance[NGT_APPLY_PROPS]) delete instance[NGT_APPLY_PROPS];

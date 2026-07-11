@@ -7,7 +7,7 @@ import {
 	input,
 	viewChild,
 } from '@angular/core';
-import { extend, is, NgtThreeElements, omit, pick } from 'angular-three';
+import { extend, NgtThreeElements, omit, pick } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
@@ -132,7 +132,7 @@ export class NgtsHTMLImpl {
 
 	isRaycastOcclusion = computed(() => {
 		const occlude = this.occlude();
-		return (occlude && occlude !== 'blending') || (Array.isArray(occlude) && occlude.length && is.ref(occlude[0]));
+		return occlude === true || occlude === 'raycast' || Array.isArray(occlude);
 	});
 
 	private shaders = computed(() => {

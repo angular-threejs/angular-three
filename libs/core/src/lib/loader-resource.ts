@@ -4,11 +4,13 @@ import * as THREE from 'three';
 import type {
 	NgtBranchingReturn,
 	NgtGLTFLike,
+	NgtLoaderCacheKey,
 	NgtLoaderExtensions,
 	NgtLoaderProto,
 	NgtLoaderResults,
 	NgtLoaderReturnType,
 } from './loader';
+import { NgtLoaderCache } from './loader-cache';
 import type { NgtAnyRecord } from './types';
 import { makeObjectGraph, type NgtObjectMap } from './utils/make';
 
@@ -33,8 +35,7 @@ function normalizeInputs(input: string | string[] | Record<string, string>) {
 	return urls.map((url) => (url.includes('undefined') || url.includes('null') || !url ? '' : url));
 }
 
-const cached = new Map();
-const memoizedLoaders = new WeakMap();
+const loaderCache = new NgtLoaderCache();
 
 function getLoaderResourceParams<
 	TData,
@@ -46,48 +47,57 @@ function getLoaderResourceParams<
 		(url: TUrl): TLoaderConstructor;
 	},
 	extensions: NgtLoaderExtensions<TLoaderConstructor> | undefined,
+	cacheKey: (() => NgtLoaderCacheKey) | undefined,
 ) {
 	const urls = input();
 	const LoaderConstructor = loaderConstructorFactory(urls);
 	const normalizedUrls = normalizeInputs(urls);
-	let loader: THREE.Loader<TData> = memoizedLoaders.get(LoaderConstructor);
-	if (!loader) {
-		loader = new LoaderConstructor();
-		memoizedLoaders.set(LoaderConstructor, loader);
-	}
+	const configurationKey = loaderCache.configurationKey(
+		extensions as ((loader: THREE.Loader<unknown>) => void) | undefined,
+		cacheKey?.(),
+	);
 
-	if (extensions) extensions(loader);
-
-	return { urls, normalizedUrls, loader };
+	return { urls, normalizedUrls, LoaderConstructor, configurationKey, extensions };
 }
 
-function getLoaderPromises<TData, TUrl extends string | string[] | Record<string, string>>(
-	params: { loader: THREE.Loader<TData>; normalizedUrls: string[]; urls: TUrl },
+function getLoaderPromises<
+	TData,
+	TUrl extends string | string[] | Record<string, string>,
+	TLoaderConstructor extends NgtLoaderProto<TData>,
+>(
+	params: {
+		LoaderConstructor: TLoaderConstructor;
+		configurationKey: unknown;
+		extensions: NgtLoaderExtensions<TLoaderConstructor> | undefined;
+		normalizedUrls: string[];
+		urls: TUrl;
+	},
 	onProgress?: { (event: ProgressEvent<EventTarget>): void },
 ) {
 	return params.normalizedUrls.map((url) => {
 		if (url === '') return Promise.resolve(null);
-		const cachedPromise = cached.get(url);
-		if (cachedPromise) return cachedPromise;
 
-		const promise = new Promise<TData>((res, rej) => {
-			params.loader.load(
-				url,
-				(data) => {
-					if ('scene' in (data as NgtAnyRecord)) {
-						Object.assign(data as NgtAnyRecord, makeObjectGraph((data as NgtAnyRecord)['scene']));
-					}
+		return loaderCache.getOrCreate(
+			params.LoaderConstructor,
+			params.configurationKey,
+			url,
+			params.extensions as ((loader: THREE.Loader<TData>) => void) | undefined,
+			(loader) =>
+				new Promise<TData>((res, rej) => {
+					loader.load(
+						url,
+						(data) => {
+							if ('scene' in (data as NgtAnyRecord)) {
+								Object.assign(data as NgtAnyRecord, makeObjectGraph((data as NgtAnyRecord)['scene']));
+							}
 
-					res(data);
-				},
-				onProgress,
-				(error) => rej(new Error(`[NGT] Could not load ${url}: ${(error as ErrorEvent)?.message}`)),
-			);
-		});
-
-		cached.set(url, promise);
-
-		return promise;
+							res(data);
+						},
+						onProgress,
+						(error) => rej(new Error(`[NGT] Could not load ${url}: ${(error as ErrorEvent)?.message}`)),
+					);
+				}),
+		);
 	});
 }
 
@@ -138,11 +148,19 @@ export function loaderResource<
 	input: () => TUrl,
 	{
 		extensions,
+		cacheKey,
 		onLoad,
 		onProgress,
 		injector,
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
+		/**
+		 * Semantic loader configuration. Components are compared by primitive value
+		 * or object/function identity. Required when captured extension configuration
+		 * changes, and useful for sharing equivalent preload/load closures. Configured
+		 * requests without a key are isolated.
+		 */
+		cacheKey?: () => NgtLoaderCacheKey;
 		onLoad?: (
 			data: NoInfer<NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>>>,
 		) => void;
@@ -154,8 +172,8 @@ export function loaderResource<
 > {
 	return assertInjector(loaderResource, injector, () => {
 		return resource({
-			params: () => getLoaderResourceParams(input, loaderConstructorFactory, extensions),
-			loader: async ({ params }) => {
+			params: () => getLoaderResourceParams(input, loaderConstructorFactory, extensions, cacheKey),
+			loader: async ({ params, abortSignal }) => {
 				// TODO: use the abortSignal when THREE.Loader supports it
 
 				const loadedResults = await Promise.all(getLoaderPromises(params, onProgress));
@@ -189,7 +207,7 @@ export function loaderResource<
 					) as NgtLoaderResults<TUrl, NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>>;
 				}
 
-				if (onLoad) onLoad(results);
+				if (!abortSignal.aborted) onLoad?.(results);
 
 				return results;
 			},
@@ -205,22 +223,21 @@ loaderResource.preload = <
 	loaderConstructor: TLoaderConstructor,
 	inputs: TUrl,
 	extensions?: NgtLoaderExtensions<TLoaderConstructor>,
+	cacheKey?: NgtLoaderCacheKey,
 ) => {
 	const params = getLoaderResourceParams(
 		() => inputs,
 		() => loaderConstructor,
 		extensions,
+		cacheKey !== undefined ? () => cacheKey : undefined,
 	);
-	void Promise.all(getLoaderPromises(params));
+	void Promise.all(getLoaderPromises(params)).catch(() => undefined);
 };
 
 loaderResource.destroy = () => {
-	cached.clear();
+	loaderCache.destroy();
 };
 
 loaderResource.clear = (urls: string | string[]) => {
-	const urlToClear = Array.isArray(urls) ? urls : [urls];
-	urlToClear.forEach((url) => {
-		cached.delete(url);
-	});
+	loaderCache.clear(urls);
 };

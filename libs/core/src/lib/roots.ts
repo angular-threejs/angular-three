@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { effect, inject, Injector, type EffectRef } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { prepare } from './instance';
@@ -8,9 +8,135 @@ import type { NgtCanvasElement, NgtCanvasOptions, NgtDisposable, NgtEquConfig, N
 import { applyProps } from './utils/apply-props';
 import { is } from './utils/is';
 import { makeCameraInstance, makeDpr, makeRendererInstance } from './utils/make';
+import type { SignalState } from './utils/signal-state';
 import { checkNeedsUpdate } from './utils/update';
 
 const shallowLoose = { objects: 'shallow', strict: false } as NgtEquConfig;
+
+type CameraConfiguration = {
+	camera: NgtCanvasOptions['camera'];
+	lookAt: NgtCanvasOptions['lookAt'];
+	orthographic: boolean;
+};
+
+type RootLifecycle = {
+	store: SignalState<NgtState>;
+	owner: object;
+	teardown?: ReturnType<typeof setTimeout>;
+	managedCamera?: NgtState['camera'];
+	cameraConfiguration?: CameraConfiguration;
+	appliedCameraConfiguration?: CameraConfiguration;
+	cameraWatcher?: EffectRef;
+};
+
+const rootLifecycles = new WeakMap<NgtCanvasElement, RootLifecycle>();
+
+function cloneConfigurationValue<T>(value: T): T {
+	if (Array.isArray(value)) return value.slice() as T;
+	if (value && typeof value === 'object' && 'clone' in value && typeof value.clone === 'function') {
+		return value.clone() as T;
+	}
+	return value;
+}
+
+function snapshotCameraOptions(camera: NgtCanvasOptions['camera']): NgtCanvasOptions['camera'] {
+	if (!camera || is.three<THREE.Camera>(camera, 'isCamera')) return camera;
+	const options = camera as Record<string, unknown>;
+	return Object.fromEntries(
+		Object.entries(options).map(([key, value]) => [key, cloneConfigurationValue(value)]),
+	) as NgtCanvasOptions['camera'];
+}
+
+function configurationValuesEqual(previous: unknown, next: unknown): boolean {
+	if (Object.is(previous, next)) return true;
+	if (Array.isArray(previous) && Array.isArray(next)) {
+		return previous.length === next.length && previous.every((value, index) => Object.is(value, next[index]));
+	}
+	if (
+		previous &&
+		next &&
+		typeof previous === 'object' &&
+		typeof next === 'object' &&
+		'equals' in previous &&
+		typeof previous.equals === 'function'
+	) {
+		return previous.equals(next);
+	}
+	return false;
+}
+
+function cameraOptionsEqual(previous: NgtCanvasOptions['camera'], next: NgtCanvasOptions['camera']): boolean {
+	if (Object.is(previous, next)) return true;
+	if (!previous || !next) return false;
+	if (is.three<THREE.Camera>(previous, 'isCamera') || is.three<THREE.Camera>(next, 'isCamera')) return false;
+	const previousKeys = Object.keys(previous);
+	const nextKeys = Object.keys(next);
+	const previousRecord = previous as Record<string, unknown>;
+	const nextRecord = next as Record<string, unknown>;
+	return (
+		previousKeys.length === nextKeys.length &&
+		previousKeys.every(
+			(key) =>
+				Object.prototype.hasOwnProperty.call(nextRecord, key) &&
+				configurationValuesEqual(previousRecord[key], nextRecord[key]),
+		)
+	);
+}
+
+function cameraConfigurationsEqual(previous: CameraConfiguration | undefined, next: CameraConfiguration): boolean {
+	return (
+		!!previous &&
+		previous.orthographic === next.orthographic &&
+		cameraOptionsEqual(previous.camera, next.camera) &&
+		configurationValuesEqual(previous.lookAt, next.lookAt)
+	);
+}
+
+function createManagedCamera(
+	configuration: CameraConfiguration,
+	store: SignalState<NgtState>,
+	size: NgtSize = store.snapshot.size,
+) {
+	const { camera: cameraOptions, lookAt, orthographic } = configuration;
+	const isCamera = is.three<THREE.Camera>(cameraOptions, 'isCamera');
+	let camera = isCamera ? cameraOptions : makeCameraInstance(orthographic, size);
+
+	if (!isCamera) {
+		camera.position.z = 5;
+		if (cameraOptions) {
+			applyProps(camera, cameraOptions);
+			if (
+				'aspect' in cameraOptions ||
+				'left' in cameraOptions ||
+				'right' in cameraOptions ||
+				'top' in cameraOptions ||
+				'bottom' in cameraOptions
+			) {
+				Object.assign(camera, { manual: true });
+				camera.updateProjectionMatrix();
+			}
+		}
+
+		if (!cameraOptions?.rotation && !cameraOptions?.quaternion) {
+			if (Array.isArray(lookAt)) camera.lookAt(lookAt[0], lookAt[1], lookAt[2]);
+			else if (typeof lookAt === 'number') camera.lookAt(lookAt, lookAt, lookAt);
+			else if (lookAt?.isVector3) camera.lookAt(lookAt);
+			else camera.lookAt(0, 0, 0);
+		}
+
+		camera.updateProjectionMatrix?.();
+	}
+
+	if (!is.instance(camera)) camera = prepare(camera, '', { store });
+	return camera;
+}
+
+function cancelPerformanceRegression(store: SignalState<NgtState>): void {
+	const regress = store.snapshot.performance.regress as typeof store.snapshot.performance.regress & {
+		cancel?: () => void;
+	};
+	regress.cancel?.();
+}
 
 /**
  * Creates a canvas root initializer function.
@@ -33,12 +159,14 @@ export function canvasRootInitializer(injector?: Injector) {
 	return assertInjector(canvasRootInitializer, injector, () => {
 		const injectedStore = injectStore();
 		const loop = injectLoop();
+		const rootInjector = inject(Injector);
 
 		return (canvas: NgtCanvasElement) => {
 			const exist = roots.has(canvas);
 			let store = roots.get(canvas);
+			const previousLifecycle = rootLifecycles.get(canvas);
 
-			if (store) {
+			if (store && !previousLifecycle?.teardown) {
 				console.warn('[NGT] Same canvas root is being created twice');
 			}
 
@@ -52,33 +180,104 @@ export function canvasRootInitializer(injector?: Injector) {
 				roots.set(canvas, store);
 			}
 
+			if (previousLifecycle?.teardown) {
+				clearTimeout(previousLifecycle.teardown);
+				previousLifecycle.teardown = undefined;
+				const performance = store.snapshot.performance;
+				if (performance.current !== performance.max) {
+					store.update((state) => ({
+						performance: { ...state.performance, current: state.performance.max },
+					}));
+				}
+			}
+
+			const owner = {};
+			const lifecycle: RootLifecycle = previousLifecycle?.store === store ? previousLifecycle : { store, owner };
+			lifecycle.owner = owner;
+			rootLifecycles.set(canvas, lifecycle);
+			lifecycle.cameraWatcher ??= effect(
+				() => {
+					const activeCamera = store.camera();
+					const desired = lifecycle.cameraConfiguration;
+					if (
+						!desired ||
+						!lifecycle.managedCamera ||
+						activeCamera !== lifecycle.managedCamera ||
+						cameraConfigurationsEqual(lifecycle.appliedCameraConfiguration, desired)
+					)
+						return;
+
+					const camera = createManagedCamera(desired, store);
+					lifecycle.managedCamera = camera;
+					lifecycle.appliedCameraConfiguration = desired;
+					const raycaster = store.snapshot.raycaster;
+					if (raycaster) raycaster.camera = camera;
+					store.update({ camera });
+				},
+				{ injector: rootInjector },
+			);
+
 			let isConfigured = false;
-			let lastCamera: NgtCanvasOptions['camera'];
+			let destroyRequested = false;
 
 			return {
-				isConfigured,
+				get isConfigured() {
+					return isConfigured;
+				},
 				destroy: (timeout = 500) => {
+					if (destroyRequested) return;
+					destroyRequested = true;
 					const root = roots.get(canvas);
-					if (root) {
+					if (
+						root &&
+						root === store &&
+						rootLifecycles.get(canvas) === lifecycle &&
+						lifecycle.owner === owner
+					) {
 						root.update((state) => ({ internal: { ...state.internal, active: false } }));
-						setTimeout(() => {
+						cancelPerformanceRegression(root);
+						const teardown = setTimeout(() => {
+							if (
+								roots.get(canvas) !== root ||
+								rootLifecycles.get(canvas) !== lifecycle ||
+								lifecycle.owner !== owner ||
+								lifecycle.teardown !== teardown
+							)
+								return;
+
+							lifecycle.teardown = undefined;
 							try {
 								const state = root.snapshot;
-								state.events.disconnect?.();
-
-								state.gl?.renderLists?.dispose?.();
-								state.gl?.dispose?.();
-								state.gl?.forceContextLoss?.();
-								if (state.gl?.xr) state.xr.disconnect();
-								dispose(state.scene);
-								roots.delete(canvas);
-							} catch (e) {
-								console.error('[NGT] Unexpected error while destroying Canvas Root', e);
+								const failures: unknown[] = [];
+								const attempt = (cleanup: () => void) => {
+									try {
+										cleanup();
+									} catch (error) {
+										failures.push(error);
+									}
+								};
+								attempt(() => state.events.disconnect?.());
+								attempt(() => state.gl?.renderLists?.dispose?.());
+								attempt(() => state.gl?.dispose?.());
+								attempt(() => state.gl?.forceContextLoss?.());
+								attempt(() => state.xr?.disconnect?.());
+								attempt(() => dispose(state.scene));
+								attempt(() => lifecycle.cameraWatcher?.destroy());
+								if (failures.length) {
+									console.error('[NGT] Errors while destroying Canvas Root', failures);
+								}
+							} finally {
+								if (roots.get(canvas) === root) roots.delete(canvas);
+								if (rootLifecycles.get(canvas) === lifecycle) rootLifecycles.delete(canvas);
 							}
 						}, timeout);
+						lifecycle.teardown = teardown;
 					}
 				},
 				configure: (inputs: NgtCanvasOptions) => {
+					if (destroyRequested || rootLifecycles.get(canvas) !== lifecycle || lifecycle.owner !== owner)
+						return;
+
 					const {
 						shadows = false,
 						linear = false,
@@ -115,48 +314,24 @@ export function canvasRootInitializer(injector?: Injector) {
 						applyProps(raycaster, { params: { ...raycaster.params, ...(params || {}) } });
 					}
 
-					// Create default camera, don't overwrite any user-set state
+					const cameraConfiguration: CameraConfiguration = {
+						camera: snapshotCameraOptions(cameraOptions),
+						lookAt: cloneConfigurationValue(lookAt),
+						orthographic,
+					};
+					lifecycle.cameraConfiguration = cameraConfiguration;
+
+					// Create the root-managed camera, but don't overwrite a camera installed directly in the store.
 					if (
 						!state.camera ||
-						(state.camera === lastCamera && !is.equ(lastCamera, cameraOptions, shallowLoose))
+						(state.camera === lifecycle.managedCamera &&
+							!cameraConfigurationsEqual(lifecycle.appliedCameraConfiguration, cameraConfiguration))
 					) {
-						lastCamera = cameraOptions;
-						const isCamera = is.three<THREE.Camera>(cameraOptions, 'isCamera');
-						let camera = isCamera
-							? cameraOptions
-							: makeCameraInstance(orthographic, sizeOptions ?? state.size);
-
-						if (!isCamera) {
-							camera.position.z = 5;
-							if (cameraOptions) {
-								applyProps(camera, cameraOptions);
-								if (
-									'aspect' in cameraOptions ||
-									'left' in cameraOptions ||
-									'right' in cameraOptions ||
-									'top' in cameraOptions ||
-									'bottom' in cameraOptions
-								) {
-									Object.assign(camera, { manual: true });
-									camera?.updateProjectionMatrix();
-								}
-							}
-
-							// always look at center or passed-in lookAt by default
-							if (!state.camera && !cameraOptions?.rotation && !cameraOptions?.quaternion) {
-								if (Array.isArray(lookAt)) camera.lookAt(lookAt[0], lookAt[1], lookAt[2]);
-								else if (typeof lookAt === 'number') camera.lookAt(lookAt, lookAt, lookAt);
-								else if (lookAt?.isVector3) camera.lookAt(lookAt);
-								else camera.lookAt(0, 0, 0);
-							}
-
-							// update projection matrix after applyprops
-							camera.updateProjectionMatrix?.();
-						}
-
-						if (!is.instance(camera)) camera = prepare(camera, '', { store });
+						const camera = createManagedCamera(cameraConfiguration, store, sizeOptions ?? state.size);
 
 						stateToUpdate.camera = camera;
+						lifecycle.managedCamera = camera;
+						lifecycle.appliedCameraConfiguration = cameraConfiguration;
 
 						// Configure raycaster
 						// https://github.com/pmndrs/react-xr/issues/300

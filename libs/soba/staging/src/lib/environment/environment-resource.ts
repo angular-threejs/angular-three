@@ -111,17 +111,13 @@ export function environmentResource(
 
 		const texture = signal<THREE.Texture | THREE.CubeTexture | null>(null);
 
-		effect(() => {
-			const [_extension, _multiFile, _files] = [untracked(extension), untracked(multiFile), files()];
+		effect((onCleanup) => {
+			const [_extension, _files] = [untracked(extension), files()];
 			if (_extension !== 'webp' && _extension !== 'jpg' && _extension !== 'jpeg') return;
-			store.gl().domElement.addEventListener(
-				'webglcontextlost',
-				() => {
-					// @ts-expect-error - files is correctly passed
-					loaderResource.clear(multiFile ? [_files] : _files);
-				},
-				{ once: true },
-			);
+			const element = store.gl().domElement;
+			const clearCachedTexture = () => loaderResource.clear(_files);
+			element.addEventListener('webglcontextlost', clearCachedTexture, { once: true });
+			onCleanup(() => element.removeEventListener('webglcontextlost', clearCachedTexture));
 		});
 
 		const resource = loaderResource(
@@ -132,6 +128,15 @@ export function environmentResource(
 				return Array.isArray(files) ? [files] : files;
 			},
 			{
+				cacheKey: () => {
+					const { colorSpace, extensions, path } = adjustedOptions();
+					const { extension } = resultOptions();
+					const renderer =
+						extension === 'webp' || extension === 'jpg' || extension === 'jpeg' ? store.gl() : null;
+					// The resolved texture is configured in-place below, so color space is
+					// part of the cached value's identity rather than merely consumer state.
+					return [path, renderer, extensions, colorSpace];
+				},
 				extensions: (loader) => {
 					const { extensions, path } = adjustedOptions();
 					const { extension } = resultOptions();
@@ -193,7 +198,7 @@ export function environmentResource(
  */
 environmentResource.preload = (options: Partial<NgtsEnvironmentResourceOptions> = {}) => {
 	let { files, path } = options;
-	const { preset, extensions } = options;
+	const { preset, extensions, colorSpace } = options;
 
 	if (files == null) {
 		files = defaultFiles;
@@ -226,6 +231,7 @@ environmentResource.preload = (options: Partial<NgtsEnvironmentResourceOptions> 
 			loader.setPath?.(path);
 			if (extensions) extensions(loader);
 		},
+		[path, null, extensions, colorSpace],
 	);
 };
 

@@ -47,6 +47,11 @@ export function storeFactory() {
 	const tempTarget = new THREE.Vector3();
 
 	let performanceTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
+	const cancelPerformanceRegression = () => {
+		if (performanceTimeout === undefined) return;
+		clearTimeout(performanceTimeout);
+		performanceTimeout = undefined;
+	};
 
 	const pointer = new THREE.Vector2();
 
@@ -95,20 +100,19 @@ export function storeFactory() {
 			regress: () => {
 				const state = store.snapshot;
 				// Clear timeout
-				if (performanceTimeout) clearTimeout(performanceTimeout);
+				cancelPerformanceRegression();
 				// Set lower bound performance
 				if (state.performance.current !== state.performance.min)
 					store.update((state) => ({
 						performance: { ...state.performance, current: state.performance.min },
 					}));
 				// Go back to upper bound performance after a while unless something regresses meanwhile
-				performanceTimeout = setTimeout(
-					() =>
-						store.update((state) => ({
-							performance: { ...state.performance, current: store.snapshot.performance.max },
-						})),
-					state.performance.debounce,
-				);
+				performanceTimeout = setTimeout(() => {
+					performanceTimeout = undefined;
+					store.update((state) => ({
+						performance: { ...state.performance, current: store.snapshot.performance.max },
+					}));
+				}, state.performance.debounce);
 			},
 		},
 
@@ -213,27 +217,34 @@ export function storeFactory() {
 				_store: SignalState<NgtState> = store,
 			) => {
 				const internal = _store.snapshot.internal;
+				const subscription = { callback, priority, store: _store };
 				// If this subscription was given a priority, it takes rendering into its own hands
 				// For that reason we switch off automatic rendering and increase the manual flag
 				// As long as this flag is positive there can be no internal rendering at all
 				// because there could be multiple render subscriptions
-				internal.priority = internal.priority + (priority > 0 ? 1 : 0);
-				internal.subscribers.push({ callback, priority, store: _store });
+				internal.priority += priority > 0 ? 1 : 0;
 				// Register subscriber and sort layers from lowest to highest, meaning,
 				// highest priority renders last (on top of the other frames)
-				internal.subscribers = internal.subscribers.sort((a, b) => (a.priority || 0) - (b.priority || 0));
+				internal.subscribers = [...internal.subscribers, subscription].sort(
+					(a, b) => (a.priority || 0) - (b.priority || 0),
+				);
 
+				let active = true;
 				return () => {
+					if (!active) return;
+					active = false;
 					const internal = _store.snapshot.internal;
-					if (internal?.subscribers) {
-						// Decrease manual flag if this subscription had a priority
-						internal.priority = internal.priority - (priority > 0 ? 1 : 0);
-						// Remove subscriber from list
-						internal.subscribers = internal.subscribers.filter((s) => s.callback !== callback);
-					}
+					const index = internal?.subscribers.indexOf(subscription);
+					if (index == null || index < 0) return;
+					internal.subscribers = internal.subscribers.filter((record) => record !== subscription);
+					if (priority > 0) internal.priority = Math.max(0, internal.priority - 1);
 				};
 			},
 		},
+	});
+
+	Object.defineProperty(store.snapshot.performance.regress, 'cancel', {
+		value: cancelPerformanceRegression,
 	});
 
 	Object.defineProperty(store, '__pointerMissed$', { get: () => pointerMissed$ });

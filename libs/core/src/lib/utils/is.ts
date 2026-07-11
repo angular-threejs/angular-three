@@ -52,7 +52,7 @@ export const is = {
 	 */
 	three: <TThreeEntity extends object, TKey extends keyof TThreeEntity = keyof TThreeEntity>(
 		a: unknown,
-		isKey: TKey extends `is${infer K}` ? TKey : never,
+		isKey: TKey extends `is${string}` ? TKey : never,
 	): a is TThreeEntity => !!a && (a as any)[isKey],
 	/** Checks if value is a valid Three.js ColorRepresentation */
 	colorRepresentation: (a: unknown): a is THREE.ColorRepresentation =>

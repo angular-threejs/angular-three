@@ -1,5 +1,5 @@
 import { computed, Directive, input, linkedSignal } from '@angular/core';
-import { NGT_ARGS_FLAG, NGT_INTERNAL_ADD_COMMENT_FLAG } from '../renderer/constants';
+import { setRendererAnchor } from '../renderer/state';
 import { NgtCommonDirective } from './common';
 
 /**
@@ -34,13 +34,7 @@ export class NgtArgs extends NgtCommonDirective<any[]> {
 		super();
 
 		const commentNode = this.commentNode;
-		commentNode.data = NGT_ARGS_FLAG;
-		commentNode[NGT_ARGS_FLAG] = true;
-
-		if (commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]) {
-			commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]('args', this.injector);
-			delete commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG];
-		}
+		setRendererAnchor(commentNode, { kind: 'args', injector: this.injector });
 	}
 
 	validate() {

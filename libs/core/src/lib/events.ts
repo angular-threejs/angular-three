@@ -13,6 +13,11 @@ import type {
 import { makeId } from './utils/make';
 import { SignalState } from './utils/signal-state';
 
+const NGT_EVENT_LAYER = Symbol('NGT_EVENT_LAYER');
+type LayeredIntersection = THREE.Intersection<THREE.Object3D> & {
+	[NGT_EVENT_LAYER]?: SignalState<NgtState>;
+};
+
 /**
  * @fileoverview Event handling system for Angular Three.
  *
@@ -119,56 +124,51 @@ export function createEvents(store: SignalState<NgtState>) {
 			if (!current) eventsObjects.push(eventsObject);
 		}
 
-		if (!state.previousRoot) {
-			// Make sure root-level pointer and ray are set up
-			state.events.compute?.(event, store, null);
+		const objectsByLayer = new Map<SignalState<NgtState>, THREE.Object3D[]>();
+		for (const object of eventsObjects) {
+			const objectStore = getInstanceState(object)?.store;
+			if (!objectStore) continue;
+			const layerObjects = objectsByLayer.get(objectStore);
+			if (layerObjects) layerObjects.push(object);
+			else objectsByLayer.set(objectStore, [object]);
 		}
 
-		// Skip work if there are no event objects
-		if (eventsObjects.length === 0) return intersections;
+		// The root computation must precede portal/layer computations, which may derive their
+		// pointer or ray from previousRoot. Each layer is reset, computed, and raycast once.
+		const eventLayers: SignalState<NgtState>[] = [];
+		const scheduledLayers = new Set<SignalState<NgtState>>();
+		const scheduleLayer = (eventLayer: SignalState<NgtState>) => {
+			if (scheduledLayers.has(eventLayer)) return;
+			scheduledLayers.add(eventLayer);
+			const previousRoot = eventLayer.snapshot.previousRoot;
+			if (previousRoot) scheduleLayer(previousRoot);
+			eventLayers.push(eventLayer);
+		};
+		scheduleLayer(store);
+		for (const objectStore of objectsByLayer.keys()) scheduleLayer(objectStore);
+		for (const eventLayer of eventLayers) eventLayer.snapshot.raycaster.camera = undefined!;
 
-		// Reset all raycaster cameras to undefined - use for loop for better performance
-		const eventsObjectsLen = eventsObjects.length;
-		for (let i = 0; i < eventsObjectsLen; i++) {
-			const objectRootState = getInstanceState(eventsObjects[i])?.store?.snapshot;
-			if (objectRootState) {
-				objectRootState.raycaster.camera = undefined!;
-			}
-		}
+		const raycastResults: LayeredIntersection[] = [];
+		for (const eventLayer of eventLayers) {
+			const layerState = eventLayer.snapshot;
+			if (!layerState.events.enabled) continue;
+			layerState.events.compute?.(event, eventLayer, layerState.previousRoot);
+			if (layerState.raycaster.camera === undefined) layerState.raycaster.camera = null!;
 
-		// Pre-allocate array to avoid garbage collection
-		const raycastResults: THREE.Intersection<THREE.Object3D>[] = [];
-
-		function handleRaycast(obj: THREE.Object3D) {
-			const objStore = getInstanceState(obj)?.store;
-			const objState = objStore?.snapshot;
-			// Skip event handling when noEvents is set, or when the raycasters camera is null
-			if (!objState || !objState.events.enabled || objState.raycaster.camera === null) return [];
-
-			// When the camera is undefined we have to call the event layers update function
-			if (objState.raycaster.camera === undefined) {
-				objState.events.compute?.(event, objStore, objState.previousRoot);
-				// If the camera is still undefined we have to skip this layer entirely
-				if (objState.raycaster.camera === undefined) objState.raycaster.camera = null!;
-			}
-
-			// Intersect object by object
-			return objState.raycaster.camera ? objState.raycaster.intersectObject(obj, true) : [];
-		}
-
-		// Collect events
-		for (let i = 0; i < eventsObjectsLen; i++) {
-			const objResults = handleRaycast(eventsObjects[i]);
-			if (objResults.length <= 0) continue;
-			for (let j = 0; j < objResults.length; j++) {
-				raycastResults.push(objResults[j]);
+			const layerObjects = objectsByLayer.get(eventLayer);
+			if (!layerState.raycaster.camera || !layerObjects?.length) continue;
+			const layerResults = layerState.raycaster.intersectObjects(layerObjects, true);
+			for (let index = 0; index < layerResults.length; index++) {
+				const result = layerResults[index] as LayeredIntersection;
+				result[NGT_EVENT_LAYER] = eventLayer;
+				raycastResults.push(result);
 			}
 		}
 
 		// Sort by event priority and distance
 		raycastResults.sort((a, b) => {
-			const aState = getInstanceState(a.object)?.store?.snapshot;
-			const bState = getInstanceState(b.object)?.store?.snapshot;
+			const aState = a[NGT_EVENT_LAYER]?.snapshot ?? getInstanceState(a.object)?.store?.snapshot;
+			const bState = b[NGT_EVENT_LAYER]?.snapshot ?? getInstanceState(b.object)?.store?.snapshot;
 			if (!aState || !bState) return a.distance - b.distance;
 			return bState.events.priority - aState.events.priority || a.distance - b.distance;
 		});
@@ -238,7 +238,9 @@ export function createEvents(store: SignalState<NgtState>) {
 					});
 				}
 
-				const { raycaster, pointer, camera, internal } = instanceState?.store?.snapshot || rootState;
+				const eventLayer = (hit as LayeredIntersection)[NGT_EVENT_LAYER];
+				const { raycaster, pointer, camera, internal } =
+					eventLayer?.snapshot || instanceState?.store?.snapshot || rootState;
 
 				const unprojectedPoint = new THREE.Vector3(pointer.x, pointer.y, 0).unproject(camera);
 				const hasPointerCapture = (id: number) => internal.capturedMap.get(id)?.has(hit.eventObject) ?? false;
@@ -405,6 +407,13 @@ export function createEvents(store: SignalState<NgtState>) {
 			const hits = intersect(event, filter);
 			// Only calculate distance for click events to avoid unnecessary math
 			const delta = isClickEvent ? calculateDistance(event) : 0;
+			let missedNotified = false;
+			const notifyMissedOnce = () => {
+				if (missedNotified || !isClickEvent) return;
+				missedNotified = true;
+				const missedObjects = internal.interaction.filter((object) => !internal.initialHits.includes(object));
+				if (missedObjects.length > 0) pointerMissed(event, missedObjects);
+			};
 
 			// Save initial coordinates on pointer-down
 			if (name === 'pointerdown') {
@@ -468,29 +477,12 @@ export function createEvents(store: SignalState<NgtState>) {
 						// Forward all events back to their respective handlers with the exception of click events,
 						// which must use the initial target
 						if (!isClickEvent || internal.initialHits.includes(eventObject)) {
-							// Get objects not in initialHits for pointer missed - avoid creating new arrays if possible
-							const missedObjects = internal.interaction.filter(
-								(object) => !internal.initialHits.includes(object),
-							);
-
-							// Call pointerMissed only if we have objects to notify
-							if (missedObjects.length > 0) {
-								pointerMissed(event, missedObjects);
-							}
-
+							notifyMissedOnce();
 							// Now call the handler
 							handler(data as NgtThreeEvent<PointerEvent>);
 						}
 					} else if (isClickEvent && internal.initialHits.includes(eventObject)) {
-						// Trigger onPointerMissed on all elements that have pointer over/out handlers, but not click and weren't hit
-						const missedObjects = internal.interaction.filter(
-							(object) => !internal.initialHits.includes(object),
-						);
-
-						// Call pointerMissed only if we have objects to notify
-						if (missedObjects.length > 0) {
-							pointerMissed(event, missedObjects);
-						}
+						notifyMissedOnce();
 					}
 				}
 			}

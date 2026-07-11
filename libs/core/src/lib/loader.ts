@@ -1,6 +1,7 @@
 import { Injector, Signal, effect, signal } from '@angular/core';
 import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
+import { NgtLoaderCache } from './loader-cache';
 import type { NgtAnyRecord } from './types';
 import { NgtObjectMap, makeObjectGraph } from './utils/make';
 
@@ -42,6 +43,12 @@ export type NgtLoaderReturnType<T, L extends NgtLoaderProto<T>> = T extends unkn
 export type NgtLoaderExtensions<T extends { prototype: NgtLoaderProto<any> }> = (loader: T['prototype']) => void;
 
 /**
+ * Semantic components that identify a configured loader. Tuple entries use
+ * value identity for primitives and reference identity for objects/functions.
+ */
+export type NgtLoaderCacheKey = readonly unknown[];
+
+/**
  * Conditional type utility.
  */
 export type NgtConditionalType<Child, Parent, Truthy, Falsy> = Child extends Parent ? Truthy : Falsy;
@@ -62,8 +69,7 @@ export type NgtLoaderResults<
 	TReturn,
 > = TInput extends string[] ? TReturn[] : TInput extends object ? { [key in keyof TInput]: TReturn } : TReturn;
 
-const cached = new Map();
-const memoizedLoaders = new WeakMap();
+const loaderCache = new NgtLoaderCache();
 
 function normalizeInputs(input: string | string[] | Record<string, string>) {
 	let urls: string[] = [];
@@ -88,31 +94,33 @@ function load<
 	inputs: () => TUrl,
 	{
 		extensions,
+		cacheKey,
 		onLoad,
 		onProgress,
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
+		cacheKey?: () => NgtLoaderCacheKey;
 		onLoad?: (data: NoInfer<TReturn>) => void;
 		onProgress?: (event: ProgressEvent) => void;
 	} = {},
 ) {
-	return (): Array<Promise<any>> => {
+	return (consumerOnLoad = onLoad): Array<Promise<any>> => {
 		const urls = normalizeInputs(inputs());
-
-		let loader: THREE.Loader<TData> = memoizedLoaders.get(loaderConstructorFactory(urls));
-		if (!loader) {
-			loader = new (loaderConstructorFactory(urls))();
-			memoizedLoaders.set(loaderConstructorFactory(urls), loader);
-		}
-
-		if (extensions) extensions(loader);
+		const LoaderConstructor = loaderConstructorFactory(urls);
+		const configurationKey = loaderCache.configurationKey(
+			extensions as ((loader: THREE.Loader<unknown>) => void) | undefined,
+			cacheKey?.(),
+		);
 
 		return urls.map((url) => {
 			if (url === '') return Promise.resolve(null);
 
-			if (!cached.has(url)) {
-				cached.set(
-					url,
+			const promise = loaderCache.getOrCreate(
+				LoaderConstructor,
+				configurationKey,
+				url,
+				extensions as ((loader: THREE.Loader<TData>) => void) | undefined,
+				(loader) =>
 					new Promise<TData>((resolve, reject) => {
 						loader.load(
 							url,
@@ -124,10 +132,6 @@ function load<
 									);
 								}
 
-								if (onLoad) {
-									onLoad(data as unknown as TReturn);
-								}
-
 								resolve(data);
 							},
 							onProgress,
@@ -135,10 +139,11 @@ function load<
 								reject(new Error(`[NGT] Could not load ${url}: ${(error as ErrorEvent)?.message}`)),
 						);
 					}),
-				);
-			}
-
-			return cached.get(url)!;
+			);
+			return promise.then((data) => {
+				consumerOnLoad?.(data as unknown as TReturn);
+				return data;
+			});
 		});
 	};
 }
@@ -157,11 +162,18 @@ function _injectLoader<
 	inputs: () => TUrl,
 	{
 		extensions,
+		cacheKey,
 		onProgress,
 		onLoad,
 		injector,
 	}: {
 		extensions?: NgtLoaderExtensions<TLoaderConstructor>;
+		/**
+		 * Semantic loader configuration. Supply this when an extension's captured
+		 * configuration can change, or when equivalent extension closures should
+		 * share preloaded results. Configured requests without a key are isolated.
+		 */
+		cacheKey?: () => NgtLoaderCacheKey;
 		onProgress?: (event: ProgressEvent) => void;
 		onLoad?: (data: NoInfer<TReturn>) => void;
 		injector?: Injector;
@@ -175,30 +187,45 @@ function _injectLoader<
 
 		const cachedResultPromisesEffect = load(loaderConstructorFactory, inputs, {
 			extensions,
+			cacheKey,
 			onProgress,
-			onLoad: onLoad as (data: unknown) => void,
 		});
 
-		effect(() => {
-			const originalUrls = inputs();
-			const cachedResultPromises = cachedResultPromisesEffect();
-			Promise.all(cachedResultPromises).then((results) => {
-				response.update(() => {
-					if (Array.isArray(originalUrls)) return results;
-					if (typeof originalUrls === 'string') return results[0];
-					const keys = Object.keys(originalUrls);
-					return keys.reduce(
-						(result, key) => {
-							// @ts-ignore
-							(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
-							return result;
-						},
-						{} as {
-							[key in keyof TUrl]: NgtBranchingReturn<TReturn, NgtGLTFLike, NgtGLTFLike & NgtObjectMap>;
-						},
-					);
-				});
+		effect((onCleanup) => {
+			let active = true;
+			onCleanup(() => {
+				active = false;
 			});
+			const originalUrls = inputs();
+			const cachedResultPromises = cachedResultPromisesEffect((data) => {
+				if (active) onLoad?.(data as NoInfer<TReturn>);
+			});
+			void Promise.all(cachedResultPromises)
+				.then((results) => {
+					// A cached request can resolve after the reactive input has moved on.
+					// Keep the shared promise, but never publish a stale generation.
+					if (!active) return;
+					response.update(() => {
+						if (Array.isArray(originalUrls)) return results;
+						if (typeof originalUrls === 'string') return results[0];
+						const keys = Object.keys(originalUrls);
+						return keys.reduce(
+							(result, key) => {
+								// @ts-ignore
+								(result as NgtAnyRecord)[key] = results[keys.indexOf(key)];
+								return result;
+							},
+							{} as {
+								[key in keyof TUrl]: NgtBranchingReturn<
+									TReturn,
+									NgtGLTFLike,
+									NgtGLTFLike & NgtObjectMap
+								>;
+							},
+						);
+					});
+				})
+				.catch(() => undefined);
 		});
 
 		return response.asReadonly();
@@ -214,22 +241,20 @@ _injectLoader.preload = <
 	inputs: () => TUrl,
 	extensions?: NgtLoaderExtensions<TLoaderConstructor>,
 	onLoad?: (data: NoInfer<TData>) => void,
+	cacheKey?: () => NgtLoaderCacheKey,
 ) => {
-	const effects = load(loaderConstructorFactory, inputs, { extensions, onLoad })();
+	const effects = load(loaderConstructorFactory, inputs, { extensions, cacheKey, onLoad })();
 	if (effects) {
-		void Promise.all(effects);
+		void Promise.all(effects).catch(() => undefined);
 	}
 };
 
 _injectLoader.destroy = () => {
-	cached.clear();
+	loaderCache.destroy();
 };
 
 _injectLoader.clear = (urls: string | string[]) => {
-	const urlToClear = Array.isArray(urls) ? urls : [urls];
-	urlToClear.forEach((url) => {
-		cached.delete(url);
-	});
+	loaderCache.clear(urls);
 };
 
 export type NgtInjectedLoader = typeof _injectLoader;

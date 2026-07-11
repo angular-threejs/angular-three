@@ -47,9 +47,22 @@ export function attach(object: NgtInstanceNode, value: unknown, paths: string[] 
 export function detach(parent: NgtInstanceNode, child: NgtInstanceNode, attachProp: string[] | NgtAttachFunction) {
 	const childInstanceState = getInstanceState(child);
 	if (childInstanceState) {
-		if (Array.isArray(attachProp))
-			attach(parent, childInstanceState.previousAttach, attachProp, childInstanceState.type === 'ngt-value');
-		else (childInstanceState.previousAttach as () => void)?.();
+		const previousAttach = childInstanceState.previousAttach;
+		childInstanceState.previousAttach = undefined;
+		if (Array.isArray(attachProp)) {
+			const attachedValue = attachProp.reduce<unknown>(
+				(value, key) => (value == null ? undefined : (value as NgtInstanceNode)[key]),
+				parent,
+			);
+			// Property bindings are applied after Angular has appended every sibling.
+			// An auto-attached resource can therefore retain a stale restoration value
+			// after a later sibling has replaced the same slot. Only the resource that
+			// still owns the slot may restore it. Raw values use applyProps and can be
+			// represented by a transformed value (for example, a THREE.Color), so their
+			// detach path remains unconditional.
+			if (childInstanceState.type !== 'ngt-value' && attachedValue !== child) return;
+			attach(parent, previousAttach, attachProp, childInstanceState.type === 'ngt-value');
+		} else (previousAttach as (() => void) | undefined)?.();
 	}
 }
 

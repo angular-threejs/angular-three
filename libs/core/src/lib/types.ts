@@ -201,7 +201,7 @@ export interface NgtInstanceState<TObject extends NgtAnyRecord = NgtAnyRecord> {
 	object: TObject & { __ngt__?: NgtInstanceState<TObject> };
 
 	// shortcut to add/remove object to list
-	add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
+	add: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects', before?: NgtInstanceNode | null) => void;
 	remove: (instance: NgtInstanceNode, type: 'objects' | 'nonObjects') => void;
 	setParent: (parent: NgtInstanceNode | null) => void;
 	updateGeometryStamp: () => void;
@@ -359,7 +359,7 @@ export interface NgtState {
 	previousRoot: SignalState<NgtState> | null;
 	/** Internals */
 	internal: NgtInternalState;
-	/** maxSkipCount from renderer options */
+	/** @deprecated Retained for compatibility; ancestor notifications are microtask-batched. */
 	maxNotificationSkipCount?: number;
 }
 

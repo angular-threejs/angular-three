@@ -1,5 +1,5 @@
 import { inject, InjectionToken } from '@angular/core';
-import type { NgtCanvasElement, NgtGlobalRenderCallback, NgtState } from './types';
+import type { NgtCanvasElement, NgtGlobalRenderCallback, NgtRenderState, NgtState } from './types';
 import type { SignalState } from './utils/signal-state';
 
 /**
@@ -78,15 +78,16 @@ function update(timestamp: number, store: SignalState<NgtState>, frame?: XRFrame
 	let delta = state.clock.getDelta();
 	// In frameloop='never' mode, clock times are updated using the provided timestamp
 	if (state.frameloop === 'never' && typeof timestamp === 'number') {
-		delta = timestamp - state.clock.elapsedTime;
-		state.clock.oldTime = state.clock.elapsedTime;
-		state.clock.elapsedTime = timestamp;
+		const elapsedTime = timestamp / 1000;
+		delta = elapsedTime - state.clock.elapsedTime;
+		state.clock.oldTime = timestamp;
+		state.clock.elapsedTime = elapsedTime;
 	}
 	// Call subscribers (beforeRender)
-	const subscribers = state.internal.subscribers;
+	const subscribers = state.internal.subscribers.slice();
 	for (let i = 0; i < subscribers.length; i++) {
 		const subscription = subscribers[i];
-		subscription.callback({ ...subscription.store.snapshot, delta, frame });
+		subscription.callback({ ...subscription.store.snapshot, delta, frame } as NgtRenderState);
 	}
 	// Render content
 	if (!state.internal.priority && state.gl.render) state.gl.render(state.scene, state.camera);

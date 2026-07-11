@@ -141,18 +141,25 @@ export function objectEvents(
 			const targetObj = resolveRef(target());
 
 			if (!targetObj || !is.instance(targetObj)) return;
+			const currentCleanUps: Array<() => void> = [];
 
 			Object.entries(events).forEach(([eventName, eventHandler]) => {
-				cleanUps.push(renderer.listen(targetObj, eventName, eventHandler));
+				const cleanUp = renderer.listen(targetObj, eventName, eventHandler);
+				currentCleanUps.push(cleanUp);
+				cleanUps.push(cleanUp);
 			});
 
 			onCleanup(() => {
-				cleanUps.forEach((cleanUp) => cleanUp());
+				for (const cleanUp of currentCleanUps) {
+					cleanUp();
+					const index = cleanUps.indexOf(cleanUp);
+					if (index >= 0) cleanUps.splice(index, 1);
+				}
 			});
 		});
 
 		inject(DestroyRef).onDestroy(() => {
-			cleanUps.forEach((cleanUp) => cleanUp());
+			for (const cleanUp of cleanUps.splice(0)) cleanUp();
 		});
 
 		return cleanUps;
