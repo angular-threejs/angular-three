@@ -127,7 +127,7 @@ class SphericalOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 		} @else if (subject() === 'spaceship') {
 			<app-html-occlusion-spaceship [mode]="mode()" [labelCount]="spaceshipLabelCount()" />
 		} @else {
-			<app-html-occlusion-area-panel [mode]="mode()" />
+			<app-html-occlusion-area-panel [mode]="mode()" [centerOnly]="panelCenterOnly()" />
 		}
 
 		<ngts-orbit-controls
@@ -202,6 +202,7 @@ export class SceneGraph {
 	mode = input<HtmlOcclusionMode>('analytic');
 	subject = input<HtmlOcclusionSubject>('sphere');
 	markerCount = input(64);
+	panelCenterOnly = input(false);
 	spaceshipLabelCount = input<SpaceshipLabelCount>(6);
 
 	protected readonly PLANET_RADIUS = PLANET_RADIUS;

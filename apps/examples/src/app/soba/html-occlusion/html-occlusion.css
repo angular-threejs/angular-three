@@ -31,6 +31,16 @@
 		gap: 16px;
 	}
 
+	.benchmark-actions {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.panel-toggle {
+		display: none;
+	}
+
 	.eyebrow {
 		margin-bottom: 4px;
 		color: #67e8f9;
@@ -343,6 +353,10 @@
 		grid-template-columns: repeat(4, 1fr);
 	}
 
+	.load-switch.is-panel {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
 	.workload-badge {
 		padding: 5px 7px;
 		border: 1px solid rgba(125, 211, 252, 0.16);
@@ -386,10 +400,84 @@
 
 	@media (max-width: 640px) {
 		.benchmark-panel {
-			top: 10px;
-			left: 10px;
-			width: min(390px, calc(100% - 20px));
-			padding: 13px;
+			top: max(8px, env(safe-area-inset-top));
+			right: max(8px, env(safe-area-inset-right));
+			left: max(8px, env(safe-area-inset-left));
+			width: auto;
+			padding: 9px 11px;
+			border-radius: 10px;
+		}
+
+		.benchmark-header {
+			align-items: center;
+			min-height: 44px;
+			gap: 10px;
+		}
+
+		.eyebrow {
+			margin-bottom: 3px;
+			font-size: 8px;
+		}
+
+		h1 {
+			font-size: 13px;
+		}
+
+		.live-status {
+			display: none;
+		}
+
+		.panel-toggle {
+			display: inline-flex;
+			min-height: 44px;
+			align-items: center;
+			justify-content: center;
+			padding: 0 11px;
+			border: 1px solid rgba(103, 232, 249, 0.24);
+			border-radius: 7px;
+			background: rgba(8, 47, 73, 0.58);
+			color: #cffafe;
+			font:
+				650 9px/1 ui-monospace,
+				SFMono-Regular,
+				Menlo,
+				Monaco,
+				Consolas,
+				monospace;
+			white-space: nowrap;
+			cursor: pointer;
+		}
+
+		.panel-toggle:focus-visible {
+			outline: 2px solid #67e8f9;
+			outline-offset: 2px;
+		}
+
+		.benchmark-panel:not(.is-mobile-expanded) > :not(.benchmark-header) {
+			display: none;
+		}
+
+		.benchmark-panel.is-mobile-expanded {
+			max-height: 76vh;
+			max-height: min(76dvh, 580px);
+			overflow-x: hidden;
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			scrollbar-gutter: stable;
+		}
+
+		.benchmark-panel.is-mobile-expanded .benchmark-header {
+			position: sticky;
+			top: -9px;
+			z-index: 2;
+			margin: -9px -11px 0;
+			padding: 9px 11px;
+			border-bottom: 1px solid rgba(148, 197, 222, 0.1);
+			background: rgba(6, 15, 33, 0.97);
+		}
+
+		.subject-switch {
+			margin-top: 10px;
 		}
 
 		.benchmark-description {
@@ -397,7 +485,53 @@
 		}
 
 		.mode-switch {
-			margin-top: 12px;
+			margin-top: 10px;
+		}
+
+		.subject-switch button,
+		.mode-switch button,
+		.load-switch button {
+			min-height: 44px;
+			padding: 7px 6px;
+			line-height: 1.15;
+		}
+
+		.comparison-shell {
+			overflow-x: auto;
+		}
+
+		.comparison-table {
+			min-width: 300px;
+		}
+
+		.lifecycle-shell p {
+			display: grid;
+			gap: 2px;
+		}
+
+		.workload {
+			align-items: stretch;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.load-switch,
+		.workload-badge {
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.workload-badge {
+			text-align: center;
+		}
+
+		.algorithm-summary div {
+			align-items: flex-start;
+		}
+
+		.algorithm-summary strong {
+			max-width: 58%;
+			text-align: right;
 		}
 	}
 }

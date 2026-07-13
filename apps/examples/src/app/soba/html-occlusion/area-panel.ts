@@ -30,6 +30,7 @@ const AREA_SAMPLES = [
 	[0, 0.42],
 	[0.42, 0.42],
 ] as const;
+const CENTER_SAMPLE = [AREA_SAMPLES[4]] as const;
 
 interface TargetMeasurement {
 	readonly width: number;
@@ -37,8 +38,8 @@ interface TargetMeasurement {
 }
 
 /**
- * Observes each HTML surface for its full strategy lifetime, then samples the
- * measured screen area instead of treating the target as one anchor point.
+ * Observes each HTML surface for its full strategy lifetime, then samples
+ * either its measured screen area or only its center point.
  */
 class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 	private readonly measurements = new WeakMap<NgtsHTMLOcclusionTarget, TargetMeasurement>();
@@ -66,6 +67,7 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 
 	constructor(
 		private readonly occluder: () => Object3D | undefined,
+		private readonly centerOnly: () => boolean,
 		private readonly metrics: HtmlOcclusionMetrics,
 	) {}
 
@@ -96,15 +98,18 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 		const measurement = this.measurements.get(target);
 		const occluder = this.occluder();
 		const camera = this.camera;
-		if (!measurement || !occluder?.visible || !camera) return this.metrics.recordCustomResult(false);
+		const centerOnly = this.centerOnly();
+		if ((!centerOnly && !measurement) || !occluder?.visible || !camera) {
+			return this.metrics.recordCustomResult(false);
+		}
 
 		target.anchor.getWorldPosition(this.anchorWorldPosition);
 		this.anchorNdc.copy(this.anchorWorldPosition).project(camera);
 
-		for (const [sampleX, sampleY] of AREA_SAMPLES) {
+		for (const [sampleX, sampleY] of centerOnly ? CENTER_SAMPLE : AREA_SAMPLES) {
 			this.sampleNdc.set(
-				this.anchorNdc.x + (sampleX * measurement.width * 2) / this.canvasWidth,
-				this.anchorNdc.y - (sampleY * measurement.height * 2) / this.canvasHeight,
+				this.anchorNdc.x + (sampleX * (measurement?.width ?? 0) * 2) / this.canvasWidth,
+				this.anchorNdc.y - (sampleY * (measurement?.height ?? 0) * 2) / this.canvasHeight,
 			);
 			this.raycaster.setFromCamera(this.sampleNdc, camera);
 
@@ -152,16 +157,26 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 					data-occlusion-surface
 					class="area-card"
 					[class.is-expanded]="expanded()"
-					aria-label="Area-aware HTML occlusion target"
+					[attr.aria-label]="
+						centerSampleActive() ? 'Center-point HTML occlusion target' : 'Area-aware HTML occlusion target'
+					"
 				>
-					<div class="sample-grid" aria-hidden="true">
+					<div class="sample-grid" [class.is-center-only]="centerSampleActive()" aria-hidden="true">
 						@for (sample of samples; track $index) {
 							<span></span>
 						}
 					</div>
 					<div class="card-eyebrow">Observed HTML target</div>
 					<h2>Flight telemetry</h2>
-					<p>The nine dots are the screen-space points checked against the moving orange occluder.</p>
+					<p>
+						{{
+							mode() === 'raycast'
+								? 'Default occlusion checks only the highlighted center anchor against the scene.'
+								: centerOnly()
+									? 'Only the highlighted center point is checked against the moving orange occluder.'
+									: 'All nine screen-space points are checked against the moving orange occluder.'
+						}}
+					</p>
 					<div class="card-meta">
 						<span>
 							<strong>setupTarget</strong>
@@ -169,7 +184,13 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 						</span>
 						<span>
 							<strong>isOccluded</strong>
-							3 × 3 rays
+							{{
+								mode() === 'raycast'
+									? 'default center ray'
+									: centerOnly()
+										? '1 center ray'
+										: '3 × 3 rays'
+							}}
 						</span>
 					</div>
 					<button type="button" (click)="toggleSize()">
@@ -191,7 +212,7 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 			display: grid;
 			position: relative;
 			box-sizing: border-box;
-			width: 250px;
+			width: min(250px, calc(100vw - 32px));
 			gap: 8px;
 			padding: 18px;
 			overflow: hidden;
@@ -207,7 +228,7 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 		}
 
 		.area-card.is-expanded {
-			width: 370px;
+			width: min(370px, calc(100vw - 32px));
 		}
 
 		.card-eyebrow {
@@ -318,17 +339,57 @@ class AreaOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
 			border-radius: 50%;
 			background: #22d3ee;
 			box-shadow: 0 0 7px rgba(34, 211, 238, 0.72);
+			transition:
+				opacity 160ms ease,
+				transform 160ms ease;
+		}
+
+		.sample-grid.is-center-only span:not(:nth-child(5)) {
+			transform: scale(0.6);
+			opacity: 0.12;
+		}
+
+		.sample-grid.is-center-only span:nth-child(5) {
+			transform: scale(1.45);
+			box-shadow: 0 0 12px rgba(34, 211, 238, 0.95);
+		}
+
+		@media (max-width: 640px) {
+			.area-card {
+				padding: 14px;
+			}
+
+			h2 {
+				font-size: 20px;
+			}
+
+			button {
+				min-height: 44px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.area-card,
+			.sample-grid span {
+				transition: none;
+			}
 		}
 	`,
 })
 export class AreaPanelOcclusionScene {
 	mode = input<HtmlOcclusionMode>('analytic');
+	centerOnly = input(false);
 
 	protected readonly expanded = signal(false);
 	protected readonly samples = AREA_SAMPLES;
+	protected readonly centerSampleActive = computed(() => this.mode() === 'raycast' || this.centerOnly());
 	private readonly metrics = inject(HtmlOcclusionMetrics);
 	private readonly occluderRef = viewChild<ElementRef<Mesh>>('occluder');
-	private readonly strategy = new AreaOcclusionStrategy(() => this.occluderRef()?.nativeElement, this.metrics);
+	private readonly strategy = new AreaOcclusionStrategy(
+		() => this.occluderRef()?.nativeElement,
+		() => this.centerOnly(),
+		this.metrics,
+	);
 	protected readonly occlusion = computed(() => (this.mode() === 'analytic' ? this.strategy : true));
 
 	constructor() {

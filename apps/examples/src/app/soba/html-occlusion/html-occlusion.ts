@@ -10,16 +10,30 @@ type MarkerCount = 64 | 128 | 256;
 	template: `
 		@let samples = metrics();
 		@let comparison = kernelComparison();
-		<aside class="benchmark-panel" aria-label="HTML occlusion performance">
+		<aside
+			class="benchmark-panel"
+			[class.is-mobile-expanded]="mobilePanelExpanded()"
+			aria-label="HTML occlusion performance"
+		>
 			<header class="benchmark-header">
 				<div>
 					<div class="eyebrow">HTML occlusion lab</div>
 					<h1>{{ subjectTitle() }}</h1>
 				</div>
-				<span class="live-status">
-					<span aria-hidden="true"></span>
-					Live
-				</span>
+				<div class="benchmark-actions">
+					<span class="live-status">
+						<span aria-hidden="true"></span>
+						Live
+					</span>
+					<button
+						type="button"
+						class="panel-toggle"
+						[attr.aria-expanded]="mobilePanelExpanded()"
+						(click)="toggleMobilePanel()"
+					>
+						{{ mobilePanelExpanded() ? 'Hide controls' : 'Show controls' }}
+					</button>
+				</div>
 			</header>
 
 			<div class="subject-switch" role="group" aria-label="Occlusion scene">
@@ -249,10 +263,37 @@ type MarkerCount = 64 | 128 | 256;
 			} @else {
 				<div class="workload">
 					<div>
-						<span>Observed content</span>
-						<small>Use the button on the card to change its measured bounds</small>
+						<span>Custom target test</span>
+						<small>
+							{{
+								mode() === 'analytic'
+									? 'Switch without recreating the strategy or observer'
+									: 'Default raycast always checks the anchor'
+							}}
+						</small>
 					</div>
-					<span class="workload-badge">1 panel · 9 samples</span>
+					@if (mode() === 'analytic') {
+						<div class="load-switch is-panel" role="group" aria-label="Custom panel occlusion samples">
+							<button
+								type="button"
+								[class.is-active]="!panelCenterOnly()"
+								[attr.aria-pressed]="!panelCenterOnly()"
+								(click)="selectPanelCenterOnly(false)"
+							>
+								Area · 9
+							</button>
+							<button
+								type="button"
+								[class.is-active]="panelCenterOnly()"
+								[attr.aria-pressed]="panelCenterOnly()"
+								(click)="selectPanelCenterOnly(true)"
+							>
+								Center · 1
+							</button>
+						</div>
+					} @else {
+						<span class="workload-badge">Center anchor · built-in</span>
+					}
 				</div>
 			}
 
@@ -285,7 +326,9 @@ type MarkerCount = 64 | 128 | 256;
 									? 'Segment / sphere test'
 									: subject() === 'spaceship'
 										? 'BVH triangle ray'
-										: '3 × 3 area samples'
+										: panelCenterOnly()
+											? '1 center sample'
+											: '3 × 3 area samples'
 						}}
 					</strong>
 				</div>
@@ -305,15 +348,17 @@ type MarkerCount = 64 | 128 | 256;
 				</div>
 				<div>
 					<span>Target setup</span>
-					<strong>{{ mode() === 'analytic' && subject() === 'panel' ? 'ResizeObserver' : 'None' }}</strong>
+					<strong>
+						{{ mode() === 'analytic' && subject() === 'panel' ? 'ResizeObserver' : 'None' }}
+					</strong>
 				</div>
 			</div>
 
 			@if (subject() === 'panel') {
 				<p class="benchmark-note">
-					Custom observes the card once, keeps its latest non-zero size, and hides it only when all nine
-					sample points are blocked. Default checks only the card's 3D anchor. Switching modes also runs the
-					observer's teardown and setup again.
+					Custom observes the card once and keeps its latest non-zero size. Area mode hides it only when all
+					nine points are blocked; center mode checks one point without recreating the strategy. Default
+					checks the card's 3D anchor. Switching custom/default runs the observer's teardown and setup again.
 				</p>
 			} @else {
 				<p class="benchmark-note">
@@ -331,6 +376,7 @@ type MarkerCount = 64 | 128 | 256;
 				[mode]="mode()"
 				[subject]="subject()"
 				[markerCount]="markerCount()"
+				[panelCenterOnly]="panelCenterOnly()"
 				[spaceshipLabelCount]="spaceshipLabelCount()"
 			/>
 		</ngt-canvas>
@@ -355,6 +401,8 @@ export default class HtmlOcclusion {
 	});
 	protected readonly markerCounts: readonly MarkerCount[] = [64, 128, 256];
 	protected readonly markerCount = signal<MarkerCount>(64);
+	protected readonly mobilePanelExpanded = signal(false);
+	protected readonly panelCenterOnly = signal(false);
 	protected readonly spaceshipLabelCounts: readonly SpaceshipLabelCount[] = [6, 64, 128, 256];
 	protected readonly spaceshipLabelCount = signal<SpaceshipLabelCount>(6);
 	private readonly metricService = inject(HtmlOcclusionMetrics);
@@ -391,6 +439,14 @@ export default class HtmlOcclusion {
 		if (this.spaceshipLabelCount() === count) return;
 		this.metricService.resetAll();
 		this.spaceshipLabelCount.set(count);
+	}
+
+	protected selectPanelCenterOnly(centerOnly: boolean) {
+		this.panelCenterOnly.set(centerOnly);
+	}
+
+	protected toggleMobilePanel() {
+		this.mobilePanelExpanded.update((expanded) => !expanded);
 	}
 
 	protected frameBudget(duration: number | null) {
