@@ -1,3 +1,13 @@
+## 4.2.4-next.0 (2026-07-13)
+
+### 🩹 Fixes
+
+- **core:** harden renderer and runtime lifecycles ([#89](https://github.com/angular-threejs/angular-three/pull/89))
+
+### ❤️ Thank You
+
+- Chau Tran @nartc
+
 ## 4.2.3 (2026-07-04)
 
 ### 🚀 Features
