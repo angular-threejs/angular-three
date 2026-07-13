@@ -1,12 +1,5 @@
-import {
-	ComponentRef,
-	CUSTOM_ELEMENTS_SCHEMA,
-	provideEnvironmentInitializer,
-	RendererFactory2,
-	Type,
-} from '@angular/core';
+import { ComponentRef, CUSTOM_ELEMENTS_SCHEMA, provideEnvironmentInitializer, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ɵDomRendererFactory2 as DomRendererFactory2 } from '@angular/platform-browser';
 import {
 	canvasRootInitializer,
 	getInstanceState,
@@ -15,11 +8,11 @@ import {
 	type NgtCanvasOptions,
 	type NgtEventHandlers,
 	type NgtInstanceNode,
-	NgtRendererFactory2,
 	type NgtState,
 	type SignalState,
 	storeFactory,
 } from 'angular-three';
+import { provideNgtRenderer } from 'angular-three/dom';
 import type * as THREE from 'three';
 import { NgtTestCanvas } from './test-canvas';
 import { createMockCanvas } from './utils/mock-canvas';
@@ -87,11 +80,7 @@ export class NgtTestBed {
 
 		const fixture = TestBed.configureTestingModule({
 			providers: [
-				{
-					provide: RendererFactory2,
-					useFactory: (delegate: RendererFactory2) => new NgtRendererFactory2(delegate),
-					deps: [DomRendererFactory2],
-				},
+				provideNgtRenderer(),
 				{ provide: NGT_STORE, useFactory: storeFactory },
 				provideEnvironmentInitializer(() => {
 					const initializerFn = (() => {
@@ -163,32 +152,21 @@ export class NgtTestBed {
 
 	static createAdvance(store: SignalState<NgtState>) {
 		return async (frames: number, delta: number | number[] = 1) => {
-			const state = store.snapshot;
-			const subscribers = state.internal.subscribers;
-
-			const promises: Promise<void>[] = [];
-
-			for (const subscriber of subscribers) {
-				for (let i = 0; i < frames; i++) {
-					if (Array.isArray(delta)) {
-						promises.push(
-							new Promise((res) => {
-								subscriber.callback({ ...state, delta: delta[i] || delta[-1] });
-								res();
-							}),
-						);
-					} else {
-						promises.push(
-							new Promise((res) => {
-								subscriber.callback({ ...state, delta });
-								res();
-							}),
-						);
+			for (let index = 0; index < frames; index++) {
+				const frameDelta = Array.isArray(delta) ? (delta[index] ?? delta.at(-1) ?? 1) : delta;
+				const rootState = store.snapshot;
+				const subscribers = rootState.internal.subscribers.slice();
+				const storeStates = new Map<SignalState<NgtState>, NgtState>([[store, rootState]]);
+				for (const subscriber of subscribers) {
+					if (!storeStates.has(subscriber.store)) {
+						storeStates.set(subscriber.store, subscriber.store.snapshot);
 					}
 				}
+				for (const subscriber of subscribers) {
+					subscriber.callback({ ...storeStates.get(subscriber.store)!, delta: frameDelta });
+				}
+				await Promise.resolve();
 			}
-
-			await Promise.all(promises);
 		};
 	}
 

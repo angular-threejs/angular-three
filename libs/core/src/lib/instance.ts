@@ -56,6 +56,12 @@ export function getInstanceState<TInstance extends NgtAnyRecord>(
 	return (obj as NgtInstanceNode<TInstance>).__ngt__ || undefined;
 }
 
+type RegisteredPointerHandler = (event: unknown) => void;
+const pointerEventRegistrations = new WeakMap<
+	NgtInstanceState,
+	Map<keyof NgtEventHandlers, Map<symbol, RegisteredPointerHandler>>
+>();
+
 /**
  * Invalidates an instance, triggering a re-render of the scene.
  *
@@ -136,8 +142,7 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			return _nonObjects;
 		});
 
-		instance.__ngt_id__ =
-			typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : uuidv4Fallback();
+		instance.__ngt_id__ = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : uuidv4Fallback();
 		instance.__ngt__ = {
 			previousAttach: null,
 			type,
@@ -148,19 +153,14 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 			parent: hierarchyStore.parent,
 			objects: hierarchyStore.objects,
 			nonObjects: nonObjectsChanged,
-			add(object, type) {
+			add(object, type, before) {
 				const current = instance.__ngt__.hierarchyStore.snapshot[type];
-				const foundIndex = current.findIndex(
-					(node) =>
-						object === node || (!!object['uuid'] && !!node['uuid'] && object['uuid'] === node['uuid']),
+				const next = current.filter(
+					(node) => object !== node && (!object['uuid'] || !node['uuid'] || object['uuid'] !== node['uuid']),
 				);
-
-				if (foundIndex > -1) {
-					current.splice(foundIndex, 1, object);
-					instance.__ngt__.hierarchyStore.update({ [type]: current });
-				} else {
-					instance.__ngt__.hierarchyStore.update((prev) => ({ [type]: [...prev[type], object] }));
-				}
+				const beforeIndex = before ? next.indexOf(before) : -1;
+				next.splice(beforeIndex >= 0 ? beforeIndex : next.length, 0, object);
+				instance.__ngt__.hierarchyStore.update({ [type]: next });
 
 				notifyAncestors(instance.__ngt__.hierarchyStore.snapshot.parent, type);
 			},
@@ -188,28 +188,40 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 				callback: NonNullable<NgtEventHandlers[TEvent]>,
 			) => {
 				const iS = getInstanceState(instance) as NgtInstanceState;
-				if (!iS.handlers) iS.handlers = {};
+				const handlers = (iS.handlers ??= {});
+				let registrations = pointerEventRegistrations.get(iS);
+				if (!registrations) {
+					registrations = new Map();
+					pointerEventRegistrations.set(iS, registrations);
+				}
 
-				// try to get the previous handler. compound might have one, the THREE object might also have one with the same name
-				const previousHandler = iS.handlers[eventName];
-				// readjust the callback
-				const updatedCallback: typeof callback = (event: any) => {
-					if (previousHandler) previousHandler(event);
-					callback(event);
-				};
+				let listeners = registrations.get(eventName);
+				if (!listeners) {
+					listeners = new Map();
+					registrations.set(eventName, listeners);
+					const existingHandler = handlers[eventName];
+					if (existingHandler) listeners.set(Symbol('existing'), existingHandler as RegisteredPointerHandler);
+				}
 
-				Object.assign(iS.handlers, { [eventName]: updatedCallback });
-
-				// increment the count everytime
+				const token = Symbol(eventName);
+				listeners.set(token, callback as RegisteredPointerHandler);
+				const dispatch = ((event: unknown) => {
+					for (const listener of [...listeners.values()]) listener(event);
+				}) as NonNullable<NgtEventHandlers[TEvent]>;
+				handlers[eventName] = dispatch;
 				iS.eventCount += 1;
 
-				// clean up the event listener by removing the target from the interaction array
+				let active = true;
 				return () => {
-					const iS = getInstanceState(instance) as NgtInstanceState;
-					if (iS) {
-						iS.handlers && delete iS.handlers[eventName];
-						iS.eventCount -= 1;
+					if (!active) return;
+					active = false;
+					if (getInstanceState(instance) !== iS || !listeners?.delete(token)) return;
+					iS.eventCount = Math.max(0, iS.eventCount - 1);
+					if (listeners.size === 0) {
+						registrations?.delete(eventName);
+						delete handlers[eventName];
 					}
+					if (iS.eventCount === 0) iS.removeInteraction?.(iS.store);
 				};
 			},
 			configurable: true,
@@ -250,11 +262,24 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 				}
 
 				if (root.snapshot.internal) {
-					const interactions = root.snapshot.internal.interaction;
-					const index = interactions.findIndex(
-						(obj) => obj.uuid === (instance as unknown as THREE.Object3D).uuid,
-					);
+					const internal = root.snapshot.internal;
+					const object = instance as unknown as THREE.Object3D;
+					const interactions = internal.interaction;
+					const index = interactions.findIndex((obj) => obj.uuid === object.uuid);
 					if (index >= 0) interactions.splice(index, 1);
+					internal.initialHits = internal.initialHits.filter((hit) => hit !== object);
+					for (const [key, hovered] of internal.hovered) {
+						if (hovered.eventObject === object || hovered.object === object) internal.hovered.delete(key);
+					}
+					for (const [pointerId, captures] of internal.capturedMap) {
+						const capture = captures.get(object);
+						if (!capture) continue;
+						captures.delete(object);
+						if (captures.size === 0) {
+							internal.capturedMap.delete(pointerId);
+							capture.target.releasePointerCapture(pointerId);
+						}
+					}
 				}
 			},
 			configurable: true,
@@ -263,13 +288,8 @@ export function prepare<TInstance extends NgtAnyRecord = NgtAnyRecord>(
 
 	return instance;
 }
-
-interface NotificationCacheState {
-	skipCount: number;
-	lastType: 'objects' | 'nonObjects';
-}
-
-const notificationCache = new Map<string, NotificationCacheState>();
+const pendingAncestorNotifications = new Map<NgtInstanceNode, Set<'objects' | 'nonObjects'>>();
+let ancestorNotificationScheduled = false;
 
 /**
  * Notify ancestors about changes to a THREE.js objects' children
@@ -278,39 +298,36 @@ const notificationCache = new Map<string, NotificationCacheState>();
  * in which case the model matrices will be settled later. `NgtsCenter` needs to know about this
  * matrices change to re-center everything inside of it.
  *
- * The implementation here uses a naive approach to reduce the number of notifications; we cache
- * the notifications by the instance ID and the type of the notification.
- *
- * 1. If there's no cache or
- * 2. If the type is different for the same instance or
- * 3. We've skipped the notifications for this instance more than a certain amount
- *
- * then we'll proceed with notification
+ * Notifications are coalesced by ancestor and hierarchy kind. Angular renderer
+ * transactions flush them at `RendererFactory2.end`; direct calls use a microtask fallback.
  */
 function notifyAncestors(instance: NgtInstanceNode | null, type: 'objects' | 'nonObjects') {
-	if (!instance) return;
-
-	const localState = getInstanceState(instance);
-	if (!localState) return;
-
-	const id = instance.__ngt_id__ || instance['uuid'];
-	if (!id) return;
-
-	const maxNotificationSkipCount = localState.store?.snapshot.maxNotificationSkipCount || 5;
-	const cached = notificationCache.get(id);
-
-	if (!cached || cached.lastType !== type || cached.skipCount > maxNotificationSkipCount) {
-		notificationCache.set(id, { skipCount: 0, lastType: type });
-
-		if (notificationCache.size === 1) {
-			queueMicrotask(() => notificationCache.clear());
-		}
-
-		const { parent } = localState.hierarchyStore.snapshot;
-		localState.hierarchyStore.update({ [type]: (localState.hierarchyStore.snapshot[type] || []).slice() });
-		notifyAncestors(parent, type);
-		return;
+	let current = instance;
+	while (current) {
+		const localState = getInstanceState(current);
+		if (!localState?.hierarchyStore) break;
+		let types = pendingAncestorNotifications.get(current);
+		if (!types) pendingAncestorNotifications.set(current, (types = new Set()));
+		types.add(type);
+		current = localState.hierarchyStore.snapshot.parent;
 	}
 
-	notificationCache.set(id, { ...cached, skipCount: cached.skipCount + 1 });
+	if (pendingAncestorNotifications.size === 0 || ancestorNotificationScheduled) return;
+	ancestorNotificationScheduled = true;
+	queueMicrotask(flushAncestorNotifications);
+}
+
+/** @internal */
+export function flushAncestorNotifications() {
+	ancestorNotificationScheduled = false;
+	const batch = [...pendingAncestorNotifications];
+	pendingAncestorNotifications.clear();
+	for (const [ancestor, types] of batch) {
+		const localState = getInstanceState(ancestor);
+		if (!localState?.hierarchyStore) continue;
+		const snapshot = localState.hierarchyStore.snapshot;
+		const update: Partial<NgtInstanceHierarchyState> = {};
+		for (const pendingType of types) update[pendingType] = snapshot[pendingType].slice();
+		localState.hierarchyStore.update(update);
+	}
 }

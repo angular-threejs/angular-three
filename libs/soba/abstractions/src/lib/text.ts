@@ -264,7 +264,9 @@ export class NgtsText {
 	constructor() {
 		this.objectEvents.events.set(this.textPrimitive);
 
+		let destroyed = false;
 		inject(DestroyRef).onDestroy(() => {
+			destroyed = true;
 			this.troikaMesh.dispose();
 		});
 
@@ -275,11 +277,19 @@ export class NgtsText {
 			}
 		});
 
-		effect(() => {
+		effect((onCleanup) => {
 			const [invalidate] = [this.store.invalidate(), this.text(), this.options()];
-			this.troikaMesh.sync(() => {
-				invalidate();
-				this.synced.emit(this.troikaMesh);
+			let cancelled = false;
+			queueMicrotask(() => {
+				if (cancelled || destroyed) return;
+				this.troikaMesh.sync(() => {
+					if (destroyed) return;
+					invalidate();
+					this.synced.emit(this.troikaMesh);
+				});
+			});
+			onCleanup(() => {
+				cancelled = true;
 			});
 		});
 	}

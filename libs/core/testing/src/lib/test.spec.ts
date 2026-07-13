@@ -86,4 +86,28 @@ describe('test canvas', () => {
 		expect(sphere.geometry).toBeInstanceOf(SphereGeometry);
 		expect(sphere.material.color.getHexString()).toEqual('ff0000');
 	});
+
+	it('advances with isolated mutable frame state just like the production loop', async () => {
+		const states: Array<{ delta: number }> = [];
+
+		@Component({ template: '' })
+		class FrameStateProbe {
+			constructor() {
+				beforeRender((state) => {
+					states.push(state);
+					state.delta = 99;
+				});
+				beforeRender((state) => states.push(state));
+			}
+		}
+
+		const { advance } = NgtTestBed.create(FrameStateProbe);
+		await advance(1, 0.25);
+
+		expect(states).toHaveLength(2);
+		expect(states[0]).not.toBe(states[1]);
+		expect(Object.isFrozen(states[0])).toBe(false);
+		expect(states[0].delta).toBe(99);
+		expect(states[1].delta).toBe(0.25);
+	});
 });

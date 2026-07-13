@@ -73,7 +73,7 @@ export function isObjectVisible(
 	occlude: THREE.Object3D[],
 ) {
 	const elPos = v1.setFromMatrixPosition(el.matrixWorld);
-	const screenPos = elPos.clone();
+	const screenPos = v2.copy(elPos);
 	screenPos.project(camera);
 	v4.set(screenPos.x, screenPos.y);
 	raycaster.setFromCamera(v4, camera);
@@ -86,6 +86,13 @@ export function isObjectVisible(
 	return true;
 }
 
+/** Returns the world-space distance between an object and a camera. */
+export function objectDistance(el: THREE.Object3D, camera: THREE.Camera) {
+	const objectPos = v1.setFromMatrixPosition(el.matrixWorld);
+	const cameraPos = v2.setFromMatrixPosition(camera.matrixWorld);
+	return objectPos.distanceTo(cameraPos);
+}
+
 /**
  * Calculates a scale factor based on object distance from camera.
  *
@@ -95,16 +102,14 @@ export function isObjectVisible(
  *
  * @param el - The object to calculate scale for
  * @param camera - The camera reference
+ * @param distance - Optional precomputed object-to-camera distance
  * @returns Scale factor (smaller values for distant objects in perspective)
  */
-export function objectScale(el: THREE.Object3D, camera: THREE.Camera) {
+export function objectScale(el: THREE.Object3D, camera: THREE.Camera, distance?: number) {
 	if (is.three<THREE.OrthographicCamera>(camera, 'isOrthographicCamera')) return camera.zoom;
 	if (is.three<THREE.PerspectiveCamera>(camera, 'isPerspectiveCamera')) {
-		const objectPos = v1.setFromMatrixPosition(el.matrixWorld);
-		const cameraPos = v2.setFromMatrixPosition(camera.matrixWorld);
 		const vFOV = (camera.fov * Math.PI) / 180;
-		const dist = objectPos.distanceTo(cameraPos);
-		const scaleFOV = 2 * Math.tan(vFOV / 2) * dist;
+		const scaleFOV = 2 * Math.tan(vFOV / 2) * (distance ?? objectDistance(el, camera));
 		return 1 / scaleFOV;
 	}
 	return 1;
@@ -120,6 +125,7 @@ export function objectScale(el: THREE.Object3D, camera: THREE.Camera) {
  * @param camera - The camera reference (must be Perspective or Orthographic)
  * @param zIndexRange - `[max, min]` range to map distance to
  * @param logarithmicDepth - Computes the z-index logarithmicly to enable a wider camera range
+ * @param distance - Optional precomputed object-to-camera distance
  * @returns Calculated z-index, or `undefined` for unsupported camera types
  */
 export function objectZIndex(
@@ -127,23 +133,22 @@ export function objectZIndex(
 	camera: THREE.Camera,
 	zIndexRange: Array<number>,
 	logarithmicDepth = false,
+	distance?: number,
 ) {
 	if (
 		is.three<THREE.PerspectiveCamera>(camera, 'isPerspectiveCamera') ||
 		is.three<THREE.OrthographicCamera>(camera, 'isOrthographicCamera')
 	) {
-		const objectPos = v1.setFromMatrixPosition(el.matrixWorld);
-		const cameraPos = v2.setFromMatrixPosition(camera.matrixWorld);
-		const dist = objectPos.distanceTo(cameraPos);
+		distance ??= objectDistance(el, camera);
 		if (logarithmicDepth) {
 			const safeNear = Math.max(camera.near, 1e-6);
-			const safeDist = Math.max(dist, 1e-6);
+			const safeDist = Math.max(distance, 1e-6);
 			const depth = Math.log(safeDist / safeNear) / Math.log(camera.far / safeNear);
 			return Math.round(zIndexRange[0] + depth * (zIndexRange[1] - zIndexRange[0]));
 		} else {
 			const A = (zIndexRange[1] - zIndexRange[0]) / (camera.far - camera.near);
 			const B = zIndexRange[1] - A * camera.far;
-			return Math.round(A * dist + B);
+			return Math.round(A * distance + B);
 		}
 	}
 	return undefined;

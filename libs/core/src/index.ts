@@ -12,6 +12,8 @@ export * from './lib/portal';
 export * from './lib/renderer/catalogue';
 export * from './lib/renderer/constants';
 export * from './lib/renderer/renderer';
+export { setRendererAnchor } from './lib/renderer/state';
+export type { NgtRendererAnchor } from './lib/renderer/state';
 export * from './lib/roots';
 export * from './lib/routed-scene';
 export * from './lib/store';

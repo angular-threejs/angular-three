@@ -9,6 +9,7 @@ import {
 	computed,
 	contentChild,
 	effect,
+	inject,
 	input,
 } from '@angular/core';
 import {
@@ -16,6 +17,7 @@ import {
 	NgtAttachable,
 	NgtComputeFunction,
 	NgtPortal,
+	NgtPortalImpl,
 	NgtThreeElements,
 	extend,
 	getInstanceState,
@@ -103,45 +105,57 @@ export class NgtsRenderTextureContainer {
 	frames = input.required<number>();
 
 	private store = injectStore();
+	private portal = inject(NgtPortalImpl, { optional: true });
 
 	constructor() {
 		effect((onCleanup) => {
 			const [renderPriority, { internal }] = [this.renderPriority(), this.store()];
 
 			let count = 0;
+			let cancelled = false;
+			let cleanup: (() => void) | undefined;
 			let oldAutoClear: boolean;
 			let oldXrEnabled: boolean;
 			let oldRenderTarget: THREE.WebGLRenderTarget | null;
 			let oldIsPresenting: boolean;
+			const unsubscribeInvalidation = this.portal?.onInvalidate(() => {
+				count = 0;
+			});
 
-			const cleanup = internal.subscribe(
-				({ gl, scene, camera }) => {
-					const [fbo, frames] = [this.fbo(), this.frames()];
-					// NOTE: render  the frames ^ 2
-					//  due to some race condition, we want to render double the frames here.
-					if (frames === Infinity || count < frames * frames) {
-						oldAutoClear = gl.autoClear;
-						oldXrEnabled = gl.xr.enabled;
-						oldRenderTarget = gl.getRenderTarget();
-						oldIsPresenting = gl.xr.isPresenting;
-						gl.autoClear = true;
-						gl.xr.enabled = false;
-						gl.xr.isPresenting = false;
-						gl.setRenderTarget(fbo);
-						gl.render(scene, camera);
-						gl.setRenderTarget(oldRenderTarget);
-						gl.autoClear = oldAutoClear;
-						gl.xr.enabled = oldXrEnabled;
-						gl.xr.isPresenting = oldIsPresenting;
-						count++;
-					}
-				},
-				renderPriority,
-				this.store,
-			);
+			// Angular runs this directive's view effect before checking child components.
+			// Wait for the current render stack so the finite budget starts only after
+			// the projected portal content and its camera have been materialized.
+			queueMicrotask(() => {
+				if (cancelled) return;
+				cleanup = internal.subscribe(
+					({ gl, scene, camera }) => {
+						const [fbo, frames] = [this.fbo(), this.frames()];
+						if (frames === Infinity || count < frames) {
+							oldAutoClear = gl.autoClear;
+							oldXrEnabled = gl.xr.enabled;
+							oldRenderTarget = gl.getRenderTarget();
+							oldIsPresenting = gl.xr.isPresenting;
+							gl.autoClear = true;
+							gl.xr.enabled = false;
+							gl.xr.isPresenting = false;
+							gl.setRenderTarget(fbo);
+							gl.render(scene, camera);
+							gl.setRenderTarget(oldRenderTarget);
+							gl.autoClear = oldAutoClear;
+							gl.xr.enabled = oldXrEnabled;
+							gl.xr.isPresenting = oldIsPresenting;
+							count++;
+						}
+					},
+					renderPriority,
+					this.store,
+				);
+			});
 
 			onCleanup(() => {
-				cleanup();
+				cancelled = true;
+				unsubscribeInvalidation?.();
+				cleanup?.();
 			});
 		});
 	}

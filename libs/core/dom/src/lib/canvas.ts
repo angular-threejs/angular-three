@@ -26,7 +26,6 @@ import {
 	canvasRootInitializer,
 	injectStore,
 	is,
-	NGT_CANVAS_CONTENT_FLAG,
 	NGT_STORE,
 	NgtCamera,
 	NgtCameraParameters,
@@ -41,6 +40,7 @@ import {
 	NgtSize,
 	NgtState,
 	NgtVector3,
+	setRendererAnchor,
 	storeFactory,
 } from 'angular-three';
 import { NgxResize, provideResizeOptions, ResizeOptions, ResizeResult } from 'ngxtension/resize';
@@ -71,22 +71,18 @@ import { createPointerEvents } from './events';
  */
 @Directive({ selector: 'ng-template[canvasContent]' })
 export class NgtCanvasContent {
-	private canvas = inject(NgtCanvasImpl);
-
 	constructor() {
 		const store = injectStore();
 		const vcr = inject(ViewContainerRef);
 		const commentNode = vcr.element.nativeElement;
 
-		// NOTE: flag this canvasContent ng-template comment node as the start
-		commentNode.data = NGT_CANVAS_CONTENT_FLAG;
-		commentNode[NGT_CANVAS_CONTENT_FLAG] = store;
+		setRendererAnchor(commentNode, { kind: 'canvas', store });
 	}
 
 	static ngTemplateContextGuard(
 		_: NgtCanvasContent,
-		ctx: unknown,
-	): ctx is { $implicit: HTMLCanvasElement; host: HTMLElement } {
+		_ctx: unknown,
+	): _ctx is { $implicit: HTMLCanvasElement; host: HTMLElement } {
 		return true;
 	}
 }

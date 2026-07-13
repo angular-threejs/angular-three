@@ -1,10 +1,6 @@
 import { computed, Directive, ElementRef, input, linkedSignal } from '@angular/core';
 import type * as THREE from 'three';
-import {
-	NGT_INTERNAL_ADD_COMMENT_FLAG,
-	NGT_INTERNAL_SET_PARENT_COMMENT_FLAG,
-	NGT_PARENT_FLAG,
-} from '../renderer/constants';
+import { setRendererAnchor } from '../renderer/state';
 import { injectStore } from '../store';
 import { NgtNullish } from '../types';
 import { resolveRef } from '../utils/resolve-ref';
@@ -66,23 +62,10 @@ export class NgtParent extends NgtCommonDirective<THREE.Object3D | null | undefi
 		super();
 
 		const commentNode = this.commentNode;
-		commentNode.data = NGT_PARENT_FLAG;
-		commentNode[NGT_PARENT_FLAG] = true;
-
-		if (commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]) {
-			commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG]('parent', this.injector);
-			delete commentNode[NGT_INTERNAL_ADD_COMMENT_FLAG];
-		}
+		setRendererAnchor(commentNode, { kind: 'parent', injector: this.injector });
 	}
 
 	validate() {
 		return !this.injected && !!this.injectedValue;
-	}
-
-	protected override beforeCreateView() {
-		const commentNode = this.commentNode;
-		if (commentNode[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG]) {
-			commentNode[NGT_INTERNAL_SET_PARENT_COMMENT_FLAG](this.injectedValue);
-		}
 	}
 }

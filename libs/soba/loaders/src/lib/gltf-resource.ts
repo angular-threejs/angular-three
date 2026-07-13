@@ -4,7 +4,7 @@ import { assertInjector } from 'ngxtension/assert-injector';
 import * as THREE from 'three';
 import { DRACOLoader, type GLTF, GLTFLoader, MeshoptDecoder } from 'three-stdlib';
 
-let dracoLoader: DRACOLoader | null = null;
+const dracoLoaders = new Map<string, DRACOLoader>();
 let decoderPath = 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/';
 
 /**
@@ -54,25 +54,35 @@ type GLTFObjectSceneMap<
 					: { [K in keyof TUrl]: GLTF['scene'] }
 				: never;
 
-function _extensions(useDraco: boolean | string, useMeshOpt: boolean, extensions?: (loader: GLTFLoader) => void) {
-	return (loader: THREE.Loader) => {
-		if (extensions) {
-			extensions(loader as GLTFLoader);
-		}
+function getLoaderConfiguration(
+	useDraco: boolean | string,
+	useMeshOpt: boolean,
+	extensions?: (loader: GLTFLoader) => void,
+) {
+	const resolvedDracoPath = useDraco ? (typeof useDraco === 'string' ? useDraco : decoderPath) : false;
 
-		if (useDraco) {
-			if (!dracoLoader) {
-				dracoLoader = new DRACOLoader();
+	return {
+		cacheKey: [resolvedDracoPath, useMeshOpt, extensions] as const,
+		extensions: (loader: THREE.Loader) => {
+			if (extensions) {
+				extensions(loader as GLTFLoader);
 			}
 
-			dracoLoader.setDecoderPath(typeof useDraco === 'string' ? useDraco : decoderPath);
-			(loader as GLTFLoader).setDRACOLoader(dracoLoader);
-		}
-		if (useMeshOpt) {
-			(loader as GLTFLoader).setMeshoptDecoder(
-				typeof MeshoptDecoder === 'function' ? MeshoptDecoder() : MeshoptDecoder,
-			);
-		}
+			if (resolvedDracoPath) {
+				let dracoLoader = dracoLoaders.get(resolvedDracoPath);
+				if (!dracoLoader) {
+					dracoLoader = new DRACOLoader().setDecoderPath(resolvedDracoPath);
+					dracoLoaders.set(resolvedDracoPath, dracoLoader);
+				}
+
+				(loader as GLTFLoader).setDRACOLoader(dracoLoader);
+			}
+			if (useMeshOpt) {
+				(loader as GLTFLoader).setMeshoptDecoder(
+					typeof MeshoptDecoder === 'function' ? MeshoptDecoder() : MeshoptDecoder,
+				);
+			}
+		},
 	};
 }
 
@@ -141,8 +151,10 @@ export function gltfResource<
 	} = {},
 ) {
 	return assertInjector(gltfResource, injector, () => {
+		const loaderConfiguration = getLoaderConfiguration(useDraco, useMeshOpt, extensions);
 		const resource = loaderResource(() => GLTFLoader, input, {
-			extensions: _extensions(useDraco, useMeshOpt, extensions),
+			extensions: loaderConfiguration.extensions,
+			cacheKey: () => loaderConfiguration.cacheKey,
 			// @ts-expect-error - we know the type of the data
 			onLoad,
 		}) as ResourceRef<GLTFObjectMap<TGLTF, TUrl> | undefined> & {
@@ -206,7 +218,8 @@ gltfResource.preload = <TUrl extends string | string[] | Record<string, string>>
 		extensions?: (loader: GLTFLoader) => void;
 	} = {},
 ) => {
-	loaderResource.preload(GLTFLoader, input, _extensions(useDraco, useMeshOpt, extensions));
+	const loaderConfiguration = getLoaderConfiguration(useDraco, useMeshOpt, extensions);
+	loaderResource.preload(GLTFLoader, input, loaderConfiguration.extensions, loaderConfiguration.cacheKey);
 };
 
 /**

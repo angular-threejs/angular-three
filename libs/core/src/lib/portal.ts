@@ -3,7 +3,9 @@ import {
 	Component,
 	contentChild,
 	CUSTOM_ELEMENTS_SCHEMA,
+	DestroyRef,
 	Directive,
+	DOCUMENT,
 	effect,
 	ElementRef,
 	EmbeddedViewRef,
@@ -14,16 +16,23 @@ import {
 	signal,
 	SkipSelf,
 	TemplateRef,
-	untracked,
 	ViewContainerRef,
 } from '@angular/core';
 import * as THREE from 'three';
 import { Group } from 'three';
 import { getInstanceState, prepare } from './instance';
 import { extend } from './renderer/catalogue';
-import { NGT_DOM_PARENT_FLAG, NGT_PORTAL_CONTENT_FLAG } from './renderer/constants';
+import {
+	createRendererNode,
+	getRendererAnchor,
+	isRendererNodeType,
+	NgtRendererClassId,
+	NgtRendererNode,
+	setRendererAnchor,
+} from './renderer/state';
+import { attachThreeNodes, removeThreeChild } from './renderer/utils';
 import { injectStore, NGT_STORE } from './store';
-import type { NgtComputeFunction, NgtEventManager, NgtSize, NgtState, NgtViewport } from './types';
+import type { NgtComputeFunction, NgtEventManager, NgtInstanceNode, NgtSize, NgtState, NgtViewport } from './types';
 import { is } from './utils/is';
 import { makeId } from './utils/make';
 import { omit, pick } from './utils/parameters';
@@ -115,7 +124,7 @@ export class NgtPortalAutoRender {
  */
 @Directive({ selector: 'ng-template[portalContent]' })
 export class NgtPortalContent {
-	static ngTemplateContextGuard(_: NgtPortalContent, ctx: unknown): ctx is { injector: Injector } {
+	static ngTemplateContextGuard(_: NgtPortalContent, _ctx: unknown): _ctx is { injector: Injector } {
 		return true;
 	}
 
@@ -124,10 +133,11 @@ export class NgtPortalContent {
 		const { element } = inject(ViewContainerRef);
 		const commentNode = element.nativeElement;
 		const store = injectStore();
+		const domParent = host.nativeElement as unknown as NgtRendererNode<'portal'>;
+		const anchor = { kind: 'portal' as const, store, domParent };
 
-		commentNode.data = NGT_PORTAL_CONTENT_FLAG;
-		commentNode[NGT_PORTAL_CONTENT_FLAG] = store;
-		commentNode[NGT_DOM_PARENT_FLAG] = host.nativeElement;
+		setRendererAnchor(commentNode, anchor);
+		setRendererAnchor(domParent, anchor);
 	}
 }
 
@@ -153,43 +163,160 @@ export interface NgtPortalState extends Omit<NgtState, 'events'> {
 function mergeState(
 	previousRoot: SignalState<NgtState>,
 	store: SignalState<NgtState>,
+	previousState: NgtState,
 	container: THREE.Object3D,
-	pointer: THREE.Vector2,
-	raycaster: THREE.Raycaster,
+	runtime: PortalRuntime,
+	restState: Omit<Partial<NgtPortalState>, 'size' | 'events'>,
 	events?: NgtPortalState['events'],
 	size?: NgtSize,
 ) {
-	// we never want to spread the id
-	const { id: _, ...previousState } = previousRoot.snapshot;
+	// The portal id belongs to this store. Everything else starts from the
+	// latest parent snapshot so removed overrides cannot leave stale values.
+	const { id: _, ...inheritedState } = previousState;
 	const state = store.snapshot;
+	capturePortalLocalState(previousState, state, runtime);
+	const layeredState = { ...inheritedState, ...runtime.localState, ...restState };
+	const camera = layeredState.camera;
+	const mergedSize = { ...previousState.size, ...size };
 
 	let viewport: Omit<NgtViewport, 'dpr' | 'initialDpr'> | undefined = undefined;
 
-	if (state.camera && size) {
-		const camera = state.camera;
+	if (camera && (camera !== previousState.camera || size)) {
 		// calculate the override viewport, if present
-		viewport = previousState.viewport.getCurrentViewport(camera, new THREE.Vector3(), size);
-		// update the portal camera, if it differs from the previous layer
-		if (camera !== previousState.camera) updateCamera(camera, size);
+		viewport = previousState.viewport.getCurrentViewport(camera, new THREE.Vector3(), mergedSize);
+		// A portal-local camera owns its projection until the portal explicitly
+		// overrides the inherited size. Camera components may intentionally provide
+		// custom orthographic bounds or a custom perspective aspect.
+		if (size && camera !== previousState.camera) updateCamera(camera, mergedSize);
 	}
 
-	return {
-		// the intersect consists of the previous root state
-		...previousState,
-		...state,
+	runtime.inputEvents = events;
+
+	const mergedState = {
+		// Inherited values are refreshed on every effect run. Current input
+		// overrides are applied over that fresh snapshot, never over stale portal
+		// state from a previous run.
+		...layeredState,
+		id: state.id,
 		// portals have their own scene, which forms the root, a raycaster and a pointer
 		scene: container as THREE.Scene,
-		pointer,
-		raycaster,
+		pointer: runtime.pointer,
+		raycaster: runtime.raycaster,
 		// their previous root is the layer before it
 		previousRoot,
-		events: { ...previousState.events, ...state.events, ...events },
-		size: { ...previousState.size, ...size },
-		viewport: { ...previousState.viewport, ...viewport },
-		// layers are allowed to override events
-		setEvents: (events: Partial<NgtEventManager<any>>) =>
-			store.update((state) => ({ ...state, events: { ...state.events, ...events } })),
+		// The render loop and subscriptions are portal runtime state. Replacing
+		// them with a new parent object would discard portal-local mutations.
+		internal: state.internal,
+		events: { ...previousState.events, ...runtime.localEvents, ...events },
+		size: mergedSize,
+		viewport: { ...previousState.viewport, ...viewport, ...restState.viewport },
+		setEvents: runtime.setEvents,
+		invalidate: runtime.invalidate,
 	} as NgtState;
+	runtime.lastMerged = mergedState;
+	return mergedState;
+}
+
+type PortalLocalStateKey = 'camera' | 'controls';
+type ManagedPortalContainer = THREE.Object3D & NgtInstanceNode & NgtRendererNode<'three'>;
+
+interface PortalLocalStateTracker {
+	baselines: Set<unknown>;
+	values: unknown[];
+}
+
+function capturePortalLocalState(parent: NgtState, current: NgtState, runtime: PortalRuntime) {
+	for (const key of ['camera', 'controls'] as const) {
+		const tracker = runtime.localStateTrackers[key];
+		tracker.baselines.add(parent[key]);
+		const previousValue = runtime.lastMerged?.[key];
+		const currentValue = current[key];
+		if (!runtime.lastMerged || Object.is(currentValue, previousValue)) continue;
+
+		if (tracker.baselines.has(currentValue)) {
+			tracker.values.length = 0;
+			delete runtime.localState[key];
+			continue;
+		}
+
+		const restoredIndex = tracker.values.lastIndexOf(currentValue);
+		if (restoredIndex >= 0) tracker.values.length = restoredIndex + 1;
+		else tracker.values.push(currentValue);
+		Object.assign(runtime.localState, { [key]: tracker.values.at(-1) });
+	}
+}
+
+function movePortalChildren(
+	store: SignalState<NgtState>,
+	previousContainer: ManagedPortalContainer | undefined,
+	nextContainer: ManagedPortalContainer,
+) {
+	if (!previousContainer || previousContainer === nextContainer) return;
+	const previousState = getInstanceState(previousContainer);
+	if (!previousState) return;
+	const children = [...previousState.objects(), ...previousState.nonObjects()];
+	for (const child of children) {
+		const childState = getInstanceState(child);
+		if (childState?.store !== store || childState.parent() !== previousContainer) continue;
+		removeThreeChild(child, previousContainer, false);
+		attachThreeNodes(nextContainer, child, undefined, store);
+	}
+}
+
+interface PortalRuntime {
+	pointer: THREE.Vector2;
+	raycaster: THREE.Raycaster;
+	localEvents: Partial<NgtEventManager<any>>;
+	inputEvents?: NgtPortalState['events'];
+	setEvents: (events: Partial<NgtEventManager<any>>) => void;
+	invalidate: NgtState['invalidate'];
+	invalidationListeners: Set<() => void>;
+	lastMerged?: NgtState;
+	localState: Partial<Pick<NgtState, PortalLocalStateKey>>;
+	localStateTrackers: Record<PortalLocalStateKey, PortalLocalStateTracker>;
+	container?: ManagedPortalContainer;
+	containerClaim?: { container: ManagedPortalContainer; release: () => void };
+}
+
+const portalRuntimes = new WeakMap<SignalState<NgtState>, PortalRuntime>();
+
+interface PortalContainerOwnership {
+	baseline: SignalState<NgtState>;
+	claims: Array<{ token: symbol; store: SignalState<NgtState> }>;
+}
+
+const portalContainerOwnership = new WeakMap<THREE.Object3D, PortalContainerOwnership>();
+
+function claimPortalContainer(
+	container: ManagedPortalContainer,
+	store: SignalState<NgtState>,
+	fallback: SignalState<NgtState>,
+) {
+	const instanceState = getInstanceState(container);
+	if (!instanceState) return () => undefined;
+
+	let ownership = portalContainerOwnership.get(container);
+	if (!ownership) {
+		ownership = { baseline: instanceState.store ?? fallback, claims: [] };
+		portalContainerOwnership.set(container, ownership);
+	}
+
+	const token = Symbol('portal-container');
+	ownership.claims.push({ token, store });
+	instanceState.store = store;
+
+	let active = true;
+	return () => {
+		if (!active) return;
+		active = false;
+		const current = portalContainerOwnership.get(container);
+		if (!current) return;
+		const index = current.claims.findIndex((claim) => claim.token === token);
+		if (index >= 0) current.claims.splice(index, 1);
+		const latest = current.claims.at(-1);
+		instanceState.store = latest?.store ?? current.baseline;
+		if (!latest) portalContainerOwnership.delete(container);
+	};
 }
 
 /**
@@ -239,7 +366,32 @@ function mergeState(
 					pointer,
 					raycaster,
 				});
-				store.update(mergeState(previousStore, store, null!, pointer, raycaster));
+
+				const runtime: PortalRuntime = {
+					pointer,
+					raycaster,
+					localEvents: {},
+					invalidate: () => undefined,
+					invalidationListeners: new Set(),
+					localState: {},
+					localStateTrackers: {
+						camera: { baselines: new Set(), values: [] },
+						controls: { baselines: new Set(), values: [] },
+					},
+					setEvents: () => undefined,
+				};
+				runtime.setEvents = (events) => {
+					Object.assign(runtime.localEvents, events);
+					store.update((state) => ({
+						events: { ...state.events, ...events, ...runtime.inputEvents },
+					}));
+				};
+				runtime.invalidate = (frames) => {
+					for (const listener of runtime.invalidationListeners) listener();
+					previousStore.snapshot.invalidate(frames);
+				};
+				portalRuntimes.set(store, runtime);
+				store.update(mergeState(previousStore, store, previousStore.snapshot, null!, runtime, {}));
 				return store;
 			},
 			deps: [[new SkipSelf(), NGT_STORE]],
@@ -256,6 +408,7 @@ export class NgtPortalImpl {
 	private previousStore = injectStore({ skipSelf: true });
 	private portalStore = injectStore();
 	private injector = inject(Injector);
+	private document = inject(DOCUMENT);
 
 	private size = pick(this.state, 'size');
 	private events = pick(this.state, 'events');
@@ -266,36 +419,66 @@ export class NgtPortalImpl {
 
 	private portalViewRef?: EmbeddedViewRef<unknown>;
 
+	/** @internal Subscribe to invalidations originating in this portal layer. */
+	onInvalidate(listener: () => void) {
+		const runtime = portalRuntimes.get(this.portalStore);
+		if (!runtime) throw new Error('[NGT] Portal store runtime was not initialized');
+		runtime.invalidationListeners.add(listener);
+		return () => {
+			runtime.invalidationListeners.delete(listener);
+		};
+	}
+
 	constructor() {
 		extend({ Group });
 
 		effect(() => {
-			let [container, anchor, content] = [
+			// A makeDefault camera/controls update writes directly to the portal
+			// store. Track those supported local overrides without tracking the
+			// whole state object that this effect itself merges.
+			this.portalStore.camera();
+			this.portalStore.controls();
+			const [inputContainer, anchor, content, previousState, size, events, restState] = [
 				this.container(),
 				this.anchorRef(),
 				this.contentRef(),
 				this.previousStore(),
+				this.size(),
+				this.events(),
+				this.restState(),
 			];
+			const runtime = portalRuntimes.get(this.portalStore);
+			if (!runtime) throw new Error('[NGT] Portal store runtime was not initialized');
 
-			const [size, events, restState] = [untracked(this.size), untracked(this.events), untracked(this.restState)];
+			const instanceContainer = is.instance(inputContainer)
+				? inputContainer
+				: prepare(inputContainer, 'ngt-portal', { store: this.previousStore });
+			const container: ManagedPortalContainer = isRendererNodeType(instanceContainer, 'three')
+				? instanceContainer
+				: createRendererNode('three', instanceContainer, this.document);
 
-			if (!is.instance(container)) {
-				container = prepare(container, 'ngt-portal', { store: this.portalStore });
+			const portalAnchor = getRendererAnchor(anchor.element.nativeElement);
+			if (portalAnchor?.kind === 'portal' && portalAnchor.domParent) {
+				portalAnchor.domParent.__ngt_renderer__[NgtRendererClassId.portalContainer] = container;
 			}
 
 			const instanceState = getInstanceState(container);
-			if (instanceState && instanceState.store !== this.portalStore) {
-				instanceState.store = this.portalStore;
+			if (instanceState && runtime.container !== container) {
+				const nextRelease = claimPortalContainer(container, this.portalStore, this.previousStore);
+				movePortalChildren(this.portalStore, runtime.container, container);
+				runtime.containerClaim?.release();
+				runtime.container = container;
+				runtime.containerClaim = { container, release: nextRelease };
 			}
 
 			this.portalStore.update(
-				restState,
 				mergeState(
 					this.previousStore,
 					this.portalStore,
+					previousState,
 					container,
-					this.portalStore.snapshot.pointer,
-					this.portalStore.snapshot.raycaster,
+					runtime,
+					restState,
 					events,
 					size,
 				),
@@ -310,6 +493,13 @@ export class NgtPortalImpl {
 			this.portalViewRef = anchor.createEmbeddedView(content, portalViewContext, portalViewContext);
 			this.portalViewRef.detectChanges();
 			this.portalContentRendered.set(true);
+		});
+
+		inject(DestroyRef).onDestroy(() => {
+			const runtime = portalRuntimes.get(this.portalStore);
+			runtime?.containerClaim?.release();
+			runtime?.invalidationListeners.clear();
+			portalRuntimes.delete(this.portalStore);
 		});
 	}
 }

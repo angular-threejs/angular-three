@@ -10,6 +10,19 @@ import type { NgtConstructorRepresentation } from '../types';
 
 const catalogue: Record<string, NgtConstructorRepresentation> = {};
 
+interface CatalogueRegistration {
+	value: NgtConstructorRepresentation;
+	count: number;
+}
+
+interface CatalogueOwnership {
+	baseline: NgtConstructorRepresentation | undefined;
+	hadBaseline: boolean;
+	registrations: CatalogueRegistration[];
+}
+
+const catalogueOwnership = new Map<string, CatalogueOwnership>();
+
 /**
  * Registers Three.js constructors for use in templates.
  *
@@ -35,10 +48,62 @@ const catalogue: Record<string, NgtConstructorRepresentation> = {};
  * ```
  */
 export function extend(objects: object) {
-	const keys = Object.keys(objects);
-	Object.assign(catalogue, objects);
+	const registrations = Object.entries(objects).map(([key, value]) => {
+		let ownership = catalogueOwnership.get(key);
+		if (!ownership) {
+			ownership = {
+				baseline: catalogue[key],
+				hadBaseline: Object.prototype.hasOwnProperty.call(catalogue, key),
+				registrations: [],
+			};
+			catalogueOwnership.set(key, ownership);
+		}
+
+		const registrationValue = value as NgtConstructorRepresentation;
+		let registration = ownership.registrations.at(-1);
+		if (!registration || registration.value !== registrationValue) {
+			registration = { value: registrationValue, count: 0 };
+			ownership.registrations.push(registration);
+		}
+		// Repeated component-level extend calls commonly register the same Three
+		// constructor. Coalesce those owners so the catalogue retains one layer,
+		// not one record per component instance.
+		registration.count++;
+		catalogue[key] = registration.value;
+
+		return { key, ownership, registration };
+	});
+
+	let cleaned = false;
 	return () => {
-		remove(...keys);
+		if (cleaned) return;
+		cleaned = true;
+
+		for (const { key, ownership, registration } of registrations) {
+			// A public remove followed by a new extend starts a new ownership era. An
+			// older cleanup must never affect that newer registration.
+			if (catalogueOwnership.get(key) !== ownership) continue;
+
+			registration.count--;
+			if (registration.count > 0) continue;
+
+			const registrationIndex = ownership.registrations.indexOf(registration);
+			if (registrationIndex === -1) continue;
+			ownership.registrations.splice(registrationIndex, 1);
+
+			const activeRegistration = ownership.registrations.at(-1);
+			if (activeRegistration) {
+				catalogue[key] = activeRegistration.value;
+				continue;
+			}
+
+			catalogueOwnership.delete(key);
+			if (ownership.hadBaseline) {
+				catalogue[key] = ownership.baseline as NgtConstructorRepresentation;
+			} else {
+				delete catalogue[key];
+			}
+		}
 	};
 }
 
@@ -49,6 +114,9 @@ export function extend(objects: object) {
  */
 export function remove(...keys: string[]) {
 	for (const key of keys) {
+		// Explicit removal is authoritative. Invalidate all outstanding cleanup
+		// tokens so they cannot restore an older value later.
+		catalogueOwnership.delete(key);
 		delete catalogue[key];
 	}
 }

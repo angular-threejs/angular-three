@@ -5,10 +5,12 @@ import {
 	EmbeddedViewRef,
 	inject,
 	Injector,
+	Renderer2,
 	Signal,
 	TemplateRef,
 	ViewContainerRef,
 } from '@angular/core';
+import { NGT_RENDERER_CONTEXT_FLAG } from '../renderer/constants';
 import { is } from '../utils/is';
 
 /**
@@ -28,6 +30,9 @@ import { is } from '../utils/is';
 export abstract class NgtCommonDirective<TValue> {
 	private vcr = inject(ViewContainerRef);
 	private template = inject(TemplateRef);
+	private renderer = inject(Renderer2) as Renderer2 & {
+		[NGT_RENDERER_CONTEXT_FLAG]?: <T>(injector: Injector, callback: () => T) => T;
+	};
 	protected injector = inject(Injector);
 
 	protected injected = false;
@@ -44,9 +49,14 @@ export abstract class NgtCommonDirective<TValue> {
 
 	protected constructor() {
 		effect(() => {
-			if (this.shouldSkipRender()) return;
-
 			const value = this.linkedValue();
+			if (this.shouldSkipRender()) {
+				this.injected = false;
+				this.injectedValue = value;
+				this.view?.destroy();
+				this.view = undefined;
+				return;
+			}
 
 			if (is.equ(value, this.injectedValue)) {
 				// we have the same value as before, no need to update
@@ -80,7 +90,13 @@ export abstract class NgtCommonDirective<TValue> {
 
 		this.beforeCreateView();
 
-		this.view = this.vcr.createEmbeddedView(this.template);
-		this.view.detectChanges();
+		const createView = () => {
+			const view = this.vcr.createEmbeddedView(this.template);
+			view.detectChanges();
+			return view;
+		};
+		this.view = this.renderer[NGT_RENDERER_CONTEXT_FLAG]
+			? this.renderer[NGT_RENDERER_CONTEXT_FLAG](this.injector, createView)
+			: createView();
 	}
 }
