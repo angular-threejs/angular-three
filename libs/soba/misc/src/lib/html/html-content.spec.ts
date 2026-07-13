@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NgtTestBed } from 'angular-three/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { NgtsHTML } from './html';
+import { NgtsHTML, type NgtsHTMLOcclusionStrategy, type NgtsHTMLOcclusionTest } from './html';
 import type { NgtsHTMLContentOptions } from './html-content';
 
 describe('NgtsHTMLContent', () => {
@@ -174,6 +174,109 @@ describe('NgtsHTMLContent', () => {
 		expect(host.style.display).toBe('block');
 
 		fixture.destroy();
+	});
+
+	it('uses a custom occlusion test without creating an occlusion mesh or raycasting', async () => {
+		const target = document.createElement('section');
+		document.body.append(target);
+
+		@Component({
+			template: `
+				<ngts-html [options]="{ occlude: occlusionTest }">
+					<div htmlContent>label</div>
+				</ngts-html>
+			`,
+			imports: [NgtsHTML],
+			schemas: [CUSTOM_ELEMENTS_SCHEMA],
+		})
+		class SceneGraph {
+			hidden = false;
+			occlusionTest = vi.fn<NgtsHTMLOcclusionTest>(() => this.hidden);
+		}
+
+		const { advance, fixture, scene, sceneGraphComponentRef, store } = NgtTestBed.create(SceneGraph, {
+			mockCanvasOptions: { beforeReturn: (canvas) => target.append(canvas) },
+		});
+		const intersectObjects = vi.spyOn(store.snapshot.raycaster, 'intersectObjects');
+		const host = target.querySelector<HTMLElement>('[data-ngts-html-content]')!;
+		const anchor = scene.children[0];
+
+		expect(anchor.children).toHaveLength(0);
+		await advance(1, 0.016);
+		const [occlusionTarget, frame] = sceneGraphComponentRef.instance.occlusionTest.mock.calls[0];
+		expect(occlusionTarget.anchor).toBe(anchor);
+		expect(occlusionTarget.element).toBe(host);
+		expect(frame).toEqual({
+			id: 1,
+			state: expect.objectContaining({ camera: store.snapshot.camera, scene }),
+		});
+		expect(intersectObjects).not.toHaveBeenCalled();
+		expect(host.style.display).not.toBe('none');
+
+		sceneGraphComponentRef.instance.hidden = true;
+		await advance(1, 0.016);
+		expect(host.style.display).toBe('none');
+
+		sceneGraphComponentRef.instance.hidden = false;
+		await advance(1, 0.016);
+		expect(host.style.display).toBe('block');
+		expect(sceneGraphComponentRef.instance.occlusionTest).toHaveBeenCalledTimes(3);
+		expect(intersectObjects).not.toHaveBeenCalled();
+
+		fixture.destroy();
+	});
+
+	it('begins a shared custom strategy frame once for every eligible HTML target', async () => {
+		const target = document.createElement('section');
+		document.body.append(target);
+		const releases: ReturnType<typeof vi.fn>[] = [];
+		const strategy: NgtsHTMLOcclusionStrategy = {
+			setupTarget: vi.fn(() => {
+				const release = vi.fn();
+				releases.push(release);
+				return release;
+			}),
+			beginFrame: vi.fn(),
+			isOccluded: vi.fn(({ element }) => element.textContent === 'hidden'),
+		};
+
+		@Component({
+			template: `
+				<ngts-html [options]="{ occlude: strategy }">
+					<div htmlContent>visible</div>
+				</ngts-html>
+				<ngts-html [options]="{ occlude: strategy }">
+					<div htmlContent>hidden</div>
+				</ngts-html>
+			`,
+			imports: [NgtsHTML],
+			schemas: [CUSTOM_ELEMENTS_SCHEMA],
+		})
+		class SceneGraph {
+			strategy = strategy;
+		}
+
+		const { advance, fixture, scene, store } = NgtTestBed.create(SceneGraph, {
+			mockCanvasOptions: { beforeReturn: (canvas) => target.append(canvas) },
+		});
+		const intersectObjects = vi.spyOn(store.snapshot.raycaster, 'intersectObjects');
+		const hosts = [...target.querySelectorAll<HTMLElement>('[data-ngts-html-content]')];
+		await advance(1, 0.016);
+
+		expect(strategy.setupTarget).toHaveBeenCalledTimes(2);
+		expect(strategy.beginFrame).toHaveBeenCalledOnce();
+		const [frameTargets, frame] = vi.mocked(strategy.beginFrame!).mock.calls[0];
+		expect(frameTargets.map(({ anchor }) => anchor)).toEqual(scene.children);
+		expect(frameTargets.map(({ element }) => element)).toEqual(hosts);
+		expect(frame).toEqual({ id: 1, state: expect.objectContaining({ scene }) });
+		expect(strategy.isOccluded).toHaveBeenCalledTimes(2);
+		expect(hosts[0].style.display).not.toBe('none');
+		expect(hosts[1].style.display).toBe('none');
+		expect(intersectObjects).not.toHaveBeenCalled();
+
+		fixture.destroy();
+		expect(releases).toHaveLength(2);
+		expect(releases.every((release) => release.mock.calls.length === 1)).toBe(true);
 	});
 
 	it('remeasures the blending occlusion mesh after observed content resizes', async () => {

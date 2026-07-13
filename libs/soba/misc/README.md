@@ -361,12 +361,50 @@ class MyCmp {}
 
 ### NgtsHTMLOptions (for `ngts-html`)
 
-| Property        | Description                                                                                | Default |
-| --------------- | ------------------------------------------------------------------------------------------ | ------- |
-| `occlude`       | Controls occlusion: `false`, `true`, `'raycast'`, `'blending'`, or array of Object3D refs. | `false` |
-| `transform`     | When `true`, uses CSS 3D transforms. When `false`, projects to 2D screen coordinates.      | `false` |
-| `castShadow`    | Forward shadow casting to occlusion mesh (blending mode only).                             | `false` |
-| `receiveShadow` | Forward shadow receiving to occlusion mesh (blending mode only).                           | `false` |
+| Property        | Description                                                                                                                | Default |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `occlude`       | Controls occlusion: `false`, `true`, `'raycast'`, `'blending'`, Object3D refs, a custom test, or a shared custom strategy. | `false` |
+| `transform`     | When `true`, uses CSS 3D transforms. When `false`, projects to 2D screen coordinates.                                      | `false` |
+| `castShadow`    | Forward shadow casting to occlusion mesh (blending mode only).                                                             | `false` |
+| `receiveShadow` | Forward shadow receiving to occlusion mesh (blending mode only).                                                           | `false` |
+
+Custom occlusion bypasses `Raycaster.intersectObjects()`, making it useful for cheaper domain-specific tests such as analytical spherical occlusion. Return `true` to hide the HTML. Angular Three still handles hidden ancestors and targets behind the active camera before invoking custom code.
+
+A lightweight test receives a stable target containing the HTML's `THREE.Group` anchor and the actual `div[htmlContent]` host, plus the active store frame:
+
+```ts
+import { type NgtsHTMLOcclusionTest } from 'angular-three-soba/misc';
+
+class MyCmp {
+	readonly occludeMarker: NgtsHTMLOcclusionTest = ({ anchor, element }, { state }) =>
+		this.planetOcclusion.isOccluded(state.camera, anchor, element);
+}
+```
+
+```html
+<ngts-html [options]="{ occlude: occludeMarker }">
+	<div htmlContent>Rocket marker</div>
+</ngts-html>
+```
+
+For many HTML content targets, share one `NgtsHTMLOcclusionStrategy` instance. The per-store coordinator calls `beginFrame()` once per active frame with every eligible target, then calls `isOccluded()` for each target. `setupTarget()` can allocate per-target resources and return their cleanup callback.
+
+Use `setupTarget()` for resources that should live as long as the target uses the strategy, not for ordinary frame data. The DOM-panel example uses it to attach one `ResizeObserver` to the rendered content, cache its changing bounds, and disconnect the observer when the target changes strategy or is removed. A temporarily hidden or behind-camera target stays set up even though it is omitted from `beginFrame()` until it becomes eligible again.
+
+```ts
+import { type NgtsHTMLOcclusionStrategy } from 'angular-three-soba/misc';
+
+class MyCmp {
+	readonly occlusion: NgtsHTMLOcclusionStrategy = {
+		beginFrame: (targets, { state }) => this.planetOcclusion.beginFrame(targets, state.camera),
+		isOccluded: ({ anchor }) => this.planetOcclusion.isAnchorOccluded(anchor),
+	};
+}
+```
+
+Keep the function or strategy identity stable when sharing it across targets. The coordinator is scoped to the active render store, so targets inside portals receive their portal scene and camera in `frame.state`.
+
+Strategy callbacks run from the render loop, not from an Angular injection context. Resolve injected dependencies when Angular constructs the owning component or an `@Injectable()` strategy, then capture them for `setupTarget()`, `beginFrame()`, and `isOccluded()`; do not call `inject()` inside those callbacks. Scope stateful strategies to a component/render store, or key their mutable state by store if a single service instance is shared across canvases.
 
 ### NgtsHTMLContentOptions (for `div[htmlContent]`)
 

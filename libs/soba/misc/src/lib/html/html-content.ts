@@ -13,20 +13,19 @@ import {
 	untracked,
 	viewChild,
 } from '@angular/core';
-import { beforeRender, injectStore, is, NgtHTML, pick, resolveRef } from 'angular-three';
+import { injectStore, is, NgtHTML, pick, resolveRef } from 'angular-three';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { acquireCanvasStyleLease } from './canvas-style-lease';
-import { acquireHTMLFramePreparation } from './frame-preparation';
+import { registerHTMLFrameTarget } from './frame-preparation';
 import { NgtsHTMLImpl } from './html';
+import type { NgtsHTMLOcclusionTarget } from './occlusion';
 import {
 	CalculatePosition,
 	defaultCalculatePosition,
 	epsilon,
 	getCameraCSSMatrix,
 	getObjectCSSMatrix,
-	isObjectBehindCamera,
-	isObjectVisible,
 	objectDistance,
 	objectScale,
 	objectZIndex,
@@ -293,8 +292,6 @@ export class NgtsHTMLContent extends NgtHTML {
 		super();
 
 		const renderer = inject(Renderer2);
-		const releaseFramePreparation = acquireHTMLFramePreparation(this.store);
-		inject(DestroyRef).onDestroy(releaseFramePreparation);
 
 		let isMeshSizeSet = false;
 
@@ -367,13 +364,9 @@ export class NgtsHTMLContent extends NgtHTML {
 		});
 
 		effect((onCleanup) => {
-			const [observedElement, occlude, isRaycastOcclusion] = [
-				this.containerRef()?.nativeElement,
-				this.html.occlude(),
-				this.html.isRaycastOcclusion(),
-			];
+			const [observedElement, occlude] = [this.containerRef()?.nativeElement, this.html.occlude()];
 			isMeshSizeSet = false;
-			if (!observedElement || !occlude || isRaycastOcclusion || typeof ResizeObserver === 'undefined') return;
+			if (!observedElement || occlude !== 'blending' || typeof ResizeObserver === 'undefined') return;
 
 			const resizeObserver = new ResizeObserver(() => {
 				isMeshSizeSet = false;
@@ -383,186 +376,158 @@ export class NgtsHTMLContent extends NgtHTML {
 			onCleanup(() => resizeObserver.disconnect());
 		});
 
-		let visible = true;
 		let oldPosition = [Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY];
 		const spriteMatrix = new THREE.Matrix4();
 		const cameraWorldPosition = new THREE.Vector3();
+		const html = this.html;
+		const target: NgtsHTMLOcclusionTarget = {
+			get anchor() {
+				return html.groupRef().nativeElement;
+			},
+			element: this.host.nativeElement,
+		};
+		const releaseHTMLFrameTarget = registerHTMLFrameTarget(this.store, {
+			target,
+			getOcclusion: () => this.html.occlude(),
+			onOcclusionChange: (occluded) => {
+				if (this.occluded['listeners']) this.occluded.emit(occluded);
+				else setStyleIfChanged(renderer, this.host.nativeElement, 'display', occluded ? 'none' : 'block');
+			},
+			update: (renderState) => {
+				const [
+					hostEl,
+					transformOuterEl,
+					transformInnerEl,
+					group,
+					occlusionMesh,
+					occlusionGeometry,
+					{ camera, size, viewport },
+					{ calculatePosition, eps, zIndexRange, logarithmicDepth, sprite, distanceFactor },
+					{ transform, occlude, scale },
+				] = [
+					this.host.nativeElement,
+					this.transformOuterRef()?.nativeElement,
+					this.transformInnerRef()?.nativeElement,
+					this.html.groupRef().nativeElement,
+					this.html.occlusionMeshRef()?.nativeElement,
+					this.html.occlusionGeometryRef()?.nativeElement,
+					renderState,
+					this.options(),
+					this.html.options(),
+				];
 
-		beforeRender((renderState) => {
-			const [
-				hostEl,
-				transformOuterEl,
-				transformInnerEl,
-				group,
-				occlusionMesh,
-				occlusionGeometry,
-				isRaycastOcclusion,
-				{ camera, size, viewport, raycaster, scene },
-				{ calculatePosition, eps, zIndexRange, logarithmicDepth, sprite, distanceFactor },
-				{ transform, occlude, scale },
-			] = [
-				this.host.nativeElement,
-				this.transformOuterRef()?.nativeElement,
-				this.transformInnerRef()?.nativeElement,
-				this.html.groupRef().nativeElement,
-				this.html.occlusionMeshRef()?.nativeElement,
-				this.html.occlusionGeometryRef()?.nativeElement,
-				this.html.isRaycastOcclusion(),
-				renderState,
-				this.options(),
-				this.html.options(),
-			];
+				if (group) {
+					const halfRange = Math.floor(zIndexRange[0] / 2);
+					const zRange = occlude
+						? occlude === 'blending'
+							? [halfRange - 1, 0]
+							: [zIndexRange[0], halfRange]
+						: zIndexRange;
+					const distance = objectDistance(group, camera);
+					const zIndex = objectZIndex(group, camera, zRange, logarithmicDepth, distance);
+					setStyleIfChanged(renderer, hostEl, 'z-index', `${zIndex}`);
 
-			if (group) {
-				// Check if any ancestor is hidden (e.g., by LOD)
-				let ancestorVisible = true;
-				let ancestor: THREE.Object3D | null = group;
-				while (ancestor) {
-					if (!ancestor.visible) {
-						ancestorVisible = false;
-						break;
-					}
-					ancestor = ancestor.parent;
-				}
-
-				const previouslyVisible = visible;
-				if (!ancestorVisible) {
-					visible = false;
-				} else {
-					const isBehindCamera = isObjectBehindCamera(group, camera);
-					let raytraceTarget: THREE.Object3D[] | undefined;
-
-					if (isRaycastOcclusion) {
-						if (Array.isArray(occlude)) {
-							raytraceTarget = occlude
-								.map((item) => resolveRef(item))
-								.filter((item): item is THREE.Object3D => !!item);
-						} else if (occlude !== 'blending') {
-							raytraceTarget = [scene];
+					if (transform) {
+						const [widthHalf, heightHalf] = [size.width / 2, size.height / 2];
+						const fov = camera.projectionMatrix.elements[5] * heightHalf;
+						const { isOrthographicCamera, top, left, bottom, right } = camera as THREE.OrthographicCamera;
+						const cameraMatrix = getCameraCSSMatrix(camera.matrixWorldInverse);
+						const cameraTransform = isOrthographicCamera
+							? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
+							: `translateZ(${fov}px)`;
+						let matrix = group.matrixWorld;
+						if (sprite) {
+							matrix = spriteMatrix
+								.copy(camera.matrixWorldInverse)
+								.transpose()
+								.copyPosition(matrix)
+								.scale(group.scale);
+							matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0;
+							matrix.elements[15] = 1;
 						}
-					}
 
-					visible =
-						!isBehindCamera &&
-						(!raytraceTarget || isObjectVisible(group, camera, raycaster, raytraceTarget));
-				}
+						setStyleIfChanged(renderer, hostEl, 'width', size.width + 'px');
+						setStyleIfChanged(renderer, hostEl, 'height', size.height + 'px');
+						setStyleIfChanged(renderer, hostEl, 'perspective', isOrthographicCamera ? '' : `${fov}px`);
 
-				if (previouslyVisible !== visible) {
-					if (this.occluded['listeners']) this.occluded.emit(!visible);
-					else setStyleIfChanged(renderer, hostEl, 'display', visible ? 'block' : 'none');
-				}
-
-				if (!ancestorVisible) return;
-
-				const halfRange = Math.floor(zIndexRange[0] / 2);
-				const zRange = occlude
-					? isRaycastOcclusion
-						? [zIndexRange[0], halfRange]
-						: [halfRange - 1, 0]
-					: zIndexRange;
-				const distance = objectDistance(group, camera);
-				const zIndex = objectZIndex(group, camera, zRange, logarithmicDepth, distance);
-				setStyleIfChanged(renderer, hostEl, 'z-index', `${zIndex}`);
-
-				if (transform) {
-					const [widthHalf, heightHalf] = [size.width / 2, size.height / 2];
-					const fov = camera.projectionMatrix.elements[5] * heightHalf;
-					const { isOrthographicCamera, top, left, bottom, right } = camera as THREE.OrthographicCamera;
-					const cameraMatrix = getCameraCSSMatrix(camera.matrixWorldInverse);
-					const cameraTransform = isOrthographicCamera
-						? `scale(${fov})translate(${epsilon(-(right + left) / 2)}px,${epsilon((top + bottom) / 2)}px)`
-						: `translateZ(${fov}px)`;
-					let matrix = group.matrixWorld;
-					if (sprite) {
-						matrix = spriteMatrix
-							.copy(camera.matrixWorldInverse)
-							.transpose()
-							.copyPosition(matrix)
-							.scale(group.scale);
-						matrix.elements[3] = matrix.elements[7] = matrix.elements[11] = 0;
-						matrix.elements[15] = 1;
-					}
-
-					setStyleIfChanged(renderer, hostEl, 'width', size.width + 'px');
-					setStyleIfChanged(renderer, hostEl, 'height', size.height + 'px');
-					setStyleIfChanged(renderer, hostEl, 'perspective', isOrthographicCamera ? '' : `${fov}px`);
-
-					if (transformOuterEl && transformInnerEl) {
+						if (transformOuterEl && transformInnerEl) {
+							setStyleIfChanged(
+								renderer,
+								transformOuterEl,
+								'transform',
+								`${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`,
+							);
+							setStyleIfChanged(
+								renderer,
+								transformInnerEl,
+								'transform',
+								getObjectCSSMatrix(matrix, 1 / ((distanceFactor || 10) / 400)),
+							);
+						}
+					} else {
+						const vec = calculatePosition(group, camera, size);
+						const positionChanged =
+							Math.abs(oldPosition[0] - vec[0]) > eps || Math.abs(oldPosition[1] - vec[1]) > eps;
+						if (positionChanged) oldPosition = [vec[0], vec[1]];
+						const htmlScale =
+							distanceFactor === undefined ? 1 : objectScale(group, camera, distance) * distanceFactor;
 						setStyleIfChanged(
 							renderer,
-							transformOuterEl,
+							hostEl,
 							'transform',
-							`${cameraTransform}${cameraMatrix}translate(${widthHalf}px,${heightHalf}px)`,
-						);
-						setStyleIfChanged(
-							renderer,
-							transformInnerEl,
-							'transform',
-							getObjectCSSMatrix(matrix, 1 / ((distanceFactor || 10) / 400)),
+							`translate3d(${oldPosition[0]}px,${oldPosition[1]}px,0) scale(${htmlScale})`,
 						);
 					}
-				} else {
-					const vec = calculatePosition(group, camera, size);
-					const positionChanged =
-						Math.abs(oldPosition[0] - vec[0]) > eps || Math.abs(oldPosition[1] - vec[1]) > eps;
-					if (positionChanged) oldPosition = [vec[0], vec[1]];
-					const htmlScale =
-						distanceFactor === undefined ? 1 : objectScale(group, camera, distance) * distanceFactor;
-					setStyleIfChanged(
-						renderer,
-						hostEl,
-						'transform',
-						`translate3d(${oldPosition[0]}px,${oldPosition[1]}px,0) scale(${htmlScale})`,
-					);
 				}
-			}
 
-			if (!isRaycastOcclusion && occlusionMesh && !isMeshSizeSet) {
-				if (transform) {
-					if (transformOuterEl) {
-						const el = this.containerRef()?.nativeElement;
+				if (occlude === 'blending' && occlusionMesh && !isMeshSizeSet) {
+					if (transform) {
+						if (transformOuterEl) {
+							const el = this.containerRef()?.nativeElement;
 
-						if (el?.clientWidth && el?.clientHeight) {
-							const { isOrthographicCamera } = camera as THREE.OrthographicCamera;
+							if (el?.clientWidth && el?.clientHeight) {
+								const { isOrthographicCamera } = camera as THREE.OrthographicCamera;
 
-							// A missing fallback geometry means the caller projected a custom one.
-							if (isOrthographicCamera || !occlusionGeometry) {
-								if (scale) {
-									if (!Array.isArray(scale)) {
-										occlusionMesh.scale.setScalar(1 / (scale as number));
-									} else if (is.three<THREE.Vector3>(scale, 'isVector3')) {
-										occlusionMesh.scale.set(1 / scale.x, 1 / scale.y, 1 / scale.z);
-									} else {
-										occlusionMesh.scale.set(1 / scale[0], 1 / scale[1], 1 / scale[2]);
+								// A missing fallback geometry means the caller projected a custom one.
+								if (isOrthographicCamera || !occlusionGeometry) {
+									if (scale) {
+										if (!Array.isArray(scale)) {
+											occlusionMesh.scale.setScalar(1 / (scale as number));
+										} else if (is.three<THREE.Vector3>(scale, 'isVector3')) {
+											occlusionMesh.scale.set(1 / scale.x, 1 / scale.y, 1 / scale.z);
+										} else {
+											occlusionMesh.scale.set(1 / scale[0], 1 / scale[1], 1 / scale[2]);
+										}
 									}
-								}
-							} else {
-								const ratio = (distanceFactor || 10) / 400;
-								const w = el.clientWidth * ratio;
-								const h = el.clientHeight * ratio;
+								} else {
+									const ratio = (distanceFactor || 10) / 400;
+									const w = el.clientWidth * ratio;
+									const h = el.clientHeight * ratio;
 
-								occlusionMesh.scale.set(w, h, 1);
+									occlusionMesh.scale.set(w, h, 1);
+								}
+
+								isMeshSizeSet = true;
 							}
+						}
+					} else {
+						const ele = hostEl.children[0];
+
+						if (ele?.clientWidth && ele?.clientHeight) {
+							const ratio = 1 / viewport.factor;
+							const w = ele.clientWidth * ratio;
+							const h = ele.clientHeight * ratio;
+
+							occlusionMesh.scale.set(w, h, 1);
 
 							isMeshSizeSet = true;
 						}
+
+						occlusionMesh.lookAt(camera.getWorldPosition(cameraWorldPosition));
 					}
-				} else {
-					const ele = hostEl.children[0];
-
-					if (ele?.clientWidth && ele?.clientHeight) {
-						const ratio = 1 / viewport.factor;
-						const w = ele.clientWidth * ratio;
-						const h = ele.clientHeight * ratio;
-
-						occlusionMesh.scale.set(w, h, 1);
-
-						isMeshSizeSet = true;
-					}
-
-					occlusionMesh.lookAt(camera.getWorldPosition(cameraWorldPosition));
 				}
-			}
+			},
 		});
+		inject(DestroyRef).onDestroy(releaseHTMLFrameTarget);
 	}
 }

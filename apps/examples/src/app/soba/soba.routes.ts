@@ -70,6 +70,10 @@ const routes: Routes = [
 		},
 	},
 	{
+		path: 'html-occlusion',
+		loadComponent: () => import('./html-occlusion/html-occlusion'),
+	},
+	{
 		path: 'stars',
 		loadComponent: () => import('./stars/stars'),
 		data: {

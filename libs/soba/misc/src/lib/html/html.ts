@@ -3,7 +3,7 @@ import {
 	Component,
 	computed,
 	CUSTOM_ELEMENTS_SCHEMA,
-	ElementRef,
+	type ElementRef,
 	input,
 	viewChild,
 } from '@angular/core';
@@ -12,6 +12,15 @@ import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
 import { Group, Mesh, PlaneGeometry, ShaderMaterial } from 'three';
 import { NgtsHTMLContent } from './html-content';
+import type { NgtsHTMLOcclusion } from './occlusion';
+
+export type {
+	NgtsHTMLOcclusion,
+	NgtsHTMLOcclusionFrame,
+	NgtsHTMLOcclusionStrategy,
+	NgtsHTMLOcclusionTarget,
+	NgtsHTMLOcclusionTest,
+} from './occlusion';
 
 /**
  * Configuration options for the NgtsHTML component.
@@ -24,8 +33,10 @@ export interface NgtsHTMLOptions extends Partial<NgtThreeElements['ngt-group']> 
 	 * - `'raycast'` - Same as `true`
 	 * - `'blending'` - Uses z-index blending (canvas becomes transparent)
 	 * - `Object3D[]` or `ElementRef<Object3D>[]` - Raycast against specific objects only
+	 * - `NgtsHTMLOcclusionTest` - Use a lightweight custom test
+	 * - `NgtsHTMLOcclusionStrategy` - Coordinate custom tests across multiple HTML content targets
 	 */
-	occlude: ElementRef<THREE.Object3D>[] | THREE.Object3D[] | boolean | 'raycast' | 'blending';
+	occlude: NgtsHTMLOcclusion;
 	/**
 	 * When `true`, uses CSS 3D transforms to position HTML in 3D space.
 	 * When `false`, projects 3D position to 2D screen coordinates.
@@ -88,7 +99,7 @@ const defaultHtmlOptions: NgtsHTMLOptions = {
 	selector: 'ngts-html',
 	template: `
 		<ngt-group #group [parameters]="parameters()">
-			@if (occlude() && !isRaycastOcclusion()) {
+			@if (occlude() === 'blending') {
 				<ngt-mesh #occlusionMesh [castShadow]="castShadow()" [receiveShadow]="receiveShadow()">
 					<ng-content select="[data-occlusion-geometry]">
 						<ngt-plane-geometry #occlusionGeometry />
@@ -129,11 +140,6 @@ export class NgtsHTMLImpl {
 	occlude = pick(this.options, 'occlude');
 	/** Whether CSS 3D transform mode is enabled */
 	transform = pick(this.options, 'transform');
-
-	isRaycastOcclusion = computed(() => {
-		const occlude = this.occlude();
-		return occlude === true || occlude === 'raycast' || Array.isArray(occlude);
-	});
 
 	private shaders = computed(() => {
 		const transform = this.transform();

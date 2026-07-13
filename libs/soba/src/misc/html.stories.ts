@@ -1,10 +1,86 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	CUSTOM_ELEMENTS_SCHEMA,
+	ElementRef,
+	input,
+	viewChild,
+} from '@angular/core';
 import { Meta } from '@storybook/angular';
 import { NgtArgs } from 'angular-three';
-import { NgtsHTML, NgtsHTMLContentOptions, NgtsHTMLOptions } from 'angular-three-soba/misc';
+import {
+	NgtsHTML,
+	NgtsHTMLContentOptions,
+	type NgtsHTMLOcclusionFrame,
+	type NgtsHTMLOcclusionStrategy,
+	type NgtsHTMLOcclusionTarget,
+	NgtsHTMLOptions,
+} from 'angular-three-soba/misc';
 import { NgtsDetailed } from 'angular-three-soba/performances';
-import { ColorRepresentation } from 'three';
+import { ColorRepresentation, Object3D, Vector3 } from 'three';
 import { storyDecorators, storyFunction, storyObject, Turnable } from '../setup-canvas';
+
+const MARKER_RADIUS = 2.2;
+
+function sphericalMarkers(count: number) {
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+	return Array.from({ length: count }, (_, id) => {
+		const y = 1 - (id / (count - 1)) * 2;
+		const ringRadius = Math.sqrt(1 - y * y);
+		const angle = goldenAngle * id;
+
+		return {
+			id,
+			position: [
+				Math.cos(angle) * ringRadius * MARKER_RADIUS,
+				y * MARKER_RADIUS,
+				Math.sin(angle) * ringRadius * MARKER_RADIUS,
+			] as [number, number, number],
+		};
+	});
+}
+
+class SphericalOcclusionStrategy implements NgtsHTMLOcclusionStrategy {
+	private readonly cameraPosition = new Vector3();
+	private readonly sphereCenter = new Vector3();
+	private readonly sphereScale = new Vector3();
+	private readonly anchorPosition = new Vector3();
+	private readonly cameraToAnchor = new Vector3();
+	private readonly cameraToCenter = new Vector3();
+	private radiusSquared = 0;
+
+	constructor(
+		private readonly sphere: () => Object3D,
+		private readonly radius: number,
+	) {}
+
+	beginFrame(_targets: readonly NgtsHTMLOcclusionTarget[], { state }: NgtsHTMLOcclusionFrame) {
+		state.camera.getWorldPosition(this.cameraPosition);
+
+		const sphere = this.sphere();
+		sphere.getWorldPosition(this.sphereCenter);
+		sphere.getWorldScale(this.sphereScale);
+		const worldRadius = this.radius * Math.max(this.sphereScale.x, this.sphereScale.y, this.sphereScale.z);
+		this.radiusSquared = worldRadius * worldRadius;
+	}
+
+	isOccluded({ anchor }: NgtsHTMLOcclusionTarget, _frame: NgtsHTMLOcclusionFrame) {
+		anchor.getWorldPosition(this.anchorPosition);
+		this.cameraToAnchor.subVectors(this.anchorPosition, this.cameraPosition);
+
+		const markerDistance = this.cameraToAnchor.length();
+		if (markerDistance === 0) return false;
+
+		this.cameraToAnchor.divideScalar(markerDistance);
+		this.cameraToCenter.subVectors(this.sphereCenter, this.cameraPosition);
+		const closestPoint = this.cameraToCenter.dot(this.cameraToAnchor);
+
+		if (closestPoint <= 0 || closestPoint >= markerDistance) return false;
+
+		return this.cameraToCenter.lengthSq() - closestPoint * closestPoint < this.radiusSquared;
+	}
+}
 
 @Component({
 	selector: 'html-scene',
@@ -132,6 +208,40 @@ class HtmlTransformScene {
 })
 class HtmlWithLODScene {}
 
+@Component({
+	selector: 'html-custom-occlusion-scene',
+	template: `
+		<ngt-color *args="['#070b18']" attach="background" />
+		<ngt-ambient-light [intensity]="0.8" />
+		<ngt-directional-light [position]="[4, 5, 6]" [intensity]="2" />
+
+		<ngt-mesh #planet>
+			<ngt-sphere-geometry *args="[2, 48, 48]" />
+			<ngt-mesh-standard-material color="#182f59" [roughness]="0.72" [metalness]="0.08" />
+		</ngt-mesh>
+
+		@for (marker of markers; track marker.id) {
+			<ngts-html [options]="{ position: marker.position, occlude: occlusionStrategy }">
+				<div
+					[htmlContent]="{ center: true }"
+					style="padding: 2px 5px; border: 1px solid #7dd3fc; border-radius: 999px; background: #071426e6; color: #e0f2fe; font: 10px/1 monospace; white-space: nowrap;"
+				>
+					{{ marker.id + 1 }}
+				</div>
+			</ngts-html>
+		}
+	`,
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgtArgs, NgtsHTML],
+})
+class HtmlCustomOcclusionScene {
+	protected readonly markers = sphericalMarkers(48);
+	protected readonly occlusionStrategy = new SphericalOcclusionStrategy(() => this.planetRef().nativeElement, 2);
+
+	private readonly planetRef = viewChild.required<ElementRef<Object3D>>('planet');
+}
+
 export default {
 	title: 'Misc/HTML',
 	decorators: storyDecorators(),
@@ -139,6 +249,10 @@ export default {
 
 export const Default = storyFunction(HtmlScene, { camera: { position: [-20, 20, -20] } });
 export const WithLOD = storyFunction(HtmlWithLODScene, { camera: { position: [0, 0, 10] } });
+export const CustomOcclusionStrategy = storyFunction(HtmlCustomOcclusionScene, {
+	camera: { position: [0, 1, 7] },
+	lights: false,
+});
 export const Transform = storyObject(HtmlTransformScene, {
 	camera: { position: [-20, 20, -20] },
 	argsOptions: {
