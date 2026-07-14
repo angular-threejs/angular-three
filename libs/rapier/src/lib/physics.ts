@@ -281,18 +281,19 @@ export class NgtrPhysics {
 		const clampedDelta = THREE.MathUtils.clamp(delta, 0, 0.5);
 
 		const stepWorld = (innerDelta: number) => {
+			world.timestep = innerDelta;
+
 			// Trigger beforeStep callbacks
 			this.beforeStepCallbacks.forEach((callback) => {
-				callback(world);
+				callback(world, innerDelta);
 			});
 
-			world.timestep = innerDelta;
 			const hasHooks = this.filterContactPairCallbacks.size > 0 || this.filterIntersectionPairCallbacks.size > 0;
 			world.step(eventQueue, hasHooks ? this.hooks : undefined);
 
 			// Trigger afterStep callbacks
 			this.afterStepCallbacks.forEach((callback) => {
-				callback(world);
+				callback(world, innerDelta);
 			});
 		};
 

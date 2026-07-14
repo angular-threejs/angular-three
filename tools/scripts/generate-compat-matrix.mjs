@@ -43,6 +43,7 @@ const CONFIG = {
 		{ name: 'angular-three-soba', distPath: 'dist/libs/soba/package.json', displayName: 'Soba' },
 		{ name: 'angular-three-cannon', distPath: 'dist/libs/cannon/package.json', displayName: 'Cannon' },
 		{ name: 'angular-three-rapier', distPath: 'dist/libs/rapier/package.json', displayName: 'Rapier' },
+		{ name: 'angular-three-ecctrl', distPath: 'dist/libs/ecctrl/package.json', displayName: 'Ecctrl' },
 		{
 			name: 'angular-three-postprocessing',
 			distPath: 'dist/libs/postprocessing/package.json',

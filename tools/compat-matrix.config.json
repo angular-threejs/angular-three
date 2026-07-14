@@ -68,6 +68,19 @@
 				}
 			]
 		},
+		"angular-three-ecctrl": {
+			"displayName": "Ecctrl",
+			"entries": [
+				{
+					"version": ">=4.0.0",
+					"peerDependencies": {
+						"@dimforge/rapier3d-compat": ">=0.14.0 <0.20.0",
+						"angular-three": ">=4.0.0 <5.0.0",
+						"angular-three-rapier": ">=4.0.0 <5.0.0"
+					}
+				}
+			]
+		},
 		"angular-three-postprocessing": {
 			"displayName": "Postprocessing",
 			"entries": [

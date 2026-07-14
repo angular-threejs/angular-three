@@ -202,7 +202,7 @@
 		}
 	},
 	"release": {
-		"projects": ["core", "cannon", "postprocessing", "soba", "rapier", "plugin", "tweakpane", "theatre"],
+		"projects": ["core", "cannon", "ecctrl", "postprocessing", "soba", "rapier", "plugin", "tweakpane", "theatre"],
 		"version": {
 			"preVersionCommand": "pnpm package",
 			"currentVersionResolver": "git-tag",

@@ -1,0 +1,43 @@
+{
+	"name": "ecctrl",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/ecctrl/src",
+	"prefix": "lib",
+	"projectType": "library",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@nx/angular:package",
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+			"options": {
+				"project": "libs/ecctrl/ng-package.json",
+				"tsConfig": "libs/ecctrl/tsconfig.lib.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/ecctrl/tsconfig.lib.prod.json"
+				},
+				"development": {}
+			},
+			"defaultConfiguration": "production"
+		},
+		"test": {
+			"executor": "@analogjs/vitest-angular:test"
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
+		},
+		"publish-next": {
+			"command": "npm publish --tag=next",
+			"options": {
+				"cwd": "{workspaceRoot}/dist/{projectRoot}"
+			}
+		},
+		"publish": {
+			"command": "npm publish",
+			"options": {
+				"cwd": "{workspaceRoot}/dist/{projectRoot}"
+			}
+		}
+	}
+}
