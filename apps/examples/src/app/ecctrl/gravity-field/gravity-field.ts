@@ -2,11 +2,9 @@ import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef,
 import { NgtArgs, NgtVector3 } from 'angular-three';
 import type { NgteEcctrlOptions } from 'angular-three-ecctrl';
 import { NgteEcctrlGravity, NgteEcctrlGravityBody } from 'angular-three-ecctrl/gravity';
-import { NgtrBallCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
-import { NgtCanvas } from 'angular-three/dom';
+import { NgtrBallCollider, NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
 import { EcctrlExampleControls } from '../shared/example-controls';
-import { EcctrlExampleOverlay } from '../shared/example-overlay';
 import { EcctrlKeyboardPlayer } from '../shared/keyboard-player';
 
 interface Star {
@@ -76,7 +74,7 @@ interface Satellite {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class EcctrlGravityFieldScene {
+export default class EcctrlGravityFieldScene {
 	protected readonly Math = Math;
 	protected readonly playerOptions: NgteEcctrlOptions = {
 		enableToggleRun: false,
@@ -115,53 +113,4 @@ class EcctrlGravityFieldScene {
 			controls.physicsGravity.set([0, -9.81, 0]);
 		});
 	}
-}
-
-@Component({
-	selector: 'app-ecctrl-gravity-field',
-	template: `
-		<ngt-canvas [camera]="{ position: [9, 7, 12], fov: 45 }" [lookAt]="[0, 5, 0]" shadows>
-			<ngtr-physics
-				*canvasContent
-				[options]="{
-					paused: controls.physicsPaused(),
-					gravity: controls.physicsGravity(),
-					timeStep: controls.physicsTimeStep(),
-				}"
-			>
-				<ng-template>
-					<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-					<ngt-directional-light
-						castShadow
-						[position]="[8, 12, 6]"
-						[intensity]="2 * Math.PI"
-						[shadow.mapSize.width]="2048"
-						[shadow.mapSize.height]="2048"
-						[shadow.camera.near]="0.5"
-						[shadow.camera.far]="50"
-						[shadow.camera.left]="-14"
-						[shadow.camera.right]="14"
-						[shadow.camera.top]="14"
-						[shadow.camera.bottom]="-14"
-						[shadow.bias]="-0.0001"
-						[shadow.normalBias]="0.02"
-						[shadow.radius]="4"
-						[shadow.intensity]="0.65"
-					/>
-
-					<app-ecctrl-gravity-field-scene />
-				</ng-template>
-			</ngtr-physics>
-		</ngt-canvas>
-		<app-ecctrl-example-overlay />
-	`,
-	imports: [EcctrlExampleOverlay, EcctrlGravityFieldScene, NgtCanvas, NgtrPhysics],
-	providers: [EcctrlExampleControls],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'block h-full relative w-full' },
-})
-export default class EcctrlGravityField {
-	protected readonly Math = Math;
-	protected readonly controls = inject(EcctrlExampleControls);
 }

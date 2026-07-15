@@ -78,9 +78,17 @@ export class EcctrlKeyboardPlayer {
 	protected readonly movement = signal<Partial<NgteEcctrlMovementInput>>({});
 
 	private readonly keyboardControls = viewChild(NgtsKeyboardControls);
+	private readonly cameraControls = viewChild(NgtsCameraControls);
 	private readonly exampleControls = inject(EcctrlExampleControls, { optional: true });
 
 	constructor() {
+		effect((onCleanup) => {
+			const cameraControls = this.cameraControls()?.controls();
+			if (!cameraControls || !this.exampleControls) return;
+			this.exampleControls.restoreCameraTarget(cameraControls);
+			onCleanup(() => this.exampleControls?.captureCameraTarget(cameraControls));
+		});
+
 		effect((onCleanup) => {
 			if (!this.touchControls() || !this.exampleControls) return;
 			this.exampleControls.touchActive.set(true);

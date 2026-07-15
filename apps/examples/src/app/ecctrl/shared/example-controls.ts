@@ -1,11 +1,18 @@
 import { Injectable, signal } from '@angular/core';
 import type { NgteEcctrlJoystickValue } from 'angular-three-ecctrl/input';
+import type { NgtsCameraControls } from 'angular-three-soba/controls';
 import type { TweakpaneCurveData } from 'angular-three-tweakpane/curve';
+import { Vector3 } from 'three';
+
+type CameraControls = ReturnType<NgtsCameraControls['controls']>;
 
 const DEFAULT_INSTRUCTIONS = 'Character · W/S move · A/D turn · Shift run · Space jump · drag to orbit · wheel to zoom';
 
 @Injectable()
 export class EcctrlExampleControls {
+	private readonly cameraTarget = new Vector3();
+	private hasCameraTarget = false;
+
 	readonly instructions = signal<string | null>(DEFAULT_INSTRUCTIONS);
 	readonly touchActive = signal(false);
 	readonly joystick = signal<NgteEcctrlJoystickValue>({ x: 0, y: 0 });
@@ -36,5 +43,16 @@ export class EcctrlExampleControls {
 		this.jump.set(false);
 		this.run.set(false);
 		this.touchActive.set(false);
+	}
+
+	restoreCameraTarget(controls: CameraControls) {
+		if (!this.hasCameraTarget) return;
+		void controls.setTarget(this.cameraTarget.x, this.cameraTarget.y, this.cameraTarget.z, false);
+		controls.update(0);
+	}
+
+	captureCameraTarget(controls: CameraControls) {
+		controls.getTarget(this.cameraTarget, false);
+		this.hasCameraTarget = true;
 	}
 }

@@ -14,15 +14,13 @@ import {
 	type NgteEcctrlVehicleOptions,
 	type NgteThrustPropellerOptions,
 } from 'angular-three-ecctrl/vehicle';
-import { NgtrCuboidCollider, NgtrCylinderCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtrCuboidCollider, NgtrCylinderCollider, NgtrRigidBody } from 'angular-three-rapier';
 import { createKeyboardControls, NgtsCameraControls, NgtsKeyboardControls } from 'angular-three-soba/controls';
 import { gltfResource } from 'angular-three-soba/loaders';
-import { NgtCanvas } from 'angular-three/dom';
 import { FrontSide, Mesh, MeshStandardMaterial, Vector3 } from 'three';
 import type { GLTF } from 'three-stdlib';
 import { createCameraTargetFollowRuntime, followCameraControlsTarget } from '../shared/camera-target-follow';
 import { EcctrlExampleControls } from '../shared/example-controls';
-import { EcctrlExampleOverlay } from '../shared/example-overlay';
 
 type VehicleGLTF = GLTF & {
 	nodes: {
@@ -156,10 +154,18 @@ class EcctrlDroneRig {
 	private readonly vehicle = viewChild(NgteEcctrlVehicle);
 	private readonly keyboard = viewChild(NgtsKeyboardControls);
 	private readonly cameraControls = viewChild(NgtsCameraControls);
+	private readonly exampleControls = inject(EcctrlExampleControls);
 	private readonly cameraAnchor = new Vector3();
 	private readonly cameraFollow = createCameraTargetFollowRuntime();
 
 	constructor() {
+		effect((onCleanup) => {
+			const controls = this.cameraControls()?.controls();
+			if (!controls) return;
+			this.exampleControls.restoreCameraTarget(controls);
+			onCleanup(() => this.exampleControls.captureCameraTarget(controls));
+		});
+
 		effect(() => {
 			const material = this.gltf.value()?.materials.GridTexture;
 			if (material) {
@@ -222,7 +228,7 @@ class EcctrlDroneRig {
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class EcctrlVehicleDroneScene {
+export default class EcctrlVehicleDroneScene {
 	protected readonly beacons: Array<{
 		position: [number, number, number];
 		scale: [number, number, number];
@@ -240,53 +246,4 @@ class EcctrlVehicleDroneScene {
 		);
 		inject(DestroyRef).onDestroy(resetInstructions);
 	}
-}
-
-@Component({
-	selector: 'app-ecctrl-vehicle-drone',
-	template: `
-		<ngt-canvas [camera]="{ position: [9, 7, 12], fov: 45 }" [lookAt]="[0, 4, 4]" shadows>
-			<ngtr-physics
-				*canvasContent
-				[options]="{
-					paused: controls.physicsPaused(),
-					gravity: controls.physicsGravity(),
-					timeStep: controls.physicsTimeStep(),
-				}"
-			>
-				<ng-template>
-					<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-					<ngt-directional-light
-						castShadow
-						[position]="[8, 12, 6]"
-						[intensity]="2 * Math.PI"
-						[shadow.mapSize.width]="2048"
-						[shadow.mapSize.height]="2048"
-						[shadow.camera.near]="0.5"
-						[shadow.camera.far]="50"
-						[shadow.camera.left]="-24"
-						[shadow.camera.right]="24"
-						[shadow.camera.top]="24"
-						[shadow.camera.bottom]="-24"
-						[shadow.bias]="-0.0001"
-						[shadow.normalBias]="0.02"
-						[shadow.radius]="4"
-						[shadow.intensity]="0.65"
-					/>
-
-					<app-ecctrl-vehicle-drone-scene />
-				</ng-template>
-			</ngtr-physics>
-		</ngt-canvas>
-		<app-ecctrl-example-overlay />
-	`,
-	imports: [EcctrlExampleOverlay, EcctrlVehicleDroneScene, NgtCanvas, NgtrPhysics],
-	providers: [EcctrlExampleControls],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'block h-full relative w-full' },
-})
-export default class EcctrlVehicleDrone {
-	protected readonly Math = Math;
-	protected readonly controls = inject(EcctrlExampleControls);
 }

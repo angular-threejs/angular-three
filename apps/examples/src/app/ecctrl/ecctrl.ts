@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import routes from './ecctrl.routes';
+import { ecctrlExampleRoutes } from './ecctrl.routes';
 
 @Component({
 	template: `
@@ -29,5 +29,5 @@ import routes from './ecctrl.routes';
 	host: { class: 'ecctrl' },
 })
 export default class Ecctrl {
-	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);
+	protected examples = ecctrlExampleRoutes.map((route) => route.path);
 }

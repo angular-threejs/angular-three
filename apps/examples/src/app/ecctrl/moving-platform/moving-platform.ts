@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
 import { beforeRender, NgtArgs } from 'angular-three';
 import type { NgteEcctrlOptions } from 'angular-three-ecctrl';
-import { NgtrCuboidCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
-import { NgtCanvas } from 'angular-three/dom';
+import { NgtrCuboidCollider, NgtrRigidBody } from 'angular-three-rapier';
 import * as THREE from 'three';
-import { EcctrlExampleControls } from '../shared/example-controls';
-import { EcctrlExampleOverlay } from '../shared/example-overlay';
 import { EcctrlKeyboardPlayer } from '../shared/keyboard-player';
 
 @Component({
@@ -69,7 +66,7 @@ import { EcctrlKeyboardPlayer } from '../shared/keyboard-player';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-class EcctrlMovingPlatformScene {
+export default class EcctrlMovingPlatformScene {
 	protected readonly playerOptions: NgteEcctrlOptions = {
 		enableToggleRun: false,
 		followPlatform: true,
@@ -127,53 +124,4 @@ class EcctrlMovingPlatformScene {
 			}
 		});
 	}
-}
-
-@Component({
-	selector: 'app-ecctrl-moving-platform',
-	template: `
-		<ngt-canvas [camera]="{ position: [9, 7, 12], fov: 45 }" [lookAt]="[0, 1, 0]" shadows>
-			<ngtr-physics
-				*canvasContent
-				[options]="{
-					paused: controls.physicsPaused(),
-					gravity: controls.physicsGravity(),
-					timeStep: controls.physicsTimeStep(),
-				}"
-			>
-				<ng-template>
-					<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-					<ngt-directional-light
-						castShadow
-						[position]="[8, 12, 6]"
-						[intensity]="2 * Math.PI"
-						[shadow.mapSize.width]="2048"
-						[shadow.mapSize.height]="2048"
-						[shadow.camera.near]="0.5"
-						[shadow.camera.far]="50"
-						[shadow.camera.left]="-18"
-						[shadow.camera.right]="18"
-						[shadow.camera.top]="18"
-						[shadow.camera.bottom]="-18"
-						[shadow.bias]="-0.0001"
-						[shadow.normalBias]="0.02"
-						[shadow.radius]="4"
-						[shadow.intensity]="0.65"
-					/>
-
-					<app-ecctrl-moving-platform-scene />
-				</ng-template>
-			</ngtr-physics>
-		</ngt-canvas>
-		<app-ecctrl-example-overlay />
-	`,
-	imports: [EcctrlExampleOverlay, EcctrlMovingPlatformScene, NgtCanvas, NgtrPhysics],
-	providers: [EcctrlExampleControls],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	host: { class: 'block h-full relative w-full' },
-})
-export default class EcctrlMovingPlatform {
-	protected readonly Math = Math;
-	protected readonly controls = inject(EcctrlExampleControls);
 }
