@@ -1,3 +1,17 @@
+## 4.2.4 (2026-07-15)
+
+### 🚀 Features
+
+- **ecctrl:** add character controller integrations ([#90](https://github.com/angular-threejs/angular-three/pull/90))
+
+### 🩹 Fixes
+
+- **core:** harden renderer and runtime lifecycles ([#89](https://github.com/angular-threejs/angular-three/pull/89))
+
+### ❤️ Thank You
+
+- Chau Tran @nartc
+
 ## 4.2.4-next.0 (2026-07-13)
 
 ### 🩹 Fixes
