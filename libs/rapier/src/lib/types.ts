@@ -339,10 +339,12 @@ export interface NgtrEventMapValue {
 export type NgtrEventMap = Map<ColliderHandle | RigidBodyHandle, NgtrEventMapValue>;
 
 /**
- * Callback function invoked during physics world step.
+ * Callback function invoked during a physics world step.
+ *
  * @param world - The Rapier physics world instance
+ * @param delta - The timestep, in seconds, for the current internal physics step
  */
-export type NgtrWorldStepCallback = (world: World) => void;
+export type NgtrWorldStepCallback = (world: World, delta?: number) => void;
 
 /**
  * Callback to filter contact pairs and determine solver behavior.

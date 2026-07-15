@@ -25,29 +25,21 @@ export function beforeRender(
 	cb: NgtBeforeRenderRecord['callback'],
 	{ priority = 0, injector }: { priority?: number | (() => number); injector?: Injector } = {},
 ) {
-	if (typeof priority === 'function') {
-		const effectRef = assertInjector(beforeRender, injector, () => {
-			const store = injectStore();
-			const ref = effect((onCleanup) => {
-				const p = priority();
-				const sub = store.snapshot.internal.subscribe(cb, p, store);
-				onCleanup(() => sub());
-			});
-
-			inject(DestroyRef).onDestroy(() => void ref.destroy());
-
-			return ref;
+	const effectRef = assertInjector(beforeRender, injector, () => {
+		const store = injectStore();
+		const priorityFn = typeof priority === 'function' ? priority : () => priority;
+		const ref = effect((onCleanup) => {
+			const p = priorityFn();
+			const sub = store.snapshot.internal.subscribe(cb, p, store);
+			onCleanup(() => sub());
 		});
 
-		return effectRef.destroy.bind(effectRef);
-	}
+		inject(DestroyRef).onDestroy(() => void ref.destroy());
 
-	return assertInjector(beforeRender, injector, () => {
-		const store = injectStore();
-		const sub = store.snapshot.internal.subscribe(cb, priority, store);
-		inject(DestroyRef).onDestroy(() => void sub());
-		return sub;
+		return ref;
 	});
+
+	return effectRef.destroy.bind(effectRef);
 }
 
 /**

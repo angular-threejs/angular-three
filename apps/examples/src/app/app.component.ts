@@ -19,6 +19,7 @@ import { filter } from 'rxjs';
 					<option class="bg-neutral-950 text-white" value="cannon">/cannon</option>
 					<option class="bg-neutral-950 text-white" value="postprocessing">/postprocessing</option>
 					<option class="bg-neutral-950 text-white" value="rapier">/rapier</option>
+					<option class="bg-neutral-950 text-white" value="ecctrl">/ecctrl</option>
 					<option class="bg-neutral-950 text-white" value="theatre">/theatre</option>
 					<option class="bg-neutral-950 text-white" value="misc">/misc</option>
 					<option class="bg-neutral-950 text-white" value="routed">/routed</option>

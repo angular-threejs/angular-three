@@ -1,4 +1,5 @@
 import {
+	booleanAttribute,
 	computed,
 	Directive,
 	DOCUMENT,
@@ -110,7 +111,7 @@ export class NgtsKeyboardControls<TName extends string = string> {
 	 * for events whose key is in the map (e.g. to stop Space from scrolling the page).
 	 * @default false
 	 */
-	preventDefault = input(false);
+	preventDefault = input(false, { transform: booleanAttribute });
 	/**
 	 * Emits on every action transition (and on each press edge for `up: false` actions).
 	 */

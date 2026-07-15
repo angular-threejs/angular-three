@@ -37,18 +37,28 @@ export class NgtrFrameStepper {
 				return;
 			}
 
-			let lastFrame = 0;
-			let raf: ReturnType<typeof requestAnimationFrame> = 0;
-			const loop = () => {
-				const now = performance.now();
-				const delta = now - lastFrame;
-				raf = requestAnimationFrame(loop);
-				stepFn(delta);
-				lastFrame = now;
-			};
-
-			raf = requestAnimationFrame(loop);
-			onCleanup(() => cancelAnimationFrame(raf));
+			onCleanup(startIndependentFrameLoop(stepFn));
 		});
 	}
+}
+
+/** @internal Starts an RAF loop whose deltas are expressed in seconds. */
+export function startIndependentFrameLoop(
+	step: (delta: number) => void,
+	requestFrame: typeof requestAnimationFrame = requestAnimationFrame,
+	cancelFrame: typeof cancelAnimationFrame = cancelAnimationFrame,
+) {
+	let lastFrame: number | null = null;
+	let raf = 0;
+	const loop: FrameRequestCallback = (now) => {
+		raf = requestFrame(loop);
+		if (lastFrame !== null) {
+			const delta = (now - lastFrame) / 1000;
+			if (Number.isFinite(delta) && delta > 0) step(delta);
+		}
+		lastFrame = now;
+	};
+
+	raf = requestFrame(loop);
+	return () => cancelFrame(raf);
 }

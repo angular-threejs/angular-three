@@ -1,0 +1,11 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"outDir": "../../dist/out-tsc",
+		"target": "es2016",
+		"types": ["node", "vitest/globals"],
+		"isolatedModules": true
+	},
+	"files": ["src/test-setup.ts"],
+	"include": ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
+}

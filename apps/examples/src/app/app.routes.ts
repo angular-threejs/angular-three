@@ -32,6 +32,12 @@ export const appRoutes: Route[] = [
 		title: 'Rapier - Angular Three Demo',
 	},
 	{
+		path: 'ecctrl',
+		loadComponent: () => import('./ecctrl/ecctrl'),
+		loadChildren: () => import('./ecctrl/ecctrl.routes'),
+		title: 'Ecctrl - Angular Three Demo',
+	},
+	{
 		path: 'misc',
 		loadComponent: () => import('./misc/misc'),
 		loadChildren: () => import('./misc/misc.routes'),

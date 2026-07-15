@@ -354,12 +354,12 @@ import { beforePhysicsStep, afterPhysicsStep } from 'angular-three-rapier';
 @Component({...})
 export class MyComponent {
 	constructor() {
-		beforePhysicsStep((world) => {
-			// Run before each physics step
+		beforePhysicsStep((world, delta) => {
+			// Run before each internal physics step. `delta` is that step's timestep.
 		});
 
-		afterPhysicsStep((world) => {
-			// Run after each physics step
+		afterPhysicsStep((world, delta) => {
+			// Run after each internal physics step. `delta` is that step's timestep.
 		});
 	}
 }

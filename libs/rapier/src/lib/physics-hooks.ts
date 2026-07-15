@@ -9,12 +9,12 @@ import type { NgtrFilterContactPairCallback, NgtrFilterIntersectionPairCallback,
  *
  * The callback is automatically unregistered when the component is destroyed.
  *
- * @param callback - Function to call before each physics step, receives the Rapier World
+ * @param callback - Function to call before each physics step, receiving the Rapier World and that step's optional delta
  * @param injector - Optional injector for dependency injection context
  *
  * @example
  * ```typescript
- * beforePhysicsStep((world) => {
+ * beforePhysicsStep((world, delta) => {
  *   // Apply custom forces or update kinematic bodies
  *   const body = world.getRigidBody(handle);
  *   body?.applyImpulse({ x: 0, y: 10, z: 0 }, true);
@@ -39,12 +39,12 @@ export function beforePhysicsStep(callback: NgtrWorldStepCallback, injector?: In
  *
  * The callback is automatically unregistered when the component is destroyed.
  *
- * @param callback - Function to call after each physics step, receives the Rapier World
+ * @param callback - Function to call after each physics step, receiving the Rapier World and that step's optional delta
  * @param injector - Optional injector for dependency injection context
  *
  * @example
  * ```typescript
- * afterPhysicsStep((world) => {
+ * afterPhysicsStep((world, delta) => {
  *   // Read physics state after simulation
  *   const body = world.getRigidBody(handle);
  *   const position = body?.translation();

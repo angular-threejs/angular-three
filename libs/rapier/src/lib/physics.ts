@@ -108,7 +108,7 @@ export class NgtrPhysicsFallback {
 
 			<ngtr-frame-stepper
 				[ready]="ready()"
-				[stepFn]="step.bind(this)"
+				[stepFn]="automaticStep.bind(this)"
 				[type]="updateLoop()"
 				[updatePriority]="updatePriority()"
 			/>
@@ -240,9 +240,13 @@ export class NgtrPhysics {
 	 * @param delta - Time in seconds since the last step
 	 */
 	step(delta: number) {
-		if (!this.paused()) {
-			this.internalStep(delta);
-		}
+		if (!Number.isFinite(delta) || delta <= 0) return;
+		this.internalStep(delta);
+	}
+
+	/** Advances from the configured frame loop while respecting `paused`. */
+	protected automaticStep(delta: number) {
+		if (!this.paused()) this.step(delta);
 	}
 
 	private updateWorldEffect() {
@@ -261,6 +265,7 @@ export class NgtrPhysics {
 	}
 
 	private internalStep(delta: number) {
+		if (!Number.isFinite(delta) || delta <= 0) return;
 		const worldSingleton = this.worldSingleton();
 		if (!worldSingleton) return;
 
@@ -281,25 +286,25 @@ export class NgtrPhysics {
 		const clampedDelta = THREE.MathUtils.clamp(delta, 0, 0.5);
 
 		const stepWorld = (innerDelta: number) => {
+			world.timestep = innerDelta;
+
 			// Trigger beforeStep callbacks
 			this.beforeStepCallbacks.forEach((callback) => {
-				callback(world);
+				callback(world, innerDelta);
 			});
 
-			world.timestep = innerDelta;
 			const hasHooks = this.filterContactPairCallbacks.size > 0 || this.filterIntersectionPairCallbacks.size > 0;
 			world.step(eventQueue, hasHooks ? this.hooks : undefined);
 
 			// Trigger afterStep callbacks
 			this.afterStepCallbacks.forEach((callback) => {
-				callback(world);
+				callback(world, innerDelta);
 			});
 		};
 
 		if (timeStepVariable) {
 			stepWorld(clampedDelta);
 		} else {
-			// don't step time forwards if paused
 			// Increase accumulator
 			this.steppingState.accumulator += clampedDelta;
 

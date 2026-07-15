@@ -11,7 +11,7 @@ import {
 	signal,
 } from '@angular/core';
 import { ClassName } from '@tweakpane/core';
-import { Pane } from 'tweakpane';
+import { Pane, type TpPluginBundle } from 'tweakpane';
 import { PaneConfig } from 'tweakpane/dist/types/pane/pane-config';
 import { TweakpaneAnchor } from './anchor';
 import { TweakpaneFolder } from './folder';
@@ -94,6 +94,8 @@ export class TweakpanePane {
 	private tweakpaneAnchor = inject(TweakpaneAnchor, { optional: true });
 	private pane = signal<Pane | null>(null);
 	private paneContainer?: HTMLDivElement;
+	private readonly pendingPlugins = new Map<string, TpPluginBundle>();
+	private readonly registeredPluginIds = new Set<string>();
 
 	constructor() {
 		this.folder.isSelf = false;
@@ -116,6 +118,11 @@ export class TweakpanePane {
 			}
 
 			const pane = new Pane(paneOptions);
+			for (const plugin of this.pendingPlugins.values()) {
+				pane.registerPlugin(plugin);
+				this.registeredPluginIds.add(plugin.id);
+			}
+			this.pendingPlugins.clear();
 
 			this.pane.set(pane);
 			this.folder.parentFolder.set(pane);
@@ -158,11 +165,23 @@ export class TweakpanePane {
 		});
 	}
 
+	/** Registers a custom Tweakpane plugin before or after the pane is mounted. */
+	registerPlugin(plugin: TpPluginBundle) {
+		if (this.registeredPluginIds.has(plugin.id) || this.pendingPlugins.has(plugin.id)) return;
+		const pane = this.pane();
+		if (!pane) {
+			this.pendingPlugins.set(plugin.id, plugin);
+			return;
+		}
+		pane.registerPlugin(plugin);
+		this.registeredPluginIds.add(plugin.id);
+	}
+
 	/**
 	 * Updates a CSS style property on the pane's parent element.
 	 * @param propertyName - The name of the style property to update
 	 */
-	private updateStyleEffect(propertyName: Exclude<keyof TweakpanePane, 'pane' | 'title' | 'expanded' | 'container'>) {
+	private updateStyleEffect(propertyName: 'top' | 'right' | 'left' | 'bottom' | 'width') {
 		const pane = this.pane();
 		if (!pane) return;
 
