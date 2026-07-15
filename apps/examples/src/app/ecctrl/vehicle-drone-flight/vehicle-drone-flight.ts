@@ -35,8 +35,12 @@ export default class EcctrlVehicleDroneFlightScene {
 	constructor() {
 		const controls = inject(EcctrlExampleControls);
 		const resetInstructions = controls.setInstructions(
-			'Flight drone · W/S climb/descend · A/D yaw · ↑/↓ pitch · ←/→ roll · chase camera + live FPV',
+			'Flight drone · W/S climb/descend · A/D yaw · ↑/↓ pitch · ←/→ roll · touch: left altitude/yaw, right pitch/roll',
 		);
-		inject(DestroyRef).onDestroy(resetInstructions);
+		controls.flightControlsActive.set(true);
+		inject(DestroyRef).onDestroy(() => {
+			resetInstructions();
+			controls.resetFlightControls();
+		});
 	}
 }

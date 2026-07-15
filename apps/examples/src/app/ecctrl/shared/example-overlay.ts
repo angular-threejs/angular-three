@@ -39,6 +39,31 @@ import { EcctrlFlightHudOverlay } from './flight-hud-overlay';
 			</div>
 		}
 
+		@if (controls.flightControlsActive()) {
+			<div class="ecctrl-flight-touch-controls" aria-label="Touch drone controls">
+				<div class="ecctrl-flight-stick">
+					<ngte-ecctrl-joystick
+						ariaLabel="Drone altitude and yaw"
+						[deadzone]="0.08"
+						[size]="92"
+						[value]="controls.flightJoystickLeft()"
+						(valueChange)="controls.flightJoystickLeft.set($event)"
+					/>
+					<span>ALT · YAW</span>
+				</div>
+				<div class="ecctrl-flight-stick">
+					<ngte-ecctrl-joystick
+						ariaLabel="Drone pitch and roll"
+						[deadzone]="0.08"
+						[size]="92"
+						[value]="controls.flightJoystickRight()"
+						(valueChange)="controls.flightJoystickRight.set($event)"
+					/>
+					<span>PITCH · ROLL</span>
+				</div>
+			</div>
+		}
+
 		@if (controls.curveActive()) {
 			<tweakpane-pane title="Mass ratio curve" top="40px" width="300px">
 				<tweakpane-curve
@@ -68,6 +93,33 @@ import { EcctrlFlightHudOverlay } from './flight-hud-overlay';
 			left: max(20px, env(safe-area-inset-left));
 			position: absolute;
 			right: max(20px, env(safe-area-inset-right));
+		}
+
+		.ecctrl-flight-touch-controls {
+			align-items: end;
+			bottom: max(132px, calc(env(safe-area-inset-bottom) + 112px));
+			display: none;
+			justify-content: space-between;
+			left: max(14px, env(safe-area-inset-left));
+			pointer-events: none;
+			position: absolute;
+			right: max(14px, env(safe-area-inset-right));
+		}
+
+		.ecctrl-flight-stick {
+			align-items: center;
+			color: rgb(207 250 254 / 82%);
+			display: flex;
+			flex-direction: column;
+			font:
+				600 9px/1 ui-monospace,
+				SFMono-Regular,
+				Menlo,
+				monospace;
+			gap: 7px;
+			letter-spacing: 0.08em;
+			pointer-events: auto;
+			text-shadow: 0 1px 4px #020617;
 		}
 
 		.ecctrl-example-info {
@@ -115,9 +167,26 @@ import { EcctrlFlightHudOverlay } from './flight-hud-overlay';
 			display: flex;
 			gap: 12px;
 		}
+
+		@media (hover: none), (pointer: coarse), (max-width: 760px) {
+			.ecctrl-flight-touch-controls {
+				display: flex;
+			}
+		}
+
+		@media (max-height: 520px) and (orientation: landscape) {
+			:host(.ecctrl-flight-active) .ecctrl-example-info {
+				max-width: min(46%, 340px);
+			}
+
+			:host(.ecctrl-flight-active) .ecctrl-instructions {
+				display: none;
+			}
+		}
 	`,
 	imports: [EcctrlFlightHudOverlay, NgteEcctrlJoystick, NgteEcctrlVirtualButton, TweakpaneCurve, TweakpanePane],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { '[class.ecctrl-flight-active]': 'controls.flightControlsActive()' },
 })
 export class EcctrlExampleOverlay {
 	readonly description = input.required<string>();

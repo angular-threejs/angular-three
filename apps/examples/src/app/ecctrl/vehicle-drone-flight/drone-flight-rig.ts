@@ -65,6 +65,7 @@ const PROPELLER_OPTIONS: NgteThrustPropellerOptions = {
 
 const CHASE_DISTANCE = 11;
 const CHASE_HEIGHT = 3.8;
+const REVERSAL_ASSIST_ACCELERATION = 18;
 const SUN_OFFSET = new Vector3(45, 70, 35);
 const WORLD_UP = new Vector3(0, 1, 0);
 
@@ -255,6 +256,7 @@ export class DroneFlightRig {
 	private readonly desiredCameraPosition = new Vector3();
 	private readonly desiredCameraQuaternion = new Quaternion();
 	private readonly forward = new Vector3();
+	private readonly reversalImpulse = new Vector3();
 	private readonly bodyEuler = new Euler(0, 0, 0, 'YXZ');
 	private readonly chaseEuler = new Euler(0, 0, 0, 'YXZ');
 	private chaseInitialized = false;
@@ -263,11 +265,14 @@ export class DroneFlightRig {
 	protected readonly hudLayout = computed(() => {
 		const [canvasWidth, canvasHeight] = [this.store.size.width(), this.store.size.height()];
 		const availableWidth = Math.max(160, canvasWidth - 36);
-		const width = Math.min(520, Math.max(240, canvasWidth * 0.38), availableWidth);
+		const compactLandscape = canvasWidth < 900 && canvasHeight < 520;
+		const width = compactLandscape
+			? Math.min(220, Math.max(190, canvasWidth * 0.34), availableWidth)
+			: Math.min(520, Math.max(240, canvasWidth * 0.38), availableWidth);
 		const height = width * (9 / 16);
-		const preferredTop = canvasWidth < 900 ? 112 : 20;
+		const preferredTop = compactLandscape ? 16 : canvasWidth < 900 ? 112 : 20;
 		const top = Math.min(preferredTop, Math.max(16, canvasHeight - height - 92));
-		return { width, height, top, right: 20 };
+		return { width, height, top, right: compactLandscape ? 16 : 20 };
 	});
 	protected readonly hudSize = computed<[number, number]>(() => {
 		const { width, height } = this.hudLayout();
@@ -307,6 +312,8 @@ export class DroneFlightRig {
 				pitchBackward: keyboard.select('pitchBackward')(),
 				rollLeft: keyboard.select('rollLeft')(),
 				rollRight: keyboard.select('rollRight')(),
+				joystickL: this.exampleControls.flightJoystickLeft(),
+				joystickR: this.exampleControls.flightJoystickRight(),
 			});
 		});
 
@@ -346,6 +353,7 @@ export class DroneFlightRig {
 		const vehicle = this.vehicle();
 		const chaseCamera = this.chaseCamera().cameraRef().nativeElement;
 		if (!vehicle.handle.body) return;
+		const frameDelta = Math.min(delta, 0.1);
 
 		const drone = vehicle.objectRef.nativeElement;
 		drone.getWorldPosition(this.dronePosition);
@@ -353,6 +361,7 @@ export class DroneFlightRig {
 
 		this.forward.set(0, 0, 1).applyQuaternion(this.droneQuaternion).setY(0);
 		if (this.forward.lengthSq() > 0.0001) this.forward.normalize();
+		this.applyLongitudinalReversalAssist(vehicle, frameDelta);
 		this.bodyEuler.setFromQuaternion(this.droneQuaternion, 'YXZ');
 		const headingYaw = Math.atan2(this.forward.x, this.forward.z);
 		this.desiredCameraPosition
@@ -363,7 +372,6 @@ export class DroneFlightRig {
 			this.chaseEuler.set(this.bodyEuler.x * 0.22 - 0.12, headingYaw + Math.PI, this.bodyEuler.z * 0.15, 'YXZ'),
 		);
 
-		const frameDelta = Math.min(delta, 0.1);
 		if (!this.chaseInitialized || chaseCamera.position.distanceToSquared(this.desiredCameraPosition) > 400) {
 			chaseCamera.position.copy(this.desiredCameraPosition);
 			chaseCamera.quaternion.copy(this.desiredCameraQuaternion);
@@ -399,5 +407,24 @@ export class DroneFlightRig {
 			speed,
 			verticalSpeed: vehicle.handle.currLinVel.y,
 		});
+	}
+
+	private applyLongitudinalReversalAssist(vehicle: NgteEcctrlVehicle, delta: number) {
+		const body = vehicle.handle.body;
+		if (!body) return;
+		// Velocity mode derives horizontal braking from tilt. Supplement only an
+		// opposing command so direction changes are responsive without exceeding the 30° tilt cap.
+		const input = vehicle.handle.input;
+		const pitch = MathUtils.clamp(
+			Number(!!input.pitchForward) - Number(!!input.pitchBackward) + (input.joystickR?.y ?? 0),
+			-1,
+			1,
+		);
+		const forwardSpeed = vehicle.handle.currLinVel.dot(this.forward);
+		if (Math.abs(pitch) < 0.05 || forwardSpeed * pitch >= 0) return;
+
+		const deltaVelocity = Math.min(Math.abs(forwardSpeed), REVERSAL_ASSIST_ACCELERATION * Math.abs(pitch) * delta);
+		this.reversalImpulse.copy(this.forward).multiplyScalar(-Math.sign(forwardSpeed) * deltaVelocity * body.mass());
+		body.applyImpulse(this.reversalImpulse, true);
 	}
 }

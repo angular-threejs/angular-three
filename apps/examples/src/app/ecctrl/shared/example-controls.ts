@@ -47,6 +47,9 @@ export class EcctrlExampleControls {
 	readonly physicsTimeStep = signal<number | 'vary'>(1 / 60);
 	readonly physicsGravity = signal<[number, number, number]>([0, -9.81, 0]);
 	readonly curveActive = signal(false);
+	readonly flightControlsActive = signal(false);
+	readonly flightJoystickLeft = signal<NgteEcctrlJoystickValue>({ x: 0, y: 0 });
+	readonly flightJoystickRight = signal<NgteEcctrlJoystickValue>({ x: 0, y: 0 });
 	readonly flightHudLayout = signal<EcctrlFlightHudLayout | null>(null);
 	readonly flightTelemetry = signal<EcctrlFlightTelemetry>(DEFAULT_FLIGHT_TELEMETRY);
 	readonly curve = signal<TweakpaneCurveData>({
@@ -75,6 +78,12 @@ export class EcctrlExampleControls {
 	resetFlightHud() {
 		this.flightHudLayout.set(null);
 		this.flightTelemetry.set(DEFAULT_FLIGHT_TELEMETRY);
+	}
+
+	resetFlightControls() {
+		this.flightControlsActive.set(false);
+		this.flightJoystickLeft.set({ x: 0, y: 0 });
+		this.flightJoystickRight.set({ x: 0, y: 0 });
 	}
 
 	restoreCameraTarget(controls: CameraControls) {
