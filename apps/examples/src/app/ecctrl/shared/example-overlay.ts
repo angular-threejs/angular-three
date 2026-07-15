@@ -3,6 +3,7 @@ import { NgteEcctrlJoystick, NgteEcctrlVirtualButton } from 'angular-three-ecctr
 import { TweakpanePane } from 'angular-three-tweakpane';
 import { TweakpaneCurve } from 'angular-three-tweakpane/curve';
 import { EcctrlExampleControls } from './example-controls';
+import { EcctrlFlightHudOverlay } from './flight-hud-overlay';
 
 @Component({
 	selector: 'app-ecctrl-example-overlay',
@@ -47,6 +48,8 @@ import { EcctrlExampleControls } from './example-controls';
 				/>
 			</tweakpane-pane>
 		}
+
+		<app-ecctrl-flight-hud-overlay />
 	`,
 	styles: `
 		:host {
@@ -113,7 +116,7 @@ import { EcctrlExampleControls } from './example-controls';
 			gap: 12px;
 		}
 	`,
-	imports: [NgteEcctrlJoystick, NgteEcctrlVirtualButton, TweakpaneCurve, TweakpanePane],
+	imports: [EcctrlFlightHudOverlay, NgteEcctrlJoystick, NgteEcctrlVirtualButton, TweakpaneCurve, TweakpanePane],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EcctrlExampleOverlay {

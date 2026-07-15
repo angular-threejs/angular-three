@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export interface EcctrlExampleCanvasConfig {
 	shadowExtent: number;
 	shadowFar?: number;
+	lighting?: 'shared' | 'scene';
 }
 
 export const ecctrlExampleRoutes: Routes = [
@@ -110,6 +111,24 @@ export const ecctrlExampleRoutes: Routes = [
 			description:
 				'Builds a velocity-controlled drone from NgteEcctrlVehicle and four thrust propellers with yaw, pitch, and roll.',
 			ecctrlCanvas: { shadowExtent: 24 } satisfies EcctrlExampleCanvasConfig,
+			credits: {
+				title: 'Ecctrl thrust-propeller drone',
+				link: 'https://github.com/pmndrs/ecctrl',
+				class: 'text-white',
+			},
+		},
+	},
+	{
+		path: 'vehicle-drone-flight',
+		loadComponent: () => import('./vehicle-drone-flight/vehicle-drone-flight'),
+		data: {
+			description:
+				'Turns the Ecctrl drone into a flight-simulator experience with a locked chase camera, live FPV portal, and a procedural dusk city.',
+			ecctrlCanvas: {
+				shadowExtent: 52,
+				shadowFar: 180,
+				lighting: 'scene',
+			} satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl thrust-propeller drone',
 				link: 'https://github.com/pmndrs/ecctrl',

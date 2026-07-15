@@ -22,24 +22,26 @@ const DEFAULT_CANVAS_CONFIG: EcctrlExampleCanvasConfig = {
 				}"
 			>
 				<ng-template>
-					<ngt-ambient-light [intensity]="0.5 * Math.PI" />
-					<ngt-directional-light
-						castShadow
-						[position]="[8, 12, 6]"
-						[intensity]="2 * Math.PI"
-						[shadow.mapSize.width]="2048"
-						[shadow.mapSize.height]="2048"
-						[shadow.camera.near]="0.5"
-						[shadow.camera.far]="canvasConfig().shadowFar ?? 50"
-						[shadow.camera.left]="-canvasConfig().shadowExtent"
-						[shadow.camera.right]="canvasConfig().shadowExtent"
-						[shadow.camera.top]="canvasConfig().shadowExtent"
-						[shadow.camera.bottom]="-canvasConfig().shadowExtent"
-						[shadow.bias]="-0.0001"
-						[shadow.normalBias]="0.02"
-						[shadow.radius]="4"
-						[shadow.intensity]="0.65"
-					/>
+					@if (canvasConfig().lighting !== 'scene') {
+						<ngt-ambient-light [intensity]="0.5 * Math.PI" />
+						<ngt-directional-light
+							castShadow
+							[position]="[8, 12, 6]"
+							[intensity]="2 * Math.PI"
+							[shadow.mapSize.width]="2048"
+							[shadow.mapSize.height]="2048"
+							[shadow.camera.near]="0.5"
+							[shadow.camera.far]="canvasConfig().shadowFar ?? 50"
+							[shadow.camera.left]="-canvasConfig().shadowExtent"
+							[shadow.camera.right]="canvasConfig().shadowExtent"
+							[shadow.camera.top]="canvasConfig().shadowExtent"
+							[shadow.camera.bottom]="-canvasConfig().shadowExtent"
+							[shadow.bias]="-0.0001"
+							[shadow.normalBias]="0.02"
+							[shadow.radius]="4"
+							[shadow.intensity]="0.65"
+						/>
+					}
 
 					<router-outlet (activate)="syncRouteData()" />
 				</ng-template>

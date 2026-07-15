@@ -8,6 +8,31 @@ type CameraControls = ReturnType<NgtsCameraControls['controls']>;
 
 const DEFAULT_INSTRUCTIONS = 'Character · W/S move · A/D turn · Shift run · Space jump · drag to orbit · wheel to zoom';
 
+export interface EcctrlFlightHudLayout {
+	width: number;
+	height: number;
+	top: number;
+	right: number;
+}
+
+export interface EcctrlFlightTelemetry {
+	altitude: number;
+	heading: number;
+	pitch: number;
+	roll: number;
+	speed: number;
+	verticalSpeed: number;
+}
+
+const DEFAULT_FLIGHT_TELEMETRY: EcctrlFlightTelemetry = {
+	altitude: 0,
+	heading: 0,
+	pitch: 0,
+	roll: 0,
+	speed: 0,
+	verticalSpeed: 0,
+};
+
 @Injectable()
 export class EcctrlExampleControls {
 	private readonly cameraTarget = new Vector3();
@@ -22,6 +47,8 @@ export class EcctrlExampleControls {
 	readonly physicsTimeStep = signal<number | 'vary'>(1 / 60);
 	readonly physicsGravity = signal<[number, number, number]>([0, -9.81, 0]);
 	readonly curveActive = signal(false);
+	readonly flightHudLayout = signal<EcctrlFlightHudLayout | null>(null);
+	readonly flightTelemetry = signal<EcctrlFlightTelemetry>(DEFAULT_FLIGHT_TELEMETRY);
 	readonly curve = signal<TweakpaneCurveData>({
 		points: [
 			{ x: 0, y: 0, r_out: 0 },
@@ -43,6 +70,11 @@ export class EcctrlExampleControls {
 		this.jump.set(false);
 		this.run.set(false);
 		this.touchActive.set(false);
+	}
+
+	resetFlightHud() {
+		this.flightHudLayout.set(null);
+		this.flightTelemetry.set(DEFAULT_FLIGHT_TELEMETRY);
 	}
 
 	restoreCameraTarget(controls: CameraControls) {
