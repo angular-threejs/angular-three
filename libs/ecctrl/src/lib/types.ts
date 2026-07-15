@@ -1,5 +1,7 @@
 import type { Collider, RigidBody } from '@dimforge/rapier3d-compat';
 import type { NgtVector3 } from 'angular-three';
+import type { NgteEcctrlCurveData } from 'angular-three-ecctrl/curves';
+import type { NgteEcctrlGravityField, NgteEcctrlGravityVector } from 'angular-three-ecctrl/gravity';
 import type { NgtrColliderOptions, NgtrRigidBodyOptions } from 'angular-three-rapier';
 import type { Quaternion, Vector3 } from 'three';
 
@@ -25,33 +27,6 @@ export interface NgteEcctrlMovementInput {
 
 /** Selects the physics query used to find ground below the character. */
 export type NgteEcctrlGroundDetection = 'shapeCast' | 'rayCast';
-
-/** A Three.js vector or `[x, y, z]` tuple; scalar math inputs are intentionally excluded. */
-export type NgteEcctrlGravityVector = Exclude<NgtVector3, number>;
-
-/** Resolves gravity at the controller's current world position. */
-export type NgteEcctrlGravityField = (position: Vector3) => NgteEcctrlGravityVector;
-
-/** A point in Ecctrl's weighted cubic-Hermite mass-ratio falloff curve. */
-export interface NgteEcctrlCurvePoint {
-	x: number;
-	y: number;
-	/** Incoming tangent angle in radians. */
-	r_in?: number;
-	/** Outgoing tangent angle in radians. */
-	r_out?: number;
-	/** Incoming tangent blend: `0` is linear, `1` uses the angle-derived tangent. */
-	w_in?: number;
-	/** Outgoing tangent blend: `0` is linear, `1` uses the angle-derived tangent. */
-	w_out?: number;
-}
-
-/** Upstream-compatible curve data used to scale impulses applied to dynamic supports. */
-export interface NgteEcctrlCurveData {
-	points: ReadonlyArray<NgteEcctrlCurvePoint>;
-	/** Number of uniformly-spaced LUT samples; Ecctrl defaults to `50`. */
-	samples?: number;
-}
 
 /**
  * Flags read from `rigidBody.userData.ecctrl` while querying support geometry.
@@ -106,7 +81,7 @@ export interface NgteEcctrlOptions {
 	groundDetection?: NgteEcctrlGroundDetection;
 	slopeMaxAngle?: number;
 	floatHeight?: number;
-	/** Upstream spelling retained for API compatibility. */
+	/** Upstream's canonical spelling. */
 	rayOriginOffest?: number;
 	rayHitForgiveness?: number;
 	rayLength?: number;
@@ -146,8 +121,6 @@ export interface NgteEcctrlState {
 	forward: Vector3;
 	right: Vector3;
 	desiredMovement: Vector3;
-	/** Alias for `desiredMovement`, aligned with Ecctrl's upstream handle. */
-	inputDirection: Vector3;
 	movingDirection: Vector3;
 	supportVelocity: Vector3;
 	relativeVelocity: Vector3;
@@ -186,8 +159,6 @@ export interface NgteEcctrlHandle {
 	readonly body: RigidBody | null;
 	readonly collider: Collider | null;
 	readonly state: NgteEcctrlState;
-	readonly movement: Readonly<NgteEcctrlMovementInput>;
-	/** Upstream-compatible alias for the current source-agnostic movement input. */
 	readonly input: Readonly<NgteEcctrlMovementInput>;
 	readonly upAxis: Vector3;
 	readonly gravityDir: Vector3;
@@ -223,39 +194,10 @@ export interface NgteEcctrlHandle {
 	readonly runActive: boolean;
 	readonly jumpActive: boolean;
 	readonly lockForward: boolean;
-	/** Upstream-compatible platform-turn quaternion name. */
 	readonly turnOnYQuat: Quaternion;
-	/** Descriptive alias for `turnOnYQuat`. */
-	readonly turnOnUpQuaternion: Quaternion;
 	setMovement(input: Partial<NgteEcctrlMovementInput>): void;
 	setLockForward(value: boolean): void;
 	setForwardDir(value: Vector3): void;
-}
-
-/** The animation states supplied by Ecctrl's optional animation adapter. */
-export type NgteEcctrlAnimationState = 'IDLE' | 'WALK' | 'RUN' | 'JUMP_START' | 'JUMP_IDLE' | 'JUMP_FALL' | 'JUMP_LAND';
-
-/** Context passed to animation-state resolvers and transition listeners. */
-export interface NgteEcctrlAnimationStateContext {
-	readonly ecctrl: NgteEcctrlHandle;
-	readonly state: NgteEcctrlState;
-	readonly delta: number;
-	readonly previousState: NgteEcctrlAnimationState | null;
-	readonly isOnGround: boolean;
-	readonly wasOnGround: boolean;
-	readonly isFalling: boolean;
-	readonly isMoving: boolean;
-	readonly runActive: boolean;
-	readonly jumpActive: boolean;
-}
-
-/** Resolves an animation state from the character's live movement state. */
-export type NgteEcctrlAnimationStateResolver = (context: NgteEcctrlAnimationStateContext) => NgteEcctrlAnimationState;
-
-/** Configuration accepted by the optional animation state controller. */
-export interface NgteEcctrlAnimationStateControllerOptions {
-	enabled?: boolean;
-	resolver?: NgteEcctrlAnimationStateResolver;
 }
 
 /** Ecctrl's upstream defaults, kept in one public constant for discoverability. */

@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
+import {
+	NgteEcctrlAnimationStateController,
+	resolveEcctrlAnimationState,
+	type NgteEcctrlAnimationStateContext,
+} from 'angular-three-ecctrl/animation';
 import { NgtrPhysics } from 'angular-three-rapier';
 import { NgtTestBed } from 'angular-three/testing';
 import * as THREE from 'three';
-import { NgteEcctrlAnimationStateController, resolveEcctrlAnimationState } from './animation';
 import { NgteEcctrl } from './ecctrl';
-import type { NgteEcctrlAnimationStateContext, NgteEcctrlState } from './types';
+import type { NgteEcctrlState } from './types';
 
 function createState(overrides: Partial<NgteEcctrlState> = {}): NgteEcctrlState {
 	return {
@@ -19,7 +23,6 @@ function createState(overrides: Partial<NgteEcctrlState> = {}): NgteEcctrlState 
 		forward: new THREE.Vector3(0, 0, -1),
 		right: new THREE.Vector3(1, 0, 0),
 		desiredMovement: new THREE.Vector3(),
-		inputDirection: new THREE.Vector3(),
 		movingDirection: new THREE.Vector3(0, 0, 1),
 		supportVelocity: new THREE.Vector3(),
 		relativeVelocity: new THREE.Vector3(),
@@ -132,6 +135,14 @@ describe(resolveEcctrlAnimationState.name, () => {
 		expect(resolve(createState({ grounded: false }))).toBe('JUMP_IDLE');
 		expect(resolve(createState({ grounded: false, falling: true }))).toBe('JUMP_FALL');
 		expect(resolve(createState(), 'JUMP_FALL', false)).toBe('JUMP_LAND');
+	});
+
+	it('resumes locomotion immediately when landing with movement', () => {
+		const walking = createState({ moving: true, desiredMovement: new THREE.Vector3(0, 0, 1) });
+		const running = createState({ moving: true, desiredMovement: new THREE.Vector3(0, 0, 1), running: true });
+
+		expect(resolve(walking, 'JUMP_FALL', false)).toBe('WALK');
+		expect(resolve(running, 'JUMP_FALL', false)).toBe('RUN');
 	});
 
 	it('emits de-duplicated animation transitions from mounted controller state', async () => {

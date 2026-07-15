@@ -14,6 +14,13 @@ import {
 import type { Collider, RigidBody, World } from '@dimforge/rapier3d-compat';
 import type { NgtEuler, NgtQuaternion, NgtThreeElements, NgtVector3 } from 'angular-three';
 import { beforeRender, injectStore } from 'angular-three';
+import {
+	bakeCurveLut,
+	evaluateCurveLut,
+	type NgteEcctrlCurveData,
+	type NgteEcctrlCurveLut,
+} from 'angular-three-ecctrl/curves';
+import { NgteEcctrlGravity, type NgteEcctrlGravityVector } from 'angular-three-ecctrl/gravity';
 import type {
 	NgtrColliderOptions,
 	NgtrCollisionEnterPayload,
@@ -26,22 +33,11 @@ import type {
 import { beforePhysicsStep, NgtrCapsuleCollider, NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
 import { mergeInputs } from 'ngxtension/inject-inputs';
 import * as THREE from 'three';
-import { NgteEcctrlGravity } from './gravity';
-import {
-	bakeCurveLut,
-	evaluateCurveLut,
-	fromRapierVector,
-	NgteEcctrlCurveLut,
-	projectOnPlane,
-	slerpUnitVector,
-	toRapierVector,
-} from './math';
+import { fromRapierVector, projectOnPlane, slerpUnitVector, toRapierVector } from './math';
 import {
 	DEFAULT_ECCTRL_OPTIONS,
 	DEFAULT_ECCTRL_POSITION,
 	NgteEcctrlColliderOptions,
-	NgteEcctrlCurveData,
-	NgteEcctrlGravityVector,
 	NgteEcctrlGroundDetection,
 	NgteEcctrlHandle,
 	NgteEcctrlMovementInput,
@@ -126,7 +122,6 @@ function createInitialState(): NgteEcctrlState {
 		forward: new THREE.Vector3(0, 0, -1),
 		right: new THREE.Vector3(1, 0, 0),
 		desiredMovement: new THREE.Vector3(),
-		inputDirection: new THREE.Vector3(),
 		movingDirection: new THREE.Vector3(0, 0, 1),
 		supportVelocity: new THREE.Vector3(),
 		relativeVelocity: new THREE.Vector3(),
@@ -339,9 +334,6 @@ export class NgteEcctrl {
 			get state() {
 				return component.state();
 			},
-			get movement() {
-				return component.movement();
-			},
 			get input() {
 				return component.movement();
 			},
@@ -367,7 +359,7 @@ export class NgteEcctrl {
 				return component.state().angularVelocity;
 			},
 			get inputDir() {
-				return component.state().inputDirection;
+				return component.state().desiredMovement;
 			},
 			get movingDirection() {
 				return component.state().movingDirection;
@@ -448,9 +440,6 @@ export class NgteEcctrl {
 				return component.state().lockForward;
 			},
 			get turnOnYQuat() {
-				return component.state().turnOnUpQuaternion;
-			},
-			get turnOnUpQuaternion() {
 				return component.state().turnOnUpQuaternion;
 			},
 			setMovement(input) {
@@ -1076,7 +1065,6 @@ export class NgteEcctrl {
 			forward: this.vForward.clone(),
 			right: this.vRight.clone(),
 			desiredMovement: this.vDesiredMovement.clone(),
-			inputDirection: this.vDesiredMovement.clone(),
 			movingDirection: this.vMovingDirection.clone(),
 			supportVelocity: this.vSupportVelocity.clone(),
 			relativeVelocity: this.vRelativeVelocity.clone(),

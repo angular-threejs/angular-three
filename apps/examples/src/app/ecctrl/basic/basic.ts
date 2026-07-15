@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { NgtArgs, NgtVector3 } from 'angular-three';
-import { NgteEcctrl } from 'angular-three-ecctrl';
-import { NgtrRigidBody } from 'angular-three-rapier';
-import { createKeyboardControls, NgtsKeyboardControls } from 'angular-three-soba/controls';
+import { NgtrPhysics, NgtrRigidBody } from 'angular-three-rapier';
+import { NgtCanvas } from 'angular-three/dom';
+import { EcctrlExampleControls } from '../shared/example-controls';
+import { EcctrlExampleOverlay } from '../shared/example-overlay';
+import { EcctrlKeyboardPlayer } from '../shared/keyboard-player';
 
 interface Obstacle {
 	position: NgtVector3;
@@ -10,17 +12,8 @@ interface Obstacle {
 	color: string;
 }
 
-const { controlsMap } = createKeyboardControls([
-	{ name: 'forward', keys: ['ArrowUp', 'KeyW'] },
-	{ name: 'backward', keys: ['ArrowDown', 'KeyS'] },
-	{ name: 'leftward', keys: ['ArrowLeft', 'KeyA'] },
-	{ name: 'rightward', keys: ['ArrowRight', 'KeyD'] },
-	{ name: 'run', keys: ['ShiftLeft', 'ShiftRight'] },
-	{ name: 'jump', keys: ['Space'] },
-]);
-
 @Component({
-	selector: 'app-ecctrl-basic',
+	selector: 'app-ecctrl-basic-scene',
 	template: `
 		<ngt-color attach="background" *args="['#111827']" />
 
@@ -40,51 +33,66 @@ const { controlsMap } = createKeyboardControls([
 			</ngt-object3D>
 		}
 
-		<ngt-group [keyboardControls]="controlsMap" preventDefault>
-			<ngte-ecctrl [position]="[0, 1.25, 5]" [options]="{ enableToggleRun: false }">
-				<ngt-group [position]="[0, 0.15, 0]">
-					<ngt-mesh castShadow receiveShadow>
-						<ngt-capsule-geometry *args="[0.3, 0.6, 8, 16]" />
-						<ngt-mesh-standard-material color="#fb923c" roughness="0.35" metalness="0.1" />
-					</ngt-mesh>
-					<ngt-mesh [position]="[0, 0.5, -0.2]">
-						<ngt-sphere-geometry *args="[0.08, 16, 16]" />
-						<ngt-mesh-basic-material color="#fef3c7" />
-					</ngt-mesh>
-				</ngt-group>
-			</ngte-ecctrl>
-		</ngt-group>
+		<app-ecctrl-keyboard-player [position]="[0, 1.25, 5]" />
 	`,
-	imports: [NgtArgs, NgteEcctrl, NgtrRigidBody, NgtsKeyboardControls],
+	imports: [EcctrlKeyboardPlayer, NgtArgs, NgtrRigidBody],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class EcctrlBasic {
-	protected readonly controlsMap = controlsMap;
+class EcctrlBasicScene {
 	protected readonly obstacles: Obstacle[] = [
 		{ position: [-4, 0.75, -3], scale: [2, 1.5, 2], color: '#334155' },
 		{ position: [4, 1.25, -2], scale: [1.5, 2.5, 1.5], color: '#475569' },
 		{ position: [-1, 0.5, -7], scale: [5, 1, 1], color: '#0f766e' },
 		{ position: [5, 0.4, 4], scale: [2.5, 0.8, 1], color: '#7c2d12' },
 	];
+}
 
-	private readonly keyboardControls = viewChild(NgtsKeyboardControls);
-	private readonly ecctrl = viewChild(NgteEcctrl);
+@Component({
+	selector: 'app-ecctrl-basic',
+	template: `
+		<ngt-canvas [camera]="{ position: [9, 7, 12], fov: 45 }" [lookAt]="[0, 1, 5]" shadows>
+			<ngtr-physics
+				*canvasContent
+				[options]="{
+					paused: controls.physicsPaused(),
+					gravity: controls.physicsGravity(),
+					timeStep: controls.physicsTimeStep(),
+				}"
+			>
+				<ng-template>
+					<ngt-ambient-light [intensity]="0.5 * Math.PI" />
+					<ngt-directional-light
+						castShadow
+						[position]="[8, 12, 6]"
+						[intensity]="2 * Math.PI"
+						[shadow.mapSize.width]="2048"
+						[shadow.mapSize.height]="2048"
+						[shadow.camera.near]="0.5"
+						[shadow.camera.far]="50"
+						[shadow.camera.left]="-12"
+						[shadow.camera.right]="12"
+						[shadow.camera.top]="12"
+						[shadow.camera.bottom]="-12"
+						[shadow.bias]="-0.0001"
+						[shadow.normalBias]="0.02"
+						[shadow.radius]="4"
+						[shadow.intensity]="0.65"
+					/>
 
-	constructor() {
-		effect(() => {
-			const keyboardControls = this.keyboardControls();
-			const ecctrl = this.ecctrl();
-			if (!keyboardControls || !ecctrl) return;
-
-			ecctrl.setMovement({
-				forward: keyboardControls.select('forward')(),
-				backward: keyboardControls.select('backward')(),
-				leftward: keyboardControls.select('leftward')(),
-				rightward: keyboardControls.select('rightward')(),
-				run: keyboardControls.select('run')(),
-				jump: keyboardControls.select('jump')(),
-			});
-		});
-	}
+					<app-ecctrl-basic-scene />
+				</ng-template>
+			</ngtr-physics>
+		</ngt-canvas>
+		<app-ecctrl-example-overlay />
+	`,
+	imports: [EcctrlBasicScene, EcctrlExampleOverlay, NgtCanvas, NgtrPhysics],
+	providers: [EcctrlExampleControls],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'block h-full relative w-full' },
+})
+export default class EcctrlBasic {
+	protected readonly Math = Math;
+	protected readonly controls = inject(EcctrlExampleControls);
 }

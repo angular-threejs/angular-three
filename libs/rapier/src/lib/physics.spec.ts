@@ -8,7 +8,7 @@ type StepWorld = {
 	forEachActiveRigidBody: ReturnType<typeof vi.fn>;
 };
 
-function createPhysicsStepHarness(timeStep: number | 'vary') {
+function createPhysicsStepHarness(timeStep: number | 'vary', paused = false) {
 	const world: StepWorld = {
 		timestep: 0,
 		step: vi.fn(),
@@ -23,7 +23,7 @@ function createPhysicsStepHarness(timeStep: number | 'vary') {
 		eventQueue: () => eventQueue,
 		timeStep: () => timeStep,
 		interpolate: () => false,
-		paused: () => false,
+		paused: () => paused,
 		beforeStepCallbacks: new Set<NgtrWorldStepCallback>(),
 		afterStepCallbacks: new Set<NgtrWorldStepCallback>(),
 		filterContactPairCallbacks: new Set(),
@@ -45,6 +45,34 @@ function createPhysicsStepHarness(timeStep: number | 'vary') {
 }
 
 describe(NgtrPhysics.name, () => {
+	it('manual stepping advances while paused and ignores invalid deltas', () => {
+		const internalStep = vi.fn();
+		const physics = { internalStep } as unknown as NgtrPhysics;
+
+		NgtrPhysics.prototype.step.call(physics, 1 / 60);
+		NgtrPhysics.prototype.step.call(physics, 0);
+		NgtrPhysics.prototype.step.call(physics, Number.NaN);
+
+		expect(internalStep).toHaveBeenCalledOnce();
+		expect(internalStep).toHaveBeenCalledWith(1 / 60);
+	});
+
+	it('automatic stepping alone respects the paused option', () => {
+		const step = vi.fn();
+		const automaticStep = Reflect.get(NgtrPhysics.prototype, 'automaticStep') as (
+			this: { paused: () => boolean; step: (delta: number) => void },
+			delta: number,
+		) => void;
+		const physics = { paused: () => true, step };
+
+		automaticStep.call(physics, 1 / 60);
+		expect(step).not.toHaveBeenCalled();
+
+		physics.paused = () => false;
+		automaticStep.call(physics, 1 / 60);
+		expect(step).toHaveBeenCalledWith(1 / 60);
+	});
+
 	it('sets and supplies the current fixed timestep before pre-step callbacks run', () => {
 		const fixedTimeStep = 1 / 60;
 		const { internalStep, physics, world } = createPhysicsStepHarness(fixedTimeStep);
@@ -66,5 +94,22 @@ describe(NgtrPhysics.name, () => {
 		expect(observedTimesteps).toEqual([fixedTimeStep, fixedTimeStep, fixedTimeStep, fixedTimeStep]);
 		expect(observedDeltas).toEqual([fixedTimeStep, fixedTimeStep]);
 		expect(world.step).toHaveBeenCalledTimes(2);
+	});
+
+	it('manually advances a paused variable-timestep world by the exact requested delta', () => {
+		const delta = 0.125;
+		const { eventQueue, internalStep, physics, world } = createPhysicsStepHarness('vary', true);
+		const beforeStep = vi.fn();
+		const afterStep = vi.fn();
+		physics.beforeStepCallbacks.add(beforeStep);
+		physics.afterStepCallbacks.add(afterStep);
+		Reflect.set(physics, 'internalStep', internalStep.bind(physics));
+
+		NgtrPhysics.prototype.step.call(physics, delta);
+
+		expect(world.timestep).toBe(delta);
+		expect(beforeStep).toHaveBeenCalledWith(world, delta);
+		expect(world.step).toHaveBeenCalledWith(eventQueue, undefined);
+		expect(afterStep).toHaveBeenCalledWith(world, delta);
 	});
 });

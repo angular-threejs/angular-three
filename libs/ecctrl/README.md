@@ -62,7 +62,7 @@ Enable position-dependent gravity per controller with `options.gravityField`, or
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { NgteEcctrlGravity } from 'angular-three-ecctrl';
+import { NgteEcctrlGravity } from 'angular-three-ecctrl/gravity';
 import * as THREE from 'three';
 
 @Injectable({ providedIn: 'root' })
@@ -73,11 +73,11 @@ export class PlanetGravity {
 }
 ```
 
-The controller applies custom gravity as a no-wake impulse during each Rapier substep, so an idle character can still sleep.
+The controller disables native gravity on its owned body while custom gravity is enabled, then applies the field as a no-wake impulse during each Rapier substep so an idle character can still sleep. The standalone `[ecctrlGravity]` body directive is additive instead; set the parent `NgtrPhysics` gravity to `[0, 0, 0]` when that directive should replace native world gravity.
 
 ## Animation state adapter
 
-Import `NgteEcctrlAnimationStateController` to derive stable high-level locomotion states from physics:
+Import `NgteEcctrlAnimationStateController` from `angular-three-ecctrl/animation` to derive stable high-level locomotion states from physics:
 
 ```html
 <ngte-ecctrl animationState (animationStateChange)="playAnimation($event)">
@@ -87,6 +87,20 @@ Import `NgteEcctrlAnimationStateController` to derive stable high-level locomoti
 
 The default states are `IDLE`, `WALK`, `RUN`, `JUMP_START`, `JUMP_IDLE`, `JUMP_FALL`, and `JUMP_LAND`. Supply `[resolver]` for an application-specific animation graph.
 
-## Scope
+## Entry points
 
-This package implements the upstream package's default core entry point: the dynamic character controller, gravity-field API, and animation-state adapter. Upstream vehicle, touch joystick, camera follow, and Leva integrations live in Ecctrl's opt-in `all` entry point and are not part of this Angular package yet.
+The root entry point contains only the character controller and its public types. Import optional features directly:
+
+| Entry point                      | Purpose                                                          |
+| -------------------------------- | ---------------------------------------------------------------- |
+| `angular-three-ecctrl/animation` | Locomotion animation-state directive                             |
+| `angular-three-ecctrl/camera`    | `[ecctrlCameraFollow]` adapter for `NgtsCameraControls`          |
+| `angular-three-ecctrl/curves`    | Curve data, LUT baking, and evaluation                           |
+| `angular-three-ecctrl/gravity`   | Shared gravity fields and the `[ecctrlGravity]` body directive   |
+| `angular-three-ecctrl/input`     | Touch joystick, virtual button, and declarative movement binding |
+| `angular-three-ecctrl/time`      | Deterministic control of a paused Rapier world                   |
+| `angular-three-ecctrl/vehicle`   | Shape-cast cars and thrust-propeller drones                      |
+
+`NgteTimeControl` must be nested under an `NgtrPhysics` configured with `paused: true`; it advances that world through `NgtrPhysics.step(delta)` and refuses to double-step an automatically advancing world.
+
+For interactive curve editing, `angular-three-tweakpane/curve` provides the structurally compatible `TweakpaneCurve`. There are intentionally no `/all` or `/leva` entry points: applications import only the features they use.

@@ -1,10 +1,10 @@
 import { signal } from '@angular/core';
+import { NgteEcctrlGravity } from 'angular-three-ecctrl/gravity';
 import { NgtrPhysics } from 'angular-three-rapier';
 import { NgtTestBed } from 'angular-three/testing';
 import * as THREE from 'three';
 import { vi } from 'vitest';
 import { NgteEcctrl } from './ecctrl';
-import { NgteEcctrlGravity } from './gravity';
 
 type Vector = { x: number; y: number; z: number };
 type PhysicsStep = (world: unknown, delta?: number) => void;

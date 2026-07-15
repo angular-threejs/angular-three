@@ -8,13 +8,6 @@ import routes from './ecctrl.routes';
 			<router-outlet />
 		</div>
 
-		<div
-			class="pointer-events-none absolute left-4 top-4 rounded-lg border border-white/15 bg-black/45 px-4 py-3 font-mono text-sm text-white shadow-xl backdrop-blur"
-		>
-			<div class="font-semibold">Ecctrl</div>
-			<div class="mt-1 text-white/75">WASD / arrows move · Shift runs · Space jumps</div>
-		</div>
-
 		<ul class="absolute bottom-12 left-12 grid grid-cols-6 gap-4">
 			@for (example of examples; track example) {
 				<li class="h-6 w-6">
@@ -36,5 +29,5 @@ import routes from './ecctrl.routes';
 	host: { class: 'ecctrl' },
 })
 export default class Ecctrl {
-	protected examples = routes[0].children?.filter((route) => !!route.path).map((route) => route.path) || [];
+	protected examples = routes.filter((route) => !!route.path).map((route) => route.path);
 }
