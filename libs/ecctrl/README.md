@@ -77,7 +77,7 @@ The controller disables native gravity on its owned body while custom gravity is
 
 ## Animation state adapter
 
-Import `NgteEcctrlAnimationStateController` from `angular-three-ecctrl/animation` to derive stable high-level locomotion states from physics:
+Import `NgteEcctrlAnimationState` from `angular-three-ecctrl/animation` to derive stable high-level locomotion states from physics:
 
 ```html
 <ngte-ecctrl animationState (animationStateChange)="playAnimation($event)">

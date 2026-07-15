@@ -5,10 +5,10 @@ type MovementKey = keyof NgteEcctrlMovementInput;
 
 /** Declaratively binds a partial movement object to a mounted `ngte-ecctrl`. */
 @Directive({
-	selector: 'ngte-ecctrl[ecctrlMovementInput]',
+	selector: 'ngte-ecctrl[movementInput]',
 })
 export class NgteEcctrlMovementBinding {
-	input = input.required<Partial<NgteEcctrlMovementInput>>({ alias: 'ecctrlMovementInput' });
+	input = input.required<Partial<NgteEcctrlMovementInput>>({ alias: 'movementInput' });
 
 	private readonly ecctrl = inject(NgteEcctrl, { host: true });
 

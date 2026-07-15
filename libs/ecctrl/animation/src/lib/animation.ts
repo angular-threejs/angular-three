@@ -3,14 +3,21 @@ import { beforeRender } from 'angular-three';
 import { NgteEcctrl, type NgteEcctrlHandle, type NgteEcctrlState } from 'angular-three-ecctrl';
 
 /** The locomotion states supplied by Ecctrl's optional animation adapter. */
-export type NgteEcctrlAnimationState = 'IDLE' | 'WALK' | 'RUN' | 'JUMP_START' | 'JUMP_IDLE' | 'JUMP_FALL' | 'JUMP_LAND';
+export type NgteEcctrlAnimationStateValue =
+	| 'IDLE'
+	| 'WALK'
+	| 'RUN'
+	| 'JUMP_START'
+	| 'JUMP_IDLE'
+	| 'JUMP_FALL'
+	| 'JUMP_LAND';
 
 /** Context passed to animation-state resolvers. */
 export interface NgteEcctrlAnimationStateContext {
 	readonly ecctrl: NgteEcctrlHandle;
 	readonly state: NgteEcctrlState;
 	readonly delta: number;
-	readonly previousState: NgteEcctrlAnimationState | null;
+	readonly previousState: NgteEcctrlAnimationStateValue | null;
 	readonly isOnGround: boolean;
 	readonly wasOnGround: boolean;
 	readonly isFalling: boolean;
@@ -20,7 +27,9 @@ export interface NgteEcctrlAnimationStateContext {
 }
 
 /** Resolves an animation state from the character's live movement state. */
-export type NgteEcctrlAnimationStateResolver = (context: NgteEcctrlAnimationStateContext) => NgteEcctrlAnimationState;
+export type NgteEcctrlAnimationStateResolver = (
+	context: NgteEcctrlAnimationStateContext,
+) => NgteEcctrlAnimationStateValue;
 
 export const resolveEcctrlAnimationState: NgteEcctrlAnimationStateResolver = ({
 	isOnGround,
@@ -44,16 +53,16 @@ export const resolveEcctrlAnimationState: NgteEcctrlAnimationStateResolver = ({
 	selector: 'ngte-ecctrl[animationState]',
 	exportAs: 'animationState',
 })
-export class NgteEcctrlAnimationStateController {
+export class NgteEcctrlAnimationState {
 	enabled = input(true, { alias: 'animationState', transform: booleanAttribute });
 	resolver = input<NgteEcctrlAnimationStateResolver>(resolveEcctrlAnimationState);
-	animationStateChange = output<NgteEcctrlAnimationState>();
+	animationStateChange = output<NgteEcctrlAnimationStateValue>();
 
 	private readonly ecctrl = inject(NgteEcctrl, { host: true });
-	private previousState: NgteEcctrlAnimationState | null = null;
+	private previousState: NgteEcctrlAnimationStateValue | null = null;
 	private previousGrounded = false;
 	private initialized = false;
-	readonly state = signal<NgteEcctrlAnimationState>('IDLE');
+	readonly state = signal<NgteEcctrlAnimationStateValue>('IDLE');
 
 	constructor() {
 		beforeRender(({ delta }) => this.update(delta));

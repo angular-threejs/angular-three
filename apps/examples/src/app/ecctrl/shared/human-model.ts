@@ -8,7 +8,7 @@ import {
 	input,
 } from '@angular/core';
 import { NgtArgs } from 'angular-three';
-import type { NgteEcctrlAnimationState } from 'angular-three-ecctrl/animation';
+import type { NgteEcctrlAnimationStateValue } from 'angular-three-ecctrl/animation';
 import { gltfResource } from 'angular-three-soba/loaders';
 import { animations, NgtsAnimationClips } from 'angular-three-soba/misc';
 import { AnimationAction, FrontSide, LoopOnce, LoopRepeat, Mesh, MeshStandardMaterial } from 'three';
@@ -22,7 +22,7 @@ type HumanGLTF = GLTF & {
 	materials: { M_Main: MeshStandardMaterial; M_Joints: MeshStandardMaterial };
 };
 
-const ANIMATION_MAP: Record<NgteEcctrlAnimationState, { action: HumanAnimationName; loop: boolean }> = {
+const ANIMATION_MAP: Record<NgteEcctrlAnimationStateValue, { action: HumanAnimationName; loop: boolean }> = {
 	IDLE: { action: 'Idle_Loop', loop: true },
 	WALK: { action: 'Walk_Loop', loop: true },
 	RUN: { action: 'Jog_Fwd_Loop', loop: true },
@@ -46,7 +46,7 @@ const ANIMATION_MAP: Record<NgteEcctrlAnimationState, { action: HumanAnimationNa
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EcctrlHumanModel {
-	state = input.required<NgteEcctrlAnimationState>();
+	state = input.required<NgteEcctrlAnimationStateValue>();
 	timeScale = input(1);
 
 	protected readonly gltf = gltfResource<HumanGLTF>(() => '/AnimationLibrary.glb');
@@ -95,7 +95,7 @@ export class EcctrlHumanModel {
 		inject(DestroyRef).onDestroy(() => this.animation.mixer.removeEventListener('finished', onFinished));
 	}
 
-	private playState(state: NgteEcctrlAnimationState) {
+	private playState(state: NgteEcctrlAnimationStateValue) {
 		if (!this.animation.isReady) return;
 		const { action: actionName, loop } = ANIMATION_MAP[state];
 		if (actionName === this.currentActionName) return;

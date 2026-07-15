@@ -33,7 +33,7 @@ class ModelBackedMockEcctrl {
 
 @Component({
 	template: `
-		<ngte-ecctrl [ecctrlMovementInput]="movement()" />
+		<ngte-ecctrl [movementInput]="movement()" />
 	`,
 	imports: [MockEcctrl, NgteEcctrlMovementBinding],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +44,7 @@ class MovementBindingHarness {
 
 @Component({
 	template: `
-		<ngte-ecctrl [ecctrlMovementInput]="movement()" />
+		<ngte-ecctrl [movementInput]="movement()" />
 	`,
 	imports: [ModelBackedMockEcctrl, NgteEcctrlMovementBinding],
 	changeDetection: ChangeDetectionStrategy.OnPush,

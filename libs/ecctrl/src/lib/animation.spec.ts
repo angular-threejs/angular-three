@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, signal, viewChild } from '@angular/core';
 import {
-	NgteEcctrlAnimationStateController,
+	NgteEcctrlAnimationState,
 	resolveEcctrlAnimationState,
 	type NgteEcctrlAnimationStateContext,
 } from 'angular-three-ecctrl/animation';
@@ -102,7 +102,7 @@ function createPhysicsStub() {
 			(animationStateChange)="record($event)"
 		/>
 	`,
-	imports: [NgteEcctrl, NgteEcctrlAnimationStateController],
+	imports: [NgteEcctrl, NgteEcctrlAnimationState],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -110,7 +110,7 @@ class AnimationHarness {
 	enabled = signal(true);
 	readonly transitions: string[] = [];
 	readonly player = viewChild.required(NgteEcctrl);
-	readonly animation = viewChild.required(NgteEcctrlAnimationStateController);
+	readonly animation = viewChild.required(NgteEcctrlAnimationState);
 	readonly resolver = resolveEcctrlAnimationState;
 
 	record(state: string) {
