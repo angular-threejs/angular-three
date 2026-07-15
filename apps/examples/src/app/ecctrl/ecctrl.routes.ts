@@ -10,6 +10,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'basic',
 		loadComponent: () => import('./basic/basic'),
 		data: {
+			description:
+				'A baseline third-person controller showing movement, jumping, running, animation states, and camera follow.',
 			ecctrlCanvas: { shadowExtent: 12 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl',
@@ -22,6 +24,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'moving-platform',
 		loadComponent: () => import('./moving-platform/moving-platform'),
 		data: {
+			description:
+				'Shows the controller staying grounded on translating and rotating kinematic platforms with followPlatform enabled.',
 			ecctrlCanvas: { shadowExtent: 18 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl TestMap',
@@ -34,6 +38,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'gravity-field',
 		loadComponent: () => import('./gravity-field/gravity-field'),
 		data: {
+			description:
+				'Applies a shared radial gravity field to the character and orbiting rigid bodies, including character-relative camera up.',
 			ecctrlCanvas: { shadowExtent: 14 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl GravityField',
@@ -46,6 +52,7 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'mobile-input',
 		loadComponent: () => import('./mobile-input/mobile-input'),
 		data: {
+			description: 'Maps the same character movement model to a virtual joystick and run/jump touch buttons.',
 			ecctrlCanvas: { shadowExtent: 16 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl touch input',
@@ -58,6 +65,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'time-control',
 		loadComponent: () => import('./time-control/time-control'),
 		data: {
+			description:
+				'Drives Rapier manually through NgteTimeControl so character physics and animation run together in slow motion.',
 			ecctrlCanvas: { shadowExtent: 16, shadowFar: 60 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl time control',
@@ -70,6 +79,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'curve-editor',
 		loadComponent: () => import('./curve-editor/curve-editor'),
 		data: {
+			description:
+				'Edits the mass-ratio falloff curve live to tune how counter-impulses affect a dynamic platform.',
 			ecctrlCanvas: { shadowExtent: 16 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl curve editor',
@@ -82,6 +93,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'vehicle-car',
 		loadComponent: () => import('./vehicle-car/vehicle-car'),
 		data: {
+			description:
+				'Builds a car from NgteEcctrlVehicle and four shape-cast wheels, including suspension, steering, drive, and braking.',
 			ecctrlCanvas: { shadowExtent: 22 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl shape-cast vehicle',
@@ -94,6 +107,8 @@ export const ecctrlExampleRoutes: Routes = [
 		path: 'vehicle-drone',
 		loadComponent: () => import('./vehicle-drone/vehicle-drone'),
 		data: {
+			description:
+				'Builds a velocity-controlled drone from NgteEcctrlVehicle and four thrust propellers with yaw, pitch, and roll.',
 			ecctrlCanvas: { shadowExtent: 24 } satisfies EcctrlExampleCanvasConfig,
 			credits: {
 				title: 'Ecctrl thrust-propeller drone',

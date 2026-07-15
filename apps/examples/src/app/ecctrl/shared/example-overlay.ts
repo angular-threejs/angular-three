@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgteEcctrlJoystick, NgteEcctrlVirtualButton } from 'angular-three-ecctrl/input';
 import { TweakpanePane } from 'angular-three-tweakpane';
 import { TweakpaneCurve } from 'angular-three-tweakpane/curve';
@@ -7,8 +7,13 @@ import { EcctrlExampleControls } from './example-controls';
 @Component({
 	selector: 'app-ecctrl-example-overlay',
 	template: `
-		@if (!controls.touchActive() && controls.instructions(); as instructions) {
-			<div class="ecctrl-instructions">{{ instructions }}</div>
+		@if (description(); as description) {
+			<div class="ecctrl-example-info">
+				<p class="ecctrl-description">{{ description }}</p>
+				@if (!controls.touchActive() && controls.instructions(); as instructions) {
+					<p class="ecctrl-instructions">{{ instructions }}</p>
+				}
+			</div>
 		}
 
 		@if (controls.touchActive()) {
@@ -62,21 +67,39 @@ import { EcctrlExampleControls } from './example-controls';
 			right: max(20px, env(safe-area-inset-right));
 		}
 
-		.ecctrl-instructions {
+		.ecctrl-example-info {
 			background: rgb(15 23 42 / 78%);
 			border: 1px solid rgb(148 163 184 / 28%);
 			border-radius: 8px;
 			color: #e2e8f0;
-			font:
-				500 13px/1.35 ui-monospace,
-				SFMono-Regular,
-				Menlo,
-				monospace;
 			left: 16px;
 			max-width: min(520px, calc(100% - 32px));
 			padding: 8px 10px;
 			position: absolute;
 			top: 16px;
+		}
+
+		.ecctrl-description,
+		.ecctrl-instructions {
+			margin: 0;
+		}
+
+		.ecctrl-description {
+			font:
+				500 13px/1.4 system-ui,
+				sans-serif;
+		}
+
+		.ecctrl-instructions {
+			border-top: 1px solid rgb(148 163 184 / 20%);
+			color: #cbd5e1;
+			font:
+				500 12px/1.35 ui-monospace,
+				SFMono-Regular,
+				Menlo,
+				monospace;
+			margin-top: 7px;
+			padding-top: 7px;
 		}
 
 		.ecctrl-touch-controls > *,
@@ -94,5 +117,6 @@ import { EcctrlExampleControls } from './example-controls';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EcctrlExampleOverlay {
+	readonly description = input.required<string>();
 	protected readonly controls = inject(EcctrlExampleControls);
 }

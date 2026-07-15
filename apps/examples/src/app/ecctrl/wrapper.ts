@@ -41,11 +41,11 @@ const DEFAULT_CANVAS_CONFIG: EcctrlExampleCanvasConfig = {
 						[shadow.intensity]="0.65"
 					/>
 
-					<router-outlet (activate)="syncCanvasConfig()" />
+					<router-outlet (activate)="syncRouteData()" />
 				</ng-template>
 			</ngtr-physics>
 		</ngt-canvas>
-		<app-ecctrl-example-overlay />
+		<app-ecctrl-example-overlay [description]="description()" />
 	`,
 	imports: [EcctrlExampleOverlay, NgtCanvas, NgtrPhysics, RouterOutlet],
 	providers: [EcctrlExampleControls],
@@ -59,9 +59,11 @@ export default class EcctrlWrapper {
 	protected readonly Math = Math;
 	protected readonly controls = inject(EcctrlExampleControls);
 	protected readonly canvasConfig = signal(this.readCanvasConfig());
+	protected readonly description = signal(this.readDescription());
 
-	protected syncCanvasConfig() {
+	protected syncRouteData() {
 		this.canvasConfig.set(this.readCanvasConfig());
+		this.description.set(this.readDescription());
 	}
 
 	private readCanvasConfig() {
@@ -69,5 +71,9 @@ export default class EcctrlWrapper {
 			(this.route.firstChild?.snapshot.data['ecctrlCanvas'] as EcctrlExampleCanvasConfig | undefined) ??
 			DEFAULT_CANVAS_CONFIG
 		);
+	}
+
+	private readDescription() {
+		return (this.route.firstChild?.snapshot.data['description'] as string | undefined) ?? '';
 	}
 }
