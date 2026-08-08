@@ -148,7 +148,7 @@
 			"czConfig": "cz.config.js"
 		}
 	},
-	"packageManager": "pnpm@10.14.0",
+	"packageManager": "pnpm@11.20.0",
 	"nx": {
 		"targets": {
 			"generate-json": {
@@ -164,11 +164,6 @@
 			"generate-compat": {
 				"command": "node ./tools/scripts/generate-compat-matrix.mjs"
 			}
-		}
-	},
-	"pnpm": {
-		"patchedDependencies": {
-			"@nx/angular": "patches/@nx__angular.patch"
 		}
 	}
 }

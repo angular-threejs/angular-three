@@ -5,6 +5,7 @@ As a contributor, here are the guidelines we would like you to follow:
 
 - [Code of Conduct](#coc)
 - [Question or Problem?](#question)
+- [Development setup](#development-setup)
 - [Issues and Bugs](#issue)
 - [Feature Requests](#feature)
 - [Submission Guidelines](#submit)
@@ -21,6 +22,17 @@ Please read and follow our [Code of Conduct][coc].
 Use [GitHub Discussions](https://github.com/angular-threejs/angular-three/discussions) to ask questions about Angular Three.
 
 Please keep the issue tracker for bug reports and feature requests.
+
+## Development setup
+
+This workspace uses [mise](https://mise.jdx.dev/) to manage its Node.js and pnpm versions. After installing and activating mise, set up the repository with:
+
+```shell
+mise install
+pnpm install --frozen-lockfile
+```
+
+The required tool versions are declared in [`mise.toml`](./mise.toml) and are selected automatically while working in the repository.
 
 ## <a name="issue"></a> Found a Bug?
 

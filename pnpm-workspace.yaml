@@ -1,0 +1,12 @@
+allowBuilds:
+    '@swc/core': false
+    cypress: false
+    esbuild: false
+    lmdb: false
+    msgpackr-extract: false
+    nx: false
+    sharp: false
+    unrs-resolver: false
+
+patchedDependencies:
+    '@nx/angular': patches/@nx__angular.patch
